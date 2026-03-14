@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
 
 /* ─── Supported fiat currencies ─── */
 interface FiatCurrency {
@@ -370,6 +371,27 @@ export default function CryptoPage() {
 
       {toast && <Toast msg={toast} onClose={() => setToast(null)} />}
       <style>{`@keyframes toastIn { from { opacity:0; transform:translate(-50%,12px); } to { opacity:1; transform:translate(-50%,0); } }`}</style>
+
+      <SeoSection
+        title="코인 수익률 계산기란 무엇인가요?"
+        description="코인 수익률 계산기(암호화폐 손익 계산기)는 비트코인, 이더리움 등 암호화폐의 평균 매수가와 보유 수량을 입력하면 현재 시세 기준 평가손익과 수익률(%)을 실시간으로 계산해주는 도구입니다. CoinGecko API를 통해 실시간 코인 가격을 가져오므로 항상 최신 시세를 기반으로 수익률을 파악할 수 있습니다. 코인 투자자라면 포트폴리오를 정기적으로 점검하고, 수익 실현 또는 손절 시점을 결정할 때 이 도구를 활용해보세요."
+        useCases={[
+          { icon: '📊', title: '포트폴리오 수익률 점검', desc: '여러 코인의 평균 매수가를 각각 입력해 보유 포트폴리오 전체의 수익/손실 현황을 빠르게 파악합니다.' },
+          { icon: '💱', title: '수익 실현 & 손절 기준 설정', desc: '+20% 수익이나 -10% 손실 등 목표 수익률을 설정하고, 현재 평가손익과 비교해 매도 타이밍을 결정합니다.' },
+          { icon: '📱', title: 'SNS 수익 인증 공유', desc: 'X(트위터)·카카오 공유 기능으로 투자 수익률 결과를 캡처해 커뮤니티에 공유하고 정보를 교환합니다.' },
+          { icon: '🧾', title: '세금 신고 사전 계산', desc: '가상자산 양도소득세 신고 전 평균 취득가액과 현재 평가금액을 계산해 세금 예상액을 미리 파악합니다.' },
+        ]}
+        steps={[
+          { step: '기준 통화 및 코인 선택', desc: '원화(KRW), 달러(USD) 등 기준 통화를 선택하고, 검색창에서 보유 코인(BTC, ETH 등)을 찾아 선택합니다.' },
+          { step: '평균 매수가 & 수량 입력', desc: '거래소에서 확인한 평균 매수 단가와 보유 수량을 입력합니다. 현재가는 실시간으로 자동 조회됩니다.' },
+          { step: '수익률 확인 및 공유', desc: '총 투자금, 현재 평가금액, 손익 금액, 수익률(%)이 즉시 표시됩니다. 공유 버튼으로 결과를 SNS에 바로 올릴 수 있습니다.' },
+        ]}
+        faqs={[
+          { q: '코인 가격은 얼마나 자주 업데이트되나요?', a: 'CoinGecko 무료 API를 사용하며, 요청 시마다 최신 가격을 가져옵니다. API 요청 한도 초과 시 캐시된 가격이 표시될 수 있으며, 이 경우 화면에 안내 메시지가 표시됩니다.' },
+          { q: '평균 매수가는 어디서 확인하나요?', a: '업비트, 빗썸, 바이낸스 등 거래소 앱의 내 보유자산 화면에서 확인할 수 있습니다. 여러 번에 나눠서 매수했다면 거래소가 자동 계산한 평균 매수가를 사용하세요.' },
+          { q: '상위 50개 코인 외의 코인은 지원되지 않나요?', a: '현재는 시가총액 기준 상위 50개 코인을 지원합니다. 소규모 알트코인은 포함되지 않을 수 있습니다. 더 많은 코인 지원이 필요하다면 피드백 게시판에 남겨주세요.' },
+        ]}
+      />
     </div>
   );
 }

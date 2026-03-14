@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, useRef } from 'react';
 import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
 
 interface TestResult {
   url: string;
@@ -271,6 +272,27 @@ export default function TtfbPage() {
       )}
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+
+      <SeoSection
+        title="TTFB(Time To First Byte)란 무엇인가요?"
+        description="TTFB(Time To First Byte)는 웹 브라우저가 서버에 HTTP 요청을 보낸 후 첫 번째 데이터 바이트를 수신하기까지 걸리는 시간을 밀리초(ms) 단위로 측정한 값입니다. 웹사이트 성능을 평가하는 핵심 지표 중 하나로, 구글의 Core Web Vitals에서도 중요하게 다룹니다. TTFB 속도 테스터를 이용하면 URL만 입력하면 즉시 서버 응답 시간을 측정하고 '양호(Good) / 보통(OK) / 개선 필요(Poor)'로 등급을 확인할 수 있습니다. TTFB가 빠를수록 사용자 경험이 좋고 SEO 점수에도 긍정적인 영향을 미칩니다."
+        useCases={[
+          { icon: '🔍', title: 'SEO & Core Web Vitals 점검', desc: '구글 검색 순위에 영향을 주는 TTFB를 정기적으로 측정해 사이트 최적화 상태를 모니터링합니다.' },
+          { icon: '🛠️', title: '서버 성능 비교', desc: '호스팅 업체 변경이나 CDN 적용 전후를 비교 측정해 실제 개선 효과를 수치로 확인할 수 있습니다.' },
+          { icon: '🌏', title: '글로벌 서버 응답 확인', desc: '해외 사용자를 위한 서비스의 응답 속도를 테스트하여 지역별 성능 이슈를 파악합니다.' },
+          { icon: '⚡', title: '코드 배포 후 성능 검증', desc: '새 기능 배포나 서버 설정 변경 후 TTFB를 측정해 성능 회귀(regression) 여부를 즉시 확인합니다.' },
+        ]}
+        steps={[
+          { step: 'URL 입력', desc: "측정하고 싶은 웹사이트 주소를 'https://'를 포함해 입력합니다." },
+          { step: '테스트 실행', desc: "'테스트 실행' 버튼을 클릭하면 서버로 요청을 보내고 응답 시간을 밀리초 단위로 측정합니다." },
+          { step: '결과 해석 및 기록 확인', desc: '측정값과 등급(양호/보통/개선 필요)을 확인합니다. 하단 이력에는 최근 테스트 기록이 남아 변화 추이를 비교할 수 있습니다.' },
+        ]}
+        faqs={[
+          { q: 'TTFB는 몇 ms 이하여야 좋은 건가요?', a: "구글 권장 기준: 200ms 이하는 '양호(Good)', 200~500ms는 '보통(Needs Improvement)', 500ms 초과는 '개선 필요(Poor)'입니다. 국내 서버 기준 100ms 이하가 이상적입니다." },
+          { q: 'TTFB가 높을 때 원인과 해결책은 무엇인가요?', a: '주요 원인: 서버 처리 속도 저하, 느린 데이터베이스 쿼리, CDN 미사용, 높은 서버 부하입니다. 해결책: CDN 도입, 서버 캐싱 적용, 데이터베이스 쿼리 최적화, 더 빠른 호스팅으로 이전을 고려하세요.' },
+          { q: '매번 측정 결과가 조금씩 다른 이유는 무엇인가요?', a: '네트워크 경로, 서버 부하, DNS 조회 시간 등이 매 요청마다 달라질 수 있습니다. 동일한 URL을 3~5회 반복 측정해 평균값을 기준으로 판단하는 것을 권장합니다.' },
+        ]}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
 
 /* ─── Currency definitions ─── */
 interface Currency {
@@ -351,6 +352,27 @@ export default function CurrencyPage() {
       </div>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+
+      <SeoSection
+        title="실시간 환율 계산기란 무엇인가요?"
+        description="실시간 환율 계산기는 Frankfurter API를 통해 최신 환율 데이터를 불러와 원화(KRW), 달러(USD), 유로(EUR), 엔화(JPY) 등 20개 이상의 통화 간 환율을 즉시 계산해주는 온라인 도구입니다. 단순 환산뿐만 아니라 최근 30일 환율 추이 차트를 제공해 환율 흐름을 파악하는 데도 유용합니다. 해외여행 전 예산 계산, 해외 직구 가격 비교, 해외 송금 금액 산정, 외화 예금 수익 계산 등 다양한 상황에서 활용할 수 있습니다."
+        useCases={[
+          { icon: '✈️', title: '해외여행 예산 계산', desc: '여행지 통화 기준으로 숙박비, 식비, 쇼핑 예산을 원화로 환산해 여행 예산을 정확하게 계획합니다.' },
+          { icon: '🛒', title: '해외 직구 가격 비교', desc: '아마존, 이베이 등 해외 쇼핑몰 가격을 원화로 즉시 환산해 국내 가격과 비교하고 실제 절감액을 파악합니다.' },
+          { icon: '💸', title: '해외 송금 금액 산정', desc: '송금 전 현재 환율로 수령액을 미리 계산하고, 환율 차트로 유리한 송금 타이밍을 파악합니다.' },
+          { icon: '📈', title: '환율 트렌드 분석', desc: '30일 환율 차트를 통해 원달러 환율, 원유로 환율 등의 최근 흐름을 확인하고 환전 시점을 결정합니다.' },
+        ]}
+        steps={[
+          { step: '금액 및 기준 통화 입력', desc: '환산할 금액을 입력하고 변환할 기준 통화(예: KRW)를 선택합니다.' },
+          { step: '대상 통화 선택', desc: '환산 결과를 보고 싶은 목표 통화(예: USD)를 선택합니다. ↔ 버튼으로 두 통화를 즉시 스왑할 수 있습니다.' },
+          { step: '결과 및 차트 확인', desc: '현재 환율 기준 환산 금액이 표시되며, 하단 30일 차트로 최근 환율 변화 추이도 확인합니다.' },
+        ]}
+        faqs={[
+          { q: '환율 데이터는 얼마나 최신인가요?', a: 'Frankfurter API는 유럽중앙은행(ECB) 공시 환율을 기반으로 매 영업일 업데이트됩니다. 실시간 은행 고시 환율과는 소폭 차이가 있을 수 있으므로, 실제 환전 시에는 은행 또는 환전 앱의 최종 환율을 확인하세요.' },
+          { q: '원화(KRW) 환율이 부정확하게 보입니다', a: 'Frankfurter API는 EUR 기반 교차 환율을 사용하므로 일부 통화 쌍은 간접 환율로 계산됩니다. 참고용으로만 사용하시고, 정확한 환율은 각 은행의 고시 환율을 기준으로 삼으세요.' },
+          { q: '원하는 통화가 목록에 없습니다', a: '현재 20개 이상의 주요 통화를 지원합니다. 필요한 통화가 없다면 피드백 게시판에 남겨주시면 추가를 검토하겠습니다.' },
+        ]}
+      />
     </div>
   );
 }

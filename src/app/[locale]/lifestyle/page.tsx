@@ -9,7 +9,27 @@ export default function LifestyleDashboardPage() {
   const t = useTranslations('LifestyleBoard');
 
   const tools: any[] = [
-    // Add lifestyle tools here later
+    {
+      id: 'lifestyle/pet-food',
+      title: useTranslations('PetFood')('title'),
+      desc: useTranslations('PetFood')('description'),
+      icon: '🐾',
+      gradient: 'linear-gradient(135deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%)'
+    },
+    {
+      id: 'lifestyle/bmi-water',
+      title: useTranslations('BmiWater')('title'),
+      desc: useTranslations('BmiWater')('description'),
+      icon: '💧',
+      gradient: 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'
+    },
+    {
+      id: 'lifestyle/nickname',
+      title: useTranslations('Nickname')('title'),
+      desc: useTranslations('Nickname')('description'),
+      icon: '✨',
+      gradient: 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'
+    }
   ];
 
   return (
