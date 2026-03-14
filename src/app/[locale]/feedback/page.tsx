@@ -66,13 +66,19 @@ export default function FeedbackBoardPage() {
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('feedback')
-      .select('id, message, category, created_at')
-      .order('created_at', { ascending: false })
-      .limit(100);
-    setItems(data ?? []);
-    setLoading(false);
+    try {
+      const { data, error } = await supabase
+        .from('feedback')
+        .select('id, message, category, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100);
+      if (error) console.error('[Feedback] fetch error:', error);
+      setItems(data ?? []);
+    } catch (e) {
+      console.error('[Feedback] unexpected error:', e);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);
