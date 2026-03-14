@@ -1,0 +1,295 @@
+{
+  "Index": {
+    "title": "Utility Hub",
+    "description": "Find all the tools you need for daily life in one place."
+  },
+  "Navigation": {
+    "home": "Home",
+    "back": "Back",
+    "categories": "Categories",
+    "feedback": "Feedback"
+  },
+  "Categories": {
+    "performance": "Performance & Monitoring",
+    "pdf": "Document Conversion",
+    "fintech": "Payments & Fintech",
+    "productivity": "Productivity",
+    "ux": "UX & Design",
+    "ai": "AI & Marketing",
+    "lifestyle": "Life & Wellness",
+    "security": "Security & Privacy",
+    "utilities": "Utilities & Games"
+  },
+  "Feedback": {
+    "title": "Suggest a Feature & Feedback",
+    "description": "Please leave any ideas for tools you want to see or general feedback for our site!",
+    "categoryLabel": "Select Category",
+    "placeholder": "e.g., Please add a QR Code Generator!",
+    "submit": "Submit Feedback",
+    "success": "Thank you for your valuable feedback! It has been successfully submitted.",
+    "error": "Failed to submit. Please try again in a moment."
+  },
+  "QRGenerator": {
+    "title": "QR Code Generator",
+    "description": "Enter a link or text you want to convert, and a QR code will be generated instantly.",
+    "placeholder": "Enter URL or text here",
+    "download": "Download QR Code",
+    "emptyState": "Enter text to see your QR code here."
+  },
+  "UtilitiesBoard": {
+    "subtitle": "A collection of various extra tools you need in your daily life.",
+    "qr": {
+      "title": "QR Code Generator",
+      "desc": "Converts URLs or text into a high-resolution QR code instantly available for download."
+    },
+    "counter": {
+      "title": "Character & Byte Counter",
+      "desc": "Calculate the number of characters (with/without spaces) and exact bytes (EUC-KR/UTF-8) of your text in real time."
+    },
+    "dday": {
+      "title": "D-Day & Date Calculator",
+      "desc": "Calculate remaining days for anniversaries, exams, or projects and perform date arithmetic."
+    }
+  },
+  "TextCounter": {
+    "title": "Character & Byte Counter",
+    "description": "Quickly count characters and calculate bytes for your essays, resumes, or reports.",
+    "placeholder": "Paste or type your text here...",
+    "charsIncludeSpaces": "Characters (with spaces)",
+    "charsExcludeSpaces": "Characters (no spaces)",
+    "byteEucKr": "Max Bytes (EUC-KR)",
+    "byteUtf8": "Max Bytes (UTF-8)"
+  },
+  "DDay": {
+    "title": "D-Day & Date Calculator",
+    "description": "Never forget important days! Calculate remaining days and perform date arithmetic in one place.",
+    "targetDateLabel": "Select Target Date",
+    "calculateButton": "Calculate",
+    "today": "Today",
+    "daysLeft": "days left",
+    "daysPassed": "days passed",
+    "dDayResult": "D-Day Result",
+    "dateAddTitle": "Add/Subtract Days",
+    "addDays": "Days after",
+    "addMonths": "Months after",
+    "result": "Result Date",
+    "placeholderDays": "e.g., 100",
+    "isToday": "It's today!"
+  },
+  "PdfBoard": {
+    "subtitle": "Collection of document conversion and editing tools.",
+    "hwp": {
+      "title": "Hangul (HWP/HWPX) to PDF",
+      "desc": "Convert Hangul documents to PDF without any external software."
+    }
+  },
+  "FintechBoard": {
+    "subtitle": "Financial utilities for payments, exchange rates, and more.",
+    "currency": {
+      "title": "Live Currency Converter",
+      "desc": "Convert 20+ currencies instantly using real-time Frankfurter API rates with a 30-day trend chart."
+    },
+    "crypto": {
+      "title": "Crypto Profit Calculator",
+      "desc": "Enter your average buy price and quantity to instantly calculate profit/loss. Supports top 50 coins."
+    }
+  },
+  "Crypto": {
+    "title": "🪙 Crypto Profit Calculator",
+    "description": "Enter your average buy price and quantity to calculate real-time profit and loss.",
+    "fiat_label": "Base Currency",
+    "loading_coins": "Loading coins...",
+    "coin_label": "Select Coin",
+    "coin_placeholder": "Search by name or symbol (BTC, ETH...)",
+    "no_results": "No results found",
+    "current_price": "Current Price",
+    "buy_price": "Avg Buy Price",
+    "buy_price_placeholder": "Average buy price (KRW)",
+    "quantity": "Quantity",
+    "qty_placeholder": "Enter quantity",
+    "total_invested": "Total Invested",
+    "current_value": "Current Value",
+    "profit_amount": "Profit / Loss",
+    "profit_rate": "Return Rate",
+    "result_summary": "{rate}% {direction}",
+    "profit": "Profit",
+    "loss": "Loss",
+    "share_title": "Share Your Results",
+    "share_twitter": "Share on X",
+    "share_kakao": "Share via Kakao",
+    "copied": "✅ Copied to clipboard",
+    "rate_limit": "⏳ Rate limit hit — showing cached data",
+    "fetch_error": "⚠️ Failed to fetch price. Please try again."
+  },
+  "Currency": {
+    "title": "💱 Live Currency Converter",
+    "description": "Instantly convert major world currencies with live exchange rates and a 30-day trend chart.",
+    "amount": "Amount",
+    "from": "From",
+    "to": "To",
+    "swap": "Swap currencies",
+    "loading": "Fetching rates...",
+    "chart_title": "30-Day Rate Trend",
+    "quick_ref": "Quick Reference",
+    "error": "Unable to fetch exchange rates. Please try again later."
+  },
+  "ProductivityBoard": {
+    "subtitle": "Productivity tools for better time management and work efficiency.",
+    "pomodoro": {
+      "title": "Pomodoro Timer",
+      "desc": "Boost your focus with 25-minute work sessions and short breaks. Supports browser notifications."
+    },
+    "timezone": {
+      "title": "Timezone Converter",
+      "desc": "Compare current times across major world cities and easily schedule meetings with the time slider."
+    }
+  },
+  "Pomodoro": {
+    "title": "🍅 Pomodoro Timer",
+    "description": "Stay focused with 25-minute work sessions, short breaks, and long breaks.",
+    "mode_focus": "Focus",
+    "mode_short": "Short Break",
+    "mode_long": "Long Break",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "sessions": "{count} sessions done",
+    "sound_on": "Sound on",
+    "sound_off": "Sound off",
+    "notif_hint": "Allow browser notifications",
+    "notif_title": "Pomodoro complete!",
+    "notif_break": "Time for a break ☕",
+    "notif_work": "Back to focus 💪",
+    "settings": "Settings",
+    "custom_times": "Custom Times (minutes)",
+    "minutes": "min",
+    "apply": "Apply"
+  },
+  "Timezone": {
+    "title": "🌍 Timezone Converter",
+    "description": "Compare current times across world cities and find the perfect meeting time with the slider.",
+    "base_label": "Base city:",
+    "now": "Current time",
+    "reset_time": "Reset to now",
+    "base": "BASE",
+    "add_zone": "Add city",
+    "select_zone": "Select a city to add"
+  },
+  "UxBoard": {
+    "subtitle": "Tools to enhance UX design and user experience.",
+    "logo": {
+      "title": "AI Logo & Favicon Package Generator",
+      "desc": "Design your logo with text or emoji and instantly download a complete favicon package (.zip) optimized for every device."
+    },
+    "color": {
+      "title": "Color Palette & Readability Checker",
+      "desc": "Instantly check WCAG 2.1 contrast ratio between any two colors and apply trending palettes with one click."
+    },
+    "font": {
+      "title": "Multilingual Font Comparer",
+      "desc": "Compare Google Fonts (Latin & Korean) side by side and copy CSS in one click. Includes a Korean/English Harmony tab."
+    },
+    "quiz": {
+      "title": "Psychology Test / Quiz Builder",
+      "desc": "Enter questions and result types to instantly create a shareable quiz. Viral CTA on the result page drives new users back to Utility Hub."
+    }
+  },
+  "FontCompare": {
+    "title": "🔤 Multilingual Font Comparer",
+    "description": "Preview and compare Google Fonts (Latin & Korean) side by side. Copy the CSS code instantly.",
+    "tab_latin": "🔤 Latin Fonts",
+    "tab_korean": "가나 Korean Fonts",
+    "tab_harmony": "✨ Harmony",
+    "en_input_label": "English Preview Text",
+    "en_placeholder": "e.g. The quick brown fox...",
+    "ko_input_label": "Korean Preview Text",
+    "ko_placeholder": "e.g. 가나다라마바사 한글 미리보기",
+    "size_label": "Font Size",
+    "harmony_hint": "Curated Korean + Latin font pairings. Check how each combination looks side by side.",
+    "footer_note": "All fonts are served free via Google Fonts. Lazy-loaded on viewport entry for optimal performance."
+  },
+  "ColorChecker": {
+    "title": "🎯 Color Palette & Readability Checker",
+    "description": "Calculate WCAG 2.1 contrast ratio between two colors and find accessible combinations — no design experience needed.",
+    "pick_colors": "Pick Colors",
+    "bg_label": "Background Color",
+    "text_label": "Text Color (Foreground)",
+    "swap": "Swap Colors",
+    "wcag_score": "WCAG 2.1 Score",
+    "normal_text": "Normal Text (16px)",
+    "large_text": "Large Text (18px+)",
+    "preview": "Live Preview",
+    "trending_title": "Trending Palettes",
+    "trending_hint": "Click any palette to apply instantly"
+  },
+  "LogoGenerator": {
+    "title": "🎨 AI Logo & Favicon Package Generator",
+    "description": "Design a logo with text or emoji and download a complete favicon package for every platform in one click.",
+    "preview": "Preview",
+    "content_type": "Content Type",
+    "use_text": "Text",
+    "use_emoji": "Emoji",
+    "text_label": "Enter Text (max 2 chars)",
+    "text_hint": "First 1–2 characters will appear in the logo",
+    "emoji_label": "Enter Emoji",
+    "shape_label": "Background Shape",
+    "palette_label": "Color Presets",
+    "bg_color": "Background",
+    "text_color": "Text Color",
+    "gradient_label": "Gradient",
+    "font_size": "Font Size",
+    "font_weight": "Font Weight",
+    "weight_normal": "Normal",
+    "weight_medium": "Medium",
+    "weight_bold": "Bold",
+    "download": "📦 Download Favicon Package (.zip)",
+    "generating": "Generating...",
+    "downloaded": "✅ Downloaded!",
+    "download_hint": "Unzip and place all files in your project's /public folder.",
+    "includes": "Included Files"
+  },
+  "PerformanceBoard": {
+    "subtitle": "A collection of website performance measurement and monitoring tools.",
+    "ttfb": {
+      "title": "TTFB Speed Tester",
+      "desc": "Enter a URL to instantly measure the server's Time to First Byte in milliseconds."
+    }
+  },
+  "Ttfb": {
+    "title": "TTFB Speed Tester",
+    "description": "Enter a URL to instantly measure how long it takes to receive the first byte from the server.",
+    "placeholder": "https://example.com",
+    "test_button": "Run Test",
+    "testing": "Testing...",
+    "measuring": "Waiting for server response...",
+    "grade_good": "Excellent",
+    "grade_ok": "Average",
+    "grade_poor": "Needs Work",
+    "history_title": "Recent Tests",
+    "history_clear": "Clear",
+    "error_invalid_url": "Invalid URL format. (e.g., https://example.com)",
+    "error_generic": "Test failed. Please check the URL or try again later."
+  },
+  "HwpConverter": {
+    "title": "HWP ↔ PDF Converter",
+    "description": "Convert Hancom Office files (.hwp, .hwpx) to PDF for universal viewing.",
+    "uploadLabel": "Select Hangul file to convert",
+    "dropzone": "Drag & drop files here or click to select.",
+    "converting": "Converting document...",
+    "download_pdf": "Download PDF",
+    "download_docx": "Download Word(.docx)",
+    "supported": "Supported: .hwpx (Recommended), .hwp",
+    "notice": "* HWPX (Standard) format provides more accurate conversion.",
+    "error": "An error occurred while reading the file.",
+    "error_supported": "Unsupported file format.",
+    "reset": "Convert Another"
+  },
+  "LifestyleBoard": {
+    "subtitle": "Tools to help with minor but tedious calculations and records in daily life.",
+    "comingSoon": "Under development. Useful lifestyle tools will be added soon!"
+  },
+  "SecurityBoard": {
+    "subtitle": "Security tools for privacy protection and safe internet usage.",
+    "comingSoon": "Under development. Secure privacy tools will be added soon!"
+  }
+}

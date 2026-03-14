@@ -1,0 +1,295 @@
+{
+  "Index": {
+    "title": "유틸리티 허브",
+    "description": "일상의 모든 도구를 한 곳에서 만나보세요."
+  },
+  "Navigation": {
+    "home": "홈으로",
+    "back": "이전으로",
+    "categories": "카테고리",
+    "feedback": "피드백"
+  },
+  "Categories": {
+    "performance": "성능 및 모니터링",
+    "pdf": "문서 변환/편집",
+    "fintech": "결제 및 핀테크",
+    "productivity": "생산성 도구",
+    "ux": "UX 및 디자인",
+    "ai": "AI 및 마케팅",
+    "lifestyle": "라이프스타일 및 건강",
+    "security": "보안 및 프라이버시",
+    "utilities": "유틸리티/게임"
+  },
+  "Feedback": {
+    "title": "기능 제안 및 피드백 (방명록)",
+    "description": "이곳에 추가되었으면 하는 유틸리티 기능이나 사이트 개선 의견을 자유롭게 남겨주세요!",
+    "categoryLabel": "카테고리 선택",
+    "placeholder": "예: QR코드 생성기를 만들어주세요!",
+    "submit": "피드백 전송하기",
+    "success": "소중한 의견 감사합니다! 성공적으로 접수되었습니다.",
+    "error": "전송에 실패했습니다. 잠시 후 다시 시도해주세요."
+  },
+  "QRGenerator": {
+    "title": "QR 코드 생성기",
+    "description": "변환하고 싶은 링크나 텍스트를 입력하면 즉시 QR 코드가 생성됩니다.",
+    "placeholder": "여기에 URL 또는 텍스트를 입력하세요",
+    "download": "QR 코드 다운로드",
+    "emptyState": "텍스트를 입력하면 여기에 QR 코드가 나타납니다."
+  },
+  "UtilitiesBoard": {
+    "subtitle": "일상생활에 필요한 다양한 부가 도구 모음입니다.",
+    "qr": {
+      "title": "QR 코드 생성기",
+      "desc": "URL이나 텍스트를 입력하면 즉시 다운로드가 가능한 고해상도 QR코드를 만들어줍니다."
+    },
+    "counter": {
+      "title": "글자 수 및 바이트 계산기",
+      "desc": "입력한 텍스트의 글자 수(공백 포함/제외)와 정확한 바이트 량(EUC-KR/UTF-8)을 실시간으로 계산합니다."
+    },
+    "dday": {
+      "title": "D-Day & 날짜 계산기",
+      "desc": "기념일, 시험, 전역일 등 중요한 날짜까지 남은 시간을 계산하고 날짜를 더하거나 뺍니다."
+    }
+  },
+  "TextCounter": {
+    "title": "글자 수 및 바이트 계산기",
+    "description": "자기소개서나 이력서, 레포트 등을 작성할 때 필요한 글자 수와 바이트 수를 세어보세요.",
+    "placeholder": "여기에 텍스트를 붙여넣거나 입력하세요...",
+    "charsIncludeSpaces": "글자 수 (공백 포함)",
+    "charsExcludeSpaces": "글자 수 (공백 제외)",
+    "byteEucKr": "최대 바이트 수 (EUC-KR 기준)",
+    "byteUtf8": "최대 바이트 수 (UTF-8 기준)"
+  },
+  "DDay": {
+    "title": "D-Day & 날짜 계산기",
+    "description": "중요한 날을 잊지 마세요! 남은 날짜 계산과 날짜 연산을 한곳에서 해결하세요.",
+    "targetDateLabel": "기준 날짜 선택",
+    "calculateButton": "계산하기",
+    "today": "오늘",
+    "daysLeft": "남음",
+    "daysPassed": "지남",
+    "dDayResult": "D-Day 결과",
+    "dateAddTitle": "날짜 더하기/빼기",
+    "addDays": "일 후는?",
+    "addMonths": "개월 후는?",
+    "result": "결과 날짜",
+    "placeholderDays": "예: 100",
+    "isToday": "오늘입니다!"
+  },
+  "PdfBoard": {
+    "subtitle": "문서 변환 및 편집 도구 모음입니다.",
+    "hwp": {
+      "title": "한글(HWP/HWPX) to PDF",
+      "desc": "아래아한글 문서를 별도의 프로그램 없이 깨짐 없이 PDF로 변환합니다."
+    }
+  },
+  "FintechBoard": {
+    "subtitle": "결제, 환율, 금융 관련 유틸리티 도구 모음입니다.",
+    "currency": {
+      "title": "실시간 환율 변환기",
+      "desc": "Frankfurter API 기반 실시간 환율로 20개 통화를 즉시 변환하고 30일 추이 차트를 확인하세요."
+    },
+    "crypto": {
+      "title": "코인 수익률 계산기",
+      "desc": "평단가와 수량을 입력하면 현재 수익/손실을 즉시 계산합니다. 상위 50개 코인 지원."
+    }
+  },
+  "Crypto": {
+    "title": "🪙 코인 수익률 계산기",
+    "description": "평단가와 보유 수량을 입력해 현재 수익률을 실시간으로 계산하세요.",
+    "fiat_label": "계산 기준 통화",
+    "loading_coins": "코인 목록 로딩 중...",
+    "coin_label": "코인 선택",
+    "coin_placeholder": "코인 이름 또는 심볼 검색 (BTC, ETH...)",
+    "no_results": "검색 결과가 없습니다",
+    "current_price": "현재 시세",
+    "buy_price": "매수 단가",
+    "buy_price_placeholder": "평균 매수가 (원)",
+    "quantity": "보유 수량",
+    "qty_placeholder": "수량 입력",
+    "total_invested": "총 투자금액",
+    "current_value": "현재 평가금액",
+    "profit_amount": "수익금",
+    "profit_rate": "수익률",
+    "result_summary": "{rate}% {direction}",
+    "profit": "수익",
+    "loss": "손실",
+    "share_title": "결과 공유하기",
+    "share_twitter": "X(트위터) 공유",
+    "share_kakao": "카카오 공유",
+    "copied": "✅ 결과가 클립보드에 복사되었습니다",
+    "rate_limit": "⏳ 시세 갱신 지연 중 — 마지막 데이터를 표시합니다",
+    "fetch_error": "⚠️ 시세를 불러올 수 없습니다. 잠시 후 다시 시도해주세요."
+  },
+  "Currency": {
+    "title": "💱 실시간 환율 변환기",
+    "description": "실시간 환율로 전 세계 주요 통화를 즉시 변환합니다. 30일 추이 차트 포함.",
+    "amount": "금액 입력",
+    "from": "보유 통화",
+    "to": "변환할 통화",
+    "swap": "통화 교환",
+    "loading": "환율 불러오는 중...",
+    "chart_title": "최근 30일 환율 추이",
+    "quick_ref": "빠른 환산표",
+    "error": "현재 환율 정보를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요."
+  },
+  "ProductivityBoard": {
+    "subtitle": "업무 효율과 시간 관리를 위한 생산성 도구 모음입니다.",
+    "pomodoro": {
+      "title": "뽀모도로 타이머",
+      "desc": "25분 집중, 5분 휴식 사이클로 업무 효율을 높이는 타이머입니다. 브라우저 알림 지원."
+    },
+    "timezone": {
+      "title": "시간대 변환기",
+      "desc": "전 세계 주요 도시의 현재 시간을 한눈에 비교하고, 슬라이더로 미팅 시간을 쉽게 조율하세요."
+    }
+  },
+  "Pomodoro": {
+    "title": "🍅 뽀모도로 타이머",
+    "description": "25분 집중, 짧은 휴식, 긴 휴식 사이클로 최적의 집중력을 유지하세요.",
+    "mode_focus": "집중",
+    "mode_short": "짧은 휴식",
+    "mode_long": "긴 휴식",
+    "start": "시작",
+    "pause": "일시 정지",
+    "resume": "계속하기",
+    "sessions": "{count}번 완료",
+    "sound_on": "소리 켜기",
+    "sound_off": "소리 끄기",
+    "notif_hint": "브라우저 알림 허용",
+    "notif_title": "뽀모도로 완료!",
+    "notif_break": "잠깐 쉬어가세요 ☕",
+    "notif_work": "다시 집중할 시간입니다 💪",
+    "settings": "설정",
+    "custom_times": "시간 직접 설정 (분)",
+    "minutes": "분",
+    "apply": "적용하기"
+  },
+  "Timezone": {
+    "title": "🌍 시간대 변환기",
+    "description": "전 세계 도시들의 현재 시간을 비교하고, 슬라이더로 원하는 시간의 각 도시 시간을 확인하세요.",
+    "base_label": "기준 도시:",
+    "now": "현재 시각",
+    "reset_time": "현재 시각으로",
+    "base": "기준",
+    "add_zone": "도시 추가",
+    "select_zone": "추가할 도시를 선택하세요"
+  },
+  "UxBoard": {
+    "subtitle": "UX 디자인과 사용자 경험을 향상시키는 도구 모음입니다.",
+    "logo": {
+      "title": "AI 로고 & 파비콘 패키지 생성기",
+      "desc": "텍스트나 이모지로 나만의 로고를 만들고, 모든 기기에 최적화된 파비콘 패키지(.zip)를 즉시 다운로드하세요."
+    },
+    "color": {
+      "title": "색상 팔레트 & 가독성 검사기",
+      "desc": "배경색과 글자색의 WCAG 2.1 대비율을 즉시 확인하고, 트렌드 팔레트를 한 클릭으로 적용하세요."
+    },
+    "font": {
+      "title": "다국어 폰트 비교기",
+      "desc": "Google Fonts 영문·한글 폰트를 나란히 비교하고, CSS 코드를 즉시 복사하세요. 한/영 조화 탭 제공."
+    },
+    "quiz": {
+      "title": "심리테스트 / 퀴즈 빌더",
+      "desc": "질문과 결과 유형을 입력하면 SNS 공유 가능한 심리테스트가 즉시 완성됩니다. 결과 페이지에서 '나도 만들기' 버튼으로 바이럴 유입."
+    }
+  },
+  "FontCompare": {
+    "title": "🔤 다국어 폰트 비교기",
+    "description": "영문·한글 Google Fonts를 나란히 미리보고 CSS 코드를 복사하세요. 한/영 조화(Harmony) 조합도 확인하세요.",
+    "tab_latin": "🔤 영문 폰트",
+    "tab_korean": "가나 한글 폰트",
+    "tab_harmony": "✨ 한/영 조화",
+    "en_input_label": "영문 미리보기 텍스트",
+    "en_placeholder": "예: The quick brown fox...",
+    "ko_input_label": "한글 미리보기 텍스트",
+    "ko_placeholder": "예: 가나다라마바사 한글 미리보기",
+    "size_label": "글자 크기",
+    "harmony_hint": "큐레이션된 한/영 폰트 조합입니다. 왼쪽(영문)과 오른쪽(한글)이 함께 어울리는지 확인하세요.",
+    "footer_note": "모든 폰트는 Google Fonts를 통해 무료로 제공됩니다. 뷰포트 진입 시 지연 로딩으로 성능을 최적화합니다."
+  },
+  "ColorChecker": {
+    "title": "🎯 색상 팔레트 & 가독성 검사기",
+    "description": "두 색상의 WCAG 2.1 대비율을 계산하고, 디자인 초보자도 실패 없는 색상 조합을 찾아보세요.",
+    "pick_colors": "색상 선택",
+    "bg_label": "배경색 (Background)",
+    "text_label": "글자색 (Text / Foreground)",
+    "swap": "색상 교체",
+    "wcag_score": "WCAG 2.1 점수",
+    "normal_text": "일반 텍스트 (16px)",
+    "large_text": "큰 텍스트 (18px+)",
+    "preview": "실시간 미리보기",
+    "trending_title": "트렌드 팔레트",
+    "trending_hint": "클릭하면 색상이 즉시 적용됩니다"
+  },
+  "LogoGenerator": {
+    "title": "🎨 AI 로고 & 파비콘 패키지 생성기",
+    "description": "텍스트 또는 이모지로 로고를 디자인하고, 모든 플랫폼에 맞는 파비콘 패키지를 한 번에 다운로드하세요.",
+    "preview": "미리보기",
+    "content_type": "콘텐츠 유형",
+    "use_text": "텍스트",
+    "use_emoji": "이모지",
+    "text_label": "텍스트 입력 (최대 2자)",
+    "text_hint": "앞 1~2글자가 로고에 표시됩니다",
+    "emoji_label": "이모지 입력",
+    "shape_label": "배경 모양",
+    "palette_label": "색상 프리셋",
+    "bg_color": "배경색",
+    "text_color": "텍스트 색상",
+    "gradient_label": "그라디언트",
+    "font_size": "글자 크기",
+    "font_weight": "글자 굵기",
+    "weight_normal": "보통",
+    "weight_medium": "중간",
+    "weight_bold": "굵게",
+    "download": "📦 파비콘 패키지 다운로드 (.zip)",
+    "generating": "생성 중...",
+    "downloaded": "✅ 다운로드 완료!",
+    "download_hint": "압축 파일을 풀고 파일들을 프로젝트의 /public 폴더에 넣으세요.",
+    "includes": "포함 파일 목록"
+  },
+  "PerformanceBoard": {
+    "subtitle": "웹사이트 성능 측정 및 모니터링 도구 모음입니다.",
+    "ttfb": {
+      "title": "TTFB 속도 테스터",
+      "desc": "URL을 입력하면 서버의 첫 응답 시간(Time to First Byte)을 밀리초 단위로 즉시 측정합니다."
+    }
+  },
+  "Ttfb": {
+    "title": "TTFB 속도 테스터",
+    "description": "URL을 입력하면 서버의 첫 번째 응답 바이트가 도달하는 시간을 즉시 측정합니다.",
+    "placeholder": "https://example.com",
+    "test_button": "측정 시작",
+    "testing": "측정 중...",
+    "measuring": "서버 응답을 기다리는 중...",
+    "grade_good": "우수",
+    "grade_ok": "보통",
+    "grade_poor": "개선 필요",
+    "history_title": "최근 측정 기록",
+    "history_clear": "기록 지우기",
+    "error_invalid_url": "올바른 URL 형식이 아닙니다. (예: https://example.com)",
+    "error_generic": "측정에 실패했습니다. URL을 확인하거나 잠시 후 다시 시도해주세요."
+  },
+  "HwpConverter": {
+    "title": "HWP ↔ PDF 변환기",
+    "description": "한컴오피스 파일(.hwp, .hwpx)을 PDF로 변환하여 어디서든 확인하세요.",
+    "uploadLabel": "변환할 한글 파일을 선택하세요",
+    "dropzone": "파일을 여기로 드래그하거나 클릭하여 선택하세요.",
+    "converting": "문서를 변환하고 있습니다...",
+    "download_pdf": "PDF 다운로드",
+    "download_docx": "Word(.docx) 다운로드",
+    "supported": "지원 형식: .hwpx (권장), .hwp",
+    "notice": "※ HWPX(표준) 형식이 더 정확하게 변환됩니다.",
+    "error": "파일을 읽는 중에 오류가 발생했습니다.",
+    "error_supported": "지원되지 않는 파일 형식입니다.",
+    "reset": "새로 변환하기"
+  },
+  "LifestyleBoard": {
+    "subtitle": "일상에서 겪는 사소하지만 귀찮은 계산과 기록을 돕는 도구 모음입니다.",
+    "comingSoon": "준비 중입니다. 유용한 생활 도구들이 곧 추가될 예정입니다!"
+  },
+  "SecurityBoard": {
+    "subtitle": "개인정보 보호와 안전한 인터넷 사용을 위한 보안 도구 모음입니다.",
+    "comingSoon": "준비 중입니다. 안전한 보안 도구들이 곧 추가될 예정입니다!"
+  }
+}
