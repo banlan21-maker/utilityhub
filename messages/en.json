@@ -18,7 +18,8 @@
     "ai": "AI & Marketing",
     "lifestyle": "Life & Wellness",
     "security": "Security & Privacy",
-    "utilities": "Utilities & Games"
+    "utilities": "Utilities & Games",
+    "dev": "Developer Tools"
   },
   "Feedback": {
     "title": "Suggest a Feature & Feedback",
@@ -568,6 +569,112 @@
     "cupGuide": "Based on a standard 200ml cup.",
     "emptyState": "Enter your height and weight to calculate.",
     "notice": "* Water needs can vary by health conditions or environment."
+  },
+  "DevBoard": {
+    "subtitle": "Essential utility tools for developers.",
+    "json": {
+      "title": "JSON Formatter & Viewer",
+      "desc": "Prettify, minify, or visualize JSON as a collapsible tree. Includes syntax highlighting and validation."
+    },
+    "regex": {
+      "title": "Regex Tester",
+      "desc": "Enter a pattern and test string to see matches highlighted in real time. Includes a cheat sheet sidebar."
+    },
+    "password": {
+      "title": "Password Generator & Strength Analyzer",
+      "desc": "Generate cryptographically secure passwords and analyze entropy with estimated crack time visualization."
+    }
+  },
+  "JsonFormatter": {
+    "title": "🗂️ JSON Formatter & Viewer",
+    "description": "Paste any JSON to instantly prettify, minify, or explore it as a collapsible tree. Real-time syntax error detection included.",
+    "label": {
+      "input": "JSON Input"
+    },
+    "btn": {
+      "sample": "Sample",
+      "clear": "Clear",
+      "pretty": "Pretty",
+      "tree": "Tree",
+      "minify": "Minify",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "placeholder": "Paste your JSON here...",
+    "status": {
+      "valid": "Valid JSON",
+      "keys": "items",
+      "empty": "Enter JSON above to see the formatted output here",
+      "saved": "{original} chars → {minified} chars (saved {pct}%)"
+    },
+    "output": {
+      "empty": "Enter valid JSON above to see the output here.",
+      "invalid": "JSON parse error"
+    }
+  },
+  "RegexTester": {
+    "title": "🔍 Regex Tester",
+    "description": "Enter a regular expression pattern and a test string to see all matches highlighted in real time. Handy cheat sheet included.",
+    "label": {
+      "pattern": "Regex Pattern",
+      "testString": "Test String",
+      "result": "Match Result"
+    },
+    "btn": {
+      "cheatsheet": "Cheat Sheet",
+      "clear": "Clear"
+    },
+    "placeholder": {
+      "test": "Enter text to test against the pattern..."
+    },
+    "status": {
+      "matches": "match(es)"
+    },
+    "cheat": {
+      "title": "Common Patterns",
+      "quickRef": "Quick Reference"
+    }
+  },
+  "DevPassword": {
+    "title": "🔑 Password Generator & Strength Analyzer",
+    "description": "Instantly generate cryptographically secure passwords and analyze entropy with an estimated crack time — all in your browser.",
+    "badge": "All processing happens locally in your browser",
+    "mode": {
+      "generate": "Generate",
+      "analyze": "Analyze"
+    },
+    "placeholder": {
+      "generated": "Click the button to generate a password",
+      "check": "Enter a password to analyze..."
+    },
+    "btn": {
+      "generate": "Generate New Password"
+    },
+    "label": {
+      "length": "Length",
+      "history": "Recent passwords",
+      "check": "Analyze Password",
+      "strength": "Strength Analysis"
+    },
+    "opt": {
+      "upper": "Uppercase (A-Z)",
+      "lower": "Lowercase (a-z)",
+      "digits": "Numbers (0-9)",
+      "symbols": "Symbols (!@#$...)",
+      "noAmbiguous": "Exclude ambiguous chars"
+    },
+    "result": {
+      "length": "Length",
+      "entropy": "Entropy",
+      "crackTime": "Estimated crack time (1 trillion guesses/sec)"
+    },
+    "check": {
+      "length12": "At least 12 characters",
+      "upper": "Contains uppercase",
+      "lower": "Contains lowercase",
+      "digit": "Contains a number",
+      "symbol": "Contains a symbol"
+    }
   },
   "Nickname": {
     "title": "✨ English Name & Nickname Generator",

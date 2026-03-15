@@ -17,6 +17,7 @@ export default function HomePage() {
     { id: 'lifestyle', name: catT('lifestyle'), icon: '🌿', color: '#26de81' },
     { id: 'security', name: catT('security'), icon: '🛡️', color: '#4b7bec' },
     { id: 'utilities', name: catT('utilities'), icon: '🛠️', color: '#3742fa' },
+    { id: 'dev', name: catT('dev'), icon: '💻', color: '#7c3aed' },
   ];
 
   return (
