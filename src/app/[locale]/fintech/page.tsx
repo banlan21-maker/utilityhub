@@ -10,6 +10,27 @@ export default function FintechPage() {
 
   const tools = [
     {
+      id: 'fintech/percent',
+      title: boardT('percent.title'),
+      desc: boardT('percent.desc'),
+      icon: '🔢',
+      gradient: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
+    },
+    {
+      id: 'fintech/vat',
+      title: boardT('vat.title'),
+      desc: boardT('vat.desc'),
+      icon: '🧾',
+      gradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+    },
+    {
+      id: 'fintech/interest',
+      title: boardT('interest.title'),
+      desc: boardT('interest.desc'),
+      icon: '💰',
+      gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+    },
+    {
       id: 'fintech/currency',
       title: boardT('currency.title'),
       desc: boardT('currency.desc'),

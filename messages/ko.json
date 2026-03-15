@@ -92,6 +92,124 @@
     "crypto": {
       "title": "코인 수익률 계산기",
       "desc": "평단가와 수량을 입력하면 현재 수익/손실을 즉시 계산합니다. 상위 50개 코인 지원."
+    },
+    "percent": {
+      "title": "퍼센트 계산기",
+      "desc": "할인율, 증감률, 비율, 역산을 즉시 계산합니다. 쇼핑·투자·비즈니스 필수 도구."
+    },
+    "vat": {
+      "title": "부가세(VAT) 계산기",
+      "desc": "공급가액에 부가세를 더하거나, 부가세 포함 금액에서 공급가액과 세액을 분리합니다."
+    },
+    "interest": {
+      "title": "이자 계산기 (단리/복리)",
+      "desc": "예금·적금·투자 이자를 단리·복리로 계산하고 연도별 원리금 증가 추이를 확인합니다."
+    }
+  },
+  "Percent": {
+    "title": "🔢 퍼센트 계산기",
+    "description": "할인율, 증감률, 비율, 역산을 즉시 계산합니다.",
+    "mode": {
+      "discount": "할인율",
+      "change": "증감률",
+      "ratio": "비율",
+      "reverse": "역산"
+    },
+    "label": {
+      "originalPrice": "원래 가격",
+      "discountRate": "할인율",
+      "oldValue": "이전 값",
+      "newValue": "새 값",
+      "part": "부분 값",
+      "total": "전체 값",
+      "finalPrice": "할인된 최종 가격",
+      "appliedRate": "적용된 할인율"
+    },
+    "result": {
+      "discountAmount": "할인 금액",
+      "finalPrice": "최종 가격",
+      "difference": "차이",
+      "changeRate": "증감률",
+      "ratio": "비율",
+      "originalPrice": "추정 원가"
+    },
+    "related": {
+      "title": "관련 도구",
+      "vat": "부가세 계산기",
+      "interest": "이자 계산기",
+      "currency": "환율 변환기"
+    }
+  },
+  "Vat": {
+    "title": "🧾 부가세(VAT) 계산기",
+    "description": "공급가액에 부가세를 더하거나, 부가세 포함 금액에서 공급가액과 세액을 분리합니다.",
+    "mode": {
+      "add": "VAT 추가",
+      "extract": "VAT 분리"
+    },
+    "label": {
+      "vatRate": "부가세율",
+      "supplyAmount": "공급가액 (부가세 제외)",
+      "totalAmount": "합계금액 (부가세 포함)"
+    },
+    "result": {
+      "title": "계산 결과",
+      "supplyAmount": "공급가액",
+      "totalAmount": "합계 (VAT 포함)"
+    },
+    "formula": {
+      "add": "합계 = 공급가액 × (1 + {rate}%)",
+      "extract": "공급가액 = 합계 ÷ (1 + {rate}%)"
+    },
+    "related": {
+      "title": "관련 도구",
+      "percent": "퍼센트 계산기",
+      "interest": "이자 계산기",
+      "currency": "환율 변환기"
+    }
+  },
+  "Interest": {
+    "title": "💰 이자 계산기",
+    "description": "단리·복리로 예금, 적금, 투자 이자를 계산합니다.",
+    "type": {
+      "simple": "단리",
+      "compound": "복리"
+    },
+    "label": {
+      "principal": "원금",
+      "rate": "연이율",
+      "duration": "기간",
+      "compoundFreq": "이자 계산 주기"
+    },
+    "note": {
+      "principal": "초기 투자/예치 금액",
+      "rate": "연간 기준"
+    },
+    "period": {
+      "year": "년",
+      "month": "개월",
+      "day": "일"
+    },
+    "freq": {
+      "yearly": "연 1회",
+      "semiannual": "반기 1회",
+      "quarterly": "분기 1회",
+      "monthly": "월 1회",
+      "daily": "매일"
+    },
+    "result": {
+      "principal": "원금",
+      "interest": "이자 수익",
+      "total": "만기 원리금",
+      "effectiveRate": "실효 수익률: {rate}%",
+      "vsSimple": "복리 vs 단리 추가 수익",
+      "yearlyBreakdown": "연도별 원리금 추이"
+    },
+    "related": {
+      "title": "관련 도구",
+      "percent": "퍼센트 계산기",
+      "vat": "부가세 계산기",
+      "currency": "환율 변환기"
     }
   },
   "Crypto": {

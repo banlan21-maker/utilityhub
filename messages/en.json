@@ -92,6 +92,124 @@
     "crypto": {
       "title": "Crypto Profit Calculator",
       "desc": "Enter your average buy price and quantity to instantly calculate profit/loss. Supports top 50 coins."
+    },
+    "percent": {
+      "title": "Percentage Calculator",
+      "desc": "Instantly calculate discounts, rate of change, ratios, and reverse discounts. Essential for shopping, investing, and business."
+    },
+    "vat": {
+      "title": "VAT Calculator",
+      "desc": "Add VAT to a supply amount or extract net price from a VAT-inclusive total. Supports custom rates for global use."
+    },
+    "interest": {
+      "title": "Interest Calculator (Simple & Compound)",
+      "desc": "Simulate deposit and investment returns with simple or compound interest. Includes a year-by-year growth chart."
+    }
+  },
+  "Percent": {
+    "title": "🔢 Percentage Calculator",
+    "description": "Calculate discounts, rate of change, ratios, and reverse discounts instantly.",
+    "mode": {
+      "discount": "Discount",
+      "change": "Rate of Change",
+      "ratio": "Ratio",
+      "reverse": "Reverse"
+    },
+    "label": {
+      "originalPrice": "Original Price",
+      "discountRate": "Discount Rate",
+      "oldValue": "Previous Value",
+      "newValue": "New Value",
+      "part": "Part",
+      "total": "Total",
+      "finalPrice": "Final (Discounted) Price",
+      "appliedRate": "Discount Rate Applied"
+    },
+    "result": {
+      "discountAmount": "Discount Amount",
+      "finalPrice": "Final Price",
+      "difference": "Difference",
+      "changeRate": "Rate of Change",
+      "ratio": "Percentage",
+      "originalPrice": "Original Price (Estimated)"
+    },
+    "related": {
+      "title": "Related Tools",
+      "vat": "VAT Calculator",
+      "interest": "Interest Calculator",
+      "currency": "Currency Converter"
+    }
+  },
+  "Vat": {
+    "title": "🧾 VAT Calculator",
+    "description": "Add VAT to a net price or extract the supply amount from a VAT-inclusive total.",
+    "mode": {
+      "add": "Add VAT",
+      "extract": "Extract VAT"
+    },
+    "label": {
+      "vatRate": "VAT Rate",
+      "supplyAmount": "Supply Amount (ex. VAT)",
+      "totalAmount": "Total Amount (inc. VAT)"
+    },
+    "result": {
+      "title": "Result",
+      "supplyAmount": "Supply Amount",
+      "totalAmount": "Total (inc. VAT)"
+    },
+    "formula": {
+      "add": "Total = Supply × (1 + {rate}%)",
+      "extract": "Supply = Total ÷ (1 + {rate}%)"
+    },
+    "related": {
+      "title": "Related Tools",
+      "percent": "Percentage Calculator",
+      "interest": "Interest Calculator",
+      "currency": "Currency Converter"
+    }
+  },
+  "Interest": {
+    "title": "💰 Interest Calculator",
+    "description": "Calculate simple or compound interest for deposits, savings, and investments.",
+    "type": {
+      "simple": "Simple Interest",
+      "compound": "Compound Interest"
+    },
+    "label": {
+      "principal": "Principal",
+      "rate": "Annual Interest Rate",
+      "duration": "Duration",
+      "compoundFreq": "Compounding Frequency"
+    },
+    "note": {
+      "principal": "initial investment amount",
+      "rate": "per year"
+    },
+    "period": {
+      "year": "Year",
+      "month": "Month",
+      "day": "Day"
+    },
+    "freq": {
+      "yearly": "Annually",
+      "semiannual": "Semi-annual",
+      "quarterly": "Quarterly",
+      "monthly": "Monthly",
+      "daily": "Daily"
+    },
+    "result": {
+      "principal": "Principal",
+      "interest": "Interest Earned",
+      "total": "Maturity Amount",
+      "effectiveRate": "Effective return: {rate}%",
+      "vsSimple": "Compound vs. Simple advantage",
+      "yearlyBreakdown": "Year-by-Year Growth"
+    },
+    "related": {
+      "title": "Related Tools",
+      "percent": "Percentage Calculator",
+      "vat": "VAT Calculator",
+      "currency": "Currency Converter"
     }
   },
   "Crypto": {
