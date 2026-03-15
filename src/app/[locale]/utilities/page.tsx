@@ -10,6 +10,20 @@ export default function UtilitiesDashboardPage() {
 
   const tools = [
     {
+      id: 'utilities/thumbnail',
+      title: t('thumbnail.title'),
+      desc: t('thumbnail.desc'),
+      icon: '📸',
+      gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+    },
+    {
+      id: 'utilities/shorturl',
+      title: t('shorturl.title'),
+      desc: t('shorturl.desc'),
+      icon: '🔗',
+      gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'
+    },
+    {
       id: 'utilities/area',
       title: t('area.title'),
       desc: t('area.desc'),

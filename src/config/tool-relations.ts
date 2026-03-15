@@ -51,6 +51,10 @@ export const TOOLS: ToolMeta[] = [
   { id: 'dev/json',     icon: '🗂️', ko: 'JSON 포맷터 & 뷰어',           en: 'JSON Formatter & Viewer',        category: 'dev' },
   { id: 'dev/regex',    icon: '🔍', ko: '정규표현식 테스터',             en: 'Regex Tester',                   category: 'dev' },
   { id: 'dev/password', icon: '🔑', ko: '비밀번호 생성기 & 강도 분석기', en: 'Password Generator & Analyzer',  category: 'dev' },
+  // social / content
+  { id: 'utilities/thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기',     en: 'YouTube Thumbnail Downloader', category: 'utilities' },
+  { id: 'utilities/shorturl',  icon: '🔗', ko: 'URL 단축기',               en: 'URL Shortener',                category: 'utilities' },
+  { id: 'ai/hashtag',          icon: '#️⃣', ko: '해시태그 생성기',          en: 'Hashtag Generator',            category: 'ai' },
 ];
 
 /** Build a lookup map: toolId → ToolMeta */
@@ -198,6 +202,23 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'security/url',
     'utilities/qr',
     'ux/logo',
+  ],
+
+  // ── Social / Content ───────────────────────────────────────
+  'utilities/thumbnail': [
+    'ai/hashtag',
+    'utilities/shorturl',
+    'utilities/qr',
+  ],
+  'utilities/shorturl': [
+    'utilities/qr',
+    'security/redact',
+    'utilities/thumbnail',
+  ],
+  'ai/hashtag': [
+    'utilities/thumbnail',
+    'utilities/counter',
+    'utilities/shorturl',
   ],
 
   // ── Dev ────────────────────────────────────────────────────

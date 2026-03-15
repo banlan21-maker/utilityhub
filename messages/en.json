@@ -39,6 +39,14 @@
   },
   "UtilitiesBoard": {
     "subtitle": "A collection of various extra tools you need in your daily life.",
+    "thumbnail": {
+      "title": "YouTube Thumbnail Downloader",
+      "desc": "Enter any YouTube URL to instantly extract and download thumbnails in MQ, HQ, SD, and Max Resolution quality."
+    },
+    "shorturl": {
+      "title": "URL Shortener",
+      "desc": "Convert long URLs into short links. Shortening history is saved in your browser so you can access it on your next visit."
+    },
     "area": {
       "title": "Pyeong ↔ ㎡ Converter",
       "desc": "Instantly convert between pyeong and square meters with apartment size presets (59㎡, 84㎡, etc.) and adjustable decimal precision."
@@ -569,6 +577,13 @@
     "cupGuide": "Based on a standard 200ml cup.",
     "emptyState": "Enter your height and weight to calculate.",
     "notice": "* Water needs can vary by health conditions or environment."
+  },
+  "AiBoard": {
+    "subtitle": "Tools for social media marketing, content creation, and AI-powered automation.",
+    "hashtag": {
+      "title": "Instagram & YouTube Hashtag Generator",
+      "desc": "Enter a keyword to instantly generate 30 trending hashtags. Supports Instagram and YouTube styles with one-click copy-all."
+    }
   },
   "DevBoard": {
     "subtitle": "Essential utility tools for developers.",
