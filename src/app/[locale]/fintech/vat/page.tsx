@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
-import { Link } from '@/i18n/routing';
+import RelatedTools from '@/app/components/RelatedTools';
 
 type Mode = 'add' | 'extract';
 
@@ -74,11 +74,6 @@ export default function VatPage() {
   const supplyAmount = val / (1 + rate / 100);
   const extractedVat = val - supplyAmount;
 
-  const relatedTools = [
-    { href: '/fintech/percent', icon: '🔢', title: t('related.percent') },
-    { href: '/fintech/interest', icon: '💰', title: t('related.interest') },
-    { href: '/fintech/currency', icon: '💱', title: t('related.currency') },
-  ];
 
   return (
     <div>
@@ -196,25 +191,7 @@ export default function VatPage() {
         </p>
       </div>
 
-      {/* Related tools */}
-      <div style={{ maxWidth: '480px', margin: '2rem auto 0' }}>
-        <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
-          {t('related.title')}
-        </p>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          {relatedTools.map(tool => (
-            <Link key={tool.href} href={tool.href as any} style={{ textDecoration: 'none' }}>
-              <div
-                style={{ padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-              >
-                {tool.icon} {tool.title}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <RelatedTools toolId="fintech/vat" />
 
       {/* Ad placeholder */}
       <div style={{ maxWidth: '480px', margin: '1.5rem auto 0', display: 'flex', justifyContent: 'center' }}>
