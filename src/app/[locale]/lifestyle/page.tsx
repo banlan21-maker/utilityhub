@@ -29,6 +29,13 @@ export default function LifestyleDashboardPage() {
       desc: useTranslations('Nickname')('description'),
       icon: '✨',
       gradient: 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'
+    },
+    {
+      id: 'lifestyle/korean-age',
+      title: t('korean-age.title'),
+      desc: t('korean-age.desc'),
+      icon: '🎂',
+      gradient: 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)'
     }
   ];
 

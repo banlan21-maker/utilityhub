@@ -23,6 +23,13 @@ export default function ProductivityPage() {
       icon: '🌍',
       gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
     },
+    {
+      id: 'productivity/coverletter',
+      title: boardT('coverletter.title'),
+      desc: boardT('coverletter.desc'),
+      icon: '📝',
+      gradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+    },
   ];
 
   return (

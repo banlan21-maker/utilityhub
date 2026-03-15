@@ -55,6 +55,10 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기',     en: 'YouTube Thumbnail Downloader', category: 'utilities' },
   { id: 'utilities/shorturl',  icon: '🔗', ko: 'URL 단축기',               en: 'URL Shortener',                category: 'utilities' },
   { id: 'ai/hashtag',          icon: '#️⃣', ko: '해시태그 생성기',          en: 'Hashtag Generator',            category: 'ai' },
+  // Korean life tools
+  { id: 'lifestyle/korean-age', icon: '🎂', ko: '한국형 날짜 계산기',       en: 'Korean Date Calculator',       category: 'lifestyle' },
+  { id: 'utilities/gpa',        icon: '📊', ko: '대학생 학점 변환기',        en: 'GPA Converter',                category: 'utilities' },
+  { id: 'productivity/coverletter', icon: '📝', ko: '자소서 작성 헬퍼',     en: 'Cover Letter Helper',          category: 'productivity' },
 ];
 
 /** Build a lookup map: toolId → ToolMeta */
@@ -219,6 +223,23 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/thumbnail',
     'utilities/counter',
     'utilities/shorturl',
+  ],
+
+  // ── Korean Life Tools ──────────────────────────────────────
+  'lifestyle/korean-age': [
+    'utilities/dday',
+    'lifestyle/bmi-water',
+    'utilities/gpa',
+  ],
+  'utilities/gpa': [
+    'utilities/counter',
+    'lifestyle/nickname',
+    'productivity/coverletter',
+  ],
+  'productivity/coverletter': [
+    'utilities/gpa',
+    'security/redact',
+    'utilities/counter',
   ],
 
   // ── Dev ────────────────────────────────────────────────────

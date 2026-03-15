@@ -62,6 +62,10 @@
     "dday": {
       "title": "D-Day & Date Calculator",
       "desc": "Calculate remaining days for anniversaries, exams, or projects and perform date arithmetic."
+    },
+    "gpa": {
+      "title": "GPA Converter",
+      "desc": "Convert between 4.5, 4.3, and 100-point GPA scales. Enter your courses and see overall, major, and liberal arts GPA automatically."
     }
   },
   "TextCounter": {
@@ -318,6 +322,10 @@
     "timezone": {
       "title": "Timezone Converter",
       "desc": "Compare current times across major world cities and easily schedule meetings with the time slider."
+    },
+    "coverletter": {
+      "title": "Cover Letter Helper",
+      "desc": "Real-time character (with/without spaces) and byte counter with company-specific presets and Korean spell checker integration. Auto-saved in your browser."
     }
   },
   "Pomodoro": {
@@ -462,7 +470,11 @@
   },
   "LifestyleBoard": {
     "subtitle": "Tools to help with minor but tedious calculations and records in daily life.",
-    "comingSoon": "Under development. Useful lifestyle tools will be added soon!"
+    "comingSoon": "Under development. Useful lifestyle tools will be added soon!",
+    "korean-age": {
+      "title": "Korean Date Calculator",
+      "desc": "Calculate Korean age, military discharge date, and ovulation cycle all in one tabbed tool."
+    }
   },
   "SecurityBoard": {
     "subtitle": "Security tools for privacy protection and safe internet usage.",
