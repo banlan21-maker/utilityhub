@@ -16,6 +16,7 @@ export interface ToolMeta {
 
 export const TOOLS: ToolMeta[] = [
   // fintech
+  { id: 'fintech/tax33',    icon: '🧾', ko: '3.3% 세금 계산기',     en: 'Freelancer 3.3% Tax Calculator', category: 'fintech' },
   { id: 'fintech/percent',  icon: '🔢', ko: '퍼센트 계산기',        en: 'Percentage Calculator',          category: 'fintech' },
   { id: 'fintech/vat',      icon: '🧾', ko: '부가세(VAT) 계산기',   en: 'VAT Calculator',                 category: 'fintech' },
   { id: 'fintech/interest', icon: '💰', ko: '이자 계산기',           en: 'Interest Calculator',            category: 'fintech' },
@@ -40,6 +41,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'security/password', icon: '🔑', ko: '비밀번호 생성기',       en: 'Password Generator',            category: 'security' },
   { id: 'security/url',      icon: '🛡️', ko: 'URL 피싱/악성코드 검사기', en: 'URL Safety Checker',        category: 'security' },
   // utilities
+  { id: 'utilities/area',    icon: '📐', ko: '평수 ↔ ㎡ 변환기',    en: 'Pyeong ↔ ㎡ Converter',         category: 'utilities' },
   { id: 'utilities/qr',      icon: '📱', ko: 'QR 코드 생성기',       en: 'QR Code Generator',             category: 'utilities' },
   { id: 'utilities/counter', icon: '📝', ko: '글자 수 & 바이트 계산기', en: 'Character Counter',          category: 'utilities' },
   { id: 'utilities/dday',    icon: '📅', ko: 'D-Day & 날짜 계산기',  en: 'D-Day Calculator',              category: 'utilities' },
@@ -59,6 +61,11 @@ export const TOOL_MAP: Record<string, ToolMeta> = Object.fromEntries(
  */
 export const TOOL_RELATIONS: Record<string, string[]> = {
   // ── Fintech ────────────────────────────────────────────────
+  'fintech/tax33': [
+    'fintech/vat',
+    'fintech/interest',
+    'fintech/percent',
+  ],
   'fintech/percent': [
     'fintech/vat',
     'fintech/interest',
@@ -161,6 +168,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   ],
 
   // ── Utilities ──────────────────────────────────────────────
+  'utilities/area': [
+    'fintech/currency',
+    'utilities/counter',
+    'utilities/dday',
+  ],
   'utilities/qr': [
     'utilities/counter',
     'utilities/dday',

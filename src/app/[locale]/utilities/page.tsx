@@ -10,6 +10,13 @@ export default function UtilitiesDashboardPage() {
 
   const tools = [
     {
+      id: 'utilities/area',
+      title: t('area.title'),
+      desc: t('area.desc'),
+      icon: '📐',
+      gradient: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)'
+    },
+    {
       id: 'utilities/qr',
       title: t('qr.title'),
       desc: t('qr.desc'),

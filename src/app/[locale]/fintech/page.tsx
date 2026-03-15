@@ -10,6 +10,13 @@ export default function FintechPage() {
 
   const tools = [
     {
+      id: 'fintech/tax33',
+      title: boardT('tax33.title'),
+      desc: boardT('tax33.desc'),
+      icon: '🧾',
+      gradient: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+    },
+    {
       id: 'fintech/percent',
       title: boardT('percent.title'),
       desc: boardT('percent.desc'),

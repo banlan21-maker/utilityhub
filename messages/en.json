@@ -38,6 +38,10 @@
   },
   "UtilitiesBoard": {
     "subtitle": "A collection of various extra tools you need in your daily life.",
+    "area": {
+      "title": "Pyeong ↔ ㎡ Converter",
+      "desc": "Instantly convert between pyeong and square meters with apartment size presets (59㎡, 84㎡, etc.) and adjustable decimal precision."
+    },
     "qr": {
       "title": "QR Code Generator",
       "desc": "Converts URLs or text into a high-resolution QR code instantly available for download."
@@ -104,6 +108,51 @@
     "interest": {
       "title": "Interest Calculator (Simple & Compound)",
       "desc": "Simulate deposit and investment returns with simple or compound interest. Includes a year-by-year growth chart."
+    },
+    "tax33": {
+      "title": "Freelancer 3.3% Tax Calculator",
+      "desc": "Enter your contract amount to instantly calculate the 3.3% withholding tax and your estimated take-home pay."
+    }
+  },
+  "Tax33": {
+    "title": "🧾 Freelancer 3.3% Tax Calculator",
+    "description": "Calculate your take-home pay after Korean 3.3% withholding tax deduction.",
+    "label": {
+      "gross": "Gross Pay (Contract Amount)",
+      "insurance": "Include 4 Major Insurance Premiums",
+      "insuranceNote": "Regional subscriber estimate — for reference only"
+    },
+    "result": {
+      "breakdown": "Tax Breakdown",
+      "gross": "Gross Pay",
+      "bizTax": "Business Income Tax",
+      "localTax": "Local Income Tax",
+      "withholding": "Total Withholding (3.3%)",
+      "insuranceSection": "4 Major Insurance (Regional Subscriber)",
+      "totalInsurance": "Total Insurance Premiums",
+      "net": "Estimated Net Pay"
+    },
+    "notice": "* This is for reference only. Actual tax may differ based on year-end settlement. Consult a tax professional for precise figures."
+  },
+  "Area": {
+    "title": "📐 Pyeong ↔ ㎡ Converter",
+    "description": "Instantly convert between pyeong and square meters. Includes standard apartment size presets.",
+    "unit": {
+      "pyeong": "py"
+    },
+    "label": {
+      "sqm": "Square Meters (㎡)",
+      "pyeong": "Pyeong (평)",
+      "decimals": "Decimal places:",
+      "presets": "Apartment Size Presets"
+    },
+    "result": {
+      "title": "Conversion Result",
+      "ref": "Reverse reference",
+      "nearest": "Nearest standard size:"
+    },
+    "table": {
+      "title": "Quick Reference Table"
     }
   },
   "Percent": {
