@@ -165,17 +165,17 @@ export default function PetFoodCalculatorPage() {
               <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--primary)' }}>Calculation Results</h2>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
+                <div style={{ padding: '1rem', background: 'var(--surface-hover)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>{t('resultRer')}</p>
-                  <p style={{ fontSize: '1.5rem', fontWeight: 700 }}>{results.rer} <span style={{ fontSize: '1rem', fontWeight: 400 }}>{t('kcalPerDay')}</span></p>
+                  <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>{results.rer} <span style={{ fontSize: '1rem', fontWeight: 400 }}>{t('kcalPerDay')}</span></p>
                 </div>
 
-                <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
+                <div style={{ padding: '1rem', background: 'var(--surface-hover)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>{t('resultDer')}</p>
                   <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary)' }}>{results.der} <span style={{ fontSize: '1rem', fontWeight: 400 }}>{t('kcalPerDay')}</span></p>
                 </div>
 
-                <div style={{ padding: '1.5rem', background: 'var(--primary-gradient)', borderRadius: '12px', color: 'white' }}>
+                <div style={{ padding: '1.5rem', background: 'var(--gradient-main)', borderRadius: '12px', color: 'white', boxShadow: '0 4px 15px rgba(79, 70, 229, 0.3)' }}>
                   <p style={{ fontSize: '1rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('resultFood')}</p>
                   <p style={{ fontSize: '2.5rem', fontWeight: 800 }}>{results.foodAmount} <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>{t('gramPerDay')}</span></p>
                 </div>
