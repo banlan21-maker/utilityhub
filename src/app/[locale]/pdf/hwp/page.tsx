@@ -362,24 +362,46 @@ export default function HwpConverterPage() {
       </div>
 
       <SeoSection
-        title="HWP/HWPX to PDF 변환기란 무엇인가요?"
-        description="HWP(Hangul Word Processor) 파일을 PDF로 변환하는 온라인 도구입니다. 한컴오피스가 설치되지 않은 맥(Mac), 리눅스, 스마트폰 등에서 HWP 파일을 열어야 할 때, 또는 PDF 형태로 제출·공유해야 할 때 즉시 사용할 수 있습니다. 이 HWP PDF 변환기는 파일을 업로드하면 서버에서 변환 후 다운로드 링크를 제공합니다. HWPX(한컴 표준 XML 형식)와 HWP(레거시 바이너리 형식) 모두 지원하며, HWPX 파일이 더 정확한 변환 결과를 제공합니다."
-        useCases={[
-          { icon: '🎓', title: '취업 & 학교 서류 제출', desc: '자기소개서, 이력서, 레포트 등 한글 문서를 PDF로 변환해 이메일 첨부나 온라인 원서 접수 시 제출합니다.' },
-          { icon: '🍎', title: '맥(Mac) & 아이폰 사용자', desc: '한컴오피스가 없는 Apple 기기에서 HWP 파일을 열 수 없을 때, PDF로 변환해 바로 확인합니다.' },
-          { icon: '🤝', title: '문서 공유 & 호환성 확보', desc: '거래처, 동료, 고객에게 문서를 공유할 때 HWP보다 PDF가 어떤 기기에서도 동일하게 열립니다.' },
-          { icon: '📁', title: '문서 아카이빙 & 장기 보관', desc: 'HWP 형식은 버전에 따라 호환 문제가 생길 수 있어, 중요 문서는 PDF로 변환해 장기 보관하는 것이 안전합니다.' },
-        ]}
-        steps={[
-          { step: 'HWP 또는 HWPX 파일 선택', desc: '파일 선택 버튼을 클릭하거나 파일을 드래그 앤 드롭합니다. .hwp, .hwpx 형식 모두 지원합니다.' },
-          { step: '자동 변환 대기', desc: '파일 선택 즉시 서버에서 변환이 시작됩니다. 파일 크기에 따라 수 초에서 수십 초가 소요될 수 있습니다.' },
-          { step: 'PDF 다운로드', desc: '변환 완료 후 PDF 다운로드 버튼이 활성화됩니다. 클릭하면 변환된 PDF 파일이 다운로드됩니다.' },
-        ]}
-        faqs={[
-          { q: 'HWP와 HWPX 중 어느 형식이 더 잘 변환되나요?', a: 'HWPX 형식이 훨씬 정확하게 변환됩니다. HWPX는 국제 표준 XML 기반이라 구조 파악이 용이하고, HWP(바이너리)는 레거시 형식이라 일부 요소가 다르게 표현될 수 있습니다. 한컴오피스 2014 이상에서 "다른 이름으로 저장 → HWPX"로 먼저 변환 후 업로드를 권장합니다.' },
-          { q: '변환된 PDF에서 글꼴이 깨집니다', a: '서버에 설치된 폰트와 원본 문서에서 사용한 폰트가 다를 경우 대체 폰트로 표시됩니다. 주요 한글 폰트(맑은 고딕, 나눔고딕 등)는 기본 지원되며, 특수 폰트는 깨질 수 있습니다.' },
-          { q: '업로드한 파일은 서버에 저장되나요?', a: '변환에 사용된 파일은 처리 후 즉시 삭제되며 서버에 보관되지 않습니다. 개인정보가 포함된 중요 문서도 안심하고 변환하실 수 있습니다.' },
-        ]}
+        ko={{
+          title: "HWP/HWPX to PDF 변환기란 무엇인가요?",
+          description: "HWP(Hangul Word Processor) 파일을 PDF로 변환하는 온라인 도구입니다. 한컴오피스가 설치되지 않은 맥(Mac), 리눅스, 스마트폰 등에서 HWP 파일을 열어야 할 때, 또는 PDF 형태로 제출·공유해야 할 때 즉시 사용할 수 있습니다. 이 HWP PDF 변환기는 파일을 업로드하면 서버에서 변환 후 다운로드 링크를 제공합니다. HWPX(한컴 표준 XML 형식)와 HWP(레거시 바이너리 형식) 모두 지원하며, HWPX 파일이 더 정확한 변환 결과를 제공합니다.",
+          useCases: [
+            { icon: '🎓', title: '취업 & 학교 서류 제출', desc: '자기소개서, 이력서, 레포트 등 한글 문서를 PDF로 변환해 이메일 첨부나 온라인 원서 접수 시 제출합니다.' },
+            { icon: '🍎', title: '맥(Mac) & 아이폰 사용자', desc: '한컴오피스가 없는 Apple 기기에서 HWP 파일을 열 수 없을 때, PDF로 변환해 바로 확인합니다.' },
+            { icon: '🤝', title: '문서 공유 & 호환성 확보', desc: '거래처, 동료, 고객에게 문서를 공유할 때 HWP보다 PDF가 어떤 기기에서도 동일하게 열립니다.' },
+            { icon: '📁', title: '문서 아카이빙 & 장기 보관', desc: 'HWP 형식은 버전에 따라 호환 문제가 생길 수 있어, 중요 문서는 PDF로 변환해 장기 보관하는 것이 안전합니다.' },
+          ],
+          steps: [
+            { step: 'HWP 또는 HWPX 파일 선택', desc: '파일 선택 버튼을 클릭하거나 파일을 드래그 앤 드롭합니다. .hwp, .hwpx 형식 모두 지원합니다.' },
+            { step: '자동 변환 대기', desc: '파일 선택 즉시 서버에서 변환이 시작됩니다. 파일 크기에 따라 수 초에서 수십 초가 소요될 수 있습니다.' },
+            { step: 'PDF 다운로드', desc: '변환 완료 후 PDF 다운로드 버튼이 활성화됩니다. 클릭하면 변환된 PDF 파일이 다운로드됩니다.' },
+          ],
+          faqs: [
+            { q: 'HWP와 HWPX 중 어느 형식이 더 잘 변환되나요?', a: 'HWPX 형식이 훨씬 정확하게 변환됩니다. HWPX는 국제 표준 XML 기반이라 구조 파악이 용이하고, HWP(바이너리)는 레거시 형식이라 일부 요소가 다르게 표현될 수 있습니다. 한컴오피스 2014 이상에서 "다른 이름으로 저장 → HWPX"로 먼저 변환 후 업로드를 권장합니다.' },
+            { q: '변환된 PDF에서 글꼴이 깨집니다', a: '서버에 설치된 폰트와 원본 문서에서 사용한 폰트가 다를 경우 대체 폰트로 표시됩니다. 주요 한글 폰트(맑은 고딕, 나눔고딕 등)는 기본 지원되며, 특수 폰트는 깨질 수 있습니다.' },
+            { q: '업로드한 파일은 서버에 저장되나요?', a: '변환에 사용된 파일은 처리 후 즉시 삭제되며 서버에 보관되지 않습니다. 개인정보가 포함된 중요 문서도 안심하고 변환하실 수 있습니다.' },
+          ],
+        }}
+        en={{
+          title: "What is an HWP/HWPX to PDF Converter?",
+          description: "An online tool that converts HWP (Hangul Word Processor) files to PDF. Ideal for Mac, Linux, or smartphone users without Hancom Office installed who need to open or submit HWP documents as PDFs. Both HWPX (Hancom standard XML format) and HWP (legacy binary format) are supported; HWPX produces more accurate conversion results.",
+          useCases: [
+            { icon: '🎓', title: 'Job Applications & Academic Submissions', desc: 'Convert cover letters, resumes, and reports written in Hancom to PDF for email attachments or online application portals.' },
+            { icon: '🍎', title: 'Mac & iPhone Users', desc: "When you can't open an HWP file on an Apple device without Hancom Office, convert it to PDF for instant viewing." },
+            { icon: '🤝', title: 'Document Sharing & Compatibility', desc: 'PDFs open identically on any device, unlike HWP — making them the better choice when sharing with clients, partners, or colleagues.' },
+            { icon: '📁', title: 'Long-Term Document Archiving', desc: 'HWP format can have version compatibility issues over time. Convert important documents to PDF for safe, format-agnostic long-term storage.' },
+          ],
+          steps: [
+            { step: 'Select an HWP or HWPX file', desc: 'Click the file picker or drag and drop a file. Both .hwp and .hwpx formats are supported.' },
+            { step: 'Wait for automatic conversion', desc: 'Conversion starts immediately after file selection. Processing time varies by file size, from a few seconds to up to a minute.' },
+            { step: 'Download the PDF', desc: 'Once conversion is complete, the PDF download button becomes active. Click it to download the converted file.' },
+          ],
+          faqs: [
+            { q: 'Which format converts more accurately — HWP or HWPX?', a: 'HWPX converts much more accurately. HWPX is based on international XML standards, making the structure easy to parse, while HWP is a legacy binary format that can render some elements differently. We recommend saving as HWPX first in Hancom Office 2014 or later before uploading.' },
+            { q: 'Fonts are broken in the converted PDF', a: 'If the fonts used in the original document differ from those installed on the server, fallback fonts are substituted. Major Korean fonts (Malgun Gothic, NanumGothic, etc.) are supported by default; custom or specialized fonts may not render correctly.' },
+            { q: 'Is my uploaded file stored on the server?', a: 'No. Files are deleted immediately after conversion and are never retained on the server. Sensitive documents can be converted with confidence.' },
+          ],
+        }}
       />
     </div>
   );

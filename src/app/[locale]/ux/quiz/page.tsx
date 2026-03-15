@@ -358,25 +358,48 @@ export default function QuizBuilderPage() {
       </div>
 
       <SeoSection
-        title="심리테스트 & 퀴즈 폼 빌더란 무엇인가요?"
-        description="노코드 심리테스트 빌더는 코딩 지식 없이도 MBTI 스타일의 성격 유형 테스트, 직업 적성 검사, 취향 궁합 테스트 등 다양한 유형의 심리 테스트와 퀴즈를 직접 만들고 링크 하나로 공유할 수 있는 도구입니다. 모든 퀴즈 데이터는 URL에 인코딩되어 데이터베이스 없이도 공유 가능하며, 결과 페이지에서 이미지 다운로드와 바이럴 공유가 자동으로 지원됩니다. 마케터, 콘텐츠 크리에이터, 선생님, 인플루언서 등 누구나 활용할 수 있습니다."
-        useCases={[
-          { icon: '📣', title: '마케팅 & 바이럴 콘텐츠', desc: '브랜드 스타일 테스트, 제품 추천 퀴즈 등을 제작해 SNS에 공유하면 높은 인게이지먼트와 자연스러운 브랜드 노출 효과를 만들어냅니다.' },
-          { icon: '🎓', title: '교육 & 학습 퀴즈', desc: '선생님이나 강사가 수업 내용 복습 퀴즈, OX 문제, 단원 마무리 테스트를 빠르게 만들어 학생들에게 링크를 공유합니다.' },
-          { icon: '👥', title: '팀 빌딩 & HR', desc: '신입 직원 온보딩, 팀 성향 파악, 사내 이벤트 참여 설문 등을 심리테스트 형식으로 만들어 흥미롭게 운영합니다.' },
-          { icon: '📱', title: '인플루언서 & 크리에이터', desc: "유튜버, 인스타그래머 등이 팔로워 참여를 유도하는 '당신의 유형은?' 테스트를 코딩 없이 10분 안에 제작합니다." },
-        ]}
-        steps={[
-          { step: '퀴즈 기본 정보 입력', desc: '퀴즈 제목과 설명을 입력합니다. 예: "당신의 개발자 유형은? 🧑‍💻"' },
-          { step: '결과 유형 설정 (2~4가지)', desc: '퀴즈 결과로 나올 유형들을 입력합니다. 각 유형에는 이름, 이모지, 설명을 작성합니다.' },
-          { step: '질문 & 선택지 작성', desc: '최대 10개의 질문을 추가하고, 각 선택지가 어떤 결과 유형에 대응되는지 설정합니다.' },
-          { step: '링크 생성 & 공유', desc: "'퀴즈 링크 생성' 버튼을 누르면 즉시 공유 가능한 URL이 생성됩니다. 카카오, X(트위터) 등으로 바로 공유하세요." },
-        ]}
-        faqs={[
-          { q: '만든 퀴즈는 언제까지 유효한가요?', a: '퀴즈 데이터는 URL 파라미터에 Base64로 인코딩되어 저장됩니다. 서버 데이터베이스를 사용하지 않으므로 생성된 URL만 있으면 영구적으로 접근 가능합니다. 단, URL을 잃어버리면 복구가 불가능하니 반드시 링크를 저장해두세요.' },
-          { q: '응답자 수나 결과 통계를 볼 수 있나요?', a: '현재 버전에서는 통계 기능이 없습니다. 순수하게 퀴즈 제작과 결과 확인에 집중된 도구입니다. 응답 수집이 필요하다면 Google 설문지와 함께 활용하거나, 통계 기능 추가 요청을 피드백 게시판에 남겨주세요.' },
-          { q: '퀴즈 결과 이미지를 다운로드할 수 있나요?', a: '네. 결과 페이지에서 Canvas API로 생성된 1200×630 결과 이미지를 다운로드할 수 있습니다. SNS 업로드용으로 최적화된 비율이며, 퀴즈 제목과 결과 유형이 자동으로 디자인됩니다.' },
-        ]}
+        ko={{
+          title: "심리테스트 & 퀴즈 폼 빌더란 무엇인가요?",
+          description: "노코드 심리테스트 빌더는 코딩 지식 없이도 MBTI 스타일의 성격 유형 테스트, 직업 적성 검사, 취향 궁합 테스트 등 다양한 유형의 심리 테스트와 퀴즈를 직접 만들고 링크 하나로 공유할 수 있는 도구입니다. 모든 퀴즈 데이터는 URL에 인코딩되어 데이터베이스 없이도 공유 가능하며, 결과 페이지에서 이미지 다운로드와 바이럴 공유가 자동으로 지원됩니다. 마케터, 콘텐츠 크리에이터, 선생님, 인플루언서 등 누구나 활용할 수 있습니다.",
+          useCases: [
+            { icon: '📣', title: '마케팅 & 바이럴 콘텐츠', desc: '브랜드 스타일 테스트, 제품 추천 퀴즈 등을 제작해 SNS에 공유하면 높은 인게이지먼트와 자연스러운 브랜드 노출 효과를 만들어냅니다.' },
+            { icon: '🎓', title: '교육 & 학습 퀴즈', desc: '선생님이나 강사가 수업 내용 복습 퀴즈, OX 문제, 단원 마무리 테스트를 빠르게 만들어 학생들에게 링크를 공유합니다.' },
+            { icon: '👥', title: '팀 빌딩 & HR', desc: '신입 직원 온보딩, 팀 성향 파악, 사내 이벤트 참여 설문 등을 심리테스트 형식으로 만들어 흥미롭게 운영합니다.' },
+            { icon: '📱', title: '인플루언서 & 크리에이터', desc: "유튜버, 인스타그래머 등이 팔로워 참여를 유도하는 '당신의 유형은?' 테스트를 코딩 없이 10분 안에 제작합니다." },
+          ],
+          steps: [
+            { step: '퀴즈 기본 정보 입력', desc: '퀴즈 제목과 설명을 입력합니다. 예: "당신의 개발자 유형은? 🧑‍💻"' },
+            { step: '결과 유형 설정 (2~4가지)', desc: '퀴즈 결과로 나올 유형들을 입력합니다. 각 유형에는 이름, 이모지, 설명을 작성합니다.' },
+            { step: '질문 & 선택지 작성', desc: '최대 10개의 질문을 추가하고, 각 선택지가 어떤 결과 유형에 대응되는지 설정합니다.' },
+            { step: '링크 생성 & 공유', desc: "'퀴즈 링크 생성' 버튼을 누르면 즉시 공유 가능한 URL이 생성됩니다. 카카오, X(트위터) 등으로 바로 공유하세요." },
+          ],
+          faqs: [
+            { q: '만든 퀴즈는 언제까지 유효한가요?', a: '퀴즈 데이터는 URL 파라미터에 Base64로 인코딩되어 저장됩니다. 서버 데이터베이스를 사용하지 않으므로 생성된 URL만 있으면 영구적으로 접근 가능합니다. 단, URL을 잃어버리면 복구가 불가능하니 반드시 링크를 저장해두세요.' },
+            { q: '응답자 수나 결과 통계를 볼 수 있나요?', a: '현재 버전에서는 통계 기능이 없습니다. 순수하게 퀴즈 제작과 결과 확인에 집중된 도구입니다. 응답 수집이 필요하다면 Google 설문지와 함께 활용하거나, 통계 기능 추가 요청을 피드백 게시판에 남겨주세요.' },
+            { q: '퀴즈 결과 이미지를 다운로드할 수 있나요?', a: '네. 결과 페이지에서 Canvas API로 생성된 1200×630 결과 이미지를 다운로드할 수 있습니다. SNS 업로드용으로 최적화된 비율이며, 퀴즈 제목과 결과 유형이 자동으로 디자인됩니다.' },
+          ],
+        }}
+        en={{
+          title: "What is a Personality Quiz & Quiz Form Builder?",
+          description: "A no-code quiz builder that lets anyone — without any coding knowledge — create MBTI-style personality tests, career aptitude quizzes, compatibility tests, and more, then share them with a single link. All quiz data is Base64-encoded in the URL, so sharing works without a database. Result pages support image download and viral social sharing out of the box. Perfect for marketers, content creators, teachers, and influencers.",
+          useCases: [
+            { icon: '📣', title: 'Marketing & Viral Content', desc: 'Create brand style tests or product recommendation quizzes and share them on social media to drive high engagement and organic brand exposure.' },
+            { icon: '🎓', title: 'Education & Learning Quizzes', desc: 'Teachers and instructors can quickly build review quizzes, true/false questions, and chapter-end tests to share with students.' },
+            { icon: '👥', title: 'Team Building & HR', desc: 'Use personality test formats for new employee onboarding, team dynamics assessment, or fun company event participation surveys.' },
+            { icon: '📱', title: 'Influencers & Creators', desc: 'YouTubers and Instagrammers can build a "What type are you?" quiz to boost follower engagement — no coding needed, done in 10 minutes.' },
+          ],
+          steps: [
+            { step: 'Enter quiz basics', desc: 'Add a title and description for your quiz. Example: "What type of developer are you? 🧑‍💻"' },
+            { step: 'Define result types (2–4)', desc: 'Create the result types your quiz can output. Give each one a name, emoji, and description.' },
+            { step: 'Write questions & answer choices', desc: 'Add up to 10 questions and map each answer option to a result type.' },
+            { step: 'Generate link & share', desc: "Click 'Generate Quiz Link' to instantly create a shareable URL. Share it via KakaoTalk, X (Twitter), or anywhere else." },
+          ],
+          faqs: [
+            { q: 'How long does the quiz link remain valid?', a: 'Quiz data is Base64-encoded in the URL parameter. Since no server database is used, the link works permanently as long as it exists. Save your link — it cannot be recovered if lost.' },
+            { q: 'Can I view response counts or result statistics?', a: 'The current version does not include analytics. It focuses purely on quiz creation and result viewing. For response collection, combine it with Google Forms, or request the statistics feature on the feedback board.' },
+            { q: 'Can I download an image of the quiz result?', a: 'Yes. The result page generates a 1200×630 image via the Canvas API that can be downloaded. The ratio is optimized for social media uploads, with the quiz title and result type automatically laid out.' },
+          ],
+        }}
       />
     </div>
   );

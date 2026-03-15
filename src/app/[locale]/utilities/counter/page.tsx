@@ -121,24 +121,46 @@ export default function CharacterCounterPage() {
       </div>
 
       <SeoSection
-        title="글자 수 세기 / 바이트 계산기란 무엇인가요?"
-        description="글자 수 세기 & 바이트 계산기는 입력한 텍스트의 문자 개수(공백 포함/제외)와 바이트 용량을 즉시 계산해주는 온라인 도구입니다. 자기소개서, 이력서, SNS 게시물, 블로그 본문, SMS 문자 메시지 등 글자 수 제한이 있는 다양한 상황에서 정확한 분량을 파악하는 데 필수적으로 활용됩니다. 특히 한국어 텍스트는 EUC-KR과 UTF-8 인코딩에 따라 바이트 크기가 달라지기 때문에, 두 가지 기준을 동시에 확인할 수 있는 글자 수 계산기가 필요합니다. 이 도구는 별도 설치 없이 브라우저에서 바로 사용할 수 있으며, 입력과 동시에 실시간으로 결과를 보여줍니다."
-        useCases={[
-          { icon: '📝', title: '자기소개서 & 이력서 작성', desc: '취업 포털의 글자 수 제한(예: 1,000자 이내)에 맞춰 내용을 조절할 때 실시간으로 확인하며 작성할 수 있습니다.' },
-          { icon: '📱', title: 'SNS & 문자 메시지 작성', desc: 'X(트위터) 280자, 인스타그램 캡션, SMS 90바이트 제한 등 플랫폼별 규격에 맞게 텍스트를 다듬을 수 있습니다.' },
-          { icon: '💻', title: '개발 & 데이터베이스 설계', desc: 'VARCHAR(255) 등 DB 컬럼 바이트 제한을 확인하거나, API 요청 본문의 용량을 미리 계산할 때 활용됩니다.' },
-          { icon: '📄', title: '논문 & 보고서 분량 체크', desc: '학술 논문이나 공모전 응모작의 원고지 매수 환산, 최소/최대 글자 수 충족 여부를 손쉽게 확인합니다.' },
-        ]}
-        steps={[
-          { step: '텍스트 붙여넣기 또는 직접 입력', desc: '상단 입력창에 분량을 확인하고 싶은 텍스트를 붙여넣거나 직접 작성합니다.' },
-          { step: '실시간 결과 확인', desc: '입력하는 즉시 공백 포함 글자 수, 공백 제외 글자 수, EUC-KR 바이트, UTF-8 바이트가 자동으로 계산됩니다.' },
-          { step: '기준에 맞게 텍스트 조정', desc: '제한 기준과 현재 분량을 비교하며 텍스트를 추가하거나 줄여 원하는 분량으로 맞춥니다.' },
-        ]}
-        faqs={[
-          { q: '공백 포함과 공백 제외 글자 수, 어떤 기준을 써야 하나요?', a: '자기소개서나 공모전 대부분은 "공백 포함" 기준을 사용합니다. 단, 제출 플랫폼마다 다를 수 있으니 공고문의 안내를 반드시 확인하세요. 이 도구는 두 기준을 동시에 표시하므로 어떤 상황에도 바로 사용할 수 있습니다.' },
-          { q: 'EUC-KR 바이트와 UTF-8 바이트는 왜 다른가요?', a: '한글 한 글자는 EUC-KR에서 2바이트, UTF-8에서 3바이트를 차지합니다. 영문과 숫자는 두 인코딩 모두 1바이트입니다. 오래된 한국 웹사이트나 전통적인 SMS 시스템은 EUC-KR을 사용하는 경우가 많고, 최신 웹 표준은 UTF-8을 사용합니다.' },
-          { q: '입력한 텍스트가 서버에 저장되나요?', a: '아니요. 이 글자 수 계산기는 100% 브라우저에서만 작동하며, 입력한 내용은 외부 서버로 전송되지 않습니다. 민감한 문서 내용도 안심하고 사용하실 수 있습니다.' },
-        ]}
+        ko={{
+          title: "글자 수 세기 / 바이트 계산기란 무엇인가요?",
+          description: "글자 수 세기 & 바이트 계산기는 입력한 텍스트의 문자 개수(공백 포함/제외)와 바이트 용량을 즉시 계산해주는 온라인 도구입니다. 자기소개서, 이력서, SNS 게시물, 블로그 본문, SMS 문자 메시지 등 글자 수 제한이 있는 다양한 상황에서 정확한 분량을 파악하는 데 필수적으로 활용됩니다. 특히 한국어 텍스트는 EUC-KR과 UTF-8 인코딩에 따라 바이트 크기가 달라지기 때문에, 두 가지 기준을 동시에 확인할 수 있는 글자 수 계산기가 필요합니다. 이 도구는 별도 설치 없이 브라우저에서 바로 사용할 수 있으며, 입력과 동시에 실시간으로 결과를 보여줍니다.",
+          useCases: [
+            { icon: '📝', title: '자기소개서 & 이력서 작성', desc: '취업 포털의 글자 수 제한(예: 1,000자 이내)에 맞춰 내용을 조절할 때 실시간으로 확인하며 작성할 수 있습니다.' },
+            { icon: '📱', title: 'SNS & 문자 메시지 작성', desc: 'X(트위터) 280자, 인스타그램 캡션, SMS 90바이트 제한 등 플랫폼별 규격에 맞게 텍스트를 다듬을 수 있습니다.' },
+            { icon: '💻', title: '개발 & 데이터베이스 설계', desc: 'VARCHAR(255) 등 DB 컬럼 바이트 제한을 확인하거나, API 요청 본문의 용량을 미리 계산할 때 활용됩니다.' },
+            { icon: '📄', title: '논문 & 보고서 분량 체크', desc: '학술 논문이나 공모전 응모작의 원고지 매수 환산, 최소/최대 글자 수 충족 여부를 손쉽게 확인합니다.' },
+          ],
+          steps: [
+            { step: '텍스트 붙여넣기 또는 직접 입력', desc: '상단 입력창에 분량을 확인하고 싶은 텍스트를 붙여넣거나 직접 작성합니다.' },
+            { step: '실시간 결과 확인', desc: '입력하는 즉시 공백 포함 글자 수, 공백 제외 글자 수, EUC-KR 바이트, UTF-8 바이트가 자동으로 계산됩니다.' },
+            { step: '기준에 맞게 텍스트 조정', desc: '제한 기준과 현재 분량을 비교하며 텍스트를 추가하거나 줄여 원하는 분량으로 맞춥니다.' },
+          ],
+          faqs: [
+            { q: '공백 포함과 공백 제외 글자 수, 어떤 기준을 써야 하나요?', a: '자기소개서나 공모전 대부분은 "공백 포함" 기준을 사용합니다. 단, 제출 플랫폼마다 다를 수 있으니 공고문의 안내를 반드시 확인하세요. 이 도구는 두 기준을 동시에 표시하므로 어떤 상황에도 바로 사용할 수 있습니다.' },
+            { q: 'EUC-KR 바이트와 UTF-8 바이트는 왜 다른가요?', a: '한글 한 글자는 EUC-KR에서 2바이트, UTF-8에서 3바이트를 차지합니다. 영문과 숫자는 두 인코딩 모두 1바이트입니다. 오래된 한국 웹사이트나 전통적인 SMS 시스템은 EUC-KR을 사용하는 경우가 많고, 최신 웹 표준은 UTF-8을 사용합니다.' },
+            { q: '입력한 텍스트가 서버에 저장되나요?', a: '아니요. 이 글자 수 계산기는 100% 브라우저에서만 작동하며, 입력한 내용은 외부 서버로 전송되지 않습니다. 민감한 문서 내용도 안심하고 사용하실 수 있습니다.' },
+          ],
+        }}
+        en={{
+          title: "What is a Character & Byte Counter?",
+          description: "The Character & Byte Counter is an online tool that instantly calculates the number of characters (with and without spaces) and byte size of your text in both EUC-KR and UTF-8 encodings. It's essential for writing job applications, social media posts, SMS messages, and any content with character limits. Since Korean text differs in byte size between EUC-KR (2 bytes/char) and UTF-8 (3 bytes/char), this tool lets you check both standards at once — all processed instantly in your browser.",
+          useCases: [
+            { icon: '📝', title: 'Job Applications & Resumes', desc: 'Monitor your character count in real time while writing job application essays with limits like "within 1,000 characters."' },
+            { icon: '📱', title: 'Social Media & SMS', desc: 'Fit your posts within platform limits — X (Twitter) 280 chars, Instagram captions, SMS 160-char limits — before hitting send.' },
+            { icon: '💻', title: 'Development & Database Design', desc: 'Verify byte sizes for VARCHAR column limits or calculate API request body sizes before sending.' },
+            { icon: '📄', title: 'Essays & Reports', desc: 'Easily check minimum/maximum character requirements for academic papers, contest entries, or official submissions.' },
+          ],
+          steps: [
+            { step: 'Paste or type your text', desc: 'Paste or type the text you want to measure into the input field.' },
+            { step: 'View real-time results', desc: 'Characters with spaces, without spaces, EUC-KR bytes, and UTF-8 bytes are calculated instantly as you type.' },
+            { step: 'Adjust your text', desc: 'Add or trim your text while watching the count to hit your target length precisely.' },
+          ],
+          faqs: [
+            { q: 'Should I use character count with or without spaces?', a: 'Most job application portals use "with spaces" as the standard. Always check the submission guidelines for the specific platform. This tool shows both simultaneously.' },
+            { q: 'Why are EUC-KR and UTF-8 byte counts different?', a: 'Korean characters take 2 bytes in EUC-KR and 3 bytes in UTF-8. ASCII/English characters are 1 byte in both. Older Korean websites and some SMS systems use EUC-KR; modern web standards use UTF-8.' },
+            { q: 'Is my text sent to a server?', a: 'No. This counter runs 100% in your browser. Nothing is transmitted to any server, so you can safely paste sensitive document content.' },
+          ],
+        }}
       />
     </div>
   );

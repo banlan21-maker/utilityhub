@@ -1,21 +1,31 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale } from 'next-intl';
 
 export interface FaqItem {
   q: string;
   a: string;
 }
 
-export interface SeoSectionProps {
-  title: string;           // H2: "XXX이란?"
-  description: string;     // intro paragraph
+export interface SeoContent {
+  title: string;
+  description: string;
   useCases: { icon: string; title: string; desc: string }[];
   steps: { step: string; desc: string }[];
   faqs: FaqItem[];
 }
 
-export default function SeoSection({ title, description, useCases, steps, faqs }: SeoSectionProps) {
+export interface SeoSectionProps {
+  ko: SeoContent;
+  en: SeoContent;
+}
+
+export default function SeoSection({ ko, en }: SeoSectionProps) {
+  const locale = useLocale();
+  const c = locale === 'ko' ? ko : en;
+  const isKo = locale === 'ko';
+
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const h2Style: React.CSSProperties = {
@@ -34,15 +44,15 @@ export default function SeoSection({ title, description, useCases, steps, faqs }
 
       {/* 1. What is it */}
       <div>
-        <h2 style={h2Style}>{title}</h2>
-        <p style={pStyle}>{description}</p>
+        <h2 style={h2Style}>{c.title}</h2>
+        <p style={pStyle}>{c.description}</p>
       </div>
 
       {/* 2. Use cases */}
       <div>
-        <h2 style={h2Style}>주요 활용 사례</h2>
+        <h2 style={h2Style}>{isKo ? '주요 활용 사례' : 'Common Use Cases'}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginTop: '0.5rem' }}>
-          {useCases.map((uc, i) => (
+          {c.useCases.map((uc, i) => (
             <div key={i} className="glass-panel" style={{ padding: '1.25rem' }}>
               <div style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>{uc.icon}</div>
               <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem', fontSize: '0.9rem' }}>{uc.title}</div>
@@ -54,9 +64,9 @@ export default function SeoSection({ title, description, useCases, steps, faqs }
 
       {/* 3. How to use */}
       <div>
-        <h2 style={h2Style}>사용 방법</h2>
+        <h2 style={h2Style}>{isKo ? '사용 방법' : 'How to Use'}</h2>
         <ol style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
-          {steps.map((s, i) => (
+          {c.steps.map((s, i) => (
             <li key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
               <span style={{ minWidth: '2rem', height: '2rem', background: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>{i + 1}</span>
               <div>
@@ -70,9 +80,9 @@ export default function SeoSection({ title, description, useCases, steps, faqs }
 
       {/* 4. FAQ accordion */}
       <div>
-        <h2 style={h2Style}>자주 묻는 질문 (FAQ)</h2>
+        <h2 style={h2Style}>{isKo ? '자주 묻는 질문 (FAQ)' : 'Frequently Asked Questions'}</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-          {faqs.map((faq, i) => (
+          {c.faqs.map((faq, i) => (
             <div key={i} className="glass-panel" style={{ overflow: 'hidden' }}>
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}

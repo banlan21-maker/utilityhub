@@ -232,24 +232,46 @@ export default function RedactPage() {
       </div>
 
       <SeoSection
-        title="개인정보 마스킹 도구란 무엇인가요?"
-        description="개인정보 마스킹 도구는 텍스트 안에 포함된 이메일 주소, 전화번호, 주민등록번호, 신용카드 번호, IP 주소, 이름 등의 민감한 개인정보를 자동으로 검출하고 일부를 별표(*)로 대체하는 온라인 개인정보 비식별화 도구입니다. 문서, 로그 파일, 고객 데이터, 스크린샷 텍스트 등을 공유하기 전에 개인정보를 안전하게 마스킹할 수 있습니다. 모든 처리는 브라우저에서만 이루어지며 서버에 데이터가 전송되지 않으므로 민감한 정보도 안심하고 사용할 수 있습니다."
-        useCases={[
-          { icon: '📋', title: '고객 데이터 공유 전 비식별화', desc: '고객 정보가 담긴 CSV, 스프레드시트 내용을 동료나 외부 업체와 공유하기 전 개인정보를 마스킹합니다.' },
-          { icon: '🐛', title: '개발 로그 & 에러 리포트 공유', desc: '서버 로그나 에러 메시지에 포함된 사용자 이메일, IP 주소를 마스킹한 후 개발팀이나 GitHub에 공유합니다.' },
-          { icon: '📝', title: '스크린샷 & 문서 공유', desc: '블로그 포스팅, SNS, 발표 자료에 스크린샷을 삽입할 때 개인정보가 노출되지 않도록 사전에 마스킹합니다.' },
-          { icon: '🏢', title: 'GDPR & 개인정보보호법 대응', desc: '테스트 환경에서 실제 사용자 데이터 대신 마스킹된 데이터를 사용해 개인정보 규정을 준수합니다.' },
-        ]}
-        steps={[
-          { step: '마스킹 규칙 선택', desc: '왼쪽 패널에서 이메일, 전화번호, 주민번호, 카드번호, IP, 한국 이름 중 마스킹할 항목을 체크합니다.' },
-          { step: '텍스트 붙여넣기', desc: '오른쪽 상단 입력창에 마스킹할 텍스트를 붙여넣거나 직접 입력합니다.' },
-          { step: '결과 확인 및 복사', desc: '하단 출력창에 마스킹 결과가 즉시 표시됩니다. 노란색으로 강조된 부분이 마스킹된 항목이며, 복사 버튼으로 클립보드에 저장합니다.' },
-        ]}
-        faqs={[
-          { q: '입력한 텍스트가 서버로 전송되나요?', a: '전혀 그렇지 않습니다. 이 개인정보 마스킹 도구는 100% 클라이언트 사이드(브라우저)에서만 동작하며, 입력한 텍스트는 어떠한 서버에도 전송되지 않습니다. 완전히 오프라인 환경에서도 사용할 수 있습니다.' },
-          { q: '마스킹 규칙을 부분적으로만 적용할 수 있나요?', a: '네. 왼쪽 패널의 체크박스에서 원하는 규칙만 선택하면 됩니다. 예를 들어 이메일만 마스킹하고 전화번호는 그대로 두고 싶다면 이메일 규칙만 체크하세요.' },
-          { q: '한국 이름 마스킹이 일부 단어를 잘못 처리합니다', a: '한국 이름 마스킹은 2~3글자 한글을 패턴으로 인식하므로, 일반 한국어 단어와 구분이 어려울 수 있습니다. 이름이 포함된 텍스트는 결과를 꼭 검토 후 사용하세요.' },
-        ]}
+        ko={{
+          title: "개인정보 마스킹 도구란 무엇인가요?",
+          description: "개인정보 마스킹 도구는 텍스트 안에 포함된 이메일 주소, 전화번호, 주민등록번호, 신용카드 번호, IP 주소, 이름 등의 민감한 개인정보를 자동으로 검출하고 일부를 별표(*)로 대체하는 온라인 개인정보 비식별화 도구입니다. 문서, 로그 파일, 고객 데이터, 스크린샷 텍스트 등을 공유하기 전에 개인정보를 안전하게 마스킹할 수 있습니다. 모든 처리는 브라우저에서만 이루어지며 서버에 데이터가 전송되지 않으므로 민감한 정보도 안심하고 사용할 수 있습니다.",
+          useCases: [
+            { icon: '📋', title: '고객 데이터 공유 전 비식별화', desc: '고객 정보가 담긴 CSV, 스프레드시트 내용을 동료나 외부 업체와 공유하기 전 개인정보를 마스킹합니다.' },
+            { icon: '🐛', title: '개발 로그 & 에러 리포트 공유', desc: '서버 로그나 에러 메시지에 포함된 사용자 이메일, IP 주소를 마스킹한 후 개발팀이나 GitHub에 공유합니다.' },
+            { icon: '📝', title: '스크린샷 & 문서 공유', desc: '블로그 포스팅, SNS, 발표 자료에 스크린샷을 삽입할 때 개인정보가 노출되지 않도록 사전에 마스킹합니다.' },
+            { icon: '🏢', title: 'GDPR & 개인정보보호법 대응', desc: '테스트 환경에서 실제 사용자 데이터 대신 마스킹된 데이터를 사용해 개인정보 규정을 준수합니다.' },
+          ],
+          steps: [
+            { step: '마스킹 규칙 선택', desc: '왼쪽 패널에서 이메일, 전화번호, 주민번호, 카드번호, IP, 한국 이름 중 마스킹할 항목을 체크합니다.' },
+            { step: '텍스트 붙여넣기', desc: '오른쪽 상단 입력창에 마스킹할 텍스트를 붙여넣거나 직접 입력합니다.' },
+            { step: '결과 확인 및 복사', desc: '하단 출력창에 마스킹 결과가 즉시 표시됩니다. 노란색으로 강조된 부분이 마스킹된 항목이며, 복사 버튼으로 클립보드에 저장합니다.' },
+          ],
+          faqs: [
+            { q: '입력한 텍스트가 서버로 전송되나요?', a: '전혀 그렇지 않습니다. 이 개인정보 마스킹 도구는 100% 클라이언트 사이드(브라우저)에서만 동작하며, 입력한 텍스트는 어떠한 서버에도 전송되지 않습니다. 완전히 오프라인 환경에서도 사용할 수 있습니다.' },
+            { q: '마스킹 규칙을 부분적으로만 적용할 수 있나요?', a: '네. 왼쪽 패널의 체크박스에서 원하는 규칙만 선택하면 됩니다. 예를 들어 이메일만 마스킹하고 전화번호는 그대로 두고 싶다면 이메일 규칙만 체크하세요.' },
+            { q: '한국 이름 마스킹이 일부 단어를 잘못 처리합니다', a: '한국 이름 마스킹은 2~3글자 한글을 패턴으로 인식하므로, 일반 한국어 단어와 구분이 어려울 수 있습니다. 이름이 포함된 텍스트는 결과를 꼭 검토 후 사용하세요.' },
+          ],
+        }}
+        en={{
+          title: "What is a Personal Data Masking Tool?",
+          description: "A personal data masking tool automatically detects sensitive information in text — including email addresses, phone numbers, social security numbers, credit card numbers, IP addresses, and names — and replaces part of each with asterisks (*) to anonymize it. Use it to safely mask personal data in documents, log files, customer records, and screenshot text before sharing. All processing happens entirely in the browser; no data is ever sent to a server.",
+          useCases: [
+            { icon: '📋', title: 'De-identify Customer Data Before Sharing', desc: 'Mask personal information in CSV files and spreadsheet content before sharing with colleagues or external vendors.' },
+            { icon: '🐛', title: 'Share Dev Logs & Error Reports', desc: 'Strip user emails and IP addresses from server logs and error messages before sharing with the dev team or posting to GitHub.' },
+            { icon: '📝', title: 'Screenshots & Document Sharing', desc: 'Pre-mask any personal data before inserting screenshots into blog posts, social media, or presentations to prevent unintended exposure.' },
+            { icon: '🏢', title: 'GDPR & Privacy Law Compliance', desc: 'Use masked data instead of real user data in test environments to maintain compliance with privacy regulations.' },
+          ],
+          steps: [
+            { step: 'Select masking rules', desc: 'Check the rules you want to apply in the left panel: email, phone, SSN, credit card, IP address, Korean name.' },
+            { step: 'Paste your text', desc: 'Paste or type the text you want to mask into the input area on the right.' },
+            { step: 'Review & copy result', desc: 'The masked output appears instantly. Yellow highlights show what was masked. Click the copy button to save it to your clipboard.' },
+          ],
+          faqs: [
+            { q: 'Is my input text sent to a server?', a: 'Not at all. This tool runs 100% client-side in your browser. Your text is never transmitted to any server and can even be used completely offline.' },
+            { q: 'Can I apply only some masking rules?', a: 'Yes. Use the checkboxes in the left panel to select only the rules you want. For example, to mask only emails while keeping phone numbers intact, check only the email rule.' },
+            { q: 'Korean name masking is incorrectly flagging some words', a: 'Korean name masking uses a 2–3 character Hangul pattern, which can be hard to distinguish from ordinary Korean words. Always review the output carefully when masking text that contains names.' },
+          ],
+        }}
       />
     </div>
   );
