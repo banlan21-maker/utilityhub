@@ -51,6 +51,13 @@ export default function FintechPage() {
       icon: '🪙',
       gradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
     },
+    {
+      id: 'fintech/net-pay',
+      title: boardT('net-pay.title'),
+      desc: boardT('net-pay.desc'),
+      icon: '💵',
+      gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+    },
   ];
 
   return (

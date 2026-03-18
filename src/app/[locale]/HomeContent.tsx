@@ -8,7 +8,7 @@ import styles from './page.module.css';
 const CATEGORIES = [
   { id: 'performance', icon: '🚀', color: '#ef4444', count: 4, hot: false, popular: false },
   { id: 'pdf',         icon: '📄', color: '#10b981', count: 4, hot: false, popular: false },
-  { id: 'fintech',     icon: '💳', color: '#3b82f6', count: 5, hot: false, popular: true  },
+  { id: 'fintech',     icon: '💳', color: '#3b82f6', count: 7, hot: false, popular: true  },
   { id: 'productivity',icon: '⚡', color: '#f59e0b', count: 4, hot: false, popular: true  },
   { id: 'ux',          icon: '✨', color: '#ec4899', count: 4, hot: false, popular: false },
   { id: 'ai',          icon: '🤖', color: '#8b5cf6', count: 3, hot: true,  popular: false },
