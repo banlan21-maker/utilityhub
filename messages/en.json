@@ -103,6 +103,10 @@
     "gpa": {
       "title": "GPA Converter",
       "desc": "Convert between 4.5, 4.3, and 100-point GPA scales. Enter your courses and see overall, major, and liberal arts GPA automatically."
+    },
+    "unit-converter": {
+      "title": "Unit Converter",
+      "desc": "Convert length, weight, temperature, speed, data, and 10 more categories instantly in your browser."
     }
   },
   "TextCounter": {

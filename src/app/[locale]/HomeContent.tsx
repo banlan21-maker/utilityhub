@@ -14,7 +14,7 @@ const CATEGORIES = [
   { id: 'ai',          icon: '🤖', color: '#8b5cf6', count: 3, hot: true,  popular: false },
   { id: 'lifestyle',   icon: '🌿', color: '#22c55e', count: 5, hot: false, popular: false },
   { id: 'security',    icon: '🛡️', color: '#6366f1', count: 4, hot: false, popular: false },
-  { id: 'utilities',   icon: '🛠️', color: '#14b8a6', count: 7, hot: false, popular: true  },
+  { id: 'utilities',   icon: '🛠️', color: '#14b8a6', count: 8, hot: false, popular: true  },
   { id: 'dev',         icon: '💻', color: '#f97316', count: 4, hot: true,  popular: false },
 ] as const;
 

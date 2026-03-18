@@ -57,6 +57,13 @@ export default function UtilitiesDashboardPage() {
       desc: t('gpa.desc'),
       icon: '📊',
       gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
+    },
+    {
+      id: 'utilities/unit-converter',
+      title: t('unit-converter.title'),
+      desc: t('unit-converter.desc'),
+      icon: '⚖️',
+      gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)'
     }
   ];
 
