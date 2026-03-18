@@ -107,6 +107,10 @@
     "unit-converter": {
       "title": "Unit Converter",
       "desc": "Convert length, weight, temperature, speed, data, and 10 more categories instantly in your browser."
+    },
+    "image-compressor": {
+      "title": "Image Compressor",
+      "desc": "Compress JPG, PNG, WebP images in your browser. No upload, no server — 100% private."
     }
   },
   "TextCounter": {

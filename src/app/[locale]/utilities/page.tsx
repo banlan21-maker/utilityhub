@@ -64,6 +64,13 @@ export default function UtilitiesDashboardPage() {
       desc: t('unit-converter.desc'),
       icon: '⚖️',
       gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)'
+    },
+    {
+      id: 'utilities/image-compressor',
+      title: t('image-compressor.title'),
+      desc: t('image-compressor.desc'),
+      icon: '🗜️',
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
     }
   ];
 

@@ -107,6 +107,10 @@
     "unit-converter": {
       "title": "단위 변환기",
       "desc": "길이, 무게, 온도, 속도, 데이터 등 10개 카테고리의 단위를 브라우저에서 즉시 환산합니다."
+    },
+    "image-compressor": {
+      "title": "이미지 압축기",
+      "desc": "JPG, PNG, WebP 이미지를 브라우저에서 직접 압축합니다. 서버 업로드 없이 100% 개인정보 보호."
     }
   },
   "TextCounter": {
