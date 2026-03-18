@@ -29,9 +29,12 @@ export default async function LocaleLayout({
   const messages = await getMessages();
  
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+        <script dangerouslySetInnerHTML={{__html: `
+(function(){try{var s=localStorage.getItem('utilhub-theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
+        `}} />
       </head>
       <body>
         <NextIntlClientProvider messages={messages}>

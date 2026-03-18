@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import {Link} from '@/i18n/routing';
 import LanguageSwitcher from './LanguageSwitcher';
 import {useTranslations} from 'next-intl';
@@ -7,6 +8,21 @@ import {useTranslations} from 'next-intl';
 export default function Header() {
   const t = useTranslations('Index');
   const nav = useTranslations('Navigation');
+
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('utilhub-theme');
+    const dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDark(dark);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
+    localStorage.setItem('utilhub-theme', next ? 'dark' : 'light');
+  };
 
   return (
     <header style={{
@@ -45,6 +61,34 @@ export default function Header() {
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <button
+            onClick={toggleTheme}
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            style={{
+              padding: '0.45rem 0.6rem',
+              fontSize: '1rem',
+              lineHeight: 1,
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--border)',
+              background: 'var(--surface)',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s',
+            }}
+            onMouseOver={e => {
+              e.currentTarget.style.background = 'var(--surface-hover)';
+              e.currentTarget.style.borderColor = 'var(--primary)';
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.background = 'var(--surface)';
+              e.currentTarget.style.borderColor = 'var(--border)';
+            }}
+          >
+            {isDark ? '☀️' : '🌙'}
+          </button>
           <Link
             href="/feedback"
             style={{

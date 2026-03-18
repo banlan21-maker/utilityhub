@@ -1,0 +1,329 @@
+/* ============================================================
+   LEGAL PAGES — Privacy Policy & Terms of Service
+   Shared styles for theutilhub.com legal documents
+   ============================================================ */
+
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 0 5rem;
+}
+
+/* ── Back navigation link ── */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  text-decoration: none;
+  margin-bottom: 2.5rem;
+  padding: 0.4rem 0.85rem 0.4rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--surface);
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.backLink:hover {
+  color: #f97316;
+  border-color: rgba(249, 115, 22, 0.4);
+  background: rgba(249, 115, 22, 0.04);
+}
+.backArrow {
+  font-style: normal;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ── Page header ── */
+.pageHeader {
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.pageIconRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.pageIcon {
+  font-size: 2.75rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+.pageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.pageTitle {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.pageTitleAccent {
+  color: #f97316;
+}
+
+.pageSubtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.lastUpdated {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--surface-hover);
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+}
+
+/* ── Intro paragraph ── */
+.intro {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border-left: 3px solid #f97316;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+/* ── Sections ── */
+.section {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1.5px solid var(--border);
+}
+.sectionNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  background: #f97316;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Body text ── */
+.body {
+  color: var(--text-secondary);
+  line-height: 1.78;
+  font-size: 0.94rem;
+  margin-bottom: 0.85rem;
+}
+
+/* ── Sub-headings within a section ── */
+.subheading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 1.5rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.subheading::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: #f97316;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+/* ── Bullet lists ── */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.listItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  line-height: 1.65;
+}
+.listItem::before {
+  content: '▸';
+  color: #f97316;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-top: 0.22rem;
+}
+
+/* ── Cookie callout box ── */
+.callout {
+  background: rgba(249, 115, 22, 0.05);
+  border: 1.5px solid rgba(249, 115, 22, 0.25);
+  border-left: 4px solid #f97316;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0 1.25rem;
+}
+.calloutLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #f97316;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.calloutBody {
+  font-size: 0.91rem;
+  color: var(--text-secondary);
+  line-height: 1.72;
+}
+
+/* ── Disclaimer / Warning box (ToS Section 4) ── */
+.disclaimer {
+  background: rgba(239, 68, 68, 0.04);
+  border: 1.5px solid rgba(239, 68, 68, 0.22);
+  border-left: 4px solid #ef4444;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1.5rem;
+  margin: 1.25rem 0;
+}
+.disclaimerLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ef4444;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.disclaimerWarning {
+  font-size: 0.91rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.65;
+  margin-bottom: 0.75rem;
+}
+.disclaimerBody {
+  font-size: 0.91rem;
+  color: var(--text-secondary);
+  line-height: 1.72;
+}
+.disclaimerFinal {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ef4444;
+  line-height: 1.6;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+/* ── Inline links ── */
+.link {
+  color: #f97316;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.15s;
+}
+.link:hover {
+  opacity: 0.75;
+}
+
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 3rem 0;
+}
+
+/* ── Table of contents (optional navigation) ── */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 3rem;
+}
+.tocTitle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+.tocList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.tocItem a {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.tocItem a:hover {
+  color: #f97316;
+}
+
+/* ── Dark mode refinements ── */
+[data-theme='dark'] .callout {
+  background: rgba(249, 115, 22, 0.08);
+}
+[data-theme='dark'] .disclaimer {
+  background: rgba(239, 68, 68, 0.07);
+}
+[data-theme='dark'] .intro {
+  background: rgba(255, 255, 255, 0.03);
+}

@@ -1,49 +1,50 @@
-import {useTranslations} from 'next-intl';
-import {Link} from '@/i18n/routing';
-import styles from './page.module.css';
-import {routing} from '@/i18n/routing';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import HomeContent from './HomeContent';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Index' });
+
+  const BASE = 'https://theutilhub.com';
+  const canonical = locale === 'ko' ? BASE : `${BASE}/${locale}`;
+
+  return {
+    title: `Utility Hub — ${t('slogan')}`,
+    description: t('metaDescription'),
+    metadataBase: new URL(BASE),
+    alternates: {
+      canonical,
+      languages: {
+        ko: BASE,
+        en: `${BASE}/en`,
+      },
+    },
+    openGraph: {
+      title: 'Utility Hub',
+      description: t('metaDescription'),
+      url: canonical,
+      siteName: 'Utility Hub',
+      locale: locale === 'ko' ? 'ko_KR' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Utility Hub',
+      description: t('metaDescription'),
+    },
+    keywords: [
+      'utility hub', 'free online tools', 'browser tools', 'no login tools',
+      'PDF converter', 'QR code generator', 'fintech calculator', 'developer tools',
+      'privacy tools', 'theutilhub', 'theutilhub.com',
+    ],
+  };
+}
 
 export default function HomePage() {
-  const t = useTranslations('Index');
-  const catT = useTranslations('Categories');
-
-  const categories = [
-    { id: 'performance', name: catT('performance'), icon: '🚀', color: '#ff4757' },
-    { id: 'pdf', name: catT('pdf'), icon: '📄', color: '#2ed573' },
-    { id: 'fintech', name: catT('fintech'), icon: '💳', color: '#1e90ff' },
-    { id: 'productivity', name: catT('productivity'), icon: '⚡', color: '#ffa502' },
-    { id: 'ux', name: catT('ux'), icon: '✨', color: '#ff6b81' },
-    { id: 'ai', name: catT('ai'), icon: '🤖', color: '#a4b0be' },
-    { id: 'lifestyle', name: catT('lifestyle'), icon: '🌿', color: '#26de81' },
-    { id: 'security', name: catT('security'), icon: '🛡️', color: '#4b7bec' },
-    { id: 'utilities', name: catT('utilities'), icon: '🛠️', color: '#3742fa' },
-    { id: 'dev', name: catT('dev'), icon: '💻', color: '#7c3aed' },
-  ];
-
-  return (
-    <div>
-      <header className={`${styles.hero} animate-fade-in`} style={{ padding: '2rem 0', marginBottom: 'var(--section-gap)' }}>
-        <h1 className={styles.title}>
-          {t('title')}
-        </h1>
-        <p className={styles.description}>
-          {t('description')}
-        </p>
-      </header>
-
-      <div className={styles.grid}>
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            href={`/${category.id}` as any} // Path configured in next-intl routing
-            className={`${styles.card} glass-panel`}
-            style={{ '--glow-color': category.color } as React.CSSProperties}
-          >
-            <span className={styles.icon}>{category.icon}</span>
-            <h2>{category.name}</h2>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
+  return <HomeContent />;
 }
