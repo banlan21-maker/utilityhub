@@ -71,6 +71,13 @@ export default function UtilitiesDashboardPage() {
       desc: t('image-compressor.desc'),
       icon: '🗜️',
       gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
+    },
+    {
+      id: 'utilities/image-resizer',
+      title: t('image-resizer.title'),
+      desc: t('image-resizer.desc'),
+      icon: '✂️',
+      gradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)'
     }
   ];
 

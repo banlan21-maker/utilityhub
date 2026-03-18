@@ -111,6 +111,10 @@
     "image-compressor": {
       "title": "Image Compressor",
       "desc": "Compress JPG, PNG, WebP images in your browser. No upload, no server — 100% private."
+    },
+    "image-resizer": {
+      "title": "Image Resizer & Cropper",
+      "desc": "Crop and resize images with SNS presets (Instagram, YouTube, OG). Rotate, flip, and export as JPG/PNG/WebP."
     }
   },
   "TextCounter": {

@@ -111,6 +111,10 @@
     "image-compressor": {
       "title": "이미지 압축기",
       "desc": "JPG, PNG, WebP 이미지를 브라우저에서 직접 압축합니다. 서버 업로드 없이 100% 개인정보 보호."
+    },
+    "image-resizer": {
+      "title": "이미지 리사이저 & 크롭",
+      "desc": "SNS 규격 프리셋(인스타, 유튜브, OG)으로 빠른 크롭. 회전·반전 후 JPG/PNG/WebP로 저장."
     }
   },
   "TextCounter": {
