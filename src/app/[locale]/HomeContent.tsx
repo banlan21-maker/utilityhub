@@ -245,9 +245,9 @@ export default function HomeContent() {
                   </Link>
                 </li>
                 <li>
-                  <Link href={'/sitemap.xml' as any} className={styles.footerLink}>
+                  <a href="/sitemap.xml" className={styles.footerLink}>
                     {t('sitemap')}
-                  </Link>
+                  </a>
                 </li>
                 <li>
                   <Link href={'/feedback' as any} className={styles.footerLink}>
