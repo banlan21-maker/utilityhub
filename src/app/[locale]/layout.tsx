@@ -3,6 +3,7 @@ import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import Header from '../components/Header';
+import Script from 'next/script';
 import '../globals.css';
 
 export const metadata = {
@@ -37,6 +38,12 @@ export default async function LocaleLayout({
         `}} />
       </head>
       <body>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9517850144901016"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <NextIntlClientProvider messages={messages}>
           <Header />
           <div className="layout-container">
