@@ -78,6 +78,13 @@ export default function UtilitiesDashboardPage() {
       desc: t('image-resizer.desc'),
       icon: '✂️',
       gradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)'
+    },
+    {
+      id: 'utilities/smart-excel-mapper',
+      title: t('smart-excel-mapper.title'),
+      desc: t('smart-excel-mapper.desc'),
+      icon: '📊',
+      gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)'
     }
   ];
 

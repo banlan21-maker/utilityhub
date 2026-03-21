@@ -36,6 +36,20 @@ export default function LifestyleDashboardPage() {
       desc: t('korean-age.desc'),
       icon: '🎂',
       gradient: 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)'
+    },
+    {
+      id: 'lifestyle/teto-egen-test',
+      title: t('teto-egen-test.title'),
+      desc: t('teto-egen-test.desc'),
+      icon: '🧬',
+      gradient: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)'
+    },
+    {
+      id: 'lifestyle/sea-mbti',
+      title: t('sea-mbti.title'),
+      desc: t('sea-mbti.desc'),
+      icon: '🌊',
+      gradient: 'linear-gradient(135deg, #0ea5e9 0%, #2dd4bf 100%)'
     }
   ];
 

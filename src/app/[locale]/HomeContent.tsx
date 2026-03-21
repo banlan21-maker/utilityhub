@@ -31,6 +31,7 @@ const ALL_TOOLS = [
   { id: 'utilities/unit-converter', category: 'utilities', icon: '⚖️', titleKey: 'UtilitiesBoard.unit-converter.title', descKey: 'UtilitiesBoard.unit-converter.desc' },
   { id: 'utilities/image-compressor', category: 'utilities', icon: '🗜️', titleKey: 'UtilitiesBoard.image-compressor.title', descKey: 'UtilitiesBoard.image-compressor.desc' },
   { id: 'utilities/image-resizer', category: 'utilities', icon: '✂️', titleKey: 'UtilitiesBoard.image-resizer.title', descKey: 'UtilitiesBoard.image-resizer.desc' },
+  { id: 'utilities/smart-excel-mapper', category: 'utilities', icon: '📊', titleKey: 'UtilitiesBoard.smart-excel-mapper.title', descKey: 'UtilitiesBoard.smart-excel-mapper.desc' },
 
   // Fintech
   { id: 'fintech/tax33', category: 'fintech', icon: '🧾', titleKey: 'FintechBoard.tax33.title', descKey: 'FintechBoard.tax33.desc' },
@@ -61,6 +62,7 @@ const ALL_TOOLS = [
   { id: 'ux/color', category: 'ux', icon: '🎨', titleKey: 'UxBoard.color.title', descKey: 'UxBoard.color.desc' },
   { id: 'ux/font', category: 'ux', icon: '🔤', titleKey: 'UxBoard.font.title', descKey: 'UxBoard.font.desc' },
   { id: 'ux/logo', category: 'ux', icon: '🎭', titleKey: 'UxBoard.logo.title', descKey: 'UxBoard.logo.desc' },
+  { id: 'ux/sea-mbti', category: 'ux', icon: '🌊', titleKey: 'UxBoard.sea-mbti.title', descKey: 'UxBoard.sea-mbti.desc' },
   { id: 'ux/quiz', category: 'ux', icon: '🎯', titleKey: 'UxBoard.quiz.title', descKey: 'UxBoard.quiz.desc' },
 
   // AI
@@ -76,6 +78,7 @@ const ALL_TOOLS = [
   { id: 'lifestyle/nickname', category: 'lifestyle', icon: '✨', titleKey: 'LifestyleBoard.nickname.title', descKey: 'LifestyleBoard.nickname.desc' },
   { id: 'lifestyle/pet-food', category: 'lifestyle', icon: '🐾', titleKey: 'LifestyleBoard.pet-food.title', descKey: 'LifestyleBoard.pet-food.desc' },
   { id: 'lifestyle/korean-age', category: 'lifestyle', icon: '🎂', titleKey: 'LifestyleBoard.korean-age.title', descKey: 'LifestyleBoard.korean-age.desc' },
+  { id: 'lifestyle/teto-egen-test', category: 'lifestyle', icon: '🧬', titleKey: 'LifestyleBoard.teto-egen-test.title', descKey: 'LifestyleBoard.teto-egen-test.desc' },
 ] as const;
 
 // Calculate tool counts per category automatically

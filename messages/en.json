@@ -140,7 +140,12 @@
     "addMonths": "Months after",
     "result": "Result Date",
     "placeholderDays": "e.g., 100",
-    "isToday": "It's today!"
+    "isToday": "It's today!",
+    "months": "months",
+    "weeks": "weeks",
+    "hours": "hours",
+    "and": "and",
+    "remainingDetails": "Remaining Details"
   },
   "PdfBoard": {
     "subtitle": "Collection of document conversion and editing tools.",
@@ -427,7 +432,7 @@
       "desc": "Compare Google Fonts (Latin & Korean) side by side and copy CSS in one click. Includes a Korean/English Harmony tab."
     },
     "quiz": {
-      "title": "Psychology Test / Quiz Builder",
+      "title": "Quiz / Personality Test Builder",
       "desc": "Enter questions and result types to instantly create a shareable quiz. Viral CTA on the result page drives new users back to Utility Hub."
     }
   },
@@ -527,6 +532,10 @@
     "korean-age": {
       "title": "Korean Date Calculator",
       "desc": "Calculate Korean age, military discharge date, and ovulation cycle all in one tabbed tool."
+    },
+    "sea-mbti": {
+      "title": "Sea Creature MBTI Test",
+      "desc": "Which sea creature matches your personality? Test yourself or even your pets!"
     }
   },
   "SecurityBoard": {
@@ -659,6 +668,10 @@
     "regex": {
       "title": "Regex Tester",
       "desc": "Enter a pattern and test string to see matches highlighted in real time. Includes a cheat sheet sidebar."
+    },
+    "resistor": {
+      "title": "Integrated Resistor Calculator",
+      "desc": "Read color band resistors (4-6 bands) and SMD codes (3-digit, 4-digit, EIA-96) with real-time graphics."
     },
     "password": {
       "title": "Password Generator & Strength Analyzer",
@@ -859,5 +872,208 @@
     "s9Body": "For questions about these Terms of Service, please reach out through our",
     "s9Link": "Feedback form",
     "s9Suffix": "and we will respond as soon as possible."
+  },
+  "SeaMbti": {
+    "title": "Sea Creature MBTI Test",
+    "description": "Find out which sea creature matches your personality through 12 fun questions!",
+    "startBtn": "Start Test",
+    "loading": "Finding your inner sea creature...",
+    "resultIntro": "Your results are in...",
+    "matchTitle": "Best Match For You",
+    "shareTitle": "Share Your Results",
+    "questions": [
+      {
+        "q": "When a stranger visits your home, how do you (or your pet) react?",
+        "a": "\"Who is it?! Are you here to play?!\" Wag tail and greet them first.",
+        "b": "\"Who's that...\" Observe from a safe place first.",
+        "type": "EI"
+      },
+      {
+        "q": "When out in a park or at the beach, what's your style?",
+        "a": "Approach new friends and mingle actively.",
+        "b": "Prefer staying close to owner or enjoying solo time.",
+        "type": "EI"
+      },
+      {
+        "q": "When the owner returns home after going out?",
+        "a": "Jump around excitedly and welcome them intensely.",
+        "b": "Just lift head while lying down or approach slowly.",
+        "type": "EI"
+      },
+      {
+        "q": "When you find a mysterious new object (toy)?",
+        "a": "Sniff and touch it to realistically figure out what it is.",
+        "b": "Bite it or play with it in weird ways using imagination.",
+        "type": "SN"
+      },
+      {
+        "q": "What's your style when taking a walk or walking down the street?",
+        "a": "Prefer the familiar and comfortable path always taken.",
+        "b": "Want to explore new alleys and sniff new bushes every day.",
+        "type": "SN"
+      },
+      {
+        "q": "When you see yourself in a mirror?",
+        "a": "\"That's fake, right?\" Coolly ignore because there's no scent.",
+        "b": "Tilt head in wonder or try to look behind the mirror.",
+        "type": "SN"
+      },
+      {
+        "q": "When the owner is depressed or crying?",
+        "a": "Glance over but keep doing own thing, thinking 'They'll be fine'.",
+        "b": "Approach to lick face or quietly lean beside for comfort.",
+        "type": "TF"
+      },
+      {
+        "q": "What's the most powerful reward to make you listen?",
+        "a": "\"Delicious treats or clear rewards!\" Need a clear purpose.",
+        "b": "\"Warm praise and intense petting!\" Emotional connection is key.",
+        "type": "TF"
+      },
+      {
+        "q": "How do you express when you want something (treats, walk)?",
+        "a": "Kick the bowl or scratch the door quite directly.",
+        "b": "Put chin on owner's lap and look with the saddest face.",
+        "type": "TF"
+      },
+      {
+        "q": "When it's time for meals or walks?",
+        "a": "Internal alarm clock! Know exactly when and start nagging.",
+        "b": "Eat when given, go when taken out. Don't mind the time much.",
+        "type": "JP"
+      },
+      {
+        "q": "When furniture is rearranged or in a strange environment?",
+        "a": "\"Where's my cushion?!\" Sensitive to changes and takes time to adapt.",
+        "b": "\"New playground!\" Don't mind at all and quickly find a new spot.",
+        "type": "JP"
+      },
+      {
+        "q": "How do you look on a lazy morning?",
+        "a": "Wake up early and wake up the owner as per the routine.",
+        "b": "If owner sleeps in, I roll around and sleep in with them.",
+        "type": "JP"
+      }
+    ],
+    "results": {
+      "ENFP": {
+        "animal": "Dolphin",
+        "title": "Free Spirit",
+        "desc": "High social energy, curiosity king! Adapts anywhere and loves making friends.",
+        "match": "Beluga"
+      },
+      "ISTJ": {
+        "animal": "Sea Turtle",
+        "title": "Planned and Steady",
+        "desc": "A pacifist who loves routines. Sincere and walks their own path silently.",
+        "match": "Penguin"
+      },
+      "ENTP": {
+        "animal": "Sea Lion",
+        "title": "Playful Genius",
+        "desc": "Curious and quirky troublemaker! Explores the world in creative ways.",
+        "match": "Shark"
+      },
+      "ISFJ": {
+        "animal": "Seahorse",
+        "title": "Kind and Delicate",
+        "desc": "Always by owner's side, a caring guardian angel. Sensitive to others' feelings.",
+        "match": "Stingray"
+      },
+      "ESFJ": {
+        "animal": "Humpback Whale",
+        "title": "Angel of the Sea",
+        "desc": "Friend to everyone! Loves peace and values the community.",
+        "match": "Seahorse"
+      },
+      "INTJ": {
+        "animal": "Octopus",
+        "title": "Independent Observer",
+        "desc": "A genius who enjoys solitude. Thinks strategically and analyzes surroundings.",
+        "match": "Cuttlefish"
+      },
+      "ESTP": {
+        "animal": "Shark",
+        "title": "Energizer Doer",
+        "desc": "Straight-ahead instinct! Loves adventure and thrills with a hot personality.",
+        "match": "Sea Lion"
+      },
+      "INFP": {
+        "animal": "Manatee",
+        "title": "Emotional Gentle Soul",
+        "desc": "Relaxed with a dreamer's vibe. Loves peace and has a rich imagination.",
+        "match": "Jellyfish"
+      },
+      "ESFP": {
+        "animal": "Sea Otter",
+        "title": "Cute Showman",
+        "desc": "Loves being the center of attention! A mood maker who spreads joy.",
+        "match": "Killer Whale"
+      },
+      "ISFP": {
+        "animal": "Beluga",
+        "title": "Flowing Pacifist",
+        "desc": "Zero stress, flexible and gentle soul. Also has great artistic sense.",
+        "match": "Dolphin"
+      },
+      "ENTJ": {
+        "animal": "Killer Whale",
+        "title": "Charismatic Leader",
+        "desc": "Confident leader of the pod! Systematic and goal-oriented type.",
+        "match": "Sea Otter"
+      },
+      "INTP": {
+        "animal": "Cuttlefish",
+        "title": "My-way Explorer",
+        "desc": "Silently analyzes surroundings. Extremely strong intellectual curiosity.",
+        "match": "Octopus"
+      },
+      "ENFJ": {
+        "animal": "Stingray",
+        "title": "Warm Golden Retriever Vibe",
+        "desc": "Kind smile-man who takes good care of others. Radiates positive energy.",
+        "match": "Manatee"
+      },
+      "INFJ": {
+        "animal": "Jellyfish",
+        "title": "Mysterious and Deep",
+        "desc": "Quiet but reads owner's emotions best. Has a very deep inner world.",
+        "match": "Crab"
+      },
+      "ESTJ": {
+        "animal": "Penguin",
+        "title": "Rule-abiding Realist",
+        "desc": "Rules and times must be kept! Systematic and highly responsible.",
+        "match": "Sea Turtle"
+      },
+      "ISTP": {
+        "animal": "Crab",
+        "title": "Indifferent but Chic",
+        "desc": "Independent and prefers solo play. Practical and good with tools.",
+        "match": "Jellyfish"
+      }
+    }
+  },
+  "Resistor": {
+    "title": "⚡ Integrated Resistor Calculator",
+    "description": "Decode values in two ways: Color Band resistors or SMD chip codes with real-time graphics.",
+    "tabBand": "🎨 Band Color",
+    "tabSmd": "📟 SMD Code",
+    "bands": "Bands",
+    "bandLabel1": "1st Digit",
+    "bandLabel2": "2nd Digit",
+    "bandLabel3": "Multiplier / 3rd Dig",
+    "bandLabel4": "Multiplier / Tol",
+    "bandLabel5": "Tolerance",
+    "bandLabel6": "PPM",
+    "enterSmdCode": "Enter SMD Code",
+    "smdHint": "Auto-detects 3/4-digit and EIA-96",
+    "shareTitle": "💡 Share Result",
+    "sharePre": "[Resistor Info] Leaded Value:",
+    "sharePreSmd": "[SMD Info] Chip Value:",
+    "howToReadBand": "How to read Bands",
+    "howToReadSmd": "How to read SMD",
+    "bandInfo": "First 2 (4-band) or 3 (5/6-band) represent numbers. Next is the multiplier. Last is the tolerance. 6-band adds temperature coefficient (PPM).",
+    "smdInfo": "3/4-digit codes use the last digit as 10^x. 'R' is the decimal point. EIA-96 is a high-precision code using 2 numeric index digits and 1 numeric multiplier letter."
   }
 }

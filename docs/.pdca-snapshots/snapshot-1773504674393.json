@@ -1,0 +1,497 @@
+{
+  "timestamp": "2026-03-14T16:11:14.392Z",
+  "reason": "compaction",
+  "status": {
+    "version": "2.0",
+    "lastUpdated": "2026-03-14T16:11:14.045Z",
+    "activeFeatures": [
+      "utility-hub",
+      "ttfb",
+      "performance",
+      "pomodoro",
+      "timezone",
+      "productivity",
+      "currency",
+      "fintech",
+      "crypto",
+      "feedback",
+      "ux",
+      "logo",
+      "color",
+      "font",
+      "quiz",
+      "play",
+      "redact"
+    ],
+    "primaryFeature": "utility-hub",
+    "features": {
+      "utility-hub": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T11:36:10.072Z",
+          "lastUpdated": "2026-03-14T15:34:29.232Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\lib\\supabase.ts"
+      },
+      "ttfb": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:15:29.351Z",
+          "lastUpdated": "2026-03-14T13:18:08.954Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\performance\\ttfb\\page.tsx"
+      },
+      "performance": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:18:21.188Z",
+          "lastUpdated": "2026-03-14T13:18:21.188Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\performance\\page.tsx"
+      },
+      "pomodoro": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:24:40.252Z",
+          "lastUpdated": "2026-03-14T13:24:40.252Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\productivity\\pomodoro\\page.tsx"
+      },
+      "timezone": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:25:23.145Z",
+          "lastUpdated": "2026-03-14T13:25:23.145Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\productivity\\timezone\\page.tsx"
+      },
+      "productivity": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:25:37.760Z",
+          "lastUpdated": "2026-03-14T13:25:37.760Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\productivity\\page.tsx"
+      },
+      "currency": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:36:57.476Z",
+          "lastUpdated": "2026-03-14T13:36:57.476Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\currency\\page.tsx"
+      },
+      "fintech": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:37:10.042Z",
+          "lastUpdated": "2026-03-14T13:42:01.451Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\page.tsx"
+      },
+      "crypto": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:41:46.271Z",
+          "lastUpdated": "2026-03-14T13:46:37.431Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\crypto\\page.tsx"
+      },
+      "feedback": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:11:20.160Z",
+          "lastUpdated": "2026-03-14T15:32:31.194Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\feedback\\page.tsx"
+      },
+      "ux": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:11:31.815Z",
+          "lastUpdated": "2026-03-14T14:55:21.514Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\page.tsx"
+      },
+      "logo": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:12:44.450Z",
+          "lastUpdated": "2026-03-14T14:14:22.507Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\logo\\page.tsx"
+      },
+      "color": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:34:48.253Z",
+          "lastUpdated": "2026-03-14T14:34:48.253Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\color\\page.tsx"
+      },
+      "font": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:41:34.546Z",
+          "lastUpdated": "2026-03-14T14:41:34.546Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\font\\page.tsx"
+      },
+      "quiz": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:54:10.468Z",
+          "lastUpdated": "2026-03-14T14:54:10.468Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\quiz\\page.tsx"
+      },
+      "play": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:55:13.698Z",
+          "lastUpdated": "2026-03-14T14:55:13.698Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\quiz\\play\\page.tsx"
+      },
+      "redact": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:11:14.045Z",
+          "lastUpdated": "2026-03-14T16:11:14.045Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\security\\redact\\page.tsx"
+      }
+    },
+    "pipeline": {
+      "currentPhase": 1,
+      "level": "Dynamic",
+      "phaseHistory": []
+    },
+    "session": {
+      "startedAt": "2026-03-14T10:05:31.131Z",
+      "onboardingCompleted": false,
+      "lastActivity": "2026-03-14T16:11:14.045Z"
+    },
+    "history": [
+      {
+        "timestamp": "2026-03-14T11:36:10.072Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T12:58:03.592Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:06:40.516Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:06:56.736Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:07:07.704Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:15:29.351Z",
+        "feature": "ttfb",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:18:08.954Z",
+        "feature": "ttfb",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:18:21.188Z",
+        "feature": "performance",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:24:40.252Z",
+        "feature": "pomodoro",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:25:23.145Z",
+        "feature": "timezone",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:25:37.760Z",
+        "feature": "productivity",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:36:57.476Z",
+        "feature": "currency",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:37:10.042Z",
+        "feature": "fintech",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:41:46.271Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:41:55.148Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:42:01.451Z",
+        "feature": "fintech",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:46:15.516Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:46:37.431Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:11:20.160Z",
+        "feature": "feedback",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:11:31.815Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:12:44.450Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:14:11.213Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:14:15.320Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:14:22.507Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:24:21.566Z",
+        "feature": "feedback",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:24:38.155Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:24:52.643Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:34:48.253Z",
+        "feature": "color",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:34:55.271Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:41:34.546Z",
+        "feature": "font",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:41:41.420Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:54:10.468Z",
+        "feature": "quiz",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:55:13.698Z",
+        "feature": "play",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:55:21.514Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:32:22.614Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:32:31.194Z",
+        "feature": "feedback",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:34:13.729Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:34:29.232Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:11:14.045Z",
+        "feature": "redact",
+        "phase": "do",
+        "action": "updated"
+      }
+    ]
+  }
+}

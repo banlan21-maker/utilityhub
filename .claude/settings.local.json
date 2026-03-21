@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(wc:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(cat:*)",
+      "Bash(npx tsc:*)",
+      "Bash(find:*)",
+      "Bash(git commit:*)",
+      "Bash(which vercel:*)",
+      "Bash(python -c \"\nimport base64\n\n# Create a simple SVG with wrench emoji\nsvg = ''''''<svg xmlns=\"\"http://www.w3.org/2000/svg\"\" viewBox=\"\"0 0 100 100\"\">\n  <text y=\"\"80\"\" font-size=\"\"80\"\" text-anchor=\"\"middle\"\" x=\"\"50\"\">🛠️</text>\n</svg>''''''\n\n# Convert emoji 🛠️ to favicon using a simple approach\n# We''ll create an HTML approach for better rendering\nprint(''SVG favicon approach needs proper emoji rendering.'')\nprint(''Recommendation: Use an online tool like favicon.io or realfavicongenerator.net'')\nprint(''Or use the Twemoji library for better cross-platform support.'')\n\")",
+      "Bash(npm install xlsx)",
+      "Bash(rm -f nul)"
+    ]
+  }
+}

@@ -12,6 +12,13 @@ export default function DDayPage() {
   const [targetDate, setTargetDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [dDayResult, setDDayResult] = useState<string | number>('');
   
+  const [detailedStats, setDetailedStats] = useState<{
+    months: number;
+    weeks: number;
+    daysRemainder: number;
+    hours: number;
+  } | null>(null);
+  
   const [addDays, setAddDays] = useState<string>('');
   const [addMonths, setAddMonths] = useState<string>('');
   const [calcResult, setCalcResult] = useState<string>('');
@@ -20,13 +27,15 @@ export default function DDayPage() {
   useEffect(() => {
     if (!targetDate) return;
     
+    const now = new Date();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
     const target = new Date(targetDate);
-    target.setHours(0, 0, 0, 0);
+    const targetMidnight = new Date(targetDate);
+    targetMidnight.setHours(0, 0, 0, 0);
     
-    const diffTime = target.getTime() - today.getTime();
+    const diffTime = targetMidnight.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays === 0) {
@@ -36,6 +45,26 @@ export default function DDayPage() {
     } else {
       setDDayResult(`D+${Math.abs(diffDays)}`);
     }
+
+    // Detailed Stats Calculation
+    const diffTimeAbsolute = Math.abs(target.getTime() - now.getTime());
+    const diffHours = Math.floor(diffTimeAbsolute / (1000 * 60 * 60));
+    
+    const absDiffDays = Math.abs(diffDays);
+    const totalWeeks = Math.floor(absDiffDays / 7);
+    const daysRemainder = absDiffDays % 7;
+
+    let m = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
+    // Adjust month if the day of month hasn't been reached yet
+    if (target.getDate() < now.getDate() && m > 0) m--;
+    if (target.getDate() > now.getDate() && m < 0) m++;
+    
+    setDetailedStats({
+      months: Math.abs(m),
+      weeks: totalWeeks,
+      daysRemainder: daysRemainder,
+      hours: diffHours
+    });
   }, [targetDate, t]);
 
   // Date Arithmetic Calculation
@@ -124,6 +153,39 @@ export default function DDayPage() {
               <p style={{ color: 'var(--secondary)', fontWeight: 600, marginTop: '0.5rem' }}>
                 {t('isToday')}
               </p>
+            )}
+
+            {/* Detailed Stats */}
+            {detailedStats && dDayResult !== t('today') && (
+              <div style={{ 
+                marginTop: '1.5rem', 
+                paddingTop: '1.5rem', 
+                borderTop: '1px solid var(--border)',
+                display: 'flex',
+                gap: '1.5rem',
+                justifyContent: 'center',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('months')}</p>
+                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{detailedStats.months}</p>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('weeks')}</p>
+                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                    {detailedStats.weeks}
+                    {detailedStats.daysRemainder > 0 && (
+                      <span style={{ fontSize: '0.875rem', fontWeight: 400, marginLeft: '2px' }}>
+                        {` +${detailedStats.daysRemainder}d`}
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('hours')}</p>
+                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{detailedStats.hours.toLocaleString()}</p>
+                </div>
+              </div>
             )}
           </div>
         </div>

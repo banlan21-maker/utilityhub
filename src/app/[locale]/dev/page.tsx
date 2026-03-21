@@ -21,7 +21,14 @@ export default function DevDashboardPage() {
       title: t('regex.title'),
       desc: t('regex.desc'),
       icon: '🔍',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
+      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    },
+    {
+      id: 'dev/resistor',
+      title: t('resistor.title'),
+      desc: t('resistor.desc'),
+      icon: '📟',
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
     },
     {
       id: 'dev/password',

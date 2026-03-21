@@ -1,0 +1,1297 @@
+{
+  "timestamp": "2026-03-15T12:03:36.451Z",
+  "reason": "compaction",
+  "status": {
+    "version": "2.0",
+    "lastUpdated": "2026-03-15T12:03:36.003Z",
+    "activeFeatures": [
+      "utility-hub",
+      "ttfb",
+      "performance",
+      "pomodoro",
+      "timezone",
+      "productivity",
+      "currency",
+      "fintech",
+      "crypto",
+      "feedback",
+      "ux",
+      "logo",
+      "color",
+      "font",
+      "quiz",
+      "play",
+      "redact",
+      "password",
+      "url",
+      "security",
+      "counter",
+      "qr",
+      "dday",
+      "hwp",
+      "bmi-water",
+      "pet-food",
+      "nickname",
+      "percent",
+      "vat",
+      "interest",
+      "config",
+      "tax33",
+      "area",
+      "utilities",
+      "json",
+      "regex"
+    ],
+    "primaryFeature": "utility-hub",
+    "features": {
+      "utility-hub": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T11:36:10.072Z",
+          "lastUpdated": "2026-03-15T11:15:37.594Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\components\\RelatedTools.tsx"
+      },
+      "ttfb": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:15:29.351Z",
+          "lastUpdated": "2026-03-14T17:09:32.461Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\performance\\ttfb\\page.tsx"
+      },
+      "performance": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:18:21.188Z",
+          "lastUpdated": "2026-03-14T13:18:21.188Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\performance\\page.tsx"
+      },
+      "pomodoro": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:24:40.252Z",
+          "lastUpdated": "2026-03-14T17:10:16.616Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\productivity\\pomodoro\\page.tsx"
+      },
+      "timezone": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:25:23.145Z",
+          "lastUpdated": "2026-03-14T17:11:06.042Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\productivity\\timezone\\page.tsx"
+      },
+      "productivity": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:25:37.760Z",
+          "lastUpdated": "2026-03-14T13:25:37.760Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\productivity\\page.tsx"
+      },
+      "currency": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:36:57.476Z",
+          "lastUpdated": "2026-03-15T10:29:32.420Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\currency\\page.tsx"
+      },
+      "fintech": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:37:10.042Z",
+          "lastUpdated": "2026-03-15T11:47:32.324Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\page.tsx"
+      },
+      "crypto": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T13:41:46.271Z",
+          "lastUpdated": "2026-03-14T17:11:52.821Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\crypto\\page.tsx"
+      },
+      "feedback": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:11:20.160Z",
+          "lastUpdated": "2026-03-14T15:32:31.194Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\feedback\\page.tsx"
+      },
+      "ux": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:11:31.815Z",
+          "lastUpdated": "2026-03-14T14:55:21.514Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\page.tsx"
+      },
+      "logo": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:12:44.450Z",
+          "lastUpdated": "2026-03-15T10:26:30.502Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\logo\\page.tsx"
+      },
+      "color": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:34:48.253Z",
+          "lastUpdated": "2026-03-14T17:11:08.559Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\color\\page.tsx"
+      },
+      "font": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:41:34.546Z",
+          "lastUpdated": "2026-03-15T10:25:39.206Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\font\\page.tsx"
+      },
+      "quiz": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:54:10.468Z",
+          "lastUpdated": "2026-03-15T10:24:54.882Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\quiz\\page.tsx"
+      },
+      "play": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T14:55:13.698Z",
+          "lastUpdated": "2026-03-14T14:55:13.698Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\ux\\quiz\\play\\page.tsx"
+      },
+      "redact": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:11:14.045Z",
+          "lastUpdated": "2026-03-15T10:27:12.508Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\security\\redact\\page.tsx"
+      },
+      "password": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:13:59.462Z",
+          "lastUpdated": "2026-03-15T12:03:36.003Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\dev\\password\\page.tsx"
+      },
+      "url": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:14:40.392Z",
+          "lastUpdated": "2026-03-14T17:10:22.520Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\security\\url\\page.tsx"
+      },
+      "security": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:14:51.718Z",
+          "lastUpdated": "2026-03-14T16:14:51.718Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\security\\page.tsx"
+      },
+      "counter": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:38:26.060Z",
+          "lastUpdated": "2026-03-14T17:07:29.093Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\utilities\\counter\\page.tsx"
+      },
+      "qr": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:38:54.650Z",
+          "lastUpdated": "2026-03-14T17:08:08.702Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\utilities\\qr\\page.tsx"
+      },
+      "dday": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:39:24.726Z",
+          "lastUpdated": "2026-03-14T17:08:53.663Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\utilities\\dday\\page.tsx"
+      },
+      "hwp": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:53:35.442Z",
+          "lastUpdated": "2026-03-15T10:27:58.439Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\pdf\\hwp\\page.tsx"
+      },
+      "bmi-water": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:58:51.341Z",
+          "lastUpdated": "2026-03-15T10:22:31.461Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\lifestyle\\bmi-water\\page.tsx"
+      },
+      "pet-food": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:59:22.968Z",
+          "lastUpdated": "2026-03-15T10:23:20.633Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\lifestyle\\pet-food\\page.tsx"
+      },
+      "nickname": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-14T16:59:55.312Z",
+          "lastUpdated": "2026-03-15T10:24:05.786Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\lifestyle\\nickname\\page.tsx"
+      },
+      "percent": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T10:50:11.580Z",
+          "lastUpdated": "2026-03-15T11:16:24.427Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\percent\\page.tsx"
+      },
+      "vat": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T10:51:21.653Z",
+          "lastUpdated": "2026-03-15T11:17:09.949Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\vat\\page.tsx"
+      },
+      "interest": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T10:52:44.738Z",
+          "lastUpdated": "2026-03-15T11:17:49.743Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\interest\\page.tsx"
+      },
+      "config": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T11:15:21.256Z",
+          "lastUpdated": "2026-03-15T11:48:20.658Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\config\\tool-relations.ts"
+      },
+      "tax33": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T11:28:19.577Z",
+          "lastUpdated": "2026-03-15T11:28:19.577Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\fintech\\tax33\\page.tsx"
+      },
+      "area": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T11:29:45.151Z",
+          "lastUpdated": "2026-03-15T11:29:45.151Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\utilities\\area\\page.tsx"
+      },
+      "utilities": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T11:47:51.336Z",
+          "lastUpdated": "2026-03-15T11:47:51.336Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\utilities\\page.tsx"
+      },
+      "json": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T11:59:47.111Z",
+          "lastUpdated": "2026-03-15T11:59:47.111Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\dev\\json\\page.tsx"
+      },
+      "regex": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-15T12:01:22.398Z",
+          "lastUpdated": "2026-03-15T12:01:22.398Z"
+        },
+        "lastFile": "C:\\mvp\\utility-hub\\src\\app\\[locale]\\dev\\regex\\page.tsx"
+      }
+    },
+    "pipeline": {
+      "currentPhase": 1,
+      "level": "Dynamic",
+      "phaseHistory": []
+    },
+    "session": {
+      "startedAt": "2026-03-14T10:05:31.131Z",
+      "onboardingCompleted": false,
+      "lastActivity": "2026-03-15T12:03:36.003Z"
+    },
+    "history": [
+      {
+        "timestamp": "2026-03-14T11:36:10.072Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T12:58:03.592Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:06:40.516Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:06:56.736Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:07:07.704Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:15:29.351Z",
+        "feature": "ttfb",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:18:08.954Z",
+        "feature": "ttfb",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:18:21.188Z",
+        "feature": "performance",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:24:40.252Z",
+        "feature": "pomodoro",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:25:23.145Z",
+        "feature": "timezone",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:25:37.760Z",
+        "feature": "productivity",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:36:57.476Z",
+        "feature": "currency",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:37:10.042Z",
+        "feature": "fintech",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:41:46.271Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:41:55.148Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:42:01.451Z",
+        "feature": "fintech",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:46:15.516Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T13:46:37.431Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:11:20.160Z",
+        "feature": "feedback",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:11:31.815Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:12:44.450Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:14:11.213Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:14:15.320Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:14:22.507Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:24:21.566Z",
+        "feature": "feedback",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:24:38.155Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:24:52.643Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:34:48.253Z",
+        "feature": "color",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:34:55.271Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:41:34.546Z",
+        "feature": "font",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:41:41.420Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:54:10.468Z",
+        "feature": "quiz",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:55:13.698Z",
+        "feature": "play",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T14:55:21.514Z",
+        "feature": "ux",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:32:22.614Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:32:31.194Z",
+        "feature": "feedback",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:34:13.729Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T15:34:29.232Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:11:14.045Z",
+        "feature": "redact",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:13:59.462Z",
+        "feature": "password",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:14:40.392Z",
+        "feature": "url",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:14:51.718Z",
+        "feature": "security",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:38:14.483Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:38:26.060Z",
+        "feature": "counter",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:38:49.834Z",
+        "feature": "counter",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:38:54.650Z",
+        "feature": "qr",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:39:21.148Z",
+        "feature": "qr",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:39:24.726Z",
+        "feature": "dday",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:39:48.997Z",
+        "feature": "dday",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:48:19.766Z",
+        "feature": "ttfb",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:48:45.109Z",
+        "feature": "ttfb",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:48:47.889Z",
+        "feature": "pomodoro",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:49:12.114Z",
+        "feature": "pomodoro",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:49:17.223Z",
+        "feature": "timezone",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:49:43.952Z",
+        "feature": "timezone",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:52:44.861Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:53:08.891Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:53:11.783Z",
+        "feature": "currency",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:53:32.365Z",
+        "feature": "currency",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:53:35.442Z",
+        "feature": "hwp",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:54:01.206Z",
+        "feature": "hwp",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:55:17.114Z",
+        "feature": "redact",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:55:37.396Z",
+        "feature": "redact",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:55:40.367Z",
+        "feature": "password",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:56:02.625Z",
+        "feature": "password",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:56:05.360Z",
+        "feature": "url",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:56:31.500Z",
+        "feature": "url",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:56:45.682Z",
+        "feature": "color",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:57:10.633Z",
+        "feature": "color",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:57:13.930Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:57:39.007Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:57:42.112Z",
+        "feature": "font",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:58:04.335Z",
+        "feature": "font",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:58:07.376Z",
+        "feature": "quiz",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:58:32.703Z",
+        "feature": "quiz",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:58:51.341Z",
+        "feature": "bmi-water",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:59:14.735Z",
+        "feature": "bmi-water",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:59:22.968Z",
+        "feature": "pet-food",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:59:52.260Z",
+        "feature": "pet-food",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T16:59:55.312Z",
+        "feature": "nickname",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:00:23.193Z",
+        "feature": "nickname",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:01:33.000Z",
+        "feature": "quiz",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:04:17.991Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:07:29.093Z",
+        "feature": "counter",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:08:08.702Z",
+        "feature": "qr",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:08:53.663Z",
+        "feature": "dday",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:09:32.461Z",
+        "feature": "ttfb",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:09:36.845Z",
+        "feature": "password",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:10:16.616Z",
+        "feature": "pomodoro",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:10:22.520Z",
+        "feature": "url",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:11:06.042Z",
+        "feature": "timezone",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:11:08.559Z",
+        "feature": "color",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-14T17:11:52.821Z",
+        "feature": "crypto",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:22:31.461Z",
+        "feature": "bmi-water",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:23:20.633Z",
+        "feature": "pet-food",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:24:05.786Z",
+        "feature": "nickname",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:24:54.882Z",
+        "feature": "quiz",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:25:39.206Z",
+        "feature": "font",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:26:30.502Z",
+        "feature": "logo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:27:12.508Z",
+        "feature": "redact",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:27:58.439Z",
+        "feature": "hwp",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:29:32.420Z",
+        "feature": "currency",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:50:11.580Z",
+        "feature": "percent",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:51:21.653Z",
+        "feature": "vat",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:52:44.738Z",
+        "feature": "interest",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T10:54:12.383Z",
+        "feature": "fintech",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:15:21.256Z",
+        "feature": "config",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:15:37.594Z",
+        "feature": "utility-hub",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:15:50.515Z",
+        "feature": "percent",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:16:17.027Z",
+        "feature": "percent",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:16:24.427Z",
+        "feature": "percent",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:16:55.448Z",
+        "feature": "vat",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:17:00.565Z",
+        "feature": "vat",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:17:09.949Z",
+        "feature": "vat",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:17:37.098Z",
+        "feature": "interest",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:17:42.063Z",
+        "feature": "interest",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:17:49.743Z",
+        "feature": "interest",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:28:19.577Z",
+        "feature": "tax33",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:29:45.151Z",
+        "feature": "area",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:47:32.324Z",
+        "feature": "fintech",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:47:51.336Z",
+        "feature": "utilities",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:48:02.403Z",
+        "feature": "config",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:48:11.138Z",
+        "feature": "config",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:48:15.743Z",
+        "feature": "config",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:48:20.658Z",
+        "feature": "config",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T11:59:47.111Z",
+        "feature": "json",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T12:01:22.398Z",
+        "feature": "regex",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-15T12:03:36.003Z",
+        "feature": "password",
+        "phase": "do",
+        "action": "updated"
+      }
+    ]
+  }
+}
