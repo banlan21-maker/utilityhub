@@ -5,17 +5,17 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import styles from './page.module.css';
 
-const CATEGORIES = [
-  { id: 'performance', icon: '🚀', color: '#ef4444', count: 4, hot: false, popular: false },
-  { id: 'pdf',         icon: '📄', color: '#10b981', count: 4, hot: false, popular: false },
-  { id: 'fintech',     icon: '💳', color: '#3b82f6', count: 7, hot: false, popular: true  },
-  { id: 'productivity',icon: '⚡', color: '#f59e0b', count: 4, hot: false, popular: true  },
-  { id: 'ux',          icon: '✨', color: '#ec4899', count: 4, hot: false, popular: false },
-  { id: 'ai',          icon: '🤖', color: '#8b5cf6', count: 3, hot: true,  popular: false },
-  { id: 'lifestyle',   icon: '🌿', color: '#22c55e', count: 5, hot: false, popular: false },
-  { id: 'security',    icon: '🛡️', color: '#6366f1', count: 4, hot: false, popular: false },
-  { id: 'utilities',   icon: '🛠️', color: '#14b8a6', count: 10, hot: false, popular: true  },
-  { id: 'dev',         icon: '💻', color: '#f97316', count: 4, hot: true,  popular: false },
+const CATEGORIES_BASE = [
+  { id: 'performance', icon: '🚀', color: '#ef4444', hot: false, popular: false },
+  { id: 'pdf',         icon: '📄', color: '#10b981', hot: false, popular: false },
+  { id: 'fintech',     icon: '💳', color: '#3b82f6', hot: false, popular: true  },
+  { id: 'productivity',icon: '⚡', color: '#f59e0b', hot: false, popular: true  },
+  { id: 'ux',          icon: '✨', color: '#ec4899', hot: false, popular: false },
+  { id: 'ai',          icon: '🤖', color: '#8b5cf6', hot: true,  popular: false },
+  { id: 'lifestyle',   icon: '🌿', color: '#22c55e', hot: false, popular: false },
+  { id: 'security',    icon: '🛡️', color: '#6366f1', hot: false, popular: false },
+  { id: 'utilities',   icon: '🛠️', color: '#14b8a6', hot: false, popular: true  },
+  { id: 'dev',         icon: '💻', color: '#f97316', hot: true,  popular: false },
 ] as const;
 
 // All available tools across categories
@@ -77,6 +77,18 @@ const ALL_TOOLS = [
   { id: 'lifestyle/pet-food', category: 'lifestyle', icon: '🐾', titleKey: 'LifestyleBoard.pet-food.title', descKey: 'LifestyleBoard.pet-food.desc' },
   { id: 'lifestyle/korean-age', category: 'lifestyle', icon: '🎂', titleKey: 'LifestyleBoard.korean-age.title', descKey: 'LifestyleBoard.korean-age.desc' },
 ] as const;
+
+// Calculate tool counts per category automatically
+const CATEGORY_TOOL_COUNTS = ALL_TOOLS.reduce((acc, tool) => {
+  acc[tool.category] = (acc[tool.category] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+// Merge category base info with auto-calculated counts
+const CATEGORIES = CATEGORIES_BASE.map(cat => ({
+  ...cat,
+  count: CATEGORY_TOOL_COUNTS[cat.id] || 0,
+}));
 
 const FEATURES = [
   { icon: '🔒', titleKey: 'feature1Title', descKey: 'feature1Desc' },
