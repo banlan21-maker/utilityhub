@@ -256,7 +256,7 @@ export default function AiSajuPromptPage() {
                   min={1900}
                   max={2100}
                   className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(15, 23, 42, 0.5)', color: 'var(--text-primary)' }}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px' }}
                 />
               </div>
               <div>
@@ -270,7 +270,7 @@ export default function AiSajuPromptPage() {
                   min={1}
                   max={12}
                   className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(15, 23, 42, 0.5)', color: 'var(--text-primary)' }}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px' }}
                 />
               </div>
               <div>
@@ -284,7 +284,7 @@ export default function AiSajuPromptPage() {
                   min={1}
                   max={31}
                   className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(15, 23, 42, 0.5)', color: 'var(--text-primary)' }}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px' }}
                 />
               </div>
             </div>
@@ -387,13 +387,13 @@ export default function AiSajuPromptPage() {
                 <div
                   className="prompt-display"
                   style={{
-                    background: 'rgba(15, 23, 42, 0.8)',
-                    border: '1px solid #fbbf24',
+                    background: 'var(--surface)',
+                    border: '1px solid rgba(251, 191, 36, 0.5)',
                     borderRadius: '12px',
                     padding: '1.5rem',
                     fontSize: '0.95rem',
                     lineHeight: '1.7',
-                    color: '#e2e8f0',
+                    color: 'var(--text-primary)',
                     whiteSpace: 'pre-wrap',
                     marginBottom: '1.5rem',
                     maxHeight: '400px',
@@ -464,18 +464,20 @@ export default function AiSajuPromptPage() {
       {/* Mystic Modern Theme Styles */}
       <style jsx>{`
         .mystic-panel {
-          background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
-          border: 1px solid rgba(251, 191, 36, 0.2);
-          box-shadow: 0 8px 32px rgba(15, 23, 42, 0.5), 0 0 20px rgba(251, 191, 36, 0.1);
+          background: var(--card-bg);
+          border: 1px solid rgba(251, 191, 36, 0.3);
+          box-shadow: 0 4px 20px rgba(251, 191, 36, 0.1);
         }
 
         .mystic-title {
-          color: #fbbf24 !important;
-          text-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+          color: #d97706 !important;
+          font-weight: 700;
         }
 
         .mystic-input {
           border: 1px solid rgba(251, 191, 36, 0.3) !important;
+          background: var(--surface) !important;
+          color: var(--text-primary) !important;
           transition: all 0.3s;
         }
 
@@ -486,13 +488,13 @@ export default function AiSajuPromptPage() {
         }
 
         .gender-btn, .calendar-btn, .analysis-btn {
-          background: rgba(15, 23, 42, 0.5);
-          border: 1px solid rgba(251, 191, 36, 0.2);
+          background: var(--surface);
+          border: 1px solid rgba(251, 191, 36, 0.3);
           color: var(--text-primary);
         }
 
         .gender-btn:hover, .calendar-btn:hover, .analysis-btn:hover {
-          background: rgba(251, 191, 36, 0.1);
+          background: rgba(251, 191, 36, 0.15);
           border-color: #fbbf24;
           transform: translateY(-2px);
         }
@@ -501,12 +503,14 @@ export default function AiSajuPromptPage() {
           background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
           border-color: #fbbf24;
           color: #0f172a;
+          font-weight: 700;
           box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
         }
 
         .generate-btn {
           background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
           color: #0f172a;
+          font-weight: 700;
           box-shadow: 0 8px 25px rgba(251, 191, 36, 0.5);
           transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -522,8 +526,8 @@ export default function AiSajuPromptPage() {
 
         .saju-pillar {
           padding: 1rem;
-          background: rgba(251, 191, 36, 0.05);
-          border: 1px solid rgba(251, 191, 36, 0.2);
+          background: rgba(251, 191, 36, 0.08);
+          border: 1px solid rgba(251, 191, 36, 0.3);
           border-radius: 8px;
           display: flex;
           justify-content: space-between;
@@ -532,8 +536,8 @@ export default function AiSajuPromptPage() {
 
         .pillar-label {
           font-size: 0.875rem;
-          color: #fbbf24;
-          font-weight: 600;
+          color: #d97706;
+          font-weight: 700;
         }
 
         .pillar-value {
@@ -546,6 +550,7 @@ export default function AiSajuPromptPage() {
         .copy-btn {
           background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
           color: white;
+          font-weight: 700;
           box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
           transition: all 0.3s;
         }
@@ -556,9 +561,10 @@ export default function AiSajuPromptPage() {
         }
 
         .quick-link-btn {
-          background: rgba(15, 23, 42, 0.8);
-          border: 1px solid rgba(251, 191, 36, 0.2);
+          background: var(--surface);
+          border: 1px solid rgba(251, 191, 36, 0.3);
           color: var(--text-primary);
+          font-weight: 600;
           transition: all 0.3s;
         }
 
@@ -574,7 +580,7 @@ export default function AiSajuPromptPage() {
         }
 
         .prompt-display::-webkit-scrollbar-track {
-          background: rgba(15, 23, 42, 0.5);
+          background: var(--surface);
           border-radius: 4px;
         }
 
