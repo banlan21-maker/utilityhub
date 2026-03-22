@@ -57,6 +57,13 @@ export default function LifestyleDashboardPage() {
       desc: t('aquarium-bioload.desc'),
       icon: '🐠',
       gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
+    },
+    {
+      id: 'lifestyle/ai-saju-prompt',
+      title: t('ai-saju-prompt.title'),
+      desc: t('ai-saju-prompt.desc'),
+      icon: '🔮',
+      gradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #fbbf24 100%)'
     }
   ];
 
