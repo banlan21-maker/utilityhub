@@ -249,43 +249,46 @@ export default function AiSajuPromptPage() {
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                   {t('year')}
                 </label>
-                <input
-                  type="number"
+                <select
                   value={year}
-                  onChange={(e) => setYear(parseInt(e.target.value) || 1990)}
-                  min={1900}
-                  max={2100}
+                  onChange={(e) => setYear(parseInt(e.target.value))}
                   className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px' }}
-                />
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  {Array.from({ length: 101 }, (_, i) => 2025 - i).map(y => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                   {t('month')}
                 </label>
-                <input
-                  type="number"
+                <select
                   value={month}
-                  onChange={(e) => setMonth(parseInt(e.target.value) || 1)}
-                  min={1}
-                  max={12}
+                  onChange={(e) => setMonth(parseInt(e.target.value))}
                   className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px' }}
-                />
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                    <option key={m} value={m}>{m}월</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                   {t('day')}
                 </label>
-                <input
-                  type="number"
+                <select
                   value={day}
-                  onChange={(e) => setDay(parseInt(e.target.value) || 1)}
-                  min={1}
-                  max={31}
+                  onChange={(e) => setDay(parseInt(e.target.value))}
                   className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px' }}
-                />
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                    <option key={d} value={d}>{d}일</option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
