@@ -50,6 +50,13 @@ export default function LifestyleDashboardPage() {
       desc: t('sea-mbti.desc'),
       icon: '🌊',
       gradient: 'linear-gradient(135deg, #0ea5e9 0%, #2dd4bf 100%)'
+    },
+    {
+      id: 'lifestyle/aquarium-bioload',
+      title: t('aquarium-bioload.title'),
+      desc: t('aquarium-bioload.desc'),
+      icon: '🐠',
+      gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
     }
   ];
 
