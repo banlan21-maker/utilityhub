@@ -46,6 +46,8 @@ const ALL_TOOLS = [
   { id: 'dev/json', category: 'dev', icon: '🗂️', titleKey: 'DevBoard.json.title', descKey: 'DevBoard.json.desc' },
   { id: 'dev/regex', category: 'dev', icon: '🔍', titleKey: 'DevBoard.regex.title', descKey: 'DevBoard.regex.desc' },
   { id: 'dev/password', category: 'dev', icon: '🔑', titleKey: 'DevBoard.password.title', descKey: 'DevBoard.password.desc' },
+  { id: 'dev/resistor', category: 'dev', icon: '💡', titleKey: 'DevBoard.resistor.title', descKey: 'DevBoard.resistor.desc' },
+  { id: 'dev/kec-grounding', category: 'dev', icon: '⚡', titleKey: 'DevBoard.kec-grounding.title', descKey: 'DevBoard.kec-grounding.desc' },
 
   // PDF
   { id: 'pdf/hwp', category: 'pdf', icon: '📄', titleKey: 'PdfBoard.hwp.title', descKey: 'PdfBoard.hwp.desc' },
@@ -62,7 +64,6 @@ const ALL_TOOLS = [
   { id: 'ux/color', category: 'ux', icon: '🎨', titleKey: 'UxBoard.color.title', descKey: 'UxBoard.color.desc' },
   { id: 'ux/font', category: 'ux', icon: '🔤', titleKey: 'UxBoard.font.title', descKey: 'UxBoard.font.desc' },
   { id: 'ux/logo', category: 'ux', icon: '🎭', titleKey: 'UxBoard.logo.title', descKey: 'UxBoard.logo.desc' },
-  { id: 'ux/sea-mbti', category: 'ux', icon: '🌊', titleKey: 'UxBoard.sea-mbti.title', descKey: 'UxBoard.sea-mbti.desc' },
   { id: 'ux/quiz', category: 'ux', icon: '🎯', titleKey: 'UxBoard.quiz.title', descKey: 'UxBoard.quiz.desc' },
 
   // AI
@@ -79,6 +80,8 @@ const ALL_TOOLS = [
   { id: 'lifestyle/pet-food', category: 'lifestyle', icon: '🐾', titleKey: 'LifestyleBoard.pet-food.title', descKey: 'LifestyleBoard.pet-food.desc' },
   { id: 'lifestyle/korean-age', category: 'lifestyle', icon: '🎂', titleKey: 'LifestyleBoard.korean-age.title', descKey: 'LifestyleBoard.korean-age.desc' },
   { id: 'lifestyle/teto-egen-test', category: 'lifestyle', icon: '🧬', titleKey: 'LifestyleBoard.teto-egen-test.title', descKey: 'LifestyleBoard.teto-egen-test.desc' },
+  { id: 'lifestyle/sea-mbti', category: 'lifestyle', icon: '🌊', titleKey: 'LifestyleBoard.sea-mbti.title', descKey: 'LifestyleBoard.sea-mbti.desc' },
+  { id: 'lifestyle/aquarium-bioload', category: 'lifestyle', icon: '🐠', titleKey: 'LifestyleBoard.aquarium-bioload.title', descKey: 'LifestyleBoard.aquarium-bioload.desc' },
 ] as const;
 
 // Calculate tool counts per category automatically
