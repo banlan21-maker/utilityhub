@@ -18,83 +18,10 @@ const CATEGORIES_BASE = [
   { id: 'dev',         icon: '💻', color: '#f97316', hot: true,  popular: false },
 ] as const;
 
-// All available tools across categories
-const ALL_TOOLS = [
-  // Utilities
-  { id: 'utilities/thumbnail', category: 'utilities', icon: '📸', titleKey: 'UtilitiesBoard.thumbnail.title', descKey: 'UtilitiesBoard.thumbnail.desc' },
-  { id: 'utilities/shorturl', category: 'utilities', icon: '🔗', titleKey: 'UtilitiesBoard.shorturl.title', descKey: 'UtilitiesBoard.shorturl.desc' },
-  { id: 'utilities/area', category: 'utilities', icon: '📐', titleKey: 'UtilitiesBoard.area.title', descKey: 'UtilitiesBoard.area.desc' },
-  { id: 'utilities/qr', category: 'utilities', icon: '🔲', titleKey: 'UtilitiesBoard.qr.title', descKey: 'UtilitiesBoard.qr.desc' },
-  { id: 'utilities/counter', category: 'utilities', icon: '📝', titleKey: 'UtilitiesBoard.counter.title', descKey: 'UtilitiesBoard.counter.desc' },
-  { id: 'utilities/dday', category: 'utilities', icon: '📅', titleKey: 'UtilitiesBoard.dday.title', descKey: 'UtilitiesBoard.dday.desc' },
-  { id: 'utilities/gpa', category: 'utilities', icon: '📊', titleKey: 'UtilitiesBoard.gpa.title', descKey: 'UtilitiesBoard.gpa.desc' },
-  { id: 'utilities/unit-converter', category: 'utilities', icon: '⚖️', titleKey: 'UtilitiesBoard.unit-converter.title', descKey: 'UtilitiesBoard.unit-converter.desc' },
-  { id: 'utilities/image-compressor', category: 'utilities', icon: '🗜️', titleKey: 'UtilitiesBoard.image-compressor.title', descKey: 'UtilitiesBoard.image-compressor.desc' },
-  { id: 'utilities/image-resizer', category: 'utilities', icon: '✂️', titleKey: 'UtilitiesBoard.image-resizer.title', descKey: 'UtilitiesBoard.image-resizer.desc' },
-  { id: 'utilities/smart-excel-mapper', category: 'utilities', icon: '📊', titleKey: 'UtilitiesBoard.smart-excel-mapper.title', descKey: 'UtilitiesBoard.smart-excel-mapper.desc' },
-
-  // Fintech
-  { id: 'fintech/tax33', category: 'fintech', icon: '🧾', titleKey: 'FintechBoard.tax33.title', descKey: 'FintechBoard.tax33.desc' },
-  { id: 'fintech/percent', category: 'fintech', icon: '🔢', titleKey: 'FintechBoard.percent.title', descKey: 'FintechBoard.percent.desc' },
-  { id: 'fintech/vat', category: 'fintech', icon: '🧾', titleKey: 'FintechBoard.vat.title', descKey: 'FintechBoard.vat.desc' },
-  { id: 'fintech/interest', category: 'fintech', icon: '💰', titleKey: 'FintechBoard.interest.title', descKey: 'FintechBoard.interest.desc' },
-  { id: 'fintech/currency', category: 'fintech', icon: '💱', titleKey: 'FintechBoard.currency.title', descKey: 'FintechBoard.currency.desc' },
-  { id: 'fintech/crypto', category: 'fintech', icon: '🪙', titleKey: 'FintechBoard.crypto.title', descKey: 'FintechBoard.crypto.desc' },
-  { id: 'fintech/net-pay', category: 'fintech', icon: '💵', titleKey: 'FintechBoard.net-pay.title', descKey: 'FintechBoard.net-pay.desc' },
-
-  // Dev
-  { id: 'dev/json', category: 'dev', icon: '🗂️', titleKey: 'DevBoard.json.title', descKey: 'DevBoard.json.desc' },
-  { id: 'dev/regex', category: 'dev', icon: '🔍', titleKey: 'DevBoard.regex.title', descKey: 'DevBoard.regex.desc' },
-  { id: 'dev/password', category: 'dev', icon: '🔑', titleKey: 'DevBoard.password.title', descKey: 'DevBoard.password.desc' },
-  { id: 'dev/resistor', category: 'dev', icon: '💡', titleKey: 'DevBoard.resistor.title', descKey: 'DevBoard.resistor.desc' },
-  { id: 'dev/kec-grounding', category: 'dev', icon: '⚡', titleKey: 'DevBoard.kec-grounding.title', descKey: 'DevBoard.kec-grounding.desc' },
-
-  // PDF
-  { id: 'pdf/hwp', category: 'pdf', icon: '📄', titleKey: 'PdfBoard.hwp.title', descKey: 'PdfBoard.hwp.desc' },
-
-  // Performance
-  { id: 'performance/ttfb', category: 'performance', icon: '⚡', titleKey: 'PerformanceBoard.ttfb.title', descKey: 'PerformanceBoard.ttfb.desc' },
-
-  // Productivity
-  { id: 'productivity/pomodoro', category: 'productivity', icon: '🍅', titleKey: 'ProductivityBoard.pomodoro.title', descKey: 'ProductivityBoard.pomodoro.desc' },
-  { id: 'productivity/timezone', category: 'productivity', icon: '🌍', titleKey: 'ProductivityBoard.timezone.title', descKey: 'ProductivityBoard.timezone.desc' },
-  { id: 'productivity/coverletter', category: 'productivity', icon: '📝', titleKey: 'ProductivityBoard.coverletter.title', descKey: 'ProductivityBoard.coverletter.desc' },
-
-  // UX
-  { id: 'ux/color', category: 'ux', icon: '🎨', titleKey: 'UxBoard.color.title', descKey: 'UxBoard.color.desc' },
-  { id: 'ux/font', category: 'ux', icon: '🔤', titleKey: 'UxBoard.font.title', descKey: 'UxBoard.font.desc' },
-  { id: 'ux/logo', category: 'ux', icon: '🎭', titleKey: 'UxBoard.logo.title', descKey: 'UxBoard.logo.desc' },
-  { id: 'ux/quiz', category: 'ux', icon: '🎯', titleKey: 'UxBoard.quiz.title', descKey: 'UxBoard.quiz.desc' },
-
-  // AI
-  { id: 'ai/hashtag', category: 'ai', icon: '#️⃣', titleKey: 'AiBoard.hashtag.title', descKey: 'AiBoard.hashtag.desc' },
-
-  // Security
-  { id: 'security/password', category: 'security', icon: '🔐', titleKey: 'SecurityBoard.password.title', descKey: 'SecurityBoard.password.desc' },
-  { id: 'security/url', category: 'security', icon: '🔗', titleKey: 'SecurityBoard.url.title', descKey: 'SecurityBoard.url.desc' },
-  { id: 'security/redact', category: 'security', icon: '🖍️', titleKey: 'SecurityBoard.redact.title', descKey: 'SecurityBoard.redact.desc' },
-
-  // Lifestyle
-  { id: 'lifestyle/bmi-water', category: 'lifestyle', icon: '💧', titleKey: 'LifestyleBoard.bmi-water.title', descKey: 'LifestyleBoard.bmi-water.desc' },
-  { id: 'lifestyle/nickname', category: 'lifestyle', icon: '✨', titleKey: 'LifestyleBoard.nickname.title', descKey: 'LifestyleBoard.nickname.desc' },
-  { id: 'lifestyle/pet-food', category: 'lifestyle', icon: '🐾', titleKey: 'LifestyleBoard.pet-food.title', descKey: 'LifestyleBoard.pet-food.desc' },
-  { id: 'lifestyle/korean-age', category: 'lifestyle', icon: '🎂', titleKey: 'LifestyleBoard.korean-age.title', descKey: 'LifestyleBoard.korean-age.desc' },
-  { id: 'lifestyle/teto-egen-test', category: 'lifestyle', icon: '🧬', titleKey: 'LifestyleBoard.teto-egen-test.title', descKey: 'LifestyleBoard.teto-egen-test.desc' },
-  { id: 'lifestyle/sea-mbti', category: 'lifestyle', icon: '🌊', titleKey: 'LifestyleBoard.sea-mbti.title', descKey: 'LifestyleBoard.sea-mbti.desc' },
-  { id: 'lifestyle/aquarium-bioload', category: 'lifestyle', icon: '🐠', titleKey: 'LifestyleBoard.aquarium-bioload.title', descKey: 'LifestyleBoard.aquarium-bioload.desc' },
-] as const;
-
-// Calculate tool counts per category automatically
-const CATEGORY_TOOL_COUNTS = ALL_TOOLS.reduce((acc, tool) => {
-  acc[tool.category] = (acc[tool.category] || 0) + 1;
-  return acc;
-}, {} as Record<string, number>);
-
-// Merge category base info with auto-calculated counts
-const CATEGORIES = CATEGORIES_BASE.map(cat => ({
-  ...cat,
-  count: CATEGORY_TOOL_COUNTS[cat.id] || 0,
-}));
+interface HomeContentProps {
+  toolCounts: Record<string, number>;
+  totalTools: number;
+}
 
 const FEATURES = [
   { icon: '🔒', titleKey: 'feature1Title', descKey: 'feature1Desc' },
@@ -102,43 +29,18 @@ const FEATURES = [
   { icon: '🎁', titleKey: 'feature3Title', descKey: 'feature3Desc' },
 ] as const;
 
-export default function HomeContent() {
+export default function HomeContent({ toolCounts, totalTools }: HomeContentProps) {
   const t = useTranslations('Index');
   const catT = useTranslations('Categories');
   const nav = useTranslations('Navigation');
-  const toolT = useTranslations();
 
   const [search, setSearch] = useState('');
 
-  // Get translated tool title and desc
-  const getToolTitle = (titleKey: string) => {
-    try {
-      const parts = titleKey.split('.');
-      return toolT(`${parts[0]}.${parts[1]}.${parts[2]}`);
-    } catch {
-      return titleKey;
-    }
-  };
-
-  const getToolDesc = (descKey: string) => {
-    try {
-      const parts = descKey.split('.');
-      return toolT(`${parts[0]}.${parts[1]}.${parts[2]}`);
-    } catch {
-      return descKey;
-    }
-  };
-
-  const filteredTools = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return [];
-    return ALL_TOOLS.filter(tool => {
-      const title = getToolTitle(tool.titleKey).toLowerCase();
-      const desc = getToolDesc(tool.descKey).toLowerCase();
-      const catName = catT(tool.category).toLowerCase();
-      return title.includes(q) || desc.includes(q) || catName.includes(q) || tool.id.includes(q);
-    });
-  }, [search, toolT, catT]);
+  // Merge category base info with auto-calculated counts from props
+  const CATEGORIES = useMemo(() => CATEGORIES_BASE.map(cat => ({
+    ...cat,
+    count: toolCounts[cat.id] || 0,
+  })), [toolCounts]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -146,10 +48,7 @@ export default function HomeContent() {
     return CATEGORIES.filter(cat =>
       catT(cat.id).toLowerCase().includes(q) || cat.id.includes(q)
     );
-  }, [search, catT]);
-
-  // Auto-switch between categories and tools view
-  const showTools = search.trim().length > 0 && filteredTools.length > 0;
+  }, [search, catT, CATEGORIES]);
 
   return (
     <div className={styles.homePage}>
@@ -200,7 +99,7 @@ export default function HomeContent() {
 
         <div className={`${styles.statsRow} ${styles.anim4}`} role="list">
           {[
-            { num: '40+', label: t('statTools') },
+            { num: `${totalTools}+`, label: t('statTools') },
             { num: '10',  label: t('statCategories') },
             { num: '100%',label: t('statFree') },
             { num: '0',   label: t('statLogin') },
@@ -221,67 +120,42 @@ export default function HomeContent() {
         <span className={styles.adSlotLabel}>AD</span>
       </div>
 
-      {/* ── CATEGORIES / TOOLS ── */}
-      <section className={styles.categoriesSection} id="categories" aria-label={showTools ? "Search results" : "Tool categories"}>
+      {/* ── CATEGORIES ── */}
+      <section className={styles.categoriesSection} id="categories" aria-label="Tool categories">
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>
-            {showTools ? `${filteredTools.length}개의 도구 검색됨` : t('browseCategories')}
+            {t('browseCategories')}
           </h2>
           <p className={styles.sectionSubtitle}>
-            {showTools ? `"${search}" 검색 결과` : t('browseCategoriesSubtitle')}
+            {t('browseCategoriesSubtitle')}
           </p>
         </div>
 
-        {showTools ? (
-          // Show tool search results
-          <div className={styles.categoriesGrid}>
-            {filteredTools.map((tool, i) => {
-              const category = CATEGORIES.find(c => c.id === tool.category);
-              return (
-                <Link
-                  key={tool.id}
-                  href={`/${tool.id}` as any}
-                  className={styles.categoryCard}
-                  style={{ '--cat-color': category?.color || '#3b82f6', animationDelay: `${i * 55}ms` } as React.CSSProperties}
-                >
-                  <span className={`${styles.badge} ${styles.badgeCategory}`}>
-                    {category?.icon} {catT(tool.category)}
-                  </span>
-                  <span className={styles.catIcon} aria-hidden>{tool.icon}</span>
-                  <h3 className={styles.catName}>{getToolTitle(tool.titleKey)}</h3>
-                  <p className={styles.toolDesc}>{getToolDesc(tool.descKey)}</p>
-                </Link>
-              );
-            })}
+        {filtered.length === 0 && search ? (
+          <div className={styles.noResults}>
+            <span aria-hidden>🔍</span>
+            <p>{t('noResults')} &ldquo;<strong>{search}</strong>&rdquo;</p>
           </div>
         ) : (
-          // Show categories (default view)
-          filtered.length === 0 && search ? (
-            <div className={styles.noResults}>
-              <span aria-hidden>🔍</span>
-              <p>{t('noResults')} &ldquo;<strong>{search}</strong>&rdquo;</p>
-            </div>
-          ) : (
-            <div className={styles.categoriesGrid}>
-              {filtered.map((cat, i) => (
-                <Link
-                  key={cat.id}
-                  href={`/${cat.id}` as any}
-                  className={styles.categoryCard}
-                  style={{ '--cat-color': cat.color, animationDelay: `${i * 55}ms` } as React.CSSProperties}
-                >
-                  {(cat.hot || cat.popular) && (
-                    <span className={`${styles.badge} ${cat.hot ? styles.badgeHot : styles.badgePopular}`}>
-                      {cat.hot ? '🔥 Hot' : '⭐ Popular'}
-                    </span>
-                  )}
-                  <span className={styles.catIcon} aria-hidden>{cat.icon}</span>
-                  <h3 className={styles.catName}>{catT(cat.id)}</h3>
-                  <span className={styles.catCount}>{cat.count} {t('tools')}</span>
-                </Link>
-              ))}
-            </div>
-          )
+          <div className={styles.categoriesGrid}>
+            {filtered.map((cat, i) => (
+              <Link
+                key={cat.id}
+                href={`/${cat.id}` as any}
+                className={styles.categoryCard}
+                style={{ '--cat-color': cat.color, animationDelay: `${i * 55}ms` } as React.CSSProperties}
+              >
+                {(cat.hot || cat.popular) && (
+                  <span className={`${styles.badge} ${cat.hot ? styles.badgeHot : styles.badgePopular}`}>
+                    {cat.hot ? '🔥 Hot' : '⭐ Popular'}
+                  </span>
+                )}
+                <span className={styles.catIcon} aria-hidden>{cat.icon}</span>
+                <h3 className={styles.catName}>{catT(cat.id)}</h3>
+                <span className={styles.catCount}>{cat.count} {t('tools')}</span>
+              </Link>
+            ))}
+          </div>
         )}
       </section>
 

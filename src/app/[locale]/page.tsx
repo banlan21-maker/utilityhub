@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import HomeContent from './HomeContent';
+import { getToolCounts, getTotalToolCount } from '@/lib/categoryUtils';
 
 export async function generateMetadata({
   params,
@@ -46,5 +47,9 @@ export async function generateMetadata({
 }
 
 export default function HomePage() {
-  return <HomeContent />;
+  // Automatically count tools by scanning file system
+  const toolCounts = getToolCounts();
+  const totalTools = getTotalToolCount();
+
+  return <HomeContent toolCounts={toolCounts} totalTools={totalTools} />;
 }
