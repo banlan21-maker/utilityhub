@@ -17,6 +17,13 @@ export default function DevDashboardPage() {
       gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
     },
     {
+      id: 'dev/kec-grounding',
+      title: t('kec-grounding.title'),
+      desc: t('kec-grounding.desc'),
+      icon: '⚡',
+      gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+    },
+    {
       id: 'dev/regex',
       title: t('regex.title'),
       desc: t('regex.desc'),
