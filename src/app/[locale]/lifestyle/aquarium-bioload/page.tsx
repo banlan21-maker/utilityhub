@@ -3,194 +3,37 @@
 import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
-import { Trash2, Plus, AlertTriangle, CheckCircle2, Info } from 'lucide-react';
+import SeoSection from '@/app/components/SeoSection';
 
 // Fish Database
 interface Fish {
   id: string;
   name: string;
   nameEn: string;
-  bioloadPerFish: number; // Liters needed per fish
-  minTankSize: number; // Minimum tank size in liters
-  tempRange: [number, number]; // Temperature range
+  bioloadPerFish: number;
+  minTankSize: number;
+  tempRange: [number, number];
   temperament: 'peaceful' | 'aggressive' | 'semi-aggressive';
-  minSchooling: number; // Minimum number for schooling fish
+  minSchooling: number;
   imageEmoji: string;
 }
 
 const FISH_DATABASE: Fish[] = [
-  {
-    id: 'guppy',
-    name: '구피',
-    nameEn: 'Guppy',
-    bioloadPerFish: 4,
-    minTankSize: 20,
-    tempRange: [22, 28],
-    temperament: 'peaceful',
-    minSchooling: 1,
-    imageEmoji: '🐠'
-  },
-  {
-    id: 'neon-tetra',
-    name: '네온테트라',
-    nameEn: 'Neon Tetra',
-    bioloadPerFish: 2,
-    minTankSize: 40,
-    tempRange: [20, 26],
-    temperament: 'peaceful',
-    minSchooling: 6,
-    imageEmoji: '🐟'
-  },
-  {
-    id: 'corydoras',
-    name: '코리도라스',
-    nameEn: 'Corydoras',
-    bioloadPerFish: 5,
-    minTankSize: 40,
-    tempRange: [22, 26],
-    temperament: 'peaceful',
-    minSchooling: 3,
-    imageEmoji: '🐡'
-  },
-  {
-    id: 'ancistrus',
-    name: '안시',
-    nameEn: 'Ancistrus (Bristlenose Pleco)',
-    bioloadPerFish: 20,
-    minTankSize: 80,
-    tempRange: [20, 28],
-    temperament: 'peaceful',
-    minSchooling: 1,
-    imageEmoji: '🐟'
-  },
-  {
-    id: 'betta',
-    name: '베타',
-    nameEn: 'Betta',
-    bioloadPerFish: 8,
-    minTankSize: 20,
-    tempRange: [24, 28],
-    temperament: 'aggressive',
-    minSchooling: 1,
-    imageEmoji: '🐠'
-  },
-  {
-    id: 'tiger-barb',
-    name: '수마트라',
-    nameEn: 'Tiger Barb',
-    bioloadPerFish: 6,
-    minTankSize: 60,
-    tempRange: [23, 27],
-    temperament: 'semi-aggressive',
-    minSchooling: 6,
-    imageEmoji: '🐟'
-  },
-  {
-    id: 'angelfish',
-    name: '엔젤피시',
-    nameEn: 'Angelfish',
-    bioloadPerFish: 15,
-    minTankSize: 150,
-    tempRange: [24, 28],
-    temperament: 'semi-aggressive',
-    minSchooling: 1,
-    imageEmoji: '🐠'
-  },
-  {
-    id: 'molly',
-    name: '몰리',
-    nameEn: 'Molly',
-    bioloadPerFish: 8,
-    minTankSize: 40,
-    tempRange: [24, 28],
-    temperament: 'peaceful',
-    minSchooling: 1,
-    imageEmoji: '🐟'
-  },
-  {
-    id: 'platy',
-    name: '플래티',
-    nameEn: 'Platy',
-    bioloadPerFish: 6,
-    minTankSize: 40,
-    tempRange: [20, 26],
-    temperament: 'peaceful',
-    minSchooling: 1,
-    imageEmoji: '🐠'
-  },
-  {
-    id: 'goldfish',
-    name: '금붕어',
-    nameEn: 'Goldfish',
-    bioloadPerFish: 40,
-    minTankSize: 150,
-    tempRange: [18, 24],
-    temperament: 'peaceful',
-    minSchooling: 1,
-    imageEmoji: '🐡'
-  },
-  {
-    id: 'zebra-danio',
-    name: '제브라 다니오',
-    nameEn: 'Zebra Danio',
-    bioloadPerFish: 3,
-    minTankSize: 40,
-    tempRange: [18, 24],
-    temperament: 'peaceful',
-    minSchooling: 6,
-    imageEmoji: '🐟'
-  },
-  {
-    id: 'cherry-shrimp',
-    name: '체리새우',
-    nameEn: 'Cherry Shrimp',
-    bioloadPerFish: 0.5,
-    minTankSize: 10,
-    tempRange: [20, 26],
-    temperament: 'peaceful',
-    minSchooling: 5,
-    imageEmoji: '🦐'
-  },
-  {
-    id: 'rasbora',
-    name: '라스보라',
-    nameEn: 'Rasbora',
-    bioloadPerFish: 2,
-    minTankSize: 40,
-    tempRange: [22, 26],
-    temperament: 'peaceful',
-    minSchooling: 8,
-    imageEmoji: '🐠'
-  },
-  {
-    id: 'discus',
-    name: '디스커스',
-    nameEn: 'Discus',
-    bioloadPerFish: 40,
-    minTankSize: 200,
-    tempRange: [26, 30],
-    temperament: 'peaceful',
-    minSchooling: 4,
-    imageEmoji: '🐟'
-  },
-  {
-    id: 'cichlid',
-    name: '시클리드',
-    nameEn: 'Cichlid',
-    bioloadPerFish: 30,
-    minTankSize: 150,
-    tempRange: [24, 28],
-    temperament: 'aggressive',
-    minSchooling: 1,
-    imageEmoji: '🐠'
-  }
+  { id: 'guppy', name: '구피', nameEn: 'Guppy', bioloadPerFish: 4, minTankSize: 20, tempRange: [22, 28], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'neon-tetra', name: '네온테트라', nameEn: 'Neon Tetra', bioloadPerFish: 2, minTankSize: 40, tempRange: [20, 26], temperament: 'peaceful', minSchooling: 6, imageEmoji: '🐟' },
+  { id: 'corydoras', name: '코리도라스', nameEn: 'Corydoras', bioloadPerFish: 5, minTankSize: 40, tempRange: [22, 26], temperament: 'peaceful', minSchooling: 3, imageEmoji: '🐡' },
+  { id: 'ancistrus', name: '안시', nameEn: 'Ancistrus', bioloadPerFish: 20, minTankSize: 80, tempRange: [20, 28], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐟' },
+  { id: 'betta', name: '베타', nameEn: 'Betta', bioloadPerFish: 8, minTankSize: 20, tempRange: [24, 28], temperament: 'aggressive', minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'tiger-barb', name: '수마트라', nameEn: 'Tiger Barb', bioloadPerFish: 6, minTankSize: 60, tempRange: [23, 27], temperament: 'semi-aggressive', minSchooling: 6, imageEmoji: '🐟' },
+  { id: 'angelfish', name: '엔젤피시', nameEn: 'Angelfish', bioloadPerFish: 15, minTankSize: 150, tempRange: [24, 28], temperament: 'semi-aggressive', minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'molly', name: '몰리', nameEn: 'Molly', bioloadPerFish: 8, minTankSize: 40, tempRange: [24, 28], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐟' },
+  { id: 'platy', name: '플래티', nameEn: 'Platy', bioloadPerFish: 6, minTankSize: 40, tempRange: [20, 26], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'goldfish', name: '금붕어', nameEn: 'Goldfish', bioloadPerFish: 40, minTankSize: 150, tempRange: [18, 24], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐡' },
+  { id: 'zebra-danio', name: '제브라 다니오', nameEn: 'Zebra Danio', bioloadPerFish: 3, minTankSize: 40, tempRange: [18, 24], temperament: 'peaceful', minSchooling: 6, imageEmoji: '🐟' },
+  { id: 'cherry-shrimp', name: '체리새우', nameEn: 'Cherry Shrimp', bioloadPerFish: 0.5, minTankSize: 10, tempRange: [20, 26], temperament: 'peaceful', minSchooling: 5, imageEmoji: '🦐' },
+  { id: 'rasbora', name: '라스보라', nameEn: 'Rasbora', bioloadPerFish: 2, minTankSize: 40, tempRange: [22, 26], temperament: 'peaceful', minSchooling: 8, imageEmoji: '🐠' },
+  { id: 'discus', name: '디스커스', nameEn: 'Discus', bioloadPerFish: 40, minTankSize: 200, tempRange: [26, 30], temperament: 'peaceful', minSchooling: 4, imageEmoji: '🐟' },
+  { id: 'cichlid', name: '시클리드', nameEn: 'Cichlid', bioloadPerFish: 30, minTankSize: 150, tempRange: [24, 28], temperament: 'aggressive', minSchooling: 1, imageEmoji: '🐠' },
 ];
 
 interface CartItem {
@@ -201,24 +44,19 @@ interface CartItem {
 export default function AquariumBioloadPage() {
   const t = useTranslations('AquariumBioload');
 
-  // Tank specifications
   const [tankLength, setTankLength] = useState<number>(60);
   const [tankWidth, setTankWidth] = useState<number>(30);
   const [tankHeight, setTankHeight] = useState<number>(36);
   const [tankLiters, setTankLiters] = useState<number>(64.8);
   const [useCustomLiters, setUseCustomLiters] = useState<boolean>(false);
-
-  // Fish selection
   const [selectedFishId, setSelectedFishId] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Calculate tank liters from dimensions
   const calculateLiters = (l: number, w: number, h: number) => {
-    return (l * w * h) / 1000; // Convert cm³ to liters
+    return (l * w * h) / 1000;
   };
 
-  // Update tank liters when dimensions change
   const handleDimensionChange = (dimension: 'length' | 'width' | 'height', value: number) => {
     if (dimension === 'length') setTankLength(value);
     if (dimension === 'width') setTankWidth(value);
@@ -233,510 +71,452 @@ export default function AquariumBioloadPage() {
     }
   };
 
-  // Add fish to cart
   const handleAddFish = () => {
     if (!selectedFishId || quantity <= 0) return;
-
     const fish = FISH_DATABASE.find(f => f.id === selectedFishId);
     if (!fish) return;
 
     const existingItem = cart.find(item => item.fish.id === fish.id);
-
     if (existingItem) {
       setCart(cart.map(item =>
-        item.fish.id === fish.id
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
+        item.fish.id === fish.id ? { ...item, quantity: item.quantity + quantity } : item
       ));
     } else {
       setCart([...cart, { fish, quantity }]);
     }
-
     setQuantity(1);
     setSelectedFishId('');
   };
 
-  // Remove fish from cart
   const handleRemoveFish = (fishId: string) => {
     setCart(cart.filter(item => item.fish.id !== fishId));
   };
 
-  // Update quantity
   const handleUpdateQuantity = (fishId: string, newQuantity: number) => {
     if (newQuantity <= 0) {
       handleRemoveFish(fishId);
     } else {
       setCart(cart.map(item =>
-        item.fish.id === fishId
-          ? { ...item, quantity: newQuantity }
-          : item
+        item.fish.id === fishId ? { ...item, quantity: newQuantity } : item
       ));
     }
   };
 
-  // Calculate bioload metrics
   const bioloadMetrics = useMemo(() => {
     const totalBioload = cart.reduce((sum, item) => sum + (item.fish.bioloadPerFish * item.quantity), 0);
     const usagePercent = tankLiters > 0 ? (totalBioload / tankLiters) * 100 : 0;
-
     return {
       totalBioload,
       usagePercent,
-      remainingCapacity: Math.max(0, tankLiters - totalBioload)
+      remainingCapacity: Math.max(0, tankLiters - totalBioload),
+      totalFish: cart.reduce((sum, item) => sum + item.quantity, 0)
     };
   }, [cart, tankLiters]);
 
-  // Get bioload status
   const getBioloadStatus = (percent: number) => {
-    if (percent > 100) return { color: 'bg-red-500', status: 'danger', label: t('statusOvercrowded') };
-    if (percent > 90) return { color: 'bg-yellow-500', status: 'warning', label: t('statusMax') };
-    if (percent > 70) return { color: 'bg-blue-500', status: 'good', label: t('statusOptimal') };
-    return { color: 'bg-green-500', status: 'safe', label: t('statusSafe') };
+    if (percent > 100) return { color: '#ef4444', status: 'danger', label: t('statusOvercrowded') };
+    if (percent > 90) return { color: '#eab308', status: 'warning', label: t('statusMax') };
+    if (percent > 70) return { color: '#06b6d4', status: 'good', label: t('statusOptimal') };
+    return { color: '#22c55e', status: 'safe', label: t('statusSafe') };
   };
 
-  // Smart alerts
   const alerts = useMemo(() => {
-    const warnings: Array<{ type: 'warning' | 'error' | 'info'; message: string }> = [];
-
+    const warnings: Array<{ type: 'warning' | 'error'; message: string }> = [];
     cart.forEach(item => {
-      // Check minimum tank size
       if (tankLiters < item.fish.minTankSize) {
-        warnings.push({
-          type: 'error',
-          message: t('alertTankTooSmall', { fishName: item.fish.name, minSize: item.fish.minTankSize })
-        });
+        warnings.push({ type: 'error', message: t('alertTankTooSmall', { fishName: item.fish.name, minSize: item.fish.minTankSize }) });
       }
-
-      // Check schooling requirements
       if (item.quantity < item.fish.minSchooling) {
-        warnings.push({
-          type: 'warning',
-          message: t('alertSchooling', { fishName: item.fish.name, minCount: item.fish.minSchooling })
-        });
+        warnings.push({ type: 'warning', message: t('alertSchooling', { fishName: item.fish.name, minCount: item.fish.minSchooling }) });
       }
     });
-
-    // Check temperament compatibility
     const hasAggressive = cart.some(item => item.fish.temperament === 'aggressive');
     const hasPeaceful = cart.some(item => item.fish.temperament === 'peaceful');
-
     if (hasAggressive && hasPeaceful) {
-      warnings.push({
-        type: 'warning',
-        message: t('alertCompatibility')
-      });
+      warnings.push({ type: 'warning', message: t('alertCompatibility') });
     }
-
     return warnings;
   }, [cart, tankLiters, t]);
 
   const status = getBioloadStatus(bioloadMetrics.usagePercent);
 
   return (
-    <div>
+    <div className="max-w-6xl mx-auto">
       <NavigationActions />
 
       <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
+        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)', fontSize: '2.5rem' }}>
           {t('title')}
         </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
           {t('subtitle')}
         </p>
       </header>
 
-      <div style={{ display: 'grid', gap: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Step 1: Tank Specifications */}
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <span>🐠</span> {t('step1Title')}
-            </CardTitle>
-            <CardDescription>{t('step1Desc')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
-                <div>
-                  <Label htmlFor="length">{t('tankLength')} (cm)</Label>
-                  <Input
-                    id="length"
-                    type="number"
-                    value={tankLength}
-                    onChange={(e) => handleDimensionChange('length', parseFloat(e.target.value) || 0)}
-                    min={0}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="width">{t('tankWidth')} (cm)</Label>
-                  <Input
-                    id="width"
-                    type="number"
-                    value={tankWidth}
-                    onChange={(e) => handleDimensionChange('width', parseFloat(e.target.value) || 0)}
-                    min={0}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="height">{t('tankHeight')} (cm)</Label>
-                  <Input
-                    id="height"
-                    type="number"
-                    value={tankHeight}
-                    onChange={(e) => handleDimensionChange('height', parseFloat(e.target.value) || 0)}
-                    min={0}
-                  />
-                </div>
-              </div>
+      <div className="grid gap-8 lg:grid-cols-2 animate-slide-up">
+        {/* Left Column - Input Section */}
+        <div className="flex flex-col gap-6">
+          {/* Tank Specifications */}
+          <div className="glass-panel" style={{ padding: '2rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
+              🐠 {t('step1Title')}
+            </h2>
 
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Label htmlFor="liters">{t('tankLiters')} (L)</Label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setUseCustomLiters(!useCustomLiters)}
-                  >
-                    {useCustomLiters ? t('useCalculated') : t('useCustom')}
-                  </Button>
-                </div>
-                <Input
-                  id="liters"
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  {t('tankLength')} (cm)
+                </label>
+                <input
                   type="number"
-                  value={tankLiters}
-                  onChange={(e) => {
-                    setUseCustomLiters(true);
-                    setTankLiters(parseFloat(e.target.value) || 0);
-                  }}
-                  min={0}
-                  step={0.1}
+                  value={tankLength}
+                  onChange={(e) => handleDimensionChange('length', parseFloat(e.target.value) || 0)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  {t('tankWidth')} (cm)
+                </label>
+                <input
+                  type="number"
+                  value={tankWidth}
+                  onChange={(e) => handleDimensionChange('width', parseFloat(e.target.value) || 0)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  {t('tankHeight')} (cm)
+                </label>
+                <input
+                  type="number"
+                  value={tankHeight}
+                  onChange={(e) => handleDimensionChange('height', parseFloat(e.target.value) || 0)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
                 />
               </div>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Step 2: Add Fish */}
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <span>🔍</span> {t('step2Title')}
-            </CardTitle>
-            <CardDescription>{t('step2Desc')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '1rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr auto', gap: '1rem', alignItems: 'end' }}>
-                <div>
-                  <Label htmlFor="fish">{t('selectFish')}</Label>
-                  <Select value={selectedFishId} onValueChange={setSelectedFishId}>
-                    <SelectTrigger id="fish">
-                      <SelectValue placeholder={t('selectFishPlaceholder')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {FISH_DATABASE.map(fish => (
-                        <SelectItem key={fish.id} value={fish.id}>
-                          <span className="flex items-center gap-2">
-                            <span>{fish.imageEmoji}</span>
-                            <span>{fish.name} ({fish.nameEn})</span>
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                {t('tankLiters')} (L)
+              </label>
+              <input
+                type="number"
+                value={tankLiters}
+                onChange={(e) => {
+                  setUseCustomLiters(true);
+                  setTankLiters(parseFloat(e.target.value) || 0);
+                }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+              />
+            </div>
+          </div>
 
-                <div>
-                  <Label htmlFor="quantity">{t('quantity')}</Label>
-                  <Input
-                    id="quantity"
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                    min={1}
-                  />
-                </div>
+          {/* Add Fish */}
+          <div className="glass-panel" style={{ padding: '2rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
+              🔍 {t('step2Title')}
+            </h2>
 
-                <Button
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                {t('selectFish')}
+              </label>
+              <select
+                value={selectedFishId}
+                onChange={(e) => setSelectedFishId(e.target.value)}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)' }}
+              >
+                <option value="">{t('selectFishPlaceholder')}</option>
+                {FISH_DATABASE.map(fish => (
+                  <option key={fish.id} value={fish.id}>
+                    {fish.imageEmoji} {fish.name} ({fish.nameEn})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {selectedFishId && (
+              <div style={{ padding: '1rem', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '12px', border: '1px solid rgba(6, 182, 212, 0.3)', marginBottom: '1.5rem' }}>
+                {(() => {
+                  const fish = FISH_DATABASE.find(f => f.id === selectedFishId);
+                  if (!fish) return null;
+                  return (
+                    <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-primary)' }}>
+                      <div><strong>{t('bioloadPerFish')}:</strong> {fish.bioloadPerFish}L</div>
+                      <div><strong>{t('minTankSize')}:</strong> {fish.minTankSize}L</div>
+                      <div><strong>{t('tempRange')}:</strong> {fish.tempRange[0]}-{fish.tempRange[1]}°C</div>
+                      <div><strong>{t('temperament')}:</strong> {t(`temperament_${fish.temperament}`)}</div>
+                      <div><strong>{t('minSchooling')}:</strong> {fish.minSchooling}{t('fish')}</div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  {t('quantity')}
+                </label>
+                <input
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+                  min={1}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <button
                   onClick={handleAddFish}
                   disabled={!selectedFishId}
-                  className="flex items-center gap-2"
-                  style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' }}
+                  className="primary-button"
+                  style={{ padding: '0.75rem 1.5rem', borderRadius: '12px', fontWeight: 700, whiteSpace: 'nowrap' }}
                 >
-                  <Plus size={16} /> {t('addToTank')}
-                </Button>
+                  ➕ {t('addToTank')}
+                </button>
               </div>
-
-              {/* Fish details */}
-              {selectedFishId && (
-                <Card style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-                  <CardContent className="pt-4">
-                    {(() => {
-                      const fish = FISH_DATABASE.find(f => f.id === selectedFishId);
-                      if (!fish) return null;
-                      return (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem', fontSize: '0.875rem' }}>
-                          <div><strong>{t('bioloadPerFish')}:</strong> {fish.bioloadPerFish}L</div>
-                          <div><strong>{t('minTankSize')}:</strong> {fish.minTankSize}L</div>
-                          <div><strong>{t('tempRange')}:</strong> {fish.tempRange[0]}-{fish.tempRange[1]}°C</div>
-                          <div><strong>{t('temperament')}:</strong> {t(`temperament_${fish.temperament}`)}</div>
-                          <div><strong>{t('minSchooling')}:</strong> {fish.minSchooling}{t('fish')}</div>
-                        </div>
-                      );
-                    })()}
-                  </CardContent>
-                </Card>
-              )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Step 3: Current Tank (Cart) */}
-        {cart.length > 0 && (
-          <Card className="glass-panel">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span>🎣</span> {t('currentTank')}
-              </CardTitle>
-              <CardDescription>{t('currentTankDesc')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div style={{ display: 'grid', gap: '0.75rem' }}>
+          {/* Current Tank */}
+          {cart.length > 0 && (
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-primary)' }}>
+                🎣 {t('currentTank')}
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {cart.map(item => (
                   <div
                     key={item.fish.id}
                     style={{
                       display: 'grid',
-                      gridTemplateColumns: 'auto 1fr auto auto auto',
+                      gridTemplateColumns: 'auto 1fr auto auto',
                       gap: '1rem',
                       alignItems: 'center',
                       padding: '1rem',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: '0.5rem',
-                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                      background: 'var(--surface-hover)',
+                      borderRadius: '12px',
+                      border: '1px solid var(--border)'
                     }}
                   >
                     <span style={{ fontSize: '1.5rem' }}>{item.fish.imageEmoji}</span>
                     <div>
-                      <div style={{ fontWeight: 600 }}>{item.fish.name} ({item.fish.nameEn})</div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.fish.name}</div>
                       <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                         {item.fish.bioloadPerFish}L × {item.quantity} = {item.fish.bioloadPerFish * item.quantity}L
                       </div>
                     </div>
-                    <Input
+                    <input
                       type="number"
                       value={item.quantity}
                       onChange={(e) => handleUpdateQuantity(item.fish.id, parseInt(e.target.value) || 0)}
                       min={1}
-                      style={{ width: '80px' }}
+                      style={{ width: '60px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)', textAlign: 'center' }}
                     />
-                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                      {item.fish.bioloadPerFish * item.quantity}L
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <button
                       onClick={() => handleRemoveFish(item.fish.id)}
-                      className="text-red-500 hover:text-red-600"
+                      style={{ padding: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '8px', cursor: 'pointer', color: '#ef4444' }}
                     >
-                      <Trash2 size={16} />
-                    </Button>
+                      🗑️
+                    </button>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
+        </div>
 
-        {/* Step 4: Bioload Dashboard */}
-        <Card className="glass-panel" style={{ border: '2px solid rgba(6, 182, 212, 0.3)' }}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <span>📊</span> {t('dashboard')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '2rem' }}>
-              {/* Progress Bar */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span style={{ fontWeight: 600 }}>{t('bioloadUsage')}</span>
-                  <span style={{ fontSize: '1.5rem', fontWeight: 700, color: status.status === 'danger' ? '#ef4444' : status.status === 'warning' ? '#eab308' : status.status === 'good' ? '#3b82f6' : '#22c55e' }}>
-                    {bioloadMetrics.usagePercent.toFixed(1)}%
-                  </span>
-                </div>
-                <Progress value={Math.min(bioloadMetrics.usagePercent, 100)} className="h-8" />
-                <div className="flex justify-between items-center mt-2">
-                  <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                    {bioloadMetrics.totalBioload.toFixed(1)}L / {tankLiters}L
-                  </span>
-                  <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>
-                    {status.label}
-                  </span>
-                </div>
-              </div>
+        {/* Right Column - Results */}
+        <div className="flex flex-col gap-6">
+          {cart.length > 0 ? (
+            <>
+              <div className="glass-panel animate-scale-in" style={{ padding: '2rem', border: `2px solid ${status.color}` }}>
+                <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--primary)' }}>
+                  📊 {t('dashboard')}
+                </h2>
 
-              {/* Metrics Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
-                <Card style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-                  <CardContent className="pt-4">
+                {/* Progress Bar */}
+                <div style={{ marginBottom: '2rem' }}>
+                  <div className="flex justify-between items-center" style={{ marginBottom: '0.5rem' }}>
+                    <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{t('bioloadUsage')}</span>
+                    <span style={{ fontSize: '1.5rem', fontWeight: 700, color: status.color }}>
+                      {bioloadMetrics.usagePercent.toFixed(1)}%
+                    </span>
+                  </div>
+                  <div style={{ width: '100%', height: '2rem', background: 'var(--surface)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                    <div
+                      style={{
+                        width: `${Math.min(bioloadMetrics.usagePercent, 100)}%`,
+                        height: '100%',
+                        background: `linear-gradient(90deg, ${status.color}, ${status.color}dd)`,
+                        transition: 'width 0.5s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        paddingRight: '0.5rem'
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between" style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>
+                      {bioloadMetrics.totalBioload.toFixed(1)}L / {tankLiters}L
+                    </span>
+                    <span style={{ fontWeight: 600, color: status.color }}>
+                      {status.label}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Metrics Cards */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div style={{ padding: '1rem', background: 'var(--surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', textAlign: 'center' }}>
                     <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                       {t('totalFish')}
                     </div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>
-                      {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                    <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                      {bioloadMetrics.totalFish}
                     </div>
-                  </CardContent>
-                </Card>
-
-                <Card style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-                  <CardContent className="pt-4">
+                  </div>
+                  <div style={{ padding: '1rem', background: 'var(--surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', textAlign: 'center' }}>
                     <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                       {t('totalBioload')}
                     </div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>
+                    <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       {bioloadMetrics.totalBioload.toFixed(1)}L
                     </div>
-                  </CardContent>
-                </Card>
-
-                <Card style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-                  <CardContent className="pt-4">
+                  </div>
+                  <div style={{ padding: '1rem', background: 'var(--surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', textAlign: 'center' }}>
                     <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                       {t('remainingCapacity')}
                     </div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>
+                    <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       {bioloadMetrics.remainingCapacity.toFixed(1)}L
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
+
+                {/* Alerts */}
+                {alerts.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {alerts.map((alert, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          padding: '1rem',
+                          background: alert.type === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(234, 179, 8, 0.1)',
+                          border: `1px solid ${alert.type === 'error' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(234, 179, 8, 0.3)'}`,
+                          borderRadius: '12px',
+                          color: 'var(--text-primary)',
+                          fontSize: '0.875rem',
+                          display: 'flex',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        <span>{alert.type === 'error' ? '⚠️' : '💡'}</span>
+                        <span>{alert.message}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {bioloadMetrics.usagePercent <= 70 && alerts.length === 0 && (
+                  <div style={{ padding: '1.5rem', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+                    <div style={{ fontWeight: 700, marginBottom: '0.25rem', color: 'var(--text-primary)' }}>
+                      {t('alertSafeTitle')}
+                    </div>
+                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                      {t('alertSafeDesc')}
+                    </div>
+                  </div>
+                )}
               </div>
-
-              {/* Alerts */}
-              {alerts.length > 0 && (
-                <div style={{ display: 'grid', gap: '0.75rem' }}>
-                  {alerts.map((alert, index) => (
-                    <Alert
-                      key={index}
-                      variant={alert.type === 'error' ? 'destructive' : 'default'}
-                      style={alert.type === 'warning' ? { background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)' } : {}}
-                    >
-                      {alert.type === 'error' ? <AlertTriangle className="h-4 w-4" /> : alert.type === 'info' ? <Info className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
-                      <AlertDescription>{alert.message}</AlertDescription>
-                    </Alert>
-                  ))}
-                </div>
-              )}
-
-              {bioloadMetrics.usagePercent <= 70 && cart.length > 0 && alerts.length === 0 && (
-                <Alert style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
-                  <CheckCircle2 className="h-4 w-4" />
-                  <AlertTitle>{t('alertSafeTitle')}</AlertTitle>
-                  <AlertDescription>{t('alertSafeDesc')}</AlertDescription>
-                </Alert>
-              )}
+            </>
+          ) : (
+            <div className="glass-panel flex items-center justify-center" style={{ padding: '4rem', opacity: 0.5, minHeight: '400px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🐠</div>
+                <p style={{ color: 'var(--text-secondary)' }}>수조에 물고기를 추가해보세요</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* SEO Content Sections */}
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle>{t('section1Title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '1rem', lineHeight: 1.8 }}>
-              <p>{t('section1Para1')}</p>
-              <p>{t('section1Para2')}</p>
-              <p>{t('section1Para3')}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle>{t('section2Title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
-              {['useCase1', 'useCase2', 'useCase3', 'useCase4'].map((useCase, index) => (
-                <div key={index}>
-                  <h3 style={{ fontWeight: 600, marginBottom: '0.5rem', color: 'var(--primary)' }}>
-                    {index + 1}. {t(`${useCase}Title`)}
-                  </h3>
-                  <p style={{ color: 'var(--text-secondary)' }}>{t(`${useCase}Desc`)}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle>{t('section3Title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
-              {['step1', 'step2', 'step3', 'step4'].map((step, index) => (
-                <div key={index}>
-                  <h3 style={{ fontWeight: 600, marginBottom: '0.5rem', color: 'var(--primary)' }}>
-                    {t(`${step}HowTitle`)}
-                  </h3>
-                  <p style={{ color: 'var(--text-secondary)' }}>{t(`${step}HowDesc`)}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle>{t('faqTitle')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
-              {['faq1', 'faq2', 'faq3', 'faq4', 'faq5'].map((faq, index) => (
-                <div key={index}>
-                  <h3 style={{ fontWeight: 600, marginBottom: '0.5rem', color: 'var(--primary)' }}>
-                    Q{index + 1}. {t(`${faq}Q`)}
-                  </h3>
-                  <p style={{ color: 'var(--text-secondary)' }}>{t(`${faq}A`)}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Disclaimer */}
-        <Alert variant="default" style={{ background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)' }}>
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>{t('disclaimerTitle')}</AlertTitle>
-          <AlertDescription>{t('disclaimerText')}</AlertDescription>
-        </Alert>
-
-        {/* Recommended Tools */}
-        <Card className="glass-panel" style={{ background: 'rgba(6, 182, 212, 0.05)' }}>
-          <CardHeader>
-            <CardTitle>{t('recommendedTools')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div style={{ display: 'grid', gap: '0.5rem' }}>
-              <p>• {t('recommendedTool1')}</p>
-              <p>• {t('recommendedTool2')}</p>
-              <p>• {t('recommendedTool3')}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Ad Placeholder */}
-        <Card className="glass-panel" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px dashed rgba(255, 255, 255, 0.2)' }}>
-          <CardContent className="pt-6">
-            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
-              {t('adPlaceholder')}
-            </div>
-          </CardContent>
-        </Card>
+          )}
+        </div>
       </div>
+
+      <style jsx>{`
+        .primary-button {
+          background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
+          color: white !important;
+          border: none;
+          box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          cursor: pointer;
+        }
+        .primary-button:hover:not(:disabled) {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5);
+        }
+        .primary-button:active:not(:disabled) {
+          transform: translateY(-1px);
+        }
+        .primary-button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      `}</style>
+
+      <SeoSection
+        ko={{
+          title: t('section1Title'),
+          description: t('section1Para1') + ' ' + t('section1Para2') + ' ' + t('section1Para3'),
+          useCases: [
+            { icon: '🏠', title: t('useCase1Title'), desc: t('useCase1Desc') },
+            { icon: '📈', title: t('useCase2Title'), desc: t('useCase2Desc') },
+            { icon: '🐟', title: t('useCase3Title'), desc: t('useCase3Desc') },
+            { icon: '🔧', title: t('useCase4Title'), desc: t('useCase4Desc') },
+          ],
+          steps: [
+            { step: t('step1HowTitle'), desc: t('step1HowDesc') },
+            { step: t('step2HowTitle'), desc: t('step2HowDesc') },
+            { step: t('step3HowTitle'), desc: t('step3HowDesc') },
+            { step: t('step4HowTitle'), desc: t('step4HowDesc') },
+          ],
+          faqs: [
+            { q: t('faq1Q'), a: t('faq1A') },
+            { q: t('faq2Q'), a: t('faq2A') },
+            { q: t('faq3Q'), a: t('faq3A') },
+            { q: t('faq4Q'), a: t('faq4A') },
+            { q: t('faq5Q'), a: t('faq5A') },
+          ],
+        }}
+        en={{
+          title: t('section1Title'),
+          description: t('section1Para1') + ' ' + t('section1Para2') + ' ' + t('section1Para3'),
+          useCases: [
+            { icon: '🏠', title: t('useCase1Title'), desc: t('useCase1Desc') },
+            { icon: '📈', title: t('useCase2Title'), desc: t('useCase2Desc') },
+            { icon: '🐟', title: t('useCase3Title'), desc: t('useCase3Desc') },
+            { icon: '🔧', title: t('useCase4Title'), desc: t('useCase4Desc') },
+          ],
+          steps: [
+            { step: t('step1HowTitle'), desc: t('step1HowDesc') },
+            { step: t('step2HowTitle'), desc: t('step2HowDesc') },
+            { step: t('step3HowTitle'), desc: t('step3HowDesc') },
+            { step: t('step4HowTitle'), desc: t('step4HowDesc') },
+          ],
+          faqs: [
+            { q: t('faq1Q'), a: t('faq1A') },
+            { q: t('faq2Q'), a: t('faq2A') },
+            { q: t('faq3Q'), a: t('faq3A') },
+            { q: t('faq4Q'), a: t('faq4A') },
+            { q: t('faq5Q'), a: t('faq5A') },
+          ],
+        }}
+      />
     </div>
   );
 }
