@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
@@ -256,8 +256,11 @@ export default function WordlePage() {
 
   // 한글 입력 처리 (IME composition 이벤트 사용)
   const [isComposing, setIsComposing] = useState(false);
-  const inputRef = useCallback((node: HTMLInputElement | null) => {
-    if (!node) return;
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const node = inputRef.current;
+    if (!node || currentLanguage !== 'ko') return;
 
     const handleCompositionStart = () => {
       setIsComposing(true);
@@ -273,7 +276,9 @@ export default function WordlePage() {
         }));
       }
       // 입력 필드 초기화
-      if (node) node.value = '';
+      setTimeout(() => {
+        if (node) node.value = '';
+      }, 0);
     };
 
     node.addEventListener('compositionstart', handleCompositionStart);
@@ -283,7 +288,7 @@ export default function WordlePage() {
       node.removeEventListener('compositionstart', handleCompositionStart);
       node.removeEventListener('compositionend', handleCompositionEnd);
     };
-  }, [gameState.currentGuess, maxLength]);
+  }, [gameState.currentGuess, maxLength, currentLanguage]);
 
   // 키보드 이벤트
   useEffect(() => {
