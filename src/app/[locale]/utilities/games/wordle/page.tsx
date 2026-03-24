@@ -254,10 +254,42 @@ export default function WordlePage() {
     }
   }, [gameState, stats, currentLanguage, getTodayAnswer, saveGameState]);
 
+  // 한글 입력 처리 (IME composition 이벤트 사용)
+  const [isComposing, setIsComposing] = useState(false);
+  const inputRef = useCallback((node: HTMLInputElement | null) => {
+    if (!node) return;
+
+    const handleCompositionStart = () => {
+      setIsComposing(true);
+    };
+
+    const handleCompositionEnd = (e: CompositionEvent) => {
+      setIsComposing(false);
+      const char = e.data;
+      if (char && /^[가-힣]$/.test(char) && gameState.currentGuess.length < maxLength) {
+        setGameState(prev => ({
+          ...prev,
+          currentGuess: prev.currentGuess + char,
+        }));
+      }
+      // 입력 필드 초기화
+      if (node) node.value = '';
+    };
+
+    node.addEventListener('compositionstart', handleCompositionStart);
+    node.addEventListener('compositionend', handleCompositionEnd);
+
+    return () => {
+      node.removeEventListener('compositionstart', handleCompositionStart);
+      node.removeEventListener('compositionend', handleCompositionEnd);
+    };
+  }, [gameState.currentGuess, maxLength]);
+
   // 키보드 이벤트
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (isComposing) return; // IME 입력 중이면 무시
 
       if (e.key === 'Enter') {
         handleKeyPress('ENTER');
@@ -265,15 +297,12 @@ export default function WordlePage() {
         handleKeyPress('BACKSPACE');
       } else if (/^[a-zA-Z]$/.test(e.key) && currentLanguage === 'en') {
         handleKeyPress(e.key.toUpperCase());
-      } else if (/^[가-힣]$/.test(e.key) && currentLanguage === 'ko') {
-        // 한글은 완성된 글자만 입력 (자음/모음 제외)
-        handleKeyPress(e.key);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPress, currentLanguage]);
+  }, [handleKeyPress, currentLanguage, isComposing]);
 
   // 타일 상태 가져오기
   const getTileStatus = (rowIndex: number, colIndex: number): TileStatus => {
@@ -516,35 +545,45 @@ export default function WordlePage() {
           })}
         </div>
 
-        {/* Hidden Input for Better Korean Input Focus */}
+        {/* Korean Input Field */}
         {currentLanguage === 'ko' && (
-          <input
-            type="text"
-            autoFocus
-            value={gameState.currentGuess}
-            onChange={() => {}} // Controlled by keyboard events
-            style={{
-              position: 'absolute',
-              opacity: 0,
-              pointerEvents: 'none',
-            }}
-          />
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+            <input
+              ref={inputRef}
+              type="text"
+              autoFocus
+              maxLength={1}
+              disabled={gameState.gameStatus !== 'playing'}
+              placeholder="여기에 한글 입력"
+              style={{
+                padding: '1rem',
+                fontSize: '1.5rem',
+                textAlign: 'center',
+                width: '80px',
+                borderRadius: '8px',
+                border: '2px solid var(--border)',
+                background: 'var(--surface)',
+                color: 'var(--text-primary)',
+                fontWeight: 700,
+                outline: 'none',
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#10b981';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'var(--border)';
+              }}
+            />
+          </div>
         )}
 
         {/* Virtual Keyboard / Korean Input Hint */}
         <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: '16px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
           {currentLanguage === 'ko' ? (
-            // 한글 모드: 키보드 입력 안내만 표시
-            <div style={{ textAlign: 'center', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⌨️</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-                키보드로 한글을 입력하세요
-              </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                완성된 글자 3개를 입력한 후 Enter를 눌러주세요
-              </div>
-              <div style={{ fontSize: '0.85rem', color: '#10b981', marginBottom: '1.5rem', padding: '0.5rem 1rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px' }}>
-                💡 이 화면을 클릭한 상태에서 키보드로 타이핑하세요
+            // 한글 모드: 입력 안내 및 버튼
+            <div style={{ textAlign: 'center', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                👆 위의 입력창에 한글을 타이핑하세요 (3글자)
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                 <button
