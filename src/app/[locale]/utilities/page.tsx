@@ -85,6 +85,13 @@ export default function UtilitiesDashboardPage() {
       desc: t('smart-excel-mapper.desc'),
       icon: '📊',
       gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)'
+    },
+    {
+      id: 'utilities/games/wordle',
+      title: t('wordle.title'),
+      desc: t('wordle.desc'),
+      icon: '🎮',
+      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
     }
   ];
 

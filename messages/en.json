@@ -115,6 +115,14 @@
     "image-resizer": {
       "title": "Image Resizer & Cropper",
       "desc": "Crop and resize images with SNS presets (Instagram, YouTube, OG). Rotate, flip, and export as JPG/PNG/WebP."
+    },
+    "smart-excel-mapper": {
+      "title": "Smart Excel Mapper",
+      "desc": "Convert report-style Excel to database-style Excel automatically. Set header and data rows with mapping rules for fast conversion."
+    },
+    "wordle": {
+      "title": "Daily Word Puzzle",
+      "desc": "Guess a new word every day! Supports Korean and English with streak tracking."
     }
   },
   "TextCounter": {
