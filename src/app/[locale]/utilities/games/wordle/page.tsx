@@ -516,19 +516,37 @@ export default function WordlePage() {
           })}
         </div>
 
+        {/* Hidden Input for Better Korean Input Focus */}
+        {currentLanguage === 'ko' && (
+          <input
+            type="text"
+            autoFocus
+            value={gameState.currentGuess}
+            onChange={() => {}} // Controlled by keyboard events
+            style={{
+              position: 'absolute',
+              opacity: 0,
+              pointerEvents: 'none',
+            }}
+          />
+        )}
+
         {/* Virtual Keyboard / Korean Input Hint */}
-        <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: '16px', maxWidth: '600px', width: '100%' }}>
+        <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: '16px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
           {currentLanguage === 'ko' ? (
             // 한글 모드: 키보드 입력 안내만 표시
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div style={{ textAlign: 'center', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⌨️</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
                 키보드로 한글을 입력하세요
               </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
                 완성된 글자 3개를 입력한 후 Enter를 눌러주세요
               </div>
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+              <div style={{ fontSize: '0.85rem', color: '#10b981', marginBottom: '1.5rem', padding: '0.5rem 1rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px' }}>
+                💡 이 화면을 클릭한 상태에서 키보드로 타이핑하세요
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                 <button
                   onClick={() => handleKeyPress('BACKSPACE')}
                   disabled={gameState.gameStatus !== 'playing'}
