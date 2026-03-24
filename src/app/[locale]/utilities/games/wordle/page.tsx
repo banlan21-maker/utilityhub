@@ -104,6 +104,7 @@ export default function WordlePage() {
   const isKorean = locale === 'ko';
 
   const [currentLanguage, setCurrentLanguage] = useState<'ko' | 'en'>('ko');
+  const maxLength = currentLanguage === 'ko' ? 3 : 5;
   const [gameState, setGameState] = useState<GameState>({
     guesses: [],
     currentGuess: '',
@@ -182,7 +183,6 @@ export default function WordlePage() {
     if (gameState.gameStatus !== 'playing') return;
 
     const answer = getTodayAnswer();
-    const maxLength = currentLanguage === 'ko' ? 3 : 5;
 
     if (key === 'ENTER') {
       if (gameState.currentGuess.length !== maxLength) {
@@ -254,45 +254,14 @@ export default function WordlePage() {
     }
   }, [gameState, stats, currentLanguage, getTodayAnswer, saveGameState]);
 
-  // 한글 입력 처리 (IME composition 이벤트 사용)
+  // 한글 입력 처리
   const [isComposing, setIsComposing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const node = inputRef.current;
-    if (!node || currentLanguage !== 'ko') return;
-
-    const handleCompositionStart = () => {
-      setIsComposing(true);
-    };
-
-    const handleCompositionEnd = (e: CompositionEvent) => {
-      setIsComposing(false);
-      const char = e.data;
-      if (char && /^[가-힣]$/.test(char) && gameState.currentGuess.length < maxLength) {
-        setGameState(prev => ({
-          ...prev,
-          currentGuess: prev.currentGuess + char,
-        }));
-      }
-      // 입력 필드 초기화
-      setTimeout(() => {
-        if (node) node.value = '';
-      }, 0);
-    };
-
-    node.addEventListener('compositionstart', handleCompositionStart);
-    node.addEventListener('compositionend', handleCompositionEnd);
-
-    return () => {
-      node.removeEventListener('compositionstart', handleCompositionStart);
-      node.removeEventListener('compositionend', handleCompositionEnd);
-    };
-  }, [gameState.currentGuess, maxLength, currentLanguage]);
 
   // 키보드 이벤트
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (document.activeElement?.tagName === 'INPUT') return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (isComposing) return; // IME 입력 중이면 무시
 
@@ -385,7 +354,7 @@ export default function WordlePage() {
     ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE'],
   ];
 
-  const maxLength = currentLanguage === 'ko' ? 3 : 5;
+  // 영어 키보드 레이아웃
 
   // 다음 퍼즐까지 남은 시간
   const [timeUntilNext, setTimeUntilNext] = useState('');
@@ -557,14 +526,29 @@ export default function WordlePage() {
               ref={inputRef}
               type="text"
               autoFocus
-              maxLength={1}
+              maxLength={maxLength}
               disabled={gameState.gameStatus !== 'playing'}
-              placeholder="여기에 한글 입력"
+              placeholder="여기에 한글 입력 (3글자)"
+              value={gameState.currentGuess}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
+                if (val.length <= maxLength) {
+                  setGameState(prev => ({ ...prev, currentGuess: val }));
+                }
+              }}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !isComposing) {
+                  handleKeyPress('ENTER');
+                }
+              }}
               style={{
                 padding: '1rem',
                 fontSize: '1.5rem',
                 textAlign: 'center',
-                width: '80px',
+                width: '100%',
+                maxWidth: '300px',
                 borderRadius: '8px',
                 border: '2px solid var(--border)',
                 background: 'var(--surface)',
