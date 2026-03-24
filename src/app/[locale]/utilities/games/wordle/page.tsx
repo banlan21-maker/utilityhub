@@ -265,7 +265,8 @@ export default function WordlePage() {
         handleKeyPress('BACKSPACE');
       } else if (/^[a-zA-Z]$/.test(e.key) && currentLanguage === 'en') {
         handleKeyPress(e.key.toUpperCase());
-      } else if (/^[ㄱ-ㅎㅏ-ㅣ가-힣]$/.test(e.key) && currentLanguage === 'ko') {
+      } else if (/^[가-힣]$/.test(e.key) && currentLanguage === 'ko') {
+        // 한글은 완성된 글자만 입력 (자음/모음 제외)
         handleKeyPress(e.key);
       }
     };
@@ -340,12 +341,8 @@ export default function WordlePage() {
     });
   };
 
-  // 한글 키보드 레이아웃
-  const koreanKeyboard = [
-    ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ'],
-    ['ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ'],
-    ['ENTER', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ', 'BACKSPACE'],
-  ];
+  // 한글 키보드는 물리 키보드 사용을 권장 (가상 키보드는 표시만)
+  const koreanKeyboardHint = '⌨️ 키보드로 한글을 직접 입력하세요';
 
   // 영어 키보드 레이아웃
   const englishKeyboard = [
@@ -354,7 +351,6 @@ export default function WordlePage() {
     ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE'],
   ];
 
-  const keyboard = currentLanguage === 'ko' ? koreanKeyboard : englishKeyboard;
   const maxLength = currentLanguage === 'ko' ? 3 : 5;
 
   // 다음 퍼즐까지 남은 시간
@@ -478,7 +474,7 @@ export default function WordlePage() {
         )}
 
         {/* Grid */}
-        <div className={shake ? 'shake' : ''} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div className={shake ? 'shake' : ''} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', width: '100%' }}>
           {Array.from({ length: 6 }).map((_, rowIndex) => {
             const isCurrentRow = rowIndex === gameState.guesses.length;
             const guess = gameState.guesses[rowIndex] || '';
@@ -520,40 +516,88 @@ export default function WordlePage() {
           })}
         </div>
 
-        {/* Virtual Keyboard */}
+        {/* Virtual Keyboard / Korean Input Hint */}
         <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: '16px', maxWidth: '600px', width: '100%' }}>
-          {keyboard.map((row, rowIndex) => (
-            <div key={rowIndex} style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center', marginBottom: rowIndex < keyboard.length - 1 ? '0.4rem' : 0 }}>
-              {row.map((key) => {
-                const status = key.length === 1 ? getKeyStatus(key) : 'empty';
-                const isSpecial = key === 'ENTER' || key === 'BACKSPACE';
-
-                return (
-                  <button
-                    key={key}
-                    onClick={() => handleKeyPress(key)}
-                    className="keyboard-key"
-                    data-status={status}
-                    disabled={gameState.gameStatus !== 'playing'}
-                    style={{
-                      padding: isSpecial ? '0 1.5rem' : '0',
-                      height: '58px',
-                      minWidth: isSpecial ? '80px' : '40px',
-                      fontSize: isSpecial ? '0.75rem' : '1.1rem',
-                      fontWeight: 600,
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: gameState.gameStatus === 'playing' ? 'pointer' : 'not-allowed',
-                      transition: 'all 0.2s',
-                      opacity: gameState.gameStatus !== 'playing' ? 0.5 : 1,
-                    }}
-                  >
-                    {key === 'BACKSPACE' ? '⌫' : key === 'ENTER' ? '↵' : key}
-                  </button>
-                );
-              })}
+          {currentLanguage === 'ko' ? (
+            // 한글 모드: 키보드 입력 안내만 표시
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⌨️</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+                키보드로 한글을 입력하세요
+              </div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                완성된 글자 3개를 입력한 후 Enter를 눌러주세요
+              </div>
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                <button
+                  onClick={() => handleKeyPress('BACKSPACE')}
+                  disabled={gameState.gameStatus !== 'playing'}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: 'var(--surface)',
+                    color: 'var(--text-primary)',
+                    fontWeight: 600,
+                    cursor: gameState.gameStatus === 'playing' ? 'pointer' : 'not-allowed',
+                    opacity: gameState.gameStatus !== 'playing' ? 0.5 : 1,
+                  }}
+                >
+                  ⌫ 지우기
+                </button>
+                <button
+                  onClick={() => handleKeyPress('ENTER')}
+                  disabled={gameState.gameStatus !== 'playing'}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    color: 'white',
+                    fontWeight: 600,
+                    cursor: gameState.gameStatus === 'playing' ? 'pointer' : 'not-allowed',
+                    opacity: gameState.gameStatus !== 'playing' ? 0.5 : 1,
+                  }}
+                >
+                  ↵ 확인
+                </button>
+              </div>
             </div>
-          ))}
+          ) : (
+            // 영어 모드: 가상 키보드 표시
+            englishKeyboard.map((row, rowIndex) => (
+              <div key={rowIndex} style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center', marginBottom: rowIndex < englishKeyboard.length - 1 ? '0.4rem' : 0 }}>
+                {row.map((key) => {
+                  const status = key.length === 1 ? getKeyStatus(key) : 'empty';
+                  const isSpecial = key === 'ENTER' || key === 'BACKSPACE';
+
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => handleKeyPress(key)}
+                      className="keyboard-key"
+                      data-status={status}
+                      disabled={gameState.gameStatus !== 'playing'}
+                      style={{
+                        padding: isSpecial ? '0 1.5rem' : '0',
+                        height: '58px',
+                        minWidth: isSpecial ? '80px' : '40px',
+                        fontSize: isSpecial ? '0.75rem' : '1.1rem',
+                        fontWeight: 600,
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: gameState.gameStatus === 'playing' ? 'pointer' : 'not-allowed',
+                        transition: 'all 0.2s',
+                        opacity: gameState.gameStatus !== 'playing' ? 0.5 : 1,
+                      }}
+                    >
+                      {key === 'BACKSPACE' ? '⌫' : key === 'ENTER' ? '↵' : key}
+                    </button>
+                  );
+                })}
+              </div>
+            ))
+          )}
         </div>
       </div>
 
