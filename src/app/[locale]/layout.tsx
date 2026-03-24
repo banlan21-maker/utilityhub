@@ -4,6 +4,7 @@ import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import Header from '../components/Header';
 import Script from 'next/script';
+import {Analytics} from '@vercel/analytics/react';
 import '../globals.css';
 
 export const metadata = {
@@ -52,6 +53,7 @@ export default async function LocaleLayout({
             </main>
           </div>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
