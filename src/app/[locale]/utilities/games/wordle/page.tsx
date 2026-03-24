@@ -99,6 +99,30 @@ interface Stats {
 const STORAGE_KEY = 'theutilhub-wordle-storage';
 const BASE_DATE = new Date('2026-01-01');
 
+// 정확한 Wordle 매칭 로직 (동일 글자 중복 처리)
+const evaluateGuess = (guess: string, answer: string): TileStatus[] => {
+  const result: TileStatus[] = Array(guess.length).fill('absent');
+  const answerChars = answer.split('');
+  
+  // 1차 패스: 정확한 위치(correct) 확인
+  for (let i = 0; i < guess.length; i++) {
+    if (guess[i] === answerChars[i]) {
+      result[i] = 'correct';
+      answerChars[i] = ''; // 사용됨 표시
+    }
+  }
+  
+  // 2차 패스: 포함(present) 확인
+  for (let i = 0; i < guess.length; i++) {
+    if (result[i] !== 'correct' && answerChars.includes(guess[i])) {
+      result[i] = 'present';
+      answerChars[answerChars.indexOf(guess[i])] = ''; // 사용됨 표시
+    }
+  }
+  
+  return result;
+};
+
 export default function WordlePage() {
   const locale = useLocale();
   const isKorean = locale === 'ko';
@@ -284,43 +308,44 @@ export default function WordlePage() {
     const guess = gameState.guesses[rowIndex];
 
     if (!guess) return 'empty';
+    if (!guess[colIndex]) return 'empty';
 
-    const char = guess[colIndex];
-    if (!char) return 'empty';
-
-    if (char === answer[colIndex]) return 'correct';
-    if (answer.includes(char)) return 'present';
-    return 'absent';
+    const evaluated = evaluateGuess(guess, answer);
+    return evaluated[colIndex];
   };
 
   // 키보드 키 상태
   const getKeyStatus = (key: string): TileStatus => {
     const answer = getTodayAnswer();
-    let status: TileStatus = 'empty';
+    let bestStatus: TileStatus = 'empty';
 
     for (const guess of gameState.guesses) {
-      if (guess.includes(key)) {
-        const keyIndex = guess.indexOf(key);
-        if (guess[keyIndex] === answer[keyIndex]) {
-          status = 'correct';
-        } else if (answer.includes(key) && status !== 'correct') {
-          status = 'present';
-        } else if (status === 'empty') {
-          status = 'absent';
+      const evaluated = evaluateGuess(guess, answer);
+      for (let i = 0; i < guess.length; i++) {
+        if (guess[i] === key) {
+          const status = evaluated[i];
+          if (status === 'correct') {
+            return 'correct'; // 초록색은 무조건 최우선
+          } else if (status === 'present') {
+            bestStatus = 'present'; // 노란색은 회색/빈칸보다 우선
+          } else if (status === 'absent' && bestStatus === 'empty') {
+            bestStatus = 'absent';
+          }
         }
       }
     }
 
-    return status;
+    return bestStatus;
   };
 
   // 공유하기
   const handleShare = () => {
     const answer = getTodayAnswer();
     const emoji = gameState.guesses.map(guess => {
-      return guess.split('').map((char, i) => {
-        if (char === answer[i]) return '🟩';
-        if (answer.includes(char)) return '🟨';
+      const evaluated = evaluateGuess(guess, answer);
+      return evaluated.map(status => {
+        if (status === 'correct') return '🟩';
+        if (status === 'present') return '🟨';
         return '⬛';
       }).join('');
     }).join('\n');
