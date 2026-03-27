@@ -10,11 +10,18 @@ export default function PerformanceDashboardPage() {
 
   const tools = [
     {
-      id: 'utilities/performance/ttfb',
-      title: boardT('ttfb.title'),
-      desc: boardT('ttfb.desc'),
-      icon: '⚡',
-      gradient: 'linear-gradient(135deg, #ff4757 0%, #c0392b 100%)',
+      id: 'utilities/performance/ttfb-check',
+      title: boardT('ttfb-check.title'),
+      desc: boardT('ttfb-check.desc'),
+      icon: '🚀',
+      gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+    },
+    {
+      id: 'utilities/performance/site-monitor',
+      title: boardT('site-monitor.title'),
+      desc: boardT('site-monitor.desc'),
+      icon: '🖥️',
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
     },
   ];
 
@@ -31,31 +38,18 @@ export default function PerformanceDashboardPage() {
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-        {tools.map((tool) => (
-          <Link
-            key={tool.id}
-            href={`/${tool.id}` as any}
-            style={{ textDecoration: 'none' }}
-          >
+        {tools.map(tool => (
+          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
             <div
               className="glass-panel"
               style={{
-                padding: '2rem',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
+                padding: '2rem', height: '100%',
+                display: 'flex', flexDirection: 'column',
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                cursor: 'pointer',
-                overflow: 'hidden',
+                cursor: 'pointer', overflow: 'hidden',
               }}
-              onMouseOver={e => {
-                e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-              }}
+              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
             >
               <div style={{
                 background: tool.gradient,

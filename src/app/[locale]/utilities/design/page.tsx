@@ -10,32 +10,25 @@ export default function DesignDashboardPage() {
 
   const tools = [
     {
-      id: 'utilities/design/logo',
-      title: boardT('logo.title'),
-      desc: boardT('logo.desc'),
+      id: 'utilities/design/logo-favicon',
+      title: boardT('logo-favicon.title'),
+      desc: boardT('logo-favicon.desc'),
       icon: '🎨',
-      gradient: 'linear-gradient(135deg, #a855f7 0%, #6d28d9 100%)',
+      gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
     },
     {
-      id: 'utilities/design/color',
-      title: boardT('color.title'),
-      desc: boardT('color.desc'),
+      id: 'utilities/design/color-palette',
+      title: boardT('color-palette.title'),
+      desc: boardT('color-palette.desc'),
       icon: '🎯',
-      gradient: 'linear-gradient(135deg, #f43f5e 0%, #fb923c 100%)',
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
     },
     {
-      id: 'utilities/design/font',
-      title: boardT('font.title'),
-      desc: boardT('font.desc'),
+      id: 'utilities/design/font-preview',
+      title: boardT('font-preview.title'),
+      desc: boardT('font-preview.desc'),
       icon: '🔤',
-      gradient: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
-    },
-    {
-      id: 'utilities/design/quiz',
-      title: boardT('quiz.title'),
-      desc: boardT('quiz.desc'),
-      icon: '🧩',
-      gradient: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
     },
   ];
 

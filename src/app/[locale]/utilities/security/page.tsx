@@ -6,12 +6,30 @@ import NavigationActions from '@/app/components/NavigationActions';
 
 export default function SecurityDashboardPage() {
   const catT = useTranslations('Categories');
-  const t = useTranslations('SecurityBoard');
+  const boardT = useTranslations('SecurityBoard');
 
   const tools = [
-    { id: 'utilities/security/redact', icon: '🔏', titleKey: 'redact' as const, descKey: 'redact' as const },
-    { id: 'utilities/security/password', icon: '🔑', titleKey: 'password' as const, descKey: 'password' as const },
-    { id: 'utilities/security/url', icon: '🛡️', titleKey: 'url' as const, descKey: 'url' as const },
+    {
+      id: 'utilities/security/privacy-masking',
+      title: boardT('privacy-masking.title'),
+      desc: boardT('privacy-masking.desc'),
+      icon: '🔏',
+      gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+    },
+    {
+      id: 'utilities/security/password-generator',
+      title: boardT('password-generator.title'),
+      desc: boardT('password-generator.desc'),
+      icon: '🔑',
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+    },
+    {
+      id: 'utilities/security/url-safety',
+      title: boardT('url-safety.title'),
+      desc: boardT('url-safety.desc'),
+      icon: '🛡️',
+      gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+    },
   ];
 
   return (
@@ -22,42 +40,39 @@ export default function SecurityDashboardPage() {
           {catT('security')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
-          {t('subtitle')}
+          {boardT('subtitle')}
         </p>
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-        {tools.map((tool) => (
-          <Link
-            key={tool.id}
-            href={`/${tool.id}` as any}
-            style={{ textDecoration: 'none' }}
-          >
+        {tools.map(tool => (
+          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
             <div
               className="glass-panel"
               style={{
-                padding: '2rem',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
+                padding: '2rem', height: '100%',
+                display: 'flex', flexDirection: 'column',
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                cursor: 'pointer',
-                position: 'relative',
-                overflow: 'hidden',
+                cursor: 'pointer', overflow: 'hidden',
               }}
-              onMouseOver={e => {
-                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
-              }}
-              onMouseOut={e => {
-                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
-              }}
+              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
             >
-              <div style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>{tool.icon}</div>
+              <div style={{
+                background: tool.gradient,
+                width: '60px', height: '60px',
+                borderRadius: 'var(--radius-lg)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '2rem', marginBottom: '1.5rem',
+                boxShadow: 'var(--shadow-md)',
+              }}>
+                {tool.icon}
+              </div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>
-                {t(`${tool.titleKey}.title` as any)}
+                {tool.title}
               </h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                {t(`${tool.descKey}.desc` as any)}
+                {tool.desc}
               </p>
             </div>
           </Link>

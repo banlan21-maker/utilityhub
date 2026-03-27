@@ -10,26 +10,26 @@ export default function DocumentDashboardPage() {
 
   const tools = [
     {
-      id: 'utilities/document/security',
-      title: boardT('security.title'),
-      desc: boardT('security.desc'),
+      id: 'utilities/document/pdf-masking',
+      title: boardT('pdf-masking.title'),
+      desc: boardT('pdf-masking.desc'),
       icon: '🛡️',
-      gradient: 'linear-gradient(135deg, #1e3a8a 0%, #10b981 100%)'
+      gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
     },
     {
-      id: 'utilities/document/image-pdf-converter',
-      title: boardT('image-pdf-converter.title'),
-      desc: boardT('image-pdf-converter.desc'),
-      icon: '🔄',
-      gradient: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)'
+      id: 'utilities/document/img-pdf-converter',
+      title: boardT('img-pdf-converter.title'),
+      desc: boardT('img-pdf-converter.desc'),
+      icon: '🖼️',
+      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     },
     {
-      id: 'utilities/document/hwp',
-      title: boardT('hwp.title'),
-      desc: boardT('hwp.desc'),
+      id: 'utilities/document/hwp-pdf-converter',
+      title: boardT('hwp-pdf-converter.title'),
+      desc: boardT('hwp-pdf-converter.desc'),
       icon: '📄',
-      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
-    }
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+    },
   ];
 
   return (
@@ -45,47 +45,27 @@ export default function DocumentDashboardPage() {
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-        {tools.map((tool) => (
-          <Link 
-            key={tool.id} 
-            href={`/${tool.id}` as any}
-            style={{ textDecoration: 'none' }}
-          >
-            <div 
+        {tools.map(tool => (
+          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
+            <div
               className="glass-panel"
               style={{
-                padding: '2rem',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
+                padding: '2rem', height: '100%',
+                display: 'flex', flexDirection: 'column',
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                cursor: 'pointer',
-                position: 'relative',
-                overflow: 'hidden'
+                cursor: 'pointer', overflow: 'hidden',
               }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-              }}
+              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
             >
-              <div 
-                style={{ 
-                  background: tool.gradient,
-                  width: '60px',
-                  height: '60px',
-                  borderRadius: 'var(--radius-lg)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '2rem',
-                  marginBottom: '1.5rem',
-                  boxShadow: 'var(--shadow-md)'
-                }}
-              >
+              <div style={{
+                background: tool.gradient,
+                width: '60px', height: '60px',
+                borderRadius: 'var(--radius-lg)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '2rem', marginBottom: '1.5rem',
+                boxShadow: 'var(--shadow-md)',
+              }}>
                 {tool.icon}
               </div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>

@@ -10,18 +10,39 @@ export default function MarketingDashboardPage() {
 
   const tools = [
     {
-      id: 'utilities/marketing/hashtag',
-      title: boardT('hashtag.title'),
-      desc: boardT('hashtag.desc'),
+      id: 'utilities/marketing/osmu-formatter',
+      title: boardT('osmu-formatter.title'),
+      desc: boardT('osmu-formatter.desc'),
+      icon: '✨',
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)'
+    },
+    {
+      id: 'utilities/marketing/hashtag-generator',
+      title: boardT('hashtag-generator.title'),
+      desc: boardT('hashtag-generator.desc'),
       icon: '#️⃣',
       gradient: 'linear-gradient(135deg, #e879f9 0%, #a21caf 100%)'
     },
     {
-      id: 'utilities/marketing/osmu-content-formatter',
-      title: boardT('osmu-content-formatter.title'),
-      desc: boardT('osmu-content-formatter.desc'),
-      icon: '✨',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)'
+      id: 'utilities/marketing/qr-generator',
+      title: boardT('qr-generator.title'),
+      desc: boardT('qr-generator.desc'),
+      icon: '🔳',
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%)'
+    },
+    {
+      id: 'utilities/marketing/shorturl',
+      title: boardT('shorturl.title'),
+      desc: boardT('shorturl.desc'),
+      icon: '🔗',
+      gradient: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)'
+    },
+    {
+      id: 'utilities/marketing/quiz-builder',
+      title: boardT('quiz-builder.title'),
+      desc: boardT('quiz-builder.desc'),
+      icon: '🧠',
+      gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)'
     }
   ];
 

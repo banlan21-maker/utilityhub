@@ -1,60 +1,70 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import {Link} from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
 export default function LifestyleDashboardPage() {
   const catT = useTranslations('Categories');
-  const t = useTranslations('LifestyleBoard');
-  const petT = useTranslations('PetFood');
-  const bmiT = useTranslations('BmiWater');
-  // Assume Nickname exists too, checking the previous content
-  // Actually I'll use a safer way to call useTranslations for each tool or just pass the translation object
-  
-  const tools: any[] = [
+  const boardT = useTranslations('LifestyleBoard');
+
+  const tools = [
     {
-      id: 'utilities/lifestyle/pet-food',
-      title: petT('title'),
-      desc: petT('description'),
-      icon: '🐾',
-      gradient: 'linear-gradient(135deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%)'
+      id: 'utilities/lifestyle/gpa-calc',
+      title: boardT('gpa-calc.title'),
+      desc: boardT('gpa-calc.desc'),
+      icon: '🎓',
+      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     },
     {
-      id: 'utilities/lifestyle/bmi-water',
-      title: bmiT('title'),
-      desc: bmiT('description'),
-      icon: '💧',
-      gradient: 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'
+      id: 'utilities/lifestyle/dday-calc',
+      title: boardT('dday-calc.title'),
+      desc: boardT('dday-calc.desc'),
+      icon: '📅',
+      gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
     },
     {
-      id: 'utilities/lifestyle/korean-age',
-      title: t('korean-age.title'),
-      desc: t('korean-age.desc'),
+      id: 'utilities/lifestyle/age-calc',
+      title: boardT('age-calc.title'),
+      desc: boardT('age-calc.desc'),
       icon: '🎂',
-      gradient: 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)'
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
     },
     {
-      id: 'utilities/lifestyle/sea-mbti',
-      title: t('sea-mbti.title'),
-      desc: t('sea-mbti.desc'),
-      icon: '🌊',
-      gradient: 'linear-gradient(135deg, #0ea5e9 0%, #2dd4bf 100%)'
+      id: 'utilities/lifestyle/pet-calorie',
+      title: boardT('pet-calorie.title'),
+      desc: boardT('pet-calorie.desc'),
+      icon: '🐾',
+      gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
     },
     {
-      id: 'utilities/lifestyle/aquarium-bioload',
-      title: t('aquarium-bioload.title'),
-      desc: t('aquarium-bioload.desc'),
+      id: 'utilities/lifestyle/bmi-calc',
+      title: boardT('bmi-calc.title'),
+      desc: boardT('bmi-calc.desc'),
+      icon: '💧',
+      gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+    },
+    {
+      id: 'utilities/lifestyle/mbti-test',
+      title: boardT('mbti-test.title'),
+      desc: boardT('mbti-test.desc'),
+      icon: '🧜',
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+    },
+    {
+      id: 'utilities/lifestyle/aquarium-calc',
+      title: boardT('aquarium-calc.title'),
+      desc: boardT('aquarium-calc.desc'),
       icon: '🐠',
-      gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
+      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     },
     {
-      id: 'utilities/lifestyle/ai-saju-prompt',
-      title: t('ai-saju-prompt.title'),
-      desc: t('ai-saju-prompt.desc'),
+      id: 'utilities/lifestyle/fortune-prompt',
+      title: boardT('fortune-prompt.title'),
+      desc: boardT('fortune-prompt.desc'),
       icon: '🔮',
-      gradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #fbbf24 100%)'
-    }
+      gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
+    },
   ];
 
   return (
@@ -65,48 +75,44 @@ export default function LifestyleDashboardPage() {
           {catT('lifestyle')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
-          {t('subtitle')}
+          {boardT('subtitle')}
         </p>
       </header>
 
-      {tools.length > 0 ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-          {tools.map((tool) => (
-            <Link 
-              key={tool.id} 
-              href={`/${tool.id}` as any}
-              style={{ textDecoration: 'none' }}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
+        {tools.map(tool => (
+          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
+            <div
+              className="glass-panel"
+              style={{
+                padding: '2rem', height: '100%',
+                display: 'flex', flexDirection: 'column',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                cursor: 'pointer', overflow: 'hidden',
+              }}
+              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
             >
-              <div 
-                className="glass-panel"
-                style={{
-                  padding: '2rem',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
-                <div style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>{tool.icon}</div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>
-                  {tool.title}
-                </h2>
-                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                  {tool.desc}
-                </p>
+              <div style={{
+                background: tool.gradient,
+                width: '60px', height: '60px',
+                borderRadius: 'var(--radius-lg)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '2rem', marginBottom: '1.5rem',
+                boxShadow: 'var(--shadow-md)',
+              }}>
+                {tool.icon}
               </div>
-            </Link>
-          ))}
-        </div>
-      ) : (
-        <div className="glass-panel animate-fade-in" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌿</div>
-          <p>{t('comingSoon')}</p>
-        </div>
-      )}
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>
+                {tool.title}
+              </h2>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                {tool.desc}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

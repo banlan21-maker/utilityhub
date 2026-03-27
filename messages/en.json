@@ -47,15 +47,15 @@
     "feedback": "Feedback"
   },
   "Categories": {
-    "performance": "Performance & Monitoring",
-    "document": "Document Conversion",
-    "finance": "Payments & Fintech",
-    "productivity": "Productivity",
-    "design": "UX & Design",
     "marketing": "AI & Marketing",
-    "lifestyle": "Life & Wellness",
+    "finance": "Payments & Fintech",
+    "productivity": "Productivity Tools",
+    "lifestyle": "Lifestyle & Health",
+    "utility": "Utility/Games",
+    "document": "Document Conversion/Edit",
+    "design": "UX & Design",
     "security": "Security & Privacy",
-    "utility": "Utilities & Games",
+    "performance": "Performance & Monitoring",
     "dev": "Developer Tools"
   },
   "Feedback": {
@@ -76,53 +76,29 @@
   },
   "UtilityBoard": {
     "subtitle": "A collection of various extra tools you need in your daily life.",
-    "thumbnail": {
-      "title": "YouTube Thumbnail Downloader",
-      "desc": "Enter any YouTube URL to instantly extract and download thumbnails in MQ, HQ, SD, and Max Resolution quality."
-    },
-    "shorturl": {
-      "title": "URL Shortener",
-      "desc": "Convert long URLs into short links. Shortening history is saved in your browser so you can access it on your next visit."
-    },
-    "area": {
-      "title": "Pyeong ↔ ㎡ Converter",
-      "desc": "Instantly convert between pyeong and square meters with apartment size presets (59㎡, 84㎡, etc.) and adjustable decimal precision."
-    },
-    "qr": {
-      "title": "QR Code Generator",
-      "desc": "Converts URLs or text into a high-resolution QR code instantly available for download."
-    },
-    "counter": {
-      "title": "Character & Byte Counter",
-      "desc": "Calculate the number of characters (with/without spaces) and exact bytes (EUC-KR/UTF-8) of your text in real time."
-    },
-    "dday": {
-      "title": "D-Day & Date Calculator",
-      "desc": "Calculate remaining days for anniversaries, exams, or projects and perform date arithmetic."
-    },
-    "gpa": {
-      "title": "GPA Converter",
-      "desc": "Convert between 4.5, 4.3, and 100-point GPA scales. Enter your courses and see overall, major, and liberal arts GPA automatically."
-    },
-    "unit-converter": {
-      "title": "Unit Converter",
-      "desc": "Convert length, weight, temperature, speed, data, and 10 more categories instantly in your browser."
-    },
-    "image-compressor": {
-      "title": "Image Compressor",
-      "desc": "Compress JPG, PNG, WebP images in your browser. No upload, no server — 100% private."
-    },
-    "image-resizer": {
-      "title": "Image Resizer & Cropper",
-      "desc": "Crop and resize images with SNS presets (Instagram, YouTube, OG). Rotate, flip, and export as JPG/PNG/WebP."
-    },
-    "smart-excel-mapper": {
-      "title": "Smart Excel Mapper",
-      "desc": "Convert report-style Excel to database-style Excel automatically. Set header and data rows with mapping rules for fast conversion."
-    },
     "wordle": {
       "title": "Daily Word Puzzle",
       "desc": "Guess a new word every day! Supports Korean and English with streak tracking."
+    },
+    "counter": {
+      "title": "Character & Byte Counter",
+      "desc": "Calculate the number of characters (with/without spaces) and exact bytes of your text in real time."
+    },
+    "unit-converter": {
+      "title": "Unit Converter",
+      "desc": "Convert length, weight, temperature, speed, data, and more instantly in your browser."
+    },
+    "yt-thumbnail": {
+      "title": "YouTube Thumbnail Downloader",
+      "desc": "Instantly extract and download thumbnails from any YouTube URL."
+    },
+    "pyeong-calc": {
+      "title": "Pyeong ↔ ㎡ Converter",
+      "desc": "Instantly convert between pyeong and square meters with apartment size presets."
+    },
+    "image-processor": {
+      "title": "Image Processor",
+      "desc": "An integrated tool for compressing, resizing, and cropping images locally."
     }
   },
   "TextCounter": {
@@ -157,59 +133,71 @@
   },
   "DocumentBoard": {
     "subtitle": "Collection of document conversion and editing tools.",
-    "security": {
+    "pdf-masking": {
       "title": "Local PDF Sheriff",
-      "desc": "AI automatically detects and masks personal information. 100% local processing with no server upload for safe security processing."
+      "desc": "AI automatically detects and masks personal information. 100% local processing."
     },
-    "image-pdf-converter": {
+    "img-pdf-converter": {
       "title": "Image ↔ PDF Converter",
-      "desc": "Convert images to PDF and PDF to images for free. 100% local processing for safe and fast conversion."
+      "desc": "Convert images to PDF and PDF to images for free. Fast and safe local processing."
     },
-    "hwp": {
-      "title": "Hangul (HWP/HWPX) to PDF",
+    "hwp-pdf-converter": {
+      "title": "Hangul to PDF Converter",
       "desc": "Convert Hangul documents to PDF without any external software."
     }
   },
   "MarketingBoard": {
-    "subtitle": "AI-powered marketing content creation tools.",
-    "hashtag": {
-      "title": "Instagram & YouTube Hashtag Generator",
-      "desc": "Enter a keyword to instantly generate 30 trending hashtags. Supports Instagram and YouTube styles with one-click copy-all."
-    },
-    "osmu-content-formatter": {
+    "subtitle": "AI-powered marketing content creation and automation tools.",
+    "osmu-formatter": {
       "title": "OSMU Content Formatter",
-      "desc": "One input, all platforms - automatically generate content for Instagram, X, Blog, and Shorts. 100% local processing."
+      "desc": "One input, all platforms - automatically generate content for Instagram, X, Blog, and Shorts."
+    },
+    "hashtag-generator": {
+      "title": "Hashtag Generator",
+      "desc": "Enter a keyword to instantly generate trending hashtags for Instagram and YouTube."
+    },
+    "qr-generator": {
+      "title": "QR Code Generator",
+      "desc": "Enter a link or text to generate a high-resolution QR code instantly."
+    },
+    "shorturl": {
+      "title": "URL Shortener",
+      "desc": "Convert long URLs into short links. History saved locally in your browser."
+    },
+    "quiz-builder": {
+      "title": "Quiz / Personality Test Builder",
+      "desc": "Create shareable quizzes and personality tests instantly with simple inputs."
     }
   },
   "FinanceBoard": {
     "subtitle": "Financial utilities for payments, exchange rates, and more.",
-    "currency": {
-      "title": "Live Currency Converter",
-      "desc": "Convert 20+ currencies instantly using real-time Frankfurter API rates with a 30-day trend chart."
-    },
-    "crypto": {
-      "title": "Crypto Profit Calculator",
-      "desc": "Enter your average buy price and quantity to instantly calculate profit/loss. Supports top 50 coins."
-    },
-    "percent": {
+    "percentage-calc": {
       "title": "Percentage Calculator",
-      "desc": "Instantly calculate discounts, rate of change, ratios, and reverse discounts. Essential for shopping, investing, and business."
+      "desc": "Instantly calculate discounts, rate of change, ratios, and reverse percentages."
     },
-    "vat": {
+    "exchange-rate": {
+      "title": "Live Currency Converter",
+      "desc": "Convert 20+ currencies instantly using real-time Frankfurter API rates."
+    },
+    "coin-profit": {
+      "title": "Crypto Profit Calculator",
+      "desc": "Enter buy price and quantity to instantly calculate profit/loss for top 50 coins."
+    },
+    "vat-calc": {
       "title": "VAT Calculator",
-      "desc": "Add VAT to a supply amount or extract net price from a VAT-inclusive total. Supports custom rates for global use."
+      "desc": "Add VAT to a supply amount or extract net price from a total amount."
     },
-    "interest": {
-      "title": "Interest Calculator (Simple & Compound)",
-      "desc": "Simulate deposit and investment returns with simple or compound interest. Includes a year-by-year growth chart."
+    "interest-calc": {
+      "title": "Interest Calculator",
+      "desc": "Simulate deposit returns with simple or compound interest with growth charts."
     },
-    "tax33": {
+    "tax-33-calc": {
       "title": "Freelancer 3.3% Tax Calculator",
-      "desc": "Enter your contract amount to instantly calculate the 3.3% withholding tax and your estimated take-home pay."
+      "desc": "Instantly calculate withholding tax and estimated take-home pay for freelancers."
     },
-    "net-pay": {
-      "title": "Global Net Pay Calculator",
-      "desc": "Calculate monthly take-home pay for KR & US. Weekly holiday pay, overtime, insurance deductions — 2026 rates."
+    "salary-calc": {
+      "title": "Global Salary Calculator",
+      "desc": "Calculate monthly take-home pay for KR & US based on 2026 rates."
     }
   },
   "Tax33": {
@@ -402,15 +390,19 @@
     "subtitle": "Productivity tools for better time management and work efficiency.",
     "pomodoro": {
       "title": "Pomodoro Timer",
-      "desc": "Boost your focus with 25-minute work sessions and short breaks. Supports browser notifications."
+      "desc": "Boost your focus with 25-minute work sessions and short breaks."
     },
-    "timezone": {
-      "title": "Timezone Converter",
-      "desc": "Compare current times across major world cities and easily schedule meetings with the time slider."
+    "world-time": {
+      "title": "World Time Converter",
+      "desc": "Compare current times across major world cities and coordinate schedules."
     },
-    "coverletter": {
-      "title": "Cover Letter Helper",
-      "desc": "Real-time character (with/without spaces) and byte counter with company-specific presets and Korean spell checker integration. Auto-saved in your browser."
+    "resume-helper": {
+      "title": "Resume Helper",
+      "desc": "Real-time character counter and convenience features for writing resumes."
+    },
+    "excel-mapper": {
+      "title": "Smart Excel Mapper",
+      "desc": "Automatically convert report-style Excel files into database-style data."
     }
   },
   "Pomodoro": {
@@ -446,21 +438,17 @@
   },
   "DesignBoard": {
     "subtitle": "Tools to enhance UX design and user experience.",
-    "logo": {
-      "title": "AI Logo & Favicon Package Generator",
-      "desc": "Design your logo with text or emoji and instantly download a complete favicon package (.zip) optimized for every device."
+    "logo-favicon": {
+      "title": "AI Logo & Favicon Generator",
+      "desc": "Design a logo with text or emoji and download a complete favicon package."
     },
-    "color": {
-      "title": "Color Palette & Readability Checker",
-      "desc": "Instantly check WCAG 2.1 contrast ratio between any two colors and apply trending palettes with one click."
+    "color-palette": {
+      "title": "Color Palette Checker",
+      "desc": "Check contrast ratios and apply trending accessible color palettes."
     },
-    "font": {
-      "title": "Multilingual Font Comparer",
-      "desc": "Compare Google Fonts (Latin & Korean) side by side and copy CSS in one click. Includes a Korean/English Harmony tab."
-    },
-    "quiz": {
-      "title": "Quiz / Personality Test Builder",
-      "desc": "Enter questions and result types to instantly create a shareable quiz. Viral CTA on the result page drives new users back to Utility Hub."
+    "font-preview": {
+      "title": "Multilingual Font Preview",
+      "desc": "Compare Google Fonts side by side and copy CSS configurations."
     }
   },
   "FontCompare": {
@@ -518,10 +506,14 @@
     "includes": "Included Files"
   },
   "PerformanceBoard": {
-    "subtitle": "A collection of website performance measurement and monitoring tools.",
-    "ttfb": {
+    "subtitle": "A collection of website performance measurement tools.",
+    "ttfb-check": {
       "title": "TTFB Speed Tester",
-      "desc": "Enter a URL to instantly measure the server's Time to First Byte in milliseconds."
+      "desc": "Measure the server's Time to First Byte in milliseconds."
+    },
+    "site-monitor": {
+      "title": "Website Performance Monitor",
+      "desc": "Monitor real-time uptime and performance metrics for your sites."
     }
   },
   "Ttfb": {
@@ -554,38 +546,53 @@
     "reset": "Convert Another"
   },
   "LifestyleBoard": {
-    "subtitle": "Tools to help with minor but tedious calculations and records in daily life.",
-    "comingSoon": "Under development. Useful lifestyle tools will be added soon!",
-    "korean-age": {
-      "title": "Korean Date Calculator",
-      "desc": "Calculate Korean age, military discharge date, and ovulation cycle all in one tabbed tool."
+    "subtitle": "Lifestyle and health tools for better daily living.",
+    "gpa-calc": {
+      "title": "GPA Converter",
+      "desc": "Convert between different GPA scales and manage your grades."
     },
-    "sea-mbti": {
+    "dday-calc": {
+      "title": "D-Day & Date Calculator",
+      "desc": "Calculate remaining days for important events and manage anniversaries."
+    },
+    "age-calc": {
+      "title": "Age & Military Date Checker",
+      "desc": "Calculate your exact age and mandatory service discharge dates."
+    },
+    "pet-calorie": {
+      "title": "Pet Food/Calorie Guide",
+      "desc": "Find the recommended daily calories and food amount for your pets."
+    },
+    "bmi-calc": {
+      "title": "BMI & Water Intake Calc",
+      "desc": "Calculate your BMI and daily recommended water intake."
+    },
+    "mbti-test": {
       "title": "Sea Creature MBTI Test",
-      "desc": "Which sea creature matches your personality? Test yourself or even your pets!"
+      "desc": "Discover which sea creature matches your personality!"
     },
-    "aquarium-bioload": {
-      "title": "Aquarium Bioload Calculator",
-      "desc": "Prevent overcrowding with optimal stocking level calculation and compatibility analysis"
+    "aquarium-calc": {
+      "title": "Aquarium Bioload Calc",
+      "desc": "Calculate the optimal fish stocking density for your aquarium."
     },
-    "ai-saju-prompt": {
-      "title": "AI Saju Fortune Prompt Generator",
-      "desc": "Convert birth date/time to Saju (Four Pillars) and generate optimized prompts for ChatGPT/Claude/Gemini fortune reading."
+    "fortune-prompt": {
+      "title": "AI Saju Fortune Prompt",
+      "desc": "Generate high-quality AI prompts for detailed Saju readings."
     }
   },
   "SecurityBoard": {
     "subtitle": "Security tools for privacy protection and safe internet usage.",
-    "redact": {
+    "privacy-masking": {
       "title": "Personal Info Redactor",
-      "desc": "Safely mask sensitive data like emails, phone numbers, SSNs, and credit cards — entirely in your browser."
+      "desc": "Mask sensitive personal data directly in your browser for protection."
     },
-    "password": {
-      "title": "Password Generator & Crack Time",
-      "desc": "Generate cryptographically secure random passwords and visualize how long it would take to crack them."
+    "password-generator": {
+      "title": "Password Gen & Crack Time",
+      "desc": "Generate strong passwords and check estimated hack times."
     },
-    "url": {
-      "title": "URL Phishing & Malware Checker",
-      "desc": "Paste any suspicious link and instantly check it against Google Safe Browsing for malware and phishing threats."
+    "url-safety": {
+      "title": "URL Phishing & Safety Check",
+      "desc": "Check suspicious links for threats via Google Safe Browsing."
     }
   },
   "Redact": {
@@ -690,25 +697,25 @@
 
   "DevBoard": {
     "subtitle": "Essential utility tools for developers.",
-    "json": {
+    "json-formatter": {
       "title": "JSON Formatter & Viewer",
-      "desc": "Prettify, minify, or visualize JSON as a collapsible tree. Includes syntax highlighting and validation."
+      "desc": "Prettify, minify, and visualize JSON structures with validation."
+    },
+    "regex-tester": {
+      "title": "Regex Tester",
+      "desc": "Test regular expression patterns against strings in real time."
+    },
+    "resistor-calc": {
+      "title": "Resistor Calculator",
+      "desc": "Decode color bands and SMD codes for resistors instantly."
+    },
+    "password-strength": {
+      "title": "Password Strength Analyzer",
+      "desc": "Analyze the entropy and security strength of your passwords."
     },
     "kec-grounding": {
-      "title": "KEC Grounding & Protective Conductor Sizing",
-      "desc": "Calculate minimum cross-sectional area for grounding and protective conductors based on KEC (Korea Electrical Code) 142.3.2 standards with cable size recommendations."
-    },
-    "regex": {
-      "title": "Regex Tester",
-      "desc": "Enter a pattern and test string to see matches highlighted in real time. Includes a cheat sheet sidebar."
-    },
-    "resistor": {
-      "title": "Integrated Resistor Calculator",
-      "desc": "Read color band resistors (4-6 bands) and SMD codes (3-digit, 4-digit, EIA-96) with real-time graphics."
-    },
-    "password": {
-      "title": "Password Generator & Strength Analyzer",
-      "desc": "Generate cryptographically secure passwords and analyze entropy with estimated crack time visualization."
+      "title": "KEC Grounding Calculator",
+      "desc": "Calculate grounding conductor sizes based on KEC standards."
     }
   },
   "JsonFormatter": {
