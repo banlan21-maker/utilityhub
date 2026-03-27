@@ -12,6 +12,7 @@ const CATEGORIES_BASE = [
   { id: 'productivity',icon: '⚡', color: '#f59e0b', hot: false, popular: true  },
   { id: 'ux',          icon: '✨', color: '#ec4899', hot: false, popular: false },
   { id: 'ai',          icon: '🤖', color: '#8b5cf6', hot: true,  popular: false },
+  { id: 'ai-marketing',icon: '✨', color: '#8b5cf6', hot: true,  popular: true  },
   { id: 'lifestyle',   icon: '🌿', color: '#22c55e', hot: false, popular: false },
   { id: 'security',    icon: '🛡️', color: '#6366f1', hot: false, popular: false },
   { id: 'utilities',   icon: '🛠️', color: '#14b8a6', hot: false, popular: true  },

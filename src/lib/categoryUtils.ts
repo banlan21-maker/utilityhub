@@ -10,6 +10,7 @@ const CATEGORIES = [
   'productivity',
   'ux',
   'ai',
+  'ai-marketing',
   'security',
   'utilities'
 ] as const;
