@@ -19,6 +19,7 @@ import {
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
 import s from './osmu.module.css';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -350,10 +351,36 @@ export default function OSMUContentFormatter() {
         </section>
       </div>
 
-      {/* SEO & Related */}
+      {/* ─── Standard Bottom Sections (Rulebook V4.3) ─── */}
       <div style={{ maxWidth: 'var(--container-max-width)', margin: '0 auto', width: '100%' }}>
-        <RelatedTools toolId="utilities/marketing/osmu-formatter" />
         
+        {/* 0-0. SNS Share */}
+        <ShareBar 
+          title={isKo ? 'OSMU 콘텐츠 재가공 포맷터' : 'OSMU Content Formatter'} 
+          description={isKo ? '한 번의 작성으로 모든 SNS 플랫폼 점령' : 'One Source, Every Platform'} 
+        />
+
+        {/* 0-1. Recommended Tools */}
+        <RelatedTools toolId="utilities/marketing/osmu-formatter" />
+
+        {/* 0-2. Ad Placeholder */}
+        <div style={{
+          width: '100%',
+          minHeight: '90px',
+          backgroundColor: 'rgba(241, 245, 249, 0.5)',
+          border: '1px dashed var(--border)',
+          borderRadius: 'var(--radius-lg)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--text-muted)',
+          fontSize: '0.875rem',
+          margin: '2rem 0'
+        }}>
+          {isKo ? '광고 영역 (Google AdSense 등)' : 'Ad Space (Google AdSense, etc.)'}
+        </div>
+
+        {/* 1 ~ 4. SEO Sections */}
         <SeoSection
           ko={{
             title: 'OSMU 재가공 포맷터란?',

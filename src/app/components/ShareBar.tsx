@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { MessageCircle, Instagram, Send, Link2 } from 'lucide-react';
 
 interface ShareBarProps {
   title: string;
@@ -12,66 +13,97 @@ export default function ShareBar({ title, description }: ShareBarProps) {
 
   const getUrl = () => (typeof window !== 'undefined' ? window.location.href : '');
 
-  const handleKakao = async () => {
+  const handleShare = async (platform: 'kakao' | 'insta' | 'tele' | 'copy') => {
     const url = getUrl();
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, text: description, url });
-        return;
-      } catch {
-        // user cancelled or API not supported
+    const shareText = `${title} - theutilhub.com`;
+
+    if (platform === 'copy') {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      return;
+    }
+
+    if (platform === 'tele') {
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`, '_blank');
+      return;
+    }
+
+    if (platform === 'insta') {
+      // Instagram doesn't have a direct share URL for web like others, usually copy link is the best we can do or point to a guide
+      // But we can just use the native share API if available
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: shareText, text: description, url });
+        } catch {
+          handleShare('copy');
+        }
+      } else {
+        handleShare('copy');
+      }
+      return;
+    }
+
+    if (platform === 'kakao') {
+      // Logic for Kakao usually involves their SDK, but we can use native share or deep link
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: shareText, text: description, url });
+        } catch {
+          handleShare('copy');
+        }
+      } else {
+        handleShare('copy');
       }
     }
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleTwitter = () => {
-    const url = getUrl();
-    const text = encodeURIComponent(`${title} - 무료 온라인 도구`);
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
-  };
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(getUrl());
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const btnBase: React.CSSProperties = {
-    padding: '0.5rem 1.25rem',
-    borderRadius: '8px',
+  const btnStyle = (bg: string, fg: string): React.CSSProperties => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '0.5rem 1rem',
+    borderRadius: 'var(--radius-md)',
     border: 'none',
-    cursor: 'pointer',
+    background: bg,
+    color: fg,
     fontSize: '0.85rem',
     fontWeight: 600,
-    transition: 'opacity 0.15s',
-  };
+    cursor: 'pointer',
+    transition: 'all 0.15s',
+  });
 
   return (
-    <div
-      style={{
-        textAlign: 'center',
-        padding: '1.5rem 1rem',
-        marginTop: '2rem',
-        borderTop: '1px solid var(--border)',
-      }}
-    >
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '0.9rem' }}>
+    <section style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
+      <p style={{
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        color: 'var(--text-muted)',
+        textTransform: 'uppercase',
+        letterSpacing: '0.1em',
+        marginBottom: '0.75rem',
+        textAlign: 'left'
+      }}>
         이 도구를 친구에게 공유하기
       </p>
-      <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <button onClick={handleKakao} style={{ ...btnBase, background: '#FEE500', color: '#3A1D1D' }}>
-          💬 카카오톡
+      
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem' }}>
+        <button onClick={() => handleShare('kakao')} style={btnStyle('#FEE500', '#3C1E1E')}>
+          <MessageCircle size={16} /> 카카오톡
         </button>
-        <button onClick={handleTwitter} style={{ ...btnBase, background: '#000', color: '#fff' }}>
-          𝕏 트위터
+        
+        <button onClick={() => handleShare('insta')} style={btnStyle('linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7)', '#fff')}>
+          <Instagram size={16} /> 인스타그램
         </button>
-        <button onClick={handleCopy} style={{ ...btnBase, background: 'var(--surface)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}>
-          {copied ? '✓ 복사됨' : '🔗 링크 복사'}
+        
+        <button onClick={() => handleShare('tele')} style={btnStyle('#0088cc', '#fff')}>
+          <Send size={16} /> 텔레그램
+        </button>
+        
+        <button onClick={() => handleShare('copy')} style={btnStyle('var(--surface-hover)', 'var(--text-secondary)')}>
+          <Link2 size={16} /> {copied ? '링크가 복사되었습니다!' : 'URL 복사'}
         </button>
       </div>
-    </div>
+    </section>
   );
 }
