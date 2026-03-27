@@ -4,7 +4,7 @@ import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import Header from '../components/Header';
 import Script from 'next/script';
-import {Analytics} from '@vercel/analytics/react';
+import {Analytics} from '@vercel/analytics/next';
 import '../globals.css';
 
 export const metadata = {
