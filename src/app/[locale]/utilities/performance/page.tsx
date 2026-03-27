@@ -16,13 +16,6 @@ export default function PerformanceDashboardPage() {
       icon: '🚀',
       gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
     },
-    {
-      id: 'utilities/performance/site-monitor',
-      title: boardT('site-monitor.title'),
-      desc: boardT('site-monitor.desc'),
-      icon: '🖥️',
-      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-    },
   ];
 
   return (
