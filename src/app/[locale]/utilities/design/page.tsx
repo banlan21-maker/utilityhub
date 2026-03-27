@@ -4,34 +4,34 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
-export default function UXPage() {
+export default function DesignDashboardPage() {
   const catT = useTranslations('Categories');
-  const boardT = useTranslations('UxBoard');
+  const boardT = useTranslations('DesignBoard');
 
   const tools = [
     {
-      id: 'ux/logo',
+      id: 'utilities/design/logo',
       title: boardT('logo.title'),
       desc: boardT('logo.desc'),
       icon: '🎨',
       gradient: 'linear-gradient(135deg, #a855f7 0%, #6d28d9 100%)',
     },
     {
-      id: 'ux/color',
+      id: 'utilities/design/color',
       title: boardT('color.title'),
       desc: boardT('color.desc'),
       icon: '🎯',
       gradient: 'linear-gradient(135deg, #f43f5e 0%, #fb923c 100%)',
     },
     {
-      id: 'ux/font',
+      id: 'utilities/design/font',
       title: boardT('font.title'),
       desc: boardT('font.desc'),
       icon: '🔤',
       gradient: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
     },
     {
-      id: 'ux/quiz',
+      id: 'utilities/design/quiz',
       title: boardT('quiz.title'),
       desc: boardT('quiz.desc'),
       icon: '🧩',
@@ -44,7 +44,7 @@ export default function UXPage() {
       <NavigationActions />
       <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
-          {catT('ux')}
+          {catT('design')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
           {boardT('subtitle')}

@@ -4,27 +4,27 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
-export default function ProductivityPage() {
+export default function ProductivityDashboardPage() {
   const catT = useTranslations('Categories');
   const boardT = useTranslations('ProductivityBoard');
 
   const tools = [
     {
-      id: 'productivity/pomodoro',
+      id: 'utilities/productivity/pomodoro',
       title: boardT('pomodoro.title'),
       desc: boardT('pomodoro.desc'),
       icon: '🍅',
       gradient: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
     },
     {
-      id: 'productivity/timezone',
+      id: 'utilities/productivity/timezone',
       title: boardT('timezone.title'),
       desc: boardT('timezone.desc'),
       icon: '🌍',
       gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
     },
     {
-      id: 'productivity/coverletter',
+      id: 'utilities/productivity/coverletter',
       title: boardT('coverletter.title'),
       desc: boardT('coverletter.desc'),
       icon: '📝',

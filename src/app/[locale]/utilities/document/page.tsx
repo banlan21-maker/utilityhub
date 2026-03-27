@@ -4,27 +4,27 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
-export default function PdfDashboardPage() {
+export default function DocumentDashboardPage() {
   const catT = useTranslations('Categories');
-  const boardT = useTranslations('PdfBoard');
+  const boardT = useTranslations('DocumentBoard');
 
   const tools = [
     {
-      id: 'pdf/security',
+      id: 'utilities/document/security',
       title: boardT('security.title'),
       desc: boardT('security.desc'),
       icon: '🛡️',
       gradient: 'linear-gradient(135deg, #1e3a8a 0%, #10b981 100%)'
     },
     {
-      id: 'pdf/image-pdf-converter',
+      id: 'utilities/document/image-pdf-converter',
       title: boardT('image-pdf-converter.title'),
       desc: boardT('image-pdf-converter.desc'),
       icon: '🔄',
       gradient: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)'
     },
     {
-      id: 'pdf/hwp',
+      id: 'utilities/document/hwp',
       title: boardT('hwp.title'),
       desc: boardT('hwp.desc'),
       icon: '📄',
@@ -37,7 +37,7 @@ export default function PdfDashboardPage() {
       <NavigationActions />
       <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
-          {catT('pdf')}
+          {catT('document')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
           {boardT('subtitle')}

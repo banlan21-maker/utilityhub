@@ -4,18 +4,14 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
-export default function AiMarketingDashboardPage() {
+export default function SecurityDashboardPage() {
   const catT = useTranslations('Categories');
-  const boardT = useTranslations('AiMarketingBoard');
+  const t = useTranslations('SecurityBoard');
 
   const tools = [
-    {
-      id: 'ai-marketing/osmu-content-formatter',
-      title: boardT('osmu-content-formatter.title'),
-      desc: boardT('osmu-content-formatter.desc'),
-      icon: '✨',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)'
-    }
+    { id: 'utilities/security/redact', icon: '🔏', titleKey: 'redact' as const, descKey: 'redact' as const },
+    { id: 'utilities/security/password', icon: '🔑', titleKey: 'password' as const, descKey: 'password' as const },
+    { id: 'utilities/security/url', icon: '🛡️', titleKey: 'url' as const, descKey: 'url' as const },
   ];
 
   return (
@@ -23,10 +19,10 @@ export default function AiMarketingDashboardPage() {
       <NavigationActions />
       <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
-          {catT('ai-marketing')}
+          {catT('security')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
-          {boardT('subtitle')}
+          {t('subtitle')}
         </p>
       </header>
 
@@ -47,38 +43,21 @@ export default function AiMarketingDashboardPage() {
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                 cursor: 'pointer',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
               }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+              onMouseOver={e => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
               }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+              onMouseOut={e => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
               }}
             >
-              <div
-                style={{
-                  background: tool.gradient,
-                  width: '60px',
-                  height: '60px',
-                  borderRadius: 'var(--radius-lg)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '2rem',
-                  marginBottom: '1.5rem',
-                  boxShadow: 'var(--shadow-md)'
-                }}
-              >
-                {tool.icon}
-              </div>
+              <div style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>{tool.icon}</div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>
-                {tool.title}
+                {t(`${tool.titleKey}.title` as any)}
               </h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                {tool.desc}
+                {t(`${tool.descKey}.desc` as any)}
               </p>
             </div>
           </Link>

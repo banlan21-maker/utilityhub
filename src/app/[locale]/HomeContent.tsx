@@ -6,17 +6,16 @@ import { Link } from '@/i18n/routing';
 import styles from './page.module.css';
 
 const CATEGORIES_BASE = [
-  { id: 'performance', icon: '🚀', color: '#ef4444', hot: false, popular: false },
-  { id: 'pdf',         icon: '📄', color: '#10b981', hot: false, popular: false },
-  { id: 'fintech',     icon: '💳', color: '#3b82f6', hot: false, popular: true  },
-  { id: 'productivity',icon: '⚡', color: '#f59e0b', hot: false, popular: true  },
-  { id: 'ux',          icon: '✨', color: '#ec4899', hot: false, popular: false },
-  { id: 'ai',          icon: '🤖', color: '#8b5cf6', hot: true,  popular: false },
-  { id: 'ai-marketing',icon: '✨', color: '#8b5cf6', hot: true,  popular: true  },
-  { id: 'lifestyle',   icon: '🌿', color: '#22c55e', hot: false, popular: false },
-  { id: 'security',    icon: '🛡️', color: '#6366f1', hot: false, popular: false },
-  { id: 'utilities',   icon: '🛠️', color: '#14b8a6', hot: false, popular: true  },
-  { id: 'dev',         icon: '💻', color: '#f97316', hot: true,  popular: false },
+  { id: 'performance',  icon: '🚀', color: '#ef4444', hot: false, popular: false },
+  { id: 'document',     icon: '📄', color: '#10b981', hot: false, popular: false },
+  { id: 'finance',      icon: '💳', color: '#3b82f6', hot: false, popular: true  },
+  { id: 'productivity', icon: '⚡', color: '#f59e0b', hot: false, popular: true  },
+  { id: 'design',       icon: '✨', color: '#ec4899', hot: false, popular: false },
+  { id: 'marketing',    icon: '🤖', color: '#8b5cf6', hot: true,  popular: true  },
+  { id: 'lifestyle',    icon: '🌿', color: '#22c55e', hot: false, popular: false },
+  { id: 'security',     icon: '🛡️', color: '#6366f1', hot: false, popular: false },
+  { id: 'utility',      icon: '🛠️', color: '#14b8a6', hot: false, popular: true  },
+  { id: 'dev',          icon: '💻', color: '#f97316', hot: true,  popular: false },
 ] as const;
 
 interface HomeContentProps {
@@ -142,7 +141,7 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
             {filtered.map((cat, i) => (
               <Link
                 key={cat.id}
-                href={`/${cat.id}` as any}
+                href={`/utilities/${cat.id}` as any}
                 className={styles.categoryCard}
                 style={{ '--cat-color': cat.color, animationDelay: `${i * 55}ms` } as React.CSSProperties}
               >
@@ -224,7 +223,7 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
               <ul className={styles.footerLinkList}>
                 {CATEGORIES.slice(0, 5).map(cat => (
                   <li key={cat.id}>
-                    <Link href={`/${cat.id}` as any} className={styles.footerLink}>
+                    <Link href={`/utilities/${cat.id}` as any} className={styles.footerLink}>
                       {cat.icon} {catT(cat.id)}
                     </Link>
                   </li>
@@ -238,7 +237,7 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
               <ul className={styles.footerLinkList}>
                 {CATEGORIES.slice(5).map(cat => (
                   <li key={cat.id}>
-                    <Link href={`/${cat.id}` as any} className={styles.footerLink}>
+                    <Link href={`/utilities/${cat.id}` as any} className={styles.footerLink}>
                       {cat.icon} {catT(cat.id)}
                     </Link>
                   </li>

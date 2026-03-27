@@ -48,15 +48,14 @@
   },
   "Categories": {
     "performance": "Performance & Monitoring",
-    "pdf": "Document Conversion",
-    "fintech": "Payments & Fintech",
+    "document": "Document Conversion",
+    "finance": "Payments & Fintech",
     "productivity": "Productivity",
-    "ux": "UX & Design",
-    "ai": "AI Tools",
-    "ai-marketing": "AI & Marketing",
+    "design": "UX & Design",
+    "marketing": "AI & Marketing",
     "lifestyle": "Life & Wellness",
     "security": "Security & Privacy",
-    "utilities": "Utilities & Games",
+    "utility": "Utilities & Games",
     "dev": "Developer Tools"
   },
   "Feedback": {
@@ -75,7 +74,7 @@
     "download": "Download QR Code",
     "emptyState": "Enter text to see your QR code here."
   },
-  "UtilitiesBoard": {
+  "UtilityBoard": {
     "subtitle": "A collection of various extra tools you need in your daily life.",
     "thumbnail": {
       "title": "YouTube Thumbnail Downloader",
@@ -156,7 +155,7 @@
     "and": "and",
     "remainingDetails": "Remaining Details"
   },
-  "PdfBoard": {
+  "DocumentBoard": {
     "subtitle": "Collection of document conversion and editing tools.",
     "security": {
       "title": "Local PDF Sheriff",
@@ -171,14 +170,18 @@
       "desc": "Convert Hangul documents to PDF without any external software."
     }
   },
-  "AiMarketingBoard": {
+  "MarketingBoard": {
     "subtitle": "AI-powered marketing content creation tools.",
+    "hashtag": {
+      "title": "Instagram & YouTube Hashtag Generator",
+      "desc": "Enter a keyword to instantly generate 30 trending hashtags. Supports Instagram and YouTube styles with one-click copy-all."
+    },
     "osmu-content-formatter": {
       "title": "OSMU Content Formatter",
       "desc": "One input, all platforms - automatically generate content for Instagram, X, Blog, and Shorts. 100% local processing."
     }
   },
-  "FintechBoard": {
+  "FinanceBoard": {
     "subtitle": "Financial utilities for payments, exchange rates, and more.",
     "currency": {
       "title": "Live Currency Converter",
@@ -441,7 +444,7 @@
     "add_zone": "Add city",
     "select_zone": "Select a city to add"
   },
-  "UxBoard": {
+  "DesignBoard": {
     "subtitle": "Tools to enhance UX design and user experience.",
     "logo": {
       "title": "AI Logo & Favicon Package Generator",
@@ -684,13 +687,7 @@
     "emptyState": "Enter your height and weight to calculate.",
     "notice": "* Water needs can vary by health conditions or environment."
   },
-  "AiBoard": {
-    "subtitle": "Tools for social media marketing, content creation, and AI-powered automation.",
-    "hashtag": {
-      "title": "Instagram & YouTube Hashtag Generator",
-      "desc": "Enter a keyword to instantly generate 30 trending hashtags. Supports Instagram and YouTube styles with one-click copy-all."
-    }
-  },
+
   "DevBoard": {
     "subtitle": "Essential utility tools for developers.",
     "json": {

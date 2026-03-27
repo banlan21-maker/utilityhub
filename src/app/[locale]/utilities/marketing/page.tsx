@@ -1,21 +1,28 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import {Link} from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
-export default function AiDashboardPage() {
+export default function MarketingDashboardPage() {
   const catT = useTranslations('Categories');
-  const t = useTranslations('AiBoard');
+  const boardT = useTranslations('MarketingBoard');
 
   const tools = [
     {
-      id: 'ai/hashtag',
-      title: t('hashtag.title'),
-      desc: t('hashtag.desc'),
+      id: 'utilities/marketing/hashtag',
+      title: boardT('hashtag.title'),
+      desc: boardT('hashtag.desc'),
       icon: '#️⃣',
       gradient: 'linear-gradient(135deg, #e879f9 0%, #a21caf 100%)'
     },
+    {
+      id: 'utilities/marketing/osmu-content-formatter',
+      title: boardT('osmu-content-formatter.title'),
+      desc: boardT('osmu-content-formatter.desc'),
+      icon: '✨',
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)'
+    }
   ];
 
   return (
@@ -23,10 +30,10 @@ export default function AiDashboardPage() {
       <NavigationActions />
       <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
-          {catT('ai')}
+          {catT('marketing')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
-          {t('subtitle')}
+          {boardT('subtitle')}
         </p>
       </header>
 

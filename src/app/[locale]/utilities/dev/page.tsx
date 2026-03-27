@@ -4,95 +4,46 @@ import {useTranslations} from 'next-intl';
 import {Link} from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
-export default function UtilitiesDashboardPage() {
+export default function DevDashboardPage() {
   const catT = useTranslations('Categories');
-  const t = useTranslations('UtilitiesBoard');
+  const t = useTranslations('DevBoard');
 
   const tools = [
     {
-      id: 'utilities/thumbnail',
-      title: t('thumbnail.title'),
-      desc: t('thumbnail.desc'),
-      icon: '📸',
-      gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+      id: 'utilities/dev/json',
+      title: t('json.title'),
+      desc: t('json.desc'),
+      icon: '🗂️',
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
     },
     {
-      id: 'utilities/shorturl',
-      title: t('shorturl.title'),
-      desc: t('shorturl.desc'),
-      icon: '🔗',
-      gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'
+      id: 'utilities/dev/kec-grounding',
+      title: t('kec-grounding.title'),
+      desc: t('kec-grounding.desc'),
+      icon: '⚡',
+      gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
     },
     {
-      id: 'utilities/area',
-      title: t('area.title'),
-      desc: t('area.desc'),
-      icon: '📐',
-      gradient: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)'
+      id: 'utilities/dev/regex',
+      title: t('regex.title'),
+      desc: t('regex.desc'),
+      icon: '🔍',
+      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     },
     {
-      id: 'utilities/qr',
-      title: t('qr.title'),
-      desc: t('qr.desc'),
-      icon: '🔲',
-      gradient: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)'
+      id: 'utilities/dev/resistor',
+      title: t('resistor.title'),
+      desc: t('resistor.desc'),
+      icon: '📟',
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
     },
     {
-      id: 'utilities/counter',
-      title: t('counter.title'),
-      desc: t('counter.desc'),
-      icon: '📝',
+      id: 'utilities/dev/password',
+      title: t('password.title'),
+      desc: t('password.desc'),
+      icon: '🔑',
       gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
     },
-    {
-      id: 'utilities/dday',
-      title: t('dday.title'),
-      desc: t('dday.desc'),
-      icon: '📅',
-      gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
-    },
-    {
-      id: 'utilities/gpa',
-      title: t('gpa.title'),
-      desc: t('gpa.desc'),
-      icon: '📊',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
-    },
-    {
-      id: 'utilities/unit-converter',
-      title: t('unit-converter.title'),
-      desc: t('unit-converter.desc'),
-      icon: '⚖️',
-      gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)'
-    },
-    {
-      id: 'utilities/image-compressor',
-      title: t('image-compressor.title'),
-      desc: t('image-compressor.desc'),
-      icon: '🗜️',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
-    },
-    {
-      id: 'utilities/image-resizer',
-      title: t('image-resizer.title'),
-      desc: t('image-resizer.desc'),
-      icon: '✂️',
-      gradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)'
-    },
-    {
-      id: 'utilities/smart-excel-mapper',
-      title: t('smart-excel-mapper.title'),
-      desc: t('smart-excel-mapper.desc'),
-      icon: '📊',
-      gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)'
-    },
-    {
-      id: 'utilities/games/wordle',
-      title: t('wordle.title'),
-      desc: t('wordle.desc'),
-      icon: '🎮',
-      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-    }
   ];
 
   return (
@@ -100,7 +51,7 @@ export default function UtilitiesDashboardPage() {
       <NavigationActions />
       <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
-          {catT('utilities')}
+          {catT('dev')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
           {t('subtitle')}
@@ -109,12 +60,12 @@ export default function UtilitiesDashboardPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
         {tools.map((tool) => (
-          <Link 
-            key={tool.id} 
+          <Link
+            key={tool.id}
             href={`/${tool.id}` as any}
             style={{ textDecoration: 'none' }}
           >
-            <div 
+            <div
               className="glass-panel"
               style={{
                 padding: '2rem',
@@ -135,8 +86,8 @@ export default function UtilitiesDashboardPage() {
                 e.currentTarget.style.boxShadow = 'var(--shadow-md)';
               }}
             >
-              <div 
-                style={{ 
+              <div
+                style={{
                   background: tool.gradient,
                   width: '60px',
                   height: '60px',

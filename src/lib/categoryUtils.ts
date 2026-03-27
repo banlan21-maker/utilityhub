@@ -2,17 +2,16 @@ import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
 const CATEGORIES = [
-  'dev',
-  'fintech',
-  'lifestyle',
-  'pdf',
   'performance',
+  'document',
+  'finance',
   'productivity',
-  'ux',
-  'ai',
-  'ai-marketing',
+  'design',
+  'marketing',
+  'lifestyle',
   'security',
-  'utilities'
+  'utility',
+  'dev'
 ] as const;
 
 /**
@@ -26,7 +25,7 @@ export function getToolCounts(): Record<string, number> {
 
   for (const category of CATEGORIES) {
     try {
-      const categoryPath = join(basePath, category);
+      const categoryPath = join(basePath, 'utilities', category);
       const items = readdirSync(categoryPath);
 
       // Count only directories (each tool has its own directory)

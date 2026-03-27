@@ -48,15 +48,14 @@
   },
   "Categories": {
     "performance": "성능 및 모니터링",
-    "pdf": "문서 변환/편집",
-    "fintech": "결제 및 핀테크",
+    "document": "문서 변환/편집",
+    "finance": "결제 및 핀테크",
     "productivity": "생산성 도구",
-    "ux": "UX 및 디자인",
-    "ai": "AI 도구",
-    "ai-marketing": "AI 및 마케팅",
+    "design": "UX 및 디자인",
+    "marketing": "AI 및 마케팅",
     "lifestyle": "라이프스타일 및 건강",
     "security": "보안 및 프라이버시",
-    "utilities": "유틸리티/게임",
+    "utility": "유틸리티/게임",
     "dev": "개발자 도구"
   },
   "Feedback": {
@@ -75,7 +74,7 @@
     "download": "QR 코드 다운로드",
     "emptyState": "텍스트를 입력하면 여기에 QR 코드가 나타납니다."
   },
-  "UtilitiesBoard": {
+  "UtilityBoard": {
     "subtitle": "일상생활에 필요한 다양한 부가 도구 모음입니다.",
     "thumbnail": {
       "title": "유튜브 썸네일 추출기",
@@ -156,7 +155,7 @@
     "and": "및",
     "remainingDetails": "상세 남은 시간"
   },
-  "PdfBoard": {
+  "DocumentBoard": {
     "subtitle": "문서 변환 및 편집 도구 모음입니다.",
     "security": {
       "title": "로컬 PDF 보안관",
@@ -171,14 +170,18 @@
       "desc": "아래아한글 문서를 별도의 프로그램 없이 깨짐 없이 PDF로 변환합니다."
     }
   },
-  "AiMarketingBoard": {
-    "subtitle": "AI 기반 마케팅 콘텐츠 제작 도구 모음입니다.",
+  "MarketingBoard": {
+    "subtitle": "AI 기반 마케팅 콘텐츠 제작 및 자동화 도구 모음입니다.",
+    "hashtag": {
+      "title": "인스타·유튜브 해시태그 생성기",
+      "desc": "키워드 하나로 인기 해시태그 30개를 즉시 생성합니다. 인스타·유튜브 전용 스타일과 원클릭 전체 복사 지원."
+    },
     "osmu-content-formatter": {
       "title": "OSMU 콘텐츠 재가공 포맷터",
       "desc": "한 번의 입력으로 인스타, X, 블로그, 숏폼까지 모든 플랫폼용 콘텐츠를 자동 생성합니다. 100% 로컬 처리."
     }
   },
-  "FintechBoard": {
+  "FinanceBoard": {
     "subtitle": "결제, 환율, 금융 관련 유틸리티 도구 모음입니다.",
     "currency": {
       "title": "실시간 환율 변환기",
@@ -441,7 +444,7 @@
     "add_zone": "도시 추가",
     "select_zone": "추가할 도시를 선택하세요"
   },
-  "UxBoard": {
+  "DesignBoard": {
     "subtitle": "UX 디자인과 사용자 경험을 향상시키는 도구 모음입니다.",
     "logo": {
       "title": "AI 로고 & 파비콘 패키지 생성기",
@@ -688,13 +691,7 @@
     "emptyState": "키와 몸무게를 입력하고 계산해 보세요.",
     "notice": "※ 건강 상태나 환경에 따라 필요한 수분량은 달라질 수 있습니다."
   },
-  "AiBoard": {
-    "subtitle": "SNS 마케팅, 콘텐츠 제작, AI 자동화를 위한 도구 모음입니다.",
-    "hashtag": {
-      "title": "인스타·유튜브 해시태그 생성기",
-      "desc": "키워드 하나로 인기 해시태그 30개를 즉시 생성합니다. 인스타·유튜브 전용 스타일과 원클릭 전체 복사 지원."
-    }
-  },
+
   "DevBoard": {
     "subtitle": "개발자를 위한 필수 유틸리티 도구 모음입니다.",
     "json": {

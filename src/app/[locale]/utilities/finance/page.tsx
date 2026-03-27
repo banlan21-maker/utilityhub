@@ -4,55 +4,55 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
-export default function FintechPage() {
+export default function FinanceDashboardPage() {
   const catT = useTranslations('Categories');
-  const boardT = useTranslations('FintechBoard');
+  const boardT = useTranslations('FinanceBoard');
 
   const tools = [
     {
-      id: 'fintech/tax33',
+      id: 'utilities/finance/tax33',
       title: boardT('tax33.title'),
       desc: boardT('tax33.desc'),
       icon: '🧾',
       gradient: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
     },
     {
-      id: 'fintech/percent',
+      id: 'utilities/finance/percent',
       title: boardT('percent.title'),
       desc: boardT('percent.desc'),
       icon: '🔢',
       gradient: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
     },
     {
-      id: 'fintech/vat',
+      id: 'utilities/finance/vat',
       title: boardT('vat.title'),
       desc: boardT('vat.desc'),
       icon: '🧾',
       gradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
     },
     {
-      id: 'fintech/interest',
+      id: 'utilities/finance/interest',
       title: boardT('interest.title'),
       desc: boardT('interest.desc'),
       icon: '💰',
       gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
     },
     {
-      id: 'fintech/currency',
+      id: 'utilities/finance/currency',
       title: boardT('currency.title'),
       desc: boardT('currency.desc'),
       icon: '💱',
       gradient: 'linear-gradient(135deg, #1e90ff 0%, #0056b3 100%)',
     },
     {
-      id: 'fintech/crypto',
+      id: 'utilities/finance/crypto',
       title: boardT('crypto.title'),
       desc: boardT('crypto.desc'),
       icon: '🪙',
       gradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
     },
     {
-      id: 'fintech/net-pay',
+      id: 'utilities/finance/net-pay',
       title: boardT('net-pay.title'),
       desc: boardT('net-pay.desc'),
       icon: '💵',
@@ -65,7 +65,7 @@ export default function FintechPage() {
       <NavigationActions />
       <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
-          {catT('fintech')}
+          {catT('finance')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
           {boardT('subtitle')}
