@@ -556,13 +556,22 @@ export default function WordlePage() {
               placeholder="여기에 한글 입력 (3글자)"
               value={gameState.currentGuess}
               onChange={(e) => {
-                const val = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
+                // IME 조합 중에는 필터링하지 않고 그대로 적용
+                // 조합이 끝나면 onCompositionEnd에서 완성된 한글만 남김
+                const val = e.target.value;
                 if (val.length <= maxLength) {
                   setGameState(prev => ({ ...prev, currentGuess: val }));
                 }
               }}
               onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={() => setIsComposing(false)}
+              onCompositionEnd={(e) => {
+                setIsComposing(false);
+                // 조합이 끝난 후 완성된 한글만 허용 (자모는 제거)
+                const val = (e.target as HTMLInputElement).value.replace(/[^가-힣]/g, '');
+                if (val.length <= maxLength) {
+                  setGameState(prev => ({ ...prev, currentGuess: val }));
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !isComposing) {
                   handleKeyPress('ENTER');
