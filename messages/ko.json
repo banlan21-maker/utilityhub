@@ -170,6 +170,13 @@
       "desc": "아래아한글 문서를 별도의 프로그램 없이 깨짐 없이 PDF로 변환합니다."
     }
   },
+  "AiMarketingBoard": {
+    "subtitle": "AI 기반 마케팅 콘텐츠 제작 도구 모음입니다.",
+    "osmu-content-formatter": {
+      "title": "OSMU 콘텐츠 재가공 포맷터",
+      "desc": "한 번의 입력으로 인스타, X, 블로그, 숏폼까지 모든 플랫폼용 콘텐츠를 자동 생성합니다. 100% 로컬 처리."
+    }
+  },
   "FintechBoard": {
     "subtitle": "결제, 환율, 금융 관련 유틸리티 도구 모음입니다.",
     "currency": {

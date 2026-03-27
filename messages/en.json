@@ -170,6 +170,13 @@
       "desc": "Convert Hangul documents to PDF without any external software."
     }
   },
+  "AiMarketingBoard": {
+    "subtitle": "AI-powered marketing content creation tools.",
+    "osmu-content-formatter": {
+      "title": "OSMU Content Formatter",
+      "desc": "One input, all platforms - automatically generate content for Instagram, X, Blog, and Shorts. 100% local processing."
+    }
+  },
   "FintechBoard": {
     "subtitle": "Financial utilities for payments, exchange rates, and more.",
     "currency": {
