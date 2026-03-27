@@ -351,8 +351,8 @@ export default function OSMUContentFormatter() {
         </section>
       </div>
 
-      {/* ─── Standard Bottom Sections (Rulebook V4.3) ─── */}
-      <div style={{ maxWidth: 'var(--container-max-width)', margin: '0 auto', width: '100%' }}>
+      {/* ─── Standard Bottom Sections (Rulebook V4.4) ─── */}
+      <div style={{ maxWidth: '1024px', margin: '0 auto', width: '100%', padding: '0 var(--page-padding)' }}>
         
         {/* 0-0. SNS Share */}
         <ShareBar 
