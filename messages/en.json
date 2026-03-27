@@ -161,6 +161,10 @@
   },
   "PdfBoard": {
     "subtitle": "Collection of document conversion and editing tools.",
+    "security": {
+      "title": "Local PDF Sheriff",
+      "desc": "AI automatically detects and masks personal information. 100% local processing with no server upload for safe security processing."
+    },
     "image-pdf-converter": {
       "title": "Image ↔ PDF Converter",
       "desc": "Convert images to PDF and PDF to images for free. 100% local processing for safe and fast conversion."

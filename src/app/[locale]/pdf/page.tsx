@@ -10,6 +10,13 @@ export default function PdfDashboardPage() {
 
   const tools = [
     {
+      id: 'pdf/security',
+      title: boardT('security.title'),
+      desc: boardT('security.desc'),
+      icon: '🛡️',
+      gradient: 'linear-gradient(135deg, #1e3a8a 0%, #10b981 100%)'
+    },
+    {
       id: 'utilities/image-pdf-converter',
       title: boardT('image-pdf-converter.title'),
       desc: boardT('image-pdf-converter.desc'),
