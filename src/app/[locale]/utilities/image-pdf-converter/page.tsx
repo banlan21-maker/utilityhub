@@ -7,7 +7,7 @@ import SeoSection from '@/app/components/SeoSection';
 import { jsPDF } from 'jspdf';
 import JSZip from 'jszip';
 import * as pdfjsLib from 'pdfjs-dist';
-import { Upload, FileImage, File, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
+import { Upload, FileImage, FileText, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
 
 // PDF.js worker 설정
 if (typeof window !== 'undefined') {
@@ -338,7 +338,7 @@ export default function ImagePdfConverterPage() {
               gap: '0.75rem',
             }}
           >
-            <File size={24} />
+            <FileText size={24} />
             {isKorean ? 'PDF → 이미지' : 'PDF → Images'}
           </button>
         </div>

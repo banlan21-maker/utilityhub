@@ -5,6 +5,7 @@ import {routing} from '@/i18n/routing';
 import Header from '../components/Header';
 import Script from 'next/script';
 import {Analytics} from '@vercel/analytics/react';
+import {SpeedInsights} from '@vercel/speed-insights/next';
 import '../globals.css';
 
 export const metadata = {
@@ -54,6 +55,7 @@ export default async function LocaleLayout({
           </div>
         </NextIntlClientProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
