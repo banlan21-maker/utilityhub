@@ -123,10 +123,6 @@
     "wordle": {
       "title": "Daily Word Puzzle",
       "desc": "Guess a new word every day! Supports Korean and English with streak tracking."
-    },
-    "image-pdf-converter": {
-      "title": "Image ↔ PDF Converter",
-      "desc": "Convert images to PDF and PDF to images for free. 100% local processing for safe and fast conversion."
     }
   },
   "TextCounter": {

@@ -92,13 +92,6 @@ export default function UtilitiesDashboardPage() {
       desc: t('wordle.desc'),
       icon: '🎮',
       gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-    },
-    {
-      id: 'utilities/image-pdf-converter',
-      title: t('image-pdf-converter.title'),
-      desc: t('image-pdf-converter.desc'),
-      icon: '🔄',
-      gradient: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)'
     }
   ];
 

@@ -17,7 +17,7 @@ export default function PdfDashboardPage() {
       gradient: 'linear-gradient(135deg, #1e3a8a 0%, #10b981 100%)'
     },
     {
-      id: 'utilities/image-pdf-converter',
+      id: 'pdf/image-pdf-converter',
       title: boardT('image-pdf-converter.title'),
       desc: boardT('image-pdf-converter.desc'),
       icon: '🔄',
