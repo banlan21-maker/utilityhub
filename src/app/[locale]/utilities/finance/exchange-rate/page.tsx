@@ -74,7 +74,7 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
       </defs>
       <path d={areaPath} fill="url(#sparkGrad)" />
       <path d={linePath} fill="none" stroke={color} strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round" />
-      <circle cx={lastX} cy={lastY} r="6" fill={color} stroke="white" strokeWidth="2" shadow="0 2px 4px rgba(0,0,0,0.2)" />
+      <circle cx={lastX} cy={lastY} r="6" fill={color} stroke="white" strokeWidth="2" />
     </svg>
   );
 }
