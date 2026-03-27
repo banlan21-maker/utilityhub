@@ -1,0 +1,141 @@
+.qr_container {
+  max-width: 896px; /* max-w-4xl per Rulebook V4.4 */
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.qr_header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.qr_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.qr_subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.qr_panel {
+  padding: 2.5rem;
+  background: white;
+  border-radius: 1.5rem; /* rounded-2xl */
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.qr_label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.qr_input_wrapper {
+  width: 100%;
+  max-width: 500px;
+}
+
+.qr_input {
+  width: 100%;
+  padding: 1.1rem 1.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #f8fafc;
+  color: #1e293b;
+  font-size: 1.05rem;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.qr_input:focus {
+  border-color: #8b5cf6;
+  background: white;
+  box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.1);
+}
+
+.qr_drawing_area {
+  min-height: 320px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  border: 2px dashed #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+.qr_svg_wrapper {
+  padding: 1.25rem;
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  transform: scale(1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.qr_svg_wrapper:hover {
+  transform: scale(1.03);
+}
+
+.qr_primary_button {
+  margin-top: 1.5rem;
+  padding: 1rem 2.5rem;
+  background: #8b5cf6; /* V4.4 Purple */
+  color: white;
+  border-radius: 1rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qr_primary_button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.qr_primary_button:active {
+  transform: scale(0.95);
+}
+
+.qr_empty_state {
+  text-align: center;
+  color: #94a3b8;
+}
+
+.qr_ad_placeholder {
+  width: 100%;
+  min-height: 90px;
+  background: rgba(241, 245, 249, 0.5);
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 2rem 0;
+}

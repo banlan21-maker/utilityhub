@@ -1,0 +1,182 @@
+.ex_container {
+  max-width: 896px; /* max-w-4xl per Rulebook V4.4 */
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.ex_header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.ex_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.ex_subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.ex_panel {
+  padding: 2.5rem;
+  background: white;
+  border-radius: 2rem; /* rounded-3xl for extra premium feel */
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ex_input_group {
+  margin-bottom: 1.5rem;
+}
+
+.ex_label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.ex_amount_input_wrapper {
+  position: relative;
+}
+
+.ex_amount_symbol {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 700;
+  color: #64748b;
+  font-size: 1.25rem;
+}
+
+.ex_amount_input {
+  width: 100%;
+  padding: 1.1rem 1.5rem 1.1rem 3rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  border: 2px solid #f1f5f9;
+  border-radius: 1.25rem;
+  background: #f8fafc;
+  color: #1e293b;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.ex_amount_input:focus {
+  border-color: #8b5cf6;
+  background: white;
+  box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.1);
+}
+
+.ex_selector_row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.ex_select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 1rem;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+}
+
+.ex_swap_btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #64748b;
+}
+
+.ex_swap_btn:hover {
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+  transform: rotate(180deg);
+}
+
+.ex_result_display {
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%);
+  border: 1.5px solid #ede9fe;
+  border-radius: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.ex_result_main {
+  font-size: 2.75rem;
+  font-weight: 900;
+  color: #1e293b;
+  line-height: 1.1;
+  margin: 0.5rem 0;
+  letter-spacing: -2px;
+}
+
+.ex_chart_box {
+  background: #f8fafc;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.ex_ref_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.ex_ref_item {
+  padding: 0.75rem;
+  background: #f1f5f9;
+  border-radius: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.ex_ad_placeholder {
+  width: 100%;
+  min-height: 90px;
+  background: rgba(241, 245, 249, 0.5);
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 2rem 0;
+}

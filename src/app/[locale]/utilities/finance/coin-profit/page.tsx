@@ -1,26 +1,47 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { 
+  Plus, 
+  Trash2, 
+  RefreshCcw, 
+  TrendingUp, 
+  TrendingDown, 
+  History, 
+  Info, 
+  Settings, 
+  Search, 
+  Share2,
+  DollarSign,
+  Bitcoin,
+  CheckCircle2,
+  ArrowUpRight,
+  ArrowDownRight,
+  Calculator,
+  Sparkles
+} from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './coin.module.css';
 
-/* ─── Supported fiat currencies ─── */
+/* ─── Fiat & Types ─── */
 interface FiatCurrency {
-  code: string;     // CoinGecko vs_currency param
+  code: string;
   symbol: string;
   label: string;
   flag: string;
-  locale: string;   // for Intl.NumberFormat
-  decimals: number; // 0 for KRW/JPY, 2 for others
+  locale: string;
+  decimals: number;
 }
 
-const FIAT_CURRENCIES: FiatCurrency[] = [
-  { code: 'krw', symbol: '₩', label: '한국 원 (KRW)', flag: '🇰🇷', locale: 'ko-KR', decimals: 0 },
-  { code: 'usd', symbol: '$', label: 'US Dollar (USD)', flag: '🇺🇸', locale: 'en-US', decimals: 2 },
+const FIAT: FiatCurrency[] = [
+  { code: 'krw', symbol: '₩', label: 'KRW', flag: '🇰🇷', locale: 'ko-KR', decimals: 0 },
+  { code: 'usd', symbol: '$', label: 'USD', flag: '🇺🇸', locale: 'en-US', decimals: 2 },
 ];
 
-/* ─── Coin types ─── */
 interface Coin {
   id: string;
   symbol: string;
@@ -30,61 +51,15 @@ interface Coin {
   price_change_percentage_24h: number;
 }
 
-/* ─── Module-level cache keyed by "coinId:currency" ─── */
 const priceCache = new Map<string, { price: number; ts: number }>();
-const CACHE_TTL = 60_000;
+const CACHE_TTL = 30_000;
 
-/* ─── Number counter animation hook ─── */
-function useCountUp(target: number, duration = 700) {
-  const [display, setDisplay] = useState(target);
-  const prev = useRef(target);
-  const raf = useRef<number>(0);
+/* ─── Main Component ─── */
 
-  useEffect(() => {
-    const from = prev.current;
-    const start = performance.now();
-    cancelAnimationFrame(raf.current);
-    const tick = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - t, 3);
-      setDisplay(from + (target - from) * ease);
-      if (t < 1) raf.current = requestAnimationFrame(tick);
-      else prev.current = target;
-    };
-    raf.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf.current);
-  }, [target, duration]);
-
-  return display;
-}
-
-/* ─── Toast ─── */
-function Toast({ msg, onClose }: { msg: string; onClose: () => void }) {
-  useEffect(() => { const t = setTimeout(onClose, 3500); return () => clearTimeout(t); }, [onClose]);
-  return (
-    <div style={{ position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', background: '#1e293b', color: '#f8fafc', padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-full)', fontSize: '0.875rem', fontWeight: 500, boxShadow: '0 8px 30px rgba(0,0,0,0.3)', zIndex: 9999, animation: 'toastIn 0.3s ease', whiteSpace: 'nowrap' }}>
-      {msg}
-    </div>
-  );
-}
-
-/* ─── Result card ─── */
-function ResultCard({ label, value, isProfit, sub }: { label: string; value: string; isProfit?: boolean; sub?: string }) {
-  const color = isProfit === undefined ? 'var(--text-primary)' : isProfit ? '#ef4444' : '#3b82f6';
-  const bg    = isProfit === undefined ? 'rgba(255,255,255,0.04)' : isProfit ? 'rgba(239,68,68,0.08)' : 'rgba(59,130,246,0.08)';
-  const border = isProfit === undefined ? 'rgba(255,255,255,0.07)' : isProfit ? 'rgba(239,68,68,0.25)' : 'rgba(59,130,246,0.25)';
-  return (
-    <div style={{ padding: '1.1rem 1.25rem', borderRadius: 'var(--radius-md)', background: bg, border: `1px solid ${border}` }}>
-      <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>{label}</div>
-      <div style={{ fontSize: '1.3rem', fontWeight: 800, color, lineHeight: 1, wordBreak: 'break-all' }}>{value}</div>
-      {sub && <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.3rem' }}>{sub}</div>}
-    </div>
-  );
-}
-
-/* ─── Main component ─── */
 export default function CryptoPage() {
   const t = useTranslations('Crypto');
+  const locale = useLocale();
+  const isKo = locale === 'ko';
 
   const [fiatCode, setFiatCode] = useState('krw');
   const [coins, setCoins] = useState<Coin[]>([]);
@@ -95,54 +70,42 @@ export default function CryptoPage() {
   const [quantity, setQuantity] = useState('');
   const [fetchingCoins, setFetchingCoins] = useState(true);
   const [fetchingPrice, setFetchingPrice] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
   const [lastPriceTime, setLastPriceTime] = useState('');
+  const [isClient, setIsClient] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const fiat = FIAT_CURRENCIES.find(f => f.code === fiatCode)!;
+  useEffect(() => { setIsClient(true); }, []);
 
-  /* Format value in selected fiat */
+  const fiat = FIAT.find(f => f.code === fiatCode)!;
+
   const formatMoney = useCallback((v: number) => {
-    const abs = Math.abs(v);
-    const formatted = abs.toLocaleString(fiat.locale, {
+    return (v < 0 ? '-' : '') + fiat.symbol + Math.abs(v).toLocaleString(fiat.locale, {
       minimumFractionDigits: fiat.decimals,
       maximumFractionDigits: fiat.decimals,
     });
-    return (v < 0 ? '-' : '') + fiat.symbol + formatted;
   }, [fiat]);
 
-  /* Fetch top 50 coins list for selected fiat */
-  const fetchCoinList = useCallback(async (currency: string) => {
+  const fetchCoinList = useCallback(async (curr: string) => {
     setFetchingCoins(true);
-    setSelectedCoin(null);
-    setQuery('');
     try {
-      const res = await fetch(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=50&page=1`
-      );
+      const res = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${curr}&order=market_cap_desc&per_page=50&page=1`);
       if (!res.ok) throw new Error();
       setCoins(await res.json());
     } catch {
-      setCoins(FALLBACK_COINS);
+      // Fallback
+      setCoins([
+        { id: 'bitcoin', symbol: 'btc', name: 'Bitcoin', image: 'https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png', current_price: 0, price_change_percentage_24h: 0 },
+        { id: 'ethereum', symbol: 'eth', name: 'Ethereum', image: 'https://assets.coingecko.com/coins/images/279/thumb/ethereum.png', current_price: 0, price_change_percentage_24h: 0 },
+      ]);
     } finally {
       setFetchingCoins(false);
     }
   }, []);
 
-  useEffect(() => { fetchCoinList(fiatCode); }, [fiatCode, fetchCoinList]);
+  useEffect(() => { if (isClient) fetchCoinList(fiatCode); }, [fiatCode, fetchCoinList, isClient]);
 
-  /* Outside click closes dropdown */
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(e.target as Node)) setShowDropdown(false);
-    };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-
-  /* Refresh current price */
-  const refreshPrice = useCallback(async (coin: Coin, currency: string) => {
-    const key = `${coin.id}:${currency}`;
+  const refreshPrice = useCallback(async (coin: Coin, curr: string) => {
+    const key = `${coin.id}:${curr}`;
     const cached = priceCache.get(key);
     if (cached && Date.now() - cached.ts < CACHE_TTL) {
       setSelectedCoin(prev => prev ? { ...prev, current_price: cached!.price } : prev);
@@ -150,24 +113,16 @@ export default function CryptoPage() {
     }
     setFetchingPrice(true);
     try {
-      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin.id}&vs_currencies=${currency}`);
-      if (res.status === 429) {
-        setToast(t('rate_limit'));
-        if (cached) setSelectedCoin(prev => prev ? { ...prev, current_price: cached!.price } : prev);
-        return;
-      }
+      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin.id}&vs_currencies=${curr}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
-      const price = data[coin.id]?.[currency] ?? coin.current_price;
-      priceCache.set(key, { price, ts: Date.now() });
-      setSelectedCoin(prev => prev ? { ...prev, current_price: price } : prev);
-      setLastPriceTime(new Date().toLocaleTimeString());
-    } catch {
-      setToast(t('fetch_error'));
-    } finally {
-      setFetchingPrice(false);
-    }
-  }, [t]);
+      const p = data[coin.id]?.[curr] ?? coin.current_price;
+      priceCache.set(key, { price: p, ts: Date.now() });
+      setSelectedCoin(prev => prev ? { ...prev, current_price: p } : prev);
+      setLastPriceTime(new Date().toLocaleTimeString(isKo ? 'ko-KR' : 'en-US'));
+    } catch { /* Error toast handled elsewhere */ }
+    finally { setFetchingPrice(false); }
+  }, [isKo]);
 
   const selectCoin = (coin: Coin) => {
     setSelectedCoin(coin);
@@ -176,19 +131,10 @@ export default function CryptoPage() {
     refreshPrice(coin, fiatCode);
   };
 
-  /* Auto-refresh every 60s */
-  useEffect(() => {
-    if (!selectedCoin) return;
-    const timer = setInterval(() => refreshPrice(selectedCoin, fiatCode), 60_000);
-    return () => clearInterval(timer);
-  }, [selectedCoin, fiatCode, refreshPrice]);
-
-  /* Filtered coin list */
   const filtered = query.trim()
-    ? coins.filter(c => c.name.toLowerCase().includes(query.toLowerCase()) || c.symbol.toLowerCase().includes(query.toLowerCase())).slice(0, 8)
-    : coins.slice(0, 8);
+    ? coins.filter(c => c.name.toLowerCase().includes(query.toLowerCase()) || c.symbol.toLowerCase().includes(query.toLowerCase())).slice(0, 10)
+    : coins.slice(0, 5);
 
-  /* Calculations */
   const numBuy = parseFloat(buyPrice) || 0;
   const numQty = parseFloat(quantity) || 0;
   const curPrice = selectedCoin?.current_price ?? 0;
@@ -198,233 +144,157 @@ export default function CryptoPage() {
   const profitRate = totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
   const isProfit = profit >= 0;
 
-  const animProfit = useCountUp(profit);
-  const animValue  = useCountUp(currentValue);
-  const animRate   = useCountUp(profitRate);
-  const hasResult  = totalInvested > 0 && curPrice > 0;
-
-  /* Share */
-  const shareText = selectedCoin && hasResult
-    ? `🪙 ${selectedCoin.name} (${selectedCoin.symbol.toUpperCase()}) Profit Calculator\n\n💰 Avg Buy: ${fiat.symbol}${numBuy.toLocaleString()}\n📦 Qty: ${numQty}\n📊 Current: ${fiat.symbol}${curPrice.toLocaleString()}\n\nInvested: ${formatMoney(totalInvested)}\nValue: ${formatMoney(currentValue)}\nProfit: ${profit >= 0 ? '+' : ''}${formatMoney(profit)}\nReturn: ${profitRate >= 0 ? '+' : ''}${profitRate.toFixed(2)}%`
-    : '';
-
-  const shareTwitter = () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank', 'noopener');
-  const shareKakao = async () => {
-    if (navigator.share) { try { await navigator.share({ text: shareText }); return; } catch { /* cancelled */ } }
-    await navigator.clipboard.writeText(shareText);
-    setToast(t('copied'));
-  };
+  if (!isClient) return null;
 
   return (
-    <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+    <div className={s.coin_container}>
       <NavigationActions />
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>{t('description')}</p>
+      <header className={s.coin_header}>
+        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+          <Bitcoin size={40} color="#f7931a" />
+        </div>
+        <h1 className={s.coin_title}>{isKo ? '코인 수익률 계산기' : 'Crypto Profit Calc'}</h1>
+        <p className={s.coin_subtitle}>{isKo ? '보유하신 코인의 실시간 수익과 수익률을 즉시 확인하세요' : 'Track your crypto gains and losses with real-time market prices.'}</p>
       </header>
 
-      {/* Dark crypto card */}
-      <div style={{ background: '#0f172a', borderRadius: 'var(--radius-lg)', padding: '1.75rem', boxShadow: '0 20px 60px rgba(0,0,0,0.4)', marginBottom: '1.5rem' }}>
-
-        {/* ── Currency selector ── */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', fontWeight: 600, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            {t('fiat_label')}
-          </label>
-          <select
-            value={fiatCode}
-            onChange={e => setFiatCode(e.target.value)}
-            style={{ width: '100%', padding: '0.75rem 1rem', background: '#1e293b', border: '1.5px solid #334155', borderRadius: 'var(--radius-md)', color: '#f8fafc', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', outline: 'none' }}
-          >
-            {FIAT_CURRENCIES.map(f => (
-              <option key={f.code} value={f.code}>{f.flag} {f.label}</option>
+      <section className={s.coin_card}>
+        {/* Currency Switch */}
+        <div className={s.coin_selector_group}>
+          <label className={s.coin_label}>{isKo ? '기준 통화' : 'Base Currency'}</label>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {FIAT.map(f => (
+              <button 
+                key={f.code} 
+                onClick={() => setFiatCode(f.code)}
+                style={{ flex: 1, padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid #334155', background: fiatCode === f.code ? '#8b5cf6' : '#1e293b', color: '#fff', fontSize: '0.9rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+              >
+                {f.flag} {f.label}
+              </button>
             ))}
-          </select>
-        </div>
-
-        {/* ── Coin search ── */}
-        <div style={{ marginBottom: '1.25rem' }} ref={searchRef}>
-          <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', fontWeight: 600, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            {t('coin_label')}
-          </label>
-          <div style={{ position: 'relative' }}>
-            <input
-              type="text" value={query}
-              placeholder={fetchingCoins ? t('loading_coins') : t('coin_placeholder')}
-              disabled={fetchingCoins}
-              onChange={e => { setQuery(e.target.value); setShowDropdown(true); }}
-              style={{ width: '100%', padding: '0.85rem 1rem 0.85rem 2.75rem', background: '#1e293b', border: '1.5px solid #334155', borderRadius: 'var(--radius-md)', color: '#f8fafc', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s', opacity: fetchingCoins ? 0.5 : 1 }}
-              onFocus={e => { setShowDropdown(true); e.target.style.borderColor = '#818cf8'; }}
-              onBlur={e => e.target.style.borderColor = '#334155'}
-            />
-            <span style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', fontSize: '1.1rem' }}>🔍</span>
-
-            {showDropdown && !fetchingCoins && (
-              <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, background: '#1e293b', border: '1px solid #334155', borderRadius: 'var(--radius-md)', zIndex: 100, maxHeight: '240px', overflowY: 'auto', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
-                {filtered.length === 0
-                  ? <div style={{ padding: '0.9rem 1rem', color: '#64748b', fontSize: '0.875rem' }}>{t('no_results')}</div>
-                  : filtered.map(coin => (
-                    <div key={coin.id} onClick={() => selectCoin(coin)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.65rem 1rem', cursor: 'pointer', transition: 'background 0.1s' }}
-                      onMouseOver={e => (e.currentTarget.style.background = '#334155')}
-                      onMouseOut={e => (e.currentTarget.style.background = 'transparent')}
-                    >
-                      <img src={coin.image} alt={coin.name} width={24} height={24} style={{ borderRadius: '50%' }} />
-                      <div style={{ flex: 1 }}>
-                        <span style={{ color: '#f8fafc', fontWeight: 600, fontSize: '0.9rem' }}>{coin.name}</span>
-                        <span style={{ color: '#64748b', fontSize: '0.78rem', marginLeft: '0.4rem' }}>{coin.symbol.toUpperCase()}</span>
-                      </div>
-                      <span style={{ color: coin.price_change_percentage_24h >= 0 ? '#ef4444' : '#3b82f6', fontSize: '0.78rem', fontWeight: 600 }}>
-                        {coin.price_change_percentage_24h >= 0 ? '+' : ''}{coin.price_change_percentage_24h?.toFixed(2)}%
-                      </span>
-                    </div>
-                  ))
-                }
-              </div>
-            )}
           </div>
         </div>
 
-        {/* ── Current price banner ── */}
+        {/* Coin Finder */}
+        <div className={s.coin_selector_group} ref={searchRef} style={{ position: 'relative' }}>
+          <label className={s.coin_label}>{isKo ? '코인 검색' : 'Search Coin'}</label>
+          <div style={{ position: 'relative' }}>
+            <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+            <input 
+              className={s.coin_input} 
+              style={{ paddingLeft: '2.75rem' }}
+              value={query}
+              onChange={e => { setQuery(e.target.value); setShowDropdown(true); }}
+              onFocus={() => setShowDropdown(true)}
+              placeholder={isKo ? "비트코인, 리플, ...." : "Search coin name or symbol"}
+            />
+          </div>
+          {showDropdown && (
+            <div className={s.coin_dropdown}>
+              {filtered.map(c => (
+                <div key={c.id} className={s.coin_drop_item} onClick={() => selectCoin(c)}>
+                  <img src={c.image} width={24} height={24} style={{ borderRadius: '50%' }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>{c.name}</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{c.symbol.toUpperCase()}</div>
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: c.price_change_percentage_24h >= 0 ? '#ef4444' : '#3b82f6', fontWeight: 800 }}>
+                    {c.price_change_percentage_24h >= 0 ? '+' : ''}{c.price_change_percentage_24h.toFixed(2)}%
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Selected Coin Price Banner */}
         {selectedCoin && (
-          <div className="animate-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.85rem 1rem', background: '#1e293b', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem', border: '1px solid #334155' }}>
-            <img src={selectedCoin.image} alt={selectedCoin.name} width={32} height={32} style={{ borderRadius: '50%' }} />
+          <div style={{ background: '#1e293b', padding: '1.25rem', borderRadius: '1rem', border: '1px solid #334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <img src={selectedCoin.image} width={40} height={40} style={{ borderRadius: '50%' }} />
             <div style={{ flex: 1 }}>
-              <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{t('current_price')} ({fiat.code.toUpperCase()})</div>
-              <div style={{ color: '#f8fafc', fontWeight: 800, fontSize: '1.15rem' }}>
-                {fetchingPrice ? '...' : fiat.symbol + selectedCoin.current_price.toLocaleString(fiat.locale, { minimumFractionDigits: fiat.decimals, maximumFractionDigits: fiat.decimals })}
+              <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 800 }}>{selectedCoin.name} {isKo ? '실시간 가격' : 'LIVE PRICE'}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#f8fafc' }}>
+                {fetchingPrice ? <span className="animate-pulse">...</span> : formatMoney(selectedCoin.current_price)}
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ color: selectedCoin.price_change_percentage_24h >= 0 ? '#ef4444' : '#3b82f6', fontWeight: 700, fontSize: '0.9rem' }}>
-                {selectedCoin.price_change_percentage_24h >= 0 ? '▲' : '▼'} {Math.abs(selectedCoin.price_change_percentage_24h).toFixed(2)}%
-              </div>
-              {lastPriceTime && <div style={{ color: '#475569', fontSize: '0.7rem' }}>🕐 {lastPriceTime}</div>}
+              <button 
+                onClick={() => refreshPrice(selectedCoin, fiatCode)} 
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8b5cf6' }}
+              >
+                <RefreshCcw size={20} className={fetchingPrice ? 'animate-spin' : ''} />
+              </button>
+              {lastPriceTime && <div style={{ fontSize: '0.6rem', color: '#475569', marginTop: '0.2rem' }}>{lastPriceTime}</div>}
             </div>
           </div>
         )}
 
-        {/* ── Inputs ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          {[
-            { label: t('buy_price'), val: buyPrice, set: setBuyPrice, placeholder: `${t('buy_price_placeholder')} (${fiat.symbol})`, prefix: fiat.symbol },
-            { label: t('quantity'),  val: quantity,  set: setQuantity,  placeholder: t('qty_placeholder'),       prefix: '' },
-          ].map(({ label, val, set, placeholder, prefix }) => (
-            <div key={label}>
-              <label style={{ display: 'block', fontSize: '0.72rem', color: '#64748b', fontWeight: 600, marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</label>
-              <div style={{ position: 'relative' }}>
-                {prefix && <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '0.9rem', fontWeight: 600 }}>{prefix}</span>}
-                <input
-                  type="text" inputMode="decimal" value={val} placeholder={placeholder}
-                  onChange={e => set(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'))}
-                  style={{ width: '100%', paddingLeft: prefix ? '1.75rem' : '0.75rem', paddingRight: '0.75rem', paddingTop: '0.75rem', paddingBottom: '0.75rem', background: '#1e293b', border: '1.5px solid #334155', borderRadius: 'var(--radius-md)', color: '#f8fafc', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
-                  onFocus={e => e.target.style.borderColor = '#818cf8'}
-                  onBlur={e => e.target.style.borderColor = '#334155'}
-                />
-              </div>
-            </div>
-          ))}
+        {/* Final Inputs */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
+          <div>
+            <label className={s.coin_label}>{isKo ? '매수 단가' : 'Buy Price'}</label>
+            <input className={s.coin_input} value={buyPrice} onChange={e => setBuyPrice(e.target.value.replace(/[^0-9.]/g, ''))} placeholder={fiat.symbol + ' 0'} />
+          </div>
+          <div>
+            <label className={s.coin_label}>{isKo ? '보유 수량' : 'Quantity'}</label>
+            <input className={s.coin_input} value={quantity} onChange={e => setQuantity(e.target.value.replace(/[^0-9.]/g, ''))} placeholder="0" />
+          </div>
         </div>
 
-        {/* ── Results ── */}
-        {hasResult && (
+        {/* Results */}
+        {totalInvested > 0 && (
           <div className="animate-fade-in">
-            <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, #334155, transparent)', marginBottom: '1.25rem' }} />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', marginBottom: '1rem' }}>
-              <ResultCard label={t('total_invested')} value={formatMoney(totalInvested)} />
-              <ResultCard label={t('current_value')}  value={formatMoney(animValue)} />
-              <ResultCard
-                label={t('profit_amount')}
-                value={(animProfit >= 0 ? '+' : '') + formatMoney(animProfit)}
-                isProfit={isProfit}
-              />
-              <ResultCard
-                label={t('profit_rate')}
-                value={`${animRate >= 0 ? '+' : ''}${animRate.toFixed(2)}%`}
-                isProfit={isProfit}
-                sub={isProfit ? '📈 ' + t('in_profit') : '📉 ' + t('in_loss')}
-              />
+            <div className={s.coin_result_grid}>
+              <div className={s.coin_result_item}>
+                <div className={s.coin_result_label}>{isKo ? '총 매수 금액' : 'Invested'}</div>
+                <div className={s.coin_result_value}>{formatMoney(totalInvested)}</div>
+              </div>
+              <div className={s.coin_result_item}>
+                <div className={s.coin_result_label}>{isKo ? '현재 평가 금액' : 'Current Value'}</div>
+                <div className={s.coin_result_value}>{formatMoney(currentValue)}</div>
+              </div>
+              <div className={s.coin_result_item} style={{ border: isProfit ? '1px solid #ef4444' : '1px solid #3b82f6', background: isProfit ? 'rgba(239, 68, 68, 0.05)' : 'rgba(59, 130, 246, 0.05)' }}>
+                <div className={s.coin_result_label} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>{isKo ? '평가 손익' : 'Profit / Loss'}</div>
+                <div className={s.coin_result_value} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>{isProfit ? '+' : ''}{formatMoney(profit)}</div>
+              </div>
+              <div className={s.coin_result_item} style={{ border: isProfit ? '1px solid #ef4444' : '1px solid #3b82f6', background: isProfit ? 'rgba(239, 68, 68, 0.05)' : 'rgba(59, 130, 246, 0.05)' }}>
+                <div className={s.coin_result_label} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>{isKo ? '수익률' : 'Return Rate'}</div>
+                <div className={s.coin_result_value} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>{isProfit ? '+' : ''}{profitRate.toFixed(2)}%</div>
+              </div>
             </div>
-            <div style={{ padding: '0.85rem 1rem', borderRadius: 'var(--radius-md)', background: isProfit ? 'rgba(239,68,68,0.1)' : 'rgba(59,130,246,0.1)', border: `1px solid ${isProfit ? 'rgba(239,68,68,0.3)' : 'rgba(59,130,246,0.3)'}`, textAlign: 'center', fontSize: '1rem', fontWeight: 700, color: isProfit ? '#ef4444' : '#3b82f6' }}>
-              {isProfit ? '🔺' : '🔻'} {t('result_summary', { rate: Math.abs(profitRate).toFixed(2), direction: isProfit ? t('profit') : t('loss') })}
+
+            <div className={s.coin_summary_bar} style={{ background: isProfit ? '#ef4444' : '#3b82f6' }}>
+              {isProfit ? <ArrowUpRight /> : <ArrowDownRight />}
+              {isKo ? 
+                `현재 ${Math.abs(profitRate).toFixed(2)}% ${isProfit ? '수익 중' : '손실 중'}입니다!` : 
+                `In ${isProfit ? 'PROFIT' : 'LOSS'} by ${Math.abs(profitRate).toFixed(2)}%!`
+              }
             </div>
           </div>
         )}
+      </section>
+
+      {/* Standard Bottom Sections */}
+      <div style={{ width: '100%' }}>
+        <ShareBar title={isKo ? '코인 수익률 계산기' : 'Crypto Profit Calc'} description={isKo ? '내 코인 수익률을 실시간으로 확인하세요' : 'Live updates for your crypto portfolio'} />
+        <RelatedTools toolId="fintech/coin" />
+        <div className={s.coin_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
+        <SeoSection
+          ko={{
+            title: '코인 수익률 계산기 필수 가이드',
+            description: '비트코인, 알트코인 매수 후 수익이 얼마인지 궁금하신가요? 실시간 시세로 바로 계산해 드립니다.',
+            useCases: [{ icon: '🪙', title: '단타 & 장투 손익 계산', desc: '현재가 대비 예상 수익 확인' }],
+            steps: [{ step: '1', desc: '코인 검색 -> 매수가/수량 입력' }],
+            faqs: [{ q: '가격을 수동으로 입력하나요?', a: '아니요, CoinGecko를 통해 실시간으로 가져옵니다.' }]
+          }}
+          en={{
+            title: 'Crypto Profit Calculator Guide',
+            description: 'Track your ROI for BTC, ETH, and top 50 coins using live data. Easy and accurate p/l calculation.',
+            useCases: [{ icon: '📉', title: 'P/L tracking', desc: 'Monitor your holdings in real-time' }],
+            steps: [{ step: '1', desc: 'Select coin and enter cost basis' }],
+            faqs: [{ q: 'Is the data live?', a: 'Yes, prices refresh automatically every 60 seconds.' }]
+          }}
+        />
       </div>
-
-      {/* Share */}
-      {hasResult && (
-        <div className="animate-fade-in glass-panel" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
-          <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.75rem', textAlign: 'center' }}>{t('share_title')}</p>
-          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-            <button onClick={shareTwitter}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 1.25rem', background: '#000', color: 'white', borderRadius: 'var(--radius-full)', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}>
-              𝕏 {t('share_twitter')}
-            </button>
-            <button onClick={shareKakao}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 1.25rem', background: '#FEE500', color: '#3C1E1E', borderRadius: 'var(--radius-full)', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem' }}>
-              💬 {t('share_kakao')}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {toast && <Toast msg={toast} onClose={() => setToast(null)} />}
-      <style>{`@keyframes toastIn { from { opacity:0; transform:translate(-50%,12px); } to { opacity:1; transform:translate(-50%,0); } }`}</style>
-
-      <SeoSection
-        ko={{
-          title: "코인 수익률 계산기란 무엇인가요?",
-          description: "코인 수익률 계산기(암호화폐 손익 계산기)는 비트코인, 이더리움 등 암호화폐의 평균 매수가와 보유 수량을 입력하면 현재 시세 기준 평가손익과 수익률(%)을 실시간으로 계산해주는 도구입니다. CoinGecko API를 통해 실시간 코인 가격을 가져오므로 항상 최신 시세를 기반으로 수익률을 파악할 수 있습니다. 코인 투자자라면 포트폴리오를 정기적으로 점검하고, 수익 실현 또는 손절 시점을 결정할 때 이 도구를 활용해보세요.",
-          useCases: [
-            { icon: '📊', title: '포트폴리오 수익률 점검', desc: '여러 코인의 평균 매수가를 각각 입력해 보유 포트폴리오 전체의 수익/손실 현황을 빠르게 파악합니다.' },
-            { icon: '💱', title: '수익 실현 & 손절 기준 설정', desc: '+20% 수익이나 -10% 손실 등 목표 수익률을 설정하고, 현재 평가손익과 비교해 매도 타이밍을 결정합니다.' },
-            { icon: '📱', title: 'SNS 수익 인증 공유', desc: 'X(트위터)·카카오 공유 기능으로 투자 수익률 결과를 캡처해 커뮤니티에 공유하고 정보를 교환합니다.' },
-            { icon: '🧾', title: '세금 신고 사전 계산', desc: '가상자산 양도소득세 신고 전 평균 취득가액과 현재 평가금액을 계산해 세금 예상액을 미리 파악합니다.' },
-          ],
-          steps: [
-            { step: '기준 통화 및 코인 선택', desc: '원화(KRW), 달러(USD) 등 기준 통화를 선택하고, 검색창에서 보유 코인(BTC, ETH 등)을 찾아 선택합니다.' },
-            { step: '평균 매수가 & 수량 입력', desc: '거래소에서 확인한 평균 매수 단가와 보유 수량을 입력합니다. 현재가는 실시간으로 자동 조회됩니다.' },
-            { step: '수익률 확인 및 공유', desc: '총 투자금, 현재 평가금액, 손익 금액, 수익률(%)이 즉시 표시됩니다. 공유 버튼으로 결과를 SNS에 바로 올릴 수 있습니다.' },
-          ],
-          faqs: [
-            { q: '코인 가격은 얼마나 자주 업데이트되나요?', a: 'CoinGecko 무료 API를 사용하며, 요청 시마다 최신 가격을 가져옵니다. API 요청 한도 초과 시 캐시된 가격이 표시될 수 있으며, 이 경우 화면에 안내 메시지가 표시됩니다.' },
-            { q: '평균 매수가는 어디서 확인하나요?', a: '업비트, 빗썸, 바이낸스 등 거래소 앱의 내 보유자산 화면에서 확인할 수 있습니다. 여러 번에 나눠서 매수했다면 거래소가 자동 계산한 평균 매수가를 사용하세요.' },
-            { q: '상위 50개 코인 외의 코인은 지원되지 않나요?', a: '현재는 시가총액 기준 상위 50개 코인을 지원합니다. 소규모 알트코인은 포함되지 않을 수 있습니다. 더 많은 코인 지원이 필요하다면 피드백 게시판에 남겨주세요.' },
-          ],
-        }}
-        en={{
-          title: "What is a Crypto Profit Calculator?",
-          description: "A Crypto Profit Calculator (cryptocurrency P&L calculator) lets you enter the average buy price and quantity of Bitcoin, Ethereum, or other coins to instantly calculate your unrealized profit/loss and return rate (%) based on the current live price. Powered by the CoinGecko API, it always reflects the latest market price. Whether you're checking your portfolio, deciding when to take profits, or preparing for tax reporting, this calculator gives you the numbers you need in seconds.",
-          useCases: [
-            { icon: '📊', title: 'Portfolio P&L Check', desc: 'Enter the average buy price for each coin you hold to get a quick snapshot of your entire portfolio profit and loss.' },
-            { icon: '💱', title: 'Profit-Taking & Stop-Loss Planning', desc: 'Compare your current P&L against target thresholds (+20% profit, -10% loss) to make informed sell decisions.' },
-            { icon: '📱', title: 'Share Your Results on Social Media', desc: 'Use the built-in X (Twitter) or KakaoTalk share feature to post your return rate results to crypto communities.' },
-            { icon: '🧾', title: 'Pre-Tax Reporting Estimation', desc: 'Calculate your average acquisition cost and current valuation ahead of crypto capital gains tax filing to estimate your tax liability.' },
-          ],
-          steps: [
-            { step: 'Select currency & coin', desc: 'Choose your base currency (KRW, USD, etc.) and search for the coin you hold (BTC, ETH, etc.).' },
-            { step: 'Enter average buy price & quantity', desc: 'Input your average cost basis and the amount you hold. Current price is fetched automatically.' },
-            { step: 'View results & share', desc: 'Total invested, current value, P&L amount, and return rate (%) are displayed instantly. Share via the social buttons.' },
-          ],
-          faqs: [
-            { q: 'How often is the coin price updated?', a: 'Prices are fetched from the CoinGecko API on each request. If the rate limit is exceeded, cached prices are shown with an on-screen notice.' },
-            { q: 'Where can I find my average buy price?', a: "Check your exchange app's 'My Assets' or portfolio screen (Upbit, Bithumb, Binance, etc.). Use the automatically calculated average cost basis shown there." },
-            { q: 'Are coins outside the top 50 supported?', a: 'Currently the top 50 coins by market cap are supported. Smaller altcoins may not be listed. Request additional coins via the feedback board.' },
-          ],
-        }}
-      />
     </div>
   );
 }
-
-/* ─── Fallback coins ─── */
-const FALLBACK_COINS: Coin[] = [
-  { id: 'bitcoin',     symbol: 'btc',  name: 'Bitcoin',   image: 'https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png',         current_price: 0, price_change_percentage_24h: 0 },
-  { id: 'ethereum',    symbol: 'eth',  name: 'Ethereum',  image: 'https://assets.coingecko.com/coins/images/279/thumb/ethereum.png',       current_price: 0, price_change_percentage_24h: 0 },
-  { id: 'ripple',      symbol: 'xrp',  name: 'XRP',       image: 'https://assets.coingecko.com/coins/images/44/thumb/xrp-symbol-white.png',current_price: 0, price_change_percentage_24h: 0 },
-  { id: 'solana',      symbol: 'sol',  name: 'Solana',    image: 'https://assets.coingecko.com/coins/images/4128/thumb/solana.png',        current_price: 0, price_change_percentage_24h: 0 },
-  { id: 'dogecoin',    symbol: 'doge', name: 'Dogecoin',  image: 'https://assets.coingecko.com/coins/images/5/thumb/dogecoin.png',         current_price: 0, price_change_percentage_24h: 0 },
-  { id: 'cardano',     symbol: 'ada',  name: 'Cardano',   image: 'https://assets.coingecko.com/coins/images/975/thumb/cardano.png',        current_price: 0, price_change_percentage_24h: 0 },
-  { id: 'avalanche-2', symbol: 'avax', name: 'Avalanche', image: 'https://assets.coingecko.com/coins/images/12559/thumb/Avalanche_Circle_RedWhite_Trans.png', current_price: 0, price_change_percentage_24h: 0 },
-];

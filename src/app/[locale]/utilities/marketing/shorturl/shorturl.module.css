@@ -1,0 +1,150 @@
+.url_container {
+  max-width: 896px; /* max-w-4xl per Rulebook V4.4 */
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.url_header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.url_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.url_subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.url_panel {
+  padding: 2rem;
+  background: white;
+  border-radius: 1.5rem; /* rounded-2xl */
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.url_label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.url_input_row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.url_input {
+  flex: 1;
+  padding: 0.875rem 1.25rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #f8fafc;
+  color: #1e293b;
+  font-size: 1rem;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.url_input:focus {
+  border-color: #8b5cf6;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+}
+
+.url_primary_button {
+  padding: 0.875rem 2rem;
+  background: #8b5cf6; /* V4.4 Purple */
+  color: white;
+  border-radius: 1rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.url_primary_button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.url_primary_button:active {
+  transform: scale(0.95);
+}
+
+.url_result_box {
+  padding: 1.5rem;
+  background: #fdfbff;
+  border: 2px solid #8b5cf6;
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.url_history_item {
+  padding: 1.25rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.2s;
+}
+
+.url_history_item:hover {
+  border-color: #8b5cf6;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.url_icon_button {
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  color: #64748b;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.url_icon_button:hover {
+  color: #8b5cf6;
+  border-color: #8b5cf6;
+  background: #f5f3ff;
+}
+
+.url_ad_placeholder {
+  width: 100%;
+  min-height: 90px;
+  background: rgba(241, 245, 249, 0.5);
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 2rem 0;
+}
