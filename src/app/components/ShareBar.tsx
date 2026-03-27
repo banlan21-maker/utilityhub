@@ -74,20 +74,32 @@ export default function ShareBar({ title, description }: ShareBarProps) {
   });
 
   return (
-    <section style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
+    <section style={{ 
+      marginTop: '2.5rem', 
+      marginBottom: '3rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center'
+    }}>
       <p style={{
-        fontSize: '0.75rem',
-        fontWeight: 600,
+        fontSize: '0.72rem',
+        fontWeight: 700,
         color: 'var(--text-muted)',
         textTransform: 'uppercase',
-        letterSpacing: '0.1em',
-        marginBottom: '0.75rem',
-        textAlign: 'left'
+        letterSpacing: '0.12em',
+        marginBottom: '1rem',
       }}>
         이 도구를 친구에게 공유하기
       </p>
       
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem' }}>
+      <div style={{ 
+        display: 'flex', 
+        flexWrap: 'wrap', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        gap: '0.75rem' 
+      }}>
         <button onClick={() => handleShare('kakao')} style={btnStyle('#FEE500', '#3C1E1E')}>
           <MessageCircle size={16} /> 카카오톡
         </button>
