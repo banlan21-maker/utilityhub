@@ -10,6 +10,13 @@ export default function PdfDashboardPage() {
 
   const tools = [
     {
+      id: 'utilities/image-pdf-converter',
+      title: boardT('image-pdf-converter.title'),
+      desc: boardT('image-pdf-converter.desc'),
+      icon: '🔄',
+      gradient: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)'
+    },
+    {
       id: 'pdf/hwp',
       title: boardT('hwp.title'),
       desc: boardT('hwp.desc'),

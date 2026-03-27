@@ -161,6 +161,10 @@
   },
   "PdfBoard": {
     "subtitle": "Collection of document conversion and editing tools.",
+    "image-pdf-converter": {
+      "title": "Image ↔ PDF Converter",
+      "desc": "Convert images to PDF and PDF to images for free. 100% local processing for safe and fast conversion."
+    },
     "hwp": {
       "title": "Hangul (HWP/HWPX) to PDF",
       "desc": "Convert Hangul documents to PDF without any external software."

@@ -161,6 +161,10 @@
   },
   "PdfBoard": {
     "subtitle": "문서 변환 및 편집 도구 모음입니다.",
+    "image-pdf-converter": {
+      "title": "이미지 ↔ PDF 변환기",
+      "desc": "이미지를 PDF로, PDF를 이미지로 변환하는 무료 도구. 100% 로컬 처리로 안전하고 빠릅니다."
+    },
     "hwp": {
       "title": "한글(HWP/HWPX) to PDF",
       "desc": "아래아한글 문서를 별도의 프로그램 없이 깨짐 없이 PDF로 변환합니다."
