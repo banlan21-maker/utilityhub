@@ -7,7 +7,7 @@ import SeoSection from '@/app/components/SeoSection';
 import { jsPDF } from 'jspdf';
 import JSZip from 'jszip';
 import * as pdfjsLib from 'pdfjs-dist';
-import { Upload, FileImage, FilePdf, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
+import { Upload, FileImage, File, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
 
 // PDF.js worker 설정
 if (typeof window !== 'undefined') {
@@ -99,7 +99,8 @@ export default function ImagePdfConverterPage() {
           await page.render({
             canvasContext: context,
             viewport: viewport,
-          }).promise;
+            canvas: canvas,
+          } as any).promise;
 
           extractedImages.push({
             id: Math.random().toString(36).substr(2, 9),
@@ -337,7 +338,7 @@ export default function ImagePdfConverterPage() {
               gap: '0.75rem',
             }}
           >
-            <FilePdf size={24} />
+            <File size={24} />
             {isKorean ? 'PDF → 이미지' : 'PDF → Images'}
           </button>
         </div>
