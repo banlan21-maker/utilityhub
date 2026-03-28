@@ -111,8 +111,15 @@ export default function NetPayPage() {
     <div className={s.sal_container}>
       <NavigationActions />
       <header className={s.sal_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-          <Briefcase size={40} color="#8b5cf6" />
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <Wallet size={40} color="#8b5cf6" />
         </div>
         <h1 className={s.sal_title}>{isKo ? '급여 & 실수령액 계산기' : 'Salary & Net Pay Calc'}</h1>
         <p className={s.sal_subtitle}>{isKo ? '각종 수당과 세금을 포함해 실제로 받는 월급을 확인하세요' : 'Calculate your real take-home pay after taxes and allowances.'}</p>

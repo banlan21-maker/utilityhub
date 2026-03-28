@@ -125,16 +125,23 @@ export default function ShortUrlPage() {
     <div className={s.url_container}>
       <NavigationActions />
 
-      <header className={s.url_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
           <Link2 size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.url_title}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
           {isKo ? 'URL 단축기' : 'URL Shortener'}
         </h1>
-        <p className={s.url_subtitle}>
-          {isKo 
-            ? '긴 주소를 짧고 강력하게 변환하세요. 클릭 한 번으로 모든 SNS 공유 가능' 
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
+          {isKo
+            ? '긴 주소를 짧고 강력하게 변환하세요. 클릭 한 번으로 모든 SNS 공유 가능'
             : 'Make long links short and powerful. Perfect for social media sharing.'}
         </p>
       </header>

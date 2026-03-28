@@ -8,19 +8,19 @@
   animation: fadeIn 0.6s ease-out;
 }
 
-.ttfb_header {
+.tool_header {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.ttfb_title {
+.tool_title {
   font-size: 2.25rem;
   font-weight: 800;
   color: #1e293b;
   margin-bottom: 0.75rem;
 }
 
-.ttfb_subtitle {
+.tool_subtitle {
   color: var(--text-secondary);
   font-size: 1.1rem;
 }

@@ -12,6 +12,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
+import { FileType } from 'lucide-react';
 
 export default function HwpConverterPage() {
   const t = useTranslations('HwpConverter');
@@ -205,13 +206,19 @@ export default function HwpConverterPage() {
           ))}
         </div>
       </div>
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>
-          {t('title')}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>
-          {t('description')}
-        </p>
+      <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <FileType size={40} color="#8b5cf6" />
+        </div>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
       </header>
 
       <div className="glass-panel" style={{ padding: 'var(--page-padding)', textAlign: 'center' }}>

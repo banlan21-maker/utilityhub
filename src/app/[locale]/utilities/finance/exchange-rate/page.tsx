@@ -166,8 +166,15 @@ export default function CurrencyPage() {
     <div className={s.ex_container}>
       <NavigationActions />
       <header className={s.ex_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-          <RefreshCcw size={40} color="#8b5cf6" className={loading ? 'animate-spin' : ''} />
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <ArrowLeftRight size={40} color="#8b5cf6" />
         </div>
         <h1 className={s.ex_title}>{isKo ? '실시간 환율 계산기' : 'Global Exchange Calculator'}</h1>
         <p className={s.ex_subtitle}>{isKo ? '세계를 넘나드는 가장 정확한 실시간 환율 정보' : 'The most accurate real-time currency conversion tool.'}</p>

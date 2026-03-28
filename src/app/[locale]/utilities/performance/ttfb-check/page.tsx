@@ -105,12 +105,12 @@ export default function TtfbPage() {
       <NavigationActions />
 
       {/* Header */}
-      <header className={s.ttfb_header}>
+      <header className={s.tool_header}>
         <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
           <Activity size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.ttfb_title}>{t('title')}</h1>
-        <p className={s.ttfb_subtitle}>{t('description')}</p>
+        <h1 className={s.tool_title}>{t('title')}</h1>
+        <p className={s.tool_subtitle}>{t('description')}</p>
       </header>
 
       {/* Main Panel */}

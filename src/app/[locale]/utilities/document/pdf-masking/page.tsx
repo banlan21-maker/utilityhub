@@ -8,7 +8,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import { jsPDF } from 'jspdf';
 import * as pdfjsLib from 'pdfjs-dist';
-import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock } from 'lucide-react';
+import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock, ShieldCheck } from 'lucide-react';
 
 // PDF.js worker 설정
 if (typeof window !== 'undefined') {
@@ -234,13 +234,21 @@ export default function PdfSecurityPage() {
       <NavigationActions />
 
       {/* Header */}
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-          <h1 style={{ color: 'var(--primary)', fontSize: '2.5rem', margin: 0 }}>
-            {isKorean ? '🛡️ 로컬 PDF 보안관' : '🛡️ Local PDF Sheriff'}
-          </h1>
+      <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <ShieldCheck size={40} color="#8b5cf6" />
         </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '1rem' }}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
+          {isKorean ? 'PDF 개인정보 마스킹' : 'PDF Privacy Masking'}
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
           {isKorean
             ? '100% 로컬 처리 | AI 개인정보 탐지 | 서버 전송 없음'
             : '100% Local Processing | AI Privacy Detection | No Server Upload'}
@@ -258,10 +266,11 @@ export default function PdfSecurityPage() {
           fontSize: '0.95rem',
           fontWeight: 600,
           boxShadow: '0 4px 12px rgba(30, 58, 138, 0.3)',
+          marginTop: '1rem',
           marginBottom: '1rem',
         }}>
           <Lock size={18} />
-          {isKorean ? '🛡️ 로컬 보안 구역 작동 중 (오프라인 안전)' : '🛡️ Local Security Zone Active (Offline Safe)'}
+          {isKorean ? '로컬 보안 구역 작동 중 (오프라인 안전)' : 'Local Security Zone Active (Offline Safe)'}
         </div>
 
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>

@@ -99,12 +99,19 @@ export default function HashtagPage() {
   return (
     <div className={s.hashtag_container}>
       <NavigationActions />
-      <header className={s.hashtag_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
           <Hash size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.hashtag_title}>{isKo ? '해시태그 생성기' : 'Hashtag Generator'}</h1>
-        <p className={s.hashtag_subtitle}>{isKo ? '키워드 하나로 인기 해시태그 즉시 생성' : 'Generate 30 popular hashtags instantly'}</p>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{isKo ? '해시태그 생성기' : 'Hashtag Generator'}</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{isKo ? '키워드 하나로 인기 해시태그 즉시 생성' : 'Generate 30 popular hashtags instantly'}</p>
       </header>
 
       <section className={s.hashtag_panel}>

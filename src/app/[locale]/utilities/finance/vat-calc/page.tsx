@@ -58,8 +58,15 @@ export default function VatPage() {
     <div className={s.vat_container}>
       <NavigationActions />
       <header className={s.vat_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-          <Receipt size={40} color="#8b5cf6" />
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <Calculator size={40} color="#8b5cf6" />
         </div>
         <h1 className={s.vat_title}>{t('title')}</h1>
         <p className={s.vat_subtitle}>{t('description')}</p>

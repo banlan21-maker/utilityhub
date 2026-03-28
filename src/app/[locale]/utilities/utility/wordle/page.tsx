@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
+import { Grid3x3 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 
@@ -411,9 +412,19 @@ export default function WordlePage() {
       <NavigationActions />
 
       {/* Header */}
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-          <h1 style={{ color: 'var(--primary)', fontSize: '2.5rem', margin: 0 }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <Grid3x3 size={40} color="#8b5cf6" />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', margin: 0 }}>
             {currentLanguage === 'ko' ? '일일 단어 퍼즐' : 'Daily Word Puzzle'}
           </h1>
           <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--surface)', padding: '0.5rem', borderRadius: '12px', border: '1px solid var(--border)' }}>

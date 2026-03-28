@@ -298,6 +298,261 @@ if (error) return <ToolError message={error.message} />;
 
 ---
 
+## [공통 개발 표준 2.4: 카테고리 리스팅 페이지 (Category Listing Page)] ✨ NEW
+
+각 카테고리의 메인 페이지(`src/app/[locale]/utilities/[category]/page.tsx`)는 해당 카테고리에 속한 모든 도구를 카드 형태로 보여주는 표준 레이아웃을 따른다.
+
+> **기준 참조**: Finance, Productivity, Design, Marketing, Lifestyle, Security, Utility, Dev 카테고리 (2025 V4 표준 적용 완료)
+
+### 헤더 구조 (필수)
+
+**HTML 구조**
+```tsx
+<header className={s.category_list_header}>
+  <div style={{
+    display: 'inline-flex',
+    padding: '1rem',
+    background: 'white',
+    borderRadius: '1.5rem',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+    marginBottom: '1.5rem'
+  }}>
+    <[CategoryIcon] size={48} color="#8b5cf6" />
+  </div>
+  <h1 className={s.category_list_title}>{catT('category')}</h1>
+  <p className={s.category_list_subtitle}>{boardT('subtitle')}</p>
+</header>
+```
+
+**1. 카테고리 아이콘 컨테이너 (인라인 스타일)**
+```css
+display: inline-flex;
+padding: 1rem;
+background: white;
+borderRadius: 1.5rem;
+boxShadow: 0 4px 12px rgba(0,0,0,0.05);
+marginBottom: 1.5rem;
+```
+- 아이콘: **Lucide React 필수**, `size={48}`, `color="#8b5cf6"` (고정값)
+- 배치: **중앙 정렬**
+
+**2. 카테고리 제목 (H1) - CSS 클래스**
+```css
+.category_list_title {
+  font-size: 3.5rem;
+  font-weight: 950;
+  background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+  letter-spacing: -2px;
+}
+```
+
+**3. 카테고리 부제목 - CSS 클래스**
+```css
+.category_list_subtitle {
+  font-size: 1.25rem;
+  color: #64748b;
+  font-weight: 500;
+}
+```
+
+### 도구 카드 그리드 (필수)
+
+**그리드 컨테이너**
+```tsx
+<div className={s.category_grid}>
+  {tools.map(tool => (
+    <Link key={tool.id} href={`/${tool.id}`} style={{ textDecoration: 'none' }}>
+      <div className={s.category_card}>
+        <div className={s.category_icon_wrap} style={{ background: tool.gradient }}>
+          {tool.icon}
+        </div>
+        <h2 className={s.category_card_title}>{tool.title}</h2>
+        <p className={s.category_card_desc}>{tool.desc}</p>
+        <div className={s.category_arrow}>
+          {isKo ? '사용하러 가기' : 'Use Now'}
+          <ArrowRight size={18} />
+        </div>
+      </div>
+    </Link>
+  ))}
+</div>
+```
+
+**CSS 클래스 (필수)**
+```css
+.category_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.category_card {
+  background: white;
+  border-radius: 2rem;
+  padding: 2.5rem;
+  border: 1px solid #f1f5f9;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.category_card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px -12px rgba(139, 92, 246, 0.15);
+  border-color: #8b5cf6;
+}
+
+.category_icon_wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  transition: all 0.4s;
+}
+
+.category_card_title {
+  font-size: 1.5rem;
+  font-weight: 850;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.category_card_desc {
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.category_arrow {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  color: #8b5cf6;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.4s;
+}
+
+.category_card:hover .category_arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+```
+
+### 도구 데이터 구조
+
+```tsx
+const tools = [
+  {
+    id: 'utilities/[category]/[tool-slug]',
+    title: boardT('[tool-slug].title'),
+    desc: boardT('[tool-slug].desc'),
+    icon: <LucideIcon size={36} color="#hexcolor" />,
+    gradient: 'rgba(r, g, b, 0.08)',
+  },
+  // ...
+];
+```
+
+**아이콘 색상 가이드:**
+- 도구 카드 아이콘: `size={36}`, 각 도구별 고유 색상 (Tailwind 색상 팔레트 참조)
+- 배경 그라디언트: 아이콘 색상의 `rgba(r, g, b, 0.08)` (8% 투명도)
+
+### 실제 구현 예제 (Finance 카테고리 기준)
+
+```tsx
+'use client';
+
+import { useTranslations, useLocale } from 'next-intl';
+import { Link } from '@/i18n/routing';
+import NavigationActions from '@/app/components/NavigationActions';
+import { Wallet, Calculator, Coins, Receipt, TrendingUp, ArrowRight } from 'lucide-react';
+import s from './finance_list.module.css';
+
+export default function FinanceDashboardPage() {
+  const catT = useTranslations('Categories');
+  const boardT = useTranslations('FinanceBoard');
+  const locale = useLocale();
+  const isKo = locale === 'ko';
+
+  const tools = [
+    {
+      id: 'utilities/finance/percentage-calc',
+      title: boardT('percentage-calc.title'),
+      desc: boardT('percentage-calc.desc'),
+      icon: <Calculator size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
+    },
+    // ... more tools
+  ];
+
+  return (
+    <div className={s.fin_list_container}>
+      <NavigationActions />
+      <header className={s.fin_list_header}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <Wallet size={48} color="#8b5cf6" />
+        </div>
+        <h1 className={s.fin_list_title}>{catT('finance')}</h1>
+        <p className={s.fin_list_subtitle}>{boardT('subtitle')}</p>
+      </header>
+
+      <div className={s.fin_grid}>
+        {tools.map(tool => (
+          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
+            <div className={s.fin_card}>
+              <div className={s.fin_icon_wrap} style={{ background: tool.gradient }}>
+                {tool.icon}
+              </div>
+              <h2 className={s.fin_card_title}>{tool.title}</h2>
+              <p className={s.fin_card_desc}>{tool.desc}</p>
+              <div className={s.fin_arrow}>
+                {isKo ? '계산하러 가기' : 'Calculate Now'}
+                <ArrowRight size={18} />
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### 주요 규칙
+
+1. ✅ **카테고리 아이콘은 size={48}** (개별 도구는 40, 도구 카드는 36)
+2. ✅ **모든 아이콘은 Lucide React 사용** (이모지 절대 금지)
+3. ✅ **카드 레이아웃은 세로형** (아이콘 → 제목 → 설명 → 화살표)
+4. ✅ **호버 시 translateY(-10px)와 보라색 그림자**
+5. ✅ **그리드는 minmax(320px, 1fr)** (반응형 자동 조절)
+6. ✅ **컨테이너 max-width는 1024px**
+7. ✅ **CSS 모듈 파일명**: `[category]_list.module.css`
+
+---
+
 ## [공통 개발 표준 2.5: 툴 시작카드 (Tool Start Card)]
 
 모든 개별 툴 페이지는 메인 기능 영역 상단에 반드시 아래 표준화된 "툴 시작카드"를 배치한다.

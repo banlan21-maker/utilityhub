@@ -69,16 +69,23 @@ export default function QRGeneratorPage() {
     <div className={s.qr_container}>
       <NavigationActions />
 
-      <header className={s.qr_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
           <QrCode size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.qr_title}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
           {isKo ? '고해상도 QR 생성기' : 'HD QR Code Generator'}
         </h1>
-        <p className={s.qr_subtitle}>
-          {isKo 
-            ? '링크나 텍스트를 고화질 QR 코드로 즉시 변환하고 소장하세요' 
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
+          {isKo
+            ? '링크나 텍스트를 고화질 QR 코드로 즉시 변환하고 소장하세요'
             : 'Turn any URL or text into a high-quality QR code instantly'}
         </p>
       </header>

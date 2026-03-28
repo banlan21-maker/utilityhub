@@ -106,7 +106,14 @@ export default function PercentPage() {
       <NavigationActions />
 
       <header className={s.fin_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
           <Percent size={40} color="#8b5cf6" />
         </div>
         <h1 className={s.fin_title}>{t('title')}</h1>

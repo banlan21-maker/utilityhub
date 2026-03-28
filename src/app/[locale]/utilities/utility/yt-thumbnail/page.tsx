@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { Youtube } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -160,9 +161,19 @@ export default function ThumbnailPage() {
       <NavigationActions />
 
       {/* Header */}
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>📸 유튜브 썸네일 추출기</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <Youtube size={40} color="#8b5cf6" />
+        </div>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>유튜브 썸네일 추출기</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
           YouTube URL만 입력하면 MQ·HQ·SD·MaxRes 전 화질 썸네일을 즉시 추출·다운로드합니다.
         </p>
       </header>

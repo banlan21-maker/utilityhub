@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { Zap } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 
 const STANDARD_SQ = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300];
@@ -64,10 +65,20 @@ export default function KECGroundingPage() {
       <div style={{ maxWidth: '1024px', margin: '0 auto', padding: '2rem 1rem' }}>
         <NavigationActions />
 
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>⚡ {t('title')}</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>{t('subtitle')}</p>
-        </div>
+        <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{
+            display: 'inline-flex',
+            padding: '1rem',
+            background: 'white',
+            borderRadius: '1.5rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            marginBottom: '1.5rem'
+          }}>
+            <Zap size={40} color="#8b5cf6" />
+          </div>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('subtitle')}</p>
+        </header>
 
         <div className="glass-panel" style={{ borderRadius: '1rem', padding: '2rem', marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>🧮 {t('calculatorTitle')}</h2>

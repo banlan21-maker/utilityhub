@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { GraduationCap } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -161,9 +162,19 @@ export default function GpaPage() {
     <div>
       <NavigationActions />
 
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>🎓 학점 변환기 (GPA Converter)</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>4.5 · 4.3 · 100점 만점 간 GPA 상호 변환 — 전공/교양 구분 입력 지원</p>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <GraduationCap size={40} color="#8b5cf6" />
+        </div>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>학점 변환기 (GPA Converter)</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>4.5 · 4.3 · 100점 만점 간 GPA 상호 변환 — 전공/교양 구분 입력 지원</p>
       </header>
 
       {/* Scale + Filter */}

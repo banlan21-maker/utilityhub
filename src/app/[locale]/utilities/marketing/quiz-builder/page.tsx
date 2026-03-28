@@ -143,12 +143,19 @@ export default function QuizBuilderPage() {
     <div className={s.quiz_container}>
       <NavigationActions />
       
-      <header className={s.quiz_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
           <Puzzle size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.quiz_title}>{isKo ? 'MBTI 스타일 퀴즈 빌더' : 'Quiz & Personality Test Builder'}</h1>
-        <p className={s.quiz_subtitle}>{isKo ? '질문과 결과를 입력하면 공유 가능한 심리테스트가 단 1분 만에 완성됩니다.' : 'Build a viral personality test in seconds. No login required.'}</p>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{isKo ? 'MBTI 스타일 퀴즈 빌더' : 'Quiz & Personality Test Builder'}</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{isKo ? '질문과 결과를 입력하면 공유 가능한 심리테스트가 단 1분 만에 완성됩니다.' : 'Build a viral personality test in seconds. No login required.'}</p>
       </header>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>

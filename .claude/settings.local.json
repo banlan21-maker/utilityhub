@@ -24,7 +24,11 @@
       "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/development-pipeline/**)",
       "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/starter/**)",
       "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/dynamic/**)",
-      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills//**)"
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills//**)",
+      "Bash(git log --all --oneline --date=short --format=\"%h %ad %s\" -- src/app/components/Footer.tsx)",
+      "Bash(git checkout d2908b9 -- src/app/components/Footer.tsx)",
+      "Bash(npm install -D tailwindcss@^3.4.0 postcss@latest autoprefixer@latest)",
+      "Bash(npm uninstall @tailwindcss/postcss)"
     ]
   }
 }

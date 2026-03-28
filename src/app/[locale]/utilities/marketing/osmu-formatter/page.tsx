@@ -199,7 +199,7 @@ export default function OSMUContentFormatter() {
       <NavigationActions />
 
       {/* Tool Start Card - V4 Standard */}
-      <header className={s.osmu_header}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
           display: 'inline-flex',
           padding: '1rem',
@@ -210,10 +210,10 @@ export default function OSMUContentFormatter() {
         }}>
           <Sparkles size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.osmu_title}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
           {isKo ? 'OSMU 콘텐츠 재가공 포맷터' : 'OSMU Content Formatter'}
         </h1>
-        <p className={s.osmu_subtitle}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
           {isKo
             ? '한 번의 작성으로 블로그, 인스타, X, 숏츠까지 완벽 변환'
             : 'One Source, Every Platform - Auto-format for SNS, Blog, and Video'}

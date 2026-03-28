@@ -146,12 +146,19 @@ export default function CoverLetterPage() {
   return (
     <div className={s.container}>
       {/* Tool Start Card */}
-      <header className={s.fin_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
           <FileText size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.fin_title}>자소서 작성 헬퍼</h1>
-        <p className={s.fin_subtitle}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>자소서 작성 헬퍼</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
           실시간 글자 수 / 바이트 카운터 + 부산대 맞춤법 검사기 연동
         </p>
       </header>

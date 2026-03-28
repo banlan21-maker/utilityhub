@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Waves } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
@@ -85,10 +86,20 @@ export default function SeaMbtiPage() {
 
   const renderStart = () => (
     <div className={`${styles.card} ${styles.fadeIn}`} style={{ textAlign: 'center' }}>
-      <h1 className={styles.startTitle} style={{ whiteSpace: 'pre-line', margin: '0 0 1.5rem', lineHeight: 1.4 }}>
+      <div style={{
+        display: 'inline-flex',
+        padding: '1rem',
+        background: 'white',
+        borderRadius: '1.5rem',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+        marginBottom: '1.5rem'
+      }}>
+        <Waves size={40} color="#8b5cf6" />
+      </div>
+      <h1 className={styles.startTitle} style={{ whiteSpace: 'pre-line', margin: '0 0 0.75rem', lineHeight: 1.4, fontSize: '2.25rem', fontWeight: 800, color: '#1e293b' }}>
         {t('title')}
       </h1>
-      <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '2.5rem', whiteSpace: 'pre-line', lineHeight: 1.6 }}>
+      <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '2.5rem', whiteSpace: 'pre-line', lineHeight: 1.6 }}>
         {t('description')}
       </p>
       <div style={{ fontSize: '4.5rem', marginBottom: '3rem', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}>
