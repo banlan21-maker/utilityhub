@@ -5,6 +5,9 @@ import { useState, useCallback, useEffect } from 'react';
 import { Key } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './password-generator.module.css';
 
 // ── Charset helpers ──────────────────────────────────────────────────────────
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -310,6 +313,15 @@ export default function PasswordGenPage() {
           )}
         </div>
       </div>
+
+      {/* 공유하기 */}
+      <ShareBar title={t('title')} description={t('description')} />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/security/password-generator" />
+
+      {/* 광고 영역 */}
+      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

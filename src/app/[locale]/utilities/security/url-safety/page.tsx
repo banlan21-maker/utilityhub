@@ -5,6 +5,9 @@ import { useState } from 'react';
 import { ShieldAlert } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './url-safety.module.css';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 type CheckStatus = 'idle' | 'checking' | 'safe' | 'unsafe' | 'error';
@@ -236,6 +239,15 @@ export default function UrlCheckerPage() {
           </div>
         ))}
       </div>
+
+      {/* 공유하기 */}
+      <ShareBar title={t('title')} description={t('description')} />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/security/url-safety" />
+
+      {/* 광고 영역 */}
+      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

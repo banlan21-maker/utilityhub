@@ -4,7 +4,10 @@ import { useTranslations } from 'next-intl';
 import { useState, useCallback } from 'react';
 import { Palette } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
+import s from './color-palette.module.css';
 
 // ── WCAG Algorithm ─────────────────────────────────────────────────────────
 function hexToRgb(hex: string): [number, number, number] | null {
@@ -429,6 +432,15 @@ export default function ColorCheckerPage() {
           </div>
         </div>
       </div>
+
+      {/* 공유하기 */}
+      <ShareBar title={t('title')} description={t('description')} />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/design/color-palette" />
+
+      {/* 광고 영역 */}
+      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

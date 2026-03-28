@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl';
 import { UserCircle } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 
 export default function NicknameGeneratorPage() {
   const t = useTranslations('Nickname');
@@ -211,6 +213,29 @@ export default function NicknameGeneratorPage() {
           transform: translateY(-1px);
         }
       `}</style>
+
+      {/* 공유하기 */}
+      <ShareBar title={t('title')} description={t('description')} />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/lifestyle/nickname" />
+
+      {/* 광고 영역 */}
+      <div style={{
+        width: '100%',
+        minHeight: '90px',
+        background: 'rgba(226, 232, 240, 0.3)',
+        border: '1px dashed #cbd5e1',
+        borderRadius: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#94a3b8',
+        fontSize: '0.875rem',
+        margin: '2rem 0'
+      }}>
+        광고 영역
+      </div>
 
       <SeoSection
         ko={{

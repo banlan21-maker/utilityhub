@@ -6,6 +6,8 @@ import { Image } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -437,6 +439,29 @@ export default function ImageCompressorPage() {
 
       {/* ── SEO Section ── */}
       <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+        {/* 공유하기 */}
+        <ShareBar title={T.title} description={T.subtitle} />
+
+        {/* 추천 도구 */}
+        <RelatedTools toolId="utilities/utility/image-processor" />
+
+        {/* 광고 영역 */}
+        <div style={{
+          width: '100%',
+          minHeight: '90px',
+          background: 'rgba(226, 232, 240, 0.3)',
+          border: '1px dashed #cbd5e1',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#94a3b8',
+          fontSize: '0.875rem',
+          margin: '2rem 0'
+        }}>
+          광고 영역
+        </div>
+
         <SeoSection
           ko={{
             title: '이미지 압축이 웹 성능과 SEO에 중요한 이유',

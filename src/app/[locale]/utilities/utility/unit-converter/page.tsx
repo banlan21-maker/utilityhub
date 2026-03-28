@@ -4,6 +4,9 @@ import { useState, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Calculator } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import SeoSection from '@/app/components/SeoSection';
 
 // ─── Unit Data ───────────────────────────────────────────────────────────────
 
@@ -486,15 +489,30 @@ export default function UnitConverterPage() {
         </div>
       </div>
 
-      {/* Ad slot */}
-      <div style={{ maxWidth: '560px', margin: '1.5rem auto 0', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '300px', height: '250px', background: 'var(--surface)', border: '1px dashed var(--border)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>📢</span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-            {locale === 'ko' ? '광고 영역' : 'Ad Area'}
-          </span>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>300 × 250</span>
-        </div>
+      {/* 공유하기 */}
+      <ShareBar
+        title={locale === 'ko' ? '단위 변환기' : 'Unit Converter'}
+        description={locale === 'ko' ? '길이, 무게, 온도, 데이터 등 모든 단위를 즉시 환산' : 'Instantly convert length, weight, temperature, data and more'}
+      />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/utility/unit-converter" />
+
+      {/* 광고 영역 */}
+      <div style={{
+        width: '100%',
+        minHeight: '90px',
+        background: 'rgba(226, 232, 240, 0.3)',
+        border: '1px dashed #cbd5e1',
+        borderRadius: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#94a3b8',
+        fontSize: '0.875rem',
+        margin: '2rem 0'
+      }}>
+        광고 영역
       </div>
     </div>
   );

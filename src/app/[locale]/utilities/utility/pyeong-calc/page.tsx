@@ -6,6 +6,7 @@ import { Ruler } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
 
 /* 1 평 = 3.30579 m² (법정 환산 계수) */
 const PYEONG_TO_SQM = 3.30579;
@@ -301,16 +302,28 @@ export default function AreaPage() {
         </div>
       </div>
 
-      {/* Ad placeholder */}
-      <div style={{ maxWidth: '520px', margin: '1.5rem auto 0', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '300px', height: '250px', background: '#f1f5f9', border: '1px dashed #cbd5e1', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>📢</span>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 500 }}>광고 영역</span>
-          <span style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>300 × 250</span>
-        </div>
-      </div>
+      {/* 공유하기 */}
+      <ShareBar title={t('title')} description={t('description')} />
 
-      <RelatedTools toolId="utilities/area" />
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/utility/pyeong-calc" />
+
+      {/* 광고 영역 */}
+      <div style={{
+        width: '100%',
+        minHeight: '90px',
+        background: 'rgba(226, 232, 240, 0.3)',
+        border: '1px dashed #cbd5e1',
+        borderRadius: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#94a3b8',
+        fontSize: '0.875rem',
+        margin: '2rem 0'
+      }}>
+        광고 영역
+      </div>
 
       <SeoSection
         ko={{

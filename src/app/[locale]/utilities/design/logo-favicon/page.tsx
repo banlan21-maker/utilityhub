@@ -4,7 +4,10 @@ import { useTranslations } from 'next-intl';
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { Image } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
+import s from './logo-favicon.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type Shape = 'circle' | 'rounded' | 'square' | 'hexagon';
@@ -580,6 +583,15 @@ export default function LogoGeneratorPage() {
           )}
         </div>
       </div>
+
+      {/* 공유하기 */}
+      <ShareBar title={t('title')} description={t('description')} />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/design/logo-favicon" />
+
+      {/* 광고 영역 */}
+      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

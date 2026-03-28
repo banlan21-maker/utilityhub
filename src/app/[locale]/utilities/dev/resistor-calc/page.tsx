@@ -275,7 +275,24 @@ export default function ResistorCalculator() {
         description={t('description')}
       />
 
-      <RelatedTools toolId="dev/resistor" />
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/dev/resistor-calc" />
+
+      {/* 광고 영역 */}
+      <div style={{
+        width: '100%',
+        minHeight: '90px',
+        background: 'rgba(226, 232, 240, 0.3)',
+        border: '1px dashed #cbd5e1',
+        borderRadius: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#94a3b8',
+        fontSize: '0.875rem',
+        margin: '2rem auto',
+        maxWidth: '960px'
+      }}>광고 영역</div>
 
       <SeoSection
         ko={{

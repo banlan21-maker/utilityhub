@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Zap } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
 
 const STANDARD_SQ = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300];
 
@@ -168,7 +171,26 @@ export default function KECGroundingPage() {
           </div>
         </div>
 
-        <div style={{ width: '100%', minHeight: '90px', background: 'var(--bg-tertiary)', border: '2px dashed var(--border)', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.875rem', margin: '2rem 0' }}>{t('adPlaceholder')}</div>
+        {/* 공유하기 */}
+        <ShareBar title={t('title')} description={t('subtitle')} />
+
+        {/* 추천 도구 */}
+        <RelatedTools toolId="utilities/dev/kec-grounding" />
+
+        {/* 광고 영역 */}
+        <div style={{
+          width: '100%',
+          minHeight: '90px',
+          background: 'rgba(226, 232, 240, 0.3)',
+          border: '1px dashed #cbd5e1',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#94a3b8',
+          fontSize: '0.875rem',
+          margin: '2rem 0'
+        }}>광고 영역</div>
 
         <section style={{ marginBottom: '2.5rem' }}>
           <h2 style={{ borderLeft: '4px solid #3b82f6', paddingLeft: '0.75rem', fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--text-primary)' }}>{t('section1Title')}</h2>

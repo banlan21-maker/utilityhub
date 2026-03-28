@@ -5,6 +5,8 @@ import { useLocale } from 'next-intl';
 import { Grid3x3 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 
 // 한국어 3글자 단어 데이터 (100개 이상)
 const KOREAN_WORDS = [
@@ -919,6 +921,32 @@ export default function WordlePage() {
           50% { opacity: 0.5; }
         }
       `}</style>
+
+      {/* 공유하기 */}
+      <ShareBar
+        title={currentLanguage === 'ko' ? '일일 단어 퍼즐' : 'Daily Word Puzzle'}
+        description={currentLanguage === 'ko' ? `매일 새로운 ${maxLength}글자 단어를 맞춰보세요!` : `Guess the ${maxLength}-letter word every day!`}
+      />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/utility/wordle" />
+
+      {/* 광고 영역 */}
+      <div style={{
+        width: '100%',
+        minHeight: '90px',
+        background: 'rgba(226, 232, 240, 0.3)',
+        border: '1px dashed #cbd5e1',
+        borderRadius: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#94a3b8',
+        fontSize: '0.875rem',
+        margin: '2rem 0'
+      }}>
+        광고 영역
+      </div>
 
       {/* SEO Section */}
       <SeoSection

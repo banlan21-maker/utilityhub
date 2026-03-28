@@ -5,6 +5,9 @@ import { useState, useCallback } from 'react';
 import { Shield } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './privacy-masking.module.css';
 
 // ── Masking Rules ──────────────────────────────────────────────────────────
 interface MaskRule {
@@ -241,6 +244,15 @@ export default function RedactPage() {
           </div>
         </div>
       </div>
+
+      {/* 공유하기 */}
+      <ShareBar title={t('title')} description={t('description')} />
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/security/privacy-masking" />
+
+      {/* 광고 영역 */}
+      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

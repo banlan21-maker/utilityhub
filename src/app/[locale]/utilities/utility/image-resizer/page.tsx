@@ -7,6 +7,7 @@ import { Crop } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
 
 // cropperjs CSS (bundled inside react-cropper's node_modules)
 import 'react-cropper/node_modules/cropperjs/dist/cropper.css';
@@ -464,7 +465,29 @@ export default function ImageResizerPage() {
 
       {/* ── SEO ── */}
       <div style={{ maxWidth: '860px', margin: '0 auto' }}>
-        <RelatedTools toolId="utilities/image-resizer" />
+        {/* 공유하기 */}
+        <ShareBar title={T.title} description={T.subtitle} />
+
+        {/* 추천 도구 */}
+        <RelatedTools toolId="utilities/utility/image-resizer" />
+
+        {/* 광고 영역 */}
+        <div style={{
+          width: '100%',
+          minHeight: '90px',
+          background: 'rgba(226, 232, 240, 0.3)',
+          border: '1px dashed #cbd5e1',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#94a3b8',
+          fontSize: '0.875rem',
+          margin: '2rem 0'
+        }}>
+          광고 영역
+        </div>
+
         <SeoSection
           ko={{
             title: '플랫폼별 최적 이미지 사이즈 가이드',

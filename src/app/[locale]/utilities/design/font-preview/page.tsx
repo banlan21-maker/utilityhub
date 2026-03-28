@@ -4,7 +4,10 @@ import { useTranslations } from 'next-intl';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Type } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
+import s from './font-preview.module.css';
 
 // ── Font Data ──────────────────────────────────────────────────────────────
 type FontCategory = 'sans-serif' | 'serif' | 'monospace' | 'display';
@@ -416,6 +419,15 @@ export default function FontComparePage() {
         <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2rem', lineHeight: 1.6 }}>
           {t('footer_note')}
         </p>
+
+        {/* 공유하기 */}
+        <ShareBar title={t('title')} description={t('description')} />
+
+        {/* 추천 도구 */}
+        <RelatedTools toolId="utilities/design/font-preview" />
+
+        {/* 광고 영역 */}
+        <div className={s.ad_placeholder}>광고 영역</div>
       </div>
 
       <SeoSection
