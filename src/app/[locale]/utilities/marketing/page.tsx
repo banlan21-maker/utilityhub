@@ -1,15 +1,16 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 import { Megaphone, Sparkles, Hash, QrCode, Link as LinkIcon, Brain, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
 import s from './marketing_list.module.css';
 
 export default function MarketingDashboardPage() {
   const catT = useTranslations('Categories');
   const boardT = useTranslations('MarketingBoard');
+  const locale = useLocale();
+  const isKo = locale === 'ko';
 
   const tools = [
     {
@@ -50,7 +51,7 @@ export default function MarketingDashboardPage() {
   ];
 
   return (
-    <div>
+    <div className={s.marketing_list_container}>
       <NavigationActions />
       <header className={s.marketing_list_header}>
         <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
@@ -64,58 +65,23 @@ export default function MarketingDashboardPage() {
         </p>
       </header>
 
-      <div className={s.marketing_list_grid}>
+      <div className={s.marketing_grid}>
         {tools.map((tool) => (
-          <ToolCard key={tool.id} tool={tool} />
+          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
+            <div className={s.marketing_card}>
+              <div className={s.marketing_icon_wrap} style={{ background: tool.gradient }}>
+                {tool.icon}
+              </div>
+              <h2 className={s.marketing_card_title}>{tool.title}</h2>
+              <p className={s.marketing_card_desc}>{tool.desc}</p>
+              <div className={s.marketing_arrow}>
+                {isKo ? '사용하러 가기' : 'Use Now'}
+                <ArrowRight size={18} />
+              </div>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
-  );
-}
-
-function ToolCard({ tool }: { tool: any }) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <Link href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
-      <div
-        className={s.marketing_card}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div style={{
-          background: tool.gradient,
-          width: '72px', height: '72px',
-          borderRadius: '1.25rem',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: '1.5rem',
-          border: '1px solid rgba(139, 92, 246, 0.1)',
-        }}>
-          {tool.icon}
-        </div>
-        <div style={{ flex: 1 }}>
-          <h2 className={s.marketing_card_title}>
-            {tool.title}
-          </h2>
-          <p className={s.marketing_card_desc}>
-            {tool.desc}
-          </p>
-        </div>
-        <div className={s.marketing_card_footer}>
-          <span className={s.marketing_card_cta} style={{ opacity: isHovered ? 1 : 0 }}>
-            사용하러 가기
-          </span>
-          <ArrowRight
-            size={20}
-            color="#8b5cf6"
-            style={{
-              opacity: isHovered ? 1 : 0,
-              transform: isHovered ? 'translateX(0)' : 'translateX(-10px)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          />
-        </div>
-      </div>
-    </Link>
   );
 }
