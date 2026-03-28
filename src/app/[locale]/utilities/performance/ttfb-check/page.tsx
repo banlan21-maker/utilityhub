@@ -1,9 +1,13 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useState, useRef } from 'react';
+import { Activity, Zap, AlertCircle } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './ttfb.module.css';
 
 interface TestResult {
   url: string;
@@ -19,23 +23,17 @@ function getGrade(ms: number): { label: string; color: string; bg: string; emoji
 }
 
 function GradeBar({ ms }: { ms: number }) {
-  // Cap visual bar at 1500ms
   const pct = Math.min((ms / 1500) * 100, 100);
   const grade = getGrade(ms);
   return (
-    <div style={{ marginTop: '0.75rem' }}>
-      <div style={{ position: 'relative', height: '8px', background: 'var(--surface-hover)', borderRadius: '99px', overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: grade.color, borderRadius: '99px', transition: 'width 0.6s ease' }} />
-        {/* threshold markers */}
+    <div>
+      <div className={s.ttfb_grade_bar}>
+        <div className={s.ttfb_grade_bar_fill} style={{ width: `${pct}%`, background: grade.color }} />
         {[200, 500].map(v => (
-          <div key={v} style={{
-            position: 'absolute', top: 0, bottom: 0,
-            left: `${Math.min((v / 1500) * 100, 100)}%`,
-            width: '2px', background: 'var(--border)', opacity: 0.6
-          }} />
+          <div key={v} className={s.ttfb_grade_marker} style={{ left: `${Math.min((v / 1500) * 100, 100)}%` }} />
         ))}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+      <div className={s.ttfb_grade_labels}>
         <span>0ms</span><span>200ms</span><span>500ms</span><span>1500ms+</span>
       </div>
     </div>
@@ -44,6 +42,8 @@ function GradeBar({ ms }: { ms: number }) {
 
 export default function TtfbPage() {
   const t = useTranslations('Ttfb');
+  const locale = useLocale();
+  const isKo = locale === 'ko';
 
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -101,16 +101,21 @@ export default function TtfbPage() {
   const grade = result ? getGrade(result.ttfb) : null;
 
   return (
-    <div>
+    <div className={s.ttfb_container}>
       <NavigationActions />
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>{t('description')}</p>
+
+      {/* Header */}
+      <header className={s.ttfb_header}>
+        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+          <Activity size={40} color="#8b5cf6" />
+        </div>
+        <h1 className={s.ttfb_title}>{t('title')}</h1>
+        <p className={s.ttfb_subtitle}>{t('description')}</p>
       </header>
 
-      {/* Input */}
-      <div className="glass-panel" style={{ padding: 'var(--page-padding)' }}>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+      {/* Main Panel */}
+      <section className={s.ttfb_panel}>
+        <div className={s.ttfb_input_group}>
           <input
             ref={inputRef}
             type="text"
@@ -119,151 +124,83 @@ export default function TtfbPage() {
             onKeyDown={handleKeyDown}
             placeholder={t('placeholder')}
             disabled={loading}
-            className="glass-panel"
-            style={{
-              flex: 1,
-              minWidth: '200px',
-              padding: '0.9rem 1.1rem',
-              fontSize: '1rem',
-              borderRadius: 'var(--radius-md)',
-              border: '2px solid var(--border)',
-              background: 'var(--surface)',
-              color: 'var(--text-primary)',
-              outline: 'none',
-              transition: 'border-color 0.2s',
-            }}
-            onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-            onBlur={e => e.target.style.borderColor = 'var(--border)'}
+            className={s.ttfb_input}
           />
           <button
             onClick={runTest}
             disabled={loading || !url.trim()}
-            style={{
-              padding: '0.9rem 2rem',
-              fontWeight: 700,
-              fontSize: '1rem',
-              borderRadius: 'var(--radius-full)',
-              border: 'none',
-              background: loading || !url.trim() ? 'var(--text-muted)' : 'var(--primary)',
-              color: 'white',
-              cursor: loading || !url.trim() ? 'not-allowed' : 'pointer',
-              transition: 'all 0.2s',
-              whiteSpace: 'nowrap',
-            }}
+            className={s.ttfb_button}
           >
-            {loading ? t('testing') : t('test_button')}
+            <Zap size={18} />
+            {loading ? t('testing') : (isKo ? '사용하러 가기' : 'Run Test')}
           </button>
         </div>
 
         {/* Error */}
         {error && (
-          <p className="animate-fade-in" style={{ color: '#ef4444', marginTop: '1rem', fontWeight: 500 }}>
-            ⚠️ {error}
-          </p>
+          <div className={s.ttfb_error}>
+            <AlertCircle size={18} />
+            {error}
+          </div>
         )}
 
         {/* Loading */}
         {loading && (
-          <div className="animate-fade-in" style={{ marginTop: '2rem', textAlign: 'center' }}>
-            <div style={{
-              display: 'inline-block', width: '40px', height: '40px',
-              border: '4px solid var(--border)', borderTopColor: 'var(--primary)',
-              borderRadius: '50%', animation: 'spin 0.8s linear infinite',
-            }} />
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem' }}>{t('measuring')}</p>
+          <div className={s.ttfb_loading}>
+            <div className={s.ttfb_spinner} />
+            <p className={s.ttfb_loading_text}>{t('measuring')}</p>
           </div>
         )}
 
         {/* Result */}
         {result && grade && !loading && (
-          <div className="animate-fade-in" style={{
-            marginTop: '2rem',
-            padding: '2rem',
-            borderRadius: 'var(--radius-lg)',
-            background: grade.bg,
-            border: `2px solid ${grade.color}`,
-            textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '3.5rem', fontWeight: 800, color: grade.color, lineHeight: 1 }}>
-              {result.ttfb} <span style={{ fontSize: '1.5rem' }}>ms</span>
+          <div className={s.ttfb_result_card} style={{ background: grade.bg, border: `2px solid ${grade.color}` }}>
+            <div className={s.ttfb_result_value} style={{ color: grade.color }}>
+              {result.ttfb}<span className={s.ttfb_result_unit}>ms</span>
             </div>
-            <div style={{
-              marginTop: '0.75rem',
-              fontSize: '1.25rem',
-              fontWeight: 700,
-              color: grade.color,
-            }}>
-              {grade.emoji} {grade.label}
+            <div className={s.ttfb_result_grade} style={{ color: grade.color }}>
+              <span>{grade.emoji}</span>
+              <span>{grade.label}</span>
             </div>
-            <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-              HTTP {result.status}
-            </div>
+            <div className={s.ttfb_result_status}>HTTP {result.status}</div>
             <GradeBar ms={result.ttfb} />
           </div>
         )}
 
-        {/* Grade guide */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+        {/* Grade Guide */}
+        <div className={s.ttfb_grade_guide}>
           {[
             { emoji: '🟢', label: t('grade_good'), range: '< 200ms', color: '#10b981' },
             { emoji: '🟡', label: t('grade_ok'),   range: '200–500ms', color: '#f59e0b' },
             { emoji: '🔴', label: t('grade_poor'), range: '> 500ms',  color: '#ef4444' },
           ].map(g => (
-            <div key={g.label} style={{
-              display: 'flex', alignItems: 'center', gap: '0.4rem',
-              fontSize: '0.8rem', color: 'var(--text-secondary)',
-              padding: '0.35rem 0.75rem',
-              background: 'var(--surface-hover)',
-              borderRadius: 'var(--radius-full)',
-            }}>
-              <span>{g.emoji}</span>
-              <span style={{ fontWeight: 600, color: g.color }}>{g.label}</span>
-              <span>{g.range}</span>
+            <div key={g.label} className={s.ttfb_grade_item}>
+              <span className={s.ttfb_grade_emoji}>{g.emoji}</span>
+              <span className={s.ttfb_grade_name} style={{ color: g.color }}>{g.label}</span>
+              <span className={s.ttfb_grade_range}>{g.range}</span>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* History */}
       {history.length > 0 && (
-        <div className="glass-panel animate-fade-in" style={{ padding: 'var(--page-padding)', marginTop: '2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ color: 'var(--text-primary)', margin: 0 }}>{t('history_title')}</h3>
-            <button
-              onClick={() => setHistory([])}
-              style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
+        <div className={s.ttfb_history}>
+          <div className={s.ttfb_history_header}>
+            <h3 className={s.ttfb_history_title}>{t('history_title')}</h3>
+            <button onClick={() => setHistory([])} className={s.ttfb_history_clear}>
               {t('history_clear')}
             </button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div className={s.ttfb_history_list}>
             {history.map((item, i) => {
               const g = getGrade(item.ttfb);
               return (
-                <div
-                  key={i}
-                  onClick={() => setUrl(item.url)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    padding: '0.6rem 0.9rem',
-                    borderRadius: 'var(--radius-md)',
-                    background: 'var(--surface-hover)',
-                    cursor: 'pointer',
-                    transition: 'background 0.15s',
-                  }}
-                  onMouseOver={e => (e.currentTarget.style.background = 'var(--border)')}
-                  onMouseOut={e => (e.currentTarget.style.background = 'var(--surface-hover)')}
-                >
-                  <span style={{ fontSize: '0.9rem' }}>{g.emoji}</span>
-                  <span style={{ flex: 1, fontSize: '0.85rem', color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {item.url}
-                  </span>
-                  <span style={{ fontWeight: 700, color: g.color, fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
-                    {item.ttfb}ms
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                    {item.timestamp.toLocaleTimeString()}
-                  </span>
+                <div key={i} onClick={() => setUrl(item.url)} className={s.ttfb_history_item}>
+                  <span className={s.ttfb_history_emoji}>{g.emoji}</span>
+                  <span className={s.ttfb_history_url}>{item.url}</span>
+                  <span className={s.ttfb_history_value} style={{ color: g.color }}>{item.ttfb}ms</span>
+                  <span className={s.ttfb_history_time}>{item.timestamp.toLocaleTimeString()}</span>
                 </div>
               );
             })}
@@ -271,7 +208,11 @@ export default function TtfbPage() {
         </div>
       )}
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      {/* Standard Bottom Sections */}
+      <div style={{ width: '100%' }}>
+        <ShareBar title={t('title')} description={t('description')} />
+        <RelatedTools toolId="performance/ttfb" />
+        <div className={s.ttfb_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
 
       <SeoSection
         ko={{
@@ -315,6 +256,7 @@ export default function TtfbPage() {
           ],
         }}
       />
+      </div>
     </div>
   );
 }
