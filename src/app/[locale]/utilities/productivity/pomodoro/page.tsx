@@ -299,7 +299,7 @@ export default function PomodoroPage() {
       />
 
       {/* Related Tools */}
-      <RelatedTools toolId="productivity/pomodoro" limit={3} />
+      <RelatedTools toolId="utilities/productivity/pomodoro" limit={3} />
 
       {/* Ad Placeholder */}
       <div className={s.ad_placeholder}>

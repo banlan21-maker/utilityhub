@@ -245,7 +245,7 @@ export default function ThumbnailPage() {
 
       <ShareBar title="유튜브 썸네일 추출기" description="YouTube URL로 모든 화질 썸네일을 즉시 추출" />
 
-      <RelatedTools toolId="utilities/thumbnail" />
+      <RelatedTools toolId="utilities/utility/yt-thumbnail" />
 
       <SeoSection
         ko={{

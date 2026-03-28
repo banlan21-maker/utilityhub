@@ -247,7 +247,7 @@ export default function InterestPage() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="fintech/interest" />
+        <RelatedTools toolId="utilities/finance/interest-calc" />
         <div className={s.int_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
         <SeoSection
           ko={{

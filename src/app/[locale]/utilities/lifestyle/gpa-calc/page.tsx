@@ -324,7 +324,7 @@ export default function GpaPage() {
       }}>광고 영역 (728×90)</div>
 
       <ShareBar title="대학생 학점 변환기 (GPA Converter)" />
-      <RelatedTools toolId="utilities/gpa" />
+      <RelatedTools toolId="utilities/lifestyle/gpa-calc" />
 
       <SeoSection
         ko={{

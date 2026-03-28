@@ -419,7 +419,7 @@ export default function KoreanAgePage() {
       }}>광고 영역 (728×90)</div>
 
       <ShareBar title="한국형 날짜 계산기 (만나이·전역일·배란일)" />
-      <RelatedTools toolId="lifestyle/korean-age" />
+      <RelatedTools toolId="utilities/lifestyle/age-calc" />
 
       <SeoSection
         ko={{

@@ -190,7 +190,7 @@ export default function Tax33Page() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="fintech/tax33" />
+        <RelatedTools toolId="utilities/finance/tax-33-calc" />
         <div className={s.tax_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
         <SeoSection
           ko={{

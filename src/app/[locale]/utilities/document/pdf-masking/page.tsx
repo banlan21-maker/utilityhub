@@ -597,7 +597,7 @@ export default function PdfSecurityPage() {
           title={isKorean ? 'PDF 개인정보 마스킹 도구' : 'PDF Privacy Masking Tool'}
           description={isKorean ? '주민번호, 전화번호 등 개인정보를 AI가 자동으로 탐지하여 마스킹합니다' : 'AI automatically detects and masks personal information like SSN and phone numbers'}
         />
-        <RelatedTools toolId="document/pdf-masking" />
+        <RelatedTools toolId="utilities/document/pdf-masking" />
         <div style={{
           width: '100%',
           minHeight: '90px',

@@ -276,7 +276,7 @@ export default function CryptoPage() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={isKo ? '코인 수익률 계산기' : 'Crypto Profit Calc'} description={isKo ? '내 코인 수익률을 실시간으로 확인하세요' : 'Live updates for your crypto portfolio'} />
-        <RelatedTools toolId="fintech/coin" />
+        <RelatedTools toolId="utilities/finance/coin-profit" />
         <div className={s.coin_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
         <SeoSection
           ko={{

@@ -217,7 +217,7 @@ export default function PercentPage() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="fintech/percent" />
+        <RelatedTools toolId="utilities/finance/percentage-calc" />
         <div className={s.fin_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
         <SeoSection
           ko={{

@@ -379,7 +379,7 @@ export default function HwpConverterPage() {
           title={isKorean ? 'HWP → PDF 변환기' : 'HWP → PDF Converter'}
           description={isKorean ? 'HWP/HWPX 파일을 PDF로 변환하는 무료 도구' : 'Free tool to convert HWP/HWPX files to PDF'}
         />
-        <RelatedTools toolId="document/hwp-pdf" />
+        <RelatedTools toolId="utilities/document/hwp-pdf-converter" />
         <div style={{
           width: '100%',
           minHeight: '90px',

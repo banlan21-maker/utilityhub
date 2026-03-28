@@ -283,7 +283,7 @@ export default function CurrencyPage() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={isKo ? '실시간 환율 계산기' : 'Exchange Calculator'} description={isKo ? '정확한 실시간 데이터와 30일 환율 차트' : 'Live rates and 30-day historical chart'} />
-        <RelatedTools toolId="fintech/exchange" />
+        <RelatedTools toolId="utilities/finance/exchange-rate" />
         <div className={s.ex_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
         <SeoSection
           ko={{

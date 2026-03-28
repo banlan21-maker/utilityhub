@@ -341,7 +341,7 @@ export default function CoverLetterPage() {
         description="실시간 글자 수/바이트 카운터와 부산대 맞춤법 검사기를 한 번에! 취업 준비생을 위한 자소서 도우미"
       />
 
-      <RelatedTools toolId="productivity/coverletter" />
+      <RelatedTools toolId="utilities/productivity/resume-helper" />
 
       {/* Ad Placeholder */}
       <div className={s.ad_placeholder}>

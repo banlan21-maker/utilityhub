@@ -211,7 +211,7 @@ export default function TtfbPage() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="performance/ttfb" />
+        <RelatedTools toolId="utilities/performance/ttfb-check" />
         <div className={s.ttfb_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
 
       <SeoSection

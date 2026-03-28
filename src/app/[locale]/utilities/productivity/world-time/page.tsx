@@ -267,7 +267,7 @@ export default function TimezonePage() {
       />
 
       {/* Related Tools */}
-      <RelatedTools toolId="productivity/world-time" limit={3} />
+      <RelatedTools toolId="utilities/productivity/world-time" limit={3} />
 
       {/* Ad Placeholder */}
       <div className={s.ad_placeholder}>

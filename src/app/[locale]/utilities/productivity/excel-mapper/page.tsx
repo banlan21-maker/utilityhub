@@ -118,7 +118,7 @@ export default function SmartExcelMapperPage() {
       />
 
       {/* Related Tools */}
-      <RelatedTools toolId="productivity/excel-mapper" limit={3} />
+      <RelatedTools toolId="utilities/productivity/excel-mapper" limit={3} />
 
       {/* Ad Placeholder */}
       <div className={s.ad_placeholder}>

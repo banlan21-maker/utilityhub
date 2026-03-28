@@ -274,7 +274,7 @@ export default function NetPayPage() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={isKo ? '급여 & 실수령액 계산기' : 'Salary Calculator'} description={isKo ? '세후 월급을 정확하게 계산하세요' : 'Calculate your real monthly income'} />
-        <RelatedTools toolId="fintech/salary" />
+        <RelatedTools toolId="utilities/finance/salary-calc" />
         <div className={s.sal_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
         <SeoSection
           ko={{
