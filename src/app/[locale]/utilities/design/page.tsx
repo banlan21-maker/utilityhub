@@ -3,6 +3,9 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
+import { Palette, Image, Type, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import s from './design_list.module.css';
 
 export default function DesignDashboardPage() {
   const catT = useTranslations('Categories');
@@ -13,71 +16,92 @@ export default function DesignDashboardPage() {
       id: 'utilities/design/logo-favicon',
       title: boardT('logo-favicon.title'),
       desc: boardT('logo-favicon.desc'),
-      icon: '🎨',
-      gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
+      icon: <Image size={36} color="#ec4899" />,
+      gradient: 'rgba(236, 72, 153, 0.08)',
     },
     {
       id: 'utilities/design/color-palette',
       title: boardT('color-palette.title'),
       desc: boardT('color-palette.desc'),
-      icon: '🎯',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+      icon: <Palette size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
     },
     {
       id: 'utilities/design/font-preview',
       title: boardT('font-preview.title'),
       desc: boardT('font-preview.desc'),
-      icon: '🔤',
-      gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+      icon: <Type size={36} color="#3b82f6" />,
+      gradient: 'rgba(59, 130, 246, 0.08)',
     },
   ];
 
   return (
     <div>
       <NavigationActions />
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
+      <header className={s.design_list_header}>
+        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+          <Palette size={48} color="#8b5cf6" />
+        </div>
+        <h1 className={s.design_list_title}>
           {catT('design')}
         </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>
+        <p className={s.design_list_subtitle}>
           {boardT('subtitle')}
         </p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
+      <div className={s.design_list_grid}>
         {tools.map(tool => (
-          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
-            <div
-              className="glass-panel"
-              style={{
-                padding: '2rem', height: '100%',
-                display: 'flex', flexDirection: 'column',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                cursor: 'pointer', overflow: 'hidden',
-              }}
-              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
-              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
-            >
-              <div style={{
-                background: tool.gradient,
-                width: '60px', height: '60px',
-                borderRadius: 'var(--radius-lg)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '2rem', marginBottom: '1.5rem',
-                boxShadow: 'var(--shadow-md)',
-              }}>
-                {tool.icon}
-              </div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>
-                {tool.title}
-              </h2>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                {tool.desc}
-              </p>
-            </div>
-          </Link>
+          <ToolCard key={tool.id} tool={tool} />
         ))}
       </div>
     </div>
+  );
+}
+
+function ToolCard({ tool }: { tool: any }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Link href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
+      <div
+        className={s.design_card}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div style={{
+          background: tool.gradient,
+          width: '72px', height: '72px',
+          borderRadius: '1.25rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '1.5rem',
+          border: '1px solid rgba(139, 92, 246, 0.1)',
+        }}>
+          {tool.icon}
+        </div>
+        <div style={{ flex: 1 }}>
+          <h2 className={s.design_card_title}>
+            {tool.title}
+          </h2>
+          <p className={s.design_card_desc}>
+            {tool.desc}
+          </p>
+        </div>
+        <div className={s.design_card_footer}>
+          <span className={s.design_card_cta} style={{ opacity: isHovered ? 1 : 0 }}>
+            사용하러 가기
+          </span>
+          <ArrowRight
+            size={20}
+            color="#8b5cf6"
+            style={{
+              opacity: isHovered ? 1 : 0,
+              transform: isHovered ? 'translateX(0)' : 'translateX(-10px)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+          />
+        </div>
+      </div>
+    </Link>
   );
 }
