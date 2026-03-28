@@ -3,16 +3,16 @@
 import React from "react";
 import { Link } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  Github,
-  Mail,
-  ExternalLink,
-  ShieldCheck,
-  Code2,
-  Zap,
-  Globe,
-  FileText,
-  CreditCard,
+import { 
+  Github, 
+  Mail, 
+  ExternalLink, 
+  ShieldCheck, 
+  Code2, 
+  Zap, 
+  Globe, 
+  FileText, 
+  CreditCard, 
   Sparkles,
   Search,
   MessageSquare
@@ -54,17 +54,17 @@ export default function Footer() {
   const isKo = locale === "ko";
 
   return (
-    <footer className="relative w-full bg-[#f8fafc] dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <footer className="w-full bg-[#f8fafc] dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800 transition-colors duration-300 overflow-hidden">
       {/* Dynamic Background Element */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"></div>
-
+      <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent"></div>
+      
       <div className="max-w-6xl mx-auto px-6 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-
+          
           {/* Brand Identity Section */}
           <div className="md:col-span-4 flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-2 group w-fit">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform duration-300">
                 <span className="text-xl">🛠️</span>
               </div>
               <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -73,13 +73,13 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium max-w-[280px]">
-              {isKo
-                ? "사용자의 소중한 데이터는 서버에 저장되지 않습니다. 모든 작업은 브라우저에서 안전하게 실행됩니다."
+              {isKo 
+                ? "사용자의 소중한 데이터는 서버에 저장되지 않습니다. 모든 작업은 브라우저에서 안전하게 실행됩니다." 
                 : "Your data stays private. All processing happens locally in your browser, never on our servers."}
             </p>
 
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 font-bold border border-orange-200/50 dark:border-orange-500/20">
+              <span className="flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-bold border border-violet-200/50 dark:border-violet-500/20">
                 <Zap className="w-3 h-3 fill-current" />
                 100% FREE
               </span>
@@ -93,7 +93,7 @@ export default function Footer() {
           {/* Navigation Links Grid */}
           <div className="md:col-span-8">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
-
+              
               {CATEGORY_GROUPS.map((group, idx) => (
                 <div key={idx} className="flex flex-col gap-5">
                   <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
@@ -102,11 +102,11 @@ export default function Footer() {
                   <ul className="flex flex-col gap-3">
                     {group.links.map((link, lIdx) => (
                       <li key={lIdx}>
-                        <Link
+                        <Link 
                           href={link.href as any}
-                          className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all duration-200 group"
+                          className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200 group"
                         >
-                          <span className="text-slate-400 dark:text-slate-600 group-hover:text-orange-500 transition-colors">
+                          <span className="text-slate-400 dark:text-slate-600 group-hover:text-violet-500 transition-colors">
                             {link.icon}
                           </span>
                           <span className="font-semibold group-hover:translate-x-0.5 transition-transform">
@@ -128,16 +128,16 @@ export default function Footer() {
                   {LEGAL_LINKS.map((link, lIdx) => (
                     <li key={lIdx}>
                       {link.external ? (
-                        <a
+                        <a 
                           href={link.href}
-                          className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all"
+                          className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all"
                         >
                           {isKo ? link.labelKo : link.labelEn}
                         </a>
                       ) : (
-                        <Link
+                        <Link 
                           href={link.href as any}
-                          className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all"
+                          className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all"
                         >
                           {isKo ? link.labelKo : link.labelEn}
                         </Link>
@@ -145,11 +145,11 @@ export default function Footer() {
                     </li>
                   ))}
                   <li>
-                    <Link
+                    <Link 
                       href="/feedback"
-                      className="inline-flex items-center gap-2 px-4 py-2 mt-2 rounded-lg bg-white dark:bg-slate-800 text-sm font-bold text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 shadow-sm hover:border-orange-500 dark:hover:border-orange-500 transition-all group"
+                      className="inline-flex items-center gap-2 px-4 py-2 mt-2 rounded-lg bg-white dark:bg-slate-800 text-sm font-bold text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 shadow-sm hover:border-violet-500 dark:hover:border-violet-500 transition-all group"
                     >
-                      <MessageSquare className="w-4 h-4 text-orange-500" />
+                      <MessageSquare className="w-4 h-4 text-violet-500" />
                       {isKo ? "피드백 보내기" : "Send Feedback"}
                     </Link>
                   </li>
@@ -162,7 +162,7 @@ export default function Footer() {
 
         {/* Footer Bottom Bar */}
         <div className="pt-8 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col md:flex-row items-center justify-between gap-8">
-
+          
           <div className="flex flex-col md:flex-row items-center gap-4">
             <p className="text-xs font-bold text-slate-400 dark:text-slate-600">
               © 2026 Utility Hub. All rights reserved.
@@ -184,8 +184,8 @@ export default function Footer() {
               href="/"
               locale="ko"
               className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${
-                isKo
-                  ? "bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-sm"
+                isKo 
+                  ? "bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm" 
                   : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
               }`}
             >
@@ -195,8 +195,8 @@ export default function Footer() {
               href="/"
               locale="en"
               className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${
-                !isKo
-                  ? "bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-sm"
+                !isKo 
+                  ? "bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm" 
                   : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
               }`}
             >
