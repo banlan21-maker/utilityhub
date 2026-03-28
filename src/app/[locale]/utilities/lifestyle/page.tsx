@@ -13,7 +13,8 @@ import {
   Fish,
   Sparkles,
   ArrowRight,
-  Heart
+  Heart,
+  Target
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './lifestyle_list.module.css';
@@ -28,6 +29,13 @@ export default function LifestyleDashboardPage() {
   useEffect(() => { setIsClient(true); }, []);
 
   const tools = [
+    {
+      id: 'utilities/lifestyle/30day-challenge',
+      title: boardT('30day-challenge.title'),
+      desc: boardT('30day-challenge.desc'),
+      icon: <Target size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
+    },
     {
       id: 'utilities/lifestyle/gpa-calc',
       title: boardT('gpa-calc.title'),

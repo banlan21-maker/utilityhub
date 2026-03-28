@@ -578,6 +578,10 @@
     "fortune-prompt": {
       "title": "AI Saju Fortune Prompt",
       "desc": "Generate high-quality AI prompts for detailed Saju readings."
+    },
+    "30day-challenge": {
+      "title": "30 Day Challenge Tracker",
+      "desc": "Track and visualize your 30-day journey to build new healthy habits."
     }
   },
   "SecurityBoard": {
@@ -694,7 +698,6 @@
     "emptyState": "Enter your height and weight to calculate.",
     "notice": "* Water needs can vary by health conditions or environment."
   },
-
   "DevBoard": {
     "subtitle": "Essential utility tools for developers.",
     "json-formatter": {

@@ -578,6 +578,10 @@
     "fortune-prompt": {
       "title": "AI 사주 운세 프롬프트 생성기",
       "desc": "사주 정보를 AI 상담에 최적화된 프롬프트로 변환해줍니다."
+    },
+    "30day-challenge": {
+      "title": "30일 챌린지 트래커",
+      "desc": "새로운 습관을 만드는 30일의 여정을 시각적으로 추적하고 기록하세요."
     }
   },
   "SecurityBoard": {
@@ -694,7 +698,6 @@
     "emptyState": "키와 몸무게를 입력하고 계산해 보세요.",
     "notice": "※ 건강 상태나 환경에 따라 필요한 수분량은 달라질 수 있습니다."
   },
-
   "DevBoard": {
     "subtitle": "개발자를 위한 필수 유틸리티 도구 모음입니다.",
     "json-formatter": {
@@ -1250,12 +1253,12 @@
     "tabBand": "🎨 띠색 계산기",
     "tabSmd": "📟 SMD 코드 판독기",
     "bands": "색대",
-      "bandLabel1": "1st Digit",
-      "bandLabel2": "2nd Digit",
-      "bandLabel3": "Multiplier / 3rd Dig",
-      "bandLabel4": "Multiplier / Tol",
-      "bandLabel5": "Tolerance",
-      "bandLabel6": "PPM",
+    "bandLabel1": "1st Digit",
+    "bandLabel2": "2nd Digit",
+    "bandLabel3": "Multiplier / 3rd Dig",
+    "bandLabel4": "Multiplier / Tol",
+    "bandLabel5": "Tolerance",
+    "bandLabel6": "PPM",
     "enterSmdCode": "SMD 코드를 입력하세요",
     "smdHint": "3/4자리 및 EIA-96 코드 자동 판별",
     "shareTitle": "💡 계산 결과 공유하기",
