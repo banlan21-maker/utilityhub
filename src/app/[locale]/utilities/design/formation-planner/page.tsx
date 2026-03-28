@@ -166,6 +166,32 @@ function drawPieces(ctx: CanvasRenderingContext2D, pieces: Piece[], w: number, h
   });
 }
 
+function drawPaths(
+  ctx: CanvasRenderingContext2D,
+  paths: Record<string, { x: number; y: number }[]>,
+  pieces: Piece[],
+  w: number,
+  h: number,
+) {
+  pieces.forEach(piece => {
+    const pts = paths[piece.id];
+    if (!pts || pts.length < 2) return;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x * w, pts[0].y * h);
+    for (let i = 1; i < pts.length; i++) {
+      ctx.lineTo(pts[i].x * w, pts[i].y * h);
+    }
+    ctx.strokeStyle = piece.color;
+    ctx.lineWidth = Math.max(2, Math.min(w, h) * 0.005);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = 0.7;
+    ctx.stroke();
+    ctx.restore();
+  });
+}
+
 function drawLegendCanvas(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, pieces: Piece[], title: string, isKo: boolean) {
   ctx.fillStyle = '#13111e'; ctx.fillRect(x, y, w, h);
   ctx.fillStyle = '#8b5cf6'; ctx.fillRect(x, y, 3, h);
@@ -219,6 +245,8 @@ export default function FormationPlannerPage() {
   const rafRef = useRef<number>(0);
   const dragRef = useRef<{ id: string; ox: number; oy: number } | null>(null);
   const dragPosRef = useRef<{ x: number; y: number } | null>(null);
+  const pathsRef = useRef<Record<string, { x: number; y: number }[]>>({});
+  const showPathRef = useRef(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -239,6 +267,7 @@ export default function FormationPlannerPage() {
   const [recording, setRecording] = useState(false);
   const [recordSecs, setRecordSecs] = useState(MAX_RECORD_SECS);
   const [legendOpen, setLegendOpen] = useState(false);
+  const [showPath, setShowPath] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -247,6 +276,7 @@ export default function FormationPlannerPage() {
   useEffect(() => { titleRef.current = title; }, [title]);
   useEffect(() => { backgroundRef.current = background; }, [background]);
   useEffect(() => { selectedIdRef.current = selectedId; }, [selectedId]);
+  useEffect(() => { showPathRef.current = showPath; }, [showPath]);
   useEffect(() => { setIsClient(true); }, []);
 
   // ── Canvas render loop ──────────────────────────────────────────────────────
@@ -276,6 +306,7 @@ export default function FormationPlannerPage() {
               : p)
           : piecesRef.current;
         drawBackground(ctx, canvas.width, canvas.height, backgroundRef.current);
+        drawPaths(ctx, pathsRef.current, displayPieces, canvas.width, canvas.height);
         drawPieces(ctx, displayPieces, canvas.width, canvas.height, selectedIdRef.current ?? undefined, dragId);
       }
       rafRef.current = requestAnimationFrame(render);
@@ -339,6 +370,7 @@ export default function FormationPlannerPage() {
     pushHistory(piecesRef.current);
     setPieces(ps => ps.filter(p => p.id !== id));
     setSelectedId(null);
+    delete pathsRef.current[id];
   }, [pushHistory]);
 
   // Canvas pointer events
@@ -348,6 +380,10 @@ export default function FormationPlannerPage() {
     if (hit) {
       setSelectedId(hit.id);
       dragRef.current = { id: hit.id, ox: pos.x - hit.x, oy: pos.y - hit.y };
+      if (showPathRef.current) {
+        if (!pathsRef.current[hit.id]) pathsRef.current[hit.id] = [];
+        pathsRef.current[hit.id].push({ x: hit.x, y: hit.y });
+      }
     } else {
       setSelectedId(null);
     }
@@ -356,11 +392,14 @@ export default function FormationPlannerPage() {
   const onPointerMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!dragRef.current) return;
     const pos = getPos(e);
-    const { ox, oy } = dragRef.current;
-    dragPosRef.current = {
-      x: Math.max(0.02, Math.min(0.98, pos.x - ox)),
-      y: Math.max(0.02, Math.min(0.98, pos.y - oy)),
-    };
+    const { id, ox, oy } = dragRef.current;
+    const nx = Math.max(0.02, Math.min(0.98, pos.x - ox));
+    const ny = Math.max(0.02, Math.min(0.98, pos.y - oy));
+    dragPosRef.current = { x: nx, y: ny };
+    if (showPathRef.current) {
+      if (!pathsRef.current[id]) pathsRef.current[id] = [];
+      pathsRef.current[id].push({ x: nx, y: ny });
+    }
   };
 
   const onPointerUp = () => {
@@ -480,6 +519,8 @@ export default function FormationPlannerPage() {
     }, 1000);
   }, [recording, isKo]);
 
+  const handleClearPaths = () => { pathsRef.current = {}; };
+
   // ── Legend type helper ────────────────────────────────────────────────────────
   const getLegendPrefix = (text: string, color: string) => {
     if (!text) return { type: 'color' as const, label: '' };
@@ -590,6 +631,20 @@ export default function FormationPlannerPage() {
               <button className={s.actionBtn} onClick={handleExportImage} aria-label={isKo ? '이미지 저장' : 'Save image'}>
                 <Download size={16} /> {isKo ? '이미지 저장' : 'Save Image'}
               </button>
+              <label className={`${s.actionBtn} ${showPath ? s.actionBtnActive : ''}`} style={{ cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={showPath}
+                  onChange={e => setShowPath(e.target.checked)}
+                  style={{ width: 14, height: 14, accentColor: '#8b5cf6', cursor: 'pointer' }}
+                />
+                {isKo ? '경로 표시' : 'Show Path'}
+              </label>
+              {showPath && (
+                <button className={s.actionBtn} onClick={handleClearPaths} aria-label={isKo ? '경로 지우기' : 'Clear paths'}>
+                  {isKo ? '경로 지우기' : 'Clear Paths'}
+                </button>
+              )}
               <div className={s.recordGroup}>
                 <button
                   className={`${s.recordBtn} ${recording ? s.recordBtnActive : ''}`}

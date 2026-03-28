@@ -260,6 +260,12 @@
   transform: translateY(-1px);
 }
 
+.actionBtnActive {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+  background: #f5f3ff;
+}
+
 .recordGroup {
   display: flex;
   align-items: center;
