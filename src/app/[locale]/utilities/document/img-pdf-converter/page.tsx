@@ -4,6 +4,8 @@ import { useState, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 import { jsPDF } from 'jspdf';
 import JSZip from 'jszip';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -719,6 +721,30 @@ export default function ImagePdfConverterPage() {
           )}
         </div>
       )}
+
+      {/* Standard Bottom Sections */}
+      <div style={{ width: '100%', maxWidth: '896px', margin: '0 auto', paddingLeft: '1rem', paddingRight: '1rem' }}>
+        <ShareBar
+          title={isKorean ? '이미지 ↔ PDF 변환기' : 'Image ↔ PDF Converter'}
+          description={isKorean ? '이미지를 PDF로, PDF를 이미지로 변환하는 무료 도구' : 'Free tool to convert images to PDF and PDF to images'}
+        />
+        <RelatedTools toolId="document/img-pdf" />
+        <div style={{
+          width: '100%',
+          minHeight: '90px',
+          background: 'rgba(241, 245, 249, 0.5)',
+          border: '1px dashed #cbd5e1',
+          borderRadius: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#94a3b8',
+          fontSize: '0.875rem',
+          margin: '2rem 0',
+        }}>
+          {isKorean ? '광고 영역' : 'Ad Space'}
+        </div>
+      </div>
 
       {/* SEO Section */}
       <SeoSection

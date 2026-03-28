@@ -2,8 +2,11 @@
 
 import { useTranslations } from 'next-intl';
 import { useState, useRef } from 'react';
+import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 import { parseHwpx, parseLegacyHwp } from '@/lib/hwp-parser';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -12,6 +15,8 @@ import { saveAs } from 'file-saver';
 
 export default function HwpConverterPage() {
   const t = useTranslations('HwpConverter');
+  const locale = useLocale();
+  const isKorean = locale === 'ko';
   const [file, setFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState(false);
   const [conversionType, setConversionType] = useState<'pdf' | 'docx' | null>(null);
@@ -359,6 +364,30 @@ export default function HwpConverterPage() {
             {error}
           </p>
         )}
+      </div>
+
+      {/* Standard Bottom Sections */}
+      <div style={{ width: '100%', maxWidth: '896px', margin: '0 auto', paddingLeft: '1rem', paddingRight: '1rem' }}>
+        <ShareBar
+          title={isKorean ? 'HWP → PDF 변환기' : 'HWP → PDF Converter'}
+          description={isKorean ? 'HWP/HWPX 파일을 PDF로 변환하는 무료 도구' : 'Free tool to convert HWP/HWPX files to PDF'}
+        />
+        <RelatedTools toolId="document/hwp-pdf" />
+        <div style={{
+          width: '100%',
+          minHeight: '90px',
+          background: 'rgba(241, 245, 249, 0.5)',
+          border: '1px dashed #cbd5e1',
+          borderRadius: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#94a3b8',
+          fontSize: '0.875rem',
+          margin: '2rem 0',
+        }}>
+          {isKorean ? '광고 영역' : 'Ad Space'}
+        </div>
       </div>
 
       <SeoSection

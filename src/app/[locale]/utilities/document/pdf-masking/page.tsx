@@ -4,6 +4,8 @@ import { useState, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 import { jsPDF } from 'jspdf';
 import * as pdfjsLib from 'pdfjs-dist';
 import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock } from 'lucide-react';
@@ -579,6 +581,30 @@ export default function PdfSecurityPage() {
           </div>
         </div>
       )}
+
+      {/* Standard Bottom Sections */}
+      <div style={{ width: '100%', maxWidth: '896px', margin: '0 auto', paddingLeft: '1rem', paddingRight: '1rem' }}>
+        <ShareBar
+          title={isKorean ? 'PDF 개인정보 마스킹 도구' : 'PDF Privacy Masking Tool'}
+          description={isKorean ? '주민번호, 전화번호 등 개인정보를 AI가 자동으로 탐지하여 마스킹합니다' : 'AI automatically detects and masks personal information like SSN and phone numbers'}
+        />
+        <RelatedTools toolId="document/pdf-masking" />
+        <div style={{
+          width: '100%',
+          minHeight: '90px',
+          background: 'rgba(241, 245, 249, 0.5)',
+          border: '1px dashed #cbd5e1',
+          borderRadius: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#94a3b8',
+          fontSize: '0.875rem',
+          margin: '2rem 0',
+        }}>
+          {isKorean ? '광고 영역' : 'Ad Space'}
+        </div>
+      </div>
 
       {/* SEO Section */}
       <SeoSection
