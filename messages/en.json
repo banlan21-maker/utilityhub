@@ -403,6 +403,10 @@
     "excel-mapper": {
       "title": "Smart Excel Mapper",
       "desc": "Automatically convert report-style Excel files into database-style data."
+    },
+    "meeting-burner": {
+      "title": "Meeting Burner",
+      "desc": "Visualize labor costs evaporating in real-time by entering meeting participants and salaries."
     }
   },
   "Pomodoro": {

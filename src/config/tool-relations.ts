@@ -29,6 +29,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/productivity/world-time', icon: '🌍', ko: '세계 시간대 변환기', en: 'World Time Converter', category: 'productivity' },
   { id: 'utilities/productivity/resume-helper', icon: '📝', ko: '자소서 작성 헬퍼', en: 'Resume Helper', category: 'productivity' },
   { id: 'utilities/productivity/excel-mapper', icon: '📊', ko: '엑셀 데이터 매퍼', en: 'Excel Data Mapper', category: 'productivity' },
+  { id: 'utilities/productivity/meeting-burner', icon: '⏱️', ko: 'Meeting Burner', en: 'Meeting Burner', category: 'productivity' },
 
   // Design
   { id: 'utilities/design/color-palette', icon: '🎯', ko: '색상 팔레트 & 가독성 검사기', en: 'Color Palette Checker', category: 'design' },
@@ -155,6 +156,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/productivity/resume-helper',
     'utilities/utility/counter',
     'utilities/dev/json-formatter',
+  ],
+  'utilities/productivity/meeting-burner': [
+    'utilities/productivity/pomodoro',
+    'utilities/finance/salary-calc',
+    'utilities/productivity/world-time',
   ],
 
   // ── Design ─────────────────────────────────────────────────

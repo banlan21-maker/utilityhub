@@ -403,6 +403,10 @@
     "excel-mapper": {
       "title": "스마트 엑셀 매퍼",
       "desc": "리포트형 Excel을 DB형 데이터로 자동 변환해줍니다."
+    },
+    "meeting-burner": {
+      "title": "Meeting Burner",
+      "desc": "회의 참석자와 연봉을 입력하면 초 단위로 증발하는 인건비를 실시간으로 시각화합니다."
     }
   },
   "Pomodoro": {

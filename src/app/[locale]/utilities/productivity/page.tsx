@@ -9,7 +9,8 @@ import {
   FileText,
   FileSpreadsheet,
   ArrowRight,
-  Briefcase
+  Briefcase,
+  Flame
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './productivity_list.module.css';
@@ -51,6 +52,13 @@ export default function ProductivityDashboardPage() {
       desc: boardT('excel-mapper.desc'),
       icon: <FileSpreadsheet size={36} color="#f59e0b" />,
       gradient: 'rgba(245, 158, 11, 0.08)',
+    },
+    {
+      id: 'utilities/productivity/meeting-burner',
+      title: boardT('meeting-burner.title'),
+      desc: boardT('meeting-burner.desc'),
+      icon: <Flame size={36} color="#22c55e" />,
+      gradient: 'rgba(34, 197, 94, 0.08)',
     },
   ];
 
