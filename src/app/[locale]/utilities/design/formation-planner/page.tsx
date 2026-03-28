@@ -218,12 +218,15 @@ export default function FormationPlannerPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const dragRef = useRef<{ id: string; ox: number; oy: number } | null>(null);
+  const dragPosRef = useRef<{ x: number; y: number } | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const animRunningRef = useRef(false);
   const piecesRef = useRef<Piece[]>([]);
   const titleRef = useRef('');
+  const backgroundRef = useRef<Background>('soccer');
+  const selectedIdRef = useRef<string | null>(null);
 
   // State
   const [pieces, setPieces] = useState<Piece[]>([]);
@@ -242,6 +245,8 @@ export default function FormationPlannerPage() {
   // Sync refs
   useEffect(() => { piecesRef.current = pieces; }, [pieces]);
   useEffect(() => { titleRef.current = title; }, [title]);
+  useEffect(() => { backgroundRef.current = background; }, [background]);
+  useEffect(() => { selectedIdRef.current = selectedId; }, [selectedId]);
   useEffect(() => { setIsClient(true); }, []);
 
   // ── Canvas render loop ──────────────────────────────────────────────────────
@@ -264,15 +269,21 @@ export default function FormationPlannerPage() {
     const render = () => {
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        drawBackground(ctx, canvas.width, canvas.height, background);
-        drawPieces(ctx, pieces, canvas.width, canvas.height, selectedId ?? undefined, dragRef.current?.id);
+        const dragId = dragRef.current?.id;
+        const displayPieces = dragId && dragPosRef.current
+          ? piecesRef.current.map(p => p.id === dragId
+              ? { ...p, x: dragPosRef.current!.x, y: dragPosRef.current!.y }
+              : p)
+          : piecesRef.current;
+        drawBackground(ctx, canvas.width, canvas.height, backgroundRef.current);
+        drawPieces(ctx, displayPieces, canvas.width, canvas.height, selectedIdRef.current ?? undefined, dragId);
       }
       rafRef.current = requestAnimationFrame(render);
     };
     render();
 
     return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
-  }, [pieces, background, selectedId, isClient]);
+  }, [isClient]);
 
   // ── Keyboard shortcuts ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -345,15 +356,24 @@ export default function FormationPlannerPage() {
   const onPointerMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!dragRef.current) return;
     const pos = getPos(e);
-    const { id, ox, oy } = dragRef.current;
-    setPieces(ps => ps.map(p => p.id === id
-      ? { ...p, x: Math.max(0.02, Math.min(0.98, pos.x - ox)), y: Math.max(0.02, Math.min(0.98, pos.y - oy)) }
-      : p
-    ));
+    const { ox, oy } = dragRef.current;
+    dragPosRef.current = {
+      x: Math.max(0.02, Math.min(0.98, pos.x - ox)),
+      y: Math.max(0.02, Math.min(0.98, pos.y - oy)),
+    };
   };
 
   const onPointerUp = () => {
-    if (dragRef.current) { pushHistory(piecesRef.current); dragRef.current = null; }
+    if (dragRef.current) {
+      if (dragPosRef.current) {
+        const { id } = dragRef.current;
+        const { x, y } = dragPosRef.current;
+        pushHistory(piecesRef.current);
+        setPieces(ps => ps.map(p => p.id === id ? { ...p, x, y } : p));
+        dragPosRef.current = null;
+      }
+      dragRef.current = null;
+    }
   };
 
   const handleAddPiece = () => {
