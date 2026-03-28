@@ -34,7 +34,7 @@ function getSaving(original: number, compressed: number): string {
 
 async function getImageDimensions(file: File): Promise<{ width: number; height: number }> {
   return new Promise(resolve => {
-    const img = new Image();
+    const img = document.createElement('img') as HTMLImageElement;
     img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
     img.src = URL.createObjectURL(file);
   });
