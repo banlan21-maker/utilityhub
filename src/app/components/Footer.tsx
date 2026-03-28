@@ -54,9 +54,9 @@ export default function Footer() {
   const isKo = locale === "ko";
 
   return (
-    <footer className="w-full bg-[#f8fafc] dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800 transition-colors duration-300 overflow-hidden">
+    <footer className="relative w-full bg-[#f8fafc] dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
       {/* Dynamic Background Element */}
-      <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"></div>
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"></div>
 
       <div className="max-w-6xl mx-auto px-6 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
