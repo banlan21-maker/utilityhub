@@ -10,7 +10,8 @@ import {
   FileSpreadsheet,
   ArrowRight,
   Briefcase,
-  Flame
+  Flame,
+  Bomb
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './productivity_list.module.css';
@@ -59,6 +60,13 @@ export default function ProductivityDashboardPage() {
       desc: boardT('meeting-burner.desc'),
       icon: <Flame size={36} color="#22c55e" />,
       gradient: 'rgba(34, 197, 94, 0.08)',
+    },
+    {
+      id: 'utilities/productivity/bomb-pad',
+      title: boardT('bomb-pad.title'),
+      desc: boardT('bomb-pad.desc'),
+      icon: <Bomb size={36} color="#f97316" />,
+      gradient: 'rgba(249, 115, 22, 0.08)',
     },
   ];
 
