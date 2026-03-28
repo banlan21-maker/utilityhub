@@ -1,0 +1,314 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  max-width: 896px;
+  margin: 0 auto;
+  padding: 3rem 1rem 1rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.tool_header {
+  text-align: center;
+  margin-bottom: var(--section-gap, 2rem);
+}
+
+.tool_icon {
+  display: inline-flex;
+  padding: 1rem;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-card, 1.5rem);
+  box-shadow: var(--shadow-icon, 0 4px 12px rgba(0, 0, 0, 0.05));
+  margin-bottom: 1.5rem;
+}
+
+.tool_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #1e293b);
+  margin-bottom: 0.75rem;
+}
+
+.tool_subtitle {
+  color: var(--color-text-secondary, #64748b);
+  font-size: 1.1rem;
+}
+
+.control_panel {
+  max-width: 100%;
+  margin: 0 auto 1.5rem;
+  padding: 2rem;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-card, 1.5rem);
+  border: 1px solid var(--color-border, #f1f5f9);
+  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
+}
+
+.base_selector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.base_label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary, #64748b);
+  white-space: nowrap;
+}
+
+.base_select {
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-md, 0.5rem);
+  border: 1.5px solid var(--color-border, #f1f5f9);
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-primary, #1e293b);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.base_select:focus {
+  outline: none;
+  border-color: var(--color-primary, #8b5cf6);
+}
+
+.reset_time {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #94a3b8);
+  background: var(--color-bg-page, #f8fafc);
+  border: none;
+  border-radius: var(--radius-button, 9999px);
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset_time:hover {
+  background: var(--color-border, #f1f5f9);
+}
+
+.slider_header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.slider_label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #94a3b8);
+}
+
+.slider_value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-primary, #8b5cf6);
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--color-primary, #8b5cf6);
+  cursor: pointer;
+  height: 6px;
+}
+
+.slider_ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--color-text-muted, #94a3b8);
+  margin-top: 2px;
+}
+
+.timezone_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.timezone_card {
+  padding: 1.25rem 1.5rem;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-card, 1.5rem);
+  border: 1px solid var(--color-border, #f1f5f9);
+  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
+  position: relative;
+  transition: all 0.2s;
+}
+
+.timezone_card_base {
+  border: 2px solid var(--color-primary, #8b5cf6);
+}
+
+.base_badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--color-primary, #8b5cf6);
+  color: white;
+  padding: 2px 7px;
+  border-radius: var(--radius-button, 9999px);
+}
+
+.timezone_header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.timezone_flag {
+  font-size: 1.5rem;
+}
+
+.timezone_label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text-primary, #1e293b);
+}
+
+.timezone_date {
+  font-size: 0.75rem;
+  color: var(--color-text-muted, #94a3b8);
+}
+
+.timezone_time {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #1e293b);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.remove_button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-bg-page, #f8fafc);
+  color: var(--color-text-muted, #94a3b8);
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.remove_button:hover {
+  background: var(--color-border, #f1f5f9);
+}
+
+.add_zone_card {
+  padding: 1.25rem 1.5rem;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-card, 1.5rem);
+  border: 2px dashed var(--color-border, #cbd5e1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  min-height: 120px;
+  transition: all 0.2s;
+}
+
+.add_zone_card:hover {
+  border-color: var(--color-primary, #8b5cf6);
+  background: var(--color-primary-light, #ede9fe);
+}
+
+.add_zone_icon {
+  font-size: 1.5rem;
+}
+
+.add_zone_text {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #94a3b8);
+  font-weight: 500;
+}
+
+.add_zone_panel {
+  max-width: 100%;
+  padding: 1.25rem;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-card, 1.5rem);
+  border: 1px solid var(--color-border, #f1f5f9);
+  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
+  margin-bottom: 1.5rem;
+}
+
+.add_zone_title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-secondary, #64748b);
+}
+
+.add_zone_buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.city_button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-button, 9999px);
+  border: 1.5px solid var(--color-border, #f1f5f9);
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-primary, #1e293b);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.city_button:hover {
+  border-color: var(--color-primary, #8b5cf6);
+  color: var(--color-primary, #8b5cf6);
+}
+
+.ad_placeholder {
+  width: 100%;
+  min-height: 90px;
+  background: rgba(241, 245, 249, 0.5);
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 640px) {
+  .tool_title {
+    font-size: 1.75rem;
+  }
+
+  .control_panel {
+    padding: 1.5rem;
+  }
+
+  .timezone_grid {
+    grid-template-columns: 1fr;
+  }
+}

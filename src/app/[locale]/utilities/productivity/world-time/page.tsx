@@ -1,9 +1,13 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
+import { Globe } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './world-time.module.css';
 
 interface TzItem {
   id: string;
@@ -72,6 +76,8 @@ function HourBadge({ hour }: { hour: number }) {
 
 export default function TimezonePage() {
   const t = useTranslations('Timezone');
+  const locale = useLocale();
+  const isKorean = locale === 'ko';
 
   const [now, setNow] = useState(new Date());
   const [selected, setSelected] = useState<string[]>(DEFAULT_SELECTED);
@@ -111,27 +117,28 @@ export default function TimezonePage() {
   const baseHour = getHourInZone(displayDate, baseZone.tz);
 
   return (
-    <div>
+    <div className={s.container}>
       <NavigationActions />
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>{t('description')}</p>
+
+      {/* Tool Header */}
+      <header className={s.tool_header}>
+        <div className={s.tool_icon}>
+          <Globe size={48} color="var(--color-primary)" />
+        </div>
+        <h1 className={s.tool_title}>{t('title')}</h1>
+        <p className={s.tool_subtitle}>{t('description')}</p>
       </header>
 
-      {/* Base timezone selector & slider */}
-      <div className="glass-panel" style={{ padding: 'var(--page-padding)', marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
-          <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+      {/* Control Panel */}
+      <div className={s.control_panel}>
+        <div className={s.base_selector}>
+          <label className={s.base_label}>
             {t('base_label')}
           </label>
           <select
             value={baseId}
             onChange={e => setBaseId(e.target.value)}
-            style={{
-              padding: '0.45rem 0.75rem', borderRadius: 'var(--radius-md)',
-              border: '1.5px solid var(--border)', background: 'var(--surface)',
-              color: 'var(--text-primary)', fontSize: '0.9rem', cursor: 'pointer',
-            }}
+            className={s.base_select}
           >
             {ALL_TIMEZONES.map(z => (
               <option key={z.id} value={z.id}>{z.flag} {z.label}</option>
@@ -140,7 +147,7 @@ export default function TimezonePage() {
           {sliderHour !== null && (
             <button
               onClick={() => setSliderHour(null)}
-              style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'var(--surface-hover)', border: 'none', borderRadius: 'var(--radius-full)', padding: '0.3rem 0.75rem', cursor: 'pointer' }}
+              className={s.reset_time}
             >
               ↺ {t('reset_time')}
             </button>
@@ -149,11 +156,11 @@ export default function TimezonePage() {
 
         {/* Time slider */}
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+          <div className={s.slider_header}>
+            <span className={s.slider_label}>
               {baseZone.flag} {baseZone.label} 기준
             </span>
-            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary)' }}>
+            <span className={s.slider_value}>
               {sliderHour !== null ? `${String(sliderHour).padStart(2,'0')}:00` : t('now')}
             </span>
           </div>
@@ -161,16 +168,16 @@ export default function TimezonePage() {
             type="range" min={0} max={23}
             value={sliderHour ?? baseHour}
             onChange={e => setSliderHour(Number(e.target.value))}
-            style={{ width: '100%', accentColor: 'var(--primary)', cursor: 'pointer', height: '6px' }}
+            className={s.slider}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+          <div className={s.slider_ticks}>
             {['0시', '6시', '12시', '18시', '23시'].map(l => <span key={l}>{l}</span>)}
           </div>
         </div>
       </div>
 
       {/* Timezone cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className={s.timezone_grid}>
         {selectedZones.map(zone => {
           const time = getTimeInZone(displayDate, zone.tz);
           const date = getDateInZone(displayDate, zone.tz);
@@ -180,34 +187,24 @@ export default function TimezonePage() {
           return (
             <div
               key={zone.id}
-              className="glass-panel animate-fade-in"
-              style={{
-                padding: '1.25rem 1.5rem',
-                border: isBase ? '2px solid var(--primary)' : '1px solid var(--border)',
-                position: 'relative',
-              }}
+              className={`${s.timezone_card} ${isBase ? s.timezone_card_base : ''}`}
             >
               {isBase && (
-                <span style={{
-                  position: 'absolute', top: '10px', right: '10px',
-                  fontSize: '0.65rem', fontWeight: 700,
-                  background: 'var(--primary)', color: 'white',
-                  padding: '2px 7px', borderRadius: 'var(--radius-full)',
-                }}>
+                <span className={s.base_badge}>
                   {t('base')}
                 </span>
               )}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.5rem' }}>{zone.flag}</span>
+              <div className={s.timezone_header}>
+                <span className={s.timezone_flag}>{zone.flag}</span>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{zone.label}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{date}</div>
+                  <div className={s.timezone_label}>{zone.label}</div>
+                  <div className={s.timezone_date}>{date}</div>
                 </div>
                 <div style={{ marginLeft: 'auto' }}>
                   <HourBadge hour={hour} />
                 </div>
               </div>
-              <div style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', lineHeight: 1 }}>
+              <div className={s.timezone_time}>
                 {time}
               </div>
 
@@ -215,15 +212,7 @@ export default function TimezonePage() {
               {!isBase && (
                 <button
                   onClick={() => toggleZone(zone.id)}
-                  style={{
-                    position: 'absolute', top: '8px', right: '8px',
-                    width: '22px', height: '22px',
-                    borderRadius: '50%', border: 'none',
-                    background: 'var(--surface-hover)',
-                    color: 'var(--text-muted)',
-                    cursor: 'pointer', fontSize: '0.75rem',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}
+                  className={s.remove_button}
                 >
                   ✕
                 </button>
@@ -235,42 +224,27 @@ export default function TimezonePage() {
         {/* Add zone card */}
         {availableToAdd.length > 0 && (
           <div
-            className="glass-panel"
-            style={{
-              padding: '1.25rem 1.5rem',
-              border: '2px dashed var(--border)',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              gap: '0.75rem', cursor: 'pointer', minHeight: '120px',
-            }}
+            className={s.add_zone_card}
             onClick={() => setShowAdd(s => !s)}
           >
-            <span style={{ fontSize: '1.5rem' }}>＋</span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>{t('add_zone')}</span>
+            <span className={s.add_zone_icon}>＋</span>
+            <span className={s.add_zone_text}>{t('add_zone')}</span>
           </div>
         )}
       </div>
 
       {/* Add zone dropdown */}
       {showAdd && availableToAdd.length > 0 && (
-        <div className="glass-panel animate-fade-in" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
-          <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.75rem', color: 'var(--text-secondary)' }}>
+        <div className={s.add_zone_panel}>
+          <p className={s.add_zone_title}>
             {t('select_zone')}
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div className={s.add_zone_buttons}>
             {availableToAdd.map(z => (
               <button
                 key={z.id}
                 onClick={() => { toggleZone(z.id); setShowAdd(false); }}
-                style={{
-                  padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)',
-                  border: '1.5px solid var(--border)',
-                  background: 'var(--surface)', color: 'var(--text-primary)',
-                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500,
-                  transition: 'all 0.15s',
-                }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                className={s.city_button}
               >
                 {z.flag} {z.label}
               </button>
@@ -278,6 +252,20 @@ export default function TimezonePage() {
           </div>
         </div>
       )}
+
+      {/* Share Bar */}
+      <ShareBar
+        title={isKorean ? '🌍 시간대 변환기' : '🌍 World Time Converter'}
+        description={isKorean ? '전 세계 도시의 시간을 한눈에 비교' : 'Compare world timezones at a glance'}
+      />
+
+      {/* Related Tools */}
+      <RelatedTools toolId="productivity/world-time" limit={3} />
+
+      {/* Ad Placeholder */}
+      <div className={s.ad_placeholder}>
+        {isKorean ? '광고 영역' : 'Ad Space'}
+      </div>
 
       <SeoSection
         ko={{

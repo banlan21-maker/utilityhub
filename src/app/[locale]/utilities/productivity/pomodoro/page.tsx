@@ -1,9 +1,13 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Timer } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './pomodoro.module.css';
 
 type Mode = 'focus' | 'short' | 'long';
 
@@ -79,6 +83,8 @@ function CircleTimer({ progress, color, children }: {
 
 export default function PomodoroPage() {
   const t = useTranslations('Pomodoro');
+  const locale = useLocale();
+  const isKorean = locale === 'ko';
 
   const [mode, setMode] = useState<Mode>('focus');
   const [times, setTimes] = useState<Record<Mode, number>>({ ...DEFAULT_TIMES });
@@ -164,31 +170,30 @@ export default function PomodoroPage() {
   };
 
   return (
-    <div>
+    <div className={s.container}>
       <NavigationActions />
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>{t('description')}</p>
+
+      {/* Tool Header */}
+      <header className={s.tool_header}>
+        <div className={s.tool_icon}>
+          <Timer size={48} color="var(--color-primary)" />
+        </div>
+        <h1 className={s.tool_title}>{t('title')}</h1>
+        <p className={s.tool_subtitle}>{t('description')}</p>
       </header>
 
-      <div className="glass-panel" style={{ padding: 'var(--page-padding)', maxWidth: '480px', margin: '0 auto' }}>
+      {/* Main Panel */}
+      <div className={s.tool_panel}>
 
         {/* Mode tabs */}
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginBottom: '2rem' }}>
+        <div className={s.mode_tabs}>
           {(['focus', 'short', 'long'] as Mode[]).map(m => (
             <button
               key={m}
               onClick={() => switchMode(m)}
+              className={`${s.mode_button} ${mode === m ? s.mode_button_active : s.mode_button_inactive}`}
               style={{
-                padding: '0.5rem 1.1rem',
-                borderRadius: 'var(--radius-full)',
-                border: 'none',
-                fontWeight: mode === m ? 700 : 400,
-                fontSize: '0.875rem',
-                background: mode === m ? MODE_COLORS[m].primary : 'var(--surface-hover)',
-                color: mode === m ? 'white' : 'var(--text-secondary)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
+                background: mode === m ? MODE_COLORS[m].primary : undefined,
               }}
             >
               {modeLabels[m]}
@@ -197,7 +202,7 @@ export default function PomodoroPage() {
         </div>
 
         {/* Circle timer */}
-        <div style={{ background: MODE_COLORS[mode].bg, borderRadius: 'var(--radius-lg)', padding: '2rem', marginBottom: '1.5rem', transition: 'background 0.4s' }}>
+        <div className={s.circle_container} style={{ background: MODE_COLORS[mode].bg }}>
           <CircleTimer progress={progress} color={color}>
             <span style={{ fontSize: '3.5rem', fontWeight: 800, color, lineHeight: 1, letterSpacing: '-2px' }}>
               {formatTime(secondsLeft)}
@@ -209,66 +214,47 @@ export default function PomodoroPage() {
         </div>
 
         {/* Controls */}
-        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginBottom: '1.5rem' }}>
+        <div className={s.controls}>
           <button
             onClick={() => setRunning(r => !r)}
-            style={{
-              padding: '0.85rem 2.5rem',
-              borderRadius: 'var(--radius-full)',
-              border: 'none',
-              background: color,
-              color: 'white',
-              fontWeight: 700,
-              fontSize: '1.1rem',
-              cursor: 'pointer',
-              boxShadow: 'var(--shadow-md)',
-              transition: 'all 0.2s',
-              minWidth: '140px',
-            }}
+            className={s.control_button}
+            style={{ background: color }}
           >
             {running ? t('pause') : (secondsLeft === totalSeconds ? t('start') : t('resume'))}
           </button>
           <button
             onClick={() => { setRunning(false); setSecondsLeft(totalSeconds); }}
-            style={{
-              padding: '0.85rem 1.2rem',
-              borderRadius: 'var(--radius-full)',
-              border: '2px solid var(--border)',
-              background: 'transparent',
-              color: 'var(--text-secondary)',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
+            className={s.reset_button}
           >
             ↺
           </button>
         </div>
 
         {/* Stats & toggles */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+        <div className={s.stats_row}>
+          <div className={s.sessions_count}>
             <span>🍅</span>
             <span>{t('sessions', { count: sessions })}</span>
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className={s.settings_buttons}>
             <button
               onClick={() => setSoundOn(s => !s)}
               title={soundOn ? t('sound_off') : t('sound_on')}
-              style={{ background: 'var(--surface-hover)', border: 'none', borderRadius: 'var(--radius-md)', padding: '0.4rem 0.7rem', cursor: 'pointer', fontSize: '1rem' }}
+              className={s.icon_button}
             >
               {soundOn ? '🔔' : '🔕'}
             </button>
             <button
               onClick={notifGranted ? undefined : requestNotif}
               title={t('notif_hint')}
-              style={{ background: notifGranted ? 'rgba(16,185,129,0.15)' : 'var(--surface-hover)', border: 'none', borderRadius: 'var(--radius-md)', padding: '0.4rem 0.7rem', cursor: notifGranted ? 'default' : 'pointer', fontSize: '1rem' }}
+              className={s.icon_button}
+              style={{ background: notifGranted ? 'rgba(16,185,129,0.15)' : undefined }}
             >
               {notifGranted ? '🔔✓' : '🖥️'}
             </button>
             <button
               onClick={() => { setEditVals({ ...times }); setEditMode(e => !e); }}
-              style={{ background: editMode ? 'var(--primary)' : 'var(--surface-hover)', color: editMode ? 'white' : 'var(--text-secondary)', border: 'none', borderRadius: 'var(--radius-md)', padding: '0.4rem 0.7rem', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}
+              className={`${s.settings_button} ${editMode ? s.settings_button_active : ''}`}
             >
               {t('settings')}
             </button>
@@ -277,29 +263,40 @@ export default function PomodoroPage() {
 
         {/* Edit panel */}
         {editMode && (
-          <div className="animate-fade-in" style={{ marginTop: '1.5rem', padding: '1.25rem', background: 'var(--surface-hover)', borderRadius: 'var(--radius-lg)' }}>
-            <p style={{ fontWeight: 600, marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-primary)' }}>{t('custom_times')}</p>
+          <div className={s.edit_panel}>
+            <p className={s.edit_title}>{t('custom_times')}</p>
             {(['focus', 'short', 'long'] as Mode[]).map(m => (
-              <div key={m} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <label style={{ flex: 1, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{modeLabels[m]}</label>
+              <div key={m} className={s.edit_row}>
+                <label className={s.edit_label}>{modeLabels[m]}</label>
                 <input
                   type="number"
                   min={1} max={99}
                   value={editVals[m]}
                   onChange={e => setEditVals(prev => ({ ...prev, [m]: Number(e.target.value) }))}
-                  style={{ width: '64px', padding: '0.35rem 0.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', background: 'var(--surface)', color: 'var(--text-primary)', textAlign: 'center', fontSize: '0.9rem' }}
+                  className={s.edit_input}
                 />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('minutes')}</span>
+                <span className={s.edit_unit}>{t('minutes')}</span>
               </div>
             ))}
-            <button
-              onClick={applyEdit}
-              style={{ width: '100%', padding: '0.6rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: 'var(--radius-md)', fontWeight: 600, cursor: 'pointer', marginTop: '0.25rem' }}
-            >
+            <button onClick={applyEdit} className={s.apply_button}>
               {t('apply')}
             </button>
           </div>
         )}
+      </div>
+
+      {/* Share Bar */}
+      <ShareBar
+        title={isKorean ? '🍅 뽀모도로 타이머' : '🍅 Pomodoro Timer'}
+        description={isKorean ? '25분 집중 + 휴식 사이클로 집중력 관리' : 'Focus & break cycles for better productivity'}
+      />
+
+      {/* Related Tools */}
+      <RelatedTools toolId="productivity/pomodoro" limit={3} />
+
+      {/* Ad Placeholder */}
+      <div className={s.ad_placeholder}>
+        {isKorean ? '광고 영역' : 'Ad Space'}
       </div>
 
       <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }`}</style>

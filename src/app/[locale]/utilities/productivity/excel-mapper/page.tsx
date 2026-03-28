@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { FileSpreadsheet } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
 import StepIndicator from './components/StepIndicator';
 import Step1FileUpload from './components/Step1FileUpload';
 import Step2Mapping from './components/Step2Mapping';
 import Step3Preview from './components/Step3Preview';
+import s from './excel-mapper.module.css';
 
 type Step = 1 | 2 | 3;
 
@@ -30,6 +34,8 @@ export interface MappingRule {
 
 export default function SmartExcelMapperPage() {
   const t = useTranslations('SmartExcelMapper');
+  const locale = useLocale();
+  const isKorean = locale === 'ko';
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [parsedData, setParsedData] = useState<ParsedExcelData | null>(null);
   const [mappingRules, setMappingRules] = useState<MappingRule[]>([]);
@@ -59,19 +65,19 @@ export default function SmartExcelMapperPage() {
   };
 
   return (
-    <div>
+    <div className={s.container}>
       <NavigationActions />
 
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <h1 style={{ marginBottom: '0.5rem', color: '#f97316' }}>
-          {t('title')}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>
-          {t('description')}
-        </p>
+      {/* Tool Header */}
+      <header className={s.tool_header}>
+        <div className={s.tool_icon}>
+          <FileSpreadsheet size={48} color="var(--color-primary)" />
+        </div>
+        <h1 className={s.tool_title}>{t('title')}</h1>
+        <p className={s.tool_subtitle}>{t('description')}</p>
       </header>
 
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
+      <div className={s.main_panel}>
         <StepIndicator currentStep={currentStep} />
 
         <div style={{ marginTop: '2rem' }}>
@@ -98,9 +104,23 @@ export default function SmartExcelMapperPage() {
         </div>
       </div>
 
+      {/* Share Bar */}
+      <ShareBar
+        title={isKorean ? '스마트 엑셀 매퍼' : 'Smart Excel Mapper'}
+        description={isKorean ? '엑셀 데이터를 원하는 형식으로 자동 변환' : 'Transform Excel data to your desired format'}
+      />
+
+      {/* Related Tools */}
+      <RelatedTools toolId="productivity/excel-mapper" limit={3} />
+
+      {/* Ad Placeholder */}
+      <div className={s.ad_placeholder}>
+        {isKorean ? '광고 영역' : 'Ad Space'}
+      </div>
+
       {/* SEO Content */}
-      <section className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#f97316', marginBottom: '1rem' }}>
+      <section className={s.main_panel}>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--color-primary)', marginBottom: '1rem' }}>
           {t('seoTitle')}
         </h2>
         <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '1rem' }}>
@@ -115,8 +135,8 @@ export default function SmartExcelMapperPage() {
       </section>
 
       {/* FAQ */}
-      <section className="glass-panel" style={{ padding: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#f97316', marginBottom: '1.5rem' }}>
+      <section className={s.main_panel}>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--color-primary)', marginBottom: '1.5rem' }}>
           {t('faqTitle')}
         </h2>
         {[1, 2, 3, 4, 5, 6].map((i) => (

@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { FileText } from 'lucide-react';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
+import s from './resume-helper.module.css';
 
 // ── Presets ────────────────────────────────────────────────────────────────
 
@@ -142,38 +144,29 @@ export default function CoverLetterPage() {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto', padding: '2rem 1rem' }}>
-      <header className="animate-fade-in" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📝</div>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-          자소서 작성 헬퍼
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+    <div className={s.container}>
+      {/* Tool Header */}
+      <header className={s.tool_header}>
+        <div className={s.tool_icon}>
+          <FileText size={48} color="var(--color-primary)" />
+        </div>
+        <h1 className={s.tool_title}>자소서 작성 헬퍼</h1>
+        <p className={s.tool_subtitle}>
           실시간 글자 수 / 바이트 카운터 + 부산대 맞춤법 검사기 연동
         </p>
       </header>
 
       {/* ── Preset selector ── */}
-      <section className="glass-panel animate-fade-in" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+      <section className={s.preset_panel}>
+        <h2 className={s.preset_title}>
           글자 수 제한 프리셋
         </h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: presetIdx === PRESETS.length - 1 ? '1rem' : 0 }}>
+        <div className={s.preset_buttons} style={{ marginBottom: presetIdx === PRESETS.length - 1 ? '1rem' : 0 }}>
           {PRESETS.map((p, i) => (
             <button
               key={i}
               onClick={() => handlePreset(i)}
-              style={{
-                padding: '0.4rem 0.9rem',
-                borderRadius: 'var(--radius-md)',
-                border: '1.5px solid ' + (presetIdx === i ? 'var(--primary)' : 'var(--border)'),
-                background: presetIdx === i ? 'var(--primary)' : 'transparent',
-                color: presetIdx === i ? '#fff' : 'var(--text-secondary)',
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                fontWeight: presetIdx === i ? 600 : 400,
-                transition: 'all 0.2s',
-              }}
+              className={`${s.preset_button} ${presetIdx === i ? s.preset_button_active : ''}`}
             >
               {p.label}
             </button>
@@ -181,45 +174,28 @@ export default function CoverLetterPage() {
         </div>
 
         {presetIdx === PRESETS.length - 1 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>최대 글자 수:</label>
+          <div className={s.custom_input_row}>
+            <label className={s.custom_label}>최대 글자 수:</label>
             <input
               type="number"
               min={1}
               value={customMax}
               onChange={e => handleCustomMax(e.target.value)}
-              style={{
-                width: 120,
-                padding: '0.4rem 0.75rem',
-                borderRadius: 'var(--radius-md)',
-                border: '1.5px solid var(--border)',
-                background: 'var(--surface)',
-                color: 'var(--text-primary)',
-                fontSize: '0.9rem',
-              }}
+              className={s.custom_input}
             />
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>자</span>
+            <span className={s.custom_unit}>자</span>
           </div>
         )}
       </section>
 
       {/* ── Count mode toggle ── */}
-      <div className="animate-fade-in" style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', alignItems: 'center' }}>
-        <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>글자 수 기준:</span>
+      <div className={s.count_mode_row}>
+        <span className={s.count_mode_label}>글자 수 기준:</span>
         {[true, false].map(ws => (
           <button
             key={String(ws)}
             onClick={() => handleToggleSpace(ws)}
-            style={{
-              padding: '0.35rem 0.85rem',
-              borderRadius: 'var(--radius-md)',
-              border: '1.5px solid ' + (countWithSpace === ws ? 'var(--primary)' : 'var(--border)'),
-              background: countWithSpace === ws ? 'var(--primary)' : 'transparent',
-              color: countWithSpace === ws ? '#fff' : 'var(--text-secondary)',
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              fontWeight: countWithSpace === ws ? 600 : 400,
-            }}
+            className={`${s.count_mode_button} ${countWithSpace === ws ? s.count_mode_button_active : ''}`}
           >
             {ws ? '공백 포함' : '공백 제외'}
           </button>
@@ -227,26 +203,13 @@ export default function CoverLetterPage() {
       </div>
 
       {/* ── Textarea ── */}
-      <section className="animate-fade-in" style={{ marginBottom: '1.5rem' }}>
+      <section style={{ marginBottom: '1.5rem' }}>
         <textarea
           value={text}
           onChange={e => handleText(e.target.value)}
           placeholder="자기소개서 내용을 입력하세요..."
           rows={14}
-          style={{
-            width: '100%',
-            padding: '1rem',
-            borderRadius: 'var(--radius-lg)',
-            border: '1.5px solid ' + (charCount > maxChars ? '#ef4444' : 'var(--border)'),
-            background: 'var(--surface)',
-            color: 'var(--text-primary)',
-            fontSize: '0.95rem',
-            lineHeight: 1.7,
-            resize: 'vertical',
-            fontFamily: 'inherit',
-            transition: 'border-color 0.2s',
-            boxSizing: 'border-box',
-          }}
+          className={`${s.textarea} ${charCount > maxChars ? s.textarea_over_limit : ''}`}
         />
 
         {/* Progress bar */}
@@ -372,6 +335,11 @@ export default function CoverLetterPage() {
       />
 
       <RelatedTools toolId="productivity/coverletter" />
+
+      {/* Ad Placeholder */}
+      <div className={s.ad_placeholder}>
+        광고 영역
+      </div>
 
       <SeoSection
         ko={{

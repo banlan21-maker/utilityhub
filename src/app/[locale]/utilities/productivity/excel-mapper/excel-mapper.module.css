@@ -1,0 +1,76 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  max-width: 896px;
+  margin: 0 auto;
+  padding: 3rem 1rem 1rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.tool_header {
+  text-align: center;
+  margin-bottom: var(--section-gap, 2rem);
+}
+
+.tool_icon {
+  display: inline-flex;
+  padding: 1rem;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-card, 1.5rem);
+  box-shadow: var(--shadow-icon, 0 4px 12px rgba(0, 0, 0, 0.05));
+  margin-bottom: 1.5rem;
+}
+
+.tool_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #1e293b);
+  margin-bottom: 0.75rem;
+}
+
+.tool_subtitle {
+  color: var(--color-text-secondary, #64748b);
+  font-size: 1.1rem;
+}
+
+.main_panel {
+  padding: 2rem;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-card, 1.5rem);
+  border: 1px solid var(--color-border, #f1f5f9);
+  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
+  margin-bottom: 2rem;
+}
+
+.ad_placeholder {
+  width: 100%;
+  min-height: 90px;
+  background: rgba(241, 245, 249, 0.5);
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 640px) {
+  .tool_title {
+    font-size: 1.75rem;
+  }
+
+  .main_panel {
+    padding: 1.5rem;
+  }
+}
