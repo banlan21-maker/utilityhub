@@ -2,156 +2,209 @@
 
 import React from "react";
 import { Link } from "@/i18n/routing";
-import { useLocale } from "next-intl";
-import { Github, Mail, Heart } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import {
+  Github,
+  Mail,
+  ExternalLink,
+  ShieldCheck,
+  Code2,
+  Zap,
+  Globe,
+  FileText,
+  CreditCard,
+  Sparkles,
+  Search,
+  MessageSquare
+} from "lucide-react";
+
+// CATEGORIES Data for Footer
+const CATEGORY_GROUPS = [
+  {
+    titleKey: "footer.tools_title",
+    links: [
+      { icon: <Zap className="w-4 h-4" />, labelKo: "성능 및 모니터링", labelEn: "Performance", href: "/utilities/performance" },
+      { icon: <FileText className="w-4 h-4" />, labelKo: "문서 변환/편집", labelEn: "Documents", href: "/utilities/document" },
+      { icon: <CreditCard className="w-4 h-4" />, labelKo: "결제 및 핀테크", labelEn: "Fintech", href: "/utilities/finance" },
+      { icon: <Sparkles className="w-4 h-4" />, labelKo: "UX 및 디자인", labelEn: "UX & Design", href: "/utilities/design" },
+      { icon: <Search className="w-4 h-4" />, labelKo: "생산성 도구", labelEn: "Productivity", href: "/utilities/productivity" },
+    ]
+  },
+  {
+    titleKey: "footer.more_tools_title",
+    links: [
+      { icon: <Globe className="w-4 h-4" />, labelKo: "AI 및 마케팅", labelEn: "AI & Marketing", href: "/utilities/marketing" },
+      { icon: <ShieldCheck className="w-4 h-4" />, labelKo: "보안 및 프라이버시", labelEn: "Security", href: "/utilities/security" },
+      { icon: <Code2 className="w-4 h-4" />, labelKo: "개발자 도구", labelEn: "Dev Tools", href: "/utilities/dev" },
+      { icon: <span className="text-sm">🛠️</span>, labelKo: "유틸리티/게임", labelEn: "Utility/Games", href: "/utilities/utility" },
+      { icon: <span className="text-sm">🌿</span>, labelKo: "라이프스타일", labelEn: "Lifestyle", href: "/utilities/lifestyle" },
+    ]
+  }
+];
+
+const LEGAL_LINKS = [
+  { labelKo: "개인정보처리방침", labelEn: "Privacy Policy", href: "/privacy" },
+  { labelKo: "이용약관", labelEn: "Terms of Service", href: "/terms" },
+  { labelKo: "사이트맵", labelEn: "Sitemap", href: "/sitemap.xml", external: true },
+];
 
 export default function Footer() {
+  const t = useTranslations();
   const locale = useLocale();
   const isKo = locale === "ko";
-  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative w-full bg-gradient-to-b from-white to-slate-50/50 border-t border-slate-100 overflow-hidden">
-      {/* Subtle top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/20 to-transparent" />
+    <footer className="w-full bg-[#f8fafc] dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800 transition-colors duration-300 overflow-hidden">
+      {/* Dynamic Background Element */}
+      <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"></div>
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="max-w-6xl mx-auto px-6 pt-16 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
 
-        {/* Top Section: Brand + Quick Links */}
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mb-12">
-
-          {/* Brand */}
-          <div className="flex flex-col items-center md:items-start gap-4 text-center md:text-left">
-            <Link href="/" className="inline-flex items-center gap-2.5 group">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform duration-300">
-                <span className="text-2xl">🛠️</span>
+          {/* Brand Identity Section */}
+          <div className="md:col-span-4 flex flex-col gap-6">
+            <Link href="/" className="flex items-center gap-2 group w-fit">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform duration-300">
+                <span className="text-xl">🛠️</span>
               </div>
-              <span className="text-2xl font-black tracking-tight text-slate-900">
+              <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
                 Utility Hub
               </span>
             </Link>
 
-            <p className="text-sm text-slate-600 leading-relaxed max-w-[320px] font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium max-w-[280px]">
               {isKo
-                ? "로그인 없이 무료로 사용하는 브라우저 기반 유틸리티 도구 모음"
-                : "Free browser-based utility tools. No login required."}
+                ? "사용자의 소중한 데이터는 서버에 저장되지 않습니다. 모든 작업은 브라우저에서 안전하게 실행됩니다."
+                : "Your data stays private. All processing happens locally in your browser, never on our servers."}
             </p>
 
-            {/* Social Links */}
             <div className="flex items-center gap-3">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-all duration-200"
-                aria-label="GitHub"
-              >
+              <span className="flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 font-bold border border-orange-200/50 dark:border-orange-500/20">
+                <Zap className="w-3 h-3 fill-current" />
+                100% FREE
+              </span>
+              <span className="flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-200/50 dark:border-emerald-500/20">
+                <ShieldCheck className="w-3 h-3 fill-current" />
+                NO LOGIN
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation Links Grid */}
+          <div className="md:col-span-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
+
+              {CATEGORY_GROUPS.map((group, idx) => (
+                <div key={idx} className="flex flex-col gap-5">
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
+                    {t(group.titleKey)}
+                  </h3>
+                  <ul className="flex flex-col gap-3">
+                    {group.links.map((link, lIdx) => (
+                      <li key={lIdx}>
+                        <Link
+                          href={link.href as any}
+                          className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all duration-200 group"
+                        >
+                          <span className="text-slate-400 dark:text-slate-600 group-hover:text-orange-500 transition-colors">
+                            {link.icon}
+                          </span>
+                          <span className="font-semibold group-hover:translate-x-0.5 transition-transform">
+                            {isKo ? link.labelKo : link.labelEn}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              {/* Legal & Feedback Column */}
+              <div className="flex flex-col gap-5">
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
+                  {isKo ? "법적 고지 및 커뮤니티" : "LEGAL & FEEDBACK"}
+                </h3>
+                <ul className="flex flex-col gap-3">
+                  {LEGAL_LINKS.map((link, lIdx) => (
+                    <li key={lIdx}>
+                      {link.external ? (
+                        <a
+                          href={link.href}
+                          className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all"
+                        >
+                          {isKo ? link.labelKo : link.labelEn}
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href as any}
+                          className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all"
+                        >
+                          {isKo ? link.labelKo : link.labelEn}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                  <li>
+                    <Link
+                      href="/feedback"
+                      className="inline-flex items-center gap-2 px-4 py-2 mt-2 rounded-lg bg-white dark:bg-slate-800 text-sm font-bold text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 shadow-sm hover:border-orange-500 dark:hover:border-orange-500 transition-all group"
+                    >
+                      <MessageSquare className="w-4 h-4 text-orange-500" />
+                      {isKo ? "피드백 보내기" : "Send Feedback"}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Bottom Bar */}
+        <div className="pt-8 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col md:flex-row items-center justify-between gap-8">
+
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <p className="text-xs font-bold text-slate-400 dark:text-slate-600">
+              © 2026 Utility Hub. All rights reserved.
+            </p>
+            <div className="hidden md:block h-3 w-px bg-slate-200 dark:bg-slate-800"></div>
+            <div className="flex items-center gap-4">
+              <a href="#" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <Github className="w-4 h-4" />
               </a>
-              <a
-                href="mailto:support@theutilhub.com"
-                className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-all duration-200"
-                aria-label="Email"
-              >
+              <a href="mailto:support@theutilhub.com" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <Mail className="w-4 h-4" />
               </a>
             </div>
           </div>
 
-          {/* Quick Links Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-12 gap-y-6 text-center md:text-left">
-
-            {/* Column 1: Categories */}
-            <div className="flex flex-col gap-3">
-              <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">
-                {isKo ? "카테고리" : "CATEGORIES"}
-              </h3>
-              <Link href="/utilities/finance" className="text-sm font-semibold text-slate-700 hover:text-orange-600 transition-colors">
-                {isKo ? "💳 금융" : "💳 Finance"}
-              </Link>
-              <Link href="/utilities/productivity" className="text-sm font-semibold text-slate-700 hover:text-orange-600 transition-colors">
-                {isKo ? "⚡ 생산성" : "⚡ Productivity"}
-              </Link>
-              <Link href="/utilities/dev" className="text-sm font-semibold text-slate-700 hover:text-orange-600 transition-colors">
-                {isKo ? "💻 개발" : "💻 Dev Tools"}
-              </Link>
-            </div>
-
-            {/* Column 2: Company */}
-            <div className="flex flex-col gap-3">
-              <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">
-                {isKo ? "회사" : "COMPANY"}
-              </h3>
-              <Link href="/privacy" className="text-sm font-semibold text-slate-700 hover:text-orange-600 transition-colors">
-                {isKo ? "개인정보처리방침" : "Privacy"}
-              </Link>
-              <Link href="/terms" className="text-sm font-semibold text-slate-700 hover:text-orange-600 transition-colors">
-                {isKo ? "이용약관" : "Terms"}
-              </Link>
-              <Link href="/feedback" className="text-sm font-semibold text-slate-700 hover:text-orange-600 transition-colors">
-                {isKo ? "피드백" : "Feedback"}
-              </Link>
-            </div>
-
-            {/* Column 3: Language Switcher */}
-            <div className="flex flex-col gap-3 col-span-2 sm:col-span-1">
-              <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">
-                {isKo ? "언어" : "LANGUAGE"}
-              </h3>
-              <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm w-fit mx-auto sm:mx-0">
-                <Link
-                  href="/"
-                  locale="ko"
-                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 ${
-                    isKo
-                      ? "bg-orange-500 text-white shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  한국어
-                </Link>
-                <Link
-                  href="/"
-                  locale="en"
-                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 ${
-                    !isKo
-                      ? "bg-orange-500 text-white shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  EN
-                </Link>
-              </div>
-            </div>
-
+          {/* Premium Language Switcher */}
+          <div className="p-1 rounded-xl bg-slate-200/50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 flex items-center shadow-inner">
+            <Link
+              href="/"
+              locale="ko"
+              className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${
+                isKo
+                  ? "bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              }`}
+            >
+              한국어
+            </Link>
+            <Link
+              href="/"
+              locale="en"
+              className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${
+                !isKo
+                  ? "bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              }`}
+            >
+              ENGLISH
+            </Link>
           </div>
 
         </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-
-          {/* Copyright */}
-          <p className="text-xs font-semibold text-slate-500 flex items-center gap-2">
-            © {currentYear} Utility Hub
-            <span className="hidden sm:inline text-slate-300">•</span>
-            <span className="inline-flex items-center gap-1.5">
-              {isKo ? "만든이" : "Made with"}
-              <Heart className="w-3 h-3 fill-orange-500 text-orange-500" />
-              {isKo ? "" : "by Dev Team"}
-            </span>
-          </p>
-
-          {/* Privacy Badge */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/50">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-bold text-emerald-700">
-              {isKo ? "100% 브라우저에서 실행" : "100% Browser-based"}
-            </span>
-          </div>
-
-        </div>
-
       </div>
     </footer>
   );
