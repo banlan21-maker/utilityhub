@@ -8,6 +8,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import confetti from 'canvas-confetti';
 import s from './challenge.module.css';
 
@@ -136,68 +137,82 @@ export default function ThirtyDayChallengePage() {
   const progressPercent = Math.round((completedCount / 30) * 100);
   const theme = THEMES[selectedTheme];
 
-  const exportToPDF = () => {
-    const doc = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
+  const exportToPDF = async () => {
+    // Create a temporary element for PDF export
+    const exportElement = document.createElement('div');
+    exportElement.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 794px; padding: 40px; background: white; font-family: "Inter", sans-serif;';
 
-    // Title
-    doc.setFontSize(24);
-    doc.setTextColor(theme.primary);
-    doc.text(challengeTitle || '30 Day Challenge', 105, 30, { align: 'center' });
+    exportElement.innerHTML = `
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="font-size: 32px; font-weight: 800; color: ${theme.primary}; margin: 0 0 10px 0;">${challengeTitle || '30 Day Challenge'}</h1>
+        <p style="font-size: 14px; color: #6b7280; margin: 5px 0;">${isKorean ? '시작일' : 'Start'}: ${startDate}</p>
+        <p style="font-size: 16px; color: #1e293b; font-weight: 600; margin: 10px 0;">${isKorean ? '진행률' : 'Progress'}: ${completedCount}/30 (${progressPercent}%)</p>
+      </div>
 
-    // Date
-    doc.setFontSize(12);
-    doc.setTextColor('#6b7280');
-    doc.text(`Start: ${startDate}`, 105, 40, { align: 'center' });
+      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-width: 600px; margin: 0 auto;">
+        ${stamps.map((checked, idx) => `
+          <div style="
+            aspect-ratio: 1;
+            border: 2px solid ${checked ? theme.primary : '#e5e7eb'};
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: ${checked ? theme.primary : '#f9fafb'};
+            position: relative;
+            padding: 8px;
+          ">
+            <span style="
+              position: absolute;
+              top: 4px;
+              left: 8px;
+              font-size: 11px;
+              font-weight: 700;
+              color: ${checked ? '#ffffff' : '#6b7280'};
+            ">${idx + 1}</span>
+            ${checked ? `<span style="font-size: 28px; color: white; font-weight: 800;">✓</span>` : ''}
+          </div>
+        `).join('')}
+      </div>
 
-    // Progress
-    doc.setFontSize(14);
-    doc.setTextColor('#1e293b');
-    doc.text(`Progress: ${completedCount}/30 (${progressPercent}%)`, 105, 50, { align: 'center' });
+      <div style="text-align: center; margin-top: 40px; font-size: 12px; color: #9ca3af;">
+        Start your challenge at theutilhub.com
+      </div>
+    `;
 
-    // Grid
-    const startX = 30;
-    const startY = 70;
-    const cellSize = 25;
-    const gap = 3;
+    document.body.appendChild(exportElement);
 
-    for (let i = 0; i < 30; i++) {
-      const col = i % 6;
-      const row = Math.floor(i / 6);
-      const x = startX + col * (cellSize + gap);
-      const y = startY + row * (cellSize + gap);
+    try {
+      const canvas = await html2canvas(exportElement, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
 
-      // Cell background
-      if (stamps[i]) {
-        doc.setFillColor(theme.primary);
-        doc.rect(x, y, cellSize, cellSize, 'F');
-      } else {
-        doc.setDrawColor('#e5e7eb');
-        doc.setLineWidth(0.5);
-        doc.rect(x, y, cellSize, cellSize);
-      }
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
 
-      // Day number
-      doc.setFontSize(10);
-      doc.setTextColor(stamps[i] ? '#ffffff' : '#6b7280');
-      doc.text(`${i + 1}`, x + cellSize / 2, y + cellSize / 2 + 2, { align: 'center' });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 10;
 
-      // Stamp emoji
-      if (stamps[i]) {
-        doc.setFontSize(16);
-        doc.text('✓', x + cellSize / 2, y + cellSize / 2 - 3, { align: 'center' });
-      }
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save(`${challengeTitle || '30day-challenge'}.pdf`);
+    } catch (error) {
+      console.error('PDF export failed:', error);
+      alert(isKorean ? 'PDF 생성 중 오류가 발생했습니다.' : 'Failed to generate PDF.');
+    } finally {
+      document.body.removeChild(exportElement);
     }
-
-    // Footer branding
-    doc.setFontSize(10);
-    doc.setTextColor('#9ca3af');
-    doc.text('Start your challenge at theutilhub.com', 105, 280, { align: 'center' });
-
-    doc.save(`${challengeTitle || '30day-challenge'}.pdf`);
   };
 
   return (
