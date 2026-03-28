@@ -2,10 +2,17 @@
   max-width: 1024px;
   margin: 0 auto;
   width: 100%;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   gap: var(--section-gap);
   animation: fadeIn 0.6s ease-out;
+}
+
+@media (min-width: 768px) {
+  .osmu_container {
+    padding: 0 2rem;
+  }
 }
 
 .osmu_header {
@@ -169,7 +176,8 @@
   color: var(--text-primary);
   line-height: 1.6;
   white-space: pre-wrap;
-  word-break: break-all;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .osmu_copy_button {
@@ -188,9 +196,15 @@
 
 .osmu_stats_grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   gap: 0.75rem;
   margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .osmu_stats_grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .osmu_stat_item {

@@ -1,7 +1,7 @@
 /**
  * Tool metadata registry and relationship map.
  *
- * toolId format: "{category}/{slug}" — matches the Next.js route path under /[locale]/
+ * toolId format: "utilities/{category}/{slug}" — matches the Next.js route path under /[locale]/
  */
 
 export interface ToolMeta {
@@ -15,50 +15,74 @@ export interface ToolMeta {
 }
 
 export const TOOLS: ToolMeta[] = [
-  // fintech
-  { id: 'fintech/tax33',    icon: '🧾', ko: '3.3% 세금 계산기',     en: 'Freelancer 3.3% Tax Calculator', category: 'fintech' },
-  { id: 'fintech/percent',  icon: '🔢', ko: '퍼센트 계산기',        en: 'Percentage Calculator',          category: 'fintech' },
-  { id: 'fintech/vat',      icon: '🧾', ko: '부가세(VAT) 계산기',   en: 'VAT Calculator',                 category: 'fintech' },
-  { id: 'fintech/interest', icon: '💰', ko: '이자 계산기',           en: 'Interest Calculator',            category: 'fintech' },
-  { id: 'fintech/currency', icon: '💱', ko: '실시간 환율 변환기',    en: 'Live Currency Converter',        category: 'fintech' },
-  { id: 'fintech/crypto',   icon: '🪙', ko: '코인 수익률 계산기',    en: 'Crypto Profit Calculator',       category: 'fintech' },
-  // pdf
-  { id: 'pdf/hwp',          icon: '📄', ko: '한글(HWP) to PDF',     en: 'HWP → PDF Converter',            category: 'pdf' },
-  // productivity
-  { id: 'productivity/pomodoro', icon: '🍅', ko: '뽀모도로 타이머', en: 'Pomodoro Timer',                 category: 'productivity' },
-  { id: 'productivity/timezone', icon: '🌍', ko: '시간대 변환기',    en: 'Timezone Converter',             category: 'productivity' },
-  // ux
-  { id: 'ux/logo',  icon: '🎨', ko: 'AI 로고 & 파비콘 생성기',      en: 'Logo & Favicon Generator',       category: 'ux' },
-  { id: 'ux/color', icon: '🎯', ko: '색상 팔레트 & 가독성 검사기',  en: 'Color Palette Checker',          category: 'ux' },
-  { id: 'ux/font',  icon: '🔤', ko: '다국어 폰트 비교기',           en: 'Multilingual Font Comparer',     category: 'ux' },
-  { id: 'ux/quiz',  icon: '🧩', ko: '심리테스트 / 퀴즈 빌더',      en: 'Quiz Builder',                   category: 'ux' },
-  // lifestyle
-  { id: 'lifestyle/pet-food',  icon: '🐾', ko: '반려동물 사료량 계산기', en: 'Pet Food Calculator',       category: 'lifestyle' },
-  { id: 'lifestyle/bmi-water', icon: '💧', ko: 'BMI & 수분 섭취량',      en: 'BMI & Water Intake',        category: 'lifestyle' },
-  { id: 'lifestyle/nickname',  icon: '✨', ko: '영문 이름/닉네임 추천기', en: 'English Name Generator',    category: 'lifestyle' },
-  // security
-  { id: 'security/redact',   icon: '🔏', ko: '개인정보 마스킹 도구',  en: 'Personal Info Redactor',       category: 'security' },
-  { id: 'security/password', icon: '🔑', ko: '비밀번호 생성기',       en: 'Password Generator',            category: 'security' },
-  { id: 'security/url',      icon: '🛡️', ko: 'URL 피싱/악성코드 검사기', en: 'URL Safety Checker',        category: 'security' },
-  // utilities
-  { id: 'utilities/area',    icon: '📐', ko: '평수 ↔ ㎡ 변환기',    en: 'Pyeong ↔ ㎡ Converter',         category: 'utilities' },
-  { id: 'utilities/qr',      icon: '📱', ko: 'QR 코드 생성기',       en: 'QR Code Generator',             category: 'utilities' },
-  { id: 'utilities/counter', icon: '📝', ko: '글자 수 & 바이트 계산기', en: 'Character Counter',          category: 'utilities' },
-  { id: 'utilities/dday',    icon: '📅', ko: 'D-Day & 날짜 계산기',  en: 'D-Day Calculator',              category: 'utilities' },
-  // performance
-  { id: 'performance/ttfb',  icon: '🚀', ko: 'TTFB 속도 테스터',    en: 'TTFB Speed Tester',             category: 'performance' },
-  // dev
-  { id: 'dev/json',     icon: '🗂️', ko: 'JSON 포맷터 & 뷰어',           en: 'JSON Formatter & Viewer',        category: 'dev' },
-  { id: 'dev/regex',    icon: '🔍', ko: '정규표현식 테스터',             en: 'Regex Tester',                   category: 'dev' },
-  { id: 'dev/password', icon: '🔑', ko: '비밀번호 생성기 & 강도 분석기', en: 'Password Generator & Analyzer',  category: 'dev' },
-  // social / content
-  { id: 'utilities/thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기',     en: 'YouTube Thumbnail Downloader', category: 'utilities' },
-  { id: 'utilities/shorturl',  icon: '🔗', ko: 'URL 단축기',               en: 'URL Shortener',                category: 'utilities' },
-  { id: 'ai/hashtag',          icon: '#️⃣', ko: '해시태그 생성기',          en: 'Hashtag Generator',            category: 'ai' },
-  // Korean life tools
-  { id: 'lifestyle/korean-age', icon: '🎂', ko: '한국형 날짜 계산기',       en: 'Korean Date Calculator',       category: 'lifestyle' },
-  { id: 'utilities/gpa',        icon: '📊', ko: '대학생 학점 변환기',        en: 'GPA Converter',                category: 'utilities' },
-  { id: 'productivity/coverletter', icon: '📝', ko: '자소서 작성 헬퍼',     en: 'Cover Letter Helper',          category: 'productivity' },
+  // Finance
+  { id: 'utilities/finance/percentage-calc', icon: '🔢', ko: '퍼센트 계산기', en: 'Percentage Calculator', category: 'finance' },
+  { id: 'utilities/finance/exchange-rate', icon: '💱', ko: '실시간 환율 변환기', en: 'Exchange Rate Converter', category: 'finance' },
+  { id: 'utilities/finance/coin-profit', icon: '🪙', ko: '코인 수익률 계산기', en: 'Crypto Profit Calculator', category: 'finance' },
+  { id: 'utilities/finance/vat-calc', icon: '🧾', ko: '부가세(VAT) 계산기', en: 'VAT Calculator', category: 'finance' },
+  { id: 'utilities/finance/interest-calc', icon: '💰', ko: '이자 계산기', en: 'Interest Calculator', category: 'finance' },
+  { id: 'utilities/finance/tax-33-calc', icon: '🧾', ko: '3.3% 세금 계산기', en: 'Freelancer 3.3% Tax Calculator', category: 'finance' },
+  { id: 'utilities/finance/salary-calc', icon: '💼', ko: '급여 계산기', en: 'Salary Calculator', category: 'finance' },
+
+  // Productivity
+  { id: 'utilities/productivity/pomodoro', icon: '🍅', ko: '뽀모도로 타이머', en: 'Pomodoro Timer', category: 'productivity' },
+  { id: 'utilities/productivity/world-time', icon: '🌍', ko: '세계 시간대 변환기', en: 'World Time Converter', category: 'productivity' },
+  { id: 'utilities/productivity/resume-helper', icon: '📝', ko: '자소서 작성 헬퍼', en: 'Resume Helper', category: 'productivity' },
+  { id: 'utilities/productivity/excel-mapper', icon: '📊', ko: '엑셀 데이터 매퍼', en: 'Excel Data Mapper', category: 'productivity' },
+
+  // Design
+  { id: 'utilities/design/color-palette', icon: '🎯', ko: '색상 팔레트 & 가독성 검사기', en: 'Color Palette Checker', category: 'design' },
+  { id: 'utilities/design/logo-favicon', icon: '🎨', ko: 'AI 로고 & 파비콘 생성기', en: 'Logo & Favicon Generator', category: 'design' },
+  { id: 'utilities/design/font-preview', icon: '🔤', ko: '다국어 폰트 비교기', en: 'Multilingual Font Comparer', category: 'design' },
+  { id: 'utilities/design/feedback', icon: '💬', ko: '사용자 피드백 수집기', en: 'User Feedback Collector', category: 'design' },
+
+  // Marketing
+  { id: 'utilities/marketing/hashtag-generator', icon: '#️⃣', ko: '해시태그 생성기', en: 'Hashtag Generator', category: 'marketing' },
+  { id: 'utilities/marketing/osmu-formatter', icon: '✨', ko: 'OSMU 콘텐츠 재가공 포맷터', en: 'OSMU Content Formatter', category: 'marketing' },
+  { id: 'utilities/marketing/qr-generator', icon: '🔳', ko: 'QR 코드 생성기', en: 'QR Code Generator', category: 'marketing' },
+  { id: 'utilities/marketing/shorturl', icon: '🔗', ko: 'URL 단축기', en: 'URL Shortener', category: 'marketing' },
+  { id: 'utilities/marketing/quiz-builder', icon: '🧩', ko: '심리테스트 / 퀴즈 빌더', en: 'Quiz Builder', category: 'marketing' },
+
+  // Lifestyle
+  { id: 'utilities/lifestyle/bmi-calc', icon: '💧', ko: 'BMI & 건강 계산기', en: 'BMI & Health Calculator', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/dday-calc', icon: '📅', ko: 'D-Day & 날짜 계산기', en: 'D-Day Calculator', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/age-calc', icon: '🎂', ko: '한국형 날짜 계산기', en: 'Korean Date Calculator', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/gpa-calc', icon: '📊', ko: '대학생 학점 변환기', en: 'GPA Converter', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/nickname', icon: '✨', ko: '영문 이름/닉네임 추천기', en: 'English Name Generator', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/pet-calorie', icon: '🐾', ko: '반려동물 칼로리 계산기', en: 'Pet Calorie Calculator', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/aquarium-calc', icon: '🐟', ko: '수족관 바이오로드 계산기', en: 'Aquarium Bioload Calculator', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/mbti-test', icon: '🌊', ko: 'MBTI 해양생물 테스트', en: 'MBTI Marine Life Test', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/fortune-prompt', icon: '🔮', ko: '오늘의 운세 프롬프트', en: 'Fortune Prompt', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/teto-egen-test', icon: '😊', ko: '태토에겐 성격 테스트', en: 'Teto Egen Personality Test', category: 'lifestyle' },
+
+  // Security
+  { id: 'utilities/security/privacy-masking', icon: '🔏', ko: '개인정보 마스킹 도구', en: 'Privacy Masking Tool', category: 'security' },
+  { id: 'utilities/security/password-generator', icon: '🔑', ko: '비밀번호 생성기', en: 'Password Generator', category: 'security' },
+  { id: 'utilities/security/url-safety', icon: '🛡️', ko: 'URL 피싱/악성코드 검사기', en: 'URL Safety Checker', category: 'security' },
+
+  // Utility
+  { id: 'utilities/utility/counter', icon: '📝', ko: '글자 수 & 바이트 계산기', en: 'Character Counter', category: 'utility' },
+  { id: 'utilities/utility/pyeong-calc', icon: '📐', ko: '평수 ↔ ㎡ 변환기', en: 'Pyeong ↔ ㎡ Converter', category: 'utility' },
+  { id: 'utilities/utility/unit-converter', icon: '🔢', ko: '단위 변환기', en: 'Unit Converter', category: 'utility' },
+  { id: 'utilities/utility/image-processor', icon: '🖼️', ko: '이미지 압축기', en: 'Image Compressor', category: 'utility' },
+  { id: 'utilities/utility/image-resizer', icon: '✂️', ko: '이미지 리사이저', en: 'Image Resizer', category: 'utility' },
+  { id: 'utilities/utility/wordle', icon: '🎮', ko: '한글 워들 게임', en: 'Korean Wordle Game', category: 'utility' },
+  { id: 'utilities/utility/yt-thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기', en: 'YouTube Thumbnail Downloader', category: 'utility' },
+
+  // Dev
+  { id: 'utilities/dev/json-formatter', icon: '🗂️', ko: 'JSON 포맷터 & 뷰어', en: 'JSON Formatter & Viewer', category: 'dev' },
+  { id: 'utilities/dev/regex-tester', icon: '🔍', ko: '정규표현식 테스터', en: 'Regex Tester', category: 'dev' },
+  { id: 'utilities/dev/password-strength', icon: '🔐', ko: '비밀번호 강도 분석기', en: 'Password Strength Analyzer', category: 'dev' },
+  { id: 'utilities/dev/kec-grounding', icon: '⚡', ko: 'KEC 접지 저항 계산기', en: 'KEC Grounding Calculator', category: 'dev' },
+  { id: 'utilities/dev/resistor-calc', icon: '🔌', ko: '저항 색띠 계산기', en: 'Resistor Color Code Calculator', category: 'dev' },
+
+  // Document
+  { id: 'utilities/document/hwp-pdf-converter', icon: '📄', ko: '한글(HWP) to PDF', en: 'HWP → PDF Converter', category: 'document' },
+  { id: 'utilities/document/img-pdf-converter', icon: '🖼️', ko: '이미지 to PDF', en: 'Image → PDF Converter', category: 'document' },
+  { id: 'utilities/document/pdf-masking', icon: '🔒', ko: 'PDF 개인정보 마스킹', en: 'PDF Privacy Masking', category: 'document' },
+
+  // Performance
+  { id: 'utilities/performance/ttfb-check', icon: '🚀', ko: 'TTFB 속도 테스터', en: 'TTFB Speed Tester', category: 'performance' },
 ];
 
 /** Build a lookup map: toolId → ToolMeta */
@@ -72,223 +96,297 @@ export const TOOL_MAP: Record<string, ToolMeta> = Object.fromEntries(
  * At most the first 3 entries are shown in the UI.
  */
 export const TOOL_RELATIONS: Record<string, string[]> = {
-  // ── Fintech ────────────────────────────────────────────────
-  'fintech/tax33': [
-    'fintech/vat',
-    'fintech/interest',
-    'fintech/percent',
+  // ── Finance ────────────────────────────────────────────────
+  'utilities/finance/tax-33-calc': [
+    'utilities/finance/vat-calc',
+    'utilities/finance/interest-calc',
+    'utilities/finance/percentage-calc',
   ],
-  'fintech/percent': [
-    'fintech/vat',
-    'fintech/interest',
-    'fintech/currency',
+  'utilities/finance/percentage-calc': [
+    'utilities/finance/vat-calc',
+    'utilities/finance/interest-calc',
+    'utilities/finance/tax-33-calc',
   ],
-  'fintech/vat': [
-    'fintech/percent',
-    'fintech/interest',
-    'fintech/currency',
+  'utilities/finance/vat-calc': [
+    'utilities/finance/tax-33-calc',
+    'utilities/finance/percentage-calc',
+    'utilities/finance/salary-calc',
   ],
-  'fintech/interest': [
-    'fintech/percent',
-    'fintech/vat',
-    'fintech/currency',
+  'utilities/finance/interest-calc': [
+    'utilities/finance/coin-profit',
+    'utilities/finance/percentage-calc',
+    'utilities/finance/exchange-rate',
   ],
-  'fintech/currency': [
-    'fintech/percent',
-    'fintech/crypto',
-    'fintech/interest',
+  'utilities/finance/exchange-rate': [
+    'utilities/finance/coin-profit',
+    'utilities/finance/interest-calc',
+    'utilities/finance/percentage-calc',
   ],
-  'fintech/crypto': [
-    'fintech/currency',
-    'fintech/percent',
-    'fintech/interest',
+  'utilities/finance/coin-profit': [
+    'utilities/finance/interest-calc',
+    'utilities/finance/exchange-rate',
+    'utilities/finance/percentage-calc',
   ],
-
-  // ── PDF ────────────────────────────────────────────────────
-  'pdf/hwp': [
-    'utilities/qr',
-    'utilities/counter',
-    'security/redact',
+  'utilities/finance/salary-calc': [
+    'utilities/finance/tax-33-calc',
+    'utilities/finance/vat-calc',
+    'utilities/finance/percentage-calc',
   ],
 
   // ── Productivity ───────────────────────────────────────────
-  'productivity/pomodoro': [
-    'productivity/timezone',
-    'utilities/dday',
-    'utilities/counter',
+  'utilities/productivity/pomodoro': [
+    'utilities/productivity/world-time',
+    'utilities/lifestyle/dday-calc',
+    'utilities/utility/counter',
   ],
-  'productivity/timezone': [
-    'productivity/pomodoro',
-    'utilities/dday',
-    'fintech/currency',
+  'utilities/productivity/world-time': [
+    'utilities/productivity/pomodoro',
+    'utilities/lifestyle/dday-calc',
+    'utilities/lifestyle/age-calc',
+  ],
+  'utilities/productivity/resume-helper': [
+    'utilities/utility/counter',
+    'utilities/productivity/excel-mapper',
+    'utilities/marketing/osmu-formatter',
+  ],
+  'utilities/productivity/excel-mapper': [
+    'utilities/productivity/resume-helper',
+    'utilities/utility/counter',
+    'utilities/dev/json-formatter',
   ],
 
-  // ── UX / Design ────────────────────────────────────────────
-  'ux/logo': [
-    'ux/color',
-    'ux/font',
-    'utilities/qr',
+  // ── Design ─────────────────────────────────────────────────
+  'utilities/design/color-palette': [
+    'utilities/design/logo-favicon',
+    'utilities/design/font-preview',
+    'utilities/design/feedback',
   ],
-  'ux/color': [
-    'ux/logo',
-    'ux/font',
-    'ux/quiz',
+  'utilities/design/logo-favicon': [
+    'utilities/design/color-palette',
+    'utilities/marketing/qr-generator',
+    'utilities/utility/image-resizer',
   ],
-  'ux/font': [
-    'ux/color',
-    'ux/logo',
-    'utilities/counter',
+  'utilities/design/font-preview': [
+    'utilities/design/color-palette',
+    'utilities/design/logo-favicon',
+    'utilities/lifestyle/nickname',
   ],
-  'ux/quiz': [
-    'ux/color',
-    'ux/font',
-    'utilities/qr',
+  'utilities/design/feedback': [
+    'utilities/design/color-palette',
+    'utilities/marketing/quiz-builder',
+    'utilities/utility/counter',
+  ],
+
+  // ── Marketing ──────────────────────────────────────────────
+  'utilities/marketing/hashtag-generator': [
+    'utilities/marketing/osmu-formatter',
+    'utilities/marketing/shorturl',
+    'utilities/utility/counter',
+  ],
+  'utilities/marketing/osmu-formatter': [
+    'utilities/marketing/hashtag-generator',
+    'utilities/marketing/qr-generator',
+    'utilities/utility/counter',
+  ],
+  'utilities/marketing/qr-generator': [
+    'utilities/marketing/shorturl',
+    'utilities/design/logo-favicon',
+    'utilities/utility/yt-thumbnail',
+  ],
+  'utilities/marketing/shorturl': [
+    'utilities/marketing/qr-generator',
+    'utilities/marketing/hashtag-generator',
+    'utilities/security/url-safety',
+  ],
+  'utilities/marketing/quiz-builder': [
+    'utilities/design/feedback',
+    'utilities/lifestyle/mbti-test',
+    'utilities/lifestyle/fortune-prompt',
   ],
 
   // ── Lifestyle ──────────────────────────────────────────────
-  'lifestyle/pet-food': [
-    'lifestyle/bmi-water',
-    'lifestyle/nickname',
-    'fintech/percent',
+  'utilities/lifestyle/bmi-calc': [
+    'utilities/lifestyle/pet-calorie',
+    'utilities/lifestyle/age-calc',
+    'utilities/utility/unit-converter',
   ],
-  'lifestyle/bmi-water': [
-    'lifestyle/pet-food',
-    'lifestyle/nickname',
-    'utilities/dday',
+  'utilities/lifestyle/dday-calc': [
+    'utilities/lifestyle/age-calc',
+    'utilities/productivity/world-time',
+    'utilities/productivity/pomodoro',
   ],
-  'lifestyle/nickname': [
-    'lifestyle/bmi-water',
-    'lifestyle/pet-food',
-    'utilities/qr',
+  'utilities/lifestyle/age-calc': [
+    'utilities/lifestyle/dday-calc',
+    'utilities/lifestyle/gpa-calc',
+    'utilities/productivity/world-time',
+  ],
+  'utilities/lifestyle/gpa-calc': [
+    'utilities/lifestyle/age-calc',
+    'utilities/productivity/resume-helper',
+    'utilities/finance/percentage-calc',
+  ],
+  'utilities/lifestyle/nickname': [
+    'utilities/design/font-preview',
+    'utilities/lifestyle/fortune-prompt',
+    'utilities/security/password-generator',
+  ],
+  'utilities/lifestyle/pet-calorie': [
+    'utilities/lifestyle/bmi-calc',
+    'utilities/lifestyle/aquarium-calc',
+    'utilities/utility/unit-converter',
+  ],
+  'utilities/lifestyle/aquarium-calc': [
+    'utilities/lifestyle/pet-calorie',
+    'utilities/utility/unit-converter',
+    'utilities/utility/pyeong-calc',
+  ],
+  'utilities/lifestyle/mbti-test': [
+    'utilities/lifestyle/fortune-prompt',
+    'utilities/lifestyle/teto-egen-test',
+    'utilities/marketing/quiz-builder',
+  ],
+  'utilities/lifestyle/fortune-prompt': [
+    'utilities/lifestyle/mbti-test',
+    'utilities/lifestyle/teto-egen-test',
+    'utilities/lifestyle/nickname',
+  ],
+  'utilities/lifestyle/teto-egen-test': [
+    'utilities/lifestyle/mbti-test',
+    'utilities/lifestyle/fortune-prompt',
+    'utilities/marketing/quiz-builder',
   ],
 
   // ── Security ───────────────────────────────────────────────
-  'security/redact': [
-    'security/password',
-    'security/url',
-    'utilities/counter',
+  'utilities/security/privacy-masking': [
+    'utilities/security/password-generator',
+    'utilities/document/pdf-masking',
+    'utilities/security/url-safety',
   ],
-  'security/password': [
-    'security/url',
-    'security/redact',
-    'utilities/qr',
+  'utilities/security/password-generator': [
+    'utilities/dev/password-strength',
+    'utilities/security/privacy-masking',
+    'utilities/lifestyle/nickname',
   ],
-  'security/url': [
-    'security/password',
-    'security/redact',
-    'performance/ttfb',
-  ],
-
-  // ── Utilities ──────────────────────────────────────────────
-  'utilities/area': [
-    'fintech/currency',
-    'utilities/counter',
-    'utilities/dday',
-  ],
-  'utilities/qr': [
-    'utilities/counter',
-    'utilities/dday',
-    'ux/logo',
-  ],
-  'utilities/counter': [
-    'utilities/qr',
-    'utilities/dday',
-    'security/redact',
-  ],
-  'utilities/dday': [
-    'utilities/counter',
-    'utilities/qr',
-    'productivity/pomodoro',
+  'utilities/security/url-safety': [
+    'utilities/marketing/shorturl',
+    'utilities/security/privacy-masking',
+    'utilities/performance/ttfb-check',
   ],
 
-  // ── Performance ────────────────────────────────────────────
-  'performance/ttfb': [
-    'security/url',
-    'utilities/qr',
-    'ux/logo',
+  // ── Utility ────────────────────────────────────────────────
+  'utilities/utility/counter': [
+    'utilities/productivity/resume-helper',
+    'utilities/marketing/osmu-formatter',
+    'utilities/marketing/hashtag-generator',
   ],
-
-  // ── Social / Content ───────────────────────────────────────
-  'utilities/thumbnail': [
-    'ai/hashtag',
-    'utilities/shorturl',
-    'utilities/qr',
+  'utilities/utility/pyeong-calc': [
+    'utilities/utility/unit-converter',
+    'utilities/lifestyle/aquarium-calc',
+    'utilities/finance/percentage-calc',
   ],
-  'utilities/shorturl': [
-    'utilities/qr',
-    'security/redact',
-    'utilities/thumbnail',
+  'utilities/utility/unit-converter': [
+    'utilities/utility/pyeong-calc',
+    'utilities/lifestyle/bmi-calc',
+    'utilities/finance/exchange-rate',
   ],
-  'ai/hashtag': [
-    'utilities/thumbnail',
-    'utilities/counter',
-    'utilities/shorturl',
+  'utilities/utility/image-processor': [
+    'utilities/utility/image-resizer',
+    'utilities/design/logo-favicon',
+    'utilities/document/img-pdf-converter',
   ],
-
-  // ── Korean Life Tools ──────────────────────────────────────
-  'lifestyle/korean-age': [
-    'utilities/dday',
-    'lifestyle/bmi-water',
-    'utilities/gpa',
+  'utilities/utility/image-resizer': [
+    'utilities/utility/image-processor',
+    'utilities/design/logo-favicon',
+    'utilities/utility/yt-thumbnail',
   ],
-  'utilities/gpa': [
-    'utilities/counter',
-    'lifestyle/nickname',
-    'productivity/coverletter',
+  'utilities/utility/wordle': [
+    'utilities/lifestyle/nickname',
+    'utilities/marketing/quiz-builder',
+    'utilities/utility/counter',
   ],
-  'productivity/coverletter': [
-    'utilities/gpa',
-    'security/redact',
-    'utilities/counter',
+  'utilities/utility/yt-thumbnail': [
+    'utilities/utility/image-resizer',
+    'utilities/marketing/qr-generator',
+    'utilities/marketing/shorturl',
   ],
 
   // ── Dev ────────────────────────────────────────────────────
-  'dev/json': [
-    'dev/regex',
-    'dev/password',
-    'utilities/counter',
+  'utilities/dev/json-formatter': [
+    'utilities/dev/regex-tester',
+    'utilities/productivity/excel-mapper',
+    'utilities/utility/counter',
   ],
-  'dev/regex': [
-    'dev/json',
-    'dev/password',
-    'utilities/counter',
+  'utilities/dev/regex-tester': [
+    'utilities/dev/json-formatter',
+    'utilities/utility/counter',
+    'utilities/dev/password-strength',
   ],
-  'dev/password': [
-    'security/password',
-    'security/redact',
-    'dev/json',
+  'utilities/dev/password-strength': [
+    'utilities/security/password-generator',
+    'utilities/dev/regex-tester',
+    'utilities/security/privacy-masking',
+  ],
+  'utilities/dev/kec-grounding': [
+    'utilities/dev/resistor-calc',
+    'utilities/utility/unit-converter',
+    'utilities/finance/percentage-calc',
+  ],
+  'utilities/dev/resistor-calc': [
+    'utilities/dev/kec-grounding',
+    'utilities/utility/unit-converter',
+    'utilities/design/color-palette',
+  ],
+
+  // ── Document ───────────────────────────────────────────────
+  'utilities/document/hwp-pdf-converter': [
+    'utilities/document/img-pdf-converter',
+    'utilities/document/pdf-masking',
+    'utilities/productivity/resume-helper',
+  ],
+  'utilities/document/img-pdf-converter': [
+    'utilities/document/hwp-pdf-converter',
+    'utilities/utility/image-processor',
+    'utilities/document/pdf-masking',
+  ],
+  'utilities/document/pdf-masking': [
+    'utilities/security/privacy-masking',
+    'utilities/document/hwp-pdf-converter',
+    'utilities/document/img-pdf-converter',
+  ],
+
+  // ── Performance ────────────────────────────────────────────
+  'utilities/performance/ttfb-check': [
+    'utilities/security/url-safety',
+    'utilities/performance/ttfb-check',
+    'utilities/dev/json-formatter',
   ],
 };
 
 /**
- * Returns up to `limit` related ToolMeta items for a given toolId.
- *
- * Priority:
- * 1. Curated relations from TOOL_RELATIONS
- * 2. Fallback: other tools in the same category (random order, excluding self)
- * 3. Fallback: any tools from the registry (excluding self)
+ * Returns up to `limit` related tools for the given toolId.
+ * Pulls from TOOL_RELATIONS if available; otherwise returns random tools from the same category.
  */
 export function getRelatedTools(toolId: string, limit = 3): ToolMeta[] {
-  const curated = (TOOL_RELATIONS[toolId] ?? [])
+  const relatedIds = TOOL_RELATIONS[toolId] || [];
+
+  // Map IDs to metadata, filtering out any that don't exist
+  const related = relatedIds
     .map(id => TOOL_MAP[id])
     .filter(Boolean)
     .slice(0, limit);
 
-  if (curated.length >= limit) return curated;
+  // If we have enough, return them
+  if (related.length >= limit) {
+    return related;
+  }
 
-  const current = TOOL_MAP[toolId];
-  const category = current?.category;
+  // Otherwise, fill with tools from the same category
+  const currentTool = TOOL_MAP[toolId];
+  if (!currentTool) return related;
 
-  const sameCat = TOOLS
-    .filter(t => t.id !== toolId && t.category === category && !curated.some(c => c.id === t.id))
-    .sort(() => Math.random() - 0.5);
+  const sameCategory = TOOLS
+    .filter(t => t.category === currentTool.category && t.id !== toolId)
+    .slice(0, limit - related.length);
 
-  const combined = [...curated, ...sameCat].slice(0, limit);
-  if (combined.length >= limit) return combined;
-
-  const rest = TOOLS
-    .filter(t => t.id !== toolId && !combined.some(c => c.id === t.id))
-    .sort(() => Math.random() - 0.5);
-
-  return [...combined, ...rest].slice(0, limit);
+  return [...related, ...sameCategory].slice(0, limit);
 }
