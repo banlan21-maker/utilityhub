@@ -37,6 +37,7 @@
   font-weight: 800;
   background: var(--gradient-main);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.75rem;
 }
@@ -121,7 +122,7 @@
 
 .osmu_tab_button {
   display: flex;
-  items-center: center;
+  align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius-full);
