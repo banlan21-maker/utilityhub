@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n '\"\"fortune-prompt\"\"' messages/en.json messages/ko.json)",
+      "Bash(grep -n \"SeoSection\\\\|ShareBar\\\\|RelatedTools\" src/app/[locale]/utilities/lifestyle/30day-challenge/page.tsx)"
+    ],
+    "additionalDirectories": [
+      "H:\\projects\\utility-hub\\src\\app\\[locale]\\utilities\\lifestyle"
+    ]
+  }
+}

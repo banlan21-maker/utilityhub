@@ -28,7 +28,15 @@
       "Bash(git log --all --oneline --date=short --format=\"%h %ad %s\" -- src/app/components/Footer.tsx)",
       "Bash(git checkout d2908b9 -- src/app/components/Footer.tsx)",
       "Bash(npm install -D tailwindcss@^3.4.0 postcss@latest autoprefixer@latest)",
-      "Bash(npm uninstall @tailwindcss/postcss)"
+      "Bash(npm uninstall @tailwindcss/postcss)",
+      "Bash(npm install jspdf canvas-confetti)",
+      "Bash(npm install --save-dev @types/canvas-confetti)",
+      "Bash(git restore --staged .claude/settings.local.json)",
+      "Bash(node -e \"\nconst fs = require(''fs'');\nconst data = JSON.parse(fs.readFileSync(''messages/ko.json'', ''utf8''));\ndata.LifestyleBoard[''30day-challenge''] = {\n  title: ''30일 챌린지 트래커'',\n  desc: ''새로운 습관을 만드는 30일의 여정을 시각적으로 추적하고 기록하세요.''\n};\nfs.writeFileSync(''messages/ko.json'', JSON.stringify(data, null, 2), ''utf8'');\nconsole.log(''Added 30day-challenge to ko.json'');\n\")",
+      "Bash(node -e \"\nconst fs = require(''fs'');\nconst data = JSON.parse(fs.readFileSync(''messages/en.json'', ''utf8''));\ndata.LifestyleBoard[''30day-challenge''] = {\n  title: ''30 Day Challenge Tracker'',\n  desc: ''Track and visualize your 30-day journey to build new healthy habits.''\n};\nfs.writeFileSync(''messages/en.json'', JSON.stringify(data, null, 2), ''utf8'');\nconsole.log(''Added 30day-challenge to en.json'');\n\")",
+      "Bash(npm install html2canvas)",
+      "Bash(node -e \"\nconst fs = require(''fs'');\nconst data = JSON.parse(fs.readFileSync(''messages/ko.json'', ''utf8''));\ndata.LifestyleBoard[''gym-plate-calc''] = {\n  title: ''1RM & 바벨 원판 계산기'',\n  desc: ''최대 중량 측정과 원판 세팅을 한 번에! Epley 공식으로 정확하게 계산하세요.''\n};\nfs.writeFileSync(''messages/ko.json'', JSON.stringify(data, null, 2), ''utf8'');\nconsole.log(''Added gym-plate-calc to ko.json'');\n\")",
+      "Bash(node -e \"\nconst fs = require(''fs'');\nconst data = JSON.parse(fs.readFileSync(''messages/en.json'', ''utf8''));\ndata.LifestyleBoard[''gym-plate-calc''] = {\n  title: ''1RM & Barbell Plate Calculator'',\n  desc: ''Calculate max weight and plate loading instantly with Epley formula precision.''\n};\nfs.writeFileSync(''messages/en.json'', JSON.stringify(data, null, 2), ''utf8'');\nconsole.log(''Added gym-plate-calc to en.json'');\n\")"
     ]
   }
 }

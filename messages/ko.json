@@ -598,6 +598,10 @@
     "gym-plate-calc": {
       "title": "1RM & 바벨 원판 계산기",
       "desc": "최대 중량 측정과 원판 세팅을 한 번에! Epley 공식으로 정확하게 계산하세요."
+    },
+    "color-coordinator": {
+      "title": "OOTD 컬러 코디네이터",
+      "desc": "스마트 마네킹으로 완성하는 색상 코디 플래너 — 3가지 알고리즘 테마 제공"
     }
   },
   "SecurityBoard": {

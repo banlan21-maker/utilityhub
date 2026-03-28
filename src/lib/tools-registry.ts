@@ -54,6 +54,7 @@ export const tools: Tool[] = [
   { slug: 'pet-calorie', category: 'lifestyle', emoji: '🐾', labelKey: 'LifestyleBoard.pet-calorie.title', href: '/utilities/lifestyle/pet-calorie', available: true },
   { slug: 'aquarium-calc', category: 'lifestyle', emoji: '🐠', labelKey: 'LifestyleBoard.aquarium-calc.title', href: '/utilities/lifestyle/aquarium-calc', available: true },
   { slug: 'fortune-prompt', category: 'lifestyle', emoji: '🔮', labelKey: 'LifestyleBoard.fortune-prompt.title', href: '/utilities/lifestyle/fortune-prompt', available: true },
+  { slug: 'color-coordinator', category: 'lifestyle', emoji: '🧥', labelKey: 'LifestyleBoard.color-coordinator.title', href: '/utilities/lifestyle/color-coordinator', available: true },
 
   // Security
   { slug: 'privacy-masking', category: 'security', emoji: '🔒', labelKey: 'SecurityBoard.privacy-masking.title', href: '/utilities/security/privacy-masking', available: true },

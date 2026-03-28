@@ -598,6 +598,10 @@
     "gym-plate-calc": {
       "title": "1RM & Barbell Plate Calculator",
       "desc": "Calculate max weight and plate loading instantly with Epley formula precision."
+    },
+    "color-coordinator": {
+      "title": "OOTD Color Coordinator",
+      "desc": "Smart mannequin color coordinator for your perfect outfit with 3 algorithm-powered look themes."
     }
   },
   "SecurityBoard": {

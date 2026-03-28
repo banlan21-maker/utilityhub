@@ -15,7 +15,8 @@ import {
   ArrowRight,
   Heart,
   Target,
-  Dumbbell
+  Dumbbell,
+  Shirt
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './lifestyle_list.module.css';
@@ -36,6 +37,13 @@ export default function LifestyleDashboardPage() {
       desc: boardT('30day-challenge.desc'),
       icon: <Target size={36} color="#8b5cf6" />,
       gradient: 'rgba(139, 92, 246, 0.08)',
+    },
+    {
+      id: 'utilities/lifestyle/color-coordinator',
+      title: boardT('color-coordinator.title'),
+      desc: boardT('color-coordinator.desc'),
+      icon: <Shirt size={36} color="#ec4899" />,
+      gradient: 'rgba(236, 72, 153, 0.08)',
     },
     {
       id: 'utilities/lifestyle/gym-plate-calc',
