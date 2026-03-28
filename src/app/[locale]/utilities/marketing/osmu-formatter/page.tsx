@@ -198,17 +198,24 @@ export default function OSMUContentFormatter() {
     <div className={s.osmu_container}>
       <NavigationActions />
 
-      {/* Header */}
+      {/* Tool Start Card - V4 Standard */}
       <header className={s.osmu_header}>
-        <div className={s.osmu_header_icon_wrapper}>
-          <Sparkles size={32} color="white" />
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <Sparkles size={40} color="#8b5cf6" />
         </div>
         <h1 className={s.osmu_title}>
           {isKo ? 'OSMU 콘텐츠 재가공 포맷터' : 'OSMU Content Formatter'}
         </h1>
         <p className={s.osmu_subtitle}>
-          {isKo 
-            ? '한 번의 작성으로 블로그, 인스타, X, 숏츠까지 완벽 변환' 
+          {isKo
+            ? '한 번의 작성으로 블로그, 인스타, X, 숏츠까지 완벽 변환'
             : 'One Source, Every Platform - Auto-format for SNS, Blog, and Video'}
         </p>
       </header>
