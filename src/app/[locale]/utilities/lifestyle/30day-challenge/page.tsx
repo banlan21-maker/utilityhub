@@ -365,7 +365,7 @@ export default function ThirtyDayChallengePage() {
       />
 
       {/* Related Tools */}
-      <RelatedTools toolId="utilities/productivity/30day-challenge" limit={3} />
+      <RelatedTools toolId="utilities/lifestyle/30day-challenge" limit={3} />
 
       {/* Ad Placeholder */}
       <div className={s.ad_placeholder}>

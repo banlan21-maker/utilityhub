@@ -26,7 +26,6 @@ export const TOOLS: ToolMeta[] = [
 
   // Productivity
   { id: 'utilities/productivity/pomodoro', icon: '🍅', ko: '뽀모도로 타이머', en: 'Pomodoro Timer', category: 'productivity' },
-  { id: 'utilities/productivity/30day-challenge', icon: '📅', ko: '30일 챌린지 트래커', en: '30 Day Challenge Tracker', category: 'productivity' },
   { id: 'utilities/productivity/world-time', icon: '🌍', ko: '세계 시간대 변환기', en: 'World Time Converter', category: 'productivity' },
   { id: 'utilities/productivity/resume-helper', icon: '📝', ko: '자소서 작성 헬퍼', en: 'Resume Helper', category: 'productivity' },
   { id: 'utilities/productivity/excel-mapper', icon: '📊', ko: '엑셀 데이터 매퍼', en: 'Excel Data Mapper', category: 'productivity' },
@@ -45,8 +44,9 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/marketing/quiz-builder', icon: '🧩', ko: '심리테스트 / 퀴즈 빌더', en: 'Quiz Builder', category: 'marketing' },
 
   // Lifestyle
+  { id: 'utilities/lifestyle/30day-challenge', icon: '📅', ko: '30일 챌린지 트래커', en: '30 Day Challenge Tracker', category: 'lifestyle' },
   { id: 'utilities/lifestyle/bmi-calc', icon: '💧', ko: 'BMI & 건강 계산기', en: 'BMI & Health Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/dday-calc', icon: '📅', ko: 'D-Day & 날짜 계산기', en: 'D-Day Calculator', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/dday-calc', icon: '📆', ko: 'D-Day & 날짜 계산기', en: 'D-Day Calculator', category: 'lifestyle' },
   { id: 'utilities/lifestyle/age-calc', icon: '🎂', ko: '한국형 날짜 계산기', en: 'Korean Date Calculator', category: 'lifestyle' },
   { id: 'utilities/lifestyle/gpa-calc', icon: '📊', ko: '대학생 학점 변환기', en: 'GPA Converter', category: 'lifestyle' },
   { id: 'utilities/lifestyle/nickname', icon: '✨', ko: '영문 이름/닉네임 추천기', en: 'English Name Generator', category: 'lifestyle' },
@@ -136,14 +136,9 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
 
   // ── Productivity ───────────────────────────────────────────
   'utilities/productivity/pomodoro': [
-    'utilities/productivity/30day-challenge',
+    'utilities/lifestyle/30day-challenge',
     'utilities/productivity/world-time',
     'utilities/lifestyle/dday-calc',
-  ],
-  'utilities/productivity/30day-challenge': [
-    'utilities/productivity/pomodoro',
-    'utilities/lifestyle/dday-calc',
-    'utilities/lifestyle/mbti-test',
   ],
   'utilities/productivity/world-time': [
     'utilities/productivity/pomodoro',
@@ -211,15 +206,20 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   ],
 
   // ── Lifestyle ──────────────────────────────────────────────
+  'utilities/lifestyle/30day-challenge': [
+    'utilities/productivity/pomodoro',
+    'utilities/lifestyle/dday-calc',
+    'utilities/lifestyle/bmi-calc',
+  ],
   'utilities/lifestyle/bmi-calc': [
+    'utilities/lifestyle/30day-challenge',
     'utilities/lifestyle/pet-calorie',
     'utilities/lifestyle/age-calc',
-    'utilities/utility/unit-converter',
   ],
   'utilities/lifestyle/dday-calc': [
+    'utilities/lifestyle/30day-challenge',
     'utilities/lifestyle/age-calc',
     'utilities/productivity/world-time',
-    'utilities/productivity/pomodoro',
   ],
   'utilities/lifestyle/age-calc': [
     'utilities/lifestyle/dday-calc',
