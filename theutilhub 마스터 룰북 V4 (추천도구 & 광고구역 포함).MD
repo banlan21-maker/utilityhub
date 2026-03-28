@@ -302,167 +302,196 @@ if (error) return <ToolError message={error.message} />;
 
 모든 개별 툴 페이지는 메인 기능 영역 상단에 반드시 아래 표준화된 "툴 시작카드"를 배치한다.
 
+> **기준 참조**: Finance, Productivity 카테고리 리뉴얼 완료 (2025)
+
 ### 헤더 구조 (필수)
 
-**1. 아이콘 컨테이너**
+**HTML 구조**
+```tsx
+<header className={s.fin_header}>
+  <div style={{
+    display: 'inline-flex',
+    padding: '1rem',
+    background: 'white',
+    borderRadius: '1.5rem',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+    marginBottom: '1.5rem'
+  }}>
+    <[LucideIcon] size={40} color="#8b5cf6" />
+  </div>
+  <h1 className={s.fin_title}>{t('title')}</h1>
+  <p className={s.fin_subtitle}>{t('description')}</p>
+</header>
+```
+
+**1. 아이콘 컨테이너 (인라인 스타일)**
 ```css
 display: inline-flex;
 padding: 1rem;
-background: var(--color-bg-card);
-borderRadius: var(--radius-card);
-boxShadow: var(--shadow-icon);
+background: white;  /* 고정값 */
+borderRadius: 1.5rem;  /* 고정값 */
+boxShadow: 0 4px 12px rgba(0,0,0,0.05);  /* 고정값 */
 marginBottom: 1.5rem;
 ```
-- 아이콘: Lucide React, `size={40~48}`, `color="var(--color-primary)"`
-- 배치: 중앙 정렬
+- 아이콘: **Lucide React 필수**, `size={40}`, `color="#8b5cf6"` (violet-500, 고정값)
+- 배치: **중앙 정렬**
 
-**2. 제목 (H1)**
+**2. 제목 (H1) - CSS 클래스**
 ```css
-font-size: 2.25rem;
-font-weight: 800;
-color: var(--color-text-primary);
-margin-bottom: 0.75rem;
+.fin_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;  /* 고정값 */
+  margin-bottom: 0.75rem;
+}
 ```
 
-**3. 부제목**
+**3. 부제목 - CSS 클래스**
 ```css
-color: var(--color-text-secondary);
-font-size: 1.1rem;
+.fin_subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+```
+
+**4. 헤더 컨테이너 - CSS 클래스**
+```css
+.fin_header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
 ```
 
 ### 메인 패널 (필수)
 
 **컨테이너**
 ```css
-max-width: 540px~640px;
+max-width: 540px;  /* 권장값 */
 margin: 0 auto;
 width: 100%;
 padding: 2.5rem;
-background: var(--color-bg-card);
-border-radius: var(--radius-card);
-border: 1px solid var(--color-border);
-box-shadow: var(--shadow-card);
+background: white;
+border-radius: 1.5rem;  /* var(--radius-card) */
+border: 1px solid #f1f5f9;  /* var(--color-border) */
+box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);  /* var(--shadow-card) */
 ```
-
-**액션 버튼**
-```css
-padding: 1rem 2rem;
-background: var(--color-primary);
-color: white;
-border-radius: var(--radius-button);
-font-weight: 700;
-transition: all 0.2s;
-```
-- 호버: `background: var(--color-primary-hover)`, `translateY(-1px)`, `shadow-lg`
-- 텍스트:
-  - Finance 카테고리: **"계산하러 가기"** / "Calculate Now"
-  - 그 외 카테고리: **"사용하러 가기"** / "Use Now"
 
 ### CSS 모듈 작성 규칙
 
-각 툴은 전용 CSS 모듈 생성 (`[tool-slug].module.css`)  
-페이드인 애니메이션 필수:
+각 툴은 전용 CSS 모듈 생성 (`[tool-slug].module.css`)
+**페이드인 애니메이션 필수**:
+
 ```css
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.tool_header {
-  animation: fadeIn 0.4s ease-out;
+.container {
+  max-width: 896px;  /* Finance/Productivity 표준 */
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.fin_header {
   text-align: center;
-  padding: 3rem 1rem 1rem;
+  margin-bottom: 2rem;
 }
 
-.tool_title {
+.fin_title {
   font-size: 2.25rem;
   font-weight: 800;
-  color: var(--color-text-primary);
+  color: #1e293b;
   margin-bottom: 0.75rem;
 }
 
-.tool_subtitle {
-  color: var(--color-text-secondary);
+.fin_subtitle {
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
-.tool_panel {
-  max-width: 580px;
+.fin_panel {
+  padding: 2.5rem;
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+  max-width: 540px;
   margin: 0 auto;
   width: 100%;
-  padding: 2.5rem;
-  background: var(--color-bg-card);
-  border-radius: var(--radius-card);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-card);
-}
-
-.tool_button {
-  padding: 1rem 2rem;
-  background: var(--color-primary);
-  color: white;
-  border-radius: var(--radius-button);
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  width: 100%;
-}
-
-.tool_button:hover {
-  background: var(--color-primary-hover);
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
-  transform: translateY(-1px);
-}
-
-.tool_button:active {
-  transform: scale(0.95);
 }
 ```
 
-### 예제 코드 구조
-```tsx
-"use client";
-import { [LucideIcon] } from "lucide-react";
-import { useTranslations, useLocale } from "next-intl";
-import ToolHeader from "@/components/tool/ToolHeader";
-import ToolPanel from "@/components/tool/ToolPanel";
-import ToolButton from "@/components/tool/ToolButton";
-import ShareButtons from "@/components/tool/ShareButtons";
-import RelatedTools from "@/components/tool/RelatedTools";
-import ToolFAQ from "@/components/tool/ToolFAQ";
-import s from "./[tool-slug].module.css";
+### 실제 구현 예제 (Finance/Productivity 기준)
 
-export default function [ToolName]Page() {
-  const t = useTranslations("[tool-slug]");
-  const locale = useLocale();
-  const isKo = locale === "ko";
+```tsx
+'use client';
+
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { Percent } from 'lucide-react';  // Lucide React 아이콘
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './percent.module.css';
+
+export default function PercentPage() {
+  const t = useTranslations('Percent');
 
   return (
-    <main className={s.container}>
-      <ToolHeader
-        icon={[LucideIcon]}
-        title={t("title")}
-        subtitle={t("description")}
-      />
+    <div className={s.fin_container}>
+      <NavigationActions />
 
-      <ToolPanel>
-        {/* 메인 기능 구현 영역 */}
-        <ToolButton isKo={isKo} category="[category-slug]" />
-      </ToolPanel>
+      {/* Tool Start Card - 표준 헤더 */}
+      <header className={s.fin_header}>
+        <div style={{
+          display: 'inline-flex',
+          padding: '1rem',
+          background: 'white',
+          borderRadius: '1.5rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          marginBottom: '1.5rem'
+        }}>
+          <Percent size={40} color="#8b5cf6" />
+        </div>
+        <h1 className={s.fin_title}>{t('title')}</h1>
+        <p className={s.fin_subtitle}>{t('description')}</p>
+      </header>
 
-      {/* 하단 7개 섹션 (순서 고정) */}
-      <ShareButtons />
-      <RelatedTools category="[category-slug]" currentSlug="[tool-slug]" />
-      <AdPlaceholder />
-      <AboutSection text={t("about")} />
-      <UseCasesSection items={t.raw("use_cases")} />
-      <HowToSection steps={t.raw("how_to")} />
-      <ToolFAQ items={t.raw("faq")} />
-    </main>
+      {/* 메인 기능 패널 */}
+      <section className={s.fin_panel}>
+        {/* 도구별 기능 구현 */}
+      </section>
+
+      {/* 하단 섹션 (순서 고정) */}
+      <ShareBar title={t('title')} description={t('description')} />
+      <RelatedTools toolId="fintech/percent" />
+      <div className={s.fin_ad_placeholder}>광고 영역</div>
+      <SeoSection ko={{...}} en={{...}} />
+    </div>
   );
 }
 ```
+
+### 주요 규칙
+
+1. ✅ **아이콘은 반드시 Lucide React 사용** (이모지 사용 금지)
+2. ✅ **아이콘 컨테이너는 인라인 스타일** (background: white, boxShadow 고정값)
+3. ✅ **아이콘 색상은 `#8b5cf6` 고정** (violet-500)
+4. ✅ **CSS 클래스명은 `.fin_header`, `.fin_title`, `.fin_subtitle` 사용**
+5. ✅ **중앙 정렬 레이아웃** (text-align: center)
+6. ✅ **컨테이너 max-width는 896px** (Finance/Productivity 표준)
 
 ---
 
