@@ -1326,5 +1326,16 @@
     "faq5A": "While AI has learned vast amounts of fortune-telling data, it cannot fully replace a 30-year expert's direct consultation. Use AI analysis as reference, and for major life decisions, consider consulting a professional fortune-teller in parallel. This tool focuses on generating high-quality prompts to maximize AI consultation quality.",
     "disclaimerTitle": "⚠️ Disclaimer",
     "disclaimerText": "This tool is a technical service that converts Four Pillars (Saju) data into AI prompt format and does not directly provide fortune-telling or consultation services. AI analysis results are for reference only. For major life decisions (marriage, career change, investments), please consult a professional fortune-teller. Legal responsibility for outcomes derived from AI analysis using generated prompts lies solely with the user. The service provider assumes no liability for any results."
+  },
+  "footer": {
+    "slogan": "All your daily tools, free and private.",
+    "tools_title": "TOOLS",
+    "more_tools_title": "MORE TOOLS",
+    "legal_title": "LEGAL",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "sitemap": "Sitemap",
+    "feedback": "Feedback",
+    "copyright": "© 2026 Utility Hub. All rights reserved."
   }
 }
