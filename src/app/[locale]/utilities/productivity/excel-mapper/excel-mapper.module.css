@@ -16,47 +16,21 @@
   animation: fadeIn 0.4s ease-out;
 }
 
-.tool_start_card {
-  max-width: 640px;
-  margin: 0 auto 2rem;
-  padding: 2rem;
-  background: var(--color-bg-card, #ffffff);
-  border-radius: var(--radius-card, 1.5rem);
-  border: 1px solid var(--color-border, #f1f5f9);
-  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
+.fin_header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.tool_icon_wrapper {
-  flex-shrink: 0;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  border-radius: 1.25rem;
-  box-shadow: 0 8px 16px rgba(249, 115, 22, 0.25);
+.fin_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
 }
 
-.tool_content {
-  flex: 1;
-  min-width: 0;
-}
-
-.tool_title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-text-primary, #1e293b);
-  margin-bottom: 0.5rem;
-}
-
-.tool_subtitle {
-  color: var(--color-text-secondary, #64748b);
-  font-size: 0.95rem;
-  line-height: 1.6;
+.fin_subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
 }
 
 .main_panel {

@@ -69,15 +69,13 @@ export default function SmartExcelMapperPage() {
       <NavigationActions />
 
       {/* Tool Start Card */}
-      <div className={s.tool_start_card}>
-        <div className={s.tool_icon_wrapper}>
-          <FileSpreadsheet size={40} color="white" strokeWidth={2.5} />
+      <header className={s.fin_header}>
+        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
+          <FileSpreadsheet size={40} color="#8b5cf6" />
         </div>
-        <div className={s.tool_content}>
-          <h1 className={s.tool_title}>{t('title')}</h1>
-          <p className={s.tool_subtitle}>{t('description')}</p>
-        </div>
-      </div>
+        <h1 className={s.fin_title}>{t('title')}</h1>
+        <p className={s.fin_subtitle}>{t('description')}</p>
+      </header>
 
       <div className={s.main_panel}>
         <StepIndicator currentStep={currentStep} />
