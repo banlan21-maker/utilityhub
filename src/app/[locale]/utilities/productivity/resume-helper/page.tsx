@@ -145,16 +145,18 @@ export default function CoverLetterPage() {
 
   return (
     <div className={s.container}>
-      {/* Tool Header */}
-      <header className={s.tool_header}>
-        <div className={s.tool_icon}>
-          <FileText size={48} color="var(--color-primary)" />
+      {/* Tool Start Card */}
+      <div className={s.tool_start_card}>
+        <div className={s.tool_icon_wrapper}>
+          <FileText size={40} color="white" strokeWidth={2.5} />
         </div>
-        <h1 className={s.tool_title}>자소서 작성 헬퍼</h1>
-        <p className={s.tool_subtitle}>
-          실시간 글자 수 / 바이트 카운터 + 부산대 맞춤법 검사기 연동
-        </p>
-      </header>
+        <div className={s.tool_content}>
+          <h1 className={s.tool_title}>자소서 작성 헬퍼</h1>
+          <p className={s.tool_subtitle}>
+            실시간 글자 수 / 바이트 카운터 + 부산대 맞춤법 검사기 연동
+          </p>
+        </div>
+      </div>
 
       {/* ── Preset selector ── */}
       <section className={s.preset_panel}>
