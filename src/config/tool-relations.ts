@@ -45,6 +45,7 @@ export const TOOLS: ToolMeta[] = [
 
   // Lifestyle
   { id: 'utilities/lifestyle/30day-challenge', icon: '📅', ko: '30일 챌린지 트래커', en: '30 Day Challenge Tracker', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/gym-plate-calc', icon: '🏋️', ko: '1RM & 바벨 원판 계산기', en: '1RM & Barbell Plate Calculator', category: 'lifestyle' },
   { id: 'utilities/lifestyle/bmi-calc', icon: '💧', ko: 'BMI & 건강 계산기', en: 'BMI & Health Calculator', category: 'lifestyle' },
   { id: 'utilities/lifestyle/dday-calc', icon: '📆', ko: 'D-Day & 날짜 계산기', en: 'D-Day Calculator', category: 'lifestyle' },
   { id: 'utilities/lifestyle/age-calc', icon: '🎂', ko: '한국형 날짜 계산기', en: 'Korean Date Calculator', category: 'lifestyle' },
@@ -211,10 +212,15 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/lifestyle/dday-calc',
     'utilities/lifestyle/bmi-calc',
   ],
+  'utilities/lifestyle/gym-plate-calc': [
+    'utilities/lifestyle/bmi-calc',
+    'utilities/lifestyle/pet-calorie',
+    'utilities/lifestyle/mbti-test',
+  ],
   'utilities/lifestyle/bmi-calc': [
+    'utilities/lifestyle/gym-plate-calc',
     'utilities/lifestyle/30day-challenge',
     'utilities/lifestyle/pet-calorie',
-    'utilities/lifestyle/age-calc',
   ],
   'utilities/lifestyle/dday-calc': [
     'utilities/lifestyle/30day-challenge',

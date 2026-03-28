@@ -582,6 +582,10 @@
     "30day-challenge": {
       "title": "30 Day Challenge Tracker",
       "desc": "Track and visualize your 30-day journey to build new healthy habits."
+    },
+    "gym-plate-calc": {
+      "title": "1RM & Barbell Plate Calculator",
+      "desc": "Calculate max weight and plate loading instantly with Epley formula precision."
     }
   },
   "SecurityBoard": {
