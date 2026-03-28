@@ -7,10 +7,16 @@
 .fullBleed {
   width: 100vw;
   margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  position: relative;
 }
 
 /* Page wrapper */
-.homePage {}
+.homePage {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
 
 /* ────────────────────────────────────────────
    HERO
@@ -19,7 +25,7 @@
   position: relative;
   text-align: center;
   padding: 5rem 0 4rem;
-  overflow: visible;
+  overflow: hidden; /* 내부 광원 효과가 화면 밖으로 나가지 않도록 차단 */
 }
 
 /* Ambient glow blobs */
