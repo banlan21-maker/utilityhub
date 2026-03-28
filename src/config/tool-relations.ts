@@ -26,6 +26,7 @@ export const TOOLS: ToolMeta[] = [
 
   // Productivity
   { id: 'utilities/productivity/pomodoro', icon: '🍅', ko: '뽀모도로 타이머', en: 'Pomodoro Timer', category: 'productivity' },
+  { id: 'utilities/productivity/30day-challenge', icon: '📅', ko: '30일 챌린지 트래커', en: '30 Day Challenge Tracker', category: 'productivity' },
   { id: 'utilities/productivity/world-time', icon: '🌍', ko: '세계 시간대 변환기', en: 'World Time Converter', category: 'productivity' },
   { id: 'utilities/productivity/resume-helper', icon: '📝', ko: '자소서 작성 헬퍼', en: 'Resume Helper', category: 'productivity' },
   { id: 'utilities/productivity/excel-mapper', icon: '📊', ko: '엑셀 데이터 매퍼', en: 'Excel Data Mapper', category: 'productivity' },
@@ -135,9 +136,14 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
 
   // ── Productivity ───────────────────────────────────────────
   'utilities/productivity/pomodoro': [
+    'utilities/productivity/30day-challenge',
     'utilities/productivity/world-time',
     'utilities/lifestyle/dday-calc',
-    'utilities/utility/counter',
+  ],
+  'utilities/productivity/30day-challenge': [
+    'utilities/productivity/pomodoro',
+    'utilities/lifestyle/dday-calc',
+    'utilities/lifestyle/mbti-test',
   ],
   'utilities/productivity/world-time': [
     'utilities/productivity/pomodoro',
