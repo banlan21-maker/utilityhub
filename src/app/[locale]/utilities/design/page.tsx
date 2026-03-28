@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
-import { Palette, Image, Type, ArrowRight } from 'lucide-react';
+import { Palette, Image, Type, ArrowRight, CircleDot } from 'lucide-react';
 import s from './design_list.module.css';
 
 export default function DesignDashboardPage() {
@@ -33,6 +33,13 @@ export default function DesignDashboardPage() {
       desc: boardT('font-preview.desc'),
       icon: <Type size={36} color="#3b82f6" />,
       gradient: 'rgba(59, 130, 246, 0.08)',
+    },
+    {
+      id: 'utilities/design/formation-planner',
+      title: boardT('formation-planner.title'),
+      desc: boardT('formation-planner.desc'),
+      icon: <CircleDot size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
     },
   ];
 

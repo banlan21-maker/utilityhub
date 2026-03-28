@@ -457,6 +457,10 @@
     "font-preview": {
       "title": "Multilingual Font Preview",
       "desc": "Compare Google Fonts side by side and copy CSS configurations."
+    },
+    "formation-planner": {
+      "title": "Formation Playmaker Pro",
+      "desc": "High-end tactics simulator with Smart Legend and 60-second recording."
     }
   },
   "FontCompare": {

@@ -36,6 +36,7 @@ export const tools: Tool[] = [
   { slug: 'logo-favicon', category: 'design', emoji: '🎨', labelKey: 'DesignBoard.logo-favicon.title', href: '/utilities/design/logo-favicon', available: true },
   { slug: 'color-palette', category: 'design', emoji: '🎯', labelKey: 'DesignBoard.color-palette.title', href: '/utilities/design/color-palette', available: true },
   { slug: 'font-preview', category: 'design', emoji: '🔤', labelKey: 'DesignBoard.font-preview.title', href: '/utilities/design/font-preview', available: true },
+  { slug: 'formation-planner', category: 'design', emoji: '🕴️', labelKey: 'DesignBoard.formation-planner.title', href: '/utilities/design/formation-planner', available: true },
 
   // Marketing
   { slug: 'osmu-formatter', category: 'marketing', emoji: '📤', labelKey: 'MarketingBoard.osmu-formatter.title', href: '/utilities/marketing/osmu-formatter', available: true },

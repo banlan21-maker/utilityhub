@@ -457,6 +457,10 @@
     "font-preview": {
       "title": "다국어 폰트 비교",
       "desc": "Google Fonts를 나란히 비교하고 CSS 코드를 복사하세요."
+    },
+    "formation-planner": {
+      "title": "Formation Playmaker Pro",
+      "desc": "스마트 범례와 60초 녹화로 완성하는 하이엔드 전술 시뮬레이터."
     }
   },
   "FontCompare": {
