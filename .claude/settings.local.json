@@ -17,7 +17,14 @@
       "Bash(rm -f nul)",
       "Bash(dir /AD /B \"src\\app\\[locale]\\pdf\")",
       "Bash(findstr /I \"market\")",
-      "Bash(dir /AD /B \"src\\app\\[locale]\")"
+      "Bash(dir /AD /B \"src\\app\\[locale]\")",
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/bkit-rules/**)",
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/enterprise/**)",
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/pdca/**)",
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/development-pipeline/**)",
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/starter/**)",
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills/dynamic/**)",
+      "Read(//c/Users/user/.claude/plugins/cache/bkit-marketplace/bkit/1.5.2/skills//**)"
     ]
   }
 }

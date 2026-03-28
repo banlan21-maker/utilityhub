@@ -173,14 +173,16 @@ export default function PomodoroPage() {
     <div className={s.container}>
       <NavigationActions />
 
-      {/* Tool Header */}
-      <header className={s.tool_header}>
-        <div className={s.tool_icon}>
-          <Timer size={48} color="var(--color-primary)" />
+      {/* Tool Start Card */}
+      <div className={s.tool_start_card}>
+        <div className={s.tool_icon_wrapper}>
+          <Timer size={40} color="white" strokeWidth={2.5} />
         </div>
-        <h1 className={s.tool_title}>{t('title')}</h1>
-        <p className={s.tool_subtitle}>{t('description')}</p>
-      </header>
+        <div className={s.tool_content}>
+          <h1 className={s.tool_title}>{t('title')}</h1>
+          <p className={s.tool_subtitle}>{t('description')}</p>
+        </div>
+      </div>
 
       {/* Main Panel */}
       <div className={s.tool_panel}>
