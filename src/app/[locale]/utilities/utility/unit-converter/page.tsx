@@ -300,14 +300,12 @@ export default function UnitConverterPage() {
         </p>
       </header>
 
-      {/* ── Tab bar ── */}
+      {/* ── Tab bar (5×2 grid) ── */}
       <div style={{
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, 1fr)',
         gap: '0.4rem',
-        overflowX: 'auto',
-        paddingBottom: '0.5rem',
         marginBottom: '1.5rem',
-        scrollbarWidth: 'none',
       }}>
         {CATEGORIES.map(cat => (
           <button
