@@ -3,16 +3,16 @@
 import React from "react";
 import { Link } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
-import { 
-  Github, 
-  Mail, 
-  ExternalLink, 
-  ShieldCheck, 
-  Code2, 
-  Zap, 
-  Globe, 
-  FileText, 
-  CreditCard, 
+import {
+  Github,
+  Mail,
+  ExternalLink,
+  ShieldCheck,
+  Code2,
+  Zap,
+  Globe,
+  FileText,
+  CreditCard,
   Sparkles,
   Search,
   MessageSquare
@@ -59,10 +59,10 @@ export default function Footer() {
     <footer className="w-full bg-[#f8fafc] dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800 transition-colors duration-300 overflow-hidden">
       {/* Dynamic Background Element */}
       <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent"></div>
-      
+
       <div className="max-w-6xl mx-auto px-6 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          
+
           {/* Brand Identity Section */}
           <div className="md:col-span-4 flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-2 group w-fit">
@@ -75,8 +75,8 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium max-w-[280px]">
-              {isKo 
-                ? "사용자의 소중한 데이터는 서버에 저장되지 않습니다. 모든 작업은 브라우저에서 안전하게 실행됩니다." 
+              {isKo
+                ? "사용자의 소중한 데이터는 서버에 저장되지 않습니다. 모든 작업은 브라우저에서 안전하게 실행됩니다."
                 : "Your data stays private. All processing happens locally in your browser, never on our servers."}
             </p>
 
@@ -95,7 +95,7 @@ export default function Footer() {
           {/* Navigation Links Grid */}
           <div className="md:col-span-8">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
-              
+
               {CATEGORY_GROUPS.map((group, idx) => (
                 <div key={idx} className="flex flex-col gap-5">
                   <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
@@ -104,7 +104,7 @@ export default function Footer() {
                   <ul className="flex flex-col gap-3">
                     {group.links.map((link, lIdx) => (
                       <li key={lIdx}>
-                        <Link 
+                        <Link
                           href={link.href as any}
                           className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200 group"
                         >
@@ -130,14 +130,14 @@ export default function Footer() {
                   {LEGAL_LINKS.map((link, lIdx) => (
                     <li key={lIdx}>
                       {link.external ? (
-                        <a 
+                        <a
                           href={link.href}
                           className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all"
                         >
                           {isKo ? link.labelKo : link.labelEn}
                         </a>
                       ) : (
-                        <Link 
+                        <Link
                           href={link.href as any}
                           className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all"
                         >
@@ -147,7 +147,7 @@ export default function Footer() {
                     </li>
                   ))}
                   <li>
-                    <Link 
+                    <Link
                       href="/feedback"
                       className="inline-flex items-center gap-2 px-4 py-2 mt-2 rounded-lg bg-white dark:bg-slate-800 text-sm font-bold text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 shadow-sm hover:border-violet-500 dark:hover:border-violet-500 transition-all group"
                     >
@@ -164,7 +164,7 @@ export default function Footer() {
 
         {/* Footer Bottom Bar */}
         <div className="pt-8 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col md:flex-row items-center justify-between gap-8">
-          
+
           <div className="flex flex-col md:flex-row items-center gap-4">
             <p className="text-xs font-bold text-slate-400 dark:text-slate-600">
               © 2026 Utility Hub. All rights reserved.
@@ -174,7 +174,7 @@ export default function Footer() {
               <a href="#" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <Github className="w-4 h-4" />
               </a>
-              <a href="mailto:support@theutilhub.com" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+              <a href="mailto:banlan21@gmail.com" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <Mail className="w-4 h-4" />
               </a>
             </div>
@@ -185,22 +185,20 @@ export default function Footer() {
             <Link
               href="/"
               locale="ko"
-              className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${
-                isKo 
-                  ? "bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm" 
+              className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${isKo
+                  ? "bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm"
                   : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
+                }`}
             >
               한국어
             </Link>
             <Link
               href="/"
               locale="en"
-              className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${
-                !isKo 
-                  ? "bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm" 
+              className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${!isKo
+                  ? "bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm"
                   : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
+                }`}
             >
               ENGLISH
             </Link>

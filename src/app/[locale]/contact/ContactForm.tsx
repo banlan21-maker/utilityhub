@@ -33,7 +33,7 @@ export default function ContactForm({ labels: l }: { labels: Labels }) {
     const data = new FormData(form);
 
     try {
-      const res = await fetch('https://formspree.io/f/[FORMSPREE_ENDPOINT]', {
+      const res = await fetch('https://formspree.io/f/xvzvwley', {
         method: 'POST',
         body: data,
         headers: { Accept: 'application/json' },
@@ -69,8 +69,8 @@ export default function ContactForm({ labels: l }: { labels: Labels }) {
         <p className={s.introBody}>{l.introBody}</p>
         <p className={s.emailHint}>
           {l.emailLabel}:{' '}
-          <a href="mailto:support@theutilhub.com" className={s.emailLink}>
-            support@theutilhub.com
+          <a href="mailto:banlan21@gmail.com" className={s.emailLink}>
+            banlan21@gmail.com
           </a>
         </p>
       </section>
