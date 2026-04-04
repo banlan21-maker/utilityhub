@@ -23,25 +23,34 @@ import s from './exchange.module.css';
 /* ─── Currency definitions ─── */
 interface Currency {
   code: string;
-  name: string;
+  nameKo: string;
+  nameEn: string;
   symbol: string;
   flag: string;
 }
 
 const CURRENCIES: Currency[] = [
-  { code: 'USD', name: 'USA Dollar',      symbol: '$',  flag: '🇺🇸' },
-  { code: 'KRW', name: 'Korea Won',        symbol: '₩',  flag: '🇰🇷' },
-  { code: 'EUR', name: 'Euro',           symbol: '€',  flag: '🇪🇺' },
-  { code: 'JPY', name: 'Japan Yen',        symbol: '¥',  flag: '🇯🇵' },
-  { code: 'CNY', name: 'China Yuan',       symbol: '¥',  flag: '🇨🇳' },
-  { code: 'GBP', name: 'UK Pound',    symbol: '£',  flag: '🇬🇧' },
-  { code: 'HKD', name: 'HK Dollar',      symbol: '$',  flag: '🇭🇰' },
-  { code: 'SGD', name: 'SG Dollar',  symbol: '$',  flag: '🇸🇬' },
-  { code: 'AUD', name: 'AU Dollar',      symbol: '$',  flag: '🇦🇺' },
-  { code: 'CAD', name: 'CA Dollar',    symbol: '$',  flag: '🇨🇦' },
-  { code: 'THB', name: 'Thai Baht',      symbol: '฿',  flag: '🇹🇭' },
-  { code: 'VND', name: 'Vietnam Dong',      symbol: '₫',  flag: '🇻🇳' },
-  { code: 'PHP', name: 'Philippine Peso',   symbol: '₱',  flag: '🇵🇭' },
+  { code: 'USD', nameKo: '미국',      nameEn: 'USA',         symbol: '$',  flag: '🇺🇸' },
+  { code: 'KRW', nameKo: '한국',      nameEn: 'Korea',       symbol: '₩',  flag: '🇰🇷' },
+  { code: 'EUR', nameKo: '유럽',      nameEn: 'Europe',      symbol: '€',  flag: '🇪🇺' },
+  { code: 'JPY', nameKo: '일본',      nameEn: 'Japan',       symbol: '¥',  flag: '🇯🇵' },
+  { code: 'CNY', nameKo: '중국',      nameEn: 'China',       symbol: '¥',  flag: '🇨🇳' },
+  { code: 'GBP', nameKo: '영국',      nameEn: 'UK',          symbol: '£',  flag: '🇬🇧' },
+  { code: 'HKD', nameKo: '홍콩',      nameEn: 'Hong Kong',   symbol: '$',  flag: '🇭🇰' },
+  { code: 'SGD', nameKo: '싱가포르',  nameEn: 'Singapore',   symbol: '$',  flag: '🇸🇬' },
+  { code: 'AUD', nameKo: '호주',      nameEn: 'Australia',   symbol: '$',  flag: '🇦🇺' },
+  { code: 'CAD', nameKo: '캐나다',    nameEn: 'Canada',      symbol: '$',  flag: '🇨🇦' },
+  { code: 'THB', nameKo: '태국',      nameEn: 'Thailand',    symbol: '฿',  flag: '🇹🇭' },
+  { code: 'VND', nameKo: '베트남',    nameEn: 'Vietnam',     symbol: '₫',  flag: '🇻🇳' },
+  { code: 'PHP', nameKo: '필리핀',    nameEn: 'Philippines', symbol: '₱',  flag: '🇵🇭' },
+  { code: 'CHF', nameKo: '스위스',    nameEn: 'Switzerland', symbol: 'Fr', flag: '🇨🇭' },
+  { code: 'INR', nameKo: '인도',      nameEn: 'India',       symbol: '₹',  flag: '🇮🇳' },
+  { code: 'MYR', nameKo: '말레이시아', nameEn: 'Malaysia',   symbol: 'RM', flag: '🇲🇾' },
+  { code: 'IDR', nameKo: '인도네시아', nameEn: 'Indonesia',  symbol: 'Rp', flag: '🇮🇩' },
+  { code: 'NZD', nameKo: '뉴질랜드',  nameEn: 'New Zealand', symbol: '$',  flag: '🇳🇿' },
+  { code: 'TWD', nameKo: '대만',      nameEn: 'Taiwan',      symbol: 'NT$', flag: '🇹🇼' },
+  { code: 'AED', nameKo: '아랍에미리트', nameEn: 'UAE',      symbol: 'د.إ', flag: '🇦🇪' },
+  { code: 'TRY', nameKo: '튀르키예',  nameEn: 'Türkiye',     symbol: '₺',  flag: '🇹🇷' },
 ];
 
 /* ─── Sparkline SVG ─── */
@@ -207,7 +216,7 @@ export default function CurrencyPage() {
   const historyRates = history.map(h => h.rate);
 
   const formatConverted = (v: number) => {
-    if (to === 'KRW' || to === 'JPY' || to === 'VND') return v.toLocaleString('ko-KR', { maximumFractionDigits: 0 });
+    if (['KRW', 'JPY', 'VND', 'IDR'].includes(to)) return v.toLocaleString('ko-KR', { maximumFractionDigits: 0 });
     return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
   };
 
@@ -255,7 +264,11 @@ export default function CurrencyPage() {
           <div>
             <label className={s.ex_label}>{isKo ? '보낼 때' : 'From'}</label>
             <select value={from} onChange={e => setFrom(e.target.value)} className={s.ex_select}>
-              {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.flag} {c.code}</option>)}
+              {CURRENCIES.map(c => (
+                <option key={c.code} value={c.code}>
+                  {c.flag} {c.code} ({isKo ? c.nameKo : c.nameEn})
+                </option>
+              ))}
             </select>
           </div>
           <button onClick={swap} className={s.ex_swap_btn} title={isKo ? '스왑' : 'Swap'}>
@@ -264,7 +277,11 @@ export default function CurrencyPage() {
           <div>
             <label className={s.ex_label}>{isKo ? '받을 때' : 'To'}</label>
             <select value={to} onChange={e => setTo(e.target.value)} className={s.ex_select}>
-              {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.flag} {c.code}</option>)}
+              {CURRENCIES.map(c => (
+                <option key={c.code} value={c.code}>
+                  {c.flag} {c.code} ({isKo ? c.nameKo : c.nameEn})
+                </option>
+              ))}
             </select>
           </div>
         </div>
