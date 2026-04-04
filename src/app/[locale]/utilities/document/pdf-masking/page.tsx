@@ -10,9 +10,9 @@ import { jsPDF } from 'jspdf';
 import * as pdfjsLib from 'pdfjs-dist';
 import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock, ShieldCheck } from 'lucide-react';
 
-// PDF.js worker 설정
+// PDF.js worker 설정 (로컬 워커 사용 - pdfjs-dist v5 호환)
 if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.min.mjs';
 }
 
 interface DetectedInfo {

@@ -11,9 +11,9 @@ import JSZip from 'jszip';
 import * as pdfjsLib from 'pdfjs-dist';
 import { Upload, FileImage, FileText, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
 
-// PDF.js worker 설정
+// PDF.js worker 설정 (로컬 워커 사용 - pdfjs-dist v5 호환)
 if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.min.mjs';
 }
 
 type ConversionMode = 'images-to-pdf' | 'pdf-to-images';
