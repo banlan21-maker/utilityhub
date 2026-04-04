@@ -41,6 +41,7 @@ const CURRENCIES: Currency[] = [
   { code: 'CAD', name: 'CA Dollar',    symbol: '$',  flag: '🇨🇦' },
   { code: 'THB', name: 'Thai Baht',      symbol: '฿',  flag: '🇹🇭' },
   { code: 'VND', name: 'Vietnam Dong',      symbol: '₫',  flag: '🇻🇳' },
+  { code: 'PHP', name: 'Philippine Peso',   symbol: '₱',  flag: '🇵🇭' },
 ];
 
 /* ─── Sparkline SVG ─── */
@@ -107,11 +108,29 @@ export default function CurrencyPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`https://api.frankfurter.app/latest?from=${f}&to=${t2}`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      setRate(data.rates[t2]);
-      setLastUpdated(new Date().toLocaleTimeString(isKo ? 'ko-KR' : 'en-US'));
+      // Primary: Frankfurter (ECB)
+      let fetched = false;
+      try {
+        const res = await fetch(`https://api.frankfurter.app/latest?from=${f}&to=${t2}`, { signal: AbortSignal.timeout(5000) });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.rates?.[t2]) {
+            setRate(data.rates[t2]);
+            setLastUpdated(new Date().toLocaleTimeString(isKo ? 'ko-KR' : 'en-US'));
+            fetched = true;
+          }
+        }
+      } catch { /* fall through to backup */ }
+
+      // Fallback: open.er-api.com (free, no key)
+      if (!fetched) {
+        const res2 = await fetch(`https://open.er-api.com/v6/latest/${f}`, { signal: AbortSignal.timeout(8000) });
+        if (!res2.ok) throw new Error();
+        const data2 = await res2.json();
+        if (!data2.rates?.[t2]) throw new Error();
+        setRate(data2.rates[t2]);
+        setLastUpdated(new Date().toLocaleTimeString(isKo ? 'ko-KR' : 'en-US'));
+      }
     } catch {
       setError(isKo ? '환율 정보를 불러오는 데 실패했습니다.' : 'Failed to fetch rate.');
       setRate(null);
@@ -128,12 +147,44 @@ export default function CurrencyPage() {
       const start = new Date();
       start.setDate(start.getDate() - 30);
       const fmt = (d: Date) => d.toISOString().split('T')[0];
-      const res = await fetch(`https://api.frankfurter.app/${fmt(start)}..${fmt(end)}?from=${f}&to=${t2}`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      const entries = Object.entries(data.rates as Record<string, Record<string, number>>)
-        .map(([date, rates]) => ({ date, rate: rates[t2] }))
-        .sort((a, b) => a.date.localeCompare(b.date));
+
+      // Primary: Frankfurter
+      let entries: { date: string; rate: number }[] = [];
+      try {
+        const res = await fetch(`https://api.frankfurter.app/${fmt(start)}..${fmt(end)}?from=${f}&to=${t2}`, { signal: AbortSignal.timeout(6000) });
+        if (res.ok) {
+          const data = await res.json();
+          entries = Object.entries(data.rates as Record<string, Record<string, number>>)
+            .map(([date, rates]) => ({ date, rate: rates[t2] }))
+            .sort((a, b) => a.date.localeCompare(b.date));
+        }
+      } catch { /* fall through */ }
+
+      // Fallback: fawazahmed0 (CDN, no key, supports all currencies)
+      if (entries.length === 0) {
+        const dates: string[] = [];
+        for (let i = 0; i < 10; i++) {
+          const d = new Date();
+          d.setDate(d.getDate() - i * 3);
+          dates.push(fmt(d));
+        }
+        const results = await Promise.allSettled(
+          dates.map(async (date) => {
+            const res = await fetch(
+              `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${date}/v1/currencies/${f.toLowerCase()}.json`,
+              { signal: AbortSignal.timeout(5000) }
+            );
+            const data = await res.json();
+            const r = data[f.toLowerCase()]?.[t2.toLowerCase()];
+            return r ? { date, rate: r as number } : null;
+          })
+        );
+        entries = results
+          .filter((r): r is PromiseFulfilledResult<{ date: string; rate: number } | null> => r.status === 'fulfilled' && r.value !== null)
+          .map(r => r.value!)
+          .sort((a, b) => a.date.localeCompare(b.date));
+      }
+
       setHistory(entries);
     } catch {
       setHistory([]);
@@ -156,7 +207,7 @@ export default function CurrencyPage() {
   const historyRates = history.map(h => h.rate);
 
   const formatConverted = (v: number) => {
-    if (to === 'KRW' || to === 'JPY') return v.toLocaleString('ko-KR', { maximumFractionDigits: 0 });
+    if (to === 'KRW' || to === 'JPY' || to === 'VND') return v.toLocaleString('ko-KR', { maximumFractionDigits: 0 });
     return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
   };
 
