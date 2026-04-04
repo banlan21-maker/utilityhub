@@ -71,6 +71,10 @@
   font-weight: 850;
   color: #1e293b;
   margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .utility_card_desc {
