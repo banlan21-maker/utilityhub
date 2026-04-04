@@ -45,6 +45,7 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  min-height: 300px;
 }
 
 .lifestyle_card:hover {
@@ -76,6 +77,10 @@
   font-size: 1rem;
   color: #64748b;
   line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .lifestyle_arrow {
