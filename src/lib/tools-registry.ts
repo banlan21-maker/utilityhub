@@ -38,6 +38,8 @@ export const tools: Tool[] = [
   { slug: 'font-preview', category: 'design', emoji: '🔤', labelKey: 'DesignBoard.font-preview.title', href: '/utilities/design/font-preview', available: true },
   { slug: 'formation-planner', category: 'design', emoji: '🕴️', labelKey: 'DesignBoard.formation-planner.title', href: '/utilities/design/formation-planner', available: true },
 
+  { slug: 'photo-batch-master', category: 'design', emoji: '📸', labelKey: 'DesignBoard.photo-batch-master.title', href: '/utilities/design/photo-batch-master', available: true },
+
   // Marketing
   { slug: 'osmu-formatter', category: 'marketing', emoji: '📤', labelKey: 'MarketingBoard.osmu-formatter.title', href: '/utilities/marketing/osmu-formatter', available: true },
   { slug: 'hashtag-generator', category: 'marketing', emoji: '🏷️', labelKey: 'MarketingBoard.hashtag-generator.title', href: '/utilities/marketing/hashtag-generator', available: true },

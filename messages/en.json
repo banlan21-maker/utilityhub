@@ -461,6 +461,10 @@
     "formation-planner": {
       "title": "Formation Playmaker Pro",
       "desc": "High-end tactics simulator with Smart Legend and 60-second recording."
+    },
+    "photo-batch-master": {
+      "title": "Photo Batch Master",
+      "desc": "100 photos in 1 minute — batch edit with your own preset & download as ZIP."
     }
   },
   "FontCompare": {

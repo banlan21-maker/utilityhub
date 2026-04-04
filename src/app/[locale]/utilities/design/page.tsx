@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
-import { Palette, Image, Type, ArrowRight, CircleDot } from 'lucide-react';
+import { Palette, Image, Type, ArrowRight, CircleDot, Camera } from 'lucide-react';
 import s from './design_list.module.css';
 
 export default function DesignDashboardPage() {
@@ -40,6 +40,13 @@ export default function DesignDashboardPage() {
       desc: boardT('formation-planner.desc'),
       icon: <CircleDot size={36} color="#8b5cf6" />,
       gradient: 'rgba(139, 92, 246, 0.08)',
+    },
+    {
+      id: 'utilities/design/photo-batch-master',
+      title: boardT('photo-batch-master.title'),
+      desc: boardT('photo-batch-master.desc'),
+      icon: <Camera size={36} color="#f59e0b" />,
+      gradient: 'rgba(245, 158, 11, 0.08)',
     },
   ];
 
