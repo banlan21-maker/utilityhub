@@ -206,6 +206,10 @@
     "salary-calc": {
       "title": "Global Salary Calculator",
       "desc": "Calculate monthly take-home pay for KR & US based on 2026 rates."
+    },
+    "smart-percent": {
+      "title": "Smart Percentage Calculator",
+      "desc": "4 modes in real time: basic, change %, discount & margin. Copy, history & progress bar included."
     }
   },
   "Tax33": {

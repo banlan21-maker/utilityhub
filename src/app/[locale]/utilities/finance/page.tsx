@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { 
-  ArrowRight, 
-  Wallet, 
-  Receipt, 
-  Coins, 
-  TrendingUp, 
-  Calculator, 
+import {
+  ArrowRight,
+  Wallet,
+  Receipt,
+  Coins,
+  TrendingUp,
+  Calculator,
   CreditCard,
   Building2,
   Briefcase,
@@ -19,7 +19,8 @@ import {
   History,
   Activity,
   ArrowUpRight,
-  DollarSign
+  DollarSign,
+  PieChart
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './finance_list.module.css';
@@ -82,6 +83,13 @@ export default function FinanceDashboardPage() {
       desc: boardT('salary-calc.desc'),
       icon: <Briefcase size={36} color="#ea580c" />,
       gradient: 'rgba(234, 88, 12, 0.08)',
+    },
+    {
+      id: 'utilities/finance/smart-percent',
+      title: boardT('smart-percent.title'),
+      desc: boardT('smart-percent.desc'),
+      icon: <PieChart size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
     },
   ];
 

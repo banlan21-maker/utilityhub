@@ -22,6 +22,7 @@ export const tools: Tool[] = [
   { slug: 'interest-calc', category: 'finance', emoji: '💰', labelKey: 'FinanceBoard.interest-calc.title', href: '/utilities/finance/interest-calc', available: true },
   { slug: 'tax-33-calc', category: 'finance', emoji: '💼', labelKey: 'FinanceBoard.tax-33-calc.title', href: '/utilities/finance/tax-33-calc', available: true },
   { slug: 'salary-calc', category: 'finance', emoji: '💵', labelKey: 'FinanceBoard.salary-calc.title', href: '/utilities/finance/salary-calc', available: true },
+  { slug: 'smart-percent', category: 'finance', emoji: '💹', labelKey: 'FinanceBoard.smart-percent.title', href: '/utilities/finance/smart-percent', available: true },
   { slug: 'exchange-rate', category: 'finance', emoji: '💱', labelKey: 'FinanceBoard.exchange-rate.title', href: '/utilities/finance/exchange-rate', available: true },
   { slug: 'coin-profit', category: 'finance', emoji: '🪙', labelKey: 'FinanceBoard.coin-profit.title', href: '/utilities/finance/coin-profit', available: true },
 
