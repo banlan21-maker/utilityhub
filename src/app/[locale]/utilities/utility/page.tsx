@@ -12,7 +12,8 @@ import {
   Crop,
   ArrowRight,
   Wrench,
-  Ticket
+  Ticket,
+  Shuffle
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './utility_list.module.css';
@@ -75,6 +76,13 @@ export default function UtilityDashboardPage() {
       desc: boardT('lotto-generator.desc'),
       icon: <Ticket size={36} color="#D4AF37" />,
       gradient: 'rgba(212, 175, 55, 0.08)',
+    },
+    {
+      id: 'utilities/utility/decision-master',
+      title: boardT('decision-master.title'),
+      desc: boardT('decision-master.desc'),
+      icon: <Shuffle size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
     },
   ];
 

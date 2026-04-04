@@ -73,6 +73,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/utility/wordle', icon: '🎮', ko: '한글 워들 게임', en: 'Korean Wordle Game', category: 'utility' },
   { id: 'utilities/utility/yt-thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기', en: 'YouTube Thumbnail Downloader', category: 'utility' },
   { id: 'utilities/utility/lotto-generator', icon: '🎰', ko: '운명 로또 번호 생성기', en: 'Destiny Lotto Picker', category: 'utility' },
+  { id: 'utilities/utility/decision-master', icon: '🎡', ko: 'Decision Master', en: 'Decision Master', category: 'utility' },
 
   // Dev
   { id: 'utilities/dev/json-formatter', icon: '🗂️', ko: 'JSON 포맷터 & 뷰어', en: 'JSON Formatter & Viewer', category: 'dev' },
@@ -333,6 +334,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/utility/wordle',
     'utilities/finance/exchange-rate',
     'utilities/utility/unit-converter',
+  ],
+  'utilities/utility/decision-master': [
+    'utilities/utility/lotto-generator',
+    'utilities/utility/wordle',
+    'utilities/utility/counter',
   ],
   'utilities/utility/yt-thumbnail': [
     'utilities/utility/image-resizer',

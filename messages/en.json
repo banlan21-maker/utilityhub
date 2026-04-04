@@ -103,6 +103,10 @@
     "lotto-generator": {
       "title": "Destiny Lotto Picker",
       "desc": "Generate your fixed destiny numbers from name, birthday & purchase date. Supports Powerball, Mega Millions & Lotto 6/45."
+    },
+    "decision-master": {
+      "title": "Decision Master",
+      "desc": "5-in-1 random decision hub: Ladder, Wheel, Dice, Draw & Arrow spinner — all in one place."
     }
   },
   "TextCounter": {

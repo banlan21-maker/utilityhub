@@ -103,6 +103,10 @@
     "lotto-generator": {
       "title": "운명 로또 번호 생성기",
       "desc": "이름·생일·구매일로 나만의 고정 운명 번호를 생성합니다. 파워볼·메가밀리언스·로또 6/45 지원."
+    },
+    "decision-master": {
+      "title": "Decision Master",
+      "desc": "사다리·돌림판·주사위·제비뽑기·화살표 5가지 랜덤 결정 도구를 한 곳에서 사용하세요."
     }
   },
   "TextCounter": {
