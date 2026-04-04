@@ -214,6 +214,10 @@
     "freelance-rate-calculator": {
       "title": "Freelance Rate Calculator",
       "desc": "Calculate your true hourly rate accounting for KR/US taxes, fixed costs, efficiency & buffer."
+    },
+    "invoice-maker": {
+      "title": "Invoice & Quote Maker",
+      "desc": "Create professional KR/US invoices with PDF, Excel export & encrypted share links. Free, no sign-up."
     }
   },
   "Tax33": {

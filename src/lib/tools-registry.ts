@@ -24,6 +24,7 @@ export const tools: Tool[] = [
   { slug: 'salary-calc', category: 'finance', emoji: '💵', labelKey: 'FinanceBoard.salary-calc.title', href: '/utilities/finance/salary-calc', available: true },
   { slug: 'smart-percent', category: 'finance', emoji: '💹', labelKey: 'FinanceBoard.smart-percent.title', href: '/utilities/finance/smart-percent', available: true },
   { slug: 'freelance-rate-calculator', category: 'finance', emoji: '⚡', labelKey: 'FinanceBoard.freelance-rate-calculator.title', href: '/utilities/finance/freelance-rate-calculator', available: true },
+  { slug: 'invoice-maker', category: 'finance', emoji: '🧾', labelKey: 'FinanceBoard.invoice-maker.title', href: '/utilities/finance/invoice-maker', available: true },
   { slug: 'exchange-rate', category: 'finance', emoji: '💱', labelKey: 'FinanceBoard.exchange-rate.title', href: '/utilities/finance/exchange-rate', available: true },
   { slug: 'coin-profit', category: 'finance', emoji: '🪙', labelKey: 'FinanceBoard.coin-profit.title', href: '/utilities/finance/coin-profit', available: true },
 

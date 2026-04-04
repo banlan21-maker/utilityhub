@@ -98,6 +98,13 @@ export default function FinanceDashboardPage() {
       icon: <Sparkles size={36} color="#065f46" />,
       gradient: 'rgba(6, 95, 70, 0.08)',
     },
+    {
+      id: 'utilities/finance/invoice-maker',
+      title: boardT('invoice-maker.title'),
+      desc: boardT('invoice-maker.desc'),
+      icon: <Receipt size={36} color="#1e40af" />,
+      gradient: 'rgba(30, 64, 175, 0.08)',
+    },
   ];
 
   if (!isClient) return null;

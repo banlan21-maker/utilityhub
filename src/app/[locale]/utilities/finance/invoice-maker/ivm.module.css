@@ -1,0 +1,237 @@
+/* ── Invoice Maker (ivm) ── */
+.ivm_wrap {
+  min-height: 100vh;
+  background: #f0f4ff;
+  padding: 1.5rem 1rem 4rem;
+  font-family: 'Pretendard', 'Inter', system-ui, sans-serif;
+  color: #1e293b;
+}
+
+/* ── Header ── */
+.ivm_header { text-align: center; padding: 2rem 1rem 1.5rem; }
+.ivm_badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: #dbeafe; border: 1px solid #93c5fd;
+  border-radius: 2rem; padding: 0.3rem 0.9rem;
+  font-size: 0.75rem; font-weight: 700; color: #1e40af;
+  letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem;
+}
+.ivm_title { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; color: #1e40af; margin: 0 0 0.5rem; }
+.ivm_subtitle { font-size: 0.9rem; color: #64748b; margin: 0; }
+
+/* ── Country Toggle ── */
+.ivm_toggle_row { display: flex; justify-content: center; gap: 0.5rem; margin: 1rem 0 1.5rem; }
+.ivm_toggle_btn {
+  padding: 0.5rem 1.4rem; border-radius: 2rem;
+  border: 1.5px solid #93c5fd; background: #fff;
+  color: #64748b; font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.ivm_toggle_btn:hover { border-color: #1e40af; color: #1e40af; }
+.ivm_toggle_active { background: #1e40af; border-color: #1e40af; color: #fff; }
+
+/* ── Layout ── */
+.ivm_layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+@media (max-width: 700px) { .ivm_layout { grid-template-columns: 1fr; } }
+
+/* ── Card ── */
+.ivm_card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(30,64,175,0.06);
+}
+.ivm_card_full { grid-column: 1 / -1; }
+.ivm_card_title {
+  font-size: 0.78rem; font-weight: 700; color: #1e40af;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin: 0 0 1rem; display: flex; align-items: center; gap: 0.4rem;
+}
+
+/* ── Form Fields ── */
+.ivm_label { display: block; font-size: 0.78rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem; }
+.ivm_input {
+  width: 100%; padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1; border-radius: 0.5rem;
+  font-size: 0.9rem; color: #1e293b; background: #fff;
+  outline: none; box-sizing: border-box; transition: border 0.15s;
+}
+.ivm_input:focus { border-color: #1e40af; box-shadow: 0 0 0 2px rgba(30,64,175,0.12); }
+.ivm_input_sm { padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+.ivm_textarea {
+  width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1;
+  border-radius: 0.5rem; font-size: 0.88rem; color: #1e293b;
+  outline: none; resize: vertical; min-height: 56px;
+  box-sizing: border-box; font-family: inherit;
+}
+.ivm_textarea:focus { border-color: #1e40af; }
+.ivm_field { margin-bottom: 0.75rem; }
+.ivm_row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.ivm_row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; }
+
+/* ── Logo Upload ── */
+.ivm_logo_wrap { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.75rem; }
+.ivm_logo_preview {
+  width: 56px; height: 56px; border-radius: 0.5rem;
+  border: 1px dashed #cbd5e1; object-fit: contain;
+  background: #f8fafc; display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; color: #94a3b8; overflow: hidden;
+}
+.ivm_logo_preview img { width: 100%; height: 100%; object-fit: contain; }
+.ivm_logo_btn {
+  padding: 0.4rem 0.8rem; border-radius: 0.5rem;
+  border: 1px solid #93c5fd; background: #eff6ff;
+  color: #1e40af; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+}
+
+/* ── Invoice Number Row ── */
+.ivm_inv_row { display: flex; gap: 0.5rem; align-items: center; }
+.ivm_inv_row .ivm_input { flex: 1; }
+.ivm_regen_btn {
+  padding: 0.5rem 0.7rem; border-radius: 0.5rem;
+  border: 1px solid #cbd5e1; background: #f8fafc;
+  color: #64748b; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+  transition: all 0.15s;
+}
+.ivm_regen_btn:hover { border-color: #1e40af; color: #1e40af; }
+
+/* ── Items Table ── */
+.ivm_items_header {
+  display: grid;
+  grid-template-columns: 2.5fr 0.8fr 1fr 1fr auto;
+  gap: 0.4rem; font-size: 0.72rem; font-weight: 700;
+  color: #64748b; text-transform: uppercase; margin-bottom: 0.4rem;
+  padding: 0 0.3rem;
+}
+.ivm_item_row {
+  display: grid;
+  grid-template-columns: 2.5fr 0.8fr 1fr 1fr auto;
+  gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;
+  animation: ivmSlide 0.18s ease;
+}
+@keyframes ivmSlide { from { opacity:0; transform:translateY(-4px) } to { opacity:1; transform:none } }
+.ivm_del_btn {
+  background: none; border: none; color: #f87171;
+  font-size: 1rem; cursor: pointer; padding: 0.2rem; line-height: 1;
+}
+.ivm_del_btn:hover { color: #dc2626; }
+.ivm_add_item_btn {
+  width: 100%; padding: 0.5rem;
+  border: 1.5px dashed #93c5fd; border-radius: 0.5rem;
+  background: #eff6ff; color: #1e40af;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem;
+  transition: all 0.15s;
+}
+.ivm_add_item_btn:hover { background: #dbeafe; }
+
+/* ── Tax & Summary ── */
+.ivm_tax_row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+.ivm_tax_label { font-size: 0.85rem; color: #475569; min-width: 100px; }
+.ivm_summary {
+  border-top: 1px solid #e2e8f0; padding-top: 0.75rem; margin-top: 0.75rem;
+}
+.ivm_sum_row {
+  display: flex; justify-content: space-between;
+  font-size: 0.88rem; color: #475569; margin-bottom: 0.3rem;
+}
+.ivm_sum_total {
+  display: flex; justify-content: space-between;
+  font-size: 1.1rem; font-weight: 800; color: #1e40af;
+  border-top: 2px solid #1e40af; padding-top: 0.5rem; margin-top: 0.4rem;
+}
+
+/* ── QR Section ── */
+.ivm_qr_row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.ivm_qr_item { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.ivm_qr_item_label { font-size: 0.72rem; color: #64748b; }
+
+/* ── Action Buttons ── */
+.ivm_actions {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  max-width: 900px; margin: 1rem auto;
+}
+.ivm_btn {
+  flex: 1; min-width: 120px; padding: 0.75rem 1rem;
+  border-radius: 0.7rem; border: none;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+}
+.ivm_btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.ivm_btn_primary { background: #1e40af; color: #fff; }
+.ivm_btn_green { background: #059669; color: #fff; }
+.ivm_btn_orange { background: #d97706; color: #fff; }
+.ivm_btn_slate { background: #475569; color: #fff; }
+
+/* ── History ── */
+.ivm_history_list { display: flex; flex-direction: column; gap: 0.4rem; }
+.ivm_history_item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0;
+  border-radius: 0.5rem; cursor: pointer; transition: all 0.15s;
+  font-size: 0.83rem;
+}
+.ivm_history_item:hover { border-color: #93c5fd; background: #eff6ff; }
+.ivm_history_num { font-weight: 700; color: #1e40af; }
+.ivm_history_meta { color: #94a3b8; font-size: 0.75rem; }
+
+/* ── SEO ── */
+.ivm_seo {
+  max-width: 900px; margin: 2rem auto 0;
+  background: #fff; border: 1px solid #e2e8f0;
+  border-radius: 1rem; padding: 1.5rem;
+}
+.ivm_seo h2 { font-size: 1rem; font-weight: 700; color: #1e40af; margin: 1rem 0 0.4rem; }
+.ivm_seo h2:first-child { margin-top: 0; }
+.ivm_seo p, .ivm_seo li { font-size: 0.85rem; color: #475569; line-height: 1.7; }
+.ivm_seo ul { padding-left: 1.2rem; }
+.ivm_seo dt { font-size: 0.88rem; font-weight: 700; color: #1e293b; margin-top: 0.8rem; }
+.ivm_seo dd { font-size: 0.83rem; color: #475569; margin: 0.2rem 0 0; line-height: 1.6; }
+
+/* ── Toast ── */
+.ivm_toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  background: #1e40af; color: #fff; padding: 0.6rem 1.2rem;
+  border-radius: 2rem; font-size: 0.85rem; font-weight: 600;
+  z-index: 9999; white-space: nowrap; animation: ivmToast 0.25s ease;
+  box-shadow: 0 4px 16px rgba(30,64,175,0.3);
+}
+@keyframes ivmToast { from { opacity:0; transform:translateX(-50%) translateY(10px) } to { opacity:1; transform:translateX(-50%) translateY(0) } }
+
+/* ── Preview (off-screen) ── */
+.ivm_preview {
+  position: fixed; left: -9999px; top: 0;
+  width: 794px; background: #fff; padding: 48px 52px;
+  font-family: 'Pretendard', 'NanumGothic', sans-serif; color: #1e293b;
+}
+.ivm_preview_header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+.ivm_preview_logo { max-height: 60px; max-width: 160px; object-fit: contain; }
+.ivm_preview_title { font-size: 2rem; font-weight: 900; color: #1e40af; text-align: right; }
+.ivm_preview_meta { text-align: right; font-size: 0.78rem; color: #64748b; margin-top: 4px; }
+.ivm_preview_parties { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+.ivm_preview_party_label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; }
+.ivm_preview_party_name { font-size: 1rem; font-weight: 700; color: #1e293b; }
+.ivm_preview_party_info { font-size: 0.8rem; color: #64748b; line-height: 1.5; margin-top: 2px; }
+.ivm_preview_table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+.ivm_preview_table th {
+  background: #1e40af; color: #fff; font-size: 0.75rem;
+  font-weight: 600; padding: 8px 10px; text-align: left;
+}
+.ivm_preview_table td { font-size: 0.82rem; padding: 7px 10px; border-bottom: 1px solid #f1f5f9; }
+.ivm_preview_table tr:nth-child(even) td { background: #f8fafc; }
+.ivm_preview_totals { display: flex; justify-content: flex-end; }
+.ivm_preview_totals_inner { width: 240px; }
+.ivm_preview_tot_row { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px; color: #475569; }
+.ivm_preview_tot_final { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 800; color: #1e40af; border-top: 2px solid #1e40af; padding-top: 6px; margin-top: 6px; }
+.ivm_preview_note { font-size: 0.8rem; color: #64748b; margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 12px; }
+.ivm_preview_footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px; }
+.ivm_preview_qr_wrap { display: flex; gap: 16px; }
+.ivm_preview_qr_item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.65rem; color: #94a3b8; }
+.ivm_preview_watermark { font-size: 0.65rem; color: #cbd5e1; text-align: right; }
