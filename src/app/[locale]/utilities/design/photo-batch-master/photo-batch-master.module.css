@@ -551,3 +551,263 @@
 .hiddenInput {
   display: none;
 }
+
+/* ══════════════════════════════════════════
+   WATERMARK SECTION
+══════════════════════════════════════════ */
+
+/* Tab switcher */
+.wmTabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 0;
+}
+
+.wmTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.18s, border-color 0.18s;
+}
+
+.wmTabActive {
+  color: #8b5cf6;
+  border-bottom-color: #8b5cf6;
+}
+
+/* Panel container */
+.wmPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Enable toggle */
+.wmToggleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+}
+
+.wmToggleRow input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #8b5cf6;
+  cursor: pointer;
+}
+
+/* Fields wrapper */
+.wmFields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 0.75rem;
+  transition: opacity 0.2s;
+}
+
+.wmFieldsDisabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Individual field row */
+.wmFieldRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.wmFieldLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Text input (for watermark text) */
+.wmTextInput {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  color: #1e293b;
+  background: white;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.wmTextInput:focus { border-color: #8b5cf6; }
+
+/* Font grid */
+.fontGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.fontChip {
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9999px;
+  background: white;
+  font-size: 0.82rem;
+  color: #475569;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.fontChipActive {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+  background: #f5f3ff;
+}
+
+/* Color row */
+.colorRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.colorPicker {
+  width: 36px;
+  height: 36px;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 2px;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.colorPresets {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.colorDot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.colorDot:hover { transform: scale(1.2); }
+
+.colorDotActive {
+  box-shadow: 0 0 0 3px #8b5cf6, 0 1px 3px rgba(0,0,0,0.15);
+  transform: scale(1.1);
+}
+
+/* 3x3 Position grid */
+.posGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 36px);
+  gap: 4px;
+}
+
+.posCell {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.posCell:hover { border-color: #8b5cf6; color: #8b5cf6; }
+
+.posCellActive {
+  border-color: #8b5cf6;
+  background: #8b5cf6;
+  color: white;
+}
+
+/* Image watermark upload */
+.wmImgUpload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wmImgSelectBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border: 2px dashed #e2e8f0;
+  border-radius: 0.75rem;
+  background: white;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.wmImgSelectBtn:hover { border-color: #8b5cf6; background: #faf5ff; }
+
+.wmImgPreviewWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+}
+
+.wmImgPreview {
+  max-height: 72px;
+  max-width: 200px;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  border: 1.5px solid #e2e8f0;
+  background: repeating-conic-gradient(#e2e8f0 0% 25%, white 0% 50%) 0 0 / 12px 12px;
+}
+
+.wmImgRemove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
