@@ -1,0 +1,202 @@
+/* Contact Us – CSS Module */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 5rem;
+  animation: fadeIn 0.55s ease-out;
+}
+
+/* ── Hero ── */
+.hero {
+  text-align: center;
+  padding: 2.5rem 0 2rem;
+}
+
+.heroIcon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--color-primary, #8b5cf6) 0%, #d946ef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* ── Form wrap ── */
+.formWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Intro card ── */
+.introCard {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #f1f5f9);
+  border-radius: var(--radius-card, 1.5rem);
+  padding: 1.75rem 2rem;
+  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
+}
+
+.introTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #1e293b);
+  margin: 0 0 0.75rem;
+}
+
+.introBody {
+  font-size: 0.93rem;
+  color: var(--color-text-secondary, #64748b);
+  line-height: 1.85;
+  margin: 0 0 1rem;
+  word-break: keep-all;
+}
+
+.emailHint {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary, #64748b);
+  margin: 0;
+}
+
+.emailLink {
+  color: var(--color-primary, #8b5cf6);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.emailLink:hover { text-decoration: underline; }
+
+/* ── Form ── */
+.form {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #f1f5f9);
+  border-radius: var(--radius-card, 1.5rem);
+  padding: 2rem;
+  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #1e293b);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 0.92rem;
+  color: var(--color-text-primary, #1e293b);
+  background: #f8fafc;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.18s, background 0.18s;
+  font-family: inherit;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--color-primary, #8b5cf6);
+  background: #ffffff;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.25rem;
+}
+
+/* ── Submit ── */
+.submitRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
+}
+
+.submitBtn {
+  padding: 0.7rem 2rem;
+  background: var(--color-primary, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.15s;
+}
+
+.submitBtn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.submitBtn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.sendNote {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary, #64748b);
+}
+
+/* ── Success state ── */
+.successCard {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid #d1fae5;
+  border-radius: var(--radius-card, 1.5rem);
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
+}
+
+.successIcon { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+
+.successTitle {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #1e293b);
+  margin: 0 0 0.5rem;
+}
+
+.successBody {
+  font-size: 0.92rem;
+  color: var(--color-text-secondary, #64748b);
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .introCard,
+  .form { padding: 1.5rem 1.25rem; }
+}

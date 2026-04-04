@@ -43,6 +43,8 @@ const CATEGORY_GROUPS = [
 ];
 
 const LEGAL_LINKS = [
+  { labelKo: "소개", labelEn: "About Us", href: "/about" },
+  { labelKo: "문의하기", labelEn: "Contact Us", href: "/contact" },
   { labelKo: "개인정보처리방침", labelEn: "Privacy Policy", href: "/privacy" },
   { labelKo: "이용약관", labelEn: "Terms of Service", href: "/terms" },
   { labelKo: "사이트맵", labelEn: "Sitemap", href: "/sitemap.xml", external: true },
