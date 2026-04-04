@@ -91,6 +91,13 @@ export default function FinanceDashboardPage() {
       icon: <PieChart size={36} color="#8b5cf6" />,
       gradient: 'rgba(139, 92, 246, 0.08)',
     },
+    {
+      id: 'utilities/finance/freelance-rate-calculator',
+      title: boardT('freelance-rate-calculator.title'),
+      desc: boardT('freelance-rate-calculator.desc'),
+      icon: <Sparkles size={36} color="#065f46" />,
+      gradient: 'rgba(6, 95, 70, 0.08)',
+    },
   ];
 
   if (!isClient) return null;

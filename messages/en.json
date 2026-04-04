@@ -210,6 +210,10 @@
     "smart-percent": {
       "title": "Smart Percentage Calculator",
       "desc": "4 modes in real time: basic, change %, discount & margin. Copy, history & progress bar included."
+    },
+    "freelance-rate-calculator": {
+      "title": "Freelance Rate Calculator",
+      "desc": "Calculate your true hourly rate accounting for KR/US taxes, fixed costs, efficiency & buffer."
     }
   },
   "Tax33": {

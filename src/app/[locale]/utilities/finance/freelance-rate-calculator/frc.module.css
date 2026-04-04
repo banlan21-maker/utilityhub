@@ -1,0 +1,481 @@
+/* ── Global Freelance Rate Calculator (FRC) ── */
+
+.frc_wrap {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #022c22 0%, #065f46 45%, #047857 100%);
+  padding: 1.5rem 1rem 4rem;
+  font-family: 'Pretendard', 'Inter', system-ui, sans-serif;
+  color: #ecfdf5;
+}
+
+/* ── Header ── */
+.frc_header {
+  text-align: center;
+  padding: 2.5rem 1rem 2rem;
+  position: relative;
+}
+.frc_badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 2rem;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #D4AF37;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.frc_title {
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.6rem;
+  line-height: 1.2;
+}
+.frc_title span { color: #D4AF37; }
+.frc_subtitle {
+  font-size: 0.95rem;
+  color: #a7f3d0;
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* ── Country Tabs ── */
+.frc_country_tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+.frc_ctab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.4rem;
+  border-radius: 2rem;
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
+  background: rgba(255,255,255,0.06);
+  color: #a7f3d0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.frc_ctab:hover {
+  border-color: rgba(212, 175, 55, 0.7);
+  color: #D4AF37;
+}
+.frc_ctab_active {
+  background: linear-gradient(135deg, #D4AF37 0%, #f0d060 100%);
+  border-color: #D4AF37;
+  color: #022c22;
+}
+
+/* ── Card ── */
+.frc_card {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.frc_card_title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #D4AF37;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0 0 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Slider ── */
+.frc_slider_label {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+}
+.frc_slider_name {
+  font-size: 0.92rem;
+  color: #d1fae5;
+  font-weight: 500;
+}
+.frc_slider_value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #D4AF37;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.frc_slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+  outline: none;
+  margin: 0.5rem 0 0.3rem;
+  cursor: pointer;
+}
+.frc_slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D4AF37, #f0d060);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.5);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.frc_slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.frc_slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D4AF37, #f0d060);
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+.frc_slider_range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #6ee7b7;
+  opacity: 0.7;
+}
+
+/* ── Fixed Cost Manager ── */
+.frc_preset_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.frc_preset_btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.1);
+  color: #D4AF37;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.frc_preset_btn:hover {
+  background: rgba(212, 175, 55, 0.25);
+}
+.frc_cost_add_row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.frc_cost_input {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+}
+.frc_cost_input::placeholder { color: rgba(255,255,255,0.35); }
+.frc_cost_input:focus { border-color: #D4AF37; }
+.frc_cost_input_amount {
+  width: 120px;
+  flex: unset;
+}
+.frc_add_btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  border: none;
+  background: linear-gradient(135deg, #D4AF37, #f0d060);
+  color: #022c22;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.15s;
+  white-space: nowrap;
+}
+.frc_add_btn:hover { transform: scale(1.04); }
+
+.frc_cost_list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.frc_cost_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.7rem;
+  animation: frcSlideIn 0.2s ease;
+}
+@keyframes frcSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.frc_cost_item_name { font-size: 0.88rem; color: #d1fae5; }
+.frc_cost_item_amount { font-size: 0.95rem; font-weight: 700; color: #D4AF37; }
+.frc_cost_del {
+  background: none;
+  border: none;
+  color: rgba(255,100,100,0.7);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 0.2rem;
+  transition: color 0.15s;
+}
+.frc_cost_del:hover { color: #f87171; }
+
+.frc_cost_total_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
+}
+.frc_cost_total_label { font-size: 0.88rem; color: #a7f3d0; font-weight: 600; }
+.frc_cost_total_amt {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #D4AF37;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s;
+}
+
+/* ── Efficiency tooltip ── */
+.frc_eff_row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+.frc_eff_tip {
+  font-size: 0.75rem;
+  color: #6ee7b7;
+  background: rgba(255,255,255,0.08);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+/* ── Result Dashboard ── */
+.frc_result_wrap {
+  max-width: 680px;
+  margin: 0 auto 1rem;
+}
+.frc_result_card {
+  background: linear-gradient(145deg, rgba(212,175,55,0.15) 0%, rgba(6,95,70,0.4) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.5);
+  border-radius: 1.5rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.frc_result_card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(212,175,55,0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+.frc_result_label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #a7f3d0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+.frc_result_rate {
+  font-size: clamp(2.2rem, 8vw, 3.2rem);
+  font-weight: 900;
+  color: #D4AF37;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.frc_result_unit { font-size: 1.1rem; font-weight: 600; color: #D4AF37; opacity: 0.7; }
+
+.frc_breakdown_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+.frc_breakdown_item {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.8rem;
+  padding: 0.7rem 1rem;
+  text-align: left;
+}
+.frc_breakdown_item_label {
+  font-size: 0.72rem;
+  color: #6ee7b7;
+  opacity: 0.8;
+  margin-bottom: 0.2rem;
+}
+.frc_breakdown_item_val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Export / Receipt ── */
+.frc_export_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto 1.5rem;
+  padding: 0.85rem;
+  border-radius: 0.9rem;
+  border: none;
+  background: linear-gradient(135deg, #D4AF37 0%, #f0d060 100%);
+  color: #022c22;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 18px rgba(212, 175, 55, 0.35);
+}
+.frc_export_btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.5);
+}
+
+/* ── Receipt (html2canvas capture target) ── */
+.frc_receipt {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 0 auto;
+  color: #1a1a1a;
+  font-family: 'Pretendard', 'Inter', sans-serif;
+  position: fixed;
+  left: -9999px;
+  top: 0;
+}
+.frc_receipt_logo {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #065f46;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.frc_receipt_cert {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #D4AF37;
+  margin-bottom: 1rem;
+}
+.frc_receipt_divider {
+  border: none;
+  border-top: 2px dashed #d1d5db;
+  margin: 0.8rem 0;
+}
+.frc_receipt_row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+.frc_receipt_key { color: #6b7280; }
+.frc_receipt_val { font-weight: 700; color: #1a1a1a; }
+.frc_receipt_big {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #065f46;
+  margin: 0.8rem 0;
+}
+.frc_receipt_footer {
+  text-align: center;
+  font-size: 0.65rem;
+  color: #9ca3af;
+  margin-top: 0.8rem;
+}
+
+/* ── SEO ── */
+.frc_seo {
+  max-width: 680px;
+  margin: 2rem auto 0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+}
+.frc_seo h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #D4AF37;
+  margin: 1rem 0 0.4rem;
+}
+.frc_seo h2:first-child { margin-top: 0; }
+.frc_seo p, .frc_seo li {
+  font-size: 0.85rem;
+  color: #a7f3d0;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+.frc_seo ul { padding-left: 1.2rem; }
+.frc_seo_faq dt {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #d1fae5;
+  margin-top: 0.8rem;
+}
+.frc_seo_faq dd {
+  font-size: 0.83rem;
+  color: #a7f3d0;
+  margin-left: 0;
+  margin-top: 0.2rem;
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .frc_card { padding: 1.1rem; }
+  .frc_result_card { padding: 1.4rem 1rem; }
+  .frc_breakdown_grid { grid-template-columns: 1fr; }
+  .frc_cost_add_row { flex-wrap: wrap; }
+  .frc_cost_input_amount { width: 100%; }
+}

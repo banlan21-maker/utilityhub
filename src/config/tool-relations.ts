@@ -24,6 +24,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/finance/tax-33-calc', icon: '🧾', ko: '3.3% 세금 계산기', en: 'Freelancer 3.3% Tax Calculator', category: 'finance' },
   { id: 'utilities/finance/salary-calc', icon: '💼', ko: '급여 계산기', en: 'Salary Calculator', category: 'finance' },
   { id: 'utilities/finance/smart-percent', icon: '💹', ko: '스마트 퍼센트 계산기', en: 'Smart Percentage Calculator', category: 'finance' },
+  { id: 'utilities/finance/freelance-rate-calculator', icon: '⚡', ko: '프리랜서 단가 계산기', en: 'Freelance Rate Calculator', category: 'finance' },
 
   // Productivity
   { id: 'utilities/productivity/pomodoro', icon: '🍅', ko: '뽀모도로 타이머', en: 'Pomodoro Timer', category: 'productivity' },
@@ -141,8 +142,13 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   ],
   'utilities/finance/salary-calc': [
     'utilities/finance/tax-33-calc',
-    'utilities/finance/vat-calc',
+    'utilities/finance/freelance-rate-calculator',
     'utilities/finance/percentage-calc',
+  ],
+  'utilities/finance/freelance-rate-calculator': [
+    'utilities/finance/salary-calc',
+    'utilities/finance/tax-33-calc',
+    'utilities/finance/smart-percent',
   ],
 
   // ── Productivity ───────────────────────────────────────────
