@@ -51,7 +51,7 @@ function pickUnique(max: number, count: number, rng: () => number): number[] {
   return pool.slice(0, count).sort((a, b) => a - b);
 }
 
-function generateNumbers(game: Game, name: string, birth: string, purchase: string): LottoResult {
+function generateNumbers(game: Game, name: string, birth: string, purchase: string, isKo: boolean): LottoResult {
   const seed = hashCode(`${name}|${birth}|${purchase}|${game}`);
   const rng  = makeRng(seed);
 
@@ -61,8 +61,11 @@ function generateNumbers(game: Game, name: string, birth: string, purchase: stri
   if (game === 'megamillions') {
     return { main: pickUnique(70, 5, rng), bonus: Math.floor(rng() * 25) + 1, bonusLabel: 'Mega Ball' };
   }
-  // lotto645
-  return { main: pickUnique(45, 6, rng), bonus: null, bonusLabel: '' };
+  // lotto645: 6 main + 1 bonus from remaining numbers
+  const main645 = pickUnique(45, 6, rng);
+  const remaining = Array.from({ length: 45 }, (_, i) => i + 1).filter(n => !main645.includes(n));
+  const bonus645 = remaining[Math.floor(rng() * remaining.length)];
+  return { main: main645, bonus: bonus645, bonusLabel: isKo ? '보너스' : 'Bonus' };
 }
 
 /* ─── Ball Helpers ─── */
@@ -110,7 +113,7 @@ export default function LottoPage() {
     setLoading(true);
     setResult(null);
     setTimeout(() => {
-      setResult(generateNumbers(game, name.trim(), birth, purchase));
+      setResult(generateNumbers(game, name.trim(), birth, purchase, isKo));
       setKey(k => k + 1);
       setLoading(false);
     }, 1500);
@@ -253,7 +256,11 @@ export default function LottoPage() {
                       />
                       <BallEl
                         num={result.bonus}
-                        cls={game === 'powerball' ? s.ball_red : s.ball_gold}
+                        cls={
+                          game === 'powerball'    ? s.ball_red :
+                          game === 'megamillions' ? s.ball_gold :
+                          getLotto645Class(result.bonus)   // 로또 6/45 보너스도 동일 색상 체계
+                        }
                         delay={result.main.length * 0.12 + 0.2}
                       />
                     </>
