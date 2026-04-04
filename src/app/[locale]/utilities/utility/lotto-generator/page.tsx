@@ -21,7 +21,7 @@ interface LottoResult {
 /* ─── Game Config ─── */
 const GAMES: { id: Game; label: string; sub: string }[] = [
   { id: 'powerball',    label: '🇺🇸 Powerball',      sub: '5/69 + PB 1/26' },
-  { id: 'megamillions', label: '🇺🇸 Mega Millions',   sub: '5/70 + MB 1/25' },
+  { id: 'megamillions', label: '🇺🇸 Mega Millions',   sub: '5/70 + MB 1/24' },
   { id: 'lotto645',     label: '🇰🇷 Lotto 6/45',      sub: '6/45' },
 ];
 
@@ -59,7 +59,7 @@ function generateNumbers(game: Game, name: string, birth: string, purchase: stri
     return { main: pickUnique(69, 5, rng), bonus: Math.floor(rng() * 26) + 1, bonusLabel: 'Powerball' };
   }
   if (game === 'megamillions') {
-    return { main: pickUnique(70, 5, rng), bonus: Math.floor(rng() * 25) + 1, bonusLabel: 'Mega Ball' };
+    return { main: pickUnique(70, 5, rng), bonus: Math.floor(rng() * 24) + 1, bonusLabel: 'Mega Ball' };
   }
   // lotto645: 6 main + 1 bonus from remaining numbers
   const main645 = pickUnique(45, 6, rng);
