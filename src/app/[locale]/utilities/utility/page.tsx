@@ -11,7 +11,8 @@ import {
   Square,
   Crop,
   ArrowRight,
-  Wrench
+  Wrench,
+  Ticket
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './utility_list.module.css';
@@ -67,6 +68,13 @@ export default function UtilityDashboardPage() {
       desc: boardT('image-processor.desc'),
       icon: <Crop size={36} color="#f59e0b" />,
       gradient: 'rgba(245, 158, 11, 0.08)',
+    },
+    {
+      id: 'utilities/utility/lotto-generator',
+      title: boardT('lotto-generator.title'),
+      desc: boardT('lotto-generator.desc'),
+      icon: <Ticket size={36} color="#D4AF37" />,
+      gradient: 'rgba(212, 175, 55, 0.08)',
     },
   ];
 

@@ -99,6 +99,10 @@
     "image-processor": {
       "title": "Image Processor",
       "desc": "An integrated tool for compressing, resizing, and cropping images locally."
+    },
+    "lotto-generator": {
+      "title": "Destiny Lotto Picker",
+      "desc": "Generate your fixed destiny numbers from name, birthday & purchase date. Supports Powerball, Mega Millions & Lotto 6/45."
     }
   },
   "TextCounter": {

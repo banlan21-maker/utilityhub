@@ -70,6 +70,7 @@ export const tools: Tool[] = [
   { slug: 'yt-thumbnail', category: 'utility', emoji: '📺', labelKey: 'UtilityBoard.yt-thumbnail.title', href: '/utilities/utility/yt-thumbnail', available: true },
   { slug: 'pyeong-calc', category: 'utility', emoji: '🏠', labelKey: 'UtilityBoard.pyeong-calc.title', href: '/utilities/utility/pyeong-calc', available: true },
   { slug: 'image-processor', category: 'utility', emoji: '🖼️', labelKey: 'UtilityBoard.image-processor.title', href: '/utilities/utility/image-processor', available: true },
+  { slug: 'lotto-generator', category: 'utility', emoji: '🎰', labelKey: 'UtilityBoard.lotto-generator.title', href: '/utilities/utility/lotto-generator', available: true },
 
   // Dev
   { slug: 'json-formatter', category: 'dev', emoji: '🗂️', labelKey: 'DevBoard.json-formatter.title', href: '/utilities/dev/json-formatter', available: true },

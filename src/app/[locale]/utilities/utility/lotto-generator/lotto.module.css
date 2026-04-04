@@ -1,0 +1,367 @@
+/* ── Lotto Generator — Galaxy Gold Theme ── */
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.15); }
+  50%       { box-shadow: 0 0 40px rgba(212,175,55,0.35); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Hero (Dark) ── */
+.hero {
+  background: linear-gradient(160deg, #0a0e1a 0%, #0f1729 60%, #0d1520 100%);
+  border-radius: 2rem;
+  border: 1px solid rgba(212,175,55,0.25);
+  box-shadow: 0 0 80px rgba(212,175,55,0.05), 0 20px 60px rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero_inner {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 2.5rem 2.5rem;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.header_icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 950;
+  background: linear-gradient(135deg, #D4AF37 0%, #f5d76e 45%, #D4AF37 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+  letter-spacing: -0.5px;
+  margin: 0 0 0.5rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ── Game Selector ── */
+.game_tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.game_tab {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.75rem 0.5rem;
+  border-radius: 1rem;
+  border: 1.5px solid rgba(212,175,55,0.2);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.45);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s;
+  line-height: 1.4;
+}
+
+.game_tab:hover {
+  border-color: rgba(212,175,55,0.5);
+  color: rgba(255,255,255,0.8);
+}
+
+.game_tab_active {
+  border-color: #D4AF37;
+  background: rgba(212,175,55,0.1);
+  color: #D4AF37;
+  box-shadow: 0 0 20px rgba(212,175,55,0.15);
+}
+
+/* ── Inputs ── */
+.inputs_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 480px) {
+  .inputs_grid { grid-template-columns: 1fr; }
+}
+
+.input_group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.input_label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(212,175,55,0.7);
+}
+
+.input_field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid rgba(212,175,55,0.2);
+  border-radius: 0.875rem;
+  background: rgba(255,255,255,0.05);
+  color: white;
+  font-size: 0.92rem;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  color-scheme: dark;
+}
+
+.input_field:focus {
+  border-color: #D4AF37;
+  background: rgba(212,175,55,0.07);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.1);
+}
+
+.input_field::placeholder { color: rgba(255,255,255,0.2); }
+
+/* ── Generate Button ── */
+.generate_btn {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  border-radius: 1.25rem;
+  border: none;
+  background: linear-gradient(135deg, #D4AF37 0%, #f5d76e 50%, #D4AF37 100%);
+  background-size: 200% auto;
+  color: #0a0e1a;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.02em;
+}
+
+.generate_btn:hover:not(:disabled) {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212,175,55,0.4);
+}
+
+.generate_btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Loading ── */
+.loading_wrap {
+  text-align: center;
+  padding: 2.5rem 0 1rem;
+}
+
+.loading_spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(212,175,55,0.2);
+  border-top-color: #D4AF37;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin-slow 0.8s linear infinite;
+}
+
+.loading_text {
+  color: rgba(212,175,55,0.85);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* ── Result ── */
+.result_wrap {
+  text-align: center;
+  padding: 2rem 0 0.5rem;
+}
+
+.result_label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(212,175,55,0.6);
+  margin-bottom: 1.5rem;
+}
+
+.balls_row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.divider {
+  width: 2px;
+  height: 48px;
+  background: rgba(212,175,55,0.3);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Balls ── */
+.ball {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: white;
+  box-shadow:
+    inset -3px -3px 8px rgba(0,0,0,0.45),
+    inset 3px 3px 8px rgba(255,255,255,0.18),
+    0 6px 20px rgba(0,0,0,0.55);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Powerball / Mega Millions main — blue */
+.ball_blue {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35) 0%, transparent 55%),
+              linear-gradient(140deg, #1d4ed8 0%, #1e3a8a 100%);
+}
+
+/* Powerball special — red */
+.ball_red {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35) 0%, transparent 55%),
+              linear-gradient(140deg, #dc2626 0%, #7f1d1d 100%);
+}
+
+/* Mega Ball special — gold */
+.ball_gold {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.5) 0%, transparent 55%),
+              linear-gradient(140deg, #D4AF37 0%, #92762a 100%);
+  color: #1a0a00;
+  text-shadow: none;
+}
+
+/* Lotto 6/45 colors */
+.ball_yellow {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.4) 0%, transparent 55%),
+              linear-gradient(140deg, #eab308 0%, #a16207 100%);
+  color: #1a1a1a;
+  text-shadow: none;
+}
+.ball_sky {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35) 0%, transparent 55%),
+              linear-gradient(140deg, #0ea5e9 0%, #0369a1 100%);
+}
+.ball_rose {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35) 0%, transparent 55%),
+              linear-gradient(140deg, #f43f5e 0%, #9f1239 100%);
+}
+.ball_slate {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.3) 0%, transparent 55%),
+              linear-gradient(140deg, #64748b 0%, #334155 100%);
+}
+.ball_green {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35) 0%, transparent 55%),
+              linear-gradient(140deg, #22c55e 0%, #15803d 100%);
+  color: #1a1a1a;
+  text-shadow: none;
+}
+
+/* ── Seed Notice ── */
+.seed_notice {
+  margin-top: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(212,175,55,0.07);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 0.875rem;
+  font-size: 0.78rem;
+  color: rgba(212,175,55,0.7);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Disclaimer ── */
+.disclaimer {
+  margin: 2rem 2.5rem 2.5rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(239,68,68,0.07);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 1rem;
+  font-size: 0.78rem;
+  color: rgba(255,100,100,0.8);
+  line-height: 1.7;
+}
+
+.disclaimer_title {
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+  color: rgba(255,120,120,0.95);
+}
+
+/* ── Light SEO Wrapper ── */
+.seo_wrap {
+  width: 100%;
+}
+
+.ad_placeholder {
+  width: 100%;
+  min-height: 250px;
+  background: rgba(241,245,249,0.5);
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 2rem 0;
+}
