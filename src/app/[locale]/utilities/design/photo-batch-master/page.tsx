@@ -73,6 +73,7 @@ const DEFAULT_IMAGE_WM: ImageWatermark = {
 };
 
 const PRESET_KEY = 'photo-batch-master-presets';
+const WM_KEY = 'photo-batch-master-watermark';
 
 const FONTS = [
   'Arial', 'Georgia', 'Impact', 'Courier New',
@@ -308,10 +309,24 @@ export default function PhotoBatchMasterPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ── Watermark state ──
+  // ── Watermark state (localStorage 자동 복원) ──
   const [wmTab, setWmTab] = useState<'text' | 'image'>('text');
-  const [textWM, setTextWM] = useState<TextWatermark>(DEFAULT_TEXT_WM);
-  const [imageWM, setImageWM] = useState<ImageWatermark>(DEFAULT_IMAGE_WM);
+  const [textWM, setTextWM] = useState<TextWatermark>(() => {
+    if (typeof window === 'undefined') return DEFAULT_TEXT_WM;
+    try {
+      const saved = localStorage.getItem(WM_KEY);
+      if (saved) return JSON.parse(saved).textWM ?? DEFAULT_TEXT_WM;
+    } catch {}
+    return DEFAULT_TEXT_WM;
+  });
+  const [imageWM, setImageWM] = useState<ImageWatermark>(() => {
+    if (typeof window === 'undefined') return DEFAULT_IMAGE_WM;
+    try {
+      const saved = localStorage.getItem(WM_KEY);
+      if (saved) return JSON.parse(saved).imageWM ?? DEFAULT_IMAGE_WM;
+    } catch {}
+    return DEFAULT_IMAGE_WM;
+  });
   const wmImgInputRef = useRef<HTMLInputElement>(null);
 
   // ── Batch ──
@@ -342,10 +357,15 @@ export default function PhotoBatchMasterPage() {
     });
   }, [sampleFile, textWM, imageWM, refreshPreview]);
 
+  const saveWMToStorage = (twm: TextWatermark, iwm: ImageWatermark) => {
+    try { localStorage.setItem(WM_KEY, JSON.stringify({ textWM: twm, imageWM: iwm })); } catch {}
+  };
+
   const updateTextWM = (patch: Partial<TextWatermark>) => {
     setTextWM((prev) => {
       const next = { ...prev, ...patch };
       refreshPreview(preset, next, imageWM, sampleFile);
+      saveWMToStorage(next, imageWM);
       return next;
     });
   };
@@ -354,6 +374,7 @@ export default function PhotoBatchMasterPage() {
     setImageWM((prev) => {
       const next = { ...prev, ...patch };
       refreshPreview(preset, textWM, next, sampleFile);
+      saveWMToStorage(textWM, next);
       return next;
     });
   };
