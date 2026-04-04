@@ -170,6 +170,112 @@
   color: #1e293b;
 }
 
+/* ── Work block UI ── */
+
+.sal_section_title {
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+.sal_work_block {
+  background: #f8fafc;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.sal_block_label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sal_block_inputs {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sal_mini_stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: white;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid #e2e8f0;
+}
+
+.sal_mini_btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.sal_mini_btn:hover {
+  background: #8b5cf6;
+  color: white;
+}
+
+.sal_mini_val {
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #1e293b;
+  min-width: 2.2rem;
+  text-align: center;
+}
+
+.sal_mult_row {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.sal_mult_btn {
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sal_mult_btn_active {
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.sal_block_preview {
+  font-size: 0.72rem;
+  color: #8b5cf6;
+  font-weight: 700;
+  margin-top: 0.6rem;
+  text-align: right;
+}
+
 .sal_ad_placeholder {
   width: 100%;
   min-height: 250px;

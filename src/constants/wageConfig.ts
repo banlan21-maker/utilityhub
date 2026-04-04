@@ -25,6 +25,7 @@ export interface USYearData {
   deductions: {
     none: number;
     fica: number;            // 7.65% (SS 6.2% + Medicare 1.45%)
+    ficaFederal: number;     // FICA 7.65% + Federal income est. ~14.35% = 22%
   };
   overtime: {
     thresholdHours: number;  // 40h / week
@@ -61,6 +62,7 @@ export const WAGE_DATA: Record<string, WageDataYear> = {
       deductions: {
         none: 0,
         fica: 0.0765,
+        ficaFederal: 0.22,   // FICA 7.65% + Federal income est. 14.35%
       },
       overtime: {
         thresholdHours: 40,
