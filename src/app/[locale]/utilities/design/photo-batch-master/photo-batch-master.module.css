@@ -74,21 +74,118 @@
   letter-spacing: 0.05em;
 }
 
-/* ── Step 1 grid ── */
-.step1Grid {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 1.5rem;
-  align-items: start;
+/* ── Preview center (large top area) ── */
+.previewCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-@media (max-width: 640px) {
-  .step1Grid {
+.sampleDropzoneLg {
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 16/9;
+  min-height: 300px;
+  background: #f8fafc;
+  border: 2.5px dashed #e2e8f0;
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+
+.sampleDropzoneLg:hover {
+  border-color: #8b5cf6;
+  background: #faf5ff;
+}
+
+.sampleImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.samplePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.samplePlaceholder p {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #475569;
+  margin: 0;
+}
+
+.samplePlaceholder span {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.previewMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.previewLabel {
+  font-size: 0.78rem;
+  color: #8b5cf6;
+  font-weight: 600;
+  margin: 0;
+}
+
+.changePhotoBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid #c4b5fd;
+  border-radius: 9999px;
+  background: #f5f3ff;
+  color: #7c3aed;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.changePhotoBtn:hover { background: #ede9fe; }
+
+/* ── Controls grid (sliders left | watermark right) ── */
+.controlsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .controlsGrid {
     grid-template-columns: 1fr;
   }
 }
 
-/* ── Sample upload ── */
+/* ── Legacy step1Grid (keep for no-breakage) ── */
+.step1Grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* ── Sample upload (legacy, unused in new layout) ── */
 .sampleArea {
   display: flex;
   flex-direction: column;
@@ -111,42 +208,6 @@
 .sampleDropzone:hover {
   border-color: #8b5cf6;
   background: #faf5ff;
-}
-
-.sampleImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.samplePlaceholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  text-align: center;
-}
-
-.samplePlaceholder p {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #475569;
-  margin: 0;
-}
-
-.samplePlaceholder span {
-  font-size: 0.75rem;
-  color: #94a3b8;
-}
-
-.previewLabel {
-  font-size: 0.75rem;
-  color: #8b5cf6;
-  font-weight: 600;
-  text-align: center;
-  margin: 0;
 }
 
 /* ── Sliders card ── */
