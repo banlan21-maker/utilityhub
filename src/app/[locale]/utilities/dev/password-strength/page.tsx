@@ -8,6 +8,30 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 
+/* ─── JSON-LD Schemas ─── */
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "비밀번호 강도 측정 & 생성기",
+  "alternateName": "Password Strength Checker & Generator",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/dev/password-strength",
+  "description": "암호학적으로 안전한 난수(crypto.getRandomValues)를 사용해 강력한 비밀번호를 생성하고, 비트 단위 엔트로피로 강도를 측정하는 무료 온라인 도구입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "엔트로피(Entropy)가 높을수록 좋은 비밀번호인가요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 엔트로피는 비밀번호 예측 불가능성을 비트로 나타냅니다. 일반적으로 72비트 이상이면 현대 컴퓨터로 사실상 해킹이 불가능한 수준입니다." } },
+    { "@type": "Question", "name": "비밀번호가 서버로 전송되지 않나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 도구의 모든 처리(생성, 분석, 강도 측정)는 100% 브라우저(JavaScript)에서 실행됩니다. 네트워크 요청이 발생하지 않으며 개인 데이터가 외부로 전송되지 않습니다." } },
+    { "@type": "Question", "name": "생성된 비밀번호는 얼마나 안전한가요?", "acceptedAnswer": { "@type": "Answer", "text": "Web Crypto API의 crypto.getRandomValues()를 사용해 암호학적으로 안전한 난수를 생성합니다. Math.random() 기반 생성기보다 훨씬 예측이 어렵습니다." } },
+    { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
+  ]
+};
+
 /* ─── Charset ─── */
 const CHARS = {
   upper:   'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -141,6 +165,8 @@ export default function DevPasswordPage() {
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
@@ -370,14 +396,16 @@ export default function DevPasswordPage() {
             { icon: '🏢', title: '기업 IT 보안 정책 준수', desc: '12자 이상, 대소문자·숫자·특수문자 포함 등 기업 비밀번호 정책에 맞는 비밀번호를 생성합니다.' },
           ],
           steps: [
-            { step: '생성 또는 분석 모드 선택', desc: '새 비밀번호 생성(Generate) 또는 기존 비밀번호 강도 분석(Analyze) 모드를 선택합니다.' },
-            { step: '옵션 설정 및 생성', desc: '길이(8~64자), 대소문자·숫자·특수문자 포함 여부를 설정하고 생성 버튼을 클릭합니다.' },
-            { step: '강도 확인 및 복사', desc: '강도 측정 결과, 엔트로피, 해킹 소요 시간을 확인하고 복사 버튼으로 클립보드에 저장합니다.' },
+            { step: '생성 또는 분석 모드 선택', desc: '상단 탭에서 새 비밀번호를 만들 때는 생성(Generate) 모드를, 현재 사용 중인 비밀번호의 보안을 점검할 때는 분석(Analyze) 모드를 선택합니다.' },
+            { step: '옵션 설정 및 생성', desc: '생성 모드에서는 슬라이더로 길이(8~64자)를 조정하고, 대문자·소문자·숫자·특수문자 포함 여부와 혼동 문자(0, O, 1, l) 제외 옵션을 설정한 후 생성 버튼을 클릭합니다.' },
+            { step: '강도 및 엔트로피 확인', desc: '강도 게이지, 비트 단위 엔트로피, 최신 GPU 클러스터(1조 회/초) 기준 해킹 소요 예상 시간을 확인합니다. 72비트 이상이면 사실상 해킹이 불가능한 수준입니다.' },
+            { step: '복사 및 저장', desc: '복사 버튼으로 생성된 비밀번호를 클립보드에 저장한 뒤, 비밀번호 관리자(1Password, Bitwarden 등)에 즉시 등록하여 안전하게 보관합니다.' },
           ],
           faqs: [
-            { q: '엔트로피(Entropy)가 높을수록 좋은 비밀번호인가요?', a: '네. 엔트로피는 비밀번호 예측 불가능성을 비트로 나타냅니다. 일반적으로 72비트 이상이면 현대 컴퓨터로 사실상 해킹이 불가능한 수준입니다.' },
-            { q: '비밀번호가 서버로 전송되지 않나요?', a: '이 도구의 모든 처리(생성, 분석, 강도 측정)는 100% 브라우저(JavaScript)에서 실행됩니다. 네트워크 요청이 발생하지 않으며 개인 데이터가 외부로 전송되지 않습니다.' },
-            { q: '생성된 비밀번호는 얼마나 안전한가요?', a: 'Web Crypto API의 crypto.getRandomValues()를 사용해 암호학적으로 안전한 난수를 생성합니다. Math.random() 기반 생성기보다 훨씬 예측이 어렵습니다.' },
+            { q: '엔트로피(Entropy)가 높을수록 좋은 비밀번호인가요?', a: '네. 엔트로피(비트)는 비밀번호가 얼마나 예측하기 어려운지를 수치로 나타냅니다. 일반적으로 72비트 이상이면 최신 GPU 클러스터(1조 회/초 공격)로도 사실상 해킹이 불가능한 수준이며, 128비트 이상이면 양자 컴퓨터 위협에도 대비할 수 있습니다.' },
+            { q: '비밀번호가 서버로 전송되지 않나요?', a: '이 도구의 모든 처리(생성, 분석, 강도 측정)는 100% 브라우저 내 JavaScript에서 실행됩니다. 네트워크 요청이 발생하지 않으며 입력한 비밀번호를 포함한 어떤 개인 데이터도 외부 서버로 전송되지 않습니다.' },
+            { q: '생성된 비밀번호는 얼마나 안전한가요?', a: 'Web Crypto API의 crypto.getRandomValues()를 사용해 암호학적으로 안전한 진성 난수를 생성합니다. 예측 가능한 Math.random() 기반 생성기와 달리 패턴이 없어 무차별 대입 공격에 매우 강합니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -390,14 +418,16 @@ export default function DevPasswordPage() {
             { icon: '🏢', title: 'Enterprise Policy Compliance', desc: 'Generate passwords meeting corporate security policies: 12+ chars, mixed case, numbers, symbols.' },
           ],
           steps: [
-            { step: 'Select Mode', desc: 'Choose Generate for a new password, or Analyze to check the strength of an existing one.' },
-            { step: 'Configure & Generate', desc: 'Set length (8–64), toggle character types, and click Generate to create an instant password.' },
-            { step: 'Check Strength & Copy', desc: 'View strength score, entropy, and estimated crack time, then copy to clipboard with one click.' },
+            { step: 'Select Mode', desc: 'Pick Generate mode to create a new password, or switch to Analyze mode to evaluate the strength of a password you already use.' },
+            { step: 'Configure & Generate', desc: 'In Generate mode, drag the slider to set length (8–64 chars), toggle uppercase, lowercase, digits, symbols, and ambiguous character exclusion, then click Generate.' },
+            { step: 'Check Strength & Entropy', desc: 'Review the strength gauge, bit-level entropy score, and estimated crack time based on a 1-trillion-guesses-per-second attack. 72+ bits is considered practically uncrackable.' },
+            { step: 'Copy & Store Safely', desc: 'Click the copy button to save the password to your clipboard, then immediately store it in a password manager like Bitwarden or 1Password.' },
           ],
           faqs: [
-            { q: 'Does higher entropy always mean a better password?', a: 'Yes. Entropy measures unpredictability in bits. Generally, 72+ bits of entropy is considered practically uncrackable by modern hardware.' },
-            { q: 'Is my password sent to your server?', a: 'No. All generation and analysis runs 100% in your browser (JavaScript). No network request is made and no personal data leaves your device.' },
-            { q: 'How secure is the password generator?', a: 'It uses the Web Crypto API\'s crypto.getRandomValues(), which is cryptographically secure and far less predictable than Math.random()-based generators.' },
+            { q: 'Does higher entropy always mean a better password?', a: 'Yes. Entropy measures unpredictability in bits. Generally, 72+ bits of entropy is considered practically uncrackable by modern GPU clusters running at 1 trillion guesses per second. 128+ bits provides resistance even against future quantum computing threats.' },
+            { q: 'Is my password sent to your server?', a: 'No. All generation and analysis runs 100% in your browser via JavaScript. No network request is made at any point, and no personal data — including the passwords you type or generate — ever leaves your device.' },
+            { q: 'How secure is the password generator?', a: 'It uses the Web Crypto API\'s crypto.getRandomValues(), which produces cryptographically secure true random numbers with no detectable pattern. This is far more secure than Math.random()-based generators, which are predictable and should never be used for security-sensitive purposes.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

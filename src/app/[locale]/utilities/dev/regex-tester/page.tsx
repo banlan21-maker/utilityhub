@@ -8,6 +8,30 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 
+/* ─── JSON-LD Schemas ─── */
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "정규표현식(Regex) 테스터",
+  "alternateName": "Regex Tester",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/dev/regex-tester",
+  "description": "패턴과 테스트 문자열을 입력하면 실시간으로 일치하는 부분을 강조 표시하고 매치 수를 계산하는 무료 온라인 정규표현식 테스터입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "정규표현식에서 특수문자를 검색하려면?", "acceptedAnswer": { "@type": "Answer", "text": "특수문자(. * + ? ^ $ { } [ ] | ( ) \\) 앞에 백슬래시(\\)를 붙여 이스케이프합니다. 예를 들어 점(.)을 검색하려면 \\.을 사용합니다." } },
+    { "@type": "Question", "name": "이메일 검증 정규식이 완벽하지 않은 이유는?", "acceptedAnswer": { "@type": "Answer", "text": "RFC 5322 표준을 완전히 따르는 이메일 정규식은 매우 복잡합니다. 실무에서는 기본 형식 확인 후 서버에서 실제 이메일 발송 테스트로 최종 검증하는 것을 권장합니다." } },
+    { "@type": "Question", "name": "자바스크립트에서 정규식을 사용하는 방법은?", "acceptedAnswer": { "@type": "Answer", "text": "/패턴/플래그 리터럴 또는 new RegExp(\"패턴\", \"플래그\")로 생성합니다. test(), match(), matchAll(), replace(), split() 등의 메서드와 함께 사용합니다." } },
+    { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
+  ]
+};
+
 /* ─── Cheat sheet patterns ─── */
 interface CheatItem {
   labelKo: string;
@@ -95,6 +119,8 @@ export default function RegexPage() {
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
@@ -292,14 +318,16 @@ export default function RegexPage() {
             { icon: '🔍', title: '데이터 정제', desc: 'CSV나 텍스트 데이터에서 원하는 형식의 값만 추출하는 데이터 전처리 작업에 활용합니다.' },
           ],
           steps: [
-            { step: '패턴 입력', desc: '/패턴/ 형식으로 정규식을 입력하거나, 오른쪽 치트시트에서 자주 쓰는 패턴을 클릭해 불러옵니다.' },
-            { step: '플래그 선택', desc: 'g(전체 검색), i(대소문자 무시), m(다중행), s(dotAll) 플래그를 필요에 따라 활성화합니다.' },
-            { step: '테스트 문자열 입력 후 결과 확인', desc: '테스트 텍스트를 입력하면 매칭 부분이 실시간으로 노란색으로 강조 표시됩니다.' },
+            { step: '패턴 입력', desc: '/패턴/ 입력란에 정규식을 직접 입력하거나, 오른쪽 치트시트에서 이메일·전화번호·URL 등 자주 쓰는 패턴을 클릭해 즉시 불러옵니다.' },
+            { step: '플래그 선택', desc: 'g(전체 검색), i(대소문자 무시), m(다중행 모드), s(dotAll — 점이 줄바꿈 포함) 플래그를 필요에 따라 토글합니다.' },
+            { step: '테스트 문자열 입력', desc: '중간 텍스트 에디터에 테스트할 문자열을 붙여넣으면 매칭 부분이 실시간으로 노란색으로 강조 표시되고 총 매치 수가 즉시 업데이트됩니다.' },
+            { step: '결과 확인 및 응용', desc: '하단 결과 영역에서 매칭된 토큰 목록을 확인하고, 검증된 패턴을 JavaScript 코드(test(), match(), replace())에 그대로 적용합니다.' },
           ],
           faqs: [
-            { q: '정규표현식에서 특수문자를 검색하려면?', a: '특수문자(.  * + ? ^ $ { } [ ] | ( ) \\) 앞에 백슬래시(\\)를 붙여 이스케이프합니다. 예를 들어 점(.)을 검색하려면 \\.을 사용합니다.' },
-            { q: '이메일 검증 정규식이 완벽하지 않은 이유는?', a: 'RFC 5322 표준을 완전히 따르는 이메일 정규식은 매우 복잡합니다. 실무에서는 기본 형식 확인 후 서버에서 실제 이메일 발송 테스트로 최종 검증하는 것을 권장합니다.' },
-            { q: '자바스크립트에서 정규식을 사용하는 방법은?', a: '/패턴/플래그 리터럴 또는 new RegExp("패턴", "플래그")로 생성합니다. test(), match(), matchAll(), replace(), split() 등의 메서드와 함께 사용합니다.' },
+            { q: '정규표현식에서 특수문자를 검색하려면?', a: '특수문자(. * + ? ^ $ { } [ ] | ( ) \\) 앞에 백슬래시(\\)를 붙여 이스케이프합니다. 예를 들어 점(.)을 검색하려면 \\.을 사용하고, 괄호를 검색하려면 \\(를 사용합니다.' },
+            { q: '이메일 검증 정규식이 완벽하지 않은 이유는?', a: 'RFC 5322 표준을 완전히 따르는 이메일 정규식은 매우 복잡하며 실용적이지 않습니다. 실무에서는 기본 형식 확인(@ 포함, 도메인 형식 등) 후 서버에서 실제 이메일 발송 테스트로 최종 검증하는 것을 권장합니다.' },
+            { q: '자바스크립트에서 정규식을 사용하는 방법은?', a: '/패턴/플래그 리터럴 또는 new RegExp("패턴", "플래그")로 생성합니다. test()로 존재 여부, match()로 매칭 결과 배열, replace()로 치환, split()으로 분할 처리 등 다양하게 활용합니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -312,14 +340,16 @@ export default function RegexPage() {
             { icon: '🔍', title: 'Data Extraction', desc: 'Extract specifically formatted values from CSV or raw text during data preprocessing.' },
           ],
           steps: [
-            { step: 'Enter Pattern', desc: 'Type your regex in the /pattern/ field or click any cheat sheet item to load a common pattern.' },
-            { step: 'Select Flags', desc: 'Toggle g (global), i (case-insensitive), m (multiline), or s (dotAll) as needed.' },
-            { step: 'Type Test String & View Results', desc: 'Enter test text and matched portions are instantly highlighted in yellow with the total match count.' },
+            { step: 'Enter Pattern', desc: 'Type your regex directly in the /pattern/ field, or click any item in the cheat sheet sidebar to instantly load a common pattern like email, phone number, or URL.' },
+            { step: 'Select Flags', desc: 'Toggle g (global search), i (case-insensitive), m (multiline), or s (dotAll — dot matches newlines) to fine-tune matching behavior.' },
+            { step: 'Type Test String', desc: 'Enter your test text in the middle editor. Matched portions are instantly highlighted in yellow and the total match count updates in real time.' },
+            { step: 'Review & Apply', desc: 'Check the matched token list in the result area below, then copy your validated pattern directly into JavaScript code using test(), match(), or replace().' },
           ],
           faqs: [
-            { q: 'How do I search for special characters in regex?', a: 'Escape special characters (.  * + ? ^ $ { } [ ] | ( ) \\) with a backslash. For example, to match a literal dot, use \\.' },
-            { q: 'Why is no email regex 100% accurate?', a: 'Fully RFC 5322-compliant email validation is extremely complex. In practice, use a basic format check via regex, then confirm the address with an actual email delivery test on the server side.' },
-            { q: 'How do I use regex in JavaScript?', a: 'Create a regex with the /pattern/flags literal or new RegExp("pattern", "flags"). Use it with methods like test(), match(), matchAll(), replace(), and split().' },
+            { q: 'How do I search for special characters in regex?', a: 'Escape special characters (. * + ? ^ $ { } [ ] | ( ) \\) with a backslash. For example, to match a literal dot use \\., and to match a literal parenthesis use \\(. The cheat sheet includes pre-escaped patterns for common use cases.' },
+            { q: 'Why is no email regex 100% accurate?', a: 'Fully RFC 5322-compliant email validation is extremely complex and rarely practical. In production, use a basic format check via regex to catch obvious errors, then confirm the address with an actual delivery test (send a verification email) on the server side.' },
+            { q: 'How do I use regex in JavaScript?', a: 'Create a regex with the /pattern/flags literal or new RegExp("pattern", "flags"). Use test() to check existence, match() to get result arrays, replace() for substitution, matchAll() for all capturing groups, and split() to divide strings.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

@@ -9,6 +9,45 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './url-safety.module.css';
 
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "URL 피싱 & 악성코드 검사기",
+  "alternateName": "URL Phishing & Malware Checker",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/security/url-safety",
+  "description": "Google Safe Browsing API를 활용해 의심스러운 링크의 악성코드, 피싱, 유해 소프트웨어 여부를 즉시 검사하는 온라인 보안 도구입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "검사 결과가 안전이어도 100% 믿어도 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Google Safe Browsing은 수십억 개의 URL을 데이터베이스로 보유하지만, 최근 생성된 신규 피싱 사이트는 아직 등록되지 않았을 수 있습니다. '안전' 결과는 '알려진 위협 없음'을 의미하며, 도메인 철자가 이상하거나 출처가 불명확한 링크는 주의하세요." }
+    },
+    {
+      "@type": "Question",
+      "name": "검사한 URL이 저장되거나 제3자에게 공유되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Google Safe Browsing API에 URL을 전송해 검사합니다. Google의 개인정보처리방침에 따라 처리되며, 이 사이트의 서버에는 저장되지 않습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "기업 내부 URL(인트라넷)도 검사할 수 있나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "내부 IP(192.168.x.x, 10.x.x.x 등) 또는 localhost는 외부 접근이 불가능하므로 Safe Browsing 검사에서 의미 있는 결과를 얻기 어렵습니다. 공개 인터넷 URL 검사에 활용하세요." }
+    },
+    {
+      "@type": "Question",
+      "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." }
+    }
+  ]
+};
+
 // ── Types ────────────────────────────────────────────────────────────────────
 type CheckStatus = 'idle' | 'checking' | 'safe' | 'unsafe' | 'error';
 
@@ -150,6 +189,8 @@ export default function UrlCheckerPage() {
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
@@ -260,14 +301,16 @@ export default function UrlCheckerPage() {
             { icon: '🔗', title: '단축 URL 원본 안전성 확인', desc: 'bit.ly, tinyurl 등 단축 URL의 실제 목적지를 파악하기 어려울 때, 단축 전 URL을 알고 있다면 사전에 검사합니다.' },
           ],
           steps: [
-            { step: '의심 URL 입력', desc: '검사하고 싶은 링크를 입력창에 붙여넣습니다. https:// 없이 도메인만 입력해도 자동으로 인식됩니다.' },
-            { step: '검사 실행', desc: "'검사하기' 버튼을 클릭하거나 Enter를 누르면 Google Safe Browsing API로 즉시 검사가 시작됩니다." },
+            { step: '의심 URL 입력', desc: '검사하고 싶은 링크를 입력창에 붙여넣습니다. https:// 없이 도메인만 입력해도 자동으로 인식되어 자동으로 https://를 붙여 검사합니다.' },
+            { step: '검사 실행', desc: "'검사하기' 버튼을 클릭하거나 Enter를 누르면 Google Safe Browsing API로 즉시 검사가 시작됩니다. 수 초 이내에 결과가 반환됩니다." },
             { step: '결과 확인', desc: "✅ '안전한 URL'이면 접속해도 됩니다. 🚨 '위험'이 표시되면 절대 클릭하지 마세요. 위협 유형(악성코드/피싱/유해 앱)도 함께 표시됩니다." },
+            { step: '추가 URL 검사', desc: "'다른 URL 검사하기' 버튼을 클릭하면 입력창이 초기화되어 다음 링크를 즉시 검사할 수 있습니다. 여러 개의 의심 링크를 연속으로 빠르게 검사하기에 적합합니다." },
           ],
           faqs: [
             { q: '검사 결과가 안전이어도 100% 믿어도 되나요?', a: "Google Safe Browsing은 수십억 개의 URL을 데이터베이스로 보유하지만, 최근 생성된 신규 피싱 사이트는 아직 등록되지 않았을 수 있습니다. '안전' 결과는 '알려진 위협 없음'을 의미하며, 도메인 철자가 이상하거나 출처가 불명확한 링크는 주의하세요." },
-            { q: '검사한 URL이 저장되거나 제3자에게 공유되나요?', a: 'Google Safe Browsing API에 URL을 전송해 검사합니다. Google의 개인정보처리방침에 따라 처리되며, 이 사이트의 서버에는 저장되지 않습니다.' },
+            { q: '검사한 URL이 저장되거나 제3자에게 공유되나요?', a: 'Google Safe Browsing API에 URL을 전송해 검사합니다. Google의 개인정보처리방침에 따라 처리되며, 이 사이트의 서버에는 저장되지 않습니다. URL 검사 기록은 별도로 보관하지 않습니다.' },
             { q: '기업 내부 URL(인트라넷)도 검사할 수 있나요?', a: '내부 IP(192.168.x.x, 10.x.x.x 등) 또는 localhost는 외부 접근이 불가능하므로 Safe Browsing 검사에서 의미 있는 결과를 얻기 어렵습니다. 공개 인터넷 URL 검사에 활용하세요.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -280,14 +323,16 @@ export default function UrlCheckerPage() {
             { icon: '🔗', title: 'Shortened URL Safety Check', desc: "When a shortened URL's destination is unclear, check the full destination URL for safety before clicking." },
           ],
           steps: [
-            { step: 'Enter the suspicious URL', desc: 'Paste the link you want to check. The domain alone (without https://) is also recognized automatically.' },
-            { step: 'Run the check', desc: "Click 'Check URL' or press Enter to instantly query the Google Safe Browsing API." },
-            { step: 'Review the result', desc: "✅ 'Safe' means no known threats — proceed with caution. 🚨 'Warning' means a known threat was detected — do not click the original link." },
+            { step: 'Enter the suspicious URL', desc: 'Paste the link you want to check. The domain alone (without https://) is also recognized automatically — the tool prepends https:// before scanning.' },
+            { step: 'Run the check', desc: "Click 'Check URL' or press Enter to instantly query the Google Safe Browsing API. Results are returned within seconds." },
+            { step: 'Review the result', desc: "✅ 'Safe' means no known threats — proceed with caution. 🚨 'Warning' means a known threat was detected — do not click the original link. The threat type (malware/phishing/PUA) is shown." },
+            { step: 'Check another URL', desc: "Click 'Check Another URL' to clear the input and immediately scan the next link. This makes it easy to quickly verify multiple suspicious links in a row." },
           ],
           faqs: [
-            { q: "Is a \"Safe\" result 100% guaranteed?", a: "Google Safe Browsing is extensive but newly created phishing sites may not yet be indexed. 'Safe' means 'no known threats found' — still exercise caution with domains that look suspicious or unfamiliar." },
-            { q: 'Is the checked URL stored or shared?', a: "The URL is sent to the Google Safe Browsing API for checking, processed under Google's privacy policy. It is not stored on our servers." },
-            { q: 'Can I check internal/intranet URLs?', a: 'Internal IPs (192.168.x.x, 10.x.x.x, localhost) are not externally accessible so Safe Browsing results are not meaningful. Use this tool for public internet URLs.' },
+            { q: "Is a \"Safe\" result 100% guaranteed?", a: "Google Safe Browsing covers billions of URLs but newly created phishing sites may not yet be indexed. 'Safe' means 'no known threats found' — still exercise caution with domains that look suspicious, misspelled, or unfamiliar." },
+            { q: 'Is the checked URL stored or shared?', a: "The URL is sent to the Google Safe Browsing API for checking, processed under Google's privacy policy. It is not stored on our servers, and we do not keep a log of checked URLs." },
+            { q: 'Can I check internal/intranet URLs?', a: 'Internal IPs (192.168.x.x, 10.x.x.x, localhost) are not externally accessible so Safe Browsing results are not meaningful for them. This tool is best suited for checking public internet URLs.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

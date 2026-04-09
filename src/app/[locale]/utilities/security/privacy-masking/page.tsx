@@ -9,6 +9,45 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './privacy-masking.module.css';
 
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "개인정보 마스킹 도구",
+  "alternateName": "Personal Data Masking Tool",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/security/privacy-masking",
+  "description": "텍스트 내 이메일, 전화번호, 주민번호, 신용카드 번호, IP 주소, 한국 이름 등 민감한 개인정보를 자동으로 검출하고 별표(*)로 마스킹하는 온라인 비식별화 도구입니다. 모든 처리는 브라우저에서만 이루어져 서버에 데이터가 전송되지 않습니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "입력한 텍스트가 서버로 전송되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "전혀 그렇지 않습니다. 이 개인정보 마스킹 도구는 100% 클라이언트 사이드(브라우저)에서만 동작하며, 입력한 텍스트는 어떠한 서버에도 전송되지 않습니다. 완전히 오프라인 환경에서도 사용할 수 있습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "마스킹 규칙을 부분적으로만 적용할 수 있나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "네. 왼쪽 패널의 체크박스에서 원하는 규칙만 선택하면 됩니다. 예를 들어 이메일만 마스킹하고 전화번호는 그대로 두고 싶다면 이메일 규칙만 체크하세요." }
+    },
+    {
+      "@type": "Question",
+      "name": "한국 이름 마스킹이 일부 단어를 잘못 처리합니다",
+      "acceptedAnswer": { "@type": "Answer", "text": "한국 이름 마스킹은 2~3글자 한글을 패턴으로 인식하므로, 일반 한국어 단어와 구분이 어려울 수 있습니다. 이름이 포함된 텍스트는 결과를 꼭 검토 후 사용하세요." }
+    },
+    {
+      "@type": "Question",
+      "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." }
+    }
+  ]
+};
+
 // ── Masking Rules ──────────────────────────────────────────────────────────
 interface MaskRule {
   id: string;
@@ -144,6 +183,8 @@ export default function RedactPage() {
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
@@ -265,14 +306,16 @@ export default function RedactPage() {
             { icon: '🏢', title: 'GDPR & 개인정보보호법 대응', desc: '테스트 환경에서 실제 사용자 데이터 대신 마스킹된 데이터를 사용해 개인정보 규정을 준수합니다.' },
           ],
           steps: [
-            { step: '마스킹 규칙 선택', desc: '왼쪽 패널에서 이메일, 전화번호, 주민번호, 카드번호, IP, 한국 이름 중 마스킹할 항목을 체크합니다.' },
-            { step: '텍스트 붙여넣기', desc: '오른쪽 상단 입력창에 마스킹할 텍스트를 붙여넣거나 직접 입력합니다.' },
+            { step: '마스킹 규칙 선택', desc: '왼쪽 패널에서 이메일, 전화번호, 주민번호, 카드번호, IP, 한국 이름 중 마스킹할 항목을 체크합니다. 각 항목 옆에 마스킹 예시가 표시되어 결과를 미리 파악할 수 있습니다.' },
+            { step: '텍스트 붙여넣기', desc: '오른쪽 상단 입력창에 마스킹할 텍스트를 붙여넣거나 직접 입력합니다. 여러 줄의 텍스트도 한 번에 처리할 수 있습니다.' },
             { step: '결과 확인 및 복사', desc: '하단 출력창에 마스킹 결과가 즉시 표시됩니다. 노란색으로 강조된 부분이 마스킹된 항목이며, 복사 버튼으로 클립보드에 저장합니다.' },
+            { step: '마스킹 결과 검토', desc: '출력 결과를 반드시 육안으로 검토하여 의도치 않게 마스킹되거나 누락된 항목이 없는지 확인한 후 사용합니다. 필요 시 규칙 체크박스를 조정해 재처리할 수 있습니다.' },
           ],
           faqs: [
             { q: '입력한 텍스트가 서버로 전송되나요?', a: '전혀 그렇지 않습니다. 이 개인정보 마스킹 도구는 100% 클라이언트 사이드(브라우저)에서만 동작하며, 입력한 텍스트는 어떠한 서버에도 전송되지 않습니다. 완전히 오프라인 환경에서도 사용할 수 있습니다.' },
-            { q: '마스킹 규칙을 부분적으로만 적용할 수 있나요?', a: '네. 왼쪽 패널의 체크박스에서 원하는 규칙만 선택하면 됩니다. 예를 들어 이메일만 마스킹하고 전화번호는 그대로 두고 싶다면 이메일 규칙만 체크하세요.' },
-            { q: '한국 이름 마스킹이 일부 단어를 잘못 처리합니다', a: '한국 이름 마스킹은 2~3글자 한글을 패턴으로 인식하므로, 일반 한국어 단어와 구분이 어려울 수 있습니다. 이름이 포함된 텍스트는 결과를 꼭 검토 후 사용하세요.' },
+            { q: '마스킹 규칙을 부분적으로만 적용할 수 있나요?', a: '네. 왼쪽 패널의 체크박스에서 원하는 규칙만 선택하면 됩니다. 예를 들어 이메일만 마스킹하고 전화번호는 그대로 두고 싶다면 이메일 규칙만 체크하세요. 나머지 규칙은 활성화 상태를 유지하면서 특정 항목만 제외하는 방식도 가능합니다.' },
+            { q: '한국 이름 마스킹이 일부 단어를 잘못 처리합니다', a: '한국 이름 마스킹은 2~3글자 한글을 패턴으로 인식하므로, 일반 한국어 단어와 구분이 어려울 수 있습니다. 이름이 포함된 텍스트는 결과를 꼭 검토 후 사용하세요. 정확한 이름 마스킹이 필요할 경우 해당 규칙을 비활성화하고 수동으로 처리하는 방법도 있습니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -285,14 +328,16 @@ export default function RedactPage() {
             { icon: '🏢', title: 'GDPR & Privacy Law Compliance', desc: 'Use masked data instead of real user data in test environments to maintain compliance with privacy regulations.' },
           ],
           steps: [
-            { step: 'Select masking rules', desc: 'Check the rules you want to apply in the left panel: email, phone, SSN, credit card, IP address, Korean name.' },
-            { step: 'Paste your text', desc: 'Paste or type the text you want to mask into the input area on the right.' },
+            { step: 'Select masking rules', desc: 'Check the rules you want to apply in the left panel: email, phone, SSN, credit card, IP address, Korean name. Each rule shows a sample output so you know what to expect.' },
+            { step: 'Paste your text', desc: 'Paste or type the text you want to mask into the input area on the right. Multiple lines of text are processed all at once.' },
             { step: 'Review & copy result', desc: 'The masked output appears instantly. Yellow highlights show what was masked. Click the copy button to save it to your clipboard.' },
+            { step: 'Verify the output', desc: 'Always review the masked result manually to confirm no items were accidentally missed or incorrectly masked. Adjust the rule checkboxes and reprocess if needed.' },
           ],
           faqs: [
-            { q: 'Is my input text sent to a server?', a: 'Not at all. This tool runs 100% client-side in your browser. Your text is never transmitted to any server and can even be used completely offline.' },
-            { q: 'Can I apply only some masking rules?', a: 'Yes. Use the checkboxes in the left panel to select only the rules you want. For example, to mask only emails while keeping phone numbers intact, check only the email rule.' },
-            { q: 'Korean name masking is incorrectly flagging some words', a: 'Korean name masking uses a 2–3 character Hangul pattern, which can be hard to distinguish from ordinary Korean words. Always review the output carefully when masking text that contains names.' },
+            { q: 'Is my input text sent to a server?', a: 'Not at all. This tool runs 100% client-side in your browser. Your text is never transmitted to any server and can even be used completely offline — no internet connection required after the page loads.' },
+            { q: 'Can I apply only some masking rules?', a: 'Yes. Use the checkboxes in the left panel to select only the rules you want. For example, to mask only emails while keeping phone numbers intact, check only the email rule. You can mix and match freely.' },
+            { q: 'Korean name masking is incorrectly flagging some words', a: 'Korean name masking uses a 2–3 character Hangul pattern, which can be hard to distinguish from ordinary Korean words. Always review the output carefully when masking text that contains names. You can disable the name rule and handle those manually.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

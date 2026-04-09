@@ -8,6 +8,46 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 
+/* ─── JSON-LD Schemas ─── */
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "평수 계산기 / 평-제곱미터 변환기",
+  "alternateName": "Pyeong to Square Meter Converter",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/utility/pyeong-calc",
+  "description": "평(坪)과 제곱미터(㎡)를 즉시 변환해주는 무료 온라인 도구입니다. 아파트 표준 전용면적 프리셋 제공."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "1평은 몇 ㎡인가요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "1평은 정확히 3.30578512㎡이며, 통상 3.3058㎡로 계산합니다. 법적으로는 1평 = 400/121㎡(약 3.30579㎡)로 정의됩니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "아파트 전용면적 84㎡는 몇 평인가요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "84 ÷ 3.30579 ≈ 25.4평입니다. 흔히 '25평형 아파트'라고 부르는 평형입니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "공급면적과 전용면적의 차이는 무엇인가요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "전용면적은 현관문 안쪽 실내 면적만을 의미하고, 공급면적은 전용면적에 계단·복도 등 공용 면적을 합산한 면적입니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." }
+    }
+  ]
+};
+
 /* 1 평 = 3.30579 m² (법정 환산 계수) */
 const PYEONG_TO_SQM = 3.30579;
 
@@ -325,6 +365,10 @@ export default function AreaPage() {
         광고 영역
       </div>
 
+      {/* JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+
       <SeoSection
         ko={{
           title: '평수-제곱미터(㎡) 변환기란 무엇인가요?',
@@ -336,14 +380,16 @@ export default function AreaPage() {
             { icon: '📐', title: '인테리어·리모델링 설계', desc: '시공 면적을 평과 ㎡로 동시 확인해 자재 발주량이나 단가 계산에 활용합니다.' },
           ],
           steps: [
-            { step: '변환 방향 선택', desc: '㎡ → 평 또는 평 → ㎡ 방향을 선택합니다.' },
-            { step: '면적 입력 또는 프리셋 선택', desc: '숫자를 직접 입력하거나, 59㎡·84㎡ 등 아파트 표준 프리셋 버튼을 클릭합니다.' },
-            { step: '결과 확인 및 복사', desc: '변환 결과가 즉시 표시됩니다. 소수점 자리수를 조절하고, 복사 버튼으로 결과를 가져가세요.' },
+            { step: '변환 방향 선택', desc: '㎡ → 평 또는 평 → ㎡ 방향을 상단 토글 버튼으로 선택합니다. 방향을 바꾸면 입력값이 초기화되므로 방향을 먼저 선택하는 것이 좋습니다.' },
+            { step: '면적 입력 또는 프리셋 선택', desc: '숫자를 직접 입력하거나, 59㎡·84㎡ 등 아파트 표준 프리셋 버튼을 클릭합니다. 소수점 입력도 지원하며, 입력과 동시에 결과가 계산됩니다.' },
+            { step: '소수점 자리수 조절', desc: '결과 정밀도를 0~4자리까지 선택할 수 있습니다. 계약서 작성 시에는 2자리, 빠른 참고용으로는 0~1자리가 적합합니다.' },
+            { step: '결과 확인 및 복사', desc: '변환 결과가 즉시 표시됩니다. 복사 버튼으로 평 또는 ㎡ 값을 클립보드에 저장하여 메모장, 이메일, 부동산 앱에 바로 붙여넣을 수 있습니다.' },
           ],
           faqs: [
-            { q: '1평은 몇 ㎡인가요?', a: '1평은 정확히 3.30578512㎡이며, 통상 3.3058㎡로 계산합니다. 법적으로는 1평 = 400/121㎡(약 3.30579㎡)로 정의됩니다.' },
-            { q: '아파트 전용면적 84㎡는 몇 평인가요?', a: '84 ÷ 3.30579 ≈ 25.4평입니다. 흔히 "25평형 아파트"라고 부르는 평형입니다.' },
-            { q: '공급면적과 전용면적의 차이는 무엇인가요?', a: '전용면적은 현관문 안쪽 실내 면적만을 의미하고, 공급면적은 전용면적에 계단·복도 등 공용 면적(주거공용면적)을 합산한 면적입니다.' },
+            { q: '1평은 몇 ㎡인가요?', a: '1평은 정확히 3.30578512㎡이며, 통상 3.3058㎡로 계산합니다. 법적으로는 1평 = 400/121㎡(약 3.30579㎡)로 정의됩니다. 이 계산기는 법정 환산 계수 3.30579를 사용합니다.' },
+            { q: '아파트 전용면적 84㎡는 몇 평인가요?', a: '84 ÷ 3.30579 ≈ 25.4평입니다. 흔히 "25평형 아파트"라고 부르는 평형입니다. 프리셋 버튼에서 84㎡를 클릭하면 바로 확인할 수 있습니다.' },
+            { q: '공급면적과 전용면적의 차이는 무엇인가요?', a: '전용면적은 현관문 안쪽 실내 면적만을 의미하고, 공급면적은 전용면적에 계단·복도 등 공용 면적(주거공용면적)을 합산한 면적입니다. 부동산 광고에서는 보통 전용면적 기준으로 표기하며, 실제 거주 공간의 크기는 전용면적으로 비교하는 것이 정확합니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -356,14 +402,16 @@ export default function AreaPage() {
             { icon: '📐', title: 'Interior & Renovation Planning', desc: 'View construction areas in both units simultaneously for accurate material ordering and cost estimation.' },
           ],
           steps: [
-            { step: 'Choose Conversion Direction', desc: 'Select ㎡ → pyeong or pyeong → ㎡ using the toggle at the top.' },
-            { step: 'Enter Area or Select Preset', desc: 'Type in a value manually or click a preset button for standard apartment sizes like 59㎡ or 84㎡.' },
-            { step: 'View Result & Copy', desc: 'The converted value appears instantly. Adjust decimal places as needed and copy the result with one click.' },
+            { step: 'Choose Conversion Direction', desc: 'Select ㎡ → pyeong or pyeong → ㎡ using the toggle at the top. It is best to choose direction first, as switching resets the input value.' },
+            { step: 'Enter Area or Select Preset', desc: 'Type in a value manually or click a preset button for standard apartment sizes like 59㎡ or 84㎡. Decimal inputs are supported and results update instantly.' },
+            { step: 'Adjust Decimal Precision', desc: 'Choose 0 to 4 decimal places to control result precision. Use 2 decimal places for contract documents, or 0–1 for quick reference.' },
+            { step: 'View Result & Copy', desc: 'The converted value appears instantly. Copy the pyeong or ㎡ value to your clipboard with one click, then paste it into a notepad, email, or real estate app.' },
           ],
           faqs: [
-            { q: 'How many square meters is one pyeong?', a: 'One pyeong equals exactly 400/121 m² ≈ 3.30579 m². In practice, 3.3058 m² is commonly used for calculations.' },
-            { q: 'How many pyeong is an 84㎡ apartment?', a: '84 ÷ 3.30579 ≈ 25.4 pyeong. This is commonly referred to as a "25-pyeong apartment" in Korea.' },
-            { q: 'What is the difference between exclusive area and supply area?', a: 'Exclusive area (전용면적) covers only the interior of your unit. Supply area (공급면적) adds shared spaces like hallways and stairwells.' },
+            { q: 'How many square meters is one pyeong?', a: 'One pyeong equals exactly 400/121 m² ≈ 3.30579 m². In practice, 3.3058 m² is commonly used for quick calculations. This converter uses the legal conversion factor of 3.30579.' },
+            { q: 'How many pyeong is an 84㎡ apartment?', a: '84 ÷ 3.30579 ≈ 25.4 pyeong. This is commonly referred to as a "25-pyeong apartment" in Korea. Click the 84㎡ preset button to verify instantly.' },
+            { q: 'What is the difference between exclusive area and supply area?', a: 'Exclusive area (전용면적) covers only the interior of your unit — everything inside the front door. Supply area (공급면적) adds shared spaces like hallways and stairwells. For comparing living space between properties, always use the exclusive area.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

@@ -8,6 +8,45 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "글자 수 세기 / 바이트 계산기",
+  "alternateName": "Character & Byte Counter",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/utility/counter",
+  "description": "텍스트의 글자 수(공백 포함/제외)와 UTF-8, EUC-KR 바이트를 실시간으로 계산하는 무료 온라인 도구입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "공백 포함과 공백 제외 글자 수, 어떤 기준을 써야 하나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "자기소개서나 공모전 대부분은 '공백 포함' 기준을 사용합니다. 단, 제출 플랫폼마다 다를 수 있으니 공고문의 안내를 반드시 확인하세요. 이 도구는 두 기준을 동시에 표시합니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "EUC-KR 바이트와 UTF-8 바이트는 왜 다른가요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "한글 한 글자는 EUC-KR에서 2바이트, UTF-8에서 3바이트를 차지합니다. 영문과 숫자는 두 인코딩 모두 1바이트입니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "입력한 텍스트가 서버에 저장되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "아니요. 이 글자 수 계산기는 100% 브라우저에서만 작동하며, 입력한 내용은 외부 서버로 전송되지 않습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." }
+    }
+  ]
+};
+
 export default function CharacterCounterPage() {
   const t = useTranslations('TextCounter');
   const [text, setText] = useState('');
@@ -152,6 +191,10 @@ export default function CharacterCounterPage() {
         광고 영역
       </div>
 
+      {/* JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+
       <SeoSection
         ko={{
           title: "글자 수 세기 / 바이트 계산기란 무엇인가요?",
@@ -163,14 +206,16 @@ export default function CharacterCounterPage() {
             { icon: '📄', title: '논문 & 보고서 분량 체크', desc: '학술 논문이나 공모전 응모작의 원고지 매수 환산, 최소/최대 글자 수 충족 여부를 손쉽게 확인합니다.' },
           ],
           steps: [
-            { step: '텍스트 붙여넣기 또는 직접 입력', desc: '상단 입력창에 분량을 확인하고 싶은 텍스트를 붙여넣거나 직접 작성합니다.' },
-            { step: '실시간 결과 확인', desc: '입력하는 즉시 공백 포함 글자 수, 공백 제외 글자 수, EUC-KR 바이트, UTF-8 바이트가 자동으로 계산됩니다.' },
-            { step: '기준에 맞게 텍스트 조정', desc: '제한 기준과 현재 분량을 비교하며 텍스트를 추가하거나 줄여 원하는 분량으로 맞춥니다.' },
+            { step: '텍스트 붙여넣기 또는 직접 입력', desc: '상단 입력창에 분량을 확인하고 싶은 텍스트를 붙여넣거나 직접 작성합니다. Ctrl+A로 전체 선택 후 붙여넣기하면 빠르게 입력할 수 있습니다.' },
+            { step: '실시간 결과 확인', desc: '입력하는 즉시 공백 포함 글자 수, 공백 제외 글자 수, EUC-KR 바이트, UTF-8 바이트가 자동으로 계산됩니다. 별도 버튼 클릭 없이 타이핑과 동시에 반영됩니다.' },
+            { step: '기준에 맞게 텍스트 조정', desc: '제한 기준과 현재 분량을 비교하며 텍스트를 추가하거나 줄여 원하는 분량으로 맞춥니다. 자기소개서 1,000자 제한, SMS 90바이트 제한 등 다양한 기준에 활용하세요.' },
+            { step: '결과 활용 및 복사', desc: '확인한 글자 수나 바이트 수치를 메모하거나, 텍스트를 그대로 복사하여 목적지 플랫폼에 붙여넣습니다. 입력창 내용은 페이지를 새로고침하기 전까지 유지됩니다.' },
           ],
           faqs: [
             { q: '공백 포함과 공백 제외 글자 수, 어떤 기준을 써야 하나요?', a: '자기소개서나 공모전 대부분은 "공백 포함" 기준을 사용합니다. 단, 제출 플랫폼마다 다를 수 있으니 공고문의 안내를 반드시 확인하세요. 이 도구는 두 기준을 동시에 표시하므로 어떤 상황에도 바로 사용할 수 있습니다.' },
             { q: 'EUC-KR 바이트와 UTF-8 바이트는 왜 다른가요?', a: '한글 한 글자는 EUC-KR에서 2바이트, UTF-8에서 3바이트를 차지합니다. 영문과 숫자는 두 인코딩 모두 1바이트입니다. 오래된 한국 웹사이트나 전통적인 SMS 시스템은 EUC-KR을 사용하는 경우가 많고, 최신 웹 표준은 UTF-8을 사용합니다.' },
             { q: '입력한 텍스트가 서버에 저장되나요?', a: '아니요. 이 글자 수 계산기는 100% 브라우저에서만 작동하며, 입력한 내용은 외부 서버로 전송되지 않습니다. 민감한 문서 내용도 안심하고 사용하실 수 있습니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -183,14 +228,16 @@ export default function CharacterCounterPage() {
             { icon: '📄', title: 'Essays & Reports', desc: 'Easily check minimum/maximum character requirements for academic papers, contest entries, or official submissions.' },
           ],
           steps: [
-            { step: 'Paste or type your text', desc: 'Paste or type the text you want to measure into the input field.' },
-            { step: 'View real-time results', desc: 'Characters with spaces, without spaces, EUC-KR bytes, and UTF-8 bytes are calculated instantly as you type.' },
-            { step: 'Adjust your text', desc: 'Add or trim your text while watching the count to hit your target length precisely.' },
+            { step: 'Paste or type your text', desc: 'Paste or type the text you want to measure into the input field. You can use Ctrl+A to select all and paste quickly from another document.' },
+            { step: 'View real-time results', desc: 'Characters with spaces, without spaces, EUC-KR bytes, and UTF-8 bytes are calculated instantly as you type — no button click required.' },
+            { step: 'Adjust your text', desc: 'Add or trim your text while watching the count to hit your target length precisely. Useful for fitting within a 1,000-character job application or a 160-character SMS limit.' },
+            { step: 'Copy and use your text', desc: 'Once your text meets the target length, copy it directly from the input field and paste it into your destination platform. The content stays visible until you refresh the page.' },
           ],
           faqs: [
-            { q: 'Should I use character count with or without spaces?', a: 'Most job application portals use "with spaces" as the standard. Always check the submission guidelines for the specific platform. This tool shows both simultaneously.' },
-            { q: 'Why are EUC-KR and UTF-8 byte counts different?', a: 'Korean characters take 2 bytes in EUC-KR and 3 bytes in UTF-8. ASCII/English characters are 1 byte in both. Older Korean websites and some SMS systems use EUC-KR; modern web standards use UTF-8.' },
-            { q: 'Is my text sent to a server?', a: 'No. This counter runs 100% in your browser. Nothing is transmitted to any server, so you can safely paste sensitive document content.' },
+            { q: 'Should I use character count with or without spaces?', a: 'Most job application portals use "with spaces" as the standard. Always check the submission guidelines for the specific platform. This tool shows both simultaneously, so you are covered either way.' },
+            { q: 'Why are EUC-KR and UTF-8 byte counts different?', a: 'Korean characters take 2 bytes in EUC-KR and 3 bytes in UTF-8. ASCII/English characters are 1 byte in both encodings. Older Korean websites and some SMS systems use EUC-KR; modern web standards use UTF-8.' },
+            { q: 'Is my text sent to a server?', a: 'No. This counter runs 100% in your browser. Nothing is transmitted to any server, so you can safely paste sensitive document content such as cover letters, contracts, or personal messages.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

@@ -9,6 +9,46 @@ import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './lotto.module.css';
 
+/* ─── JSON-LD Schemas ─── */
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "글로벌 운명 로또 번호 생성기",
+  "alternateName": "Global Destiny Lotto Picker",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/utility/lotto-generator",
+  "description": "이름·생년월일·구매날짜로 Powerball, Mega Millions, 로또 6/45 번호를 생성하는 재미있는 무료 도구입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "같은 번호를 다시 뽑으려면?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이름, 생년월일, 구매일을 동일하게 입력하면 항상 같은 번호가 나옵니다. 결정론적 알고리즘(Seeded PRNG)을 사용하기 때문에 날짜나 기기가 달라져도 결과가 변하지 않습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "이 번호는 실제로 당첨될 수 있나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이 도구는 순수 오락 목적으로 제작되었습니다. 생성되는 번호는 수학적 알고리즘에 기반한 의사난수로, 실제 복권 추첨과는 아무런 연관이 없습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "파워볼과 메가밀리언스는 어떻게 다른가요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "파워볼은 1~69에서 5개를 뽑고 1~26에서 파워볼 1개를 추가 추첨합니다. 메가밀리언스는 1~70에서 5개를 뽑고 1~25에서 메가볼 1개를 추가합니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 이 도구는 순수 오락 목적으로 제작되었으며, 생성된 번호는 실제 복권 추첨과 아무런 연관이 없습니다." }
+    }
+  ]
+};
+
 /* ─── Types ─── */
 type Game = 'powerball' | 'megamillions' | 'lotto645';
 
@@ -306,6 +346,10 @@ export default function LottoPage() {
         />
         <RelatedTools toolId="utilities/utility/lotto-generator" />
         <div className={s.ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
+        {/* JSON-LD */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+
         <SeoSection
           ko={{
             title: '글로벌 운명 로또 번호 생성기란 무엇인가요?',
@@ -326,7 +370,7 @@ export default function LottoPage() {
               { q: '같은 번호를 다시 뽑으려면?', a: '이름, 생년월일, 구매일을 동일하게 입력하면 항상 같은 번호가 나옵니다. 결정론적 알고리즘(Seeded PRNG)을 사용하기 때문에 날짜나 기기가 달라져도 결과가 변하지 않습니다.' },
               { q: '이 번호는 실제로 당첨될 수 있나요?', a: '이 도구는 순수 오락 목적으로 제작되었습니다. 생성되는 번호는 수학적 알고리즘에 기반한 의사난수로, 실제 복권 추첨과는 아무런 연관이 없습니다. 당첨을 보장하지 않으며, 복권 구매 판단은 전적으로 사용자의 책임입니다.' },
               { q: '파워볼과 메가밀리언스는 어떻게 다른가요?', a: '파워볼은 1~69에서 5개를 뽑고 1~26에서 파워볼 1개를 추가 추첨합니다. 메가밀리언스는 1~70에서 5개를 뽑고 1~25에서 메가볼 1개를 추가합니다. 두 게임 모두 메인 번호와 보너스 번호가 일치해야 최고 상금을 받을 수 있습니다.' },
-              { q: '한국 로또 공 색상은 실제와 같나요?', a: '네. 한국 로또 6/45의 공식 색상 체계를 그대로 반영했습니다: 1~10번 노랑, 11~20번 파랑, 21~30번 빨강, 31~40번 회색, 41~45번 초록으로 표시됩니다.' },
+              { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 이 도구는 순수 오락 목적으로 제작되었으며, 생성된 번호는 실제 복권 추첨과 아무런 연관이 없습니다. 복권 구매 판단은 전적으로 사용자의 책임입니다.' },
             ],
           }}
           en={{
@@ -348,7 +392,7 @@ export default function LottoPage() {
               { q: 'How do I get the same numbers again?', a: 'Enter the exact same name, birth date, and purchase date — the deterministic seeded PRNG guarantees identical output every time, regardless of device or session.' },
               { q: 'Can these numbers actually win?', a: 'This tool is purely for entertainment. The numbers are generated mathematically and have no connection to real lottery draws. No winnings are guaranteed, and purchasing lottery tickets is entirely at your own discretion.' },
               { q: 'What\'s the difference between Powerball and Mega Millions?', a: 'Powerball draws 5 balls from 1–69, plus a Powerball from 1–26. Mega Millions draws 5 from 1–70, plus a Mega Ball from 1–25. Both require matching all main numbers and the bonus ball for the jackpot.' },
-              { q: 'Are the Korean Lotto ball colors accurate?', a: 'Yes — the official Korean Lotto 6/45 color scheme is applied: numbers 1–10 are yellow, 11–20 blue, 21–30 red, 31–40 gray, and 41–45 green, matching the real lottery ball colors.' },
+              { q: 'Can I use this result as official data?', a: 'Results are for reference only. This tool is for entertainment purposes only. The numbers generated have no connection to real lottery draws, and purchasing lottery tickets is entirely at your own discretion.' },
             ],
           }}
         />

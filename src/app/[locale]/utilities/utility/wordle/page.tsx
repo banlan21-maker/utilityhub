@@ -4,6 +4,45 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { Grid3x3 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "일일 단어 퍼즐",
+  "alternateName": "Daily Word Puzzle",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "GameApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/utility/wordle",
+  "description": "매일 새로운 단어를 맞추는 두뇌 게임입니다. 한국어(3글자)와 영어(5글자)를 지원하며 연승 기록을 추적합니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "매일 새로운 단어가 나오나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "네! 매일 자정(00:00)이 되면 새로운 단어 퍼즐이 생성됩니다. 날짜 기반 알고리즘을 사용하여 모든 사용자에게 동일한 단어가 제공됩니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "연승이 끊기면 어떻게 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "하루를 건너뛰거나 퍼즐을 실패하면 현재 연승이 0으로 초기화됩니다. 하지만 최대 연승 기록은 유지되므로, 다시 도전하여 새로운 기록을 세워보세요!" }
+    },
+    {
+      "@type": "Question",
+      "name": "무료로 플레이할 수 있나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "네! 일일 단어 퍼즐은 100% 무료로 제공됩니다. 회원가입이나 로그인 없이 바로 플레이하고, 데이터는 브라우저에 안전하게 저장됩니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." }
+    }
+  ]
+};
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -1053,10 +1092,10 @@ export default function WordlePage() {
                 : 'Yes! You can switch languages anytime using the KR/EN toggle button at the top. Each language has an independent word list, and game records are managed separately.',
             },
             {
-              q: currentLanguage === 'ko' ? '공유 기능은 어떻게 작동하나요?' : 'How does the share feature work?',
+              q: currentLanguage === 'ko' ? '이 툴의 결과를 공식 자료로 사용해도 되나요?' : 'Can I use this result as official data?',
               a: currentLanguage === 'ko'
-                ? '게임 종료 후 공유 버튼을 누르면 스포일러 없이 결과를 이모지(🟩🟨⬛)로 표현한 텍스트가 클립보드에 복사됩니다. SNS에 붙여넣어 친구들에게 도전장을 내밀어보세요!'
-                : 'After the game ends, clicking the share button copies a text expressing your results with emojis (🟩🟨⬛) without spoilers to your clipboard. Paste it on social media to challenge your friends!',
+                ? '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.'
+                : 'Results are for reference only. Please consult a professional or official source for accurate figures.',
             },
           ],
         }}
@@ -1147,14 +1186,17 @@ export default function WordlePage() {
                 : 'Yes! You can switch languages anytime using the KR/EN toggle button at the top. Each language has an independent word list, and game records are managed separately.',
             },
             {
-              q: currentLanguage === 'ko' ? '공유 기능은 어떻게 작동하나요?' : 'How does the share feature work?',
+              q: currentLanguage === 'ko' ? '이 툴의 결과를 공식 자료로 사용해도 되나요?' : 'Can I use this result as official data?',
               a: currentLanguage === 'ko'
-                ? '게임 종료 후 공유 버튼을 누르면 스포일러 없이 결과를 이모지(🟩🟨⬛)로 표현한 텍스트가 클립보드에 복사됩니다. SNS에 붙여넣어 친구들에게 도전장을 내밀어보세요!'
-                : 'After the game ends, clicking the share button copies a text expressing your results with emojis (🟩🟨⬛) without spoilers to your clipboard. Paste it on social media to challenge your friends!',
+                ? '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.'
+                : 'Results are for reference only. Please consult a professional or official source for accurate figures.',
             },
           ],
         }}
       />
+      {/* JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>
   );
 }
