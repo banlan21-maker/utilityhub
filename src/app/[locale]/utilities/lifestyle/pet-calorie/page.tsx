@@ -1,5 +1,6 @@
 'use client';
 
+import type { Metadata } from 'next';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Heart } from 'lucide-react';
@@ -7,6 +8,57 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === 'ko';
+  const title = isKo
+    ? '반려동물 사료량 & 칼로리 계산기 | Utility Hub'
+    : 'Pet Food & Calorie Calculator | Utility Hub';
+  const description = isKo
+    ? '강아지·고양이의 체중·나이·활동량으로 일일 권장 칼로리(DER)와 사료량(g)을 계산하는 무료 도구'
+    : 'Calculate your dog or cat daily calorie needs (DER) and recommended food amount in grams — free and instant.';
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/pet-calorie`;
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/pet-calorie',
+        en: 'https://www.theutilhub.com/en/utilities/lifestyle/pet-calorie',
+      },
+    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: '반려동물 사료량 & 칼로리 계산기',
+  alternateName: 'Pet Food & Calorie Calculator',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  url: 'https://www.theutilhub.com/ko/utilities/lifestyle/pet-calorie',
+  description: '강아지·고양이의 체중·나이·활동량으로 일일 권장 칼로리(DER)와 사료량(g)을 계산하는 무료 도구',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: '계산된 사료량과 사료 봉투의 급여량 기준이 다릅니다', acceptedAnswer: { '@type': 'Answer', text: '사료 봉투의 급여량은 제조사 기준으로 다소 많이 제시되는 경향이 있습니다. 이 계산기는 개별 반려동물의 체중과 활동량을 반영하므로 더 정밀합니다. 처음에는 계산량을 기준으로 2~3주간 급여 후 체중 변화를 모니터링하세요.' } },
+    { '@type': 'Question', name: '중성화 수술 후 사료량을 줄여야 하나요?', acceptedAnswer: { '@type': 'Answer', text: '네. 중성화 후에는 기초 대사율이 약 20~30% 낮아져 같은 양을 먹어도 살이 찌기 쉽습니다. 생애 단계에서 "성견/성묘 (중성화 완료)"를 선택하면 이를 반영한 권장량이 계산됩니다.' } },
+    { '@type': 'Question', name: '반려동물이 계산된 양보다 훨씬 많이 먹으려 합니다', acceptedAnswer: { '@type': 'Answer', text: '하루 급여량을 한 번에 주지 말고 2~3회로 나눠 급여하면 포만감이 높아집니다. 또한 식이섬유가 풍부한 사료나 물을 사료와 함께 제공하면 과식 충동을 줄일 수 있습니다.' } },
+    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
+  ],
+};
 
 export default function PetFoodCalculatorPage() {
   const t = useTranslations('PetFood');
@@ -70,6 +122,8 @@ export default function PetFoodCalculatorPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <div style={{
@@ -275,11 +329,13 @@ export default function PetFoodCalculatorPage() {
             { step: '반려동물 정보 입력', desc: '종류(강아지/고양이), 체중(kg), 생애 단계(자견~노령), 활동량(낮음/보통/높음)을 선택합니다.' },
             { step: '사료 칼로리 입력', desc: '현재 급여 중인 사료의 칼로리(kcal/kg)를 입력합니다. 사료 봉투 뒷면이나 제조사 홈페이지에서 확인할 수 있습니다.' },
             { step: '권장 사료량 확인', desc: '기초 대사량(RER), 일일 권장 칼로리(DER), 하루 권장 사료량(g)이 계산됩니다. 아침·저녁 2회 급여 시 절반씩 나눠주세요.' },
+            { step: '결과 기록 & 모니터링', desc: '계산된 사료량을 기준으로 2~3주간 급여하면서 반려동물의 체중 변화를 모니터링하세요. 체중이 늘거나 줄면 활동량 설정을 조정해 재계산합니다.' },
           ],
           faqs: [
             { q: '계산된 사료량과 사료 봉투의 급여량 기준이 다릅니다', a: '사료 봉투의 급여량은 제조사 기준으로 다소 많이 제시되는 경향이 있습니다. 이 계산기는 개별 반려동물의 체중과 활동량을 반영하므로 더 정밀합니다. 처음에는 계산량을 기준으로 2~3주간 급여 후 체중 변화를 모니터링하세요.' },
             { q: '중성화 수술 후 사료량을 줄여야 하나요?', a: '네. 중성화 후에는 기초 대사율이 약 20~30% 낮아져 같은 양을 먹어도 살이 찌기 쉽습니다. 생애 단계에서 "성견/성묘 (중성화 완료)"를 선택하면 이를 반영한 권장량이 계산됩니다.' },
             { q: '반려동물이 계산된 양보다 훨씬 많이 먹으려 합니다', a: '하루 급여량을 한 번에 주지 말고 2~3회로 나눠 급여하면 포만감이 높아집니다. 또한 식이섬유가 풍부한 사료나 물을 사료와 함께 제공하면 과식 충동을 줄일 수 있습니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -295,11 +351,13 @@ export default function PetFoodCalculatorPage() {
             { step: 'Enter pet information', desc: 'Select species (dog/cat), enter weight (kg), choose life stage (puppy to senior), and select activity level (low/normal/high).' },
             { step: 'Enter food calorie density', desc: "Input the calorie content (kcal/kg) of the food you currently serve. Find this on the bag's label or the manufacturer's website." },
             { step: 'View recommended portion', desc: 'RER, DER, and daily food amount (g) are calculated. Split the total evenly between morning and evening meals.' },
+            { step: 'Monitor and adjust', desc: 'Feed the calculated amount for 2–3 weeks and monitor your pet\'s body weight. If weight changes unexpectedly, revisit the activity level setting and recalculate.' },
           ],
           faqs: [
             { q: "The calculator's result differs from the bag's feeding guide", a: "Manufacturer guidelines tend to be slightly generous. This calculator accounts for your individual pet's weight and activity level for a more precise result. Start with the calculated amount, monitor weight changes over 2–3 weeks, and adjust as needed." },
             { q: 'Should I reduce food portions after spaying/neutering?', a: 'Yes. Spaying/neutering lowers the metabolic rate by about 20–30%, making it easier to gain weight on the same portions. Select "Adult (neutered)" in the life stage field to factor this in.' },
             { q: 'My pet always seems hungry after the calculated portion', a: 'Divide the daily amount into 2–3 smaller meals instead of one feeding to improve satiety. Offering fiber-rich food or adding water to dry kibble can also help reduce overeating urges.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

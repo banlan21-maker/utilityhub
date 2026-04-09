@@ -1,5 +1,6 @@
 'use client';
 
+import type { Metadata } from 'next';
 import { useState, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
@@ -9,6 +10,57 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './color-coordinator.module.css';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === 'ko';
+  const title = isKo
+    ? 'OOTD 컬러 코디네이터 | Utility Hub'
+    : 'OOTD Color Coordinator | Utility Hub';
+  const description = isKo
+    ? '마네킹 위에서 상의·하의·아우터 색상을 실시간 조합하고 3가지 알고리즘 룩을 제안하는 무료 패션 코디 플래너'
+    : 'Combine outfit colors on a mannequin in real-time with 3 algorithm-powered look themes — free online fashion planner.';
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/color-coordinator`;
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
+        en: 'https://www.theutilhub.com/en/utilities/lifestyle/color-coordinator',
+      },
+    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'OOTD 컬러 코디네이터',
+  alternateName: 'OOTD Color Coordinator',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  url: 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
+  description: '마네킹 위에서 상의·하의·아우터 색상을 실시간 조합하고 3가지 알고리즘 룩을 제안하는 무료 패션 코디 플래너',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: '색상 팔레트는 어떻게 구성되나요?', acceptedAnswer: { '@type': 'Answer', text: '뉴트럴 4색, 웜뉴트럴 4색, 컬러 4색, 포인트 4색의 총 16색으로 구성되어 있으며, [+ Custom] 버튼으로 커스텀 색상도 추가할 수 있습니다.' } },
+    { '@type': 'Question', name: '룩 알고리즘은 어떤 원리인가요?', acceptedAnswer: { '@type': 'Answer', text: '데일리는 무채색 톤 배치, 포인트는 보색(Hue +180°) 적용, 소프트는 유사색(Analogous) 조합으로 각각 색채 이론을 자동 적용합니다.' } },
+    { '@type': 'Question', name: '모자와 아우터는 왜 기본 비활성인가요?', acceptedAnswer: { '@type': 'Answer', text: '모든 코디에서 필수 아이템이 아니기 때문입니다. [+ Add] 버튼으로 필요할 때 추가할 수 있습니다.' } },
+    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
+  ],
+};
 
 // ─────────────────── Types ───────────────────
 type SlotKey = 'hat' | 'outer' | 'top' | 'bottom' | 'shoes';
@@ -488,9 +540,7 @@ export default function ColorCoordinatorPage() {
       { q: '색상 팔레트는 어떻게 구성되나요?', a: '뉴트럴 4색, 웜뉴트럴 4색, 컬러 4색, 포인트 4색의 총 16색으로 구성되어 있으며, [+ Custom] 버튼으로 커스텀 색상도 추가할 수 있습니다.' },
       { q: '룩 알고리즘은 어떤 원리인가요?', a: '데일리는 무채색 톤 배치, 포인트는 보색(Hue +180°) 적용, 소프트는 유사색(Analogous) 조합으로 각각 색채 이론을 자동 적용합니다.' },
       { q: '모자와 아우터는 왜 기본 비활성인가요?', a: '모든 코디에서 필수 아이템이 아니기 때문입니다. [+ Add] 버튼으로 필요할 때 추가할 수 있습니다.' },
-      { q: '저장한 이미지는 어디에 저장되나요?', a: '브라우저 다운로드 폴더에 PNG 파일로 저장됩니다.' },
-      { q: '모바일에서도 사용할 수 있나요?', a: '반응형 디자인으로 스마트폰 화면에서도 편리하게 사용할 수 있습니다.' },
-      { q: '면책 조항', a: '본 도구는 일반적인 패션 색채 이론을 기반으로 코디를 제안합니다. 개인의 피부톤, 체형, 취향에 따라 실제 착장 결과가 다를 수 있습니다. 최종 코디 결정은 사용자 본인의 판단에 따라 주시기 바랍니다.' },
+      { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
     ],
   };
 
@@ -514,9 +564,7 @@ export default function ColorCoordinatorPage() {
       { q: 'How is the color palette organized?', a: 'The palette has 16 colors across 4 groups: Neutrals, Warm Neutrals, Colors, and Points. You can also add custom colors with the [+ Custom] button.' },
       { q: 'How do the look algorithms work?', a: 'Daily uses neutral tone distribution, Point uses complementary color (Hue +180°), and Soft uses analogous color theory — all applied automatically.' },
       { q: 'Why are hat and outer inactive by default?', a: 'They are optional accessories. You can add them anytime by clicking the [+ Add] button next to each slot.' },
-      { q: 'Where is the saved image stored?', a: 'It downloads directly to your browser\'s Downloads folder as a PNG file.' },
-      { q: 'Does it work on mobile?', a: 'Yes, the tool is fully responsive and works on smartphones and tablets.' },
-      { q: 'Disclaimer', a: 'This tool suggests outfits based on general fashion color theory. Results may vary based on individual skin tone, body type, and personal style.' },
+      { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
     ],
   };
 
@@ -528,6 +576,8 @@ export default function ColorCoordinatorPage() {
 
   return (
     <div className={s.container}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
 
       {/* ── Header ── */}

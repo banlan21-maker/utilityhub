@@ -1,5 +1,6 @@
 'use client';
 
+import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { CalendarDays } from 'lucide-react';
@@ -7,6 +8,57 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === 'ko';
+  const title = isKo
+    ? 'D-Day & 날짜 계산기 | Utility Hub'
+    : 'D-Day & Date Calculator | Utility Hub';
+  const description = isKo
+    ? '목표일까지 남은 D-Day를 계산하고 날짜 더하기/빼기를 간편하게 처리하는 무료 날짜 계산기'
+    : 'Free D-Day calculator with date arithmetic — track countdowns and calculate future or past dates instantly.';
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/dday-calc`;
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/dday-calc',
+        en: 'https://www.theutilhub.com/en/utilities/lifestyle/dday-calc',
+      },
+    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'D-Day & 날짜 계산기',
+  alternateName: 'D-Day & Date Calculator',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  url: 'https://www.theutilhub.com/ko/utilities/lifestyle/dday-calc',
+  description: '목표일까지 남은 D-Day를 계산하고 날짜 더하기/빼기를 간편하게 처리하는 무료 날짜 계산기',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'D-Day 계산 시 오늘 날짜도 포함되나요?', acceptedAnswer: { '@type': 'Answer', text: '일반적으로 D-Day 계산은 오늘을 기준으로 내일을 D-1, 목표일 당일을 D-0으로 계산합니다. 이 도구도 동일한 방식을 따르며, 오늘이 목표일이면 "D-Day!"로 표시됩니다.' } },
+    { '@type': 'Question', name: '날짜 더하기 계산 시 윤년·월별 일수 차이가 적용되나요?', acceptedAnswer: { '@type': 'Answer', text: '네. 이 날짜 계산기는 JavaScript 내장 Date 객체를 사용하므로 윤년(2월 29일)과 각 월의 정확한 일수가 자동 반영됩니다. 별도로 신경 쓰실 필요가 없습니다.' } },
+    { '@type': 'Question', name: '모바일에서도 D-Day 계산이 가능한가요?', acceptedAnswer: { '@type': 'Answer', text: '네, 이 D-Day 계산기는 모바일 브라우저에서도 완벽하게 동작합니다. 앱 설치 없이 즐겨찾기에 추가해 언제든지 빠르게 접근하세요.' } },
+    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
+  ],
+};
 
 export default function DDayPage() {
   const t = useTranslations('DDay');
@@ -96,6 +148,8 @@ export default function DDayPage() {
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <div style={{
@@ -303,11 +357,13 @@ export default function DDayPage() {
             { step: '목표 날짜 선택', desc: '달력 입력창에서 D-Day로 지정할 날짜를 선택합니다. 오늘 이전 날짜를 선택하면 "경과일"로 표시됩니다.' },
             { step: 'D-Day 결과 확인', desc: '선택 즉시 오늘로부터 며칠 남았는지(또는 며칠이 지났는지) 자동으로 계산됩니다.' },
             { step: '날짜 더하기/빼기 활용', desc: '기준 날짜에 일수나 개월 수를 더하거나 빼서 정확한 결과 날짜를 계산합니다. 계약서·납기일 산정에 유용합니다.' },
+            { step: '결과 활용 & 공유', desc: '계산된 D-Day 결과를 메모하거나 SNS 공유 버튼을 눌러 친구에게 전달하세요. 즐겨찾기에 추가하면 언제든지 빠르게 재방문할 수 있습니다.' },
           ],
           faqs: [
             { q: 'D-Day 계산 시 오늘 날짜도 포함되나요?', a: '일반적으로 D-Day 계산은 오늘을 기준으로 내일을 D-1, 목표일 당일을 D-0으로 계산합니다. 이 도구도 동일한 방식을 따르며, 오늘이 목표일이면 "D-Day!"로 표시됩니다.' },
             { q: '날짜 더하기 계산 시 윤년·월별 일수 차이가 적용되나요?', a: '네. 이 날짜 계산기는 JavaScript 내장 Date 객체를 사용하므로 윤년(2월 29일)과 각 월의 정확한 일수가 자동 반영됩니다. 별도로 신경 쓰실 필요가 없습니다.' },
             { q: '모바일에서도 D-Day 계산이 가능한가요?', a: '네, 이 D-Day 계산기는 모바일 브라우저에서도 완벽하게 동작합니다. 앱 설치 없이 즐겨찾기에 추가해 언제든지 빠르게 접근하세요.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -320,14 +376,16 @@ export default function DDayPage() {
             { icon: '✈️', title: 'Travel & Event Preparation', desc: 'Set a D-day for your trip departure or concert date and use the countdown to prepare step-by-step.' },
           ],
           steps: [
-            { step: 'Select your target date', desc: 'Pick a date from the calendar. Selecting a past date will show days elapsed instead.' },
-            { step: 'View your D-Day result', desc: 'Days remaining (or elapsed) are calculated instantly upon selection.' },
-            { step: 'Use date arithmetic', desc: 'Add or subtract days and months from a base date to calculate exact result dates for contracts and deadlines.' },
+            { step: 'Select your target date', desc: 'Pick a date from the calendar input. Selecting a past date will show elapsed days instead of a countdown.' },
+            { step: 'View your D-Day result', desc: 'Days remaining (or elapsed) are calculated instantly upon selection, displayed as a large D-number at the center.' },
+            { step: 'Use date arithmetic', desc: 'Add or subtract days and months from a base date to calculate exact result dates for contracts, probation periods, and deadlines.' },
+            { step: 'Share or bookmark', desc: 'Tap the share buttons to send your D-Day result to friends, or bookmark the page for quick access from any device.' },
           ],
           faqs: [
             { q: 'Is today included in the D-Day count?', a: "The standard convention counts tomorrow as D-1 and the target date itself as D-0. This tool follows the same convention — if today is the target date, it displays \"D-Day!\"" },
-            { q: 'Are leap years and month lengths handled correctly?', a: "Yes. This calculator uses JavaScript's built-in Date object, so leap years (Feb 29) and varying month lengths are automatically accounted for." },
+            { q: 'Are leap years and month lengths handled correctly?', a: "Yes. This calculator uses JavaScript's built-in Date object, so leap years (Feb 29) and varying month lengths are automatically accounted for. No manual adjustment is needed." },
             { q: 'Does this work on mobile?', a: "Yes, the D-Day calculator works perfectly in mobile browsers. Add it to your bookmarks for quick access anytime — no app installation needed." },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

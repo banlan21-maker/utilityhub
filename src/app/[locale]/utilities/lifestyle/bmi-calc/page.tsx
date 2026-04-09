@@ -1,5 +1,6 @@
 'use client';
 
+import type { Metadata } from 'next';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Activity } from 'lucide-react';
@@ -7,6 +8,57 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === 'ko';
+  const title = isKo
+    ? 'BMI 계산기 & 일일 수분 섭취량 계산기 | Utility Hub'
+    : 'BMI Calculator & Daily Water Intake Guide | Utility Hub';
+  const description = isKo
+    ? '키와 몸무게로 체질량지수(BMI)를 계산하고 활동량 기반 일일 권장 수분 섭취량을 확인하세요'
+    : 'Calculate your BMI and recommended daily water intake based on your weight and activity level — free and instant.';
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/bmi-calc`;
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/bmi-calc',
+        en: 'https://www.theutilhub.com/en/utilities/lifestyle/bmi-calc',
+      },
+    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'BMI 계산기 & 수분 섭취량 계산기',
+  alternateName: 'BMI Calculator & Daily Water Intake',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  url: 'https://www.theutilhub.com/ko/utilities/lifestyle/bmi-calc',
+  description: '키와 몸무게로 체질량지수(BMI)를 계산하고 활동량 기반 일일 권장 수분 섭취량을 확인하세요',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'BMI가 높으면 반드시 건강에 문제가 있나요?', acceptedAnswer: { '@type': 'Answer', text: 'BMI는 빠른 체중 상태 평가를 위한 참고 지표입니다. 근육량이 많은 운동선수는 BMI가 높아도 건강할 수 있으며, 노인의 경우 정상 BMI여도 근감소증이 있을 수 있습니다. 정확한 진단은 의료 전문가와 상담하세요.' } },
+    { '@type': 'Question', name: '하루 물을 얼마나 마셔야 하나요?', acceptedAnswer: { '@type': 'Answer', text: '일반적으로 체중(kg) × 30~35ml가 기본 권장량입니다. 예를 들어 60kg이라면 1,800~2,100ml(약 9~10잔)입니다. 더운 날씨, 운동 후, 고섬유질 식단에서는 추가 수분이 필요합니다.' } },
+    { '@type': 'Question', name: '아시아인 기준 BMI는 서양인과 다른가요?', acceptedAnswer: { '@type': 'Answer', text: '네. WHO 아시아·태평양 권고 기준은 정상 범위를 18.5~22.9로 설정해 서양 기준(18.5~24.9)보다 낮습니다. 이 도구는 일반 WHO 기준을 사용하며, 아시아인은 25 미만이어도 과체중 위험을 고려할 필요가 있습니다.' } },
+    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
+  ],
+};
 
 export default function BmiWaterCalculatorPage() {
   const t = useTranslations('BmiWater');
@@ -64,6 +116,8 @@ export default function BmiWaterCalculatorPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
         <div style={{
@@ -238,11 +292,13 @@ export default function BmiWaterCalculatorPage() {
             { step: '키 & 몸무게 입력', desc: '신장(cm)과 체중(kg)을 입력합니다. 정확한 측정값을 사용할수록 더 정확한 결과를 얻을 수 있습니다.' },
             { step: '활동량 선택', desc: '평소 활동량(거의 없음 / 적당함 / 매우 활동적)을 선택합니다. 수분 섭취 권장량 계산에 반영됩니다.' },
             { step: '계산 결과 확인', desc: 'BMI 수치와 상태(저체중/정상/과체중/비만)가 표시되고, 하루 권장 수분 섭취량이 ml와 컵 수로 안내됩니다.' },
+            { step: '결과 공유 & 목표 설정', desc: '계산된 BMI와 수분 섭취량을 바탕으로 체중 관리 목표를 설정하세요. SNS 공유 버튼으로 친구에게 도구를 소개할 수도 있습니다.' },
           ],
           faqs: [
-            { q: 'BMI가 높으면 반드시 건강에 문제가 있나요?', a: "BMI는 빠른 체중 상태 평가를 위한 참고 지표입니다. 근육량이 많은 운동선수는 BMI가 높아도 건강할 수 있으며, 노인의 경우 정상 BMI여도 근감소증이 있을 수 있습니다. 정확한 진단은 의료 전문가와 상담하세요." },
+            { q: 'BMI가 높으면 반드시 건강에 문제가 있나요?', a: 'BMI는 빠른 체중 상태 평가를 위한 참고 지표입니다. 근육량이 많은 운동선수는 BMI가 높아도 건강할 수 있으며, 노인의 경우 정상 BMI여도 근감소증이 있을 수 있습니다. 정확한 진단은 의료 전문가와 상담하세요.' },
             { q: '하루 물을 얼마나 마셔야 하나요?', a: '일반적으로 체중(kg) × 30~35ml가 기본 권장량입니다. 예를 들어 60kg이라면 1,800~2,100ml(약 9~10잔)입니다. 더운 날씨, 운동 후, 고섬유질 식단에서는 추가 수분이 필요합니다.' },
             { q: '아시아인 기준 BMI는 서양인과 다른가요?', a: '네. WHO 아시아·태평양 권고 기준은 정상 범위를 18.5~22.9로 설정해 서양 기준(18.5~24.9)보다 낮습니다. 이 도구는 일반 WHO 기준을 사용하며, 아시아인은 25 미만이어도 과체중 위험을 고려할 필요가 있습니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -258,11 +314,13 @@ export default function BmiWaterCalculatorPage() {
             { step: 'Enter height & weight', desc: 'Input your height (cm) and weight (kg). More accurate measurements yield more accurate results.' },
             { step: 'Select activity level', desc: 'Choose your typical activity level (low / moderate / high). This is factored into your daily water intake recommendation.' },
             { step: 'View results', desc: 'Your BMI value and weight status (underweight/normal/overweight/obese) are displayed, along with your recommended daily water intake in ml and cups.' },
+            { step: 'Set health goals', desc: 'Use your BMI and hydration results as a baseline to set diet or exercise goals. Share the tool with friends using the SNS share buttons below.' },
           ],
           faqs: [
             { q: 'Does a high BMI always mean poor health?', a: 'BMI is a reference indicator for quick weight status assessment, not a diagnostic tool. Athletes with high muscle mass may have a high BMI while being perfectly healthy, and older adults can have sarcopenia even with a normal BMI. Consult a healthcare professional for accurate diagnosis.' },
             { q: 'How much water should I drink per day?', a: 'The general guideline is body weight (kg) × 30–35 ml. For example, a 60 kg person needs approximately 1,800–2,100 ml (about 9–10 cups) per day. Hot weather, exercise, and high-fiber diets require additional fluid intake.' },
             { q: 'Is the BMI standard different for Asians?', a: 'Yes. The WHO Asia-Pacific recommendation sets the healthy range at 18.5–22.9, lower than the Western standard of 18.5–24.9. This tool uses the general WHO standard; Asians should be aware of overweight risk even below 25.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />
