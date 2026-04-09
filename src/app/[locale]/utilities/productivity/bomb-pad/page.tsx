@@ -1,3 +1,68 @@
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === "ko";
+  const title = isKo
+    ? "72시간 시한폭탄 패드 — 암호화 공유 메모장 | Utility Hub"
+    : "72H Bomb Pad — Encrypted Collaborative Notepad | Utility Hub";
+  const description = isKo
+    ? "마지막 수정으로부터 72시간만 생존하는 AES-256 암호화 공유 메모장. 아무도 안 쓰면 폭발합니다."
+    : "AES-256 encrypted shared notepad that self-destructs 72 hours after the last edit. Nobody writes = BOOM.";
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/productivity/bomb-pad`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: `https://www.theutilhub.com/ko/utilities/productivity/bomb-pad`,
+        en: `https://www.theutilhub.com/en/utilities/productivity/bomb-pad`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Utility Hub",
+      locale: isKo ? "ko_KR" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "72시간 시한폭탄 패드",
+  "alternateName": "72H Bomb Pad",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/productivity/bomb-pad",
+  "description": "마지막 수정으로부터 72시간만 생존하는 AES-256 암호화 공유 메모장. 아무도 안 쓰면 폭발합니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "정말 운영자도 내용을 볼 수 없나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 내용은 브라우저에서 AES-256-GCM으로 암호화된 후 저장됩니다. 암호화 키는 URL의 # 뒤에만 존재하며 서버로 전송되지 않습니다. 데이터베이스에는 암호화된 덩어리만 저장됩니다." } },
+    { "@type": "Question", "name": "수정하면 시간이 얼마나 늘어나나요?", "acceptedAnswer": { "@type": "Answer", "text": "수정할 때마다 남은 시간과 무관하게 72:00:00으로 완전 리셋됩니다." } },
+    { "@type": "Question", "name": "링크를 잃어버리면 어떻게 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "#이 포함된 전체 URL을 잃어버리면 복호화 키가 없어 내용에 접근할 수 없습니다. 링크는 안전한 곳에 보관하세요." } },
+    { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
+  ]
+};
+
 'use client';
 
 import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
@@ -331,6 +396,14 @@ function BombPadContent() {
 
   return (
     <div className={s.container}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <NavigationActions />
 
       {/* Header */}
@@ -500,49 +573,52 @@ function BombPadContent() {
       />
       <RelatedTools toolId="utilities/productivity/bomb-pad" />
 
+      {/* Ad Placeholder */}
+      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
+
       <SeoSection
         ko={{
           title: '72시간 시한폭탄 패드 — 종단간 암호화 공유 메모장',
-          description: '마지막 수정으로부터 72시간 동안만 생존하는 공유 메모장. AES-256 종단간 암호화로 운영자도 내용을 볼 수 없습니다. MT, 여행, 팀 프로젝트에 최적.',
+          description: '72시간 시한폭탄 패드(Bomb Pad)는 마지막 수정 시각으로부터 정확히 72시간 동안만 생존하는 브라우저 기반 공유 메모장입니다. AES-256-GCM 종단간 암호화를 적용해 운영자도 내용을 절대 열람할 수 없습니다. 암호화 키는 URL의 # 해시 뒤에만 존재하며 서버에 전송되지 않으므로 데이터베이스에는 암호화된 덩어리만 저장됩니다. Supabase Realtime을 통해 여러 사람이 동시에 편집하면 즉시 반영되며, MT·여행·팀 스프린트·긴급 회의록 작성에 최적입니다. 패드에 아무도 글을 쓰지 않으면 72시간 후 자동 폭발(삭제)됩니다.',
           useCases: [
-            { icon: '🏕️', title: 'MT/여행 계획', desc: '단톡방 대신 이 패드에 여행 계획을 공유하세요. 맛집 리스트 하나 추가하면 3일 더 살아납니다!' },
-            { icon: '🛒', title: '공동 장보기 목록', desc: '여럿이 함께 쓰는 장보기 리스트. 아무도 안 추가하면 패드가 폭발합니다.' },
-            { icon: '💡', title: '단기 팀 프로젝트', desc: '짧은 스프린트의 브레인스토밍과 아이디어 공유에 최적입니다.' },
-            { icon: '🎯', title: '긴급 회의록', desc: '72시간 안에 결론이 나야 하는 안건 정리에 활용하세요.' },
+            { icon: '🏕️', title: 'MT/여행 계획', desc: '단톡방 대신 이 패드에 여행 계획, 맛집 리스트, 준비물을 함께 작성하세요. 누군가 항목을 추가할 때마다 수명이 72시간으로 리셋됩니다!' },
+            { icon: '🛒', title: '공동 장보기 목록', desc: '가족이나 룸메이트와 함께 장보기 목록을 실시간으로 공유하고 수정합니다. 패드에 아무것도 추가하지 않으면 자동으로 소멸되므로 항상 최신 리스트를 유지할 수 있습니다.' },
+            { icon: '💡', title: '단기 팀 스프린트', desc: '짧은 스프린트 기간 동안 팀원과 브레인스토밍 아이디어를 자유롭게 공유하고 실시간으로 편집합니다. 프로젝트가 끝나면 패드도 자동으로 소멸됩니다.' },
+            { icon: '🎯', title: '긴급 회의록', desc: '72시간 안에 결론이 나야 하는 긴급 안건을 정리하고 참석자와 실시간으로 공유합니다. 회의가 끝난 후 다운로드해 보관하고 패드는 자동 소멸되도록 두세요.' },
           ],
           steps: [
-            { step: '패드 열기', desc: '이 페이지를 열면 고유 URL과 암호화 키가 자동으로 생성됩니다.' },
-            { step: '전체 URL 공유', desc: '#이 포함된 전체 URL을 복사해서 공유하세요. 같은 링크를 열어야 같은 패드에 접속됩니다.' },
-            { step: '같이 작성', desc: '누구든 내용을 수정하면 모든 접속자 화면에 실시간 반영됩니다.' },
-            { step: '1시간 전 대피', desc: '수명이 1시간 미만으로 떨어지면 다운로드 버튼으로 내용을 저장하세요.' },
+            { step: '패드 열기', desc: '이 페이지를 열면 고유한 패드 ID와 AES-256 암호화 키가 자동으로 생성되며, URL에 반영됩니다. 별도 로그인이나 설치 없이 즉시 사용할 수 있습니다.' },
+            { step: '전체 URL 공유', desc: '#이 포함된 전체 URL을 복사해서 함께 쓸 사람에게 공유하세요. 같은 링크를 열어야 같은 패드에 접속되며, 링크가 없으면 내용을 복호화할 수 없습니다.' },
+            { step: '같이 작성', desc: '누구든 내용을 수정하면 Supabase Realtime을 통해 모든 접속자 화면에 즉시 반영됩니다. 수정할 때마다 72시간 타이머가 초기화됩니다.' },
+            { step: '1시간 전 대피', desc: '수명이 1시간 미만으로 떨어지면 경고 배너가 표시됩니다. 다운로드 버튼을 클릭해 텍스트 파일로 내용을 안전하게 저장한 후 패드를 종료하세요.' },
           ],
           faqs: [
             { q: '정말 운영자도 내용을 볼 수 없나요?', a: '네. 내용은 브라우저에서 AES-256-GCM으로 암호화된 후 저장됩니다. 암호화 키는 URL의 # 뒤에만 존재하며 서버로 전송되지 않습니다. 데이터베이스에는 암호화된 덩어리만 저장됩니다.' },
-            { q: '수정하면 시간이 얼마나 늘어나나요?', a: '수정할 때마다 남은 시간과 무관하게 72:00:00으로 완전 리셋됩니다.' },
-            { q: '링크를 잃어버리면 어떻게 되나요?', a: '#이 포함된 전체 URL을 잃어버리면 복호화 키가 없어 내용에 접근할 수 없습니다. 링크는 안전한 곳에 보관하세요.' },
-            { q: '데이터는 어디에 저장되나요?', a: '암호화된 형태로 Supabase 데이터베이스에 저장됩니다. 72시간 경과 후 자동 삭제됩니다.' },
+            { q: '수정하면 시간이 얼마나 늘어나나요?', a: '수정할 때마다 남은 시간과 무관하게 72:00:00으로 완전 리셋됩니다. 즉, 패드에 내용을 추가하거나 수정하기만 하면 항상 72시간의 수명이 보장됩니다.' },
+            { q: '링크를 잃어버리면 어떻게 되나요?', a: '#이 포함된 전체 URL을 잃어버리면 복호화 키가 없어 내용에 접근할 수 없습니다. 링크는 북마크, 메모 앱 등 안전한 곳에 반드시 보관하세요. 분실한 경우 새 패드를 생성해야 합니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
           title: '72H Bomb Pad — End-to-End Encrypted Collaborative Notepad',
-          description: 'A shared notepad alive 72 hours from the last edit, protected by AES-256 end-to-end encryption. Not even the site owner can read your content.',
+          description: 'The 72H Bomb Pad is a browser-based collaborative notepad that self-destructs exactly 72 hours after the last edit. It uses AES-256-GCM end-to-end encryption so that not even the site owner can read your content. The encryption key exists only in the URL hash (#) and is never sent to the server — the database stores only an encrypted blob. Multiple users can edit simultaneously via Supabase Realtime, with changes reflected instantly on every connected screen. It is ideal for trip planning, group shopping lists, short team sprints, and urgent meeting notes. If nobody writes anything for 72 hours, the pad automatically self-destructs.',
           useCases: [
-            { icon: '🏕️', title: 'Trip Planning', desc: 'Share travel plans here instead of group chats. Add one restaurant = 3 more days!' },
-            { icon: '🛒', title: 'Group Shopping', desc: 'A shared shopping list. Nobody adds anything = pad explodes.' },
-            { icon: '💡', title: 'Short Team Sprints', desc: 'Perfect for brainstorming and quick collaboration.' },
-            { icon: '🎯', title: 'Urgent Meeting Notes', desc: 'Organize agendas that need a conclusion within 72 hours.' },
+            { icon: '🏕️', title: 'Trip Planning', desc: 'Share travel plans, restaurant lists, and packing checklists in one collaborative pad instead of a group chat. Every time someone adds an item, the 72-hour timer resets automatically.' },
+            { icon: '🛒', title: 'Group Shopping Lists', desc: 'Create a shared shopping list with family or roommates that updates in real time for all viewers. The pad auto-expires when the list is no longer needed, keeping things tidy without manual deletion.' },
+            { icon: '💡', title: 'Short Team Sprints', desc: 'Freely share and co-edit brainstorming ideas with teammates during a short sprint period. When the project ends, the pad self-destructs automatically without leaving behind stale content.' },
+            { icon: '🎯', title: 'Urgent Meeting Notes', desc: 'Organize time-sensitive agendas and action items that need a resolution within 72 hours. Download the notes after the meeting, then let the pad expire on its own.' },
           ],
           steps: [
-            { step: 'Open the pad', desc: 'A unique URL and encryption key are auto-generated when you open this page.' },
-            { step: 'Share the full URL', desc: 'Copy the URL including the # part and share it. Same full link = same pad.' },
-            { step: 'Collaborate', desc: 'Any edit is reflected in real-time on all connected screens.' },
-            { step: 'Evacuate before 1 hour', desc: 'When under 1 hour remains, save your content with the download button.' },
+            { step: 'Open the pad', desc: 'Opening this page automatically generates a unique pad ID and AES-256 encryption key embedded in the URL. No login or installation is required — the pad is ready to use instantly.' },
+            { step: 'Share the full URL', desc: 'Copy the entire URL including the # part and send it to your collaborators. Only those with the same full link can access and decrypt the pad content.' },
+            { step: 'Collaborate in real time', desc: 'Any edit is encrypted and synced via Supabase Realtime, reflected instantly on every connected screen. Each edit also resets the 72-hour countdown timer from the beginning.' },
+            { step: 'Evacuate before 1 hour remains', desc: 'When less than 1 hour remains, a warning banner appears. Click the download button to save the content as a text file before the pad self-destructs permanently.' },
           ],
           faqs: [
-            { q: "Can't even the site owner read the content?", a: "Correct. Content is encrypted with AES-256-GCM in the browser before saving. The key lives only in the URL hash (#) and is never sent to the server. The database only contains encrypted ciphertext." },
-            { q: 'How much time is added when you edit?', a: 'Every edit resets the timer to exactly 72:00:00 regardless of remaining time.' },
-            { q: 'What if I lose the link?', a: 'Without the full URL including the # part, the decryption key is gone and the content is inaccessible. Keep the link in a safe place.' },
-            { q: 'Where is data stored?', a: 'Encrypted data is stored in Supabase database and automatically deleted after 72 hours of inactivity.' },
+            { q: "Can't even the site owner read the content?", a: "Correct. Content is encrypted with AES-256-GCM in the browser before saving. The encryption key lives only in the URL hash (#) and is never sent to the server. The database only contains encrypted ciphertext that is completely unreadable without the key." },
+            { q: 'How much time is added when you edit?', a: 'Every edit resets the timer to exactly 72:00:00 regardless of how much time remains. This means as long as someone keeps adding or editing content, the pad will never self-destruct.' },
+            { q: 'What if I lose the link?', a: 'Without the full URL including the # part, the decryption key is gone and the content is permanently inaccessible. Bookmark the link or store it in a notes app immediately after creating a new pad.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />
