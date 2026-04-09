@@ -33,6 +33,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/productivity/resume-helper', icon: '📝', ko: '자소서 작성 헬퍼', en: 'Resume Helper', category: 'productivity' },
   { id: 'utilities/productivity/excel-mapper', icon: '📊', ko: '엑셀 데이터 매퍼', en: 'Excel Data Mapper', category: 'productivity' },
   { id: 'utilities/productivity/meeting-burner', icon: '⏱️', ko: 'Meeting Burner', en: 'Meeting Burner', category: 'productivity' },
+  { id: 'utilities/productivity/solar-master', icon: '☀️', ko: 'Solar Master', en: 'Solar Master', category: 'productivity' },
 
   // Design
   { id: 'utilities/design/color-palette', icon: '🎯', ko: '색상 팔레트 & 가독성 검사기', en: 'Color Palette Checker', category: 'design' },
@@ -158,6 +159,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   ],
 
   // ── Productivity ───────────────────────────────────────────
+  'utilities/productivity/solar-master': [
+    'utilities/finance/invoice-maker',
+    'utilities/finance/freelance-rate-calculator',
+    'utilities/finance/salary-calc',
+  ],
   'utilities/productivity/pomodoro': [
     'utilities/lifestyle/30day-challenge',
     'utilities/productivity/world-time',

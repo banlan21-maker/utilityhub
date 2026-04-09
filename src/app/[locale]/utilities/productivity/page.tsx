@@ -11,7 +11,8 @@ import {
   ArrowRight,
   Briefcase,
   Flame,
-  Bomb
+  Bomb,
+  Sun,
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './productivity_list.module.css';
@@ -67,6 +68,13 @@ export default function ProductivityDashboardPage() {
       desc: boardT('bomb-pad.desc'),
       icon: <Bomb size={36} color="#f97316" />,
       gradient: 'rgba(249, 115, 22, 0.08)',
+    },
+    {
+      id: 'utilities/productivity/solar-master',
+      title: boardT('solar-master.title'),
+      desc: boardT('solar-master.desc'),
+      icon: <Sun size={36} color="#f59e0b" />,
+      gradient: 'rgba(245, 158, 11, 0.08)',
     },
   ];
 

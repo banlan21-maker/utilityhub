@@ -34,6 +34,7 @@ export const tools: Tool[] = [
   { slug: 'resume-helper', category: 'productivity', emoji: '📝', labelKey: 'ProductivityBoard.resume-helper.title', href: '/utilities/productivity/resume-helper', available: true },
   { slug: 'excel-mapper', category: 'productivity', emoji: '📊', labelKey: 'ProductivityBoard.excel-mapper.title', href: '/utilities/productivity/excel-mapper', available: true },
   { slug: 'bomb-pad', category: 'productivity', emoji: '💣', labelKey: 'ProductivityBoard.bomb-pad.title', href: '/utilities/productivity/bomb-pad', available: true },
+  { slug: 'solar-master', category: 'productivity', emoji: '☀️', labelKey: 'ProductivityBoard.solar-master.title', href: '/utilities/productivity/solar-master', available: true },
 
   // Design
   { slug: 'logo-favicon', category: 'design', emoji: '🎨', labelKey: 'DesignBoard.logo-favicon.title', href: '/utilities/design/logo-favicon', available: true },

@@ -431,6 +431,10 @@
     "bomb-pad": {
       "title": "72H Bomb Pad",
       "desc": "A shared notepad alive for 72 hours from the last edit. Nobody writes = BOOM!"
+    },
+    "solar-master": {
+      "title": "Solar Master",
+      "desc": "Calculate solar PV & thermal output, savings, and ROI payback using regional irradiance data and progressive electricity rates."
     }
   },
   "Pomodoro": {
