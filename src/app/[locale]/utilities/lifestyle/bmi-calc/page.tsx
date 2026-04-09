@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Activity } from 'lucide-react';
@@ -8,34 +7,6 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? 'BMI 계산기 & 일일 수분 섭취량 계산기 | Utility Hub'
-    : 'BMI Calculator & Daily Water Intake Guide | Utility Hub';
-  const description = isKo
-    ? '키와 몸무게로 체질량지수(BMI)를 계산하고 활동량 기반 일일 권장 수분 섭취량을 확인하세요'
-    : 'Calculate your BMI and recommended daily water intake based on your weight and activity level — free and instant.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/bmi-calc`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/bmi-calc',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/bmi-calc',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

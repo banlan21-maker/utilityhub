@@ -1,44 +1,14 @@
-import type { Metadata } from 'next';
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? 'PDF 개인정보 마스킹 — 주민번호·전화번호 자동 탐지 & 가리기 | Utility Hub'
-    : 'PDF Privacy Masking — Auto-Detect & Redact Personal Info | Utility Hub';
-  const description = isKo
-    ? 'AI가 PDF의 주민번호, 전화번호, 이메일, 주소를 자동 탐지해 마스킹. 100% 브라우저 처리, 서버 전송 없음.'
-    : 'AI auto-detects and redacts SSN, phone numbers, emails, and addresses in PDFs. 100% browser-based, no server upload.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/document/pdf-masking`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/document/pdf-masking',
-        en: 'https://www.theutilhub.com/en/utilities/document/pdf-masking',
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: 'Utility Hub',
-      locale: isKo ? 'ko_KR' : 'en_US',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
-  };
-}
+import { useState, useCallback, useRef } from 'react';
+import { useLocale } from 'next-intl';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import { jsPDF } from 'jspdf';
+import * as pdfjsLib from 'pdfjs-dist';
+import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock, ShieldCheck } from 'lucide-react';
 
 const softwareSchema = {
   '@context': 'https://schema.org',
@@ -91,18 +61,6 @@ const faqSchema = {
     },
   ],
 };
-
-'use client';
-
-import { useState, useCallback, useRef } from 'react';
-import { useLocale } from 'next-intl';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import { jsPDF } from 'jspdf';
-import * as pdfjsLib from 'pdfjs-dist';
-import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock, ShieldCheck } from 'lucide-react';
 
 // PDF.js worker 설정 (로컬 워커 사용 - pdfjs-dist v5 호환)
 if (typeof window !== 'undefined') {

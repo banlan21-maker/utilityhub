@@ -1,44 +1,18 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "Photo Batch Master — 일괄 사진 보정 & 워터마크 | Utility Hub"
-    : "Photo Batch Master — Batch Photo Editor & Watermark | Utility Hub";
-  const description = isKo
-    ? "여러 장의 사진을 동일한 색감으로 보정하고 텍스트·이미지 워터마크를 일괄 삽입하세요."
-    : "Apply consistent color grading and insert text or image watermarks across multiple photos at once.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/photo-batch-master`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/design/photo-batch-master`,
-        en: `https://www.theutilhub.com/en/utilities/design/photo-batch-master`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useState, useRef, useCallback } from 'react';
+import { useLocale } from 'next-intl';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Camera, Upload, Save, Download, Trash2,
+  CheckCircle, Loader2, X, FolderOpen, Type, ImageIcon,
+} from 'lucide-react';
+import JSZip from 'jszip';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './photo-batch-master.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,22 +36,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useState, useRef, useCallback } from 'react';
-import { useLocale } from 'next-intl';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Camera, Upload, Save, Download, Trash2,
-  CheckCircle, Loader2, X, FolderOpen, Type, ImageIcon,
-} from 'lucide-react';
-import JSZip from 'jszip';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import s from './photo-batch-master.module.css';
 
 // ─────────────────── Types ───────────────────
 interface Preset {

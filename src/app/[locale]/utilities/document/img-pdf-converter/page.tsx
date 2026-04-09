@@ -1,44 +1,15 @@
-import type { Metadata } from 'next';
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? '이미지 PDF 변환기 — 사진을 PDF로, PDF를 이미지로 무료 변환 | Utility Hub'
-    : 'Image PDF Converter — Convert Images to PDF & PDF to Images Free | Utility Hub';
-  const description = isKo
-    ? 'JPG·PNG·WebP 이미지를 PDF로 합치거나, PDF를 PNG 이미지로 추출. 100% 브라우저 처리, 서버 업로드 없음, 무료.'
-    : 'Merge JPG, PNG, WebP images into PDF or extract PDF pages as images. 100% browser-based, no server upload, free.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/document/img-pdf-converter`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/document/img-pdf-converter',
-        en: 'https://www.theutilhub.com/en/utilities/document/img-pdf-converter',
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: 'Utility Hub',
-      locale: isKo ? 'ko_KR' : 'en_US',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
-  };
-}
+import { useState, useCallback, useRef } from 'react';
+import { useLocale } from 'next-intl';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import { jsPDF } from 'jspdf';
+import JSZip from 'jszip';
+import * as pdfjsLib from 'pdfjs-dist';
+import { Upload, FileImage, FileText, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
 
 const softwareSchema = {
   '@context': 'https://schema.org',
@@ -92,18 +63,6 @@ const faqSchema = {
   ],
 };
 
-'use client';
-
-import { useState, useCallback, useRef } from 'react';
-import { useLocale } from 'next-intl';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import { jsPDF } from 'jspdf';
-import JSZip from 'jszip';
-import * as pdfjsLib from 'pdfjs-dist';
-import { Upload, FileImage, FileText, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
 
 // PDF.js worker 설정 (로컬 워커 사용 - pdfjs-dist v5 호환)
 if (typeof window !== 'undefined') {

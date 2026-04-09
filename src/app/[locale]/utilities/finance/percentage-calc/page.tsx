@@ -1,44 +1,24 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "퍼센트 계산기 — 할인·증감률·비율·역산 | Utility Hub"
-    : "Percentage Calculator — Discount, Change, Ratio | Utility Hub";
-  const description = isKo
-    ? "할인율, 증감률, 비율, 역산 4가지 퍼센트 계산을 하나의 도구에서 즉시 처리하세요."
-    : "Calculate discounts, percentage change, ratios, and reverse percentages instantly in one tool.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/finance/percentage-calc`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/finance/percentage-calc`,
-        en: `https://www.theutilhub.com/en/utilities/finance/percentage-calc`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import React, { useState, useEffect } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { 
+  Percent, 
+  TrendingUp, 
+  Hash, 
+  RotateCcw, 
+  Sparkles,
+  ArrowRight,
+  TrendingDown,
+  Activity,
+  ArrowDownToLine,
+  ArrowUpFromLine
+} from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './percent.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,28 +42,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import React, { useState, useEffect } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
-import { 
-  Percent, 
-  TrendingUp, 
-  Hash, 
-  RotateCcw, 
-  Sparkles,
-  ArrowRight,
-  TrendingDown,
-  Activity,
-  ArrowDownToLine,
-  ArrowUpFromLine
-} from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import RelatedTools from '@/app/components/RelatedTools';
-import ShareBar from '@/app/components/ShareBar';
-import s from './percent.module.css';
 
 type Mode = 'discount' | 'change' | 'ratio' | 'reverse';
 

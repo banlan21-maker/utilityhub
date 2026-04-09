@@ -1,40 +1,11 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState, useMemo, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? '한국형 날짜 계산기 (만나이·전역일·배란일) | Utility Hub'
-    : 'Korean Date Calculator (Age / Discharge / Ovulation) | Utility Hub';
-  const description = isKo
-    ? '만나이·연나이·세는나이 변환, 군 전역일 계산, 배란일 예측을 하나의 도구에서 해결하세요'
-    : 'Calculate Korean age types, military discharge date, and ovulation prediction all in one free tool.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/age-calc`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/age-calc',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/age-calc',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import React, { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,34 +9,6 @@ import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import styles from './page.module.css';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? '바다 생물 MBTI 테스트 | Utility Hub'
-    : 'Sea Creature MBTI Test | Utility Hub';
-  const description = isKo
-    ? '12가지 심리 분석 질문으로 나와 닮은 바다 생물을 찾는 무료 MBTI 성격 테스트'
-    : 'Discover your matching sea creature through 12 psychological questions — free marine MBTI personality test.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/mbti-test`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/mbti-test',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/mbti-test',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

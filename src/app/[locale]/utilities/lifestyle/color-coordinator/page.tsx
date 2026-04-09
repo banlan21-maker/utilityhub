@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
@@ -10,34 +9,6 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './color-coordinator.module.css';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? 'OOTD 컬러 코디네이터 | Utility Hub'
-    : 'OOTD Color Coordinator | Utility Hub';
-  const description = isKo
-    ? '마네킹 위에서 상의·하의·아우터 색상을 실시간 조합하고 3가지 알고리즘 룩을 제안하는 무료 패션 코디 플래너'
-    : 'Combine outfit colors on a mannequin in real-time with 3 algorithm-powered look themes — free online fashion planner.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/color-coordinator`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/color-coordinator',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

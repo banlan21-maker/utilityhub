@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Heart } from 'lucide-react';
@@ -8,34 +7,6 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? '반려동물 사료량 & 칼로리 계산기 | Utility Hub'
-    : 'Pet Food & Calorie Calculator | Utility Hub';
-  const description = isKo
-    ? '강아지·고양이의 체중·나이·활동량으로 일일 권장 칼로리(DER)와 사료량(g)을 계산하는 무료 도구'
-    : 'Calculate your dog or cat daily calorie needs (DER) and recommended food amount in grams — free and instant.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/pet-calorie`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/pet-calorie',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/pet-calorie',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

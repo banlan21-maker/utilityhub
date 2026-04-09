@@ -1,44 +1,21 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "해시태그 생성기 | Utility Hub"
-    : "Hashtag Generator | Utility Hub";
-  const description = isKo
-    ? "키워드 하나로 인스타그램·유튜브 인기 해시태그 30개를 즉시 생성하는 무료 도구"
-    : "Generate 30 trending hashtags for Instagram or YouTube instantly from a single keyword. Free and no login required.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/marketing/hashtag-generator`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: "https://www.theutilhub.com/ko/utilities/marketing/hashtag-generator",
-        en: "https://www.theutilhub.com/en/utilities/marketing/hashtag-generator",
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import React, { useState, useMemo, useEffect } from 'react';
+import { useLocale } from 'next-intl';
+import { 
+  Instagram, 
+  Youtube, 
+  Hash, 
+  Copy, 
+  TrendingUp, 
+  Zap,
+  Share2
+} from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './hashtag.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,25 +39,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import React, { useState, useMemo, useEffect } from 'react';
-import { useLocale } from 'next-intl';
-import { 
-  Instagram, 
-  Youtube, 
-  Hash, 
-  Copy, 
-  TrendingUp, 
-  Zap,
-  Share2
-} from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import RelatedTools from '@/app/components/RelatedTools';
-import ShareBar from '@/app/components/ShareBar';
-import s from './hashtag.module.css';
 
 /* ─── Hashtag Database ─── */
 type Platform = 'instagram' | 'youtube';

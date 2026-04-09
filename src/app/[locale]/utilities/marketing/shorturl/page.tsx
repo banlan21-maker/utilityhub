@@ -1,44 +1,23 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "URL 단축기 | Utility Hub"
-    : "URL Shortener | Utility Hub";
-  const description = isKo
-    ? "긴 URL을 짧고 공유하기 쉬운 링크로 즉시 변환하세요. 무료·무제한·로그인 불필요"
-    : "Shorten any long URL into a clean, shareable link instantly. Free, unlimited, no login required.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/marketing/shorturl`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: "https://www.theutilhub.com/ko/utilities/marketing/shorturl",
-        en: "https://www.theutilhub.com/en/utilities/marketing/shorturl",
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import React, { useState, useEffect, useCallback } from 'react';
+import { useLocale } from 'next-intl';
+import { 
+  Link2, 
+  Copy, 
+  Trash2, 
+  History, 
+  Zap, 
+  Share2,
+  ExternalLink,
+  ChevronRight,
+  Sparkles
+} from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './shorturl.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,27 +41,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import React, { useState, useEffect, useCallback } from 'react';
-import { useLocale } from 'next-intl';
-import { 
-  Link2, 
-  Copy, 
-  Trash2, 
-  History, 
-  Zap, 
-  Share2,
-  ExternalLink,
-  ChevronRight,
-  Sparkles
-} from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import RelatedTools from '@/app/components/RelatedTools';
-import ShareBar from '@/app/components/ShareBar';
-import s from './shorturl.module.css';
 
 /* ─── Types & Storage ─── */
 interface HistoryItem {

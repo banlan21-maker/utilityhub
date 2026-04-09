@@ -1,44 +1,18 @@
-import type { Metadata } from 'next';
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? 'HWP PDF 변환기 — 한글 파일을 PDF/DOCX로 무료 변환 | Utility Hub'
-    : 'HWP to PDF Converter — Free Online HWP/HWPX to PDF | Utility Hub';
-  const description = isKo
-    ? '한컴오피스 없이 HWP, HWPX 파일을 PDF 또는 Word(DOCX)로 즉시 변환. 맥·리눅스 완벽 지원, 100% 무료.'
-    : 'Convert HWP and HWPX files to PDF or Word (DOCX) instantly without Hancom Office. Mac & Linux compatible, 100% free.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/document/hwp-pdf-converter`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/document/hwp-pdf-converter',
-        en: 'https://www.theutilhub.com/en/utilities/document/hwp-pdf-converter',
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: 'Utility Hub',
-      locale: isKo ? 'ko_KR' : 'en_US',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
-  };
-}
+import { useTranslations } from 'next-intl';
+import { useState, useRef } from 'react';
+import { useLocale } from 'next-intl';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import { parseHwpx, parseLegacyHwp } from '@/lib/hwp-parser';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { saveAs } from 'file-saver';
+import { FileType } from 'lucide-react';
 
 const softwareSchema = {
   '@context': 'https://schema.org',
@@ -91,22 +65,6 @@ const faqSchema = {
     },
   ],
 };
-
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { useState, useRef } from 'react';
-import { useLocale } from 'next-intl';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import { parseHwpx, parseLegacyHwp } from '@/lib/hwp-parser';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
-import { saveAs } from 'file-saver';
-import { FileType } from 'lucide-react';
 
 export default function HwpConverterPage() {
   const t = useTranslations('HwpConverter');

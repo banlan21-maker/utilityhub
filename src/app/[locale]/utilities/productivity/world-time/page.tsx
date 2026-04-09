@@ -1,44 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "세계 시간대 변환기 | Utility Hub"
-    : "World Time Zone Converter | Utility Hub";
-  const description = isKo
-    ? "전 세계 주요 도시의 현재 시각을 한 화면에서 비교하고, 슬라이더로 최적의 국제 미팅 시간을 찾으세요."
-    : "Compare current times across major world cities on one screen and find the perfect international meeting slot with the time slider.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/productivity/world-time`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/productivity/world-time`,
-        en: `https://www.theutilhub.com/en/utilities/productivity/world-time`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useTranslations, useLocale } from 'next-intl';
+import { useState, useEffect } from 'react';
+import { Globe } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './world-time.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,17 +31,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useTranslations, useLocale } from 'next-intl';
-import { useState, useEffect } from 'react';
-import { Globe } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import s from './world-time.module.css';
 
 interface TzItem {
   id: string;

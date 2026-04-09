@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
@@ -9,34 +8,6 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import { Lunar, Solar } from 'lunar-javascript';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? 'AI 사주팔자 운세 프롬프트 생성기 | Utility Hub'
-    : 'AI Saju Fortune Prompt Generator | Utility Hub';
-  const description = isKo
-    ? '생년월일로 사주팔자를 계산하고 ChatGPT·Claude·Gemini에 바로 붙여넣을 운세 프롬프트를 생성하는 무료 도구'
-    : 'Generate a personalized fortune-reading prompt from your Saju (四柱) birth data and paste it into ChatGPT, Claude, or Gemini instantly.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/fortune-prompt`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/fortune-prompt',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/fortune-prompt',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

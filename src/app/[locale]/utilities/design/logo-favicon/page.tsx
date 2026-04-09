@@ -1,44 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "AI 로고 & 파비콘 생성기 | Utility Hub"
-    : "AI Logo & Favicon Generator | Utility Hub";
-  const description = isKo
-    ? "텍스트·이모지·색상으로 파비콘 패키지를 5분 안에 생성하고 ZIP으로 다운로드하세요."
-    : "Generate a complete favicon package from text, emoji, and colors in 5 minutes. Download as ZIP.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/logo-favicon`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/design/logo-favicon`,
-        en: `https://www.theutilhub.com/en/utilities/design/logo-favicon`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useTranslations } from 'next-intl';
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { Image } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import SeoSection from '@/app/components/SeoSection';
+import s from './logo-favicon.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,17 +31,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { useRef, useState, useCallback, useEffect } from 'react';
-import { Image } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import SeoSection from '@/app/components/SeoSection';
-import s from './logo-favicon.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type Shape = 'circle' | 'rounded' | 'square' | 'hexagon';

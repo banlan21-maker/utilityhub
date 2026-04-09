@@ -1,44 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "다국어 폰트 비교기 | Utility Hub"
-    : "Multilingual Font Comparator | Utility Hub";
-  const description = isKo
-    ? "영문·한국어 구글 폰트를 나란히 미리보고 CSS 코드를 한 번에 복사하세요."
-    : "Preview English and Korean Google Fonts side by side and copy CSS code in one click.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/font-preview`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/design/font-preview`,
-        en: `https://www.theutilhub.com/en/utilities/design/font-preview`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useTranslations } from 'next-intl';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Type } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import SeoSection from '@/app/components/SeoSection';
+import s from './font-preview.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,17 +31,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Type } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import SeoSection from '@/app/components/SeoSection';
-import s from './font-preview.module.css';
 
 // ── Font Data ──────────────────────────────────────────────────────────────
 type FontCategory = 'sans-serif' | 'serif' | 'monospace' | 'display';

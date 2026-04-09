@@ -1,44 +1,17 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "스마트 엑셀 매퍼 — 엑셀 컬럼 자동 변환 | Utility Hub"
-    : "Smart Excel Mapper — Auto Column Mapping | Utility Hub";
-  const description = isKo
-    ? "엑셀 파일을 업로드하고 컬럼을 드래그앤드롭으로 매핑해 원하는 형식으로 즉시 변환·다운로드하세요."
-    : "Upload an Excel file, map columns via drag-and-drop, and instantly download the transformed output in your desired format.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/productivity/excel-mapper`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/productivity/excel-mapper`,
-        en: `https://www.theutilhub.com/en/utilities/productivity/excel-mapper`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useState } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
+import { FileSpreadsheet } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import SeoSection from '@/app/components/SeoSection';
+import StepIndicator from './components/StepIndicator';
+import Step1FileUpload from './components/Step1FileUpload';
+import Step2Mapping from './components/Step2Mapping';
+import Step3Preview from './components/Step3Preview';
+import s from './excel-mapper.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,21 +35,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useState } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
-import { FileSpreadsheet } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import SeoSection from '@/app/components/SeoSection';
-import StepIndicator from './components/StepIndicator';
-import Step1FileUpload from './components/Step1FileUpload';
-import Step2Mapping from './components/Step2Mapping';
-import Step3Preview from './components/Step3Preview';
-import s from './excel-mapper.module.css';
 
 type Step = 1 | 2 | 3;
 

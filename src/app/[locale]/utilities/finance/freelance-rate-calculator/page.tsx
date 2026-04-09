@@ -1,44 +1,9 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "프리랜서 적정 단가 계산기 | Utility Hub"
-    : "Freelance Rate Calculator | Utility Hub";
-  const description = isKo
-    ? "세금·고정지출·업무효율을 반영한 시간당 적정 단가를 한국·미국 기준으로 즉시 계산하세요."
-    : "Calculate your true hourly freelance rate factoring in taxes, fixed costs, and work efficiency.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/finance/freelance-rate-calculator`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/finance/freelance-rate-calculator`,
-        en: `https://www.theutilhub.com/en/utilities/finance/freelance-rate-calculator`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocale } from 'next-intl';
+import NavigationActions from '@/app/components/NavigationActions';
+import s from './frc.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,13 +27,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocale } from 'next-intl';
-import NavigationActions from '@/app/components/NavigationActions';
-import s from './frc.module.css';
 
 // ── Types ──
 type Country = 'KR' | 'US';

@@ -1,40 +1,11 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { GraduationCap } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? '학점 변환기 (GPA Converter) | Utility Hub'
-    : 'GPA Converter (4.5 / 4.3 / 100-point) | Utility Hub';
-  const description = isKo
-    ? '4.5·4.3·100점 만점 GPA를 자동 변환하고 전공·교양 학점을 분리 계산하는 무료 학점 변환기'
-    : 'Free online GPA converter between 4.5, 4.3, and 100-point scales with major/liberal arts split.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/gpa-calc`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/gpa-calc',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/gpa-calc',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

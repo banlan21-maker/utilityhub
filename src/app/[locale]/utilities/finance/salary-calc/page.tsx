@@ -1,44 +1,14 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "급여 & 실수령액 계산기 | Utility Hub"
-    : "Salary & Net Pay Calculator | Utility Hub";
-  const description = isKo
-    ? "시급·잔업·특근·주휴수당을 포함한 월 실수령액을 한국·미국 세금 기준으로 즉시 계산하세요."
-    : "Calculate monthly net pay with overtime, holiday pay and tax deductions for Korea and the US.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/finance/salary-calc`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/finance/salary-calc`,
-        en: `https://www.theutilhub.com/en/utilities/finance/salary-calc`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import React, { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
+import { Wallet, Plus, Minus } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import { CURRENT_DATA, WEEKS_PER_MONTH } from '@/constants/wageConfig';
+import s from './salary.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,18 +32,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import React, { useState, useEffect } from 'react';
-import { useLocale } from 'next-intl';
-import { Wallet, Plus, Minus } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import RelatedTools from '@/app/components/RelatedTools';
-import ShareBar from '@/app/components/ShareBar';
-import { CURRENT_DATA, WEEKS_PER_MONTH } from '@/constants/wageConfig';
-import s from './salary.module.css';
 
 type Country = 'KR' | 'US';
 type KRDeduction = 'none' | 'withholdingTax' | 'insurance';

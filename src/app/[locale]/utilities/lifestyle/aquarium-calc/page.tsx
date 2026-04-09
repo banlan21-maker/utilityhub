@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Fish } from 'lucide-react';
@@ -8,34 +7,6 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? '수족관 생물학적 부하 계산기 | Utility Hub'
-    : 'Aquarium Bioload Calculator | Utility Hub';
-  const description = isKo
-    ? '수조 크기와 어종별 생물학적 부하를 계산해 과밀 사육을 방지하는 무료 아쿠아리움 계산기'
-    : 'Calculate aquarium bioload by fish species to prevent overcrowding — free online aquarium management tool.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/aquarium-calc`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/aquarium-calc',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/aquarium-calc',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

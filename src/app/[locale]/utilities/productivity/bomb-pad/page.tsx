@@ -1,44 +1,15 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "72시간 시한폭탄 패드 — 암호화 공유 메모장 | Utility Hub"
-    : "72H Bomb Pad — Encrypted Collaborative Notepad | Utility Hub";
-  const description = isKo
-    ? "마지막 수정으로부터 72시간만 생존하는 AES-256 암호화 공유 메모장. 아무도 안 쓰면 폭발합니다."
-    : "AES-256 encrypted shared notepad that self-destructs 72 hours after the last edit. Nobody writes = BOOM.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/productivity/bomb-pad`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/productivity/bomb-pad`,
-        en: `https://www.theutilhub.com/en/utilities/productivity/bomb-pad`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { Bomb, Clock, Download, Users, RefreshCw, AlertTriangle, Copy, Lock, ShieldCheck } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './bomb-pad.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,19 +33,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
-import { Bomb, Clock, Download, Users, RefreshCw, AlertTriangle, Copy, Lock, ShieldCheck } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import s from './bomb-pad.module.css';
 
 const EXPIRY_MS = 72 * 60 * 60 * 1000;
 const WARNING_MS = 60 * 60 * 1000;

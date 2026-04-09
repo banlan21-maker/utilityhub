@@ -1,44 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "색상 대비 검사기 & WCAG 팔레트 | Utility Hub"
-    : "Color Contrast Checker & WCAG Palette | Utility Hub";
-  const description = isKo
-    ? "두 색상의 WCAG 2.1 명도 대비를 즉시 계산하고 AA/AAA 합격 여부를 확인하세요."
-    : "Instantly calculate WCAG 2.1 contrast ratio between two colors and verify AA/AAA compliance.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/color-palette`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/design/color-palette`,
-        en: `https://www.theutilhub.com/en/utilities/design/color-palette`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useTranslations } from 'next-intl';
+import { useState, useCallback } from 'react';
+import { Palette } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import SeoSection from '@/app/components/SeoSection';
+import s from './color-palette.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,17 +31,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { useState, useCallback } from 'react';
-import { Palette } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import SeoSection from '@/app/components/SeoSection';
-import s from './color-palette.module.css';
 
 // ── WCAG Algorithm ─────────────────────────────────────────────────────────
 function hexToRgb(hex: string): [number, number, number] | null {

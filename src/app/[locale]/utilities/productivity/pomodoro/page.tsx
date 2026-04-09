@@ -1,44 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "포모도로 타이머 | Utility Hub"
-    : "Pomodoro Timer | Utility Hub";
-  const description = isKo
-    ? "25분 집중 + 5분 휴식 사이클로 집중력을 높이는 무료 포모도로 타이머. 설치 없이 브라우저에서 바로 사용하세요."
-    : "Free Pomodoro timer with 25-min focus and 5-min break cycles to boost productivity. No install needed — runs in your browser.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/productivity/pomodoro`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/productivity/pomodoro`,
-        en: `https://www.theutilhub.com/en/utilities/productivity/pomodoro`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useTranslations, useLocale } from 'next-intl';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Timer } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './pomodoro.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,17 +31,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useTranslations, useLocale } from 'next-intl';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Timer } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import s from './pomodoro.module.css';
 
 type Mode = 'focus' | 'short' | 'long';
 

@@ -1,44 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "Formation Playmaker Pro — 전술 보드 | Utility Hub"
-    : "Formation Playmaker Pro — Tactics Board | Utility Hub";
-  const description = isKo
-    ? "멤버 이름을 범례로 관리하고 동선을 60초 영상으로 기록하는 스마트 전술 시뮬레이터."
-    : "Smart tactics simulator that organizes member names as a legend and records movement as a 60-second video.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/formation-planner`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/design/formation-planner`,
-        en: `https://www.theutilhub.com/en/utilities/design/formation-planner`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocale } from 'next-intl';
+import { Download, Undo2, Plus, Trash2, ChevronUp, ChevronDown, Info, Square, Circle } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import s from './formation-planner.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,17 +31,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocale } from 'next-intl';
-import { Download, Undo2, Plus, Trash2, ChevronUp, ChevronDown, Info, Square, Circle } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import s from './formation-planner.module.css';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

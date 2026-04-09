@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { CalendarDays } from 'lucide-react';
@@ -8,34 +7,6 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === 'ko';
-  const title = isKo
-    ? 'D-Day & 날짜 계산기 | Utility Hub'
-    : 'D-Day & Date Calculator | Utility Hub';
-  const description = isKo
-    ? '목표일까지 남은 D-Day를 계산하고 날짜 더하기/빼기를 간편하게 처리하는 무료 날짜 계산기'
-    : 'Free D-Day calculator with date arithmetic — track countdowns and calculate future or past dates instantly.';
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/lifestyle/dday-calc`;
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/dday-calc',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/dday-calc',
-      },
-    },
-    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
-}
 
 const softwareSchema = {
   '@context': 'https://schema.org',

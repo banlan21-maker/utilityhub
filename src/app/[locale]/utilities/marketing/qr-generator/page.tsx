@@ -1,44 +1,23 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "고해상도 QR 코드 생성기 | Utility Hub"
-    : "HD QR Code Generator | Utility Hub";
-  const description = isKo
-    ? "URL이나 텍스트를 고해상도 QR 코드로 즉시 변환하고 PNG로 무료 다운로드하세요"
-    : "Convert any URL or text into a high-resolution QR code instantly. Free PNG download, no login required.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/marketing/qr-generator`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: "https://www.theutilhub.com/ko/utilities/marketing/qr-generator",
-        en: "https://www.theutilhub.com/en/utilities/marketing/qr-generator",
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocale } from 'next-intl';
+import { QRCodeSVG } from 'qrcode.react';
+import { 
+  QrCode, 
+  Download, 
+  Search, 
+  LayoutGrid, 
+  Smartphone, 
+  Share2,
+  Trash2,
+  Sparkles
+} from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './qr.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,27 +41,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import React, { useState, useRef, useEffect } from 'react';
-import { useLocale } from 'next-intl';
-import { QRCodeSVG } from 'qrcode.react';
-import { 
-  QrCode, 
-  Download, 
-  Search, 
-  LayoutGrid, 
-  Smartphone, 
-  Share2,
-  Trash2,
-  Sparkles
-} from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import RelatedTools from '@/app/components/RelatedTools';
-import ShareBar from '@/app/components/ShareBar';
-import s from './qr.module.css';
 
 export default function QRGeneratorPage() {
   const locale = useLocale();

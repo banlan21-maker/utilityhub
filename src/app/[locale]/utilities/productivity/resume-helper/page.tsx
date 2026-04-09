@@ -1,44 +1,12 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "자소서 작성 헬퍼 — 글자 수 & 맞춤법 검사 | Utility Hub"
-    : "Cover Letter Helper — Character Count & Spell Check | Utility Hub";
-  const description = isKo
-    ? "실시간 글자 수/바이트 카운터와 부산대 맞춤법 검사기를 한 번에! 취업 준비생을 위한 자소서 도우미."
-    : "Real-time character/byte counter with Korean spell checker integration. The ultimate cover letter writing tool for job seekers.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/productivity/resume-helper`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/productivity/resume-helper`,
-        en: `https://www.theutilhub.com/en/utilities/productivity/resume-helper`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useState, useEffect, useCallback } from 'react';
+import { FileText } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import ShareBar from '@/app/components/ShareBar';
+import RelatedTools from '@/app/components/RelatedTools';
+import SeoSection from '@/app/components/SeoSection';
+import s from './resume-helper.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,16 +30,6 @@ const faqSchema = {
     { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
   ]
 };
-
-'use client';
-
-import { useState, useEffect, useCallback } from 'react';
-import { FileText } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import SeoSection from '@/app/components/SeoSection';
-import s from './resume-helper.module.css';
 
 // ── Presets ────────────────────────────────────────────────────────────────
 

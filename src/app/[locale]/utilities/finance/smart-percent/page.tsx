@@ -1,44 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isKo = params.locale === "ko";
-  const title = isKo
-    ? "스마트 퍼센트 계산기 — 기본·증감률·할인·마진 | Utility Hub"
-    : "Smart Percentage Calculator — Basic, Change, Discount, Margin | Utility Hub";
-  const description = isKo
-    ? "기본·증감률·할인율·마진율 4가지 퍼센트 계산을 입력하는 즉시 실시간으로 처리하세요."
-    : "Calculate basic percentages, change rates, discounts, and margins in real time as you type.";
-  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/finance/smart-percent`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/finance/smart-percent`,
-        en: `https://www.theutilhub.com/en/utilities/finance/smart-percent`,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
-}
+import { useState, useEffect, useCallback } from 'react';
+import { useLocale } from 'next-intl';
+import { Copy, Check, Trash2, Clock } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import SeoSection from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import s from './smart-percent.module.css';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -62,17 +31,6 @@ const faqSchema = {
     { "@type": "Question", "name": "모바일에서도 편리하게 사용할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 입력 필드에 inputMode=\"decimal\" 속성이 적용되어 모바일에서 숫자 키패드가 자동으로 표시됩니다. 탭 메뉴는 모바일(600px 이하)에서 2열 2행으로 재배치되어 터치하기 쉽게 구성되며, 카드 레이아웃도 작은 화면에 최적화되어 있습니다." } }
   ]
 };
-
-'use client';
-
-import { useState, useEffect, useCallback } from 'react';
-import { useLocale } from 'next-intl';
-import { Copy, Check, Trash2, Clock } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import SeoSection from '@/app/components/SeoSection';
-import RelatedTools from '@/app/components/RelatedTools';
-import ShareBar from '@/app/components/ShareBar';
-import s from './smart-percent.module.css';
 
 /* ── Types ── */
 type Tab = 'basic' | 'change' | 'discount' | 'margin';
