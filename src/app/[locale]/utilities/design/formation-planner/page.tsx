@@ -1,3 +1,68 @@
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === "ko";
+  const title = isKo
+    ? "Formation Playmaker Pro — 전술 보드 | Utility Hub"
+    : "Formation Playmaker Pro — Tactics Board | Utility Hub";
+  const description = isKo
+    ? "멤버 이름을 범례로 관리하고 동선을 60초 영상으로 기록하는 스마트 전술 시뮬레이터."
+    : "Smart tactics simulator that organizes member names as a legend and records movement as a 60-second video.";
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/formation-planner`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: `https://www.theutilhub.com/ko/utilities/design/formation-planner`,
+        en: `https://www.theutilhub.com/en/utilities/design/formation-planner`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Utility Hub",
+      locale: isKo ? "ko_KR" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Formation Playmaker Pro — 스마트 범례 전술 보드",
+  "alternateName": "Formation Playmaker Pro — Smart Legend Tactics Board",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/design/formation-planner",
+  "description": "각 멤버의 이름을 범례로 관리하고 동선을 60초 영상으로 기록할 수 있는 스마트 전술 시뮬레이터입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "범례에 몇 명까지 넣을 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "화면 구성상 15~20명 내외가 가장 보기 좋게 저장됩니다." } },
+    { "@type": "Question", "name": "녹화된 영상에도 범례가 나오나요?", "acceptedAnswer": { "@type": "Answer", "text": "네, 보드와 범례가 통합된 상태로 녹화되어 저장됩니다." } },
+    { "@type": "Question", "name": "왜 녹화 시간이 60초로 제한되나요?", "acceptedAnswer": { "@type": "Answer", "text": "본 툴은 별도 서버 없이 브라우저에서 직접 영상을 인코딩합니다. 기기 성능 저하 없이 안정적인 녹화 품질을 보장하기 위해 최대 60초로 설계되었습니다." } },
+    { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
+  ]
+};
+
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -532,6 +597,8 @@ export default function FormationPlannerPage() {
 
   return (
     <div className={s.container}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
 
       {/* Header */}
@@ -783,8 +850,7 @@ export default function FormationPlannerPage() {
             { q: '범례에 몇 명까지 넣을 수 있나요?', a: '화면 구성상 15~20명 내외가 가장 보기 좋게 저장됩니다.' },
             { q: '녹화된 영상에도 범례가 나오나요?', a: '네, 보드와 범례가 통합된 상태로 녹화되어 저장됩니다.' },
             { q: '왜 녹화 시간이 60초로 제한되나요?', a: '본 툴은 별도 서버 없이 브라우저에서 직접 영상을 인코딩합니다. 기기 성능 저하 없이 안정적인 녹화 품질을 보장하기 위해 최대 60초로 설계되었습니다.' },
-            { q: '색상과 번호를 동시에 쓰면 범례는 어떻게 표시되나요?', a: '숫자 또는 알파벳이 포함된 아이콘은 번호/문자형 범례로 우선 처리됩니다. 색상은 캔버스 위에서 시각적으로 구분하는 보조 역할을 하며, 별도의 색상 범례 항목이 중복 생성되지 않습니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -806,8 +872,7 @@ export default function FormationPlannerPage() {
             { q: 'How many pieces can I add?', a: '15–20 pieces display best when saving as image or video.' },
             { q: 'Does the legend appear in the recording?', a: 'Yes — the board and legend are combined into a single recording.' },
             { q: 'Why is recording limited to 60 seconds?', a: 'The tool encodes video directly in your browser without a server. 60s ensures stable quality on all devices.' },
-            { q: 'How does the legend work with color + number together?', a: 'Pieces with text (number or letter) are shown as number/letter-type legends. Color is a visual aid on the canvas only — no duplicate color legend entries are created.' },
-            { q: 'Can I use this for official documents?', a: 'This tool is for reference purposes only. Please verify with professionals or official sources for critical decisions.' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />

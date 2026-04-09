@@ -1,3 +1,68 @@
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === "ko";
+  const title = isKo
+    ? "Photo Batch Master — 일괄 사진 보정 & 워터마크 | Utility Hub"
+    : "Photo Batch Master — Batch Photo Editor & Watermark | Utility Hub";
+  const description = isKo
+    ? "여러 장의 사진을 동일한 색감으로 보정하고 텍스트·이미지 워터마크를 일괄 삽입하세요."
+    : "Apply consistent color grading and insert text or image watermarks across multiple photos at once.";
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/photo-batch-master`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: `https://www.theutilhub.com/ko/utilities/design/photo-batch-master`,
+        en: `https://www.theutilhub.com/en/utilities/design/photo-batch-master`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Utility Hub",
+      locale: isKo ? "ko_KR" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Photo Batch Master — 일괄 사진 보정 & 워터마크 삽입",
+  "alternateName": "Photo Batch Master — Batch Photo Editor & Watermark Tool",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/design/photo-batch-master",
+  "description": "여러 장의 사진을 동일한 밝기·대비·색감으로 보정하고 텍스트 또는 이미지 워터마크를 일괄 삽입하는 전문가용 브라우저 기반 도구입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "워터마크는 어떤 위치에 넣을 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "9개 구역(좌상단·중상단·우상단·좌중단·정중앙·우중단·좌하단·중하단·우하단) 중 원하는 위치를 클릭하여 선택할 수 있습니다." } },
+    { "@type": "Question", "name": "이미지 워터마크로 어떤 파일을 쓸 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "PNG, JPG, WebP 등 브라우저가 지원하는 모든 이미지를 사용할 수 있습니다. 투명 배경의 PNG 로고를 권장합니다." } },
+    { "@type": "Question", "name": "사진 개수 제한이 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "브라우저 성능에 따라 다르지만 보통 20~30장 정도는 무리 없이 처리 가능합니다." } },
+    { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
+  ]
+};
+
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
@@ -500,8 +565,7 @@ export default function PhotoBatchMasterPage() {
       { q: '워터마크는 어떤 위치에 넣을 수 있나요?', a: '9개 구역(좌상단·중상단·우상단·좌중단·정중앙·우중단·좌하단·중하단·우하단) 중 원하는 위치를 클릭하여 선택할 수 있습니다.' },
       { q: '이미지 워터마크로 어떤 파일을 쓸 수 있나요?', a: 'PNG, JPG, WebP 등 브라우저가 지원하는 모든 이미지를 사용할 수 있습니다. 투명 배경의 PNG 로고를 권장합니다.' },
       { q: '사진 개수 제한이 있나요?', a: '브라우저 성능에 따라 다르지만 보통 20~30장 정도는 무리 없이 처리 가능합니다.' },
-      { q: '원본 파일은 안전한가요?', a: '모든 처리는 브라우저 캔버스 내에서만 이루어지며 서버에 업로드되지 않습니다.' },
-      { q: '면책 조항', a: '본 도구는 브라우저 기반 캔버스 처리로 제공됩니다. 중요한 사진은 원본을 별도 백업 후 사용하시기 바랍니다.' },
+      { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
     ],
   };
 
@@ -524,13 +588,14 @@ export default function PhotoBatchMasterPage() {
       { q: 'How many positions can I place the watermark?', a: 'You can choose from 9 positions: top-left, top-center, top-right, middle-left, center, middle-right, bottom-left, bottom-center, bottom-right.' },
       { q: 'What image formats work as watermarks?', a: 'Any browser-supported image format. PNG with transparent background is recommended for logo watermarks.' },
       { q: 'Is there a photo limit?', a: 'Typically 20–30 photos can be processed at once depending on browser performance.' },
-      { q: 'Are my original files safe?', a: 'All processing happens locally in the browser — no files are uploaded to any server.' },
-      { q: 'Disclaimer', a: 'This tool provides browser-based canvas processing. Always back up important photos before editing.' },
+      { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
     ],
   };
 
   return (
     <div className={s.container}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
 
       {/* ── Header ── */}

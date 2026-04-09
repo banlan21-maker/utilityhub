@@ -1,3 +1,68 @@
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === "ko";
+  const title = isKo
+    ? "AI 로고 & 파비콘 생성기 | Utility Hub"
+    : "AI Logo & Favicon Generator | Utility Hub";
+  const description = isKo
+    ? "텍스트·이모지·색상으로 파비콘 패키지를 5분 안에 생성하고 ZIP으로 다운로드하세요."
+    : "Generate a complete favicon package from text, emoji, and colors in 5 minutes. Download as ZIP.";
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/design/logo-favicon`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: `https://www.theutilhub.com/ko/utilities/design/logo-favicon`,
+        en: `https://www.theutilhub.com/en/utilities/design/logo-favicon`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Utility Hub",
+      locale: isKo ? "ko_KR" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AI 로고 & 파비콘 생성기",
+  "alternateName": "AI Logo & Favicon Generator",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+  "url": "https://www.theutilhub.com/ko/utilities/design/logo-favicon",
+  "description": "텍스트 또는 이모지로 favicon.ico, PNG 다중 크기, Apple Touch Icon, site.webmanifest를 포함한 완전한 파비콘 패키지를 무료로 생성하는 온라인 도구입니다."
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "ZIP 파일에 포함된 파일들을 어디에 놓아야 하나요?", "acceptedAnswer": { "@type": "Answer", "text": "Next.js, React, Vue.js 프로젝트는 /public 폴더, 정적 HTML은 루트 디렉토리에 넣으세요. HTML의 <head>에 site.webmanifest 링크와 apple-touch-icon 링크를 추가하면 모든 디바이스에서 올바르게 표시됩니다. 다운로드된 ZIP에 README가 포함되어 있습니다." } },
+    { "@type": "Question", "name": "이 도구로 만든 로고를 상업적으로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "텍스트와 색상을 직접 조합해 Canvas API로 생성한 이미지이므로 저작권 문제 없이 자유롭게 상업적으로 활용하실 수 있습니다. 단, 입력한 이모지의 경우 플랫폼별 이모지 디자인의 저작권에 주의하세요." } },
+    { "@type": "Question", "name": "고해상도 로고(SVG 또는 1024px 이상 PNG)도 가능한가요?", "acceptedAnswer": { "@type": "Answer", "text": "현재 최대 512×512 PNG를 제공합니다. SVG 포맷은 추후 업데이트 예정입니다. 대형 인쇄용 로고가 필요하다면 생성된 PNG를 벡터 변환 도구(예: Vectorizer.ai)를 통해 SVG로 변환하는 것을 권장합니다." } },
+    { "@type": "Question", "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다." } }
+  ]
+};
+
 'use client';
 
 import { useTranslations } from 'next-intl';
@@ -251,6 +316,8 @@ export default function LogoGeneratorPage() {
 
   return (
     <div style={{ maxWidth: '896px', margin: '0 auto', width: '100%' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
 
       {/* Tool Start Card - V4 Standard */}
@@ -607,11 +674,13 @@ export default function LogoGeneratorPage() {
             { step: '콘텐츠 유형 선택 (텍스트 / 이모지)', desc: "브랜드 이니셜 1~2자(예: 'UH') 또는 이모지(예: 🚀)를 선택해 로고 내용을 입력합니다." },
             { step: '모양 & 색상 커스터마이징', desc: '원형/라운드/정사각형/육각형 중 배경 모양을 선택하고, 프리셋 팔레트 또는 커스텀 색상 피커로 브랜드 컬러를 적용합니다.' },
             { step: 'ZIP 다운로드 & 프로젝트 적용', desc: "'다운로드' 버튼을 클릭하면 모든 크기의 파비콘과 site.webmanifest가 포함된 ZIP 파일이 생성됩니다. 압축 해제 후 프로젝트의 /public 폴더에 넣으면 완성입니다." },
+            { step: 'HTML에 링크 태그 추가', desc: "HTML <head>에 site.webmanifest 링크, apple-touch-icon, shortcut icon 태그를 추가하세요. 다운로드된 ZIP 내 README에 모든 태그 예시가 포함되어 있어 그대로 복사해서 사용할 수 있습니다." },
           ],
           faqs: [
             { q: 'ZIP 파일에 포함된 파일들을 어디에 놓아야 하나요?', a: 'Next.js, React, Vue.js 프로젝트는 /public 폴더, 정적 HTML은 루트 디렉토리에 넣으세요. HTML의 <head>에 site.webmanifest 링크와 apple-touch-icon 링크를 추가하면 모든 디바이스에서 올바르게 표시됩니다. 다운로드된 ZIP에 README가 포함되어 있습니다.' },
             { q: '이 도구로 만든 로고를 상업적으로 사용해도 되나요?', a: '텍스트와 색상을 직접 조합해 Canvas API로 생성한 이미지이므로 저작권 문제 없이 자유롭게 상업적으로 활용하실 수 있습니다. 단, 입력한 이모지의 경우 플랫폼별 이모지 디자인의 저작권에 주의하세요.' },
             { q: '고해상도 로고(SVG 또는 1024px 이상 PNG)도 가능한가요?', a: '현재 최대 512×512 PNG를 제공합니다. SVG 포맷은 추후 업데이트 예정입니다. 대형 인쇄용 로고가 필요하다면 생성된 PNG를 벡터 변환 도구(예: Vectorizer.ai)를 통해 SVG로 변환하는 것을 권장합니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
           ],
         }}
         en={{
@@ -627,11 +696,13 @@ export default function LogoGeneratorPage() {
             { step: 'Choose content type (text or emoji)', desc: "Enter 1–2 brand initials (e.g. 'UH') or pick an emoji (e.g. 🚀) as your logo content." },
             { step: 'Customize shape & colors', desc: 'Select circle, rounded, square, or hexagon background shape, then apply brand colors using preset palettes or custom color pickers.' },
             { step: 'Download ZIP & apply to project', desc: "Click 'Download' to generate a ZIP file with all favicon sizes and site.webmanifest. Unzip and place everything in your project's /public folder." },
+            { step: 'Add link tags to HTML', desc: "Add the site.webmanifest link, apple-touch-icon, and shortcut icon tags to your HTML <head>. The README inside the downloaded ZIP includes ready-to-copy tag examples for every major framework." },
           ],
           faqs: [
             { q: 'Where should I place the files from the ZIP?', a: 'For Next.js, React, or Vue.js projects, place them in the /public folder. For static HTML, put them in the root directory. Add site.webmanifest and apple-touch-icon links in the HTML <head>. A README inside the ZIP explains everything.' },
             { q: 'Can I use the generated logo commercially?', a: 'Yes. The image is generated via the Canvas API by combining your text and colors, so it is free from copyright concerns for commercial use. Note: if you used an emoji, be aware of the platform-specific emoji design copyrights.' },
             { q: 'Is high-resolution output (SVG or 1024px+) available?', a: 'Currently the maximum is 512×512 PNG. SVG format is planned for a future update. If you need a large print-ready logo, convert the generated PNG to SVG using a vector conversion tool (e.g., Vectorizer.ai).' },
+            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
           ],
         }}
       />
