@@ -630,6 +630,10 @@
     "color-coordinator": {
       "title": "OOTD Color Coordinator",
       "desc": "Smart mannequin color coordinator for your perfect outfit with 3 algorithm-powered look themes."
+    },
+    "apnea-trainer": {
+      "title": "Apnea Pro Dry Training",
+      "desc": "Auto-generate CO2 & O2 training tables with voice guide, beep alerts, and visual flash for structured freediving dry static apnea training."
     }
   },
   "SecurityBoard": {

@@ -630,6 +630,10 @@
     "color-coordinator": {
       "title": "OOTD 컬러 코디네이터",
       "desc": "스마트 마네킹으로 완성하는 색상 코디 플래너 — 3가지 알고리즘 테마 제공"
+    },
+    "apnea-trainer": {
+      "title": "Apnea Pro 드라이 트레이닝",
+      "desc": "CO2·O2 테이블 자동 생성, 음성 가이드, 비프음, 시각 플래시로 프리다이빙 드라이 스태틱 훈련을 체계적으로 관리하세요."
     }
   },
   "SecurityBoard": {

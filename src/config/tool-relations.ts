@@ -62,6 +62,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/lifestyle/mbti-test', icon: '🌊', ko: 'MBTI 해양생물 테스트', en: 'MBTI Marine Life Test', category: 'lifestyle' },
   { id: 'utilities/lifestyle/fortune-prompt', icon: '🔮', ko: '오늘의 운세 프롬프트', en: 'Fortune Prompt', category: 'lifestyle' },
   { id: 'utilities/lifestyle/teto-egen-test', icon: '😊', ko: '태토에겐 성격 테스트', en: 'Teto Egen Personality Test', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/apnea-trainer', icon: '🫁', ko: 'Apnea Pro 드라이 트레이닝', en: 'Apnea Pro Dry Training', category: 'lifestyle' },
 
   // Security
   { id: 'utilities/security/privacy-masking', icon: '🔏', ko: '개인정보 마스킹 도구', en: 'Privacy Masking Tool', category: 'security' },
@@ -245,6 +246,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   ],
 
   // ── Lifestyle ──────────────────────────────────────────────
+  'utilities/lifestyle/apnea-trainer': [
+    'utilities/lifestyle/bmi-calc',
+    'utilities/lifestyle/gym-plate-calc',
+    'utilities/lifestyle/30day-challenge',
+  ],
   'utilities/lifestyle/30day-challenge': [
     'utilities/productivity/pomodoro',
     'utilities/lifestyle/dday-calc',

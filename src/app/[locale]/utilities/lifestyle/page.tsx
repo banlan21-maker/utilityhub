@@ -16,6 +16,7 @@ import {
   Heart,
   Target,
   Dumbbell,
+  Wind,
   Shirt
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
@@ -107,6 +108,13 @@ export default function LifestyleDashboardPage() {
       desc: boardT('fortune-prompt.desc'),
       icon: <Sparkles size={36} color="#ec4899" />,
       gradient: 'rgba(236, 72, 153, 0.08)',
+    },
+    {
+      id: 'utilities/lifestyle/apnea-trainer',
+      title: boardT('apnea-trainer.title'),
+      desc: boardT('apnea-trainer.desc'),
+      icon: <Wind size={36} color="#06b6d4" />,
+      gradient: 'rgba(6, 182, 212, 0.08)',
     },
   ];
 
