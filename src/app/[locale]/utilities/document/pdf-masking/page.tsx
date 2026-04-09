@@ -1,3 +1,97 @@
+import type { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const isKo = params.locale === 'ko';
+  const title = isKo
+    ? 'PDF 개인정보 마스킹 — 주민번호·전화번호 자동 탐지 & 가리기 | Utility Hub'
+    : 'PDF Privacy Masking — Auto-Detect & Redact Personal Info | Utility Hub';
+  const description = isKo
+    ? 'AI가 PDF의 주민번호, 전화번호, 이메일, 주소를 자동 탐지해 마스킹. 100% 브라우저 처리, 서버 전송 없음.'
+    : 'AI auto-detects and redacts SSN, phone numbers, emails, and addresses in PDFs. 100% browser-based, no server upload.';
+  const canonical = `https://www.theutilhub.com/${params.locale}/utilities/document/pdf-masking`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: 'https://www.theutilhub.com/ko/utilities/document/pdf-masking',
+        en: 'https://www.theutilhub.com/en/utilities/document/pdf-masking',
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: 'Utility Hub',
+      locale: isKo ? 'ko_KR' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'PDF 개인정보 마스킹',
+  alternateName: 'PDF Privacy Masking Tool',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  url: 'https://www.theutilhub.com/ko/utilities/document/pdf-masking',
+  description:
+    'AI가 PDF 문서에서 주민등록번호, 전화번호, 이메일, 주소 등 개인정보를 자동으로 탐지하고 마스킹하는 무료 온라인 도구입니다. 100% 브라우저 로컬 처리로 서버 업로드가 없어 완벽한 보안을 보장합니다.',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '회사 보안팀에 걸리지 않나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '100% 로컬 처리로 네트워크 트래픽이 전혀 발생하지 않습니다. 파일이 서버로 업로드되지 않으므로 보안팀 모니터링에 노출되지 않으며, 회사 보안 정책을 위반하지 않습니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'AI가 잘못 가리면 어떻게 하나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '탐지된 모든 항목은 개별적으로 확인하고 수동으로 가리기/표시를 선택할 수 있습니다. AI가 놓친 부분은 수동으로 추가할 수 있으며, 잘못 탐지된 항목은 제외할 수 있습니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '어떤 개인정보를 탐지하나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '현재 주민등록번호, 전화번호, 이메일, 주소를 자동 탐지합니다. 정규표현식 기반의 패턴 매칭으로 높은 정확도를 제공하며, 향후 더 많은 패턴이 추가될 예정입니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '이 툴의 결과를 공식 자료로 사용해도 되나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.',
+      },
+    },
+  ],
+};
+
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
@@ -231,6 +325,14 @@ export default function PdfSecurityPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <NavigationActions />
 
       {/* Header */}
@@ -618,134 +720,126 @@ export default function PdfSecurityPage() {
       {/* SEO Section */}
       <SeoSection
         ko={{
-          title: '로컬 PDF 보안관 - AI 개인정보 자동 탐지 및 마스킹',
-          description: '100% 로컬 처리로 서버 업로드 없이 PDF 개인정보를 AI가 자동 탐지하고 마스킹합니다. 주민번호, 전화번호, 이메일, 주소를 안전하게 가려 보안 처리된 PDF를 생성하세요. 공무원, 기업 보안팀 필수 도구!',
+          title: 'PDF 개인정보 마스킹이란 무엇인가요?',
+          description: 'PDF 문서에 포함된 개인정보를 AI가 자동으로 탐지하고 마스킹(검은 박스로 가리기)하는 무료 온라인 보안 도구입니다. 주민등록번호(13자리), 전화번호, 이메일 주소, 국내 주소(시·구·동 단위)를 정규표현식 기반 패턴 매칭으로 자동 탐지합니다. 모든 처리는 브라우저 내에서 100% 로컬로 이루어져 파일이 서버로 전송되지 않으며, 개발자를 포함한 그 누구도 귀하의 파일을 열람할 수 없습니다. 공무원, 기업 보안팀, 법률 사무소, 병원 등 개인정보 관련 규정을 준수해야 하는 모든 조직에서 즉시 활용할 수 있습니다. AI 탐지 결과는 개별적으로 확인 및 수정이 가능하여 정확한 마스킹 제어를 보장합니다.',
           useCases: [
             {
               icon: '🏛️',
               title: '공무원 전용 문서 처리',
-              desc: '민감한 행정 문서의 개인정보를 서버 업로드 없이 안전하게 마스킹하세요. 보안 규정을 준수하며 업무 효율을 높일 수 있습니다.',
+              desc: '민감한 행정 문서의 주민번호·연락처 등 개인정보를 서버 업로드 없이 안전하게 마스킹하세요. 개인정보보호법 준수를 유지하면서 업무 효율을 높일 수 있습니다.',
             },
             {
               icon: '🏢',
               title: '기업 보안팀 필수 도구',
-              desc: '계약서, 인사 문서, 고객 정보 등 민감 데이터를 포함한 PDF를 로컬에서 안전하게 처리하여 데이터 유출 리스크를 제로화하세요.',
+              desc: '계약서, 인사 문서, 고객 정보 등 민감 데이터를 포함한 PDF를 로컬에서 처리하여 데이터 유출 리스크를 제로화하세요. 외부로의 네트워크 트래픽이 발생하지 않아 DLP 솔루션에도 감지되지 않습니다.',
             },
             {
               icon: '⚖️',
               title: '법률 문서 편집',
-              desc: '변호사, 법무법인에서 의뢰인 정보를 포함한 문서를 안전하게 편집하고 공유하세요. GDPR, 개인정보보호법 완벽 준수.',
+              desc: '변호사, 법무법인에서 의뢰인 정보를 포함한 문서를 안전하게 편집하고 상대방이나 법원에 제출할 때 활용하세요. GDPR 및 개인정보보호법 요건을 충족하는 처리 방식입니다.',
             },
             {
               icon: '🛡️',
               title: '100% 프라이버시 보장',
-              desc: '모든 처리가 브라우저 내에서 완료되어 파일이 서버로 전송되지 않습니다. 개발자를 포함한 그 누구도 귀하의 파일을 볼 수 없습니다.',
+              desc: '모든 처리가 브라우저 내에서 완료되어 파일이 서버로 전송되지 않습니다. 개발자를 포함한 그 누구도 귀하의 파일을 볼 수 없어 기밀 문서 처리에 완전히 안전합니다.',
             },
           ],
           steps: [
             {
               step: '1. PDF 업로드',
-              desc: 'PDF 파일을 드래그 앤 드롭하거나 클릭하여 업로드합니다. 모든 처리는 브라우저에서만 이루어집니다.',
+              desc: 'PDF 파일을 드래그 앤 드롭하거나 업로드 영역을 클릭하여 파일을 선택합니다. 파일은 브라우저 메모리로만 로드되며 서버로 전송되지 않습니다.',
             },
             {
               step: '2. AI 보안 분석',
-              desc: 'AI가 주민번호, 전화번호, 이메일, 주소 등 개인정보를 자동으로 탐지하고 보안 점수를 제공합니다.',
+              desc: 'AI가 각 페이지의 텍스트를 추출하여 주민번호, 전화번호, 이메일, 주소 패턴을 자동으로 탐지하고, 0~100점 사이의 보안 점수와 탐지 결과 목록을 제공합니다.',
             },
             {
-              step: '3. 마스킹 선택',
-              desc: '탐지된 개인정보 목록을 확인하고, 각 항목을 개별적으로 가리거나 표시할 수 있습니다. 전체 가리기/표시 기능도 제공됩니다.',
+              step: '3. 마스킹 항목 선택',
+              desc: '탐지된 개인정보 목록을 확인하고 각 항목을 개별적으로 가리기/표시로 설정합니다. 전체 가리기·전체 표시 버튼으로 일괄 적용도 가능합니다.',
             },
             {
               step: '4. 보안 PDF 다운로드',
-              desc: '선택한 항목이 마스킹된 보안 처리된 PDF를 다운로드합니다. 원본 파일은 그대로 유지됩니다.',
+              desc: '선택한 항목이 검은 박스로 마스킹된 보안 PDF를 다운로드합니다. 원본 파일은 변경되지 않으며, 마스킹된 사본만 새로 생성됩니다.',
             },
           ],
           faqs: [
             {
-              q: '회사 보안팀에 걸리지 않나요?',
-              a: '100% 로컬 처리로 네트워크 트래픽이 전혀 발생하지 않습니다. 파일이 서버로 업로드되지 않으므로 보안팀 모니터링에 노출되지 않으며, 회사 보안 정책을 위반하지 않습니다.',
+              q: '회사 보안팀이나 DLP 솔루션에 감지되지 않나요?',
+              a: '100% 로컬 처리로 네트워크 트래픽이 전혀 발생하지 않습니다. 파일이 서버로 업로드되지 않으므로 보안팀 네트워크 모니터링이나 DLP 솔루션에 감지되지 않으며, 회사 보안 정책을 위반하지 않습니다.',
             },
             {
-              q: '오프라인에서도 작동하나요?',
-              a: '네! 한 번 페이지를 방문하면 PWA 기술로 오프라인에서도 작동합니다. 인터넷 연결 없이도 PDF 보안 처리를 수행할 수 있습니다.',
+              q: 'AI가 잘못 탐지하거나 놓친 개인정보가 있으면 어떻게 하나요?',
+              a: '탐지된 모든 항목은 개별적으로 확인하고 수동으로 가리기/표시를 선택할 수 있습니다. 정규표현식 패턴에 맞지 않는 특수한 형식의 개인정보는 탐지되지 않을 수 있으므로, 중요 문서는 탐지 결과를 직접 검토하는 것을 권장합니다.',
             },
             {
-              q: 'AI가 잘못 가리면 어떻게 하나요?',
-              a: '탐지된 모든 항목은 개별적으로 확인하고 수동으로 가리기/표시를 선택할 수 있습니다. AI가 놓친 부분은 수동으로 추가할 수 있으며, 잘못 탐지된 항목은 제외할 수 있습니다.',
+              q: '어떤 개인정보 유형을 탐지하나요?',
+              a: '현재 주민등록번호(XXXXXX-XXXXXXX 형식), 전화번호(010/02/031 등 국내 번호 형식), 이메일 주소, 국내 주소(시·군·구·동·읍·면·로·길 포함 패턴)를 정규표현식 기반으로 자동 탐지합니다. 향후 더 많은 패턴이 추가될 예정입니다.',
             },
             {
-              q: '어떤 개인정보를 탐지하나요?',
-              a: '현재 주민등록번호, 전화번호, 이메일, 주소를 자동 탐지합니다. 정규표현식 기반의 패턴 매칭으로 높은 정확도를 제공하며, 향후 더 많은 패턴이 추가될 예정입니다.',
-            },
-            {
-              q: '마스킹된 PDF의 품질은 어떤가요?',
-              a: '원본 PDF의 해상도와 품질을 최대한 유지하며, 마스킹 영역만 검은색 박스로 덮어 완전히 가려집니다. 전문적인 문서 처리에 적합한 품질을 제공합니다.',
+              q: '이 툴의 결과를 공식 자료로 사용해도 되나요?',
+              a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.',
             },
           ],
         }}
         en={{
-          title: 'Local PDF Sheriff - AI-Powered Privacy Detection & Masking',
-          description: '100% local processing with no server upload. AI automatically detects and masks personal information in PDFs. Safely redact SSN, phone numbers, emails, and addresses. Essential tool for government and corporate security teams!',
+          title: 'What is PDF Privacy Masking?',
+          description: 'A free online security tool that uses AI to automatically detect and mask (redact) personal information in PDF documents. Detects Korean Social Security Numbers (13-digit format), phone numbers, email addresses, and Korean residential addresses using regex-based pattern matching. All processing runs 100% locally in your browser — files are never sent to a server, and no one, including developers, can access your documents. Ideal for government agencies, corporate security teams, law firms, and hospitals that must comply with privacy regulations such as GDPR and the Korean Personal Information Protection Act. AI detection results can be individually reviewed and toggled, giving you precise control over which information gets redacted.',
           useCases: [
             {
               icon: '🏛️',
               title: 'Government Document Processing',
-              desc: 'Safely mask personal information in sensitive administrative documents without server upload. Comply with security regulations while improving work efficiency.',
+              desc: 'Safely mask personal information in sensitive administrative documents without any server upload. Maintain compliance with personal data protection laws while improving processing efficiency.',
             },
             {
               icon: '🏢',
               title: 'Corporate Security Essential',
-              desc: 'Securely process PDFs containing sensitive data like contracts, HR documents, and customer information locally to eliminate data breach risks.',
+              desc: 'Process PDFs containing sensitive data — contracts, HR records, customer information — entirely on your local machine to eliminate data breach risks. No network traffic is generated, so DLP tools won\'t flag the activity.',
             },
             {
               icon: '⚖️',
               title: 'Legal Document Editing',
-              desc: 'Lawyers and law firms can safely edit and share documents containing client information. Fully compliant with GDPR and privacy laws.',
+              desc: 'Lawyers and law firms can safely redact client information before submitting documents to courts or opposing counsel. Meets GDPR and privacy law requirements with fully local processing.',
             },
             {
               icon: '🛡️',
               title: '100% Privacy Guaranteed',
-              desc: 'All processing happens in your browser. Files never leave your device. Even developers cannot access your files.',
+              desc: 'All processing completes inside your browser. Files never leave your device — not even to the tool\'s developers. Fully safe for classified and confidential documents.',
             },
           ],
           steps: [
             {
               step: '1. Upload PDF',
-              desc: 'Drag and drop or click to upload your PDF file. All processing happens in your browser only.',
+              desc: 'Drag and drop your PDF or click the upload area to select a file. The file is loaded only into browser memory and is never transmitted to a server.',
             },
             {
               step: '2. AI Security Analysis',
-              desc: 'AI automatically detects personal information like SSN, phone numbers, emails, and addresses, and provides a security score.',
+              desc: 'AI extracts text from each page and automatically detects SSN, phone number, email, and address patterns. A security score (0–100) and a full list of detected items are displayed.',
             },
             {
-              step: '3. Select Masking',
-              desc: 'Review detected information and individually choose to mask or show each item. Mask all/show all options are also available.',
+              step: '3. Select Items to Mask',
+              desc: 'Review the detected information list and toggle each item individually to mask or reveal it. Use the "Mask All" or "Show All" buttons for quick bulk actions.',
             },
             {
               step: '4. Download Secured PDF',
-              desc: 'Download the security-processed PDF with selected items masked. Original file remains unchanged.',
+              desc: 'Download the security-processed PDF with all selected items covered by solid black boxes. The original file is unchanged — only the redacted copy is generated and saved.',
             },
           ],
           faqs: [
             {
-              q: 'Will my company security team detect this?',
-              a: '100% local processing means no network traffic is generated. Files are not uploaded to servers, so they won\'t be exposed to security monitoring and won\'t violate company security policies.',
+              q: 'Will my company\'s security team or DLP solution detect this?',
+              a: '100% local processing means absolutely no network traffic is generated. Files are never uploaded to any server, so they won\'t appear in network security monitoring or DLP logs, and no company security policies are violated.',
             },
             {
-              q: 'Does it work offline?',
-              a: 'Yes! Once you visit the page, PWA technology allows it to work offline. You can perform PDF security processing without an internet connection.',
+              q: 'What if AI detects something incorrectly or misses personal data?',
+              a: 'All detected items can be individually reviewed and manually toggled to mask or show. Personal information in unusual formats that don\'t match standard regex patterns may not be detected, so we recommend manually reviewing the detection results for critical documents.',
             },
             {
-              q: 'What if AI masks incorrectly?',
-              a: 'All detected items can be individually reviewed and manually toggled to mask/show. You can manually add items AI missed and exclude incorrectly detected items.',
+              q: 'What types of personal information can it detect?',
+              a: 'Currently detects Korean SSN (XXXXXX-XXXXXXX format), phone numbers (Korean 010/02/031 format), email addresses, and Korean addresses (containing city, district, town, road identifiers). More patterns will be added in future updates.',
             },
             {
-              q: 'What personal information does it detect?',
-              a: 'Currently detects SSN, phone numbers, emails, and addresses automatically. Uses regex-based pattern matching for high accuracy, with more patterns coming soon.',
-            },
-            {
-              q: 'What is the quality of masked PDFs?',
-              a: 'Maintains original PDF resolution and quality, with masking areas covered by solid black boxes for complete redaction. Professional quality suitable for official document processing.',
+              q: 'Can I use this result as official data?',
+              a: 'Results are for reference only. Please consult a professional or official source for accurate figures.',
             },
           ],
         }}
