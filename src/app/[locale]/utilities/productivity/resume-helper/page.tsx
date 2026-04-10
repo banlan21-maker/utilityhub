@@ -155,9 +155,9 @@ export default function CoverLetterPage() {
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-      window.open('https://speller.cs.pusan.ac.kr/', '_blank', 'noopener,noreferrer');
+      window.open('https://dic.daum.net/grammar_checker.do', '_blank', 'noopener,noreferrer');
     } catch {
-      window.open('https://speller.cs.pusan.ac.kr/', '_blank', 'noopener,noreferrer');
+      window.open('https://dic.daum.net/grammar_checker.do', '_blank', 'noopener,noreferrer');
     }
   };
 
