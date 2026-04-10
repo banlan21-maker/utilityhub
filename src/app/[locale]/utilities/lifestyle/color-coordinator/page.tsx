@@ -203,51 +203,56 @@ interface MannequinProps {
 }
 
 function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }: MannequinProps) {
-  const SKIN = '#EAC59B';
+  const SKIN = '#E8D0B3';
+  const SKIN_SHADOW = '#D4B896';
 
   const activeStroke = (k: SlotKey) =>
-    selectedSlot === k ? '#8B5CF6' : 'rgba(255,255,255,0.5)';
+    selectedSlot === k ? '#8B5CF6' : 'rgba(180,180,180,0.4)';
   const activeStrokeWidth = (k: SlotKey) =>
-    selectedSlot === k ? 2.5 : 1.5;
+    selectedSlot === k ? 2.5 : 0.7;
 
   const inactiveProps = {
     fill: 'none',
     stroke: '#CBD5E1',
     strokeDasharray: '5 4',
-    strokeWidth: 1.5,
+    strokeWidth: 1.2,
   };
+
+  // — Path constants for reuse (outer overlaps top) —
+  const PATH_TOP_BODY = 'M 54 96 C 54 96 68 90 100 90 C 132 90 146 96 146 96 C 148 120 144 148 140 165 C 138 172 136 178 134 182 L 66 182 C 64 178 62 172 60 165 C 56 148 52 120 54 96 Z';
+  const PATH_SLEEVE_L = 'M 54 96 C 40 100 28 114 24 148 C 24 152 26 156 30 156 L 36 156 C 38 156 40 154 40 150 C 42 128 48 110 56 102 Z';
+  const PATH_SLEEVE_R = 'M 146 96 C 160 100 172 114 176 148 C 176 152 174 156 170 156 L 164 156 C 162 156 160 154 160 150 C 158 128 152 110 144 102 Z';
 
   return (
     <svg
       ref={svgRef}
-      viewBox="0 0 200 400"
+      viewBox="0 0 200 380"
       xmlns="http://www.w3.org/2000/svg"
       className={s.mannequin}
     >
-      {/* ── Inactive outer dashed outline (before top, so top is clickable) ── */}
+      <defs>
+        <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={SKIN} />
+          <stop offset="100%" stopColor={SKIN_SHADOW} />
+        </linearGradient>
+      </defs>
+
+      {/* ── Inactive outer dashed outline ── */}
       {!slots.outer.active && (
         <>
-          <path
-            d="M 44 88 L 12 94 L 10 150 L 30 152 L 44 108 Z"
-            {...inactiveProps}
-            style={{ pointerEvents: 'none' }}
-          />
-          <path
-            d="M 156 88 L 188 94 L 190 150 L 170 152 L 156 108 Z"
-            {...inactiveProps}
-            style={{ pointerEvents: 'none' }}
-          />
-          <path
-            d="M 44 88 L 156 88 L 160 185 L 40 185 Z"
-            {...inactiveProps}
-            style={{ pointerEvents: 'none' }}
-          />
+          <path d={PATH_SLEEVE_L} {...inactiveProps} style={{ pointerEvents: 'none' }} />
+          <path d={PATH_SLEEVE_R} {...inactiveProps} style={{ pointerEvents: 'none' }} />
+          <path d={PATH_TOP_BODY} {...inactiveProps} style={{ pointerEvents: 'none' }} />
         </>
       )}
 
+      {/* ── Hands (skin, behind sleeves) ── */}
+      <ellipse cx={28} cy={158} rx={7} ry={9} fill="url(#skinGrad)" />
+      <ellipse cx={172} cy={158} rx={7} ry={9} fill="url(#skinGrad)" />
+
       {/* ── Shoes ── */}
-      <motion.rect
-        x={30} y={314} width={60} height={18} rx={7}
+      <motion.path
+        d="M 60 338 L 60 330 C 58 326 50 322 42 324 C 36 326 34 332 36 338 Z"
         animate={{ fill: slots.shoes.color }}
         transition={{ duration: 0.35 }}
         stroke={activeStroke('shoes')}
@@ -255,8 +260,8 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
         style={{ cursor: 'pointer' }}
         onClick={() => onSelectSlot('shoes')}
       />
-      <motion.rect
-        x={110} y={314} width={60} height={18} rx={7}
+      <motion.path
+        d="M 140 338 L 140 330 C 142 326 150 322 158 324 C 164 326 166 332 164 338 Z"
         animate={{ fill: slots.shoes.color }}
         transition={{ duration: 0.35 }}
         stroke={activeStroke('shoes')}
@@ -265,9 +270,9 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
         onClick={() => onSelectSlot('shoes')}
       />
 
-      {/* ── Bottom ── */}
+      {/* ── Bottom (pants — two legs) ── */}
       <motion.path
-        d="M 48 183 L 40 314 L 86 314 L 100 242 L 114 314 L 160 314 L 152 183 Z"
+        d="M 66 182 C 64 200 60 260 58 310 C 58 320 58 328 60 330 L 80 330 C 82 328 82 318 82 310 L 96 218 L 100 210 L 104 218 L 118 310 C 118 318 118 328 120 330 L 140 330 C 142 328 142 320 142 310 C 140 260 136 200 134 182 Z"
         animate={{ fill: slots.bottom.color }}
         transition={{ duration: 0.35 }}
         stroke={activeStroke('bottom')}
@@ -276,9 +281,9 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
         onClick={() => onSelectSlot('bottom')}
       />
 
-      {/* ── Top sleeves ── */}
+      {/* ── Top — sleeves ── */}
       <motion.path
-        d="M 52 88 L 22 94 L 20 146 L 38 148 L 52 106 Z"
+        d={PATH_SLEEVE_L}
         animate={{ fill: slots.top.color }}
         transition={{ duration: 0.35 }}
         stroke={activeStroke('top')}
@@ -287,7 +292,7 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
         onClick={() => onSelectSlot('top')}
       />
       <motion.path
-        d="M 148 88 L 178 94 L 180 146 L 162 148 L 148 106 Z"
+        d={PATH_SLEEVE_R}
         animate={{ fill: slots.top.color }}
         transition={{ duration: 0.35 }}
         stroke={activeStroke('top')}
@@ -295,9 +300,9 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
         style={{ cursor: 'pointer' }}
         onClick={() => onSelectSlot('top')}
       />
-      {/* ── Top body ── */}
+      {/* ── Top — body ── */}
       <motion.path
-        d="M 52 88 L 148 88 L 152 183 L 48 183 Z"
+        d={PATH_TOP_BODY}
         animate={{ fill: slots.top.color }}
         transition={{ duration: 0.35 }}
         stroke={activeStroke('top')}
@@ -306,11 +311,11 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
         onClick={() => onSelectSlot('top')}
       />
 
-      {/* ── Active outer (rendered after top) ── */}
+      {/* ── Active outer (over top) ── */}
       {slots.outer.active && (
         <>
           <motion.path
-            d="M 44 88 L 12 94 L 10 150 L 30 152 L 44 108 Z"
+            d={PATH_SLEEVE_L}
             animate={{ fill: slots.outer.color }}
             transition={{ duration: 0.35 }}
             stroke={activeStroke('outer')}
@@ -319,7 +324,7 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
             onClick={() => onSelectSlot('outer')}
           />
           <motion.path
-            d="M 156 88 L 188 94 L 190 150 L 170 152 L 156 108 Z"
+            d={PATH_SLEEVE_R}
             animate={{ fill: slots.outer.color }}
             transition={{ duration: 0.35 }}
             stroke={activeStroke('outer')}
@@ -328,7 +333,7 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
             onClick={() => onSelectSlot('outer')}
           />
           <motion.path
-            d="M 44 88 L 156 88 L 160 185 L 40 185 Z"
+            d={PATH_TOP_BODY}
             animate={{ fill: slots.outer.color }}
             transition={{ duration: 0.35 }}
             stroke={activeStroke('outer')}
@@ -340,41 +345,36 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
       )}
 
       {/* ── Neck ── */}
-      <rect x={93} y={76} width={14} height={12} rx={3} fill={SKIN} />
+      <path d="M 92 74 L 92 86 C 92 90 95 92 100 92 C 105 92 108 90 108 86 L 108 74 Z" fill="url(#skinGrad)" />
 
-      {/* ── Head ── */}
-      <circle cx={100} cy={52} r={24} fill={SKIN} />
+      {/* ── Head (smooth mannequin oval — no face) ── */}
+      <ellipse cx={100} cy={52} rx={20} ry={24} fill="url(#skinGrad)" />
+      {/* Subtle ear hints */}
+      <ellipse cx={79} cy={54} rx={3.5} ry={6} fill={SKIN_SHADOW} />
+      <ellipse cx={121} cy={54} rx={3.5} ry={6} fill={SKIN_SHADOW} />
 
-      {/* ── Face ── */}
-      <circle cx={93} cy={49} r={2.5} fill="#8B6355" />
-      <circle cx={107} cy={49} r={2.5} fill="#8B6355" />
-      <path d="M 94 58 Q 100 63 106 58" stroke="#8B6355" strokeWidth={1.5} fill="none" strokeLinecap="round" />
-
-      {/* ── Hat inactive dashed (before head so head is on top) ── */}
+      {/* ── Hat inactive dashed ── */}
       {!slots.hat.active && (
         <>
-          <rect x={76} y={2} width={48} height={24} rx={5} {...inactiveProps} style={{ cursor: 'pointer' }} onClick={onActivateHat} />
-          <rect x={60} y={22} width={80} height={10} rx={4} {...inactiveProps} style={{ cursor: 'pointer' }} onClick={onActivateHat} />
+          <path d="M 78 8 C 78 2 84 -2 100 -2 C 116 -2 122 2 122 8 L 122 26 C 122 28 120 30 118 30 L 82 30 C 80 30 78 28 78 26 Z" {...inactiveProps} style={{ cursor: 'pointer' }} onClick={onActivateHat} />
+          <path d="M 62 28 C 62 24 70 22 100 22 C 130 22 138 24 138 28 C 138 32 130 36 100 36 C 70 36 62 32 62 28 Z" {...inactiveProps} style={{ cursor: 'pointer' }} onClick={onActivateHat} />
           <text
-            x={100}
-            y={18}
+            x={100} y={16}
             textAnchor="middle"
             dominantBaseline="middle"
-            fontSize={14}
+            fontSize={13}
             fill="#CBD5E1"
             style={{ cursor: 'pointer', userSelect: 'none' }}
             onClick={onActivateHat}
-          >
-            +
-          </text>
+          >+</text>
         </>
       )}
 
-      {/* ── Hat active (after head) ── */}
+      {/* ── Hat active ── */}
       {slots.hat.active && (
         <>
-          <motion.rect
-            x={76} y={2} width={48} height={24} rx={5}
+          <motion.path
+            d="M 78 8 C 78 2 84 -2 100 -2 C 116 -2 122 2 122 8 L 122 26 C 122 28 120 30 118 30 L 82 30 C 80 30 78 28 78 26 Z"
             animate={{ fill: slots.hat.color }}
             transition={{ duration: 0.35 }}
             stroke={activeStroke('hat')}
@@ -382,8 +382,8 @@ function Mannequin({ slots, selectedSlot, onSelectSlot, onActivateHat, svgRef }:
             style={{ cursor: 'pointer' }}
             onClick={() => onSelectSlot('hat')}
           />
-          <motion.rect
-            x={60} y={22} width={80} height={10} rx={4}
+          <motion.path
+            d="M 62 28 C 62 24 70 22 100 22 C 130 22 138 24 138 28 C 138 32 130 36 100 36 C 70 36 62 32 62 28 Z"
             animate={{ fill: slots.hat.color }}
             transition={{ duration: 0.35 }}
             stroke={activeStroke('hat')}
@@ -454,7 +454,7 @@ export default function ColorCoordinatorPage() {
     ctx.fillRect(0, 0, 320, 540);
     const img = new Image();
     img.onload = () => {
-      ctx.drawImage(img, 20, 10, 260, 400);
+      ctx.drawImage(img, 20, 10, 260, 380);
       // Color info below
       ctx.fillStyle = '#374151';
       ctx.font = 'bold 13px sans-serif';
