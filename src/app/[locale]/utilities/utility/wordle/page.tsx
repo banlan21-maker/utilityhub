@@ -336,16 +336,38 @@ export default function WordlePage() {
     }
   }, [gameState, stats, currentLanguage, getTodayAnswer, saveGameState]);
 
-  // 한글 입력 처리
-  const [isComposing, setIsComposing] = useState(false);
+  // 한글 입력 처리 — ref 기반 (state 렌더링이 IME를 깨뜨리는 문제 방지)
+  const composingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // 키보드 이벤트
+  // input → React state 동기화 (조합 중이 아닐 때만)
+  const syncInputToState = useCallback(() => {
+    if (!inputRef.current) return;
+    const raw = inputRef.current.value;
+    // 완성된 한글 + 조합 중인 자모 모두 허용
+    const filtered = raw.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
+    const clamped = filtered.slice(0, maxLength);
+    // DOM 값도 보정
+    if (inputRef.current.value !== clamped) {
+      inputRef.current.value = clamped;
+    }
+    setGameState(prev => ({ ...prev, currentGuess: clamped }));
+  }, [maxLength]);
+
+  // state → DOM 동기화 (ENTER 후 input 초기화, 언어 전환 등)
+  useEffect(() => {
+    if (inputRef.current && !composingRef.current) {
+      if (inputRef.current.value !== gameState.currentGuess) {
+        inputRef.current.value = gameState.currentGuess;
+      }
+    }
+  }, [gameState.currentGuess]);
+
+  // 키보드 이벤트 (영어 전용 — 한글은 input 이벤트로 처리)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (document.activeElement?.tagName === 'INPUT') return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
-      if (isComposing) return; // IME 입력 중이면 무시
 
       if (e.key === 'Enter') {
         handleKeyPress('ENTER');
@@ -358,7 +380,7 @@ export default function WordlePage() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPress, currentLanguage, isComposing]);
+  }, [handleKeyPress, currentLanguage]);
 
   // 타일 상태 가져오기
   const getTileStatus = (rowIndex: number, colIndex: number): TileStatus => {
@@ -612,37 +634,51 @@ export default function WordlePage() {
           })}
         </div>
 
-        {/* Korean Input Field */}
+        {/* Korean Input Field — Uncontrolled (모바일 IME 호환) */}
         {currentLanguage === 'ko' && (
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
             <input
               ref={inputRef}
               type="text"
               autoFocus
-              maxLength={maxLength}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
               disabled={gameState.gameStatus !== 'playing'}
               placeholder="여기에 한글 입력 (3글자)"
-              value={gameState.currentGuess}
-              onChange={(e) => {
-                // IME 조합 중에는 필터링하지 않고 그대로 적용
-                // 조합이 끝나면 onCompositionEnd에서 완성된 한글만 남김
-                const val = e.target.value;
-                if (val.length <= maxLength) {
-                  setGameState(prev => ({ ...prev, currentGuess: val }));
+              onChange={() => {
+                if (composingRef.current) {
+                  // 조합 중: 타일 표시용 state만 업데이트, DOM은 절대 건드리지 않음
+                  if (inputRef.current) {
+                    const raw = inputRef.current.value;
+                    const filtered = raw.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
+                    const clamped = filtered.slice(0, maxLength);
+                    setGameState(prev => ({ ...prev, currentGuess: clamped }));
+                  }
+                  return;
                 }
+                syncInputToState();
               }}
-              onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={(e) => {
-                setIsComposing(false);
-                // 조합이 끝난 후 완성된 한글만 허용 (자모는 제거)
-                const val = (e.target as HTMLInputElement).value.replace(/[^가-힣]/g, '');
-                if (val.length <= maxLength) {
-                  setGameState(prev => ({ ...prev, currentGuess: val }));
-                }
+              onCompositionStart={() => {
+                composingRef.current = true;
+              }}
+              onCompositionEnd={() => {
+                composingRef.current = false;
+                // 조합 완료 후 동기화 — setTimeout으로 Android 이벤트 순서 차이 대응
+                setTimeout(() => syncInputToState(), 0);
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && !isComposing) {
-                  handleKeyPress('ENTER');
+                if (e.key === 'Enter' && !composingRef.current) {
+                  e.preventDefault();
+                  // 제출 시에만 완성된 한글 검증
+                  if (inputRef.current) {
+                    const final = inputRef.current.value.replace(/[^가-힣]/g, '');
+                    inputRef.current.value = final;
+                    setGameState(prev => ({ ...prev, currentGuess: final }));
+                  }
+                  // 다음 틱에서 ENTER 처리 (state 반영 후)
+                  setTimeout(() => handleKeyPress('ENTER'), 0);
                 }
               }}
               style={{
@@ -678,7 +714,14 @@ export default function WordlePage() {
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                 <button
-                  onClick={() => handleKeyPress('BACKSPACE')}
+                  onClick={() => {
+                    if (inputRef.current) {
+                      const cur = inputRef.current.value;
+                      inputRef.current.value = cur.slice(0, -1);
+                      syncInputToState();
+                      inputRef.current.focus();
+                    }
+                  }}
                   disabled={gameState.gameStatus !== 'playing'}
                   style={{
                     padding: '0.75rem 1.5rem',
@@ -694,7 +737,14 @@ export default function WordlePage() {
                   ⌫ 지우기
                 </button>
                 <button
-                  onClick={() => handleKeyPress('ENTER')}
+                  onClick={() => {
+                    if (inputRef.current) {
+                      const final = inputRef.current.value.replace(/[^가-힣]/g, '');
+                      inputRef.current.value = final;
+                      setGameState(prev => ({ ...prev, currentGuess: final }));
+                      setTimeout(() => handleKeyPress('ENTER'), 0);
+                    }
+                  }}
                   disabled={gameState.gameStatus !== 'playing'}
                   style={{
                     padding: '0.75rem 1.5rem',
