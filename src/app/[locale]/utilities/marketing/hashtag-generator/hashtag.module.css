@@ -62,6 +62,24 @@
 .hashtag_input_row {
   display: flex;
   gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.hashtag_input_row .hashtag_input {
+  min-width: 0;
+}
+
+.hashtag_input_row .hashtag_primary_btn {
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .hashtag_input_row {
+    flex-wrap: nowrap;
+  }
+  .hashtag_input_row .hashtag_primary_btn {
+    width: auto;
+  }
 }
 
 .hashtag_input {

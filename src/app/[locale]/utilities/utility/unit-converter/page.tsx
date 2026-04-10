@@ -302,22 +302,24 @@ export default function UnitConverterPage() {
     locale === 'ko' ? TAB_NAMES[id].ko : TAB_NAMES[id].en;
 
   const selectStyle = (active: boolean): React.CSSProperties => ({
-    flex: '0 0 auto',
-    padding: '0.5rem 1rem',
-    borderRadius: '2rem',
+    padding: '0.4rem 0.3rem',
+    borderRadius: '0.65rem',
     border: '1.5px solid',
     borderColor: active ? 'var(--primary)' : 'transparent',
     background: active ? 'rgba(249,115,22,0.12)' : 'transparent',
     color: active ? 'var(--primary)' : 'var(--text-secondary)',
     fontWeight: active ? 700 : 500,
-    fontSize: '0.875rem',
+    fontSize: '0.75rem',
     cursor: 'pointer',
-    whiteSpace: 'nowrap',
+    whiteSpace: 'normal',
+    wordBreak: 'keep-all',
+    textAlign: 'center',
     transition: 'all 0.15s',
+    lineHeight: 1.2,
   });
 
   return (
-    <div>
+    <div style={{ maxWidth: '896px', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
       <NavigationActions />
 
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -341,7 +343,7 @@ export default function UnitConverterPage() {
         </p>
       </header>
 
-      {/* ── Tab bar (5×2 grid) ── */}
+      {/* ── Tab bar (5×2 grid on desktop, 4+remaining on mobile) ── */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(5, 1fr)',
@@ -363,7 +365,7 @@ export default function UnitConverterPage() {
       <div className="glass-panel" style={{ padding: '1.75rem', maxWidth: '560px', margin: '0 auto' }}>
 
         {/* From / Swap / To row */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.75rem', alignItems: 'end', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.5rem', alignItems: 'end', marginBottom: '1.5rem', minWidth: 0 }}>
 
           {/* FROM */}
           <div>

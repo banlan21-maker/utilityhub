@@ -197,7 +197,7 @@ export default function ThumbnailPage() {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: '896px', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
       <NavigationActions />
 
       {/* Header */}
@@ -221,8 +221,10 @@ export default function ThumbnailPage() {
       {/* Input Panel */}
       <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
         <label style={labelStyle}>YouTube URL 또는 영상 ID</label>
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <Input value={input} onChange={setInput} onEnter={handleExtract} />
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <Input value={input} onChange={setInput} onEnter={handleExtract} />
+          </div>
           <button
             onClick={handleExtract}
             style={{

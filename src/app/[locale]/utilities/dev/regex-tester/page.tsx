@@ -7,6 +7,7 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import rxs from './regex-tester.module.css';
 
 /* ─── JSON-LD Schemas ─── */
 const softwareSchema = {
@@ -118,7 +119,7 @@ export default function RegexPage() {
   };
 
   return (
-    <div>
+    <div className={rxs.rx_wrap}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <NavigationActions />
@@ -137,7 +138,7 @@ export default function RegexPage() {
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
       </header>
 
-      <div style={{ maxWidth: '960px', margin: '0 auto', display: 'grid', gridTemplateColumns: showCheat ? '1fr 280px' : '1fr', gap: '1rem' }}>
+      <div className={`${rxs.rx_grid} ${showCheat ? rxs.rx_grid_with_cheat : ''}`}>
 
         {/* Main column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

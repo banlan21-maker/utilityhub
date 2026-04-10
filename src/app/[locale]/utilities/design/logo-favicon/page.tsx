@@ -298,7 +298,7 @@ export default function LogoGeneratorPage() {
         </p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 1fr) minmax(260px, 2fr)', gap: '2rem', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '2rem', alignItems: 'start' }}>
 
         {/* ── Left: Preview ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

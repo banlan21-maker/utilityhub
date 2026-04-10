@@ -1,0 +1,21 @@
+.rx_wrap {
+  max-width: 1024px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.rx_grid {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .rx_grid_with_cheat {
+    grid-template-columns: 1fr 280px;
+  }
+}
