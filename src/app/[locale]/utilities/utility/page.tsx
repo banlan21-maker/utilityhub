@@ -13,7 +13,8 @@ import {
   ArrowRight,
   Wrench,
   Ticket,
-  Shuffle
+  Shuffle,
+  Gamepad2
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './utility_list.module.css';
@@ -83,6 +84,13 @@ export default function UtilityDashboardPage() {
       desc: boardT('decision-master.desc'),
       icon: <Shuffle size={36} color="#8b5cf6" />,
       gradient: 'rgba(139, 92, 246, 0.08)',
+    },
+    {
+      id: 'utilities/utility/grid-poker',
+      title: boardT('grid-poker.title'),
+      desc: boardT('grid-poker.desc'),
+      icon: <Gamepad2 size={36} color="#ef4444" />,
+      gradient: 'rgba(239, 68, 68, 0.08)',
     },
   ];
 
