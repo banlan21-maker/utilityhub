@@ -1,0 +1,329 @@
+/* grid-poker.module.css */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  max-width: 896px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.fin_header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.fin_title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.fin_subtitle {
+  color: var(--color-text-secondary, #64748b);
+  font-size: 1.1rem;
+}
+
+.fin_panel {
+  padding: 2rem;
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* ── Next card area ── */
+.nextCardArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nextCardLabel {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nextCard {
+  width: 64px;
+  height: 90px;
+  border-radius: 10px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.nextCardRank {
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.nextCardSuit {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.cardRed  { color: #ef4444; }
+.cardBlack { color: #1e293b; }
+
+.cardCount {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* ── 5×5 Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(4px, 1.2vw, 8px);
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.cell {
+  aspect-ratio: 2.5 / 3.5;
+  border-radius: clamp(4px, 1vw, 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cellEmpty {
+  border: 2px dashed #cbd5e1;
+  background: #f8fafc;
+}
+
+.cellEmpty:hover {
+  border-color: #8b5cf6;
+  background: #ede9fe;
+  transform: scale(1.03);
+}
+
+.cellFilled {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+}
+
+.cell:active {
+  transform: scale(0.95);
+}
+
+.cardRank {
+  font-size: clamp(0.7rem, 2.5vw, 1.2rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.cardSuit {
+  font-size: clamp(0.6rem, 2vw, 1rem);
+  line-height: 1;
+}
+
+/* ── Result panel ── */
+.resultPanel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.streakBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.streakMain {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.streakSub {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.totalScoreLabel {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.totalScore {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #8b5cf6;
+  line-height: 1;
+}
+
+.totalScoreMax {
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+/* ── Hands table ── */
+.handsTable {
+  width: 100%;
+  max-width: 440px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.handsTable th {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-weight: 700;
+  color: #475569;
+  border-bottom: 2px solid #f1f5f9;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.handsTable td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid #f8fafc;
+  color: #1e293b;
+}
+
+.handsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.handScore {
+  font-weight: 700;
+  color: #8b5cf6;
+  text-align: right;
+}
+
+.handScoreZero {
+  font-weight: 400;
+  color: #94a3b8;
+  text-align: right;
+}
+
+/* ── Buttons ── */
+.shareBtn {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.9rem 2rem;
+  border-radius: 9999px;
+  border: none;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.shareBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.shareBtn:active {
+  transform: scale(0.97);
+}
+
+/* ── Countdown ── */
+.countdown {
+  text-align: center;
+}
+
+.countdownLabel {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+}
+
+.countdownTimer {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
+/* ── Stats bar ── */
+.statsBar {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.1rem;
+}
+
+/* ── Mobile breakpoints ── */
+@media (max-width: 360px) {
+  .grid {
+    gap: 2px;
+  }
+  .cardRank {
+    font-size: 0.65rem;
+  }
+  .cardSuit {
+    font-size: 0.55rem;
+  }
+  .fin_panel {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fin_title {
+    font-size: 1.75rem;
+  }
+  .totalScore {
+    font-size: 2.5rem;
+  }
+}

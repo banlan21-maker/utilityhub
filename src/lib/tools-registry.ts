@@ -77,6 +77,7 @@ export const tools: Tool[] = [
   { slug: 'image-processor', category: 'utility', emoji: '🖼️', labelKey: 'UtilityBoard.image-processor.title', href: '/utilities/utility/image-processor', available: true },
   { slug: 'lotto-generator', category: 'utility', emoji: '🎰', labelKey: 'UtilityBoard.lotto-generator.title', href: '/utilities/utility/lotto-generator', available: true },
   { slug: 'decision-master', category: 'utility', emoji: '🎡', labelKey: 'UtilityBoard.decision-master.title', href: '/utilities/utility/decision-master', available: true },
+  { slug: 'grid-poker', category: 'utility', emoji: '🃏', labelKey: 'UtilityBoard.grid-poker.title', href: '/utilities/utility/grid-poker', available: true },
 
   // Dev
   { slug: 'json-formatter', category: 'dev', emoji: '🗂️', labelKey: 'DevBoard.json-formatter.title', href: '/utilities/dev/json-formatter', available: true },

@@ -107,6 +107,10 @@
     "decision-master": {
       "title": "Decision Master",
       "desc": "5-in-1 random decision hub: Ladder, Wheel, Dice, Draw & Arrow spinner — all in one place."
+    },
+    "grid-poker": {
+      "title": "Daily Grid Poker",
+      "desc": "Place 25 daily cards on a 5x5 grid and maximize your poker hand scores. A new brain puzzle every day."
     }
   },
   "TextCounter": {
