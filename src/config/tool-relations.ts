@@ -63,6 +63,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/lifestyle/fortune-prompt', icon: '🔮', ko: '오늘의 운세 프롬프트', en: 'Fortune Prompt', category: 'lifestyle' },
   { id: 'utilities/lifestyle/teto-egen-test', icon: '😊', ko: '태토에겐 성격 테스트', en: 'Teto Egen Personality Test', category: 'lifestyle' },
   { id: 'utilities/lifestyle/apnea-trainer', icon: '🫁', ko: 'Apnea Pro 드라이 트레이닝', en: 'Apnea Pro Dry Training', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/saju-compatibility', icon: '💕', ko: '사주 궁합 테스트', en: 'Saju Compatibility Test', category: 'lifestyle' },
 
   // Security
   { id: 'utilities/security/privacy-masking', icon: '🔏', ko: '개인정보 마스킹 도구', en: 'Privacy Masking Tool', category: 'security' },
@@ -310,6 +311,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/lifestyle/mbti-test',
     'utilities/lifestyle/fortune-prompt',
     'utilities/marketing/quiz-builder',
+  ],
+  'utilities/lifestyle/saju-compatibility': [
+    'utilities/lifestyle/fortune-prompt',
+    'utilities/lifestyle/mbti-test',
+    'utilities/lifestyle/teto-egen-test',
   ],
 
   // ── Security ───────────────────────────────────────────────
