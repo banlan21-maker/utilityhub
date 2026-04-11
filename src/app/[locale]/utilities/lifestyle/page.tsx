@@ -17,7 +17,8 @@ import {
   Target,
   Dumbbell,
   Wind,
-  Shirt
+  Shirt,
+  HeartHandshake
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './lifestyle_list.module.css';
@@ -115,6 +116,13 @@ export default function LifestyleDashboardPage() {
       desc: boardT('apnea-trainer.desc'),
       icon: <Wind size={36} color="#06b6d4" />,
       gradient: 'rgba(6, 182, 212, 0.08)',
+    },
+    {
+      id: 'utilities/lifestyle/saju-compatibility',
+      title: boardT('saju-compatibility.title'),
+      desc: boardT('saju-compatibility.desc'),
+      icon: <HeartHandshake size={36} color="#fb7185" />,
+      gradient: 'rgba(251, 113, 133, 0.08)',
     },
   ];
 

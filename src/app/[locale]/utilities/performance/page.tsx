@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { Activity, ArrowRight, Zap } from 'lucide-react';
+import { Activity, ArrowRight, Zap, BarChart3 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from '../finance/finance_list.module.css';
 
@@ -23,6 +23,13 @@ export default function PerformanceDashboardPage() {
       desc: boardT('ttfb-check.desc'),
       icon: <Activity size={36} color="#8b5cf6" />,
       gradient: 'rgba(139, 92, 246, 0.08)',
+    },
+    {
+      id: 'utilities/performance/sla-uptime-calc',
+      title: boardT('sla-uptime-calc.title'),
+      desc: boardT('sla-uptime-calc.desc'),
+      icon: <BarChart3 size={36} color="#3b82f6" />,
+      gradient: 'rgba(59, 130, 246, 0.08)',
     },
   ];
 
