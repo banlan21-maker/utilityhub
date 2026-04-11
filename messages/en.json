@@ -558,6 +558,10 @@
     "site-monitor": {
       "title": "Website Performance Monitor",
       "desc": "Monitor real-time uptime and performance metrics for your sites."
+    },
+    "sla-uptime-calc": {
+      "title": "SLA Uptime Calculator",
+      "desc": "Instantly convert any SLA uptime percentage into allowed downtime per year, month, week, and day."
     }
   },
   "Ttfb": {
@@ -1444,5 +1448,9 @@
   "SajuCompat": {
     "title": "Saju Compatibility Test",
     "description": "Calculate your Saju compatibility for free. Share a link and check results together — no sign-up needed."
+  },
+  "SlaUptimeCalc": {
+    "title": "SLA Uptime Calculator",
+    "description": "From three nines (99.9%) to five nines (99.999%) — instantly convert any SLA uptime percentage into allowed downtime per year, month, week, and day."
   }
 }

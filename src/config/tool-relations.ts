@@ -95,6 +95,7 @@ export const TOOLS: ToolMeta[] = [
 
   // Performance
   { id: 'utilities/performance/ttfb-check', icon: '🚀', ko: 'TTFB 속도 테스터', en: 'TTFB Speed Tester', category: 'performance' },
+  { id: 'utilities/performance/sla-uptime-calc', icon: '📊', ko: 'SLA 가동률 계산기', en: 'SLA Uptime Calculator', category: 'performance' },
 ];
 
 /** Build a lookup map: toolId → ToolMeta */
@@ -429,7 +430,12 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   // ── Performance ────────────────────────────────────────────
   'utilities/performance/ttfb-check': [
     'utilities/security/url-safety',
+    'utilities/performance/sla-uptime-calc',
+    'utilities/dev/json-formatter',
+  ],
+  'utilities/performance/sla-uptime-calc': [
     'utilities/performance/ttfb-check',
+    'utilities/finance/percentage-calc',
     'utilities/dev/json-formatter',
   ],
 };
