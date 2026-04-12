@@ -9,58 +9,57 @@ const CATEGORY_SLUGS = [
   'design', 'marketing', 'lifestyle', 'security', 'utility', 'dev',
 ];
 
+const LOCALES = ['ko', 'en'] as const;
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const entries: MetadataRoute.Sitemap = [];
 
-  // Static pages — one canonical (ko) entry with en alternate
+  const alts = (path: string) => ({
+    languages: {
+      ko: `${BASE}/ko${path}`,
+      en: `${BASE}/en${path}`,
+    },
+  });
+
+  // Static pages — ko + en 각각 등록
   for (const path of STATIC_PATHS) {
-    entries.push({
-      url: `${BASE}/ko${path}`,
-      lastModified: now,
-      changeFrequency: path === '' ? 'weekly' : 'monthly',
-      priority: path === '' ? 1.0 : 0.5,
-      alternates: {
-        languages: {
-          ko: `${BASE}/ko${path}`,
-          en: `${BASE}/en${path}`,
-        },
-      },
-    });
+    for (const locale of LOCALES) {
+      entries.push({
+        url: `${BASE}/${locale}${path}`,
+        lastModified: now,
+        changeFrequency: path === '' ? 'weekly' : 'monthly',
+        priority: path === '' ? 1.0 : 0.5,
+        alternates: alts(path),
+      });
+    }
   }
 
-  // Category listing pages
+  // Category listing pages — ko + en 각각 등록
   for (const cat of CATEGORY_SLUGS) {
-    entries.push({
-      url: `${BASE}/ko/utilities/${cat}`,
-      lastModified: now,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-      alternates: {
-        languages: {
-          ko: `${BASE}/ko/utilities/${cat}`,
-          en: `${BASE}/en/utilities/${cat}`,
-        },
-      },
-    });
+    for (const locale of LOCALES) {
+      entries.push({
+        url: `${BASE}/${locale}/utilities/${cat}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: 0.8,
+        alternates: alts(`/utilities/${cat}`),
+      });
+    }
   }
 
-  // Individual tool pages
+  // Individual tool pages — ko + en 각각 등록
   for (const tool of tools) {
     if (!tool.available) continue;
-    // tool.href = '/utilities/[category]/[slug]'
-    entries.push({
-      url: `${BASE}/ko${tool.href}`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-      alternates: {
-        languages: {
-          ko: `${BASE}/ko${tool.href}`,
-          en: `${BASE}/en${tool.href}`,
-        },
-      },
-    });
+    for (const locale of LOCALES) {
+      entries.push({
+        url: `${BASE}/${locale}${tool.href}`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+        alternates: alts(tool.href),
+      });
+    }
   }
 
   return entries;
