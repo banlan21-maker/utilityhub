@@ -1,9 +1,8 @@
 import { MetadataRoute } from 'next';
 import { tools } from '@/lib/tools-registry';
 
-const BASE = 'https://theutilhub.com';
-
-const STATIC_PAGES = ['', '/privacy', '/terms', '/feedback'];
+const BASE = 'https://www.theutilhub.com';
+const STATIC_PATHS = ['', '/privacy', '/terms', '/feedback'];
 
 const CATEGORY_SLUGS = [
   'performance', 'document', 'finance', 'productivity',
@@ -14,44 +13,50 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const entries: MetadataRoute.Sitemap = [];
 
-  // Static pages
-  for (const path of STATIC_PAGES) {
+  // Static pages — one canonical (ko) entry with en alternate
+  for (const path of STATIC_PATHS) {
     entries.push({
-      url: `${BASE}${path}`,
+      url: `${BASE}/ko${path}`,
       lastModified: now,
       changeFrequency: path === '' ? 'weekly' : 'monthly',
       priority: path === '' ? 1.0 : 0.5,
-      alternates: { languages: { ko: `${BASE}${path}`, en: `${BASE}/en${path}` } },
+      alternates: {
+        languages: {
+          ko: `${BASE}/ko${path}`,
+          en: `${BASE}/en${path}`,
+        },
+      },
     });
   }
 
-  // Category pages
+  // Category listing pages
   for (const cat of CATEGORY_SLUGS) {
     entries.push({
-      url: `${BASE}/utilities/${cat}`,
+      url: `${BASE}/ko/utilities/${cat}`,
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.8,
       alternates: {
         languages: {
-          ko: `${BASE}/utilities/${cat}`,
+          ko: `${BASE}/ko/utilities/${cat}`,
           en: `${BASE}/en/utilities/${cat}`,
         },
       },
     });
   }
 
-  // Individual tool pages (from tools-registry)
+  // Individual tool pages
   for (const tool of tools) {
     if (!tool.available) continue;
+    // tool.href = '/utilities/[category]/[slug]'
     entries.push({
-      url: `${BASE}${tool.href}`,
+      url: `${BASE}/ko${tool.href}`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.7,
       alternates: {
         languages: {
-          ko: `${BASE}${tool.href}`,
+          ko: `${BASE}/ko${tool.href}`,
           en: `${BASE}/en${tool.href}`,
         },
       },
