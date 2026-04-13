@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { tools } from '@/lib/tools-registry';
 
 const BASE = 'https://www.theutilhub.com';
-const STATIC_PATHS = ['', '/privacy', '/terms', '/feedback'];
+const STATIC_PATHS = ['', '/privacy', '/terms', '/feedback', '/about', '/contact'];
 
 const CATEGORY_SLUGS = [
   'performance', 'document', 'finance', 'productivity',
