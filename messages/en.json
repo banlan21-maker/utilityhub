@@ -111,6 +111,10 @@
     "grid-poker": {
       "title": "Daily Grid Poker",
       "desc": "Place 25 daily cards on a 5x5 grid and maximize your poker hand scores. A new brain puzzle every day."
+    },
+    "gif-master": {
+      "title": "GIF Master",
+      "desc": "All-in-one GIF tool. Compress GIFs, convert images/text/video to GIF — free and browser-based."
     }
   },
   "TextCounter": {

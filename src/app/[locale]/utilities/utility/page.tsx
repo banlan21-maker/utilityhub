@@ -14,7 +14,8 @@ import {
   Wrench,
   Ticket,
   Shuffle,
-  Gamepad2
+  Gamepad2,
+  Clapperboard,
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './utility_list.module.css';
@@ -91,6 +92,13 @@ export default function UtilityDashboardPage() {
       desc: boardT('grid-poker.desc'),
       icon: <Gamepad2 size={36} color="#ef4444" />,
       gradient: 'rgba(239, 68, 68, 0.08)',
+    },
+    {
+      id: 'utilities/utility/gif-master',
+      title: boardT('gif-master.title'),
+      desc: boardT('gif-master.desc'),
+      icon: <Clapperboard size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
     },
   ];
 
