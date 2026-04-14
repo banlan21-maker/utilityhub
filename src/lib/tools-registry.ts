@@ -11,6 +11,7 @@ export const tools: Tool[] = [
   // Performance
   { slug: 'ttfb-check', category: 'performance', emoji: '🚀', labelKey: 'Ttfb.title', href: '/utilities/performance/ttfb-check', available: true },
   { slug: 'sla-uptime-calc', category: 'performance', emoji: '📊', labelKey: 'PerformanceBoard.sla-uptime-calc.title', href: '/utilities/performance/sla-uptime-calc', available: true },
+  { slug: 'carbon-footprint', category: 'performance', emoji: '🌿', labelKey: 'PerformanceBoard.carbon-footprint.title', href: '/utilities/performance/carbon-footprint', available: true },
 
   // Document
   { slug: 'hwp-pdf-converter', category: 'document', emoji: '📄', labelKey: 'DocumentBoard.hwp-pdf-converter.title', href: '/utilities/document/hwp-pdf-converter', available: true },

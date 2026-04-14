@@ -566,7 +566,15 @@
     "sla-uptime-calc": {
       "title": "SLA Uptime Calculator",
       "desc": "Instantly convert any SLA uptime percentage into allowed downtime per year, month, week, and day."
+    },
+    "carbon-footprint": {
+      "title": "Carbon Footprint Calculator",
+      "desc": "Calculate your website's annual CO₂ emissions and see how many trees it takes to offset them."
     }
+  },
+  "CarbonFootprint": {
+    "title": "Website Carbon Footprint Calculator",
+    "description": "Calculate how much CO₂ your website emits per year. Enter your page size and monthly visitors to get your carbon footprint and tree equivalent instantly."
   },
   "Ttfb": {
     "title": "TTFB Speed Tester",
