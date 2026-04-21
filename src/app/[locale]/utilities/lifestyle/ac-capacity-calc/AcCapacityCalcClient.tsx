@@ -89,10 +89,12 @@ export default function AcCapacityCalcClient() {
 
     const totalLoadW = envAdjustedLoad + spaceFactorExtra + occupantLoad;
     const totalLoadKw = totalLoadW / 1000;
-    const recommendedPyeong = Math.ceil(totalLoadKw / 0.7);
+    // 기준: 기저부하 기반 단위환산 (상업 0.2kW/평형, 가정 0.15kW/평형)
+    const kWPerPyeong = BASE_LOAD_PER_PYEONG / 1000;
+    const recommendedPyeong = Math.ceil(totalLoadKw / kWPerPyeong);
     const recommendedKwMin = totalLoadKw;
     const recommendedKwMax = totalLoadKw * 1.1;
-    const simpleCapacityKw = p * 0.7;
+    const simpleCapacityKw = p * kWPerPyeong; // 보정 없이 평수만 반영한 기준값
     const loadMultiplier = Number((totalLoadKw / simpleCapacityKw).toFixed(1));
 
     const loadBreakdown = {
