@@ -233,6 +233,91 @@
   transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.int_rate_presets {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.int_rate_preset_btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.int_rate_preset_btn_active {
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.int_compare_row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #ede9fe;
+  text-align: center;
+}
+
+.int_compare_label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.int_compare_val {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.int_compare_sep {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #94a3b8;
+  opacity: 0.4;
+}
+
+.int_copy_row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.int_copy_btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.6rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.int_copy_btn_done {
+  color: #16a34a;
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
 .int_ad_placeholder {
   width: 100%;
   min-height: 90px;

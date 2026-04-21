@@ -22,8 +22,12 @@ import {
   Coins,
   ArrowUpRight,
   PieChart,
-  BarChart3
+  BarChart3,
+  Copy,
+  Check
 } from 'lucide-react';
+
+const RATE_PRESETS = [1, 2, 3, 5];
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -54,8 +58,22 @@ export default function InterestCalcClient() {
   const [period, setPeriod] = useState<Period>('year');
   const [freq, setFreq] = useState<CompoundFreq>(12);
   const [isClient, setIsClient] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => { setIsClient(true); }, []);
+
+  const handleCopy = () => {
+    const lines = [
+      `${isKo ? '원금' : 'Principal'}: ${fmt(p)}${isKo ? '원' : ''}`,
+      `${isKo ? '이자' : 'Interest'}: +${fmt(interest)}${isKo ? '원' : ''}`,
+      `${isKo ? '최종 금액' : 'Total'}: ${fmt(total)}${isKo ? '원' : ''}`,
+      `(${type === 'simple' ? (isKo ? '단리' : 'Simple') : (isKo ? '복리' : 'Compound')}, ${(parseFloat(rate) || 0)}%, ${duration}${isKo ? (period === 'year' ? '년' : period === 'month' ? '개월' : '일') : period})`,
+    ];
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   const fmt = (n: number) => Math.round(n).toLocaleString(isKo ? 'ko-KR' : 'en-US');
 
@@ -147,6 +165,17 @@ export default function InterestCalcClient() {
 
         <div className={s.int_input_group}>
           <label className={s.int_label}>{t('label.rate')} (p.a.)</label>
+          <div className={s.int_rate_presets}>
+            {RATE_PRESETS.map(p => (
+              <button
+                key={p}
+                className={`${s.int_rate_preset_btn} ${rate === String(p) ? s.int_rate_preset_btn_active : ''}`}
+                onClick={() => setRate(String(p))}
+              >
+                {p}%
+              </button>
+            ))}
+          </div>
           <div style={{ position: 'relative' }}>
             <input
               className={s.int_input}
@@ -219,6 +248,29 @@ export default function InterestCalcClient() {
                 {t('result.effectiveRate', { rate: (interest / p * 100).toFixed(2) })}
               </div>
             </div>
+            {/* 단리 vs 복리 동시 비교 */}
+            <div className={s.int_compare_row}>
+              <div>
+                <div className={s.int_compare_label}>{isKo ? '단리' : 'Simple'}</div>
+                <div className={s.int_compare_val}>{fmt(simpleTotal)}{isKo ? '원' : ''}</div>
+              </div>
+              <div className={s.int_compare_sep}>vs</div>
+              <div>
+                <div className={s.int_compare_label}>{isKo ? '복리' : 'Compound'}</div>
+                <div className={s.int_compare_val} style={{ color: '#8b5cf6' }}>{fmt(compoundTotal)}{isKo ? '원' : ''}</div>
+              </div>
+            </div>
+            {/* 복사 버튼 */}
+            <div className={s.int_copy_row}>
+              <button
+                className={`${s.int_copy_btn} ${copied ? s.int_copy_btn_done : ''}`}
+                onClick={handleCopy}
+                aria-label={isKo ? '결과 복사' : 'Copy result'}
+              >
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? (isKo ? '복사됨' : 'Copied!') : (isKo ? '결과 복사' : 'Copy')}
+              </button>
+            </div>
           </div>
         )}
 
@@ -247,8 +299,8 @@ export default function InterestCalcClient() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="utilities/finance/interest-calc" />
-        <div className={s.int_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
+        <RelatedTools toolId="finance/interest-calc" />
+        <div className={s.int_ad_placeholder}>AD</div>
         <SeoSection
           ko={{
             title: '단리·복리 이자 계산기란 무엇인가요?',

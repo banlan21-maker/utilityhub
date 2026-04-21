@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
-import { Wallet, Plus, Minus } from 'lucide-react';
+import { Wallet, Plus, Minus, Copy, Check } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -132,6 +132,7 @@ export default function SalaryCalcClient() {
   const [krDeduction, setKrDeduction] = useState<KRDeduction>('insurance');
   const [usDeduction, setUsDeduction] = useState<USDeduction>('fica');
   const [isClient, setIsClient]     = useState(false);
+  const [copied, setCopied]         = useState(false);
 
   useEffect(() => { setIsClient(true); }, []);
 
@@ -153,6 +154,20 @@ export default function SalaryCalcClient() {
   const kr = calcKR(hourlyWage, regular, overtime, special, holidayOn, krDeduction);
   const us = calcUS(hourlyWage, regular, overtime, special, usDeduction);
   const res = isKRW ? kr : us;
+
+  const handleCopy = () => {
+    const r = isKRW ? kr : us;
+    const lines = [
+      isKo ? '급여 & 실수령액 계산기' : 'Salary & Net Pay Calculator',
+      `${isKo ? '주 총급여' : 'Weekly Gross'}: ${fmt(r.weeklyGross)}`,
+      `${isKo ? '월 총급여' : 'Monthly Gross'}: ${fmt(r.monthlyGross)}`,
+      `${isKo ? '공제액' : 'Deductions'}: -${fmt(r.deductAmt)} (${(r.dRate * 100).toFixed(1)}%)`,
+      `${isKo ? '최종 실수령액' : 'Net Take-Home'}: ${fmt(r.monthlyNet)}`,
+    ];
+    navigator.clipboard.writeText(lines.join('\n'));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   if (!isClient) return null;
 
@@ -460,14 +475,23 @@ export default function SalaryCalcClient() {
               ? '* 지방세 및 개인 소득 수준에 따라 실제 수령액은 차이가 있을 수 있습니다.'
               : '* State/local taxes and personal deductions may further reduce net pay.'}
           </div>
+          <div className={s.sal_copy_row}>
+            <button
+              className={`${s.sal_copy_btn} ${copied ? s.sal_copy_btn_done : ''}`}
+              onClick={handleCopy}
+            >
+              {copied ? <Check size={14} /> : <Copy size={14} />}
+              {copied ? (isKo ? '복사됨!' : 'Copied!') : (isKo ? '결과 복사' : 'Copy Result')}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={isKo ? '급여 & 실수령액 계산기' : 'Salary Calculator'} description={isKo ? '일반·잔업·특근 수당 포함 실수령액 계산' : 'Calculate net pay with overtime & holiday pay'} />
-        <RelatedTools toolId="utilities/finance/salary-calc" />
-        <div className={s.sal_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
+        <RelatedTools toolId="finance/salary-calc" />
+        <div className={s.sal_ad_placeholder}>AD</div>
         <SeoSection
           ko={{
             title: '급여 및 실수령액 계산기란 무엇인가요?',

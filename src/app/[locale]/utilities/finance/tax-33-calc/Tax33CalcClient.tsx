@@ -37,6 +37,7 @@ export default function Tax33CalcClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
+  const [calcMode, setCalcMode] = useState<'normal' | 'reverse'>('normal');
   const [gross, setGross] = useState('');
   const [applyInsurance, setApplyInsurance] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -44,7 +45,9 @@ export default function Tax33CalcClient() {
 
   useEffect(() => { setIsClient(true); }, []);
 
-  const grossNum = parseFloat(gross.replace(/,/g, '')) || 0;
+  const inputNum = parseFloat(gross.replace(/,/g, '')) || 0;
+  // normal: 입력값 = 세전, reverse: 입력값 = 원하는 실수령액 → 세전 역산
+  const grossNum = calcMode === 'reverse' ? inputNum / (1 - 0.033) : inputNum;
 
   // 3.3% Withholding Tax
   const businessTax = grossNum * 0.03;
@@ -90,9 +93,29 @@ export default function Tax33CalcClient() {
       </header>
 
       <section className={s.tax_panel}>
-        {/* Gross Input */}
+        {/* Mode Tabs */}
+        <div className={s.tax_mode_tabs}>
+          <button
+            className={`${s.tax_mode_btn} ${calcMode === 'normal' ? s.tax_mode_btn_active : ''}`}
+            onClick={() => { setCalcMode('normal'); setGross(''); }}
+          >
+            {isKo ? '세전 → 세후' : 'Gross → Net'}
+          </button>
+          <button
+            className={`${s.tax_mode_btn} ${calcMode === 'reverse' ? s.tax_mode_btn_active : ''}`}
+            onClick={() => { setCalcMode('reverse'); setGross(''); }}
+          >
+            {isKo ? '역산: 받고 싶은 금액 → 세전' : 'Reverse: Net → Gross'}
+          </button>
+        </div>
+
+        {/* Input */}
         <div className={s.tax_input_group}>
-          <label className={s.tax_label}>{t('label.gross')}</label>
+          <label className={s.tax_label}>
+            {calcMode === 'normal'
+              ? t('label.gross')
+              : (isKo ? '원하는 실수령액' : 'Desired Net Amount')}
+          </label>
           <div style={{ position: 'relative' }}>
             <input
               className={s.tax_input}
@@ -134,7 +157,7 @@ export default function Tax33CalcClient() {
         </div>
 
         {/* Results Area */}
-        {grossNum > 0 && (
+        {inputNum > 0 && (
           <div className={s.tax_result_card} style={{ animation: 'bounceIn 0.5s ease-out' }}>
             <div className={s.tax_result_header}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -151,6 +174,16 @@ export default function Tax33CalcClient() {
                 </button>
               </div>
             </div>
+
+            {/* 역산 모드: 필요한 세전 금액 강조 */}
+            {calcMode === 'reverse' && (
+              <div className={s.tax_result_row} style={{ background: '#fdfbff' }}>
+                <span className={s.tax_result_label} style={{ color: '#8b5cf6', fontWeight: 800 }}>
+                  {isKo ? '필요한 세전 계약금' : 'Required Gross Amount'}
+                </span>
+                <span className={s.tax_net_value}>{fmt(grossNum)}{isKo ? '원' : ''}</span>
+              </div>
+            )}
 
             <div className={s.tax_result_row}>
               <span className={s.tax_result_label}>{t('result.gross')}</span>
@@ -190,8 +223,8 @@ export default function Tax33CalcClient() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="utilities/finance/tax-33-calc" />
-        <div className={s.tax_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
+        <RelatedTools toolId="finance/tax-33-calc" />
+        <div className={s.tax_ad_placeholder}>AD</div>
         <SeoSection
           ko={{
             title: '프리랜서 3.3% 원천징수 세금 계산기란 무엇인가요?',
