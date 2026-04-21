@@ -1,0 +1,163 @@
+/* KEC Grounding — responsive fixes */
+
+.page_container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.icon_wrap {
+  display: inline-flex;
+  padding: 1rem;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  word-break: keep-all;
+}
+
+.subtitle {
+  color: var(--text-secondary, #64748b);
+  font-size: 1.1rem;
+  word-break: keep-all;
+}
+
+/* ── Panel ── */
+.panel {
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Tabs ── */
+.tab_bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border, #e2e8f0);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tab_bar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab_btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab_btn_active {
+  background: #3b82f6;
+  color: white;
+}
+
+.tab_btn_inactive {
+  background: transparent;
+  color: var(--text-secondary, #64748b);
+}
+
+/* ── Input rows ── */
+.input_row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.input_field {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 0.5rem;
+  background: var(--bg-secondary, #f8fafc);
+  color: var(--text-primary, #1e293b);
+  font-size: 1rem;
+}
+
+.unit_badge {
+  padding: 0.75rem 0.75rem;
+  background: var(--bg-tertiary, #f1f5f9);
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary, #1e293b);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+/* ── Result card ── */
+.result_number {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .page_container {
+    padding: 1rem 0.75rem;
+  }
+
+  .panel {
+    padding: 1.25rem 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .tab_btn {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .result_number {
+    font-size: 3rem;
+  }
+
+  .unit_badge {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .tab_btn {
+    font-size: 0.75rem;
+    padding: 0.55rem 0.6rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+}

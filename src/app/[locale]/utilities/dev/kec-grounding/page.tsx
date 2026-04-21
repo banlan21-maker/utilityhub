@@ -7,6 +7,7 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import s from './kec-grounding.module.css';
 
 // --- JSON-LD Schemas ---
 const softwareSchema = {
@@ -90,30 +91,31 @@ export default function KECGroundingPage() {
     <div style={{ minHeight: '100vh' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div style={{ maxWidth: '1024px', margin: '0 auto', padding: '2rem 1rem' }}>
+      <div className={s.page_container}>
         <NavigationActions />
 
-        <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            display: 'inline-flex',
-            padding: '1rem',
-            background: 'white',
-            borderRadius: '1.5rem',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            marginBottom: '1.5rem'
-          }}>
+        <header className={s.header}>
+          <div className={s.icon_wrap}>
             <Zap size={40} color="#8b5cf6" />
           </div>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('subtitle')}</p>
+          <h1 className={s.title}>{t('title')}</h1>
+          <p className={s.subtitle}>{t('subtitle')}</p>
         </header>
 
-        <div className="glass-panel" style={{ borderRadius: '1rem', padding: '2rem', marginBottom: '2rem' }}>
+        <div className={`glass-panel ${s.panel}`}>
           <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>🧮 {t('calculatorTitle')}</h2>
 
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '2px solid var(--border)' }}>
-            <button onClick={() => setActiveTab('method-a')} style={{ padding: '0.75rem 1.5rem', border: 'none', background: activeTab === 'method-a' ? '#3b82f6' : 'transparent', color: activeTab === 'method-a' ? 'white' : 'var(--text-secondary)', borderRadius: '0.5rem 0.5rem 0 0', cursor: 'pointer', fontWeight: '600' }}>{t('tabA')}</button>
-            <button onClick={() => setActiveTab('method-b')} style={{ padding: '0.75rem 1.5rem', border: 'none', background: activeTab === 'method-b' ? '#3b82f6' : 'transparent', color: activeTab === 'method-b' ? 'white' : 'var(--text-secondary)', borderRadius: '0.5rem 0.5rem 0 0', cursor: 'pointer', fontWeight: '600' }}>{t('tabB')}</button>
+          <div className={s.tab_bar}>
+            <button
+              onClick={() => setActiveTab('method-a')}
+              className={`${s.tab_btn} ${activeTab === 'method-a' ? s.tab_btn_active : s.tab_btn_inactive}`}
+              aria-label={t('tabA')}
+            >{t('tabA')}</button>
+            <button
+              onClick={() => setActiveTab('method-b')}
+              className={`${s.tab_btn} ${activeTab === 'method-b' ? s.tab_btn_active : s.tab_btn_inactive}`}
+              aria-label={t('tabB')}
+            >{t('tabB')}</button>
           </div>
 
           {activeTab === 'method-a' && (
@@ -127,9 +129,9 @@ export default function KECGroundingPage() {
                 </ul>
               </div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>{t('phaseConductorLabel')}</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <input type="number" placeholder="16" value={phaseConductor} onChange={(e) => handlePhaseConductorChange(e.target.value)} min="0" step="0.1" style={{ flex: 1, padding: '0.75rem', border: '1px solid var(--border)', borderRadius: '0.5rem', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }} />
-                <div style={{ padding: '0.75rem 1rem', background: 'var(--bg-tertiary)', borderRadius: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>㎟</div>
+              <div className={s.input_row}>
+                <input type="number" placeholder="16" value={phaseConductor} onChange={(e) => handlePhaseConductorChange(e.target.value)} min="0" step="0.1" className={s.input_field} />
+                <div className={s.unit_badge}>㎟</div>
               </div>
             </div>
           )}
@@ -143,16 +145,16 @@ export default function KECGroundingPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>{t('faultCurrentLabel')}</label>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <input type="number" placeholder="1000" value={faultCurrent} onChange={(e) => setFaultCurrent(e.target.value)} style={{ flex: 1, padding: '0.75rem', border: '1px solid var(--border)', borderRadius: '0.5rem', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }} />
-                    <div style={{ padding: '0.75rem 1rem', background: 'var(--bg-tertiary)', borderRadius: '0.5rem', color: 'var(--text-primary)' }}>A (RMS)</div>
+                  <div className={s.input_row}>
+                    <input type="number" placeholder="1000" value={faultCurrent} onChange={(e) => setFaultCurrent(e.target.value)} className={s.input_field} />
+                    <div className={s.unit_badge}>A (RMS)</div>
                   </div>
                 </div>
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>{t('breakTimeLabel')}</label>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <input type="number" placeholder="1" value={breakTime} onChange={(e) => setBreakTime(e.target.value)} style={{ flex: 1, padding: '0.75rem', border: '1px solid var(--border)', borderRadius: '0.5rem', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }} />
-                    <div style={{ padding: '0.75rem 1rem', background: 'var(--bg-tertiary)', borderRadius: '0.5rem', color: 'var(--text-primary)' }}>{t('seconds')}</div>
+                  <div className={s.input_row}>
+                    <input type="number" placeholder="1" value={breakTime} onChange={(e) => setBreakTime(e.target.value)} className={s.input_field} />
+                    <div className={s.unit_badge}>{t('seconds')}</div>
                   </div>
                 </div>
                 <div>
@@ -175,7 +177,7 @@ export default function KECGroundingPage() {
             </div>
             <div style={{ textAlign: 'center', background: 'linear-gradient(to bottom right, #3b82f6, #2563eb)', color: 'white', borderRadius: '1rem', padding: '2rem' }}>
               <p style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('recommendedSize')}</p>
-              <p style={{ fontSize: '4rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{recommendedSize}</p>
+              <p className={s.result_number}>{recommendedSize}</p>
               <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>SQ (㎟)</p>
               <p style={{ fontSize: '0.875rem', opacity: 0.9, marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.3)' }}>{t('standardCableNote')}</p>
             </div>
