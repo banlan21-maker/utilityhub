@@ -16,6 +16,7 @@ import {
   Shuffle,
   Gamepad2,
   Clapperboard,
+  Zap,
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './utility_list.module.css';
@@ -106,6 +107,13 @@ export default function UtilityDashboardPage() {
       desc: boardT('cable-tray-calc.desc'),
       icon: <Ruler size={36} color="#f59e0b" />,
       gradient: 'rgba(245, 158, 11, 0.08)',
+    },
+    {
+      id: 'utilities/utility/wire-size-calc',
+      title: boardT('wire-size-calc.title'),
+      desc: boardT('wire-size-calc.desc'),
+      icon: <Zap size={36} color="#eab308" />,
+      gradient: 'rgba(234, 179, 8, 0.08)',
     },
   ];
 

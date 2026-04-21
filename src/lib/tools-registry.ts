@@ -84,6 +84,7 @@ export const tools: Tool[] = [
   { slug: 'grid-poker', category: 'utility', emoji: '🃏', labelKey: 'UtilityBoard.grid-poker.title', href: '/utilities/utility/grid-poker', available: true },
   { slug: 'gif-master', category: 'utility', emoji: '🎞️', labelKey: 'UtilityBoard.gif-master.title', href: '/utilities/utility/gif-master', available: true },
   { slug: 'cable-tray-calc', category: 'utility', emoji: '📐', labelKey: 'UtilityBoard.cable-tray-calc.title', href: '/utilities/utility/cable-tray-calc', available: true },
+  { slug: 'wire-size-calc', category: 'utility', emoji: '⚡', labelKey: 'UtilityBoard.wire-size-calc.title', href: '/utilities/utility/wire-size-calc', available: true },
 
   // Dev
   { slug: 'json-formatter', category: 'dev', emoji: '🗂️', labelKey: 'DevBoard.json-formatter.title', href: '/utilities/dev/json-formatter', available: true },

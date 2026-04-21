@@ -119,6 +119,10 @@
     "cable-tray-calc": {
       "title": "Cable Tray Slope Calculator",
       "desc": "Enter start/end heights and horizontal distance to instantly calculate slope length, angle, and hanger spacing. Elbow size auto-recommended."
+    },
+    "wire-size-calc": {
+      "title": "Wire Size Calculator",
+      "desc": "Instantly calculate the correct wire SQ using KEC standard formulas. Supports single-phase and three-phase systems with automatic K-constant selection."
     }
   },
   "TextCounter": {
