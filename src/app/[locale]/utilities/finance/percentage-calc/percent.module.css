@@ -134,6 +134,43 @@
   color: #8b5cf6;
 }
 
+.fin_presets {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.fin_preset_btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fin_preset_btn_active {
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.fin_result_value_up {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #16a34a;
+}
+
+.fin_result_value_down {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #dc2626;
+}
+
 .fin_ad_placeholder {
   width: 100%;
   min-height: 90px;
