@@ -60,7 +60,13 @@ export default function Header() {
           {t('title')}
         </Link>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <style>{`
+            @media (max-width: 640px) {
+              .header-feedback-text { display: none; }
+              .header-feedback { padding: 0.45rem 0.6rem !important; }
+            }
+          `}</style>
           <button
             onClick={toggleTheme}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -91,8 +97,9 @@ export default function Header() {
           </button>
           <Link
             href="/feedback"
+            className="header-feedback"
             style={{
-              padding: '0.45rem 0.9rem',
+              padding: '0.45rem 0.75rem',
               fontSize: '0.875rem',
               fontWeight: 600,
               borderRadius: 'var(--radius-md)',
@@ -118,7 +125,7 @@ export default function Header() {
             }}
           >
             <span>💬</span>
-            {nav('feedback')}
+            <span className="header-feedback-text">{nav('feedback')}</span>
           </Link>
           <LanguageSwitcher />
         </div>

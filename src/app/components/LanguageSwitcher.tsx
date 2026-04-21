@@ -25,16 +25,17 @@ export default function LanguageSwitcher() {
         disabled={isPending}
         onChange={onSelectChange}
         style={{
-          padding: '0.5rem 1rem',
-          fontSize: '1rem',
+          padding: '0.45rem 0.5rem',
+          fontSize: '0.875rem',
+          fontWeight: 600,
           borderRadius: 'var(--radius-md)',
           cursor: 'pointer',
           outline: 'none',
           color: 'var(--text-primary)'
         }}
       >
-        <option value="ko">🇰🇷 한국어</option>
-        <option value="en">🇺🇸 English</option>
+        <option value="ko">KR</option>
+        <option value="en">EN</option>
       </select>
     </div>
   );
