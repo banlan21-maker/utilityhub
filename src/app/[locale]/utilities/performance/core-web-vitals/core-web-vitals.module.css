@@ -1,0 +1,334 @@
+/* Core Web Vitals — CSS Module */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  max-width: 896px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem 3rem;
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.icon_wrap {
+  display: inline-flex;
+  padding: 1rem;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* ── Input Panel ── */
+.panel {
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+  padding: 2rem 2.5rem;
+}
+
+.metric_block {
+  padding: 1.5rem 0;
+}
+
+.metric_block + .metric_block {
+  border-top: 0.5px solid #e2e8f0;
+}
+
+.metric_top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.metric_info {
+  flex: 1;
+}
+
+.metric_name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.15rem;
+}
+
+.metric_fullname {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.metric_hint {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+/* Grade Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge_good {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.badge_needs {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.badge_poor {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+/* ── Slider + Input Row ── */
+.input_row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #e2e8f0;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-primary, #8b5cf6);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(139, 92, 246, 0.4);
+  transition: box-shadow 0.15s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.6);
+}
+
+.slider:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-primary, #8b5cf6);
+  outline-offset: 2px;
+}
+
+.number_input {
+  width: 80px;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: right;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.number_input:focus {
+  border-color: var(--color-primary, #8b5cf6);
+}
+
+.unit_label {
+  font-size: 0.82rem;
+  color: #64748b;
+  min-width: 24px;
+}
+
+/* ── Color Zone Bar ── */
+.zone_bar_wrap {
+  margin-bottom: 0.4rem;
+}
+
+.zone_bar {
+  display: flex;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.zone_good  { background: #10B981; }
+.zone_needs { background: #F59E0B; }
+.zone_poor  { background: #EF4444; }
+
+.zone_labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+/* ── Overflow Warning ── */
+.overflow_warning {
+  font-size: 0.78rem;
+  color: #92400E;
+  background: #FEF3C7;
+  border-radius: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  margin-top: 0.4rem;
+}
+
+/* ── Result Grid ── */
+.result_grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.result_card {
+  background: white;
+  border: 1px solid #f1f5f9;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+}
+
+.result_card_overall {
+  border-width: 1.5px;
+  border-color: var(--color-primary, #8b5cf6);
+}
+
+.result_metric_name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.result_value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.result_badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ── Tips Box ── */
+.tips_box {
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+}
+
+.tips_title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tips_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tips_list li {
+  font-size: 0.88rem;
+  color: #475569;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.tips_list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary, #8b5cf6);
+  font-weight: 700;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem 1rem 3rem;
+  }
+
+  .panel {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .result_grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .result_card_overall {
+    grid-column: span 2;
+  }
+
+  .input_row {
+    flex-wrap: wrap;
+  }
+
+  .number_input {
+    width: 70px;
+  }
+}

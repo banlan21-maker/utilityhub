@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { Activity, ArrowRight, Zap, BarChart3, Flame } from 'lucide-react';
+import { Activity, ArrowRight, Zap, BarChart3, Flame, Layers } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from '../finance/finance_list.module.css';
 
@@ -37,6 +37,13 @@ export default function PerformanceDashboardPage() {
       desc: boardT('carbon-footprint.desc'),
       icon: <Flame size={36} color="#059669" />,
       gradient: 'rgba(5, 150, 105, 0.08)',
+    },
+    {
+      id: 'utilities/performance/core-web-vitals',
+      title: boardT('core-web-vitals.title'),
+      desc: boardT('core-web-vitals.desc'),
+      icon: <Layers size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
     },
   ];
 

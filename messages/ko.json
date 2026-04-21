@@ -570,6 +570,10 @@
     "carbon-footprint": {
       "title": "탄소 발자국 계산기",
       "desc": "내 웹사이트의 연간 CO₂ 배출량을 계산하고 나무 환산치로 확인하세요."
+    },
+    "core-web-vitals": {
+      "title": "Core Web Vitals 판정기",
+      "desc": "LCP·INP·CLS 수치를 입력하면 Google 공식 기준으로 Good/Needs Work/Poor 등급을 즉시 판정합니다."
     }
   },
   "CarbonFootprint": {

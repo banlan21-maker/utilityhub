@@ -570,6 +570,10 @@
     "carbon-footprint": {
       "title": "Carbon Footprint Calculator",
       "desc": "Calculate your website's annual CO₂ emissions and see how many trees it takes to offset them."
+    },
+    "core-web-vitals": {
+      "title": "Core Web Vitals Checker",
+      "desc": "Enter your LCP, INP, and CLS scores to instantly get Google's Good / Needs Work / Poor ratings."
     }
   },
   "CarbonFootprint": {
