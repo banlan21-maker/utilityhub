@@ -115,10 +115,10 @@ export default function CableTrayCalcClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  // ── Shared state (all 3 tabs) ──
-  const [h1, setH1] = useState<number | ''>('');
-  const [h2, setH2] = useState<number | ''>('');
-  const [L, setL]   = useState<number | ''>('');
+  // ── Shared state (all 3 tabs) — string to preserve decimal input ──
+  const [h1, setH1] = useState<string>('');
+  const [h2, setH2] = useState<string>('');
+  const [L, setL]   = useState<string>('');
 
   // ── Tab 3 extras ──
   const [trayWidth, setTrayWidth]   = useState<number>(200);
@@ -128,11 +128,11 @@ export default function CableTrayCalcClient() {
   const [copyMsg, setCopyMsg] = useState<string>('');
 
   // ── Derived values ──
-  const h1Val = typeof h1 === 'number' ? Math.max(0, h1) : 0;
-  const h2Val = typeof h2 === 'number' ? Math.max(0, h2) : 0;
-  const lVal  = typeof L  === 'number' ? Math.max(0, L)  : 0;
+  const h1Val = Math.max(0, parseFloat(h1) || 0);
+  const h2Val = Math.max(0, parseFloat(h2) || 0);
+  const lVal  = Math.max(0, parseFloat(L)  || 0);
 
-  const hasValidInput = h1 !== '' && h2 !== '' && L !== '';
+  const hasValidInput = h1.trim() !== '' && h2.trim() !== '' && L.trim() !== '';
   const heightDiff = Math.abs(h1Val - h2Val);
   const isVertical = lVal === 0;
 
@@ -186,8 +186,8 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
     setTimeout(() => setCopyMsg(''), 2500);
   };
 
-  // ── Input section (shared tabs 1 & 2) ──
-  const InputSection = () => (
+  // ── Shared input JSX (inlined to prevent unmount on re-render) ──
+  const sharedInputs = (
     <div className={s.input_grid}>
       <div>
         <label className={s.field_label}>{isKo ? '시작 높이 H1 (m)' : 'Start Height H1 (m)'}</label>
@@ -196,7 +196,7 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
           placeholder={isKo ? '예: 3.00' : 'e.g. 3.00'}
           className={s.field_input}
           value={h1}
-          onChange={e => setH1(e.target.value === '' ? '' : Number(e.target.value))}
+          onChange={e => setH1(e.target.value)}
           aria-label={isKo ? '시작 높이 입력' : 'Start height input'}
         />
       </div>
@@ -207,7 +207,7 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
           placeholder={isKo ? '예: 1.00' : 'e.g. 1.00'}
           className={s.field_input}
           value={h2}
-          onChange={e => setH2(e.target.value === '' ? '' : Number(e.target.value))}
+          onChange={e => setH2(e.target.value)}
           aria-label={isKo ? '끝 높이 입력' : 'End height input'}
         />
       </div>
@@ -218,7 +218,7 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
           placeholder={isKo ? '예: 5.00' : 'e.g. 5.00'}
           className={s.field_input}
           value={L}
-          onChange={e => setL(e.target.value === '' ? '' : Number(e.target.value))}
+          onChange={e => setL(e.target.value)}
           aria-label={isKo ? '수평 거리 입력' : 'Horizontal distance input'}
         />
         <p className={s.field_hint}>{isKo ? '수직 구간은 0 입력' : 'Enter 0 for vertical riser'}</p>
@@ -266,7 +266,7 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
         {/* ── TAB 1: 경사 길이 ── */}
         {activeTab === 'length' && (
           <div role="tabpanel">
-            <InputSection />
+            {sharedInputs}
 
             {hasValidInput && isVertical && (
               <div className={s.vertical_box}>
@@ -378,7 +378,7 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
         {/* ── TAB 2: 경사각 ── */}
         {activeTab === 'angle' && (
           <div role="tabpanel">
-            <InputSection />
+            {sharedInputs}
 
             {hasValidInput && isVertical && (
               <div className={s.vertical_box}>
@@ -428,7 +428,7 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
         {/* ── TAB 3: 행거 간격 ── */}
         {activeTab === 'hanger' && (
           <div role="tabpanel">
-            <InputSection />
+            {sharedInputs}
 
             {/* Tab-3 only inputs */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
