@@ -472,7 +472,9 @@
     "settings": "Settings",
     "custom_times": "Custom Times (minutes)",
     "minutes": "min",
-    "apply": "Apply"
+    "apply": "Apply",
+    "auto_next": "Switching to next phase...",
+    "sessions_today": "Today: {count} done"
   },
   "Timezone": {
     "title": "🌍 Timezone Converter",
@@ -601,7 +603,11 @@
     "history_title": "Recent Tests",
     "history_clear": "Clear",
     "error_invalid_url": "Invalid URL format. (e.g., https://example.com)",
-    "error_generic": "Test failed. Please check the URL or try again later."
+    "error_generic": "Test failed. Please check the URL or try again later.",
+    "avg_button": "Average (3×)",
+    "avg_label": "3-Test Avg",
+    "copy": "Copy Result",
+    "copied": "Copied!"
   },
   "HwpConverter": {
     "title": "HWP ↔ PDF Converter",
@@ -615,7 +621,9 @@
     "notice": "* HWPX (Standard) format provides more accurate conversion.",
     "error": "An error occurred while reading the file.",
     "error_supported": "Unsupported file format.",
-    "reset": "Convert Another"
+    "reset": "Convert Another",
+    "done": "Conversion complete!",
+    "size_error": "File too large. Maximum size is 10MB."
   },
   "LifestyleBoard": {
     "subtitle": "Lifestyle and health tools for better daily living.",

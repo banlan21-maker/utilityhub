@@ -472,7 +472,9 @@
     "settings": "설정",
     "custom_times": "시간 직접 설정 (분)",
     "minutes": "분",
-    "apply": "적용하기"
+    "apply": "적용하기",
+    "auto_next": "다음 단계로 자동 전환합니다...",
+    "sessions_today": "오늘 {count}번 완료"
   },
   "Timezone": {
     "title": "🌍 시간대 변환기",
@@ -601,7 +603,11 @@
     "history_title": "최근 측정 기록",
     "history_clear": "기록 지우기",
     "error_invalid_url": "올바른 URL 형식이 아닙니다. (예: https://example.com)",
-    "error_generic": "측정에 실패했습니다. URL을 확인하거나 잠시 후 다시 시도해주세요."
+    "error_generic": "측정에 실패했습니다. URL을 확인하거나 잠시 후 다시 시도해주세요.",
+    "avg_button": "3회 평균 측정",
+    "avg_label": "3회 평균",
+    "copy": "결과 복사",
+    "copied": "복사됨!"
   },
   "HwpConverter": {
     "title": "HWP ↔ PDF 변환기",
@@ -615,7 +621,9 @@
     "notice": "※ HWPX(표준) 형식이 더 정확하게 변환됩니다.",
     "error": "파일을 읽는 중에 오류가 발생했습니다.",
     "error_supported": "지원되지 않는 파일 형식입니다.",
-    "reset": "새로 변환하기"
+    "reset": "새로 변환하기",
+    "done": "변환 완료!",
+    "size_error": "파일이 너무 큽니다. 최대 10MB까지 지원합니다."
   },
   "LifestyleBoard": {
     "subtitle": "일상생활과 건강을 위한 라이프스타일 도구 모음입니다.",

@@ -1,10 +1,11 @@
 .coin_container {
-  max-width: 896px; /* max-w-4xl per Rulebook V4.4 */
+  max-width: 896px;
   margin: 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--section-gap);
+  gap: 1.5rem;
+  padding: 0 1rem;
   animation: fadeIn 0.6s ease-out;
 }
 
@@ -21,12 +22,12 @@
 }
 
 .coin_subtitle {
-  color: var(--text-secondary);
+  color: #64748b;
   font-size: 1.1rem;
 }
 
 .coin_card {
-  background: #0f172a; /* Premium Dark */
+  background: #0f172a;
   border-radius: 2rem;
   padding: 2.5rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -58,16 +59,30 @@
   font-weight: 700;
   transition: all 0.2s;
   outline: none;
+  box-sizing: border-box;
 }
 
 .coin_input:focus {
   border-color: #8b5cf6;
-  background: #1e293b;
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
 }
 
 .coin_selector_group {
   margin-bottom: 1.5rem;
+}
+
+.coin_error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 0.75rem;
+  color: #fca5a5;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 .coin_result_grid {
@@ -96,6 +111,11 @@
   font-size: 1.25rem;
   font-weight: 900;
   color: #f8fafc;
+  word-break: break-all;
+}
+
+.coin_result_reveal {
+  animation: fadeIn 0.4s ease-out;
 }
 
 .coin_summary_bar {
@@ -105,6 +125,7 @@
   text-align: center;
   font-size: 1rem;
   font-weight: 800;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,9 +167,79 @@
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.15s;
 }
 
 .coin_drop_item:hover {
   background: #334155;
+}
+
+/* Spinner animation via CSS module (replaces Tailwind animate-spin) */
+.coin_spin {
+  animation: spin 0.8s linear infinite;
+}
+
+/* Pulse animation (replaces Tailwind animate-pulse) */
+.coin_pulse {
+  display: inline-block;
+  animation: pulse 1.2s ease-in-out infinite;
+  color: #64748b;
+  letter-spacing: 0.15em;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+@media (max-width: 600px) {
+  .coin_container {
+    padding: 0 0.75rem;
+    gap: 1.25rem;
+  }
+
+  .coin_title {
+    font-size: 1.75rem;
+  }
+
+  .coin_subtitle {
+    font-size: 1rem;
+  }
+
+  .coin_card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 1.5rem;
+  }
+
+  .coin_result_grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .coin_result_value {
+    font-size: 1.05rem;
+  }
+
+  .coin_input {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .coin_title {
+    font-size: 1.5rem;
+  }
+
+  .coin_result_grid {
+    grid-template-columns: 1fr;
+  }
 }
