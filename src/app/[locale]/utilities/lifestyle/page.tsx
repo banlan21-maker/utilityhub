@@ -124,6 +124,13 @@ export default function LifestyleDashboardPage() {
       icon: <HeartHandshake size={36} color="#fb7185" />,
       gradient: 'rgba(251, 113, 133, 0.08)',
     },
+    {
+      id: 'utilities/lifestyle/ac-capacity-calc',
+      title: boardT('ac-capacity-calc.title'),
+      desc: boardT('ac-capacity-calc.desc'),
+      icon: <Wind size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
+    },
   ];
 
   if (!isClient) return null;

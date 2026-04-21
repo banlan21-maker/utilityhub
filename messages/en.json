@@ -678,6 +678,10 @@
     "saju-compatibility": {
       "title": "Saju Compatibility Test",
       "desc": "Calculate Saju compatibility with your birth date and share a link to check results together."
+    },
+    "ac-capacity-calc": {
+      "title": "AC Capacity Calculator",
+      "desc": "Calculate the right air conditioner capacity (kW) for commercial and residential spaces instantly."
     }
   },
   "SecurityBoard": {

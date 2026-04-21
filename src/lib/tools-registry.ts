@@ -66,6 +66,7 @@ export const tools: Tool[] = [
   { slug: 'color-coordinator', category: 'lifestyle', emoji: '🧥', labelKey: 'LifestyleBoard.color-coordinator.title', href: '/utilities/lifestyle/color-coordinator', available: true },
   { slug: 'apnea-trainer', category: 'lifestyle', emoji: '🫁', labelKey: 'LifestyleBoard.apnea-trainer.title', href: '/utilities/lifestyle/apnea-trainer', available: true },
   { slug: 'saju-compatibility', category: 'lifestyle', emoji: '💕', labelKey: 'LifestyleBoard.saju-compatibility.title', href: '/utilities/lifestyle/saju-compatibility', available: true },
+  { slug: 'ac-capacity-calc', category: 'lifestyle', emoji: '❄️', labelKey: 'LifestyleBoard.ac-capacity-calc.title', href: '/utilities/lifestyle/ac-capacity-calc', available: true },
 
   // Security
   { slug: 'privacy-masking', category: 'security', emoji: '🔒', labelKey: 'SecurityBoard.privacy-masking.title', href: '/utilities/security/privacy-masking', available: true },
