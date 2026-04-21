@@ -115,6 +115,10 @@
     "gif-master": {
       "title": "GIF Master",
       "desc": "All-in-one GIF tool. Compress GIFs, convert images/text/video to GIF — free and browser-based."
+    },
+    "cable-tray-calc": {
+      "title": "Cable Tray Slope Calculator",
+      "desc": "Enter start/end heights and horizontal distance to instantly calculate slope length, angle, and hanger spacing. Elbow size auto-recommended."
     }
   },
   "TextCounter": {

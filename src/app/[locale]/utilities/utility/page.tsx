@@ -100,6 +100,13 @@ export default function UtilityDashboardPage() {
       icon: <Clapperboard size={36} color="#8b5cf6" />,
       gradient: 'rgba(139, 92, 246, 0.08)',
     },
+    {
+      id: 'utilities/utility/cable-tray-calc',
+      title: boardT('cable-tray-calc.title'),
+      desc: boardT('cable-tray-calc.desc'),
+      icon: <Ruler size={36} color="#f59e0b" />,
+      gradient: 'rgba(245, 158, 11, 0.08)',
+    },
   ];
 
   if (!isClient) return null;

@@ -1,0 +1,359 @@
+/* Cable Tray Calc — CSS Module */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  max-width: 896px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem 3rem;
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.icon_wrap {
+  display: inline-flex;
+  padding: 1rem;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  word-break: keep-all;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1.1rem;
+  word-break: keep-all;
+}
+
+/* ── Panel ── */
+.panel {
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+  padding: 2rem 2.5rem;
+}
+
+/* ── Tab bar ── */
+.tab_bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tab_bar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab_btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab_active {
+  background: var(--color-primary, #8b5cf6);
+  color: white;
+}
+
+.tab_inactive {
+  background: transparent;
+  color: #64748b;
+}
+
+/* ── Input Grid ── */
+.input_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.field_label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.4rem;
+}
+
+.field_input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  font-size: 0.95rem;
+  color: #1e293b;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.field_input:focus {
+  border-color: var(--color-primary, #8b5cf6);
+}
+
+.field_hint {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-top: 0.3rem;
+}
+
+/* ── Vertical riser warning ── */
+.vertical_box {
+  background: #FEF3C7;
+  color: #92400E;
+  border-radius: 0.6rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* ── Result values ── */
+.result_primary {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-primary, #8b5cf6);
+  line-height: 1.1;
+}
+
+.result_unit {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-left: 0.25rem;
+}
+
+.result_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+}
+
+.result_row:last-child {
+  border-bottom: none;
+}
+
+.result_label {
+  color: #64748b;
+}
+
+.result_value {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* ── Elbow badge ── */
+.elbow_badge {
+  display: inline-flex;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1rem;
+  background: #ede9fe;
+  color: var(--color-primary, #8b5cf6);
+}
+
+.elbow_warning {
+  background: #FEF3C7;
+  color: #92400E;
+  border-radius: 0.6rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+/* ── SVG Section ── */
+.svg_wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+}
+
+/* ── Order quantities ── */
+.order_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.order_card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  text-align: center;
+}
+
+.order_label {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 0.3rem;
+}
+
+.order_value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+/* ── Hanger tab extras ── */
+.select_field {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  color: #1e293b;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.15s;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.select_field:focus {
+  border-color: var(--color-primary, #8b5cf6);
+}
+
+.hanger_list {
+  max-height: 200px;
+  overflow-y: auto;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  padding: 0.5rem 0;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.hanger_item {
+  padding: 0.35rem 1rem;
+  color: #475569;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.hanger_item:last-child {
+  border-bottom: none;
+}
+
+.hanger_item_first,
+.hanger_item_last {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* ── Copy button ── */
+.copy_btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 1.25rem;
+}
+
+.copy_btn:hover {
+  background: #e2e8f0;
+}
+
+.copy_msg {
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+  color: #10b981;
+}
+
+.copy_msg_fail {
+  color: #ef4444;
+}
+
+/* ── Section divider ── */
+.divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 1.25rem 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem 1rem 3rem;
+  }
+
+  .panel {
+    padding: 1.25rem 1rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .input_grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tab_btn {
+    font-size: 0.78rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .result_primary {
+    font-size: 1.6rem;
+  }
+
+  .order_grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
