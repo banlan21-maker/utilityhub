@@ -1,0 +1,375 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  max-width: 1200px; /* CLAUDE.md 표준 예외 — 스플릿 레이아웃 */
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeIn 0.6s ease-out;
+  padding: 0 1rem 3rem;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.icon_wrap {
+  display: inline-flex;
+  padding: 1rem;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #1e293b);
+  margin-bottom: 0.6rem;
+}
+
+.subtitle {
+  color: var(--text-secondary, #64748b);
+  font-size: 1.05rem;
+}
+
+/* ── Tabs ── */
+.tab_row {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.tab_btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab_btn:hover {
+  color: #8b5cf6;
+}
+
+.tab_active {
+  color: #8b5cf6;
+  border-bottom-color: #8b5cf6;
+}
+
+/* ── Split layout ── */
+.split_layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .split_layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Panels ── */
+.input_panel,
+.result_panel {
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+  padding: 1.75rem;
+  min-height: 400px;
+}
+
+.section_title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Form elements ── */
+.form_group {
+  margin-bottom: 1.1rem;
+}
+
+.input_row_2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.field_label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+
+.field_input {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.65rem;
+  font-size: 0.93rem;
+  color: #1e293b;
+  background: white;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.field_input:focus {
+  outline: none;
+  border-color: #8b5cf6;
+}
+
+.field_select {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.65rem;
+  font-size: 0.88rem;
+  color: #1e293b;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.field_select:focus {
+  outline: none;
+  border-color: #8b5cf6;
+}
+
+.field_hint {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 0.3rem;
+  line-height: 1.5;
+}
+
+/* ── Radio group ── */
+.radio_group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.radio_option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #374151;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.radio_option input[type="radio"] {
+  accent-color: #8b5cf6;
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Disclaimer ── */
+.disclaimer {
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  margin-top: 1.25rem;
+  font-size: 0.82rem;
+  color: #92400E;
+  line-height: 1.6;
+}
+
+/* ── Main result (big number) ── */
+.main_result_wrap {
+  text-align: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  border-radius: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #ddd6fe;
+}
+
+.main_result_label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #7c3aed;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+.main_result_value {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #8b5cf6;
+  line-height: 1;
+}
+
+.main_result_unit {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-left: 0.25rem;
+  color: #7c3aed;
+}
+
+.main_result_sub {
+  font-size: 0.9rem;
+  color: #7c3aed;
+  margin-top: 0.3rem;
+  font-weight: 600;
+}
+
+/* ── Breakdown table ── */
+.result_table {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  margin-bottom: 1.25rem;
+}
+
+.result_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid #f8fafc;
+  font-size: 0.875rem;
+}
+
+.result_row:last-child {
+  border-bottom: none;
+}
+
+.result_row_strong {
+  background: #faf5ff;
+  font-weight: 700;
+}
+
+.result_row_loss {
+  background: #f8fafc;
+  cursor: help;
+}
+
+.result_key {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.result_val {
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.result_row_strong .result_val {
+  color: #8b5cf6;
+}
+
+/* ── SVG section ── */
+.svg_section_title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 0.75rem;
+}
+
+.svg_wrap {
+  margin-bottom: 1rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+  padding: 0.75rem;
+}
+
+.no_svg_msg {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Empty / Error states ── */
+.empty_state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 280px;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.error_box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: #dc2626;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ── Copy button ── */
+.copy_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.7rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9999px;
+  background: white;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+
+.copy_btn:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+/* ── Responsive: small screens ── */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  .input_row_2 {
+    grid-template-columns: 1fr;
+  }
+  .main_result_value {
+    font-size: 2rem;
+  }
+}

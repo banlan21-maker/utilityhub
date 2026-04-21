@@ -123,6 +123,10 @@
     "wire-size-calc": {
       "title": "Wire Size Calculator",
       "desc": "Instantly calculate the correct wire SQ using KEC standard formulas. Supports single-phase and three-phase systems with automatic K-constant selection."
+    },
+    "interior-material-calc": {
+      "title": "Tile & Wallpaper Calculator",
+      "desc": "Calculate tile boxes and wallpaper rolls with SVG grid visualization. Supports staggered/brick patterns and automatic safety margin."
     }
   },
   "TextCounter": {

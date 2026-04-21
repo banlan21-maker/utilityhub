@@ -17,6 +17,7 @@ import {
   Gamepad2,
   Clapperboard,
   Zap,
+  LayoutGrid,
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './utility_list.module.css';
@@ -114,6 +115,13 @@ export default function UtilityDashboardPage() {
       desc: boardT('wire-size-calc.desc'),
       icon: <Zap size={36} color="#eab308" />,
       gradient: 'rgba(234, 179, 8, 0.08)',
+    },
+    {
+      id: 'utilities/utility/interior-material-calc',
+      title: boardT('interior-material-calc.title'),
+      desc: boardT('interior-material-calc.desc'),
+      icon: <LayoutGrid size={36} color="#8b5cf6" />,
+      gradient: 'rgba(139, 92, 246, 0.08)',
     },
   ];
 
