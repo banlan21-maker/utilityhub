@@ -25,7 +25,7 @@
   position: relative;
   text-align: center;
   padding: 5rem 0 4rem;
-  overflow: hidden; /* 내부 광원 효과가 화면 밖으로 나가지 않도록 차단 */
+  /* overflow: hidden 제거 — 드롭다운이 잘리는 문제 해결 */
 }
 
 /* Ambient glow blobs */
@@ -36,6 +36,8 @@
   opacity: 0.18;
   pointer-events: none;
   z-index: 0;
+  max-width: 100vw;
+  overflow: hidden;
 }
 .heroGlowLeft {
   width: 420px;
