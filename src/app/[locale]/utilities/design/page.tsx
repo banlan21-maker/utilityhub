@@ -1,54 +1,20 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import React, { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Palette } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
-import { Palette, Image, Type, ArrowRight, CircleDot, Camera } from 'lucide-react';
+import CategoryTools from '@/app/components/CategoryTools';
 import s from './design_list.module.css';
 
 export default function DesignDashboardPage() {
   const catT = useTranslations('Categories');
   const boardT = useTranslations('DesignBoard');
-  const locale = useLocale();
-  const isKo = locale === 'ko';
+  const [isClient, setIsClient] = useState(false);
 
-  const tools = [
-    {
-      id: 'utilities/design/logo-favicon',
-      title: boardT('logo-favicon.title'),
-      desc: boardT('logo-favicon.desc'),
-      icon: <Image size={36} color="#ec4899" />,
-      gradient: 'rgba(236, 72, 153, 0.08)',
-    },
-    {
-      id: 'utilities/design/color-palette',
-      title: boardT('color-palette.title'),
-      desc: boardT('color-palette.desc'),
-      icon: <Palette size={36} color="#8b5cf6" />,
-      gradient: 'rgba(139, 92, 246, 0.08)',
-    },
-    {
-      id: 'utilities/design/font-preview',
-      title: boardT('font-preview.title'),
-      desc: boardT('font-preview.desc'),
-      icon: <Type size={36} color="#3b82f6" />,
-      gradient: 'rgba(59, 130, 246, 0.08)',
-    },
-    {
-      id: 'utilities/design/formation-planner',
-      title: boardT('formation-planner.title'),
-      desc: boardT('formation-planner.desc'),
-      icon: <CircleDot size={36} color="#8b5cf6" />,
-      gradient: 'rgba(139, 92, 246, 0.08)',
-    },
-    {
-      id: 'utilities/design/photo-batch-master',
-      title: boardT('photo-batch-master.title'),
-      desc: boardT('photo-batch-master.desc'),
-      icon: <Camera size={36} color="#f59e0b" />,
-      gradient: 'rgba(245, 158, 11, 0.08)',
-    },
-  ];
+  useEffect(() => { setIsClient(true); }, []);
+
+  if (!isClient) return null;
 
   return (
     <div className={s.design_list_container}>
@@ -65,23 +31,7 @@ export default function DesignDashboardPage() {
         </p>
       </header>
 
-      <div className={s.design_grid}>
-        {tools.map(tool => (
-          <Link key={tool.id} href={`/${tool.id}` as any} style={{ textDecoration: 'none' }}>
-            <div className={s.design_card}>
-              <div className={s.design_icon_wrap} style={{ background: tool.gradient }}>
-                {tool.icon}
-              </div>
-              <h2 className={s.design_card_title}>{tool.title}</h2>
-              <p className={s.design_card_desc}>{tool.desc}</p>
-              <div className={s.design_arrow}>
-                {isKo ? '사용하러 가기' : 'Use Now'}
-                <ArrowRight size={18} />
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <CategoryTools categorySlug="design" />
     </div>
   );
 }
