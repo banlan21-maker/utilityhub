@@ -120,7 +120,7 @@
 .cardTitle {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: #1e293b;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -130,7 +130,7 @@
 
 .cardDesc {
   font-size: 0.85rem;
-  color: var(--color-text-secondary);
+  color: #64748b;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -184,7 +184,7 @@
 }
 
 .listItem:hover {
-  background: var(--color-primary-light);
+  background: #f5f3ff;
 }
 
 .listIcon {
@@ -209,7 +209,7 @@
 .listName {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: #1e293b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -217,14 +217,14 @@
 
 .listDesc {
   font-size: 0.78rem;
-  color: var(--color-text-secondary);
+  color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .listArrow {
-  color: var(--color-text-secondary);
+  color: #94a3b8;
   opacity: 0;
   flex-shrink: 0;
   transition: opacity 0.15s, transform 0.15s;
@@ -233,6 +233,66 @@
 .listItem:hover .listArrow {
   opacity: 1;
   transform: translateX(3px);
+}
+
+/* ============================================================
+   다크모드
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  /* 리스트뷰 */
+  .listWrapper {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+  }
+
+  .listItem {
+    background: #1e293b;
+    border-bottom-color: #334155;
+  }
+
+  .listItem:hover {
+    background: #2d1f5e;
+  }
+
+  .listIcon {
+    background: rgba(139, 92, 246, 0.2);
+  }
+
+  .listName {
+    color: #f1f5f9;
+  }
+
+  .listDesc {
+    color: #94a3b8;
+  }
+
+  .listArrow {
+    color: #64748b;
+  }
+
+  /* 카드뷰 */
+  .card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .card:hover {
+    border-color: #8b5cf6;
+    box-shadow: 0 30px 60px -12px rgba(139, 92, 246, 0.25);
+  }
+
+  .cardIconWrapper {
+    background: rgba(139, 92, 246, 0.2);
+  }
+
+  .cardTitle {
+    color: #f1f5f9;
+  }
+
+  .cardDesc {
+    color: #94a3b8;
+  }
 }
 
 /* ============================================================
