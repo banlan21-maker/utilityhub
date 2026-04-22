@@ -135,11 +135,11 @@
 .listWrapper {
   max-width: 1024px;
   margin: 0 auto;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 1.5rem;
   overflow: hidden;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
 }
 
 .listItem {
@@ -147,7 +147,7 @@
   align-items: center;
   gap: 1rem;
   padding: 0.875rem 1.25rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #e2e8f0;
   text-decoration: none;
   transition: background 0.15s;
   min-height: 64px;
