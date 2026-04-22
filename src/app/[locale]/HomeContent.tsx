@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useMemo } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import styles from './page.module.css';
+import SearchDropdown from '@/app/components/SearchDropdown';
 
 const CATEGORIES_BASE = [
   { id: 'performance',  icon: '🚀', color: '#ef4444', hot: false, popular: false },
@@ -33,22 +34,13 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
   const t = useTranslations('Index');
   const catT = useTranslations('Categories');
   const nav = useTranslations('Navigation');
-
-  const [search, setSearch] = useState('');
+  const locale = useLocale();
 
   // Merge category base info with auto-calculated counts from props
   const CATEGORIES = useMemo(() => CATEGORIES_BASE.map(cat => ({
     ...cat,
     count: toolCounts[cat.id] || 0,
   })), [toolCounts]);
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return CATEGORIES;
-    return CATEGORIES.filter(cat =>
-      catT(cat.id).toLowerCase().includes(q) || cat.id.includes(q)
-    );
-  }, [search, catT, CATEGORIES]);
 
   return (
     <div className={styles.homePage}>
@@ -75,26 +67,11 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
         </p>
 
         <div className={`${styles.searchWrapper} ${styles.anim3}`}>
-          <div className={styles.searchContainer}>
-            <span className={styles.searchIcon} aria-hidden>🔍</span>
-            <input
-              type="search"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder={t('searchPlaceholder')}
-              className={styles.searchInput}
-              aria-label={t('searchPlaceholder')}
-            />
-            {search && (
-              <button
-                className={styles.searchClear}
-                onClick={() => setSearch('')}
-                aria-label="Clear search"
-              >
-                ×
-              </button>
-            )}
-          </div>
+          <SearchDropdown
+            placeholder={locale === 'ko'
+              ? '퍼센트, 환율, 세금... 원하는 툴을 검색하세요'
+              : 'Search for percent, currency, tax...'}
+          />
         </div>
 
         <div className={`${styles.statsRow} ${styles.anim4}`} role="list">
@@ -131,14 +108,8 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
           </p>
         </div>
 
-        {filtered.length === 0 && search ? (
-          <div className={styles.noResults}>
-            <span aria-hidden>🔍</span>
-            <p>{t('noResults')} &ldquo;<strong>{search}</strong>&rdquo;</p>
-          </div>
-        ) : (
-          <div className={styles.categoriesGrid}>
-            {filtered.map((cat, i) => (
+        <div className={styles.categoriesGrid}>
+            {CATEGORIES.map((cat, i) => (
               <Link
                 key={cat.id}
                 href={`/utilities/${cat.id}` as any}
@@ -156,7 +127,6 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
               </Link>
             ))}
           </div>
-        )}
       </section>
 
       {/* ── AD SLOT 2 · 300×250 Rectangle ── */}
