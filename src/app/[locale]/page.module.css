@@ -400,15 +400,15 @@
   margin-bottom: 3rem;
 }
 .featuresInner {
-  max-width: var(--container-max-width);
+  max-width: 900px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 .featuresGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
+  gap: 1rem;
   margin-top: 2.5rem;
-  padding: 0 2px; /* 좌우 카드 테두리가 잘리지 않도록 */
 }
 @media (min-width: 600px) {
   .featuresGrid {
@@ -420,12 +420,11 @@
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  padding: 2rem 1.5rem 2.5rem;
+  padding: 1.75rem 1.25rem 2rem;
   text-align: center;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: transform 0.2s, box-shadow 0.2s;
-  overflow: visible;
 }
 .featureCard:hover {
   transform: translateY(-3px);
