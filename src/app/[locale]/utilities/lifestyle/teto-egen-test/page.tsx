@@ -1,130 +1,61 @@
-'use client';
+import type { Metadata } from 'next';
+import TetoEgenTestClient from './TetoEgenTestClient';
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Smile } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import ShareBar from '@/app/components/ShareBar';
-import RelatedTools from '@/app/components/RelatedTools';
-import GenderSelection from './components/GenderSelection';
-import QuestionScreen from './components/QuestionScreen';
-import ResultScreen from './components/ResultScreen';
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isKo = locale === 'ko';
+  const title = isKo ? '테토·에겐 테스트 | Utility Hub' : 'Teto-Egen Test | Utility Hub';
+  const description = isKo
+    ? '남성형(테토)과 여성형(에겐) 성향을 분석하는 무료 성격 테스트'
+    : 'A free personality test that analyzes your Teto (masculine) and Egen (feminine) tendencies.';
+  const canonical = `https://www.theutilhub.com/${locale}/utilities/lifestyle/teto-egen-test`;
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/teto-egen-test',
+        en: 'https://www.theutilhub.com/en/utilities/lifestyle/teto-egen-test',
+      },
+    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
 
-type Gender = 'male' | 'female' | null;
-type Screen = 'gender' | 'questions' | 'result';
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: '테토·에겐 테스트',
+  alternateName: 'Teto-Egen Test',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  url: 'https://www.theutilhub.com/ko/utilities/lifestyle/teto-egen-test',
+  description: '남성형(테토)과 여성형(에겐) 성향을 분석하는 무료 성격 테스트',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: '테토·에겐 테스트란 무엇인가요?', acceptedAnswer: { '@type': 'Answer', text: '테토(Teto)와 에겐(Egen)은 일본 인터넷 문화에서 유래한 성향 분류로, 각각 남성형·여성형 특성을 의미합니다. 성별과 무관하게 누구나 테토 또는 에겐 성향을 가질 수 있습니다.' } },
+    { '@type': 'Question', name: '테스트 결과가 정확한가요?', acceptedAnswer: { '@type': 'Answer', text: '이 테스트는 재미와 자기 탐색을 위한 가벼운 도구입니다. 심리학적으로 공인된 진단 도구가 아니므로 결과를 참고용으로만 활용하시기 바랍니다.' } },
+    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
+  ],
+};
 
 export default function TetoEgenTestPage() {
-  const t = useTranslations('TetoEgenTest');
-  const [screen, setScreen] = useState<Screen>('gender');
-  const [gender, setGender] = useState<Gender>(null);
-  const [tetoScore, setTetoScore] = useState(0);
-  const [egenScore, setEgenScore] = useState(0);
-
-  const handleGenderSelect = (selectedGender: 'male' | 'female') => {
-    setGender(selectedGender);
-    setScreen('questions');
-  };
-
-  const handleTestComplete = (teto: number, egen: number) => {
-    setTetoScore(teto);
-    setEgenScore(egen);
-    setScreen('result');
-  };
-
-  const handleRestart = () => {
-    setScreen('gender');
-    setGender(null);
-    setTetoScore(0);
-    setEgenScore(0);
-  };
-
   return (
-    <div>
-      <NavigationActions />
-
-      <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Smile size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
-      </header>
-
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem', minHeight: '500px' }}>
-        {screen === 'gender' && <GenderSelection onSelect={handleGenderSelect} />}
-        {screen === 'questions' && <QuestionScreen onComplete={handleTestComplete} />}
-        {screen === 'result' && gender && (
-          <ResultScreen
-            gender={gender}
-            tetoScore={tetoScore}
-            egenScore={egenScore}
-            onRestart={handleRestart}
-          />
-        )}
-      </div>
-
-      {/* 공유하기 */}
-      <ShareBar title={t('title')} description={t('description')} />
-
-      {/* 추천 도구 */}
-      <RelatedTools toolId="utilities/lifestyle/teto-egen-test" />
-
-      {/* 광고 영역 */}
-      <div style={{
-        width: '100%',
-        minHeight: '90px',
-        background: 'rgba(226, 232, 240, 0.3)',
-        border: '1px dashed #cbd5e1',
-        borderRadius: '0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#94a3b8',
-        fontSize: '0.875rem',
-        margin: '2rem 0'
-      }}>
-        광고 영역
-      </div>
-
-      {/* SEO Content */}
-      <section className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ec4899', marginBottom: '1rem' }}>
-          {t('seoTitle')}
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '1rem' }}>
-          {t('seoPara1')}
-        </p>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '1rem' }}>
-          {t('seoPara2')}
-        </p>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-          {t('seoPara3')}
-        </p>
-      </section>
-
-      {/* FAQ */}
-      <section className="glass-panel" style={{ padding: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ec4899', marginBottom: '1.5rem' }}>
-          {t('faqTitle')}
-        </h2>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} style={{ marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-              {t(`faq${i}Q`)}
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              {t(`faq${i}A`)}
-            </p>
-          </div>
-        ))}
-      </section>
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <TetoEgenTestClient />
+    </>
   );
 }
