@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import type { ParsedExcelData } from '../page';
+import type { ParsedExcelData } from '../ExcelMapperClient';
 
 interface Step1FileUploadProps {
   onComplete: (data: ParsedExcelData) => void;

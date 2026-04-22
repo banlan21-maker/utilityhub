@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import type { ParsedExcelData, MappingRule } from '../page';
+import type { ParsedExcelData, MappingRule } from '../ExcelMapperClient';
 
 interface Step3PreviewProps {
   parsedData: ParsedExcelData;
