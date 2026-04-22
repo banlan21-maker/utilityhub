@@ -92,7 +92,7 @@ function CardView({ tools, locale }: { tools: Tool[]; locale: string }) {
     <div className={s.cardGrid}>
       {tools.map(tool => {
         const IconComponent = tool.icon
-          ? (LucideIcons as Record<string, React.ComponentType<{ size?: number; color?: string }>>)[tool.icon]
+          ? (LucideIcons as unknown as Record<string, React.ComponentType<{ size?: number; color?: string }>>)[tool.icon]
           : null;
         const name = isKo ? (tool.nameKo ?? tool.slug) : (tool.nameEn ?? tool.slug);
         const desc = isKo ? (tool.descKo ?? '') : (tool.descEn ?? '');
@@ -121,7 +121,7 @@ function ListView({ tools, locale }: { tools: Tool[]; locale: string }) {
     <div className={s.listWrapper}>
       {tools.map(tool => {
         const IconComponent = tool.icon
-          ? (LucideIcons as Record<string, React.ComponentType<{ size?: number; color?: string }>>)[tool.icon]
+          ? (LucideIcons as unknown as Record<string, React.ComponentType<{ size?: number; color?: string }>>)[tool.icon]
           : null;
         const name = isKo ? (tool.nameKo ?? tool.slug) : (tool.nameEn ?? tool.slug);
         const desc = isKo ? (tool.descKo ?? '') : (tool.descEn ?? '');

@@ -133,7 +133,7 @@ export default function SearchDropdown({ categoryFilter, placeholder }: SearchDr
           {results.length > 0 ? (
             <>
               {results.map((tool, index) => {
-                const IconComponent = tool.icon ? (LucideIcons as Record<string, React.ComponentType<{ size?: number; color?: string }>>)[tool.icon] : null;
+                const IconComponent = tool.icon ? (LucideIcons as unknown as Record<string, React.ComponentType<{ size?: number; color?: string }>>)[tool.icon] : null;
                 const isActive = index === activeIndex;
                 const displayName = locale === 'ko' ? (tool.nameKo ?? tool.slug) : (tool.nameEn ?? tool.slug);
                 const displayDesc = locale === 'ko' ? (tool.descKo ?? '') : (tool.descEn ?? '');
