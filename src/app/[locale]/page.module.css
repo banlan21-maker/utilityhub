@@ -408,6 +408,7 @@
   grid-template-columns: 1fr;
   gap: 1.25rem;
   margin-top: 2.5rem;
+  padding: 0 2px; /* 좌우 카드 테두리가 잘리지 않도록 */
 }
 @media (min-width: 600px) {
   .featuresGrid {
