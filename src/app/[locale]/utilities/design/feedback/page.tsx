@@ -1,130 +1,87 @@
-'use client';
+import type { Metadata } from 'next';
+import FeedbackClient from './FeedbackClient';
 
-import {useTranslations} from 'next-intl';
-import { useRef, useState, useTransition } from 'react';
-import { MessageSquare } from 'lucide-react';
-import { submitFeedback } from '@/actions/feedback';
-import NavigationActions from '@/app/components/NavigationActions';
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isKo = locale === 'ko';
+  const title = isKo
+    ? '피드백 보내기 | Utility Hub'
+    : 'Send Feedback | Utility Hub';
+  const description = isKo
+    ? '새로운 유틸리티 제안, 버그 제보, 일반 피드백을 보내주세요. 여러분의 의견이 더 나은 서비스를 만듭니다.'
+    : 'Submit feature requests, bug reports, or general feedback. Your input helps us build a better service.';
+  const canonical = `https://www.theutilhub.com/${locale}/utilities/design/feedback`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        ko: 'https://www.theutilhub.com/ko/utilities/design/feedback',
+        en: 'https://www.theutilhub.com/en/utilities/design/feedback',
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: 'Utility Hub',
+      locale: isKo ? 'ko_KR' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: '피드백 위젯',
+  alternateName: 'Feedback Widget',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  url: 'https://www.theutilhub.com/ko/utilities/design/feedback',
+  description: '새로운 유틸리티 제안, 버그 제보, 일반 피드백을 보내주세요. 여러분의 의견이 더 나은 서비스를 만듭니다.',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '피드백을 보내면 답변을 받을 수 있나요?',
+      acceptedAnswer: { '@type': 'Answer', text: '현재 피드백은 익명으로 수집되어 서비스 개선에 활용됩니다. 개별 답변은 제공되지 않지만, 제안해주신 내용은 모두 검토됩니다.' },
+    },
+    {
+      '@type': 'Question',
+      name: '어떤 내용을 피드백으로 보낼 수 있나요?',
+      acceptedAnswer: { '@type': 'Answer', text: '새로운 유틸리티 도구 제안, 버그 제보, 기존 기능 개선 요청, 일반적인 사용 후기 등 어떤 내용이든 보내주실 수 있습니다.' },
+    },
+    {
+      '@type': 'Question',
+      name: '피드백이 실제로 반영되나요?',
+      acceptedAnswer: { '@type': 'Answer', text: '네, 수집된 피드백은 우선순위를 정해 서비스 개선에 반영합니다. 많은 분들이 요청하신 기능은 더 빠르게 추가됩니다.' },
+    },
+  ],
+};
 
 export default function FeedbackPage() {
-  const fb = useTranslations('Feedback');
-  const [isPending, startTransition] = useTransition();
-  const [result, setResult] = useState<{ success?: boolean; error?: string } | null>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const handleSubmit = (formData: FormData) => {
-    setResult(null);
-    startTransition(async () => {
-      const res = await submitFeedback(formData);
-      setResult(res);
-      if (res.success) {
-        formRef.current?.reset();
-      }
-    });
-  };
-
   return (
-    <div style={{ maxWidth: '896px', margin: '0 auto', width: '100%' }}>
-      <NavigationActions />
-
-      {/* Tool Start Card - V4 Standard */}
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <MessageSquare size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {fb('title')}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {fb('description')}
-        </p>
-      </header>
-
-      <div className="glass-panel" style={{ padding: '2.5rem', maxWidth: '640px', margin: '0 auto' }}>
-        <form ref={formRef} action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="category" style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>
-              {fb('categoryLabel')}
-            </label>
-            <select
-              name="category"
-              id="category"
-              className="glass-panel"
-              style={{
-                padding: '0.75rem',
-                fontSize: '1rem',
-                borderRadius: 'var(--radius-sm)',
-                outline: 'none',
-                color: 'var(--text-primary)',
-                background: 'var(--surface)'
-              }}
-            >
-              <option value="feature_request">💡 새로운 유틸리티 제안 (Feature Request)</option>
-              <option value="bug_report">🐛 버그 제보 (Bug Report)</option>
-              <option value="general">💬 일반 피드백 (General Feedback)</option>
-            </select>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <textarea
-              name="message"
-              required
-              rows={5}
-              placeholder={fb('placeholder')}
-              className="glass-panel"
-              style={{
-                padding: '1rem',
-                fontSize: '1rem',
-                borderRadius: 'var(--radius-sm)',
-                outline: 'none',
-                color: 'var(--text-primary)',
-                resize: 'vertical',
-                background: 'var(--surface)'
-              }}
-            />
-          </div>
-
-          {result?.error && (
-            <div style={{ color: '#ef4444', padding: '0.75rem', background: '#fef2f2', borderRadius: 'var(--radius-sm)' }}>
-              {fb('error')}: {result.error}
-            </div>
-          )}
-          {result?.success && (
-            <div style={{ color: '#10b981', padding: '0.75rem', background: '#ecfdf5', borderRadius: 'var(--radius-sm)' }}>
-               ✓ {fb('success')}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={isPending}
-            style={{
-              padding: '1rem',
-              fontSize: '1rem',
-              fontWeight: 600,
-              backgroundColor: 'var(--primary)',
-              color: 'white',
-              borderRadius: 'var(--radius-md)',
-              transition: 'background-color 0.2s, opacity 0.2s',
-              opacity: isPending ? 0.7 : 1,
-              cursor: isPending ? 'not-allowed' : 'pointer'
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary-hover)')}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
-          >
-            {isPending ? '...' : fb('submit')}
-          </button>
-
-        </form>
-      </div>
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <FeedbackClient />
+    </>
   );
 }
