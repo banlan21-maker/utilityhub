@@ -57,8 +57,8 @@ function FabSVG({
   angle: number; vCutHalf: number; vCutFull: number;
   markingA: number; refDim: number; isKo: boolean;
 }) {
-  const VW = 400, VH = 250;
-  const trayX = 50, trayY = 85, trayW = 300, trayH = 80;
+  const VW = 400, VH = 260;
+  const trayX = 50, trayY = 100, trayW = 300, trayH = 80;
   const cx = trayX + trayW / 2;
 
   if (angle >= 90) {
@@ -85,7 +85,8 @@ function FabSVG({
 
   return (
     <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 600 }}
-      aria-label={isKo ? 'V-컷 가공 도면' : 'V-cut fabrication diagram'}>
+      aria-label={isKo ? 'V-컷 가공 도면' : 'V-cut fabrication diagram'}
+      overflow="visible">
 
       {/* Tray body */}
       <rect x={trayX} y={trayY} width={trayW} height={trayH}
@@ -114,23 +115,24 @@ function FabSVG({
         fill="none" stroke="#ef4444" strokeWidth="2" />
 
       {/* Dimension line top: vCutFull */}
-      <line x1={cx - halfPx} y1={trayY - 14} x2={cx + halfPx} y2={trayY - 14}
+      <line x1={cx - halfPx} y1={trayY - 28} x2={cx + halfPx} y2={trayY - 28}
         stroke="#64748b" strokeWidth="1" />
-      <line x1={cx - halfPx} y1={trayY - 18} x2={cx - halfPx} y2={trayY - 10}
+      <line x1={cx - halfPx} y1={trayY - 32} x2={cx - halfPx} y2={trayY - 10}
         stroke="#64748b" strokeWidth="1" />
-      <line x1={cx + halfPx} y1={trayY - 18} x2={cx + halfPx} y2={trayY - 10}
+      <line x1={cx + halfPx} y1={trayY - 32} x2={cx + halfPx} y2={trayY - 10}
         stroke="#64748b" strokeWidth="1" />
-      <text x={cx} y={trayY - 20} textAnchor="middle" fontSize="12" fill="#ef4444" fontWeight="800">
+      {/* 전체 폭 레이블 — 치수선 위에 단독 표시 */}
+      <text x={cx} y={trayY - 33} textAnchor="middle" fontSize="12" fill="#ef4444" fontWeight="800">
         {vCutFull.toFixed(1)}mm
       </text>
 
-      {/* Half labels */}
-      {halfPx > 22 && (
+      {/* 한쪽 레이블 — 치수선 바로 아래, 좌우 분리 */}
+      {halfPx > 28 && (
         <>
-          <text x={cx - halfPx / 2} y={trayY - 20} textAnchor="middle" fontSize="10" fill="#94a3b8">
+          <text x={cx - halfPx / 2} y={trayY - 16} textAnchor="middle" fontSize="9" fill="#94a3b8">
             {vCutHalf.toFixed(1)}
           </text>
-          <text x={cx + halfPx / 2} y={trayY - 20} textAnchor="middle" fontSize="10" fill="#94a3b8">
+          <text x={cx + halfPx / 2} y={trayY - 16} textAnchor="middle" fontSize="9" fill="#94a3b8">
             {vCutHalf.toFixed(1)}
           </text>
         </>
