@@ -57,7 +57,7 @@ function FabSVG({
   angle: number; vCutHalf: number; vCutFull: number;
   markingA: number; refDim: number; isKo: boolean;
 }) {
-  const VW = 400, VH = 290;
+  const VW = 400, VH = 310;
   const trayX = 50, trayY = 100, trayW = 300, trayH = 80;
   const cx = trayX + trayW / 2;
 
@@ -138,30 +138,27 @@ function FabSVG({
         </>
       )}
 
+      {/* ── 하단 영역: 홀 관련 치수 (트레이 아래) ── */}
+      {/* Ø14 labels */}
+      <text x={cx - boltPx} y={trayY + trayH + 16} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
+      <text x={cx + boltPx} y={trayY + trayH + 16} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
+
+      {/* 70mm dimension line (left: center → left bolt) */}
+      <line x1={cx} y1={trayY + trayH + 28} x2={cx - boltPx} y2={trayY + trayH + 28}
+        stroke="#f97316" strokeWidth="1.5" strokeDasharray="4 2" />
+      <line x1={cx}        y1={trayY + trayH + 23} x2={cx}        y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
+      <line x1={cx-boltPx} y1={trayY + trayH + 23} x2={cx-boltPx} y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
+      <text x={cx - boltPx / 2} y={trayY + trayH + 22} textAnchor="middle" fontSize="11" fill="#f97316" fontWeight="700">70mm</text>
+
+      {/* 70mm dimension line (right: center → right bolt) */}
+      <line x1={cx} y1={trayY + trayH + 28} x2={cx + boltPx} y2={trayY + trayH + 28}
+        stroke="#f97316" strokeWidth="1.5" strokeDasharray="4 2" />
+      <line x1={cx+boltPx} y1={trayY + trayH + 23} x2={cx+boltPx} y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
+      <text x={cx + boltPx / 2} y={trayY + trayH + 22} textAnchor="middle" fontSize="11" fill="#f97316" fontWeight="700">70mm</text>
+
       {/* Center label */}
-      <text x={cx} y={trayY + trayH + 38} textAnchor="middle" fontSize="10" fill="#3b82f6" fontWeight="600">
+      <text x={cx} y={trayY + trayH + 46} textAnchor="middle" fontSize="10" fill="#3b82f6" fontWeight="600">
         {isKo ? '기준선 (중심)' : 'Center ref.'}
-      </text>
-
-      {/* Bolt labels: Ø14 */}
-      <text x={cx - boltPx} y={trayY + trayH + 38} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
-      <text x={cx + boltPx} y={trayY + trayH + 38} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
-
-      {/* Bolt position dimension: ±70mm from center */}
-      {/* left bolt: center → left */}
-      <line x1={cx} y1={trayY + trayH / 2 + 18} x2={cx - boltPx} y2={trayY + trayH / 2 + 18}
-        stroke="#f97316" strokeWidth="1" strokeDasharray="3 2" />
-      <line x1={cx}        y1={trayY + trayH / 2 + 14} x2={cx}        y2={trayY + trayH / 2 + 22} stroke="#f97316" strokeWidth="1" />
-      <line x1={cx-boltPx} y1={trayY + trayH / 2 + 14} x2={cx-boltPx} y2={trayY + trayH / 2 + 22} stroke="#f97316" strokeWidth="1" />
-      <text x={cx - boltPx / 2} y={trayY + trayH / 2 + 14} textAnchor="middle" fontSize="10" fill="#f97316" fontWeight="700">
-        70mm
-      </text>
-      {/* right bolt: center → right */}
-      <line x1={cx} y1={trayY + trayH / 2 + 18} x2={cx + boltPx} y2={trayY + trayH / 2 + 18}
-        stroke="#f97316" strokeWidth="1" strokeDasharray="3 2" />
-      <line x1={cx+boltPx} y1={trayY + trayH / 2 + 14} x2={cx+boltPx} y2={trayY + trayH / 2 + 22} stroke="#f97316" strokeWidth="1" />
-      <text x={cx + boltPx / 2} y={trayY + trayH / 2 + 14} textAnchor="middle" fontSize="10" fill="#f97316" fontWeight="700">
-        70mm
       </text>
 
       {/* Marking A at bottom */}
