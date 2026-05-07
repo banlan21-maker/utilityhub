@@ -52,10 +52,11 @@ function getElbowRec(angle: number, isKo: boolean): { label: string; warning: st
 
 // ── SVG Fabrication Diagram ────────────────────────
 function FabSVG({
-  angle, vCutHalf, vCutFull, markingA, refDim, isKo,
+  angle, vCutHalf, vCutFull, markingA, refDim, direction, isKo,
 }: {
   angle: number; vCutHalf: number; vCutFull: number;
-  markingA: number; refDim: number; isKo: boolean;
+  markingA: number; refDim: number;
+  direction: 'vertical' | 'horizontal'; isKo: boolean;
 }) {
   const VW = 400, VH = 310;
   const trayX = 50, trayY = 100, trayW = 300, trayH = 80;
@@ -63,7 +64,7 @@ function FabSVG({
 
   if (angle >= 90) {
     return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 600 }}
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}
         aria-label={isKo ? '수직 구간 도면' : 'Vertical riser diagram'}>
         <rect x={cx - 24} y={30} width={48} height={VH - 60}
           fill="#f1f5f9" stroke="#94a3b8" strokeWidth="2" rx="6" />
@@ -81,13 +82,11 @@ function FabSVG({
   const scalePx = (trayW / 2) / refDim;
   const halfPx = Math.min(vCutHalf * scalePx, trayW / 2 - 6);
   const boltPx = Math.min(70 * scalePx, trayW / 2 - 6);
-  const vtDepth = Math.min(trayH * 0.55, trayH - 8); // V triangle depth
+  const vtDepth = Math.min(trayH * 0.55, trayH - 8);
 
-  return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 600 }}
-      aria-label={isKo ? 'V-컷 가공 도면' : 'V-cut fabrication diagram'}
-      overflow="visible">
-
+  // ── Shared top section (V-cut + center line) ──────
+  const sharedTop = (
+    <>
       {/* Tray body */}
       <rect x={trayX} y={trayY} width={trayW} height={trayH}
         fill="#f8fafc" stroke="#94a3b8" strokeWidth="2" rx="4" />
@@ -101,32 +100,22 @@ function FabSVG({
       <line x1={cx} y1={trayY - 18} x2={cx} y2={trayY + trayH + 18}
         stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="6 3" />
 
-      {/* V-cut left line */}
+      {/* V-cut left/right lines */}
       <line x1={cx - halfPx} y1={trayY - 10} x2={cx - halfPx} y2={trayY + trayH + 10}
         stroke="#ef4444" strokeWidth="2" />
-      {/* V-cut right line */}
       <line x1={cx + halfPx} y1={trayY - 10} x2={cx + halfPx} y2={trayY + trayH + 10}
         stroke="#ef4444" strokeWidth="2" />
 
-      {/* Bolt holes */}
-      <circle cx={cx - boltPx} cy={trayY + trayH / 2} r={7}
-        fill="none" stroke="#ef4444" strokeWidth="2" />
-      <circle cx={cx + boltPx} cy={trayY + trayH / 2} r={7}
-        fill="none" stroke="#ef4444" strokeWidth="2" />
-
-      {/* Dimension line top: vCutFull */}
+      {/* V-cut dimension line */}
       <line x1={cx - halfPx} y1={trayY - 28} x2={cx + halfPx} y2={trayY - 28}
         stroke="#64748b" strokeWidth="1" />
       <line x1={cx - halfPx} y1={trayY - 32} x2={cx - halfPx} y2={trayY - 10}
         stroke="#64748b" strokeWidth="1" />
       <line x1={cx + halfPx} y1={trayY - 32} x2={cx + halfPx} y2={trayY - 10}
         stroke="#64748b" strokeWidth="1" />
-      {/* 전체 폭 레이블 — 치수선 위에 단독 표시 */}
       <text x={cx} y={trayY - 33} textAnchor="middle" fontSize="12" fill="#ef4444" fontWeight="800">
         {vCutFull.toFixed(1)}mm
       </text>
-
-      {/* 한쪽 레이블 — 치수선 바로 아래, 좌우 분리 */}
       {halfPx > 28 && (
         <>
           <text x={cx - halfPx / 2} y={trayY - 16} textAnchor="middle" fontSize="9" fill="#94a3b8">
@@ -137,20 +126,102 @@ function FabSVG({
           </text>
         </>
       )}
+    </>
+  );
 
-      {/* ── 하단 영역: 홀 관련 치수 (트레이 아래) ── */}
-      {/* Ø14 labels */}
-      <text x={cx - boltPx} y={trayY + trayH + 16} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
-      <text x={cx + boltPx} y={trayY + trayH + 16} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
+  // ── VERTICAL (상하) 꺾임 — 측면도 ─────────────────
+  if (direction === 'vertical') {
+    return (
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}
+        aria-label={isKo ? 'V-컷 가공 도면 (측면도)' : 'V-cut fabrication diagram (side view)'}
+        overflow="visible">
 
-      {/* 70mm dimension line (left: center → left bolt) */}
+        <text x={VW / 2} y={18} textAnchor="middle" fontSize="10" fill="#94a3b8" fontWeight="600">
+          {isKo ? '측면도 (Side View)' : 'Side View'}
+        </text>
+
+        {sharedTop}
+
+        {/* Bolt holes on face (측면에 타공) */}
+        <circle cx={cx - boltPx} cy={trayY + trayH / 2} r={7}
+          fill="none" stroke="#ef4444" strokeWidth="2" />
+        <circle cx={cx + boltPx} cy={trayY + trayH / 2} r={7}
+          fill="none" stroke="#ef4444" strokeWidth="2" />
+
+        {/* Ø14 labels */}
+        <text x={cx - boltPx} y={trayY + trayH + 16} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
+        <text x={cx + boltPx} y={trayY + trayH + 16} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
+
+        {/* 70mm dimension (left) */}
+        <line x1={cx} y1={trayY + trayH + 28} x2={cx - boltPx} y2={trayY + trayH + 28}
+          stroke="#f97316" strokeWidth="1.5" strokeDasharray="4 2" />
+        <line x1={cx}        y1={trayY + trayH + 23} x2={cx}        y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
+        <line x1={cx-boltPx} y1={trayY + trayH + 23} x2={cx-boltPx} y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
+        <text x={cx - boltPx / 2} y={trayY + trayH + 22} textAnchor="middle" fontSize="11" fill="#f97316" fontWeight="700">70mm</text>
+
+        {/* 70mm dimension (right) */}
+        <line x1={cx} y1={trayY + trayH + 28} x2={cx + boltPx} y2={trayY + trayH + 28}
+          stroke="#f97316" strokeWidth="1.5" strokeDasharray="4 2" />
+        <line x1={cx+boltPx} y1={trayY + trayH + 23} x2={cx+boltPx} y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
+        <text x={cx + boltPx / 2} y={trayY + trayH + 22} textAnchor="middle" fontSize="11" fill="#f97316" fontWeight="700">70mm</text>
+
+        {/* Center label */}
+        <text x={cx} y={trayY + trayH + 46} textAnchor="middle" fontSize="10" fill="#3b82f6" fontWeight="600">
+          {isKo ? '기준선 (중심)' : 'Center ref.'}
+        </text>
+
+        {/* Marking A */}
+        <text x={VW / 2} y={VH - 6} textAnchor="middle" fontSize="11" fill="#475569">
+          {isKo ? `마킹 간격 A: ${markingA.toFixed(0)}mm` : `Marking Interval A: ${markingA.toFixed(0)}mm`}
+        </text>
+      </svg>
+    );
+  }
+
+  // ── HORIZONTAL (좌우) 꺾임 — 평면도 ───────────────
+  // 바닥면 평면도. 볼트홀은 바닥면(내부)이 아닌 양쪽 측면 레일에 시공.
+  return (
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}
+      aria-label={isKo ? 'V-컷 가공 도면 (평면도)' : 'V-cut fabrication diagram (top view)'}
+      overflow="visible">
+
+      <text x={VW / 2} y={18} textAnchor="middle" fontSize="10" fill="#94a3b8" fontWeight="600">
+        {isKo ? '평면도 (Top View)' : 'Top View'}
+      </text>
+
+      {sharedTop}
+
+      {/* Rail edge labels */}
+      <text x={trayX + 4} y={trayY - 4} fontSize="9" fill="#64748b" fontWeight="600">
+        {isKo ? '← 상단 레일 (측면) →' : '← Top Rail (side) →'}
+      </text>
+      <text x={trayX + 4} y={trayY + trayH + 12} fontSize="9" fill="#64748b" fontWeight="600">
+        {isKo ? '← 하단 레일 (측면) →' : '← Bottom Rail (side) →'}
+      </text>
+
+      {/* Bolt position markers ON the rail edges (●) — NOT on the face */}
+      <circle cx={cx - boltPx} cy={trayY}          r={5} fill="#ef4444" />
+      <circle cx={cx + boltPx} cy={trayY}          r={5} fill="#ef4444" />
+      <circle cx={cx - boltPx} cy={trayY + trayH}  r={5} fill="#ef4444" />
+      <circle cx={cx + boltPx} cy={trayY + trayH}  r={5} fill="#ef4444" />
+
+      {/* Warning text inside tray body (below V-cut triangle) */}
+      <text x={cx} y={trayY + vtDepth + 18} textAnchor="middle" fontSize="11" fill="#ef4444" fontWeight="800">
+        {isKo ? '※ 타공(Ø14)은 바닥이 아닌' : '※ Drill Ø14 on side rails,'}
+      </text>
+      <text x={cx} y={trayY + vtDepth + 33} textAnchor="middle" fontSize="11" fill="#ef4444" fontWeight="800">
+        {isKo ? '양쪽 측면 레일에 시공' : 'NOT on the bottom face'}
+      </text>
+
+      {/* 70mm dimension below the bottom rail */}
+      {/* left: center → left bolt */}
       <line x1={cx} y1={trayY + trayH + 28} x2={cx - boltPx} y2={trayY + trayH + 28}
         stroke="#f97316" strokeWidth="1.5" strokeDasharray="4 2" />
       <line x1={cx}        y1={trayY + trayH + 23} x2={cx}        y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
       <line x1={cx-boltPx} y1={trayY + trayH + 23} x2={cx-boltPx} y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
       <text x={cx - boltPx / 2} y={trayY + trayH + 22} textAnchor="middle" fontSize="11" fill="#f97316" fontWeight="700">70mm</text>
 
-      {/* 70mm dimension line (right: center → right bolt) */}
+      {/* right: center → right bolt */}
       <line x1={cx} y1={trayY + trayH + 28} x2={cx + boltPx} y2={trayY + trayH + 28}
         stroke="#f97316" strokeWidth="1.5" strokeDasharray="4 2" />
       <line x1={cx+boltPx} y1={trayY + trayH + 23} x2={cx+boltPx} y2={trayY + trayH + 33} stroke="#f97316" strokeWidth="1.5" />
@@ -161,7 +232,7 @@ function FabSVG({
         {isKo ? '기준선 (중심)' : 'Center ref.'}
       </text>
 
-      {/* Marking A at bottom */}
+      {/* Marking A */}
       <text x={VW / 2} y={VH - 6} textAnchor="middle" fontSize="11" fill="#475569">
         {isKo ? `마킹 간격 A: ${markingA.toFixed(0)}mm` : `Marking Interval A: ${markingA.toFixed(0)}mm`}
       </text>
@@ -561,6 +632,7 @@ export default function CableTrayCalcClient() {
               vCutFull={vCutFull}
               markingA={markingA}
               refDim={refDim}
+              direction={direction!}
               isKo={isKo}
             />
           </div>
