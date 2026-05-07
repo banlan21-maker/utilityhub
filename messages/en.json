@@ -172,6 +172,10 @@
     "hwp-pdf-converter": {
       "title": "Hangul to PDF Converter",
       "desc": "Convert Hangul documents to PDF without any external software."
+    },
+    "pdf-ocr": {
+      "title": "PDF OCR Converter",
+      "desc": "Make scanned contracts, official documents, and faxes searchable with Ctrl+F. 100% local processing for complete privacy protection."
     }
   },
   "MarketingBoard": {
@@ -1555,5 +1559,10 @@
         "a": "Results are for reference only. Please consult a professional or official source for accurate figures."
       }
     ]
+  },
+  "pdf-ocr": {
+    "title": "PDF OCR Converter",
+    "description": "Convert scanned contracts, official documents, and faxed files into searchable PDFs. 100% client-side — files never leave your browser. PC recommended.",
+    "button": "Use Now"
   }
 }
