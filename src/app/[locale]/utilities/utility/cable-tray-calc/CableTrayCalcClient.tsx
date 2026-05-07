@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useLocale } from 'next-intl';
-import { Ruler, Copy, Check } from 'lucide-react';
+import { Ruler, Copy } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -10,13 +10,20 @@ import ShareBar from '@/app/components/ShareBar';
 import s from './cable-tray-calc.module.css';
 
 // ── Constants ──────────────────────────────────────
+const TRAY_WIDTHS = [100, 150, 200, 300, 400, 450, 600];
+const TRAY_HEIGHTS = [60, 80, 100, 120, 150];
+
 const BASE_INTERVAL: Record<number, number> = {
   100: 1.5, 150: 1.5, 200: 1.5,
   300: 2.0, 400: 2.0, 450: 2.0,
   600: 1.5,
 };
 
-const TRAY_WIDTHS = [100, 150, 200, 300, 400, 450, 600];
+const ENV_FACTOR: Record<string, number> = {
+  indoor: 1.0,
+  outdoor: 0.8,
+  vibration: 0.7,
+};
 
 function getAngleFactor(angle: number): number {
   if (angle <= 10) return 1.0;
@@ -27,75 +34,8 @@ function getAngleFactor(angle: number): number {
   return 0.40;
 }
 
-const ENV_FACTOR: Record<string, number> = {
-  indoor: 1.0,
-  outdoor: 0.8,
-  vibration: 0.7,
-};
-
-// ── SVG helpers ────────────────────────────────────
-const SVG_W = 200;
-const SVG_H = 120;
-const PADDING = 20;
-
-function normalizeSVG(h1: number, h2: number, l: number, isVertical: boolean) {
-  const drawW = SVG_W - PADDING * 2;
-  const drawH = SVG_H - PADDING * 2;
-
-  if (isVertical) {
-    const x = PADDING + drawW / 2;
-    return {
-      startX: x, startY: PADDING,
-      endX: x,   endY: PADDING + drawH,
-      labelH1:    { x: x + 6, y: PADDING + 12 },
-      labelH2:    { x: x + 6, y: PADDING + drawH - 4 },
-      labelL:     null,
-      labelSlope: { x: x + 6, y: SVG_H / 2 },
-    };
-  }
-
-  const heightDiff = Math.abs(h1 - h2);
-  const scaleX = drawW / (l || 1);
-  const scaleY = heightDiff > 0 ? drawH / heightDiff : scaleX;
-  const scale = Math.min(scaleX, scaleY);
-
-  const scaledL = l * scale;
-  const scaledH = heightDiff * scale;
-
-  const startX = PADDING + (drawW - scaledL) / 2;
-  const startY = PADDING + (drawH - scaledH) / 2;
-  const endX = startX + scaledL;
-  const endY = startY + scaledH;
-
-  return {
-    startX, startY, endX, endY,
-    labelH1:    { x: startX - 3, y: startY + 12 },
-    labelH2:    { x: endX + 3,   y: endY - 4 },
-    labelL:     { x: (startX + endX) / 2, y: endY + 13 },
-    labelSlope: { x: (startX + endX) / 2 - 12, y: (startY + endY) / 2 - 8 },
-  };
-}
-
-// ── Hanger positions ───────────────────────────────
-function generateHangerPositions(trayLength: number, hangerInterval: number): string[] {
-  if (trayLength <= 0 || hangerInterval <= 0) return [];
-  const count = Math.ceil(trayLength / hangerInterval) + 1;
-  const positions: string[] = [];
-  for (let i = 0; i < count; i++) {
-    const rawPosition = i * hangerInterval;
-    const position = Math.min(rawPosition, trayLength);
-    positions.push(position.toFixed(2));
-    if (position >= trayLength) break;
-  }
-  return positions;
-}
-
-// ── Elbow recommendation ───────────────────────────
 function getElbowRec(angle: number, isKo: boolean): { label: string; warning: string | null } {
-  if (angle === 90) return {
-    label: isKo ? '수직 구간 — 엘보 불필요' : 'Vertical Riser — No elbow needed',
-    warning: null,
-  };
+  if (angle >= 90) return { label: isKo ? '수직 구간 — 엘보 불필요' : 'Vertical Riser — No elbow needed', warning: null };
   if (angle <= 0) return { label: '—', warning: null };
   if (angle <= 10) return { label: '10° 엘보', warning: null };
   if (angle <= 15) return { label: '15° 엘보', warning: null };
@@ -110,75 +50,200 @@ function getElbowRec(angle: number, isKo: boolean): { label: string; warning: st
   };
 }
 
+// ── SVG Fabrication Diagram ────────────────────────
+function FabSVG({
+  angle, vCutHalf, vCutFull, markingA, refDim, isKo,
+}: {
+  angle: number; vCutHalf: number; vCutFull: number;
+  markingA: number; refDim: number; isKo: boolean;
+}) {
+  const VW = 400, VH = 250;
+  const trayX = 50, trayY = 85, trayW = 300, trayH = 80;
+  const cx = trayX + trayW / 2;
+
+  if (angle >= 90) {
+    return (
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 600 }}
+        aria-label={isKo ? '수직 구간 도면' : 'Vertical riser diagram'}>
+        <rect x={cx - 24} y={30} width={48} height={VH - 60}
+          fill="#f1f5f9" stroke="#94a3b8" strokeWidth="2" rx="6" />
+        <text x={cx} y={VH / 2 - 8} textAnchor="middle" fontSize="14" fill="#64748b" fontWeight="700">
+          {isKo ? '수직 구간' : 'Vertical Riser'}
+        </text>
+        <text x={cx} y={VH / 2 + 12} textAnchor="middle" fontSize="11" fill="#94a3b8">
+          {isKo ? 'V-컷 불필요, 직각 절단' : 'No V-cut — straight cut'}
+        </text>
+      </svg>
+    );
+  }
+
+  // Scale: half of refDim → half of trayW (150px)
+  const scalePx = (trayW / 2) / refDim;
+  const halfPx = Math.min(vCutHalf * scalePx, trayW / 2 - 6);
+  const boltPx = Math.min(70 * scalePx, trayW / 2 - 6);
+  const vtDepth = Math.min(trayH * 0.55, trayH - 8); // V triangle depth
+
+  return (
+    <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 600 }}
+      aria-label={isKo ? 'V-컷 가공 도면' : 'V-cut fabrication diagram'}>
+
+      {/* Tray body */}
+      <rect x={trayX} y={trayY} width={trayW} height={trayH}
+        fill="#f8fafc" stroke="#94a3b8" strokeWidth="2" rx="4" />
+
+      {/* V-cut removed area */}
+      <polygon
+        points={`${cx - halfPx},${trayY} ${cx + halfPx},${trayY} ${cx},${trayY + vtDepth}`}
+        fill="rgba(239,68,68,0.15)" stroke="#ef4444" strokeWidth="1.5" />
+
+      {/* Center reference line (blue dashed) */}
+      <line x1={cx} y1={trayY - 18} x2={cx} y2={trayY + trayH + 18}
+        stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="6 3" />
+
+      {/* V-cut left line */}
+      <line x1={cx - halfPx} y1={trayY - 10} x2={cx - halfPx} y2={trayY + trayH + 10}
+        stroke="#ef4444" strokeWidth="2" />
+      {/* V-cut right line */}
+      <line x1={cx + halfPx} y1={trayY - 10} x2={cx + halfPx} y2={trayY + trayH + 10}
+        stroke="#ef4444" strokeWidth="2" />
+
+      {/* Bolt holes */}
+      <circle cx={cx - boltPx} cy={trayY + trayH / 2} r={7}
+        fill="none" stroke="#ef4444" strokeWidth="2" />
+      <circle cx={cx + boltPx} cy={trayY + trayH / 2} r={7}
+        fill="none" stroke="#ef4444" strokeWidth="2" />
+
+      {/* Dimension line top: vCutFull */}
+      <line x1={cx - halfPx} y1={trayY - 14} x2={cx + halfPx} y2={trayY - 14}
+        stroke="#64748b" strokeWidth="1" />
+      <line x1={cx - halfPx} y1={trayY - 18} x2={cx - halfPx} y2={trayY - 10}
+        stroke="#64748b" strokeWidth="1" />
+      <line x1={cx + halfPx} y1={trayY - 18} x2={cx + halfPx} y2={trayY - 10}
+        stroke="#64748b" strokeWidth="1" />
+      <text x={cx} y={trayY - 20} textAnchor="middle" fontSize="12" fill="#ef4444" fontWeight="800">
+        {vCutFull.toFixed(1)}mm
+      </text>
+
+      {/* Half labels */}
+      {halfPx > 22 && (
+        <>
+          <text x={cx - halfPx / 2} y={trayY - 20} textAnchor="middle" fontSize="10" fill="#94a3b8">
+            {vCutHalf.toFixed(1)}
+          </text>
+          <text x={cx + halfPx / 2} y={trayY - 20} textAnchor="middle" fontSize="10" fill="#94a3b8">
+            {vCutHalf.toFixed(1)}
+          </text>
+        </>
+      )}
+
+      {/* Center label */}
+      <text x={cx} y={trayY + trayH + 24} textAnchor="middle" fontSize="10" fill="#3b82f6" fontWeight="600">
+        {isKo ? '기준선 (중심)' : 'Center ref.'}
+      </text>
+
+      {/* Bolt labels */}
+      <text x={cx - boltPx} y={trayY + trayH + 24} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
+      <text x={cx + boltPx} y={trayY + trayH + 24} textAnchor="middle" fontSize="10" fill="#ef4444">Ø14</text>
+
+      {/* Marking A at bottom */}
+      <text x={VW / 2} y={VH - 6} textAnchor="middle" fontSize="11" fill="#475569">
+        {isKo ? `마킹 간격 A: ${markingA.toFixed(0)}mm` : `Marking Interval A: ${markingA.toFixed(0)}mm`}
+      </text>
+    </svg>
+  );
+}
+
 // ── Main component ─────────────────────────────────
 export default function CableTrayCalcClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  // ── Shared state (all 3 tabs) — string to preserve decimal input ──
-  const [h1, setH1] = useState<string>('');
-  const [h2, setH2] = useState<string>('');
-  const [L, setL]   = useState<string>('');
+  // STEP 1
+  const [direction, setDirection] = useState<'vertical' | 'horizontal' | null>(null);
+  const [trayWidth, setTrayWidth] = useState<number>(200);
+  const [trayHeight, setTrayHeight] = useState<number>(100);
 
-  // ── Tab 3 extras ──
-  const [trayWidth, setTrayWidth]   = useState<number>(200);
+  // STEP 2
+  const [inputMode, setInputMode] = useState<'preset' | 'manual'>('preset');
+  const [presetAngle, setPresetAngle] = useState<30 | 45 | 60 | null>(null);
+  const [presetH, setPresetH] = useState<string>('');
+  const [manualH, setManualH] = useState<string>('');
+  const [manualL, setManualL] = useState<string>('');
+
+  // STEP 6
   const [environment, setEnvironment] = useState<string>('indoor');
-
-  const [activeTab, setActiveTab] = useState<'length' | 'angle' | 'hanger'>('length');
   const [copyMsg, setCopyMsg] = useState<string>('');
 
-  // ── Derived values ──
-  const h1Val = Math.max(0, parseFloat(h1) || 0);
-  const h2Val = Math.max(0, parseFloat(h2) || 0);
-  const lVal  = Math.max(0, parseFloat(L)  || 0);
+  // ── Derived calculations ──
+  const step1Done = direction !== null;
 
-  const hasValidInput = h1.trim() !== '' && h2.trim() !== '' && L.trim() !== '';
-  const heightDiff = Math.abs(h1Val - h2Val);
-  const isVertical = lVal === 0;
-
+  let angle = 0;
+  let H = 0;
+  let L = 0;
   let slopeLength = 0;
-  let slopeAngle  = 0;
+  let isVertical = false;
+  let hasValidCalc = false;
 
-  if (hasValidInput) {
-    if (isVertical) {
-      slopeLength = heightDiff;
-      slopeAngle  = 90;
-    } else {
-      slopeLength = Math.sqrt(lVal * lVal + heightDiff * heightDiff);
-      slopeAngle  = Math.atan(heightDiff / lVal) * (180 / Math.PI);
+  if (step1Done) {
+    if (inputMode === 'preset' && presetAngle !== null && presetH.trim() !== '') {
+      H = Math.max(0, parseFloat(presetH) || 0);
+      if (H > 0) {
+        angle = presetAngle;
+        const rad = angle * Math.PI / 180;
+        L = H / Math.tan(rad);
+        slopeLength = H / Math.sin(rad);
+        hasValidCalc = true;
+      }
+    } else if (inputMode === 'manual' && manualH.trim() !== '' && manualL.trim() !== '') {
+      H = Math.max(0, parseFloat(manualH) || 0);
+      L = Math.max(0, parseFloat(manualL) || 0);
+      isVertical = L === 0;
+      if (isVertical) {
+        angle = 90;
+        slopeLength = H;
+      } else {
+        angle = Math.atan(H / L) * (180 / Math.PI);
+        slopeLength = Math.sqrt(L * L + H * H);
+      }
+      hasValidCalc = H > 0 || L > 0;
     }
   }
 
-  const hangerInterval = hasValidInput
-    ? Number(
-        (BASE_INTERVAL[trayWidth] * getAngleFactor(slopeAngle) * ENV_FACTOR[environment]).toFixed(2)
-      )
+  // V-컷 계산
+  const refDim = direction === 'vertical' ? trayHeight : trayWidth;
+  const vCutHalf = (angle > 0 && angle < 90)
+    ? refDim * Math.tan((angle / 2) * Math.PI / 180)
+    : 0;
+  const vCutFull = vCutHalf * 2;
+  const markingA = slopeLength * 1000; // m → mm
+
+  // 행거 간격
+  const hangerInterval = hasValidCalc
+    ? Number((BASE_INTERVAL[trayWidth] * getAngleFactor(angle) * ENV_FACTOR[environment]).toFixed(2))
     : 0;
 
-  const hangerCount = hangerInterval > 0
-    ? Math.ceil(slopeLength / hangerInterval) + 1
-    : 0;
+  const elbow = getElbowRec(angle, isKo);
+  const warn45 = angle > 45 && angle < 90;
+  const warnVcut80 = vCutFull > refDim * 0.8 && angle > 0 && angle < 90;
 
-  const hangerPositions = hasValidInput
-    ? generateHangerPositions(slopeLength, hangerInterval)
-    : [];
-
-  const elbow = getElbowRec(slopeAngle, isKo);
-
-  const coords = hasValidInput
-    ? normalizeSVG(h1Val, h2Val, lVal, isVertical)
-    : null;
-
-  // ── Copy ──
+  // 결과 복사
   const handleCopy = async () => {
-    const text = `[${isKo ? '케이블 트레이 경사 계산 결과' : 'Cable Tray Slope Calculation'}]
-${isKo ? '사선 길이' : 'Slope Length'}: ${slopeLength.toFixed(2)}m
-${isKo ? '경사각' : 'Slope Angle'}: ${slopeAngle.toFixed(1)}°
-${isKo ? '권장 엘보' : 'Recommended Elbow'}: ${elbow.label}
-${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2)}m / ${isKo ? '행거' : 'hangers'} ${hangerCount}${isKo ? '개 필요' : ' needed'}
-📐 theutilhub.com/utilities/utility/cable-tray-calc`;
+    const lines = [
+      `[${isKo ? '케이블 트레이 경사 & 가공 계산 결과' : 'Cable Tray Slope & Fabrication Results'}]`,
+      `${isKo ? '꺾임 방향' : 'Direction'}: ${direction === 'vertical' ? (isKo ? '상하 꺾임' : 'Vertical') : (isKo ? '좌우 꺾임' : 'Horizontal')}`,
+      `${isKo ? '트레이 폭' : 'Tray Width'}: ${trayWidth}mm  |  ${isKo ? '옆면 높이' : 'Side Height'}: ${trayHeight}mm`,
+      `${isKo ? '경사각' : 'Angle'}: ${angle.toFixed(1)}°`,
+      `${isKo ? '사선 길이' : 'Slope Length'}: ${slopeLength.toFixed(2)}m`,
+      `${isKo ? '권장 엘보' : 'Elbow'}: ${elbow.label}`,
+      `${isKo ? 'V-컷 한쪽' : 'V-cut half'}: ${vCutHalf.toFixed(1)}mm`,
+      `${isKo ? 'V-컷 전체' : 'V-cut full'}: ${vCutFull.toFixed(1)}mm`,
+      `${isKo ? '마킹 간격 A' : 'Marking A'}: ${markingA.toFixed(0)}mm`,
+      `${isKo ? '타공 위치' : 'Bolt holes'}: ±70mm / Ø14mm`,
+      `${isKo ? '행거 간격' : 'Hanger spacing'}: ${hangerInterval.toFixed(2)}m`,
+      `📐 theutilhub.com/utilities/utility/cable-tray-calc`,
+    ];
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(lines.join('\n'));
       setCopyMsg(isKo ? '✓ 복사됨' : '✓ Copied');
     } catch {
       setCopyMsg(isKo ? '❌ 복사 실패' : '❌ Copy failed');
@@ -186,50 +251,10 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
     setTimeout(() => setCopyMsg(''), 2500);
   };
 
-  // ── Shared input JSX (inlined to prevent unmount on re-render) ──
-  const sharedInputs = (
-    <div className={s.input_grid}>
-      <div>
-        <label className={s.field_label}>{isKo ? '시작 높이 H1 (m)' : 'Start Height H1 (m)'}</label>
-        <input
-          type="number" step="0.01" min="0"
-          placeholder={isKo ? '예: 3.00' : 'e.g. 3.00'}
-          className={s.field_input}
-          value={h1}
-          onChange={e => setH1(e.target.value)}
-          aria-label={isKo ? '시작 높이 입력' : 'Start height input'}
-        />
-      </div>
-      <div>
-        <label className={s.field_label}>{isKo ? '끝 높이 H2 (m)' : 'End Height H2 (m)'}</label>
-        <input
-          type="number" step="0.01" min="0"
-          placeholder={isKo ? '예: 1.00' : 'e.g. 1.00'}
-          className={s.field_input}
-          value={h2}
-          onChange={e => setH2(e.target.value)}
-          aria-label={isKo ? '끝 높이 입력' : 'End height input'}
-        />
-      </div>
-      <div>
-        <label className={s.field_label}>{isKo ? '수평 거리 L (m)' : 'Horizontal Distance L (m)'}</label>
-        <input
-          type="number" step="0.01" min="0"
-          placeholder={isKo ? '예: 5.00' : 'e.g. 5.00'}
-          className={s.field_input}
-          value={L}
-          onChange={e => setL(e.target.value)}
-          aria-label={isKo ? '수평 거리 입력' : 'Horizontal distance input'}
-        />
-        <p className={s.field_hint}>{isKo ? '수직 구간은 0 입력' : 'Enter 0 for vertical riser'}</p>
-      </div>
-    </div>
-  );
-
-  const titleStr = isKo ? '케이블 트레이 경사 계산기' : 'Cable Tray Slope Calculator';
-  const descStr  = isKo
-    ? '전기공사 현장에서 케이블 트레이 사선 길이, 경사각, 행거 간격을 즉시 계산. 엘보 규격 자동 추천 포함.'
-    : 'Calculate cable tray slope length, angle, and hanger spacing instantly for electrical construction sites.';
+  const titleStr = isKo ? '케이블 트레이 경사 & 가공 계산기' : 'Cable Tray Slope & Fabrication Calculator';
+  const descStr = isKo
+    ? 'V-컷 절단폭, 타공 위치, 사선 길이, 행거 간격을 즉시 계산. SVG 가공 도면으로 현장에서 바로 마킹.'
+    : 'Calculate V-cut dimensions, bolt positions, slope length, and hanger spacing. SVG diagram for on-site marking.';
 
   return (
     <div className={s.container}>
@@ -243,325 +268,405 @@ ${isKo ? '권장 행거 간격' : 'Hanger Interval'}: ${hangerInterval.toFixed(2
         <p className={s.subtitle}>{descStr}</p>
       </header>
 
-      {/* Main panel */}
-      <section className={s.panel}>
-        {/* Tab bar */}
-        <div className={s.tab_bar} role="tablist">
-          {([
-            ['length', isKo ? '📐 경사 길이' : '📐 Length'],
-            ['angle',  isKo ? '📏 경사각'   : '📏 Angle'],
-            ['hanger', isKo ? '🔩 행거 간격' : '🔩 Hangers'],
-          ] as const).map(([tab, label]) => (
-            <button
-              key={tab}
-              role="tab"
-              aria-selected={activeTab === tab}
-              className={`${s.tab_btn} ${activeTab === tab ? s.tab_active : s.tab_inactive}`}
-              onClick={() => setActiveTab(tab)}
-              aria-label={label}
-            >{label}</button>
-          ))}
+      {/* ── STEP 1 ── */}
+      <section className={s.step_card}>
+        <div className={s.step_label}>STEP 1</div>
+        <h2 className={s.step_title}>
+          {isKo ? '꺾임 방향 + 트레이 규격' : 'Bend Direction + Tray Specs'}
+        </h2>
+
+        <div className={s.direction_grid}>
+          <button
+            className={`${s.direction_card} ${direction === 'vertical' ? s.direction_active : ''}`}
+            onClick={() => setDirection('vertical')}
+            aria-label={isKo ? '상하 꺾임 선택' : 'Select vertical bend'}
+          >
+            <span className={s.dir_icon}>⬆️⬇️</span>
+            <span className={s.dir_label}>{isKo ? '상하 꺾임 (수직)' : 'Vertical Bend'}</span>
+            <span className={s.dir_desc}>
+              {isKo ? '트레이가 위아래로 경사지는 구간' : 'Tray slopes up or down'}
+            </span>
+          </button>
+          <button
+            className={`${s.direction_card} ${direction === 'horizontal' ? s.direction_active : ''}`}
+            onClick={() => setDirection('horizontal')}
+            aria-label={isKo ? '좌우 꺾임 선택' : 'Select horizontal bend'}
+          >
+            <span className={s.dir_icon}>⬅️➡️</span>
+            <span className={s.dir_label}>{isKo ? '좌우 꺾임 (수평)' : 'Horizontal Bend'}</span>
+            <span className={s.dir_desc}>
+              {isKo ? '트레이가 평면에서 방향을 바꾸는 구간' : 'Tray changes direction on a flat plane'}
+            </span>
+          </button>
         </div>
 
-        {/* ── TAB 1: 경사 길이 ── */}
-        {activeTab === 'length' && (
-          <div role="tabpanel">
-            {sharedInputs}
-
-            {hasValidInput && isVertical && (
-              <div className={s.vertical_box}>
-                ⚠️ {isKo
-                  ? '수직 상승/하강 구간 (Vertical Riser)입니다. 사선 길이 = 높이 차'
-                  : 'Vertical Riser segment. Slope length = height difference'}
-              </div>
-            )}
-
-            {hasValidInput && (
-              <>
-                <div className={s.result_row} style={{ paddingTop: 0 }}>
-                  <span className={s.result_label}>{isKo ? '사선 길이' : 'Slope Length'}</span>
-                  <span>
-                    <span className={s.result_primary}>{slopeLength.toFixed(2)}</span>
-                    <span className={s.result_unit}>m</span>
-                  </span>
-                </div>
-                <div className={s.result_row}>
-                  <span className={s.result_label}>{isKo ? '높이 차' : 'Height Difference'}</span>
-                  <span className={s.result_value}>{heightDiff.toFixed(2)} m</span>
-                </div>
-                <div className={s.result_row}>
-                  <span className={s.result_label}>{isKo ? '경사각 (참고)' : 'Angle (ref)'}</span>
-                  <span className={s.result_value}>{slopeAngle.toFixed(1)}°</span>
-                </div>
-
-                <div className={s.divider} />
-
-                <p style={{ fontSize: '0.82rem', fontWeight: 600, color: '#64748b', marginBottom: '0.5rem' }}>
-                  {isKo ? '여유분 포함 권장 주문량' : 'Recommended Order Qty (with margin)'}
-                </p>
-                <div className={s.order_grid}>
-                  <div className={s.order_card}>
-                    <div className={s.order_label}>{isKo ? '5% 여유' : '5% margin'}</div>
-                    <div className={s.order_value}>{(slopeLength * 1.05).toFixed(2)} m</div>
-                  </div>
-                  <div className={s.order_card}>
-                    <div className={s.order_label}>{isKo ? '10% 여유' : '10% margin'}</div>
-                    <div className={s.order_value}>{(slopeLength * 1.10).toFixed(2)} m</div>
-                  </div>
-                </div>
-
-                {/* SVG 단면도 */}
-                {coords && (
-                  <div className={s.svg_wrap}>
-                    <svg
-                      viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-                      width="100%"
-                      style={{ maxWidth: '400px' }}
-                      aria-label={isKo ? '케이블 트레이 단면도' : 'Cable tray cross-section diagram'}
-                    >
-                      {/* 보조선 */}
-                      {!isVertical && (
-                        <>
-                          <line
-                            x1={coords.startX} y1={coords.endY}
-                            x2={coords.endX}   y2={coords.endY}
-                            stroke="#e2e8f0" strokeWidth="1" strokeDasharray="4 2"
-                          />
-                          <line
-                            x1={coords.startX} y1={coords.startY}
-                            x2={coords.startX} y2={coords.endY}
-                            stroke="#e2e8f0" strokeWidth="1" strokeDasharray="4 2"
-                          />
-                        </>
-                      )}
-                      {/* 사선 */}
-                      <line
-                        x1={coords.startX} y1={coords.startY}
-                        x2={coords.endX}   y2={coords.endY}
-                        stroke="#8b5cf6" strokeWidth="2.5"
-                        strokeLinecap="round"
-                      />
-                      {/* 레이블 */}
-                      <text x={coords.labelH1.x} y={coords.labelH1.y}
-                        fontSize="9" fill="#8b5cf6" fontWeight="bold">H1</text>
-                      <text x={coords.labelH2.x} y={coords.labelH2.y}
-                        fontSize="9" fill="#64748b">H2</text>
-                      {coords.labelL && (
-                        <text x={coords.labelL.x} y={coords.labelL.y}
-                          fontSize="9" fill="#64748b" textAnchor="middle">L</text>
-                      )}
-                      <text x={coords.labelSlope.x} y={coords.labelSlope.y}
-                        fontSize="8" fill="#8b5cf6" textAnchor="middle">
-                        {slopeLength.toFixed(2)}m
-                      </text>
-                    </svg>
-                  </div>
-                )}
-
-                <button className={s.copy_btn} onClick={handleCopy} aria-label={isKo ? '결과 복사' : 'Copy results'}>
-                  <Copy size={14} /> {isKo ? '결과 복사' : 'Copy results'}
-                </button>
-                {copyMsg && (
-                  <p className={`${s.copy_msg} ${copyMsg.includes('❌') ? s.copy_msg_fail : ''}`}>{copyMsg}</p>
-                )}
-              </>
-            )}
-
-            {!hasValidInput && (
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', textAlign: 'center', padding: '1.5rem 0' }}>
-                {isKo ? 'H1, H2, L을 모두 입력하면 결과가 표시됩니다.' : 'Enter H1, H2, and L to see results.'}
-              </p>
-            )}
+        <div className={s.spec_grid}>
+          <div>
+            <label className={s.field_label}>{isKo ? '트레이 폭 (mm)' : 'Tray Width (mm)'}</label>
+            <select className={s.select_field} value={trayWidth}
+              onChange={e => setTrayWidth(Number(e.target.value))}
+              aria-label={isKo ? '트레이 폭 선택' : 'Select tray width'}>
+              {TRAY_WIDTHS.map(w => <option key={w} value={w}>{w}mm</option>)}
+            </select>
           </div>
-        )}
-
-        {/* ── TAB 2: 경사각 ── */}
-        {activeTab === 'angle' && (
-          <div role="tabpanel">
-            {sharedInputs}
-
-            {hasValidInput && isVertical && (
-              <div className={s.vertical_box}>
-                ⚠️ {isKo
-                  ? '수직 상승/하강 구간 (Vertical Riser)입니다.'
-                  : 'Vertical Riser segment.'}
-              </div>
-            )}
-
-            {hasValidInput && (
-              <>
-                <div className={s.result_row} style={{ paddingTop: 0 }}>
-                  <span className={s.result_label}>{isKo ? '실제 경사각' : 'Slope Angle'}</span>
-                  <span>
-                    <span className={s.result_primary}>{slopeAngle.toFixed(1)}</span>
-                    <span className={s.result_unit}>°</span>
-                  </span>
-                </div>
-
-                <div className={s.divider} />
-
-                <p style={{ fontSize: '0.82rem', fontWeight: 600, color: '#64748b', marginBottom: '0.75rem' }}>
-                  {isKo ? '권장 엘보 규격' : 'Recommended Elbow'}
-                </p>
-                <span className={s.elbow_badge}>{elbow.label}</span>
-                {elbow.warning && (
-                  <div className={s.elbow_warning}>{elbow.warning}</div>
-                )}
-
-                <button className={s.copy_btn} onClick={handleCopy} aria-label={isKo ? '결과 복사' : 'Copy results'}>
-                  <Copy size={14} /> {isKo ? '결과 복사' : 'Copy results'}
-                </button>
-                {copyMsg && (
-                  <p className={`${s.copy_msg} ${copyMsg.includes('❌') ? s.copy_msg_fail : ''}`}>{copyMsg}</p>
-                )}
-              </>
-            )}
-
-            {!hasValidInput && (
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', textAlign: 'center', padding: '1.5rem 0' }}>
-                {isKo ? 'H1, H2, L을 모두 입력하면 결과가 표시됩니다.' : 'Enter H1, H2, and L to see results.'}
-              </p>
-            )}
+          <div>
+            <label className={s.field_label}>{isKo ? '옆면 높이 (mm)' : 'Side Height (mm)'}</label>
+            <select className={s.select_field} value={trayHeight}
+              onChange={e => setTrayHeight(Number(e.target.value))}
+              aria-label={isKo ? '옆면 높이 선택' : 'Select side height'}>
+              {TRAY_HEIGHTS.map(h => <option key={h} value={h}>{h}mm</option>)}
+            </select>
+            <p className={s.field_hint}>
+              {isKo ? '측면 레일 높이 (현장 보통 100mm)' : 'Side rail height (usually 100mm)'}
+            </p>
           </div>
-        )}
-
-        {/* ── TAB 3: 행거 간격 ── */}
-        {activeTab === 'hanger' && (
-          <div role="tabpanel">
-            {sharedInputs}
-
-            {/* Tab-3 only inputs */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div>
-                <label className={s.field_label}>{isKo ? '트레이 폭 (mm)' : 'Tray Width (mm)'}</label>
-                <select
-                  className={s.select_field}
-                  value={trayWidth}
-                  onChange={e => setTrayWidth(Number(e.target.value))}
-                  aria-label={isKo ? '트레이 폭 선택' : 'Select tray width'}
-                >
-                  {TRAY_WIDTHS.map(w => (
-                    <option key={w} value={w}>{w} mm</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className={s.field_label}>{isKo ? '설치 환경' : 'Environment'}</label>
-                <select
-                  className={s.select_field}
-                  value={environment}
-                  onChange={e => setEnvironment(e.target.value)}
-                  aria-label={isKo ? '설치 환경 선택' : 'Select installation environment'}
-                >
-                  <option value="indoor">{isKo ? '실내 일반' : 'Indoor (standard)'}</option>
-                  <option value="outdoor">{isKo ? '실외·부식 환경' : 'Outdoor / Corrosive'}</option>
-                  <option value="vibration">{isKo ? '진동 있음' : 'Vibration present'}</option>
-                </select>
-              </div>
-            </div>
-
-            {hasValidInput && (
-              <>
-                <div className={s.result_row} style={{ paddingTop: 0 }}>
-                  <span className={s.result_label}>{isKo ? '권장 행거 간격' : 'Hanger Interval'}</span>
-                  <span>
-                    <span className={s.result_primary}>{hangerInterval.toFixed(2)}</span>
-                    <span className={s.result_unit}>m</span>
-                  </span>
-                </div>
-                <div className={s.result_row}>
-                  <span className={s.result_label}>{isKo ? '필요 행거 개수' : 'Hangers Required'}</span>
-                  <span className={s.result_value}>{hangerCount}{isKo ? '개' : ' pcs'}</span>
-                </div>
-                <div className={s.result_row}>
-                  <span className={s.result_label}>{isKo ? '트레이 사선 길이' : 'Slope Length'}</span>
-                  <span className={s.result_value}>{slopeLength.toFixed(2)} m</span>
-                </div>
-                <div className={s.result_row}>
-                  <span className={s.result_label}>{isKo ? '경사각' : 'Slope Angle'}</span>
-                  <span className={s.result_value}>{slopeAngle.toFixed(1)}°</span>
-                </div>
-
-                <p style={{ fontSize: '0.82rem', fontWeight: 600, color: '#64748b', marginTop: '1rem', marginBottom: '0.25rem' }}>
-                  {isKo ? '행거 위치 목록' : 'Hanger Positions'}
-                </p>
-                <div className={s.hanger_list}>
-                  {hangerPositions.map((pos, i) => (
-                    <div
-                      key={i}
-                      className={`${s.hanger_item} ${i === 0 ? s.hanger_item_first : ''} ${i === hangerPositions.length - 1 ? s.hanger_item_last : ''}`}
-                    >
-                      {i + 1}{isKo ? '번 행거' : '. hanger'}: {pos}m
-                      {i === 0 ? (isKo ? ' (시작점)' : ' (start)') : ''}
-                      {i === hangerPositions.length - 1 ? (isKo ? ' (끝점)' : ' (end)') : ''}
-                    </div>
-                  ))}
-                </div>
-
-                <button className={s.copy_btn} onClick={handleCopy} aria-label={isKo ? '결과 복사' : 'Copy results'}>
-                  <Copy size={14} /> {isKo ? '결과 복사' : 'Copy results'}
-                </button>
-                {copyMsg && (
-                  <p className={`${s.copy_msg} ${copyMsg.includes('❌') ? s.copy_msg_fail : ''}`}>{copyMsg}</p>
-                )}
-              </>
-            )}
-
-            {!hasValidInput && (
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', textAlign: 'center', padding: '1.5rem 0' }}>
-                {isKo ? 'H1, H2, L을 모두 입력하면 결과가 표시됩니다.' : 'Enter H1, H2, and L to see results.'}
-              </p>
-            )}
-          </div>
-        )}
+        </div>
       </section>
 
-      {/* Bottom 7 sections */}
+      {/* ── STEP 2 ── */}
+      {step1Done && (
+        <section className={s.step_card}>
+          <div className={s.step_label}>STEP 2</div>
+          <h2 className={s.step_title}>{isKo ? '각도 입력' : 'Angle Input'}</h2>
+
+          <div className={s.mode_toggle}>
+            <button
+              className={`${s.mode_btn} ${inputMode === 'preset' ? s.mode_active : ''}`}
+              onClick={() => setInputMode('preset')}
+              aria-label={isKo ? '프리셋 모드' : 'Preset mode'}
+            >
+              {isKo ? '프리셋' : 'Preset'}
+            </button>
+            <button
+              className={`${s.mode_btn} ${inputMode === 'manual' ? s.mode_active : ''}`}
+              onClick={() => setInputMode('manual')}
+              aria-label={isKo ? '수동 입력 모드' : 'Manual input mode'}
+            >
+              {isKo ? '수동 입력' : 'Manual'}
+            </button>
+          </div>
+
+          {inputMode === 'preset' ? (
+            <>
+              <div className={s.preset_grid}>
+                {([30, 45, 60] as const).map(a => (
+                  <button
+                    key={a}
+                    className={`${s.preset_btn} ${presetAngle === a ? s.preset_active : ''}`}
+                    onClick={() => setPresetAngle(a)}
+                    aria-label={`${a}도 선택`}
+                  >
+                    {a}°
+                  </button>
+                ))}
+              </div>
+              <div style={{ marginTop: '1.25rem' }}>
+                <label className={s.field_label}>{isKo ? '높이 H (m)' : 'Height H (m)'}</label>
+                <input
+                  type="number" step="0.01" min="0"
+                  placeholder={isKo ? '예: 0.25' : 'e.g. 0.25'}
+                  className={s.field_input}
+                  value={presetH}
+                  onChange={e => setPresetH(e.target.value)}
+                  aria-label={isKo ? '높이 입력' : 'Height input'}
+                />
+              </div>
+            </>
+          ) : (
+            <div className={s.spec_grid}>
+              <div>
+                <label className={s.field_label}>{isKo ? '높이 H (m)' : 'Height H (m)'}</label>
+                <input
+                  type="number" step="0.01" min="0"
+                  placeholder={isKo ? '예: 0.25' : 'e.g. 0.25'}
+                  className={s.field_input}
+                  value={manualH}
+                  onChange={e => setManualH(e.target.value)}
+                  aria-label={isKo ? '높이 입력' : 'Height input'}
+                />
+              </div>
+              <div>
+                <label className={s.field_label}>{isKo ? '수평 거리 L (m)' : 'Horizontal L (m)'}</label>
+                <input
+                  type="number" step="0.01" min="0"
+                  placeholder={isKo ? '예: 0.43' : 'e.g. 0.43'}
+                  className={s.field_input}
+                  value={manualL}
+                  onChange={e => setManualL(e.target.value)}
+                  aria-label={isKo ? '수평 거리 입력' : 'Horizontal distance input'}
+                />
+                <p className={s.field_hint}>
+                  {isKo ? '수직 상승 구간은 L에 0 입력' : 'Enter 0 for vertical riser'}
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ── STEP 3 ── */}
+      {step1Done && hasValidCalc && (
+        <section className={s.step_card}>
+          <div className={s.step_label}>STEP 3</div>
+          <h2 className={s.step_title}>{isKo ? '경사 계산 결과' : 'Slope Results'}</h2>
+
+          {isVertical && (
+            <div className={s.warn_box}>
+              ⚠️ {isKo
+                ? '수직 상승/하강 구간 (Vertical Riser)입니다.'
+                : 'Vertical Riser segment.'}
+            </div>
+          )}
+
+          <div className={s.result_big_grid}>
+            <div className={s.result_big}>
+              <div>
+                <span className={s.result_num}>{angle.toFixed(1)}</span>
+                <span className={s.result_unit}>°</span>
+              </div>
+              <div className={s.result_label}>{isKo ? '경사각' : 'Slope Angle'}</div>
+            </div>
+            <div className={s.result_big}>
+              <div>
+                <span className={s.result_num}>{slopeLength.toFixed(2)}</span>
+                <span className={s.result_unit}>m</span>
+              </div>
+              <div className={s.result_label}>{isKo ? '사선 길이' : 'Slope Length'}</div>
+            </div>
+          </div>
+
+          <div className={s.result_sub_grid}>
+            <div className={s.result_sub}>
+              <span>{isKo ? '수평 거리' : 'Horizontal'}</span>
+              <strong>{L.toFixed(2)}m</strong>
+            </div>
+            <div className={s.result_sub}>
+              <span>{isKo ? '높이 차' : 'Height Diff'}</span>
+              <strong>{H.toFixed(2)}m</strong>
+            </div>
+            <div className={s.result_sub}>
+              <span>{isKo ? '5% 여유 주문량' : '+5% order qty'}</span>
+              <strong>{(slopeLength * 1.05).toFixed(2)}m</strong>
+            </div>
+            <div className={s.result_sub}>
+              <span>{isKo ? '10% 여유 주문량' : '+10% order qty'}</span>
+              <strong>{(slopeLength * 1.10).toFixed(2)}m</strong>
+            </div>
+          </div>
+
+          <div className={s.elbow_row}>
+            <span className={s.field_label}>{isKo ? '권장 엘보 규격' : 'Recommended Elbow'}</span>
+            <span className={s.elbow_badge}>{elbow.label}</span>
+          </div>
+          {elbow.warning && <div className={s.warn_box} style={{ marginTop: '0.75rem' }}>{elbow.warning}</div>}
+        </section>
+      )}
+
+      {/* ── STEP 4 ── */}
+      {step1Done && hasValidCalc && !isVertical && angle > 0 && (
+        <section className={s.step_card}>
+          <div className={s.step_label}>STEP 4</div>
+          <h2 className={s.step_title}>{isKo ? 'V-컷 가공 수치' : 'V-Cut Fabrication Dimensions'}</h2>
+
+          <p className={s.step_hint}>
+            {isKo
+              ? `기준 치수: ${direction === 'vertical' ? '옆면 높이' : '트레이 폭'} ${refDim}mm`
+              : `Reference: ${direction === 'vertical' ? 'Side height' : 'Tray width'} ${refDim}mm`}
+          </p>
+
+          <div className={s.vcut_grid}>
+            <div className={s.vcut_card}>
+              <div className={s.vcut_num} style={{ color: '#ef4444' }}>{vCutHalf.toFixed(1)}</div>
+              <div className={s.vcut_unit}>mm</div>
+              <div className={s.vcut_label}>{isKo ? '기준선 한쪽' : 'Half width'}</div>
+              <div className={s.vcut_badge}>{isKo ? '★ 마킹 핵심' : '★ Key mark'}</div>
+            </div>
+            <div className={s.vcut_card}>
+              <div className={s.vcut_num}>{vCutFull.toFixed(1)}</div>
+              <div className={s.vcut_unit}>mm</div>
+              <div className={s.vcut_label}>{isKo ? 'V-컷 전체 폭' : 'Full V-cut width'}</div>
+            </div>
+            <div className={s.vcut_card}>
+              <div className={s.vcut_num}>{markingA.toFixed(0)}</div>
+              <div className={s.vcut_unit}>mm</div>
+              <div className={s.vcut_label}>{isKo ? '마킹 간격 A' : 'Marking interval A'}</div>
+            </div>
+            <div className={s.vcut_card}>
+              <div className={s.vcut_num}>±70</div>
+              <div className={s.vcut_unit}>mm / Ø14</div>
+              <div className={s.vcut_label}>{isKo ? '타공 위치' : 'Bolt hole position'}</div>
+            </div>
+          </div>
+
+          {direction === 'vertical' && (
+            <div className={s.warn_box}>
+              ⚠️ {isKo
+                ? '수직 꺾임 시 트레이 하단 날개(플랜지)는 절대 절단하지 마세요. 케이블 처짐 및 구조 약화 위험.'
+                : 'Never cut the bottom flange on vertical bends. Risk of cable sag and structural weakening.'}
+            </div>
+          )}
+          {warn45 && (
+            <div className={s.warn_box}>
+              ⚠️ {isKo
+                ? '45° 초과 각도는 단일 V-컷이 어렵습니다. 45° 2회 분할 시공을 권장합니다.'
+                : 'V-cut is not practical above 45°. Use two 45° cuts instead.'}
+            </div>
+          )}
+          {warnVcut80 && (
+            <div className={s.warn_box}>
+              ⚠️ {isKo
+                ? 'V-컷 폭이 기준 치수의 80%를 초과합니다. 재료가 약해질 수 있으니 주의하세요.'
+                : 'V-cut width exceeds 80% of the reference dimension. Material may be weakened.'}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ── STEP 5 ── */}
+      {step1Done && hasValidCalc && (
+        <section className={s.step_card}>
+          <div className={s.step_label}>STEP 5</div>
+          <h2 className={s.step_title}>{isKo ? 'SVG 가공 도면' : 'Fabrication Diagram'}</h2>
+          <p className={s.step_hint}>
+            {isKo
+              ? '줄자로 기준선에서 수치를 재고 바로 마킹하세요.'
+              : 'Measure from the center line and mark directly on the tray.'}
+          </p>
+          <div className={s.svg_wrap}>
+            <FabSVG
+              angle={angle}
+              vCutHalf={vCutHalf}
+              vCutFull={vCutFull}
+              markingA={markingA}
+              refDim={refDim}
+              isKo={isKo}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* ── STEP 6 ── */}
+      {step1Done && hasValidCalc && (
+        <section className={s.step_card}>
+          <div className={s.step_label}>STEP 6</div>
+          <h2 className={s.step_title}>{isKo ? '행거 간격 계산' : 'Hanger Spacing'}</h2>
+
+          <div className={s.radio_group}>
+            {([
+              ['indoor',    isKo ? '실내 일반'      : 'Indoor (standard)',     '× 1.0'],
+              ['outdoor',   isKo ? '실외·부식 환경' : 'Outdoor / Corrosive',   '× 0.8'],
+              ['vibration', isKo ? '진동 있음'       : 'Vibration present',    '× 0.7'],
+            ] as const).map(([val, label, factor]) => (
+              <label
+                key={val}
+                className={`${s.radio_label} ${environment === val ? s.radio_active : ''}`}
+              >
+                <input
+                  type="radio" name="env" value={val}
+                  checked={environment === val}
+                  onChange={() => setEnvironment(val)}
+                  className={s.radio_input}
+                  aria-label={label}
+                />
+                <span className={s.radio_text}>{label}</span>
+                <span className={s.radio_factor}>{factor}</span>
+              </label>
+            ))}
+          </div>
+
+          <div className={s.result_big} style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+            <span className={s.result_num}>{hangerInterval.toFixed(2)}</span>
+            <span className={s.result_unit}>m</span>
+            <div className={s.result_label} style={{ marginTop: '0.25rem' }}>
+              {isKo ? '권장 행거 간격' : 'Recommended Hanger Spacing'}
+            </div>
+          </div>
+
+          <div className={s.result_sub_grid} style={{ marginTop: '1rem' }}>
+            <div className={s.result_sub}>
+              <span>{isKo ? '트레이 폭' : 'Tray width'}</span>
+              <strong>{trayWidth}mm</strong>
+            </div>
+            <div className={s.result_sub}>
+              <span>{isKo ? '기본 간격' : 'Base spacing'}</span>
+              <strong>{BASE_INTERVAL[trayWidth]}m</strong>
+            </div>
+            <div className={s.result_sub}>
+              <span>{isKo ? '경사각 계수' : 'Angle factor'}</span>
+              <strong>{getAngleFactor(angle)}</strong>
+            </div>
+            <div className={s.result_sub}>
+              <span>{isKo ? '환경 계수' : 'Env. factor'}</span>
+              <strong>{ENV_FACTOR[environment]}</strong>
+            </div>
+          </div>
+
+          <button
+            className={s.copy_btn}
+            onClick={handleCopy}
+            aria-label={isKo ? '전체 결과 복사' : 'Copy all results'}
+          >
+            <Copy size={14} />
+            {isKo ? '전체 결과 복사' : 'Copy all results'}
+          </button>
+          {copyMsg && (
+            <p className={`${s.copy_msg} ${copyMsg.includes('❌') ? s.copy_msg_fail : ''}`}>
+              {copyMsg}
+            </p>
+          )}
+        </section>
+      )}
+
+      {/* Bottom sections */}
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utility/cable-tray-calc" />
-      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
+      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">
+        AD
+      </div>
       <SeoSection
         ko={{
-          title: '케이블 트레이 경사 계산기란 무엇인가요?',
-          description: '케이블 트레이 경사 계산기는 전기공사 현장에서 케이블 트레이를 경사지게 설치할 때 필요한 모든 수치를 즉시 계산해주는 현장 실무 도구입니다. 시작 높이, 끝 높이, 수평 거리를 한 번만 입력하면 탭을 전환해도 입력값이 유지되어 사선 길이, 경사각, 행거 간격을 연속으로 확인할 수 있습니다. 수직 상승/하강 구간(Vertical Riser)도 지원하며, 수평 거리를 0으로 입력하면 90° 수직 구간으로 자동 처리됩니다. 경사각에 따라 10°·15°·22.5°·30°·45° 표준 엘보 규격을 자동으로 추천하며, 행거 간격은 트레이 폭·경사각·설치 환경을 모두 고려해 산출하고 행거 위치 목록까지 제공합니다. 현장에서 스마트폰으로 바로 꺼내 쓸 수 있도록 최적화되어 있습니다.',
+          title: '케이블 트레이 경사 & 가공 계산기란 무엇인가요?',
+          description: '케이블 트레이 경사 & 가공 계산기는 전기공사 현장에서 케이블 트레이를 경사 구간에 직접 가공할 때 필요한 모든 수치를 즉시 제공하는 실무 도구입니다. 현장 국룰 각도인 30°·45°·60° 프리셋 버튼 하나로 V-컷 절단폭, 타공 위치, 마킹 간격을 자동 산출하며, SVG 가공 도면으로 줄자를 대고 바로 마킹할 수 있습니다. 상하 꺾임과 좌우 꺾임을 구분하여 각각 정확한 V-컷 공식을 적용하고, 수직 구간과 45° 초과 분할 시공 경고도 자동으로 안내합니다. 행거 간격은 트레이 폭, 경사각, 설치 환경을 모두 고려한 KEC 실무 기준으로 산출합니다. 스마트폰으로도 편리하게 사용할 수 있도록 단일 스크롤 구조로 설계되어 현장에서 빠르게 확인하고 결과를 복사해 동료와 공유할 수 있습니다.',
           useCases: [
-            { icon: '📦', title: '트레이 재료 수량 산출', desc: '현장 구조물 변경으로 트레이 경로가 바뀌었을 때, 시작·끝 높이와 수평 거리만 입력하면 실제 사선 길이와 여유분 포함 권장 주문량을 즉시 계산할 수 있습니다.' },
-            { icon: '🔧', title: '엘보 규격 즉시 확인', desc: '경사각을 직접 계산하기 어려운 현장에서 높이와 거리만 입력하면 10°·15°·22.5°·30°·45° 중 적합한 엘보 규격을 자동으로 추천해드립니다.' },
-            { icon: '🔩', title: '행거 설치 계획 수립', desc: '경사각과 트레이 폭, 설치 환경에 따라 행거 간격과 필요 개수를 자동 산출하고 행거 위치 목록까지 제공해 시공 계획을 빠르게 수립할 수 있습니다.' },
-            { icon: '📱', title: '수직 구간(Vertical Riser) 계산', desc: '수평 거리가 0인 수직 상승·하강 구간도 지원합니다. 수평 거리에 0을 입력하면 90° 수직 구간으로 자동 처리되어 사선 길이와 행거 간격을 바로 확인할 수 있습니다.' },
+            { icon: '✂️', title: 'V-컷 가공 수치 즉시 산출', desc: '현장에서 그라인더로 V-컷을 넣기 전, 기준선 한쪽과 전체 절단폭을 즉시 계산합니다. 상하/좌우 꺾임 방향에 따라 올바른 기준 치수(옆면 높이 또는 트레이 폭)를 자동 선택합니다.' },
+            { icon: '📐', title: 'SVG 도면으로 현장 마킹', desc: 'SVG 가공 도면에 V-컷 위치, 타공 원(Ø14), 기준선이 시각적으로 표시되어 스마트폰 화면을 보며 줄자를 대고 바로 마킹할 수 있습니다. 도면 인쇄나 별도 앱이 필요 없습니다.' },
+            { icon: '📏', title: '사선 길이 및 엘보 규격 확인', desc: '경사각을 직접 계산하기 어려운 현장에서 높이와 거리만 입력하면 사선 길이와 10°·15°·22.5°·30°·45° 중 적합한 엘보 규격을 자동으로 추천합니다.' },
+            { icon: '🔩', title: '행거 간격 설치 계획 수립', desc: '트레이 폭, 경사각, 실내/실외/진동 환경 계수를 조합해 KEC 기준 권장 행거 간격을 즉시 산출합니다. 전체 결과를 한 번에 복사해 현장 팀과 즉시 공유할 수 있습니다.' },
           ],
           steps: [
-            { step: '입력값 입력', desc: '시작 높이(H1), 끝 높이(H2), 수평 거리(L)를 미터(m) 단위로 입력합니다. 수직 상승·하강 구간은 수평 거리에 0을 입력하세요. 한 번 입력한 값은 탭을 전환해도 유지됩니다.' },
-            { step: '경사 길이 확인', desc: '경사 길이 탭에서 실제 사선 길이와 여유분 포함 권장 주문량을 확인합니다. SVG 단면도로 트레이 형태를 시각적으로 확인할 수 있습니다.' },
-            { step: '경사각 및 엘보 확인', desc: '경사각 탭에서 자동으로 계산된 경사각과 권장 엘보 규격을 확인합니다. 45° 초과 시 분할 시공 안내가 표시됩니다.' },
-            { step: '행거 간격 계획', desc: '행거 간격 탭에서 트레이 폭과 설치 환경을 추가로 선택하면 권장 행거 간격과 위치 목록이 자동으로 계산됩니다. 결과 복사 버튼으로 동료와 즉시 공유하세요.' },
+            { step: 'STEP 1 — 방향 & 규격 선택', desc: '상하 꺾임(수직) 또는 좌우 꺾임(수평) 중 하나를 선택하고, 트레이 폭과 옆면 높이를 셀렉트에서 고릅니다. V-컷 기준 치수가 이 선택에 따라 자동 결정됩니다.' },
+            { step: 'STEP 2 — 각도 입력', desc: '프리셋 모드에서 30°/45°/60° 중 하나를 선택하고 높이 H를 입력하면 사선 길이와 수평 거리가 자동 산출됩니다. 수동 모드에서는 실측 H와 L을 직접 입력하고, L=0이면 수직 구간으로 처리됩니다.' },
+            { step: 'STEP 3~5 — 결과 확인 & 도면', desc: 'STEP 3에서 경사각, 사선 길이, 엘보 규격을, STEP 4에서 V-컷 한쪽·전체·마킹 간격 A·타공 위치를 확인합니다. STEP 5 SVG 도면을 보며 트레이에 줄자로 직접 마킹하세요.' },
+            { step: 'STEP 6 — 행거 간격 & 결과 복사', desc: '설치 환경(실내/실외/진동)을 선택하면 KEC 기준 행거 간격이 즉시 계산됩니다. 하단 "전체 결과 복사" 버튼으로 모든 수치를 클립보드에 복사해 동료와 공유하세요.' },
           ],
           faqs: [
-            { q: '탭을 전환하면 입력값이 초기화되나요?', a: '아닙니다. 시작 높이, 끝 높이, 수평 거리는 세 탭 모두 동일한 값을 공유합니다. 한 탭에서 입력한 값은 다른 탭으로 전환해도 그대로 유지되므로 중복 입력할 필요가 없습니다. 행거 간격 탭에서는 트레이 폭과 설치 환경만 추가로 선택하면 됩니다.' },
-            { q: '수직 상승/하강 구간(Vertical Riser)도 계산되나요?', a: '네, 지원합니다. 수평 거리(L)에 0을 입력하면 90° 수직 구간으로 자동 처리됩니다. 수직 구간에서는 사선 길이가 높이 차와 동일하게 계산되며, 엘보 규격 추천 대신 수직 구간 안내가 표시됩니다. 행거 간격도 수직 구간 기준(경사 계수 0.40)으로 산출됩니다.' },
-            { q: '행거 간격 기준은 어떤 규정을 따르나요?', a: '행거 간격은 KEC(한국전기설비규정) 및 현장 실무 기준을 바탕으로 트레이 폭, 경사각, 설치 환경을 종합해 산출합니다. 경사각이 클수록, 트레이가 넓을수록, 실외·진동 환경일수록 간격이 줄어듭니다. 최종 간격은 반드시 현장 감리 및 설계 기준과 대조하여 확인하시기 바랍니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 실제 시공 시에는 반드시 설계도서, 감리 지침, KEC 규정을 기준으로 확인하시기 바랍니다.' },
+            { q: 'V-컷 공식이 상하 꺾임과 좌우 꺾임에서 왜 다른가요?', a: '상하 꺾임은 트레이 옆면(레일)에 V-컷을 넣기 때문에 기준 치수가 옆면 높이(보통 100mm)이고, 좌우 꺾임은 트레이 상면 폭 전체에 V-컷을 넣기 때문에 기준 치수가 트레이 폭(예: 200mm)입니다. 공식 자체는 기준치수 × tan(각도/2)로 동일하지만, 입력 치수가 달라 결과가 크게 차이납니다.' },
+            { q: '수직 구간(L=0)도 계산되나요?', a: '네, 지원합니다. 수동 모드에서 수평 거리(L)에 0을 입력하면 90° 수직 구간으로 자동 처리됩니다. 수직 구간은 V-컷 가공이 불필요하며, 직각 절단 후 별도 수직 연결구를 사용하도록 안내됩니다. 행거 간격도 수직 계수(0.40)로 자동 계산됩니다.' },
+            { q: '행거 간격 기준은 어떤 규정을 따르나요?', a: '행거 간격은 KEC(한국전기설비규정) 실무 기준을 바탕으로 트레이 폭별 기본 간격(100~200mm: 1.5m, 300~450mm: 2.0m, 600mm: 1.5m)에 경사각 계수(0.40~1.0)와 환경 계수(실내 1.0, 실외 0.8, 진동 0.7)를 곱해 산출합니다. 최종 수치는 현장 감리 및 설계 기준과 대조하여 확인하시기 바랍니다.' },
+            { q: '45° 초과 각도를 선택하면 어떻게 되나요?', a: '45°를 초과하는 각도는 단일 V-컷 가공이 구조적으로 어렵습니다. 이 경우 도구는 V-컷 수치를 계산하되 주황색 경고 박스로 "45° 2회 분할 시공"을 권장합니다. 또한 V-컷 전체 폭이 기준 치수의 80%를 초과하면 재료 약화 경고도 별도로 표시됩니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 현장 참고용으로만 제공됩니다. 실제 시공 시에는 반드시 설계도서, 감리 지침, KEC 규정을 기준으로 확인하시기 바랍니다.' },
           ],
         }}
         en={{
-          title: 'What is Cable Tray Slope Calculator?',
-          description: 'The Cable Tray Slope Calculator is a field-ready tool for electrical construction workers who need to quickly calculate slope length, angle, and hanger spacing for inclined cable tray installations. Enter the start height, end height, and horizontal distance once — your inputs are shared across all three tabs, so you can switch between slope length, angle, and hanger spacing results without re-entering data. Vertical riser segments (L=0) are fully supported: entering a horizontal distance of 0 automatically treats the segment as a 90° vertical riser and adjusts all calculations accordingly. The angle tab automatically recommends the correct standard elbow size (10°, 15°, 22.5°, 30°, or 45°) and warns when the angle exceeds 45°. The hanger tab accounts for tray width, slope angle, and installation environment to output the recommended spacing interval and a complete hanger position list, calculated using index-based arithmetic to eliminate floating-point accumulation errors. All calculations run client-side in your browser — no server, no login required.',
+          title: 'What is the Cable Tray Slope & Fabrication Calculator?',
+          description: 'The Cable Tray Slope & Fabrication Calculator is a field-ready tool for electrical construction workers who need to quickly calculate V-cut dimensions, bolt hole positions, slope length, and hanger spacing for inclined cable tray installations. Select the bend direction (vertical or horizontal), choose a preset angle (30°/45°/60°) or enter measured height and distance manually, and the tool instantly outputs V-cut half width, full width, marking interval A, and a to-scale SVG fabrication diagram you can use with a measuring tape on-site. Warnings are shown automatically for vertical risers, angles above 45°, and V-cut widths exceeding 80% of the reference dimension. Hanger spacing is calculated using KEC field practice guidelines, accounting for tray width, slope angle, and installation environment. All results can be copied in one tap to share with your team.',
           useCases: [
-            { icon: '📦', title: 'Material Quantity Estimation', desc: 'When a cable tray route changes on-site, enter the new start and end heights and horizontal distance to instantly get the actual slope length and recommended order quantity with 5% and 10% safety margins.' },
-            { icon: '🔧', title: 'Elbow Size Lookup', desc: 'On sites where calculating the exact slope angle by hand is impractical, input height and distance values to instantly receive the correct standard elbow size recommendation from 10° up to 45°.' },
-            { icon: '🔩', title: 'Hanger Installation Planning', desc: 'Select the tray width and installation environment to automatically calculate hanger spacing interval, total hanger count, and a complete numbered hanger position list for immediate use in construction planning.' },
-            { icon: '📱', title: 'Vertical Riser Calculation', desc: 'Supports vertical riser segments where the horizontal distance is zero. Enter L=0 to switch to 90° vertical mode — slope length equals height difference and hanger spacing adjusts to the vertical factor automatically.' },
+            { icon: '✂️', title: 'V-Cut Dimensions On-Site', desc: 'Before grinding a V-cut into a tray, get the exact half-width and full-width in millimeters. The tool automatically selects the correct reference dimension — side height for vertical bends, tray width for horizontal bends — so there is no guesswork.' },
+            { icon: '📐', title: 'SVG Diagram for Direct Marking', desc: 'The SVG fabrication diagram shows V-cut lines, bolt hole circles (Ø14), and the center reference line to scale so you can hold your phone next to the tray and mark directly with a tape measure. No printing or separate app required.' },
+            { icon: '📏', title: 'Slope Length and Elbow Selection', desc: 'Enter height and distance or select a preset angle to get the actual slope length with 5% and 10% safety margins, and the correct standard elbow size (10° to 45°) automatically recommended from your calculated angle.' },
+            { icon: '🔩', title: 'Hanger Spacing Planning', desc: 'Select the tray width and installation environment to compute the recommended hanger interval per KEC guidelines, combining base spacing, slope angle factor, and environment factor. Copy all results at once to share with your crew.' },
           ],
           steps: [
-            { step: 'Enter dimensions', desc: 'Type the start height (H1), end height (H2), and horizontal distance (L) in meters. For a vertical riser segment, enter 0 for L. Your inputs persist across all three tabs — no need to retype.' },
-            { step: 'Check slope length', desc: 'On the Length tab, read the actual slope length and the recommended order quantities with 5% and 10% margins. An SVG cross-section diagram visualizes the geometry for any input ratio without layout breakage.' },
-            { step: 'Check angle and elbow', desc: 'On the Angle tab, see the calculated slope angle in degrees and the automatically selected standard elbow size. A warning appears if the angle exceeds 45°, recommending a split installation approach.' },
-            { step: 'Plan hanger placement', desc: 'On the Hangers tab, select the tray width and environment, then read the recommended hanger interval, total count, and every hanger position to the nearest centimeter. Copy all results with one tap to share with your team.' },
+            { step: 'STEP 1 — Direction & Specs', desc: 'Choose vertical bend (tray slopes up/down) or horizontal bend (tray changes direction on a flat plane). Then select the tray width and side height from the dropdowns. These determine the V-cut reference dimension automatically.' },
+            { step: 'STEP 2 — Angle Input', desc: 'In Preset mode, tap 30°, 45°, or 60° and enter the height H in meters — slope length and horizontal distance are computed automatically. In Manual mode, enter measured H and L directly. Enter L=0 for a vertical riser segment.' },
+            { step: 'STEP 3–5 — Results and Diagram', desc: 'STEP 3 shows slope angle, length, and elbow recommendation. STEP 4 shows V-cut half width, full width, marking interval A, and bolt hole positions. STEP 5 shows the SVG diagram — hold your phone next to the tray and mark it directly.' },
+            { step: 'STEP 6 — Hanger Spacing & Copy', desc: 'Select the installation environment (indoor, outdoor/corrosive, or vibration) to get the recommended hanger interval. Tap "Copy all results" to copy every calculated value to your clipboard and share with your team instantly.' },
           ],
           faqs: [
-            { q: 'Do my inputs reset when I switch tabs?', a: 'No. The start height, end height, and horizontal distance are shared state across all three tabs. Values you enter on any tab remain intact when you navigate to another tab — only the tray width and environment dropdowns are exclusive to the Hangers tab.' },
-            { q: 'Does it handle vertical riser segments?', a: 'Yes. Enter 0 for the horizontal distance (L) to activate vertical riser mode. The tool automatically sets the slope angle to 90°, sets slope length equal to the height difference, and adjusts the hanger spacing factor to 0.40 for vertical segments. No elbow recommendation is shown for vertical risers.' },
-            { q: 'What standard is the hanger spacing based on?', a: 'Hanger spacing is derived from KEC (Korean Electrical Code) field practice guidelines, adjusted by slope angle factor (ranging from 1.0 at 0–10° to 0.40 at 90°) and an environment reduction factor (0.7 for vibration, 0.8 for outdoor/corrosive, 1.0 for indoor). Always verify the final spacing against your project specifications and supervising engineer\'s approval.' },
+            { q: 'Why is the V-cut formula different for vertical vs horizontal bends?', a: 'For a vertical bend, the V-cut is made into the side rail of the tray, so the reference dimension is the side height (typically 100mm). For a horizontal bend, the V-cut spans the full width of the tray top, so the reference dimension is the tray width (e.g. 200mm). The formula itself — reference × tan(angle/2) — is the same, but the different input dimension produces significantly different results.' },
+            { q: 'Does it support vertical riser segments (L=0)?', a: 'Yes. In Manual mode, enter 0 for the horizontal distance to activate vertical riser mode. The tool sets the slope angle to 90°, sets slope length equal to the height, and skips the V-cut section since vertical risers require a straight cut and a separate vertical connector, not a V-cut. Hanger spacing is also adjusted using the vertical factor of 0.40.' },
+            { q: 'What standard is the hanger spacing based on?', a: 'Hanger spacing follows KEC (Korean Electrical Code) field practice guidelines. The base interval (1.5m for 100–200mm trays, 2.0m for 300–450mm, 1.5m for 600mm) is multiplied by a slope angle factor (1.0 at 0–10° down to 0.40 at 90°) and an environment factor (1.0 indoor, 0.8 outdoor/corrosive, 0.7 vibration). Always verify against your project specifications and supervising engineer approval.' },
+            { q: 'What happens if I enter an angle above 45°?', a: 'The tool calculates V-cut dimensions for angles above 45° but displays an orange warning recommending two 45° cuts (split installation) instead of a single V-cut. If the V-cut full width exceeds 80% of the reference dimension, a separate material weakening warning also appears. These are caution flags, not hard stops.' },
             { q: 'Can I use these results as official data?', a: 'Results are for reference only. For all actual construction work, verify the final specifications against your design documents, supervision guidelines, and applicable KEC regulations before procurement or installation.' },
           ],
         }}
