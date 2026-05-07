@@ -513,9 +513,15 @@ export default function CableTrayCalcClient() {
             <div className={s.vcut_card}>
               <div className={s.vcut_num}>±70</div>
               <div className={s.vcut_unit}>mm / Ø14</div>
-              <div className={s.vcut_label}>{isKo ? '타공 위치' : 'Bolt hole position'}</div>
+              <div className={s.vcut_label}>{isKo ? '타공 위치 (기본값)' : 'Bolt position (default)'}</div>
             </div>
           </div>
+
+          <p className={s.step_hint} style={{ marginTop: '0.25rem' }}>
+            {isKo
+              ? '※ 타공 위치(±70mm)와 홀 크기(Ø14)는 현장 볼트 규격(M10~M16)에 따라 조정하세요.'
+              : '※ Adjust bolt position (±70mm) and hole size (Ø14) to match your site bolt spec (M10–M16).'}
+          </p>
 
           {direction === 'vertical' && (
             <div className={s.warn_box}>
