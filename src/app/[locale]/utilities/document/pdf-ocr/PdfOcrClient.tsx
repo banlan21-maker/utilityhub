@@ -103,8 +103,8 @@ export default function PdfOcrClient() {
 
       try {
         const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        // Use unpkg CDN matching the exact installed version to avoid worker mismatch
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
         const arrayBuffer = await f.arrayBuffer();
         const pdfDocCheck = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -177,11 +177,12 @@ export default function PdfOcrClient() {
 
     try {
       const pdfjsLib = await import('pdfjs-dist');
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
       const { createWorker } = await import('tesseract.js');
-      const { jsPDF } = await import('jspdf');
+      const jspdfModule = await import('jspdf');
+      const { jsPDF } = jspdfModule;
+      const GState = (jspdfModule as any).GState ?? (jsPDF as any).GState;
 
       // STEP 1: Load PDF
       const arrayBuffer = await file.arrayBuffer();
@@ -239,7 +240,7 @@ export default function PdfOcrClient() {
         // STEP 6: Invisible text overlay
         const scaleRatio = 1 / scale;
         pdf.setTextColor(0, 0, 0);
-        pdf.setGState(new (pdf as any).GState({ opacity: 0 }));
+        pdf.setGState(new GState({ opacity: 0 }));
 
         (ocrData.words || []).forEach((word: any) => {
           if (!word.text.trim()) return;
@@ -255,7 +256,7 @@ export default function PdfOcrClient() {
           pdf.text(word.text, x, y + h, { baseline: 'bottom' });
         });
 
-        pdf.setGState(new (pdf as any).GState({ opacity: 1 }));
+        pdf.setGState(new GState({ opacity: 1 }));
 
         // Release canvas memory per page
         ctx.clearRect(0, 0, canvas.width, canvas.height);
