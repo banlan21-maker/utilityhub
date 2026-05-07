@@ -449,19 +449,14 @@ export default function TileVisualizerClient() {
         <div className={s.panel}>
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-bold text-slate-800">구역 선택</h2>
-            <button 
+            <button
               onClick={() => {
-                if (window.confirm('모든 구역의 꼭짓점 위치를 초기화하시겠습니까?')) {
-                  localStorage.removeItem('tile-visualizer-presets');
-                  setZones(prev => prev.map(z => ({
-                    ...z,
-                    points: PRESET_ZONES.find(pz => pz.id === z.id)!.points
-                  })));
-                }
+                const data = localStorage.getItem('tile-visualizer-presets') || '없음';
+                navigator.clipboard.writeText(data).then(() => alert('좌표 복사 완료! 채팅창에 붙여넣기 해주세요.'));
               }}
-              className="text-xs text-slate-400 hover:text-slate-600 underline"
+              className="text-xs text-violet-500 hover:text-violet-700 underline"
             >
-              좌표 초기화
+              📋 좌표 복사
             </button>
           </div>
           <div className={s.zoneButtons}>
