@@ -20,10 +20,10 @@ const mmToPixel = (mm: number, canvasWidth: number): number => {
 };
 
 const PRESET_ZONES = [
-  { id: 'floor', label: '바닥', emoji: '⬜', points: [{x: 0.1, y: 0.62}, {x: 0.9, y: 0.62}, {x: 0.9, y: 0.9}, {x: 0.1, y: 0.9}] },
-  { id: 'wall_left', label: '좌측 벽', emoji: '🧱', points: [{x: 0.1, y: 0.22}, {x: 0.3, y: 0.244}, {x: 0.3, y: 0.62}, {x: 0.1, y: 0.62}] },
-  { id: 'wall_center', label: '정면 벽', emoji: '🪞', points: [{x: 0.3, y: 0.244}, {x: 0.7, y: 0.244}, {x: 0.7, y: 0.62}, {x: 0.3, y: 0.62}] },
-  { id: 'wall_right', label: '우측 벽', emoji: '🧱', points: [{x: 0.7, y: 0.244}, {x: 0.9, y: 0.22}, {x: 0.9, y: 0.62}, {x: 0.7, y: 0.62}] },
+  { id: 'floor',       label: '바닥',    emoji: '⬜', points: [{x:0.3128772232738096,y:0.6616803015960213},{x:0.696177010298577,y:0.6616803015960213},{x:1.0191146261383417,y:0.9008843503212945},{x:0.03370218154317195,y:0.9008843503212945}] },
+  { id: 'wall_left',   label: '좌측 벽', emoji: '🧱', points: [{x:0.08048286421154907,y:0.0897804808760901},{x:0.3672031773403121,y:0.3576216340262199},{x:0.3702212858995622,y:0.5900875405338797},{x:0.08651908133004935,y:0.8579286936840096}] },
+  { id: 'wall_center', label: '정면 벽', emoji: '🪞', points: [{x:0.3702212858995622,y:0.3593061695806232},{x:0.6584506533079503,y:0.3593061695806232},{x:0.6569415990283253,y:0.657468962710013},{x:0.36418506878106194,y:0.6557844271556097}] },
+  { id: 'wall_right',  label: '우측 벽', emoji: '🧱', points: [{x:0.6629778161468255,y:0.3593061695806232},{x:0.9014083923275864,y:0.13778974417658507},{x:0.9044265008868365,y:0.8225534470415395},{x:0.6599597075875754,y:0.632200929393963}] },
 ];
 
 function bilinear(p: any[], u: number, v: number) {
@@ -129,6 +129,7 @@ export default function TileVisualizerClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  const [usePreset, setUsePreset] = useState<boolean>(true);
   const [activeZoneId, setActiveZoneId] = useState<string>('floor');
   const [dragPointIndex, setDragPointIndex] = useState<number | null>(null);
   
@@ -189,6 +190,7 @@ export default function TileVisualizerClient() {
   }, []);
 
   const drawAllOverlays = useCallback((ctx: CanvasRenderingContext2D, W: number, H: number) => {
+    if (usePreset) return;
     const activeZone = zones.find(z => z.id === activeZoneId);
     if (!activeZone || activeZone.boundsConfirmed) return;
 
@@ -213,7 +215,7 @@ export default function TileVisualizerClient() {
       ctx.strokeStyle = '#8b5cf6';
       ctx.stroke();
     });
-  }, [zones, activeZoneId]);
+  }, [zones, activeZoneId, usePreset]);
 
   const renderAll = useCallback(async (isExport = false) => {
     const canvas = canvasRef.current;
@@ -248,7 +250,10 @@ export default function TileVisualizerClient() {
       
       try {
         const tileImg = await loadImage(zone.tileUrl);
-        const dstPoints = zone.points.map(p => ({ x: p.x * W, y: p.y * H }));
+        const srcPoints = usePreset
+          ? PRESET_ZONES.find(pz => pz.id === zone.id)!.points
+          : zone.points;
+        const dstPoints = srcPoints.map(p => ({ x: p.x * W, y: p.y * H }));
         
         const tileW_px = mmToPixel(zone.tileSize, effW) * zone.tileScale;
         const tileH_px = zone.tileSizeH ? mmToPixel(zone.tileSizeH, effH) * zone.tileScale : tileW_px;
@@ -292,7 +297,7 @@ export default function TileVisualizerClient() {
     if (!isExport) {
       drawAllOverlays(ctx, W, H);
     }
-  }, [zones, images, drawAllOverlays]);
+  }, [zones, images, drawAllOverlays, usePreset]);
 
   useEffect(() => {
     let active = true;
@@ -325,6 +330,7 @@ export default function TileVisualizerClient() {
   }, []);
 
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
+    if (usePreset) return;
     const pos = getPointerPos(e);
     const zone = zones.find(z => z.id === activeZoneId);
     if (!zone || zone.boundsConfirmed) return;
@@ -447,17 +453,22 @@ export default function TileVisualizerClient() {
 
       <div className={s.splitLayout}>
         <div className={s.panel}>
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex flex-col gap-2 mb-2">
             <h2 className="text-lg font-bold text-slate-800">구역 선택</h2>
-            <button
-              onClick={() => {
-                const data = localStorage.getItem('tile-visualizer-presets') || '없음';
-                navigator.clipboard.writeText(data).then(() => alert('좌표 복사 완료! 채팅창에 붙여넣기 해주세요.'));
-              }}
-              className="text-xs text-violet-500 hover:text-violet-700 underline"
-            >
-              📋 좌표 복사
-            </button>
+            <div className="flex rounded-xl overflow-hidden border border-slate-200 text-sm font-semibold">
+              <button
+                onClick={() => setUsePreset(true)}
+                className={`flex-1 py-2 transition-colors ${usePreset ? 'bg-violet-600 text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
+              >
+                기본 영역
+              </button>
+              <button
+                onClick={() => setUsePreset(false)}
+                className={`flex-1 py-2 transition-colors ${!usePreset ? 'bg-violet-600 text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
+              >
+                직접 설정
+              </button>
+            </div>
           </div>
           <div className={s.zoneButtons}>
             {zones.map(z => (
@@ -477,16 +488,18 @@ export default function TileVisualizerClient() {
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-bold text-slate-800">{activeZone.emoji} {activeZone.label} 설정</h2>
             <div className="flex gap-2">
-              <button 
-                onClick={() => handleZoneUpdate({ boundsConfirmed: !activeZone.boundsConfirmed })}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  activeZone.boundsConfirmed 
-                    ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' 
-                    : 'bg-violet-100 text-violet-700 hover:bg-violet-200'
-                }`}
-              >
-                {activeZone.boundsConfirmed ? '영역 수정' : '영역 확정'}
-              </button>
+              {!usePreset && (
+                <button
+                  onClick={() => handleZoneUpdate({ boundsConfirmed: !activeZone.boundsConfirmed })}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    activeZone.boundsConfirmed
+                      ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-violet-100 text-violet-700 hover:bg-violet-200'
+                  }`}
+                >
+                  {activeZone.boundsConfirmed ? '영역 수정' : '영역 확정'}
+                </button>
+              )}
               {activeZone.isComplete && (
                 <button onClick={handleRemoveTile} className={s.deleteBtn} title="타일 제거">
                   <Trash size={16} />
