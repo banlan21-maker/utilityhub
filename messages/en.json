@@ -127,6 +127,10 @@
     "interior-material-calc": {
       "title": "Tile & Wallpaper Calculator",
       "desc": "Calculate tile boxes and wallpaper rolls with SVG grid visualization. Supports staggered/brick patterns and automatic safety margin."
+    },
+    "metal-weight-calc": {
+      "title": "Metal Weight & Area Calculator",
+      "desc": "Calculate weight, paint area, and cost for 11 metal shapes including H-beam, pipe, and plate. 19 material densities, KS presets, and quote basket included."
     }
   },
   "TextCounter": {
