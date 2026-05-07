@@ -511,6 +511,10 @@
     "photo-batch-master": {
       "title": "Photo Batch Master",
       "desc": "100 photos in 1 minute — batch edit with your own preset & download as ZIP."
+    },
+    "tile-visualizer": {
+      "title": "Bathroom Tile Visualizer",
+      "desc": "Virtually install tiles in an empty bathroom photo and preview the realistic 3D perspective simulation."
     }
   },
   "FontCompare": {
@@ -1492,5 +1496,64 @@
   "SlaUptimeCalc": {
     "title": "SLA Uptime Calculator",
     "description": "From three nines (99.9%) to five nines (99.999%) — instantly convert any SLA uptime percentage into allowed downtime per year, month, week, and day."
+  },
+  "TileVisualizer": {
+    "title": "Bathroom Tile Visualizer",
+    "description": "Virtually apply tiles to an empty room photo and experience a realistic 3D perspective simulation that blends naturally with furniture. Fast and secure client-side processing.",
+    "button": "Use Now",
+    "result_label": "Simulation Result",
+    "share_title": "Found this tool useful? Share it!",
+    "faq_title": "Frequently Asked Questions",
+    "related_title": "Related Tools",
+    "use_cases_title": "Main Use Cases",
+    "how_to_title": "How to Use",
+    "about_title": "What is Bathroom Tile Visualizer?",
+    "about": "The Bathroom Tile Visualizer is a 3D perspective-based web utility that allows you to virtually install tile images onto an empty bathroom photo. Without needing complex 3D modeling software, you can instantly adjust floor and wall tile sizes, patterns, and grout colors in your web browser to realistically preview the post-installation look. It includes built-in furniture masking to ensure tiles do not unnaturally overlap the toilet or bathtub, providing a clean final result.",
+    "use_cases": [
+      {
+        "emoji": "🛁",
+        "title": "Bathroom Remodeling Planning",
+        "desc": "Virtually match various tile patterns and colors before actual construction to significantly reduce the risk of remodeling failures."
+      },
+      {
+        "emoji": "🏢",
+        "title": "Interior Client Consultation",
+        "desc": "Show clients the post-construction look instantly on-site to speed up design discussions and decision-making."
+      },
+      {
+        "emoji": "🎨",
+        "title": "Tile Vendor Product Showcase",
+        "desc": "Apply new tile lineups to an empty bathroom image to help customers easily understand the actual feel of the product."
+      },
+      {
+        "emoji": "💡",
+        "title": "DIY Interior Simulation",
+        "desc": "Find the best combination by adjusting grout colors and tile sizes for individuals planning to buy and install tiles themselves."
+      }
+    ],
+    "how_to": [
+      "When the simulator loads, the default empty bathroom photo and furniture mask will appear on the screen.",
+      "Select a zone (floor, left wall, front wall) from the left control panel and upload your tile image.",
+      "Adjust the tile size (mm), grout width, and grout color using the sliders to match the proportions.",
+      "Check the auto-perspective 3D rendered result and save the high-resolution image."
+    ],
+    "faq": [
+      {
+        "q": "Can I simulate with my own bathroom photo?",
+        "a": "The current version provides a pre-optimized bathroom photo and a dedicated furniture mask (transparent PNG) for the best 3D perspective quality."
+      },
+      {
+        "q": "Can I change the grout color and width?",
+        "a": "Yes, you can. Adjust the grout width in pixels and apply the desired grout color in real-time using the color picker in the zone settings panel."
+      },
+      {
+        "q": "What is the copyright of the generated tile composite image?",
+        "a": "You can freely download and use the generated composite images for commercial or non-commercial purposes. However, please be mindful of the copyright of the original tile images you upload."
+      },
+      {
+        "q": "Can I use this result as official data?",
+        "a": "Results are for reference only. Please consult a professional or official source for accurate figures."
+      }
+    ]
   }
 }
