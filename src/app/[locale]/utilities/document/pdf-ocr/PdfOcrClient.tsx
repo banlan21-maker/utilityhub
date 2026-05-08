@@ -180,9 +180,7 @@ export default function PdfOcrClient() {
       pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
       const { createWorker } = await import('tesseract.js');
-      const jspdfModule = await import('jspdf');
-      const { jsPDF } = jspdfModule;
-      const GState = (jspdfModule as any).GState ?? (jsPDF as any).GState;
+      const { PDFDocument } = await import('pdf-lib');
 
       // STEP 1: Load PDF
       const arrayBuffer = await file.arrayBuffer();
@@ -193,18 +191,21 @@ export default function PdfOcrClient() {
       // STEP 2: Tesseract worker
       const worker = await createWorker(language);
 
-      // STEP 3: jsPDF instance (set up from first page dimensions)
-      const firstPage = await pdfDoc.getPage(1);
-      const firstViewport = firstPage.getViewport({ scale: 1.0 });
-      const pdf = new jsPDF({
-        orientation: firstViewport.width > firstViewport.height ? 'l' : 'p',
-        unit: 'pt',
-        format: [firstViewport.width, firstViewport.height],
-      });
+      // Set DPI so Tesseract outputs correct page dimensions in the PDF.
+      // When canvas is rendered at `scale` factor (e.g. 2.0×), pixels are 2× larger.
+      // Telling Tesseract "this image is at 144 DPI" makes it output a page of
+      // (pixels / 144dpi * 72pt) = original pt dimensions. Without this the output
+      // PDF pages would be `scale` times larger than the original.
+      try {
+        await (worker as any).setParameters({ user_defined_dpi: Math.round(72 * scale) });
+      } catch {
+        // setParameters may not be available in all Tesseract.js versions; continue anyway
+      }
 
-      // STEP 4: Per-page processing — single canvas reused for memory
+      // STEP 3: Per-page processing — single canvas reused for memory
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d')!;
+      const pagePdfs: Uint8Array[] = [];
 
       for (let pageNum = 1; pageNum <= numPages; pageNum++) {
         setCurrentPage(pageNum);
@@ -215,69 +216,75 @@ export default function PdfOcrClient() {
 
         canvas.width = viewport.width;
         canvas.height = viewport.height;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // White background avoids transparent areas being black in the output PDF
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         await page.render({ canvas, viewport }).promise;
 
-        // JPEG quality 0.75 to prevent file size explosion
-        const imgData = canvas.toDataURL('image/jpeg', 0.75);
-
-        const pageViewport = page.getViewport({ scale: 1.0 });
-        const pageW = pageViewport.width;
-        const pageH = pageViewport.height;
-
-        if (pageNum > 1) {
-          pdf.addPage([pageW, pageH], pageW > pageH ? 'l' : 'p');
+        // STEP 4: Tesseract generates a "sandwich PDF" — image + properly-encoded
+        // invisible text layer. This correctly handles Korean/Japanese/Chinese
+        // Unicode because Tesseract uses its own internal font mapping, unlike
+        // jsPDF which only supports Latin-1 with default fonts.
+        const { data } = await worker.recognize(canvas, {}, { pdf: true });
+        const pagePdfBytes = (data as any).pdf as Uint8Array | undefined;
+        if (pagePdfBytes && pagePdfBytes.length > 0) {
+          pagePdfs.push(pagePdfBytes);
         }
 
-        // Insert original image
-        pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
-
-        // STEP 5: OCR
-        const result = await worker.recognize(canvas);
-        const ocrData = result.data as any;
-
-        // STEP 6: Invisible text overlay
-        const scaleRatio = 1 / scale;
-        pdf.setTextColor(0, 0, 0);
-        pdf.setGState(new GState({ opacity: 0 }));
-
-        (ocrData.words || []).forEach((word: any) => {
-          if (!word.text.trim()) return;
-          if (word.confidence < 30) return;
-
-          const x = word.bbox.x0 * scaleRatio;
-          const y = word.bbox.y0 * scaleRatio;
-          const w = (word.bbox.x1 - word.bbox.x0) * scaleRatio;
-          const h = (word.bbox.y1 - word.bbox.y0) * scaleRatio;
-
-          const fontSize = Math.max(6, h * 0.85);
-          pdf.setFontSize(fontSize);
-          pdf.text(word.text, x, y + h, { baseline: 'bottom' });
-        });
-
-        pdf.setGState(new GState({ opacity: 1 }));
-
-        // Release canvas memory per page
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
 
-      // STEP 7: Terminate worker
+      // STEP 5: Terminate worker and release canvas
       await worker.terminate();
-
-      // Release canvas completely
       canvas.width = 0;
       canvas.height = 0;
 
-      setProgress(100);
+      if (pagePdfs.length === 0) {
+        throw new Error('No pages were processed successfully');
+      }
 
-      // STEP 8: Auto-download
+      setProgress(95);
+
+      // STEP 6: Merge all per-page PDFs into one document using pdf-lib
+      const mergedPdf = await PDFDocument.create();
+      for (const pdfBytes of pagePdfs) {
+        const pageDoc = await PDFDocument.load(pdfBytes);
+        const copied = await mergedPdf.copyPages(pageDoc, pageDoc.getPageIndices());
+        copied.forEach(p => mergedPdf.addPage(p));
+      }
+
+      const mergedBytes = await mergedPdf.save();
+      const blob = new Blob([mergedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+
       const originalName = file.name.replace(/\.pdf$/i, '');
       const outputName = isKo ? `${originalName}_검색가능.pdf` : `${originalName}_searchable.pdf`;
-      pdf.save(outputName);
 
-      // Save reference for re-download
-      setSavedPdfRef({ save: () => pdf.save(outputName), name: outputName });
+      // STEP 7: Auto-download
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = outputName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // Save reference for re-download; revoke object URL after 5 minutes
+      setSavedPdfRef({
+        save: () => {
+          const a2 = document.createElement('a');
+          a2.href = blobUrl;
+          a2.download = outputName;
+          document.body.appendChild(a2);
+          a2.click();
+          document.body.removeChild(a2);
+        },
+        name: outputName,
+      });
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 5 * 60 * 1000);
+
+      setProgress(100);
       setIsDone(true);
     } catch (err: any) {
       console.error('OCR error:', err);
