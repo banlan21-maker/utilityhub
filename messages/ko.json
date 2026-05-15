@@ -523,6 +523,10 @@
     "tile-visualizer": {
       "title": "욕실 타일 시뮬레이터",
       "desc": "빈 방 사진에 타일을 가상으로 시공하고 원근감이 적용된 3D 시뮬레이션을 미리 확인하세요."
+    },
+    "bubble-popart": {
+      "title": "버블 팝아트 글씨 생성기",
+      "desc": "텍스트를 입력하면 둥글둥글한 버블 폰트에 멀티컬러·광택 효과가 적용된 팝아트 이미지를 PNG로 만들어 줍니다."
     }
   },
   "FontCompare": {
@@ -1718,5 +1722,34 @@
     "title": "PDF 검색 변환기",
     "description": "스캔된 계약서, 공문서, 팩스 문서를 Ctrl+F로 검색 가능한 PDF로 변환합니다. 파일이 서버로 전송되지 않아 완전한 개인정보 보호. PC 환경 권장.",
     "button": "사용하러 가기"
+  },
+  "BubblePopart": {
+    "title": "버블 팝아트 글씨 생성기",
+    "description": "텍스트를 입력하면 둥글둥글한 버블 폰트에 멀티컬러, 두꺼운 외곽선, 광택 하이라이트 효과가 적용된 팝아트 이미지를 PNG로 즉시 다운로드합니다. 매장 POP, SNS 이미지, 현수막에 활용하세요.",
+    "button": "사용하러 가기",
+    "loading_font": "⏳ 폰트 로딩 중...",
+    "step_text": "STEP 1. 텍스트 입력",
+    "step_text_placeholder": "텍스트 입력... (최대 10자)",
+    "step_bg": "STEP 2. 배경색",
+    "step_color": "STEP 3. 글자 색상",
+    "color_mode_multi": "🌈 멀티컬러",
+    "color_mode_single": "🎨 단색",
+    "step_size": "STEP 4. 글자 크기 & 자간",
+    "label_size": "글자 크기",
+    "label_kerning": "자간",
+    "kerning_hint": "← 좁게 (겹침)     넓게 →",
+    "step_output": "STEP 5. 출력 크기",
+    "preset_square": "정사각형",
+    "preset_landscape": "가로형",
+    "preset_portrait": "세로형",
+    "preset_a4": "A4 비율",
+    "step_deco": "STEP 6. 장식 옵션",
+    "opt_highlight": "💧 하이라이트",
+    "opt_stars": "⭐ 별 장식",
+    "opt_zigzag": "🌀 지그재그 회전",
+    "download": "📥 PNG 다운로드",
+    "download_done": "✅ 다운로드 완료!",
+    "about_title": "버블 팝아트 글씨 생성기란?",
+    "about": "버블 팝아트 글씨 생성기는 텍스트를 입력하면 둥글둥글한 버블 폰트에 멀티컬러, 두꺼운 외곽선, 광택 하이라이트 효과가 적용된 팝아트 스타일 이미지를 즉시 생성해주는 도구입니다. 매장 POP(Point of Purchase) 제작, SNS 이벤트 이미지, 현수막, 스티커 등 다양한 용도로 활용할 수 있습니다. 배경색, 글자 색상(멀티컬러/단색), 글자 크기, 출력 해상도를 자유롭게 설정할 수 있으며, 모든 처리가 브라우저 안에서만 이루어져 파일이 서버로 전송되지 않습니다. 정사각형, 16:9 가로형, 9:16 세로형, A4 비율 등 다양한 크기로 고해상도 PNG를 바로 다운로드할 수 있습니다."
   }
 }

@@ -523,6 +523,10 @@
     "tile-visualizer": {
       "title": "Bathroom Tile Visualizer",
       "desc": "Virtually install tiles in an empty bathroom photo and preview the realistic 3D perspective simulation."
+    },
+    "bubble-popart": {
+      "title": "Bubble Pop Art Text Generator",
+      "desc": "Generate cute bubble-style pop art text images with multicolor, glossy highlights, and bold outlines. Download as PNG instantly."
     }
   },
   "FontCompare": {
@@ -1568,5 +1572,34 @@
     "title": "PDF OCR Converter",
     "description": "Convert scanned contracts, official documents, and faxed files into searchable PDFs. 100% client-side — files never leave your browser. PC recommended.",
     "button": "Use Now"
+  },
+  "BubblePopart": {
+    "title": "Bubble Pop Art Text Generator",
+    "description": "Generate cute bubble-style pop art text images with multicolor, glossy highlights, and bold outlines. Download as PNG instantly — no signup required.",
+    "button": "Use Now",
+    "loading_font": "⏳ Loading font...",
+    "step_text": "STEP 1. Text",
+    "step_text_placeholder": "Enter text... (max 10 chars)",
+    "step_bg": "STEP 2. Background",
+    "step_color": "STEP 3. Text Color",
+    "color_mode_multi": "🌈 Multi",
+    "color_mode_single": "🎨 Single",
+    "step_size": "STEP 4. Size & Kerning",
+    "label_size": "Font size",
+    "label_kerning": "Kerning",
+    "kerning_hint": "← Tight (overlap)     Wide →",
+    "step_output": "STEP 5. Output Size",
+    "preset_square": "Square",
+    "preset_landscape": "Landscape",
+    "preset_portrait": "Portrait",
+    "preset_a4": "A4 Ratio",
+    "step_deco": "STEP 6. Decorations",
+    "opt_highlight": "💧 Highlight",
+    "opt_stars": "⭐ Stars",
+    "opt_zigzag": "🌀 Zigzag rotate",
+    "download": "📥 Download PNG",
+    "download_done": "✅ Downloaded!",
+    "about_title": "What is the Bubble Pop Art Text Generator?",
+    "about": "The Bubble Pop Art Text Generator instantly creates pop art-style images with rounded bubble fonts, vivid multicolor letters, thick bold outlines, and glossy highlights. Perfect for store POP (Point of Purchase) signs, social media event graphics, banners, and stickers. You can freely customize the background color, text color (multicolor or single), font size, and output resolution. All processing happens entirely in your browser — files are never uploaded to a server. Download high-resolution PNG images in multiple aspect ratios including square, 16:9 landscape, 9:16 portrait, and A4 ratio for both print and digital use."
   }
 }

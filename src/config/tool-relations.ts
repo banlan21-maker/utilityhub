@@ -41,6 +41,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/design/font-preview', icon: '🔤', ko: '다국어 폰트 비교기', en: 'Multilingual Font Comparer', category: 'design' },
   { id: 'utilities/design/feedback', icon: '💬', ko: '사용자 피드백 수집기', en: 'User Feedback Collector', category: 'design' },
   { id: 'utilities/design/photo-batch-master', icon: '📸', ko: '일괄 사진 보정 & 프리셋 마스터', en: 'Photo Batch Master', category: 'design' },
+  { id: 'utilities/design/bubble-popart', icon: '🎨', ko: '버블 팝아트 글씨 생성기', en: 'Bubble Pop Art Text Generator', category: 'design' },
 
   // Marketing
   { id: 'utilities/marketing/hashtag-generator', icon: '#️⃣', ko: '해시태그 생성기', en: 'Hashtag Generator', category: 'marketing' },
@@ -218,6 +219,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/lifestyle/color-coordinator',
     'utilities/utility/unit-converter',
     'utilities/lifestyle/30day-challenge',
+  ],
+  'utilities/design/bubble-popart': [
+    'utilities/design/logo-favicon',
+    'utilities/design/color-palette',
+    'utilities/design/font-preview',
   ],
 
   // ── Marketing ──────────────────────────────────────────────
