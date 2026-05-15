@@ -477,6 +477,8 @@
     "sessions": "{count} sessions done",
     "sound_on": "Sound on",
     "sound_off": "Sound off",
+    "autostart_on": "Auto-start on (advance to next session)",
+    "autostart_off": "Auto-start off",
     "notif_hint": "Allow browser notifications",
     "notif_title": "Pomodoro complete!",
     "notif_break": "Time for a break ☕",

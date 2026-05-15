@@ -477,6 +477,8 @@
     "sessions": "{count}번 완료",
     "sound_on": "소리 켜기",
     "sound_off": "소리 끄기",
+    "autostart_on": "자동 시작 켜기 (다음 세션 자동 진행)",
+    "autostart_off": "자동 시작 끄기",
     "notif_hint": "브라우저 알림 허용",
     "notif_title": "뽀모도로 완료!",
     "notif_break": "잠깐 쉬어가세요 ☕",

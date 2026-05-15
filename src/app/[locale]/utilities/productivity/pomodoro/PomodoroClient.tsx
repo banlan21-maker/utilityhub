@@ -92,6 +92,7 @@ export default function PomodoroClient() {
   const [notifGranted, setNotifGranted] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editVals, setEditVals] = useState({ ...DEFAULT_TIMES });
+  const [autoStart, setAutoStart] = useState(true);
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -100,11 +101,13 @@ export default function PomodoroClient() {
   const notifGrantedRef = useRef(notifGranted);
   const modeRef = useRef(mode);
   const timesRef = useRef(times);
+  const autoStartRef = useRef(autoStart);
 
   useEffect(() => { soundOnRef.current = soundOn; }, [soundOn]);
   useEffect(() => { notifGrantedRef.current = notifGranted; }, [notifGranted]);
   useEffect(() => { modeRef.current = mode; }, [mode]);
   useEffect(() => { timesRef.current = times; }, [times]);
+  useEffect(() => { autoStartRef.current = autoStart; }, [autoStart]);
 
   // Load today's session count from localStorage
   useEffect(() => {
@@ -138,7 +141,7 @@ export default function PomodoroClient() {
 
   // Stable onDone: reads all values from refs to avoid stale closure
   const onDoneRef = useRef(() => {
-    setRunning(false);
+    setRunning(false); // 즉시 interval 정지 → 무한 호출 방지
     if (soundOnRef.current) playBeep('done');
     if (notifGrantedRef.current && typeof Notification !== 'undefined') {
       try {
@@ -155,6 +158,7 @@ export default function PomodoroClient() {
         setTimeout(() => {
           setMode(nextMode);
           setSecondsLeft(timesRef.current[nextMode] * 60);
+          if (autoStartRef.current) setRunning(true);
         }, 800);
         return next;
       });
@@ -162,6 +166,7 @@ export default function PomodoroClient() {
       setTimeout(() => {
         setMode('focus');
         setSecondsLeft(timesRef.current.focus * 60);
+        if (autoStartRef.current) setRunning(true);
       }, 800);
     }
   });
@@ -286,6 +291,15 @@ export default function PomodoroClient() {
             <span>{t('sessions_today', { count: sessions })}</span>
           </div>
           <div className={s.settings_buttons}>
+            <button
+              onClick={() => setAutoStart(v => !v)}
+              title={autoStart ? t('autostart_off') : t('autostart_on')}
+              aria-label={autoStart ? t('autostart_off') : t('autostart_on')}
+              className={s.icon_button}
+              style={{ background: autoStart ? 'rgba(139,92,246,0.15)' : undefined }}
+            >
+              {autoStart ? '⏩' : '⏸'}
+            </button>
             <button
               onClick={() => setSoundOn(v => !v)}
               title={soundOn ? t('sound_off') : t('sound_on')}
