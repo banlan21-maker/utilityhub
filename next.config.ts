@@ -46,6 +46,18 @@ const nextConfig: NextConfig = {
         destination: '/ko',
         permanent: true,
       },
+      // /{locale}/{category} → /{locale}/utilities/{category}
+      {
+        source: '/:locale(ko|en)/:cat(performance|document|finance|productivity|design|marketing|lifestyle|security|utility|dev)',
+        destination: '/:locale/utilities/:cat',
+        permanent: true,
+      },
+      // /{locale}/{category}/{tool} → /{locale}/utilities/{category}/{tool}
+      {
+        source: '/:locale(ko|en)/:cat(performance|document|finance|productivity|design|marketing|lifestyle|security|utility|dev)/:tool',
+        destination: '/:locale/utilities/:cat/:tool',
+        permanent: true,
+      },
     ];
   },
 };
