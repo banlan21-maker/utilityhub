@@ -743,7 +743,18 @@
     "input_label": "Input Text",
     "output_label": "Masked Result",
     "placeholder": "Paste text containing sensitive info here...",
-    "highlight": "Highlight changes"
+    "highlight": "Highlight changes",
+    "rule_email": "Email Address",
+    "rule_phone_kr": "Korean Phone Number",
+    "rule_ssn_kr": "Korean Resident Registration Number",
+    "rule_card": "Credit Card Number",
+    "rule_ip": "IP Address (IPv4/IPv6)",
+    "rule_name_kr": "Korean Name (false positives possible)",
+    "rule_name_warning": "⚠️ The Korean name rule may match common words. Review the output carefully.",
+    "copy_button": "Copy",
+    "copy_done": "Copied",
+    "copy_icon_button": "📋 Copy",
+    "copy_icon_done": "✓ Copied"
   },
   "PasswordGen": {
     "title": "🔑 Password Generator",

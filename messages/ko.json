@@ -743,7 +743,18 @@
     "input_label": "원본 텍스트 입력",
     "output_label": "마스킹 결과",
     "placeholder": "여기에 마스킹할 텍스트를 붙여넣으세요...",
-    "highlight": "변경 부분 강조"
+    "highlight": "변경 부분 강조",
+    "rule_email": "이메일 주소",
+    "rule_phone_kr": "한국 전화번호",
+    "rule_ssn_kr": "주민등록번호",
+    "rule_card": "신용카드 번호",
+    "rule_ip": "IP 주소 (IPv4/IPv6)",
+    "rule_name_kr": "한국 이름 (오탐 주의)",
+    "rule_name_warning": "⚠️ 한국 이름 규칙은 일반 단어와 충돌 가능. 결과를 반드시 검토하세요.",
+    "copy_button": "복사",
+    "copy_done": "복사됨",
+    "copy_icon_button": "📋 복사",
+    "copy_icon_done": "✓ 복사됨"
   },
   "PasswordGen": {
     "title": "🔑 비밀번호 생성기",
