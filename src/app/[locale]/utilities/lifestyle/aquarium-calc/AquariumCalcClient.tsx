@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
-import { Fish } from 'lucide-react';
+import { useState, useMemo, useCallback } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { Fish, Copy, Check } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
@@ -19,24 +19,26 @@ interface Fish {
   temperament: 'peaceful' | 'aggressive' | 'semi-aggressive';
   minSchooling: number;
   imageEmoji: string;
+  isInvertebrate?: boolean;
 }
 
+// 어종 데이터 (보수적 권장 기준 — 베타·안시·디스커스 등은 업계 표준 수치로 보정)
 const FISH_DATABASE: Fish[] = [
-  { id: 'guppy', name: '구피', nameEn: 'Guppy', bioloadPerFish: 4, minTankSize: 20, tempRange: [22, 28], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐠' },
-  { id: 'neon-tetra', name: '네온테트라', nameEn: 'Neon Tetra', bioloadPerFish: 2, minTankSize: 40, tempRange: [20, 26], temperament: 'peaceful', minSchooling: 6, imageEmoji: '🐟' },
-  { id: 'corydoras', name: '코리도라스', nameEn: 'Corydoras', bioloadPerFish: 5, minTankSize: 40, tempRange: [22, 26], temperament: 'peaceful', minSchooling: 3, imageEmoji: '🐡' },
-  { id: 'ancistrus', name: '안시', nameEn: 'Ancistrus', bioloadPerFish: 20, minTankSize: 80, tempRange: [20, 28], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐟' },
-  { id: 'betta', name: '베타', nameEn: 'Betta', bioloadPerFish: 8, minTankSize: 20, tempRange: [24, 28], temperament: 'aggressive', minSchooling: 1, imageEmoji: '🐠' },
-  { id: 'tiger-barb', name: '수마트라', nameEn: 'Tiger Barb', bioloadPerFish: 6, minTankSize: 60, tempRange: [23, 27], temperament: 'semi-aggressive', minSchooling: 6, imageEmoji: '🐟' },
-  { id: 'angelfish', name: '엔젤피시', nameEn: 'Angelfish', bioloadPerFish: 15, minTankSize: 150, tempRange: [24, 28], temperament: 'semi-aggressive', minSchooling: 1, imageEmoji: '🐠' },
-  { id: 'molly', name: '몰리', nameEn: 'Molly', bioloadPerFish: 8, minTankSize: 40, tempRange: [24, 28], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐟' },
-  { id: 'platy', name: '플래티', nameEn: 'Platy', bioloadPerFish: 6, minTankSize: 40, tempRange: [20, 26], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐠' },
-  { id: 'goldfish', name: '금붕어', nameEn: 'Goldfish', bioloadPerFish: 40, minTankSize: 150, tempRange: [18, 24], temperament: 'peaceful', minSchooling: 1, imageEmoji: '🐡' },
-  { id: 'zebra-danio', name: '제브라 다니오', nameEn: 'Zebra Danio', bioloadPerFish: 3, minTankSize: 40, tempRange: [18, 24], temperament: 'peaceful', minSchooling: 6, imageEmoji: '🐟' },
-  { id: 'cherry-shrimp', name: '체리새우', nameEn: 'Cherry Shrimp', bioloadPerFish: 0.5, minTankSize: 10, tempRange: [20, 26], temperament: 'peaceful', minSchooling: 5, imageEmoji: '🦐' },
-  { id: 'rasbora', name: '라스보라', nameEn: 'Rasbora', bioloadPerFish: 2, minTankSize: 40, tempRange: [22, 26], temperament: 'peaceful', minSchooling: 8, imageEmoji: '🐠' },
-  { id: 'discus', name: '디스커스', nameEn: 'Discus', bioloadPerFish: 40, minTankSize: 200, tempRange: [26, 30], temperament: 'peaceful', minSchooling: 4, imageEmoji: '🐟' },
-  { id: 'cichlid', name: '시클리드', nameEn: 'Cichlid', bioloadPerFish: 30, minTankSize: 150, tempRange: [24, 28], temperament: 'aggressive', minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'guppy',         name: '구피',         nameEn: 'Guppy',          bioloadPerFish: 4,   minTankSize: 20,  tempRange: [22, 28], temperament: 'peaceful',         minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'neon-tetra',    name: '네온테트라',   nameEn: 'Neon Tetra',     bioloadPerFish: 2,   minTankSize: 40,  tempRange: [20, 26], temperament: 'peaceful',         minSchooling: 6, imageEmoji: '🐟' },
+  { id: 'corydoras',     name: '코리도라스',   nameEn: 'Corydoras',      bioloadPerFish: 5,   minTankSize: 40,  tempRange: [22, 26], temperament: 'peaceful',         minSchooling: 3, imageEmoji: '🐡' },
+  { id: 'ancistrus',     name: '안시',         nameEn: 'Ancistrus',      bioloadPerFish: 30,  minTankSize: 80,  tempRange: [20, 28], temperament: 'peaceful',         minSchooling: 1, imageEmoji: '🐟' },
+  { id: 'betta',         name: '베타',         nameEn: 'Betta',          bioloadPerFish: 20,  minTankSize: 20,  tempRange: [24, 28], temperament: 'aggressive',       minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'tiger-barb',    name: '수마트라',     nameEn: 'Tiger Barb',     bioloadPerFish: 6,   minTankSize: 60,  tempRange: [23, 27], temperament: 'semi-aggressive',  minSchooling: 6, imageEmoji: '🐟' },
+  { id: 'angelfish',     name: '엔젤피시',     nameEn: 'Angelfish',      bioloadPerFish: 15,  minTankSize: 150, tempRange: [24, 28], temperament: 'semi-aggressive',  minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'molly',         name: '몰리',         nameEn: 'Molly',          bioloadPerFish: 8,   minTankSize: 40,  tempRange: [24, 28], temperament: 'peaceful',         minSchooling: 1, imageEmoji: '🐟' },
+  { id: 'platy',         name: '플래티',       nameEn: 'Platy',          bioloadPerFish: 6,   minTankSize: 40,  tempRange: [20, 26], temperament: 'peaceful',         minSchooling: 1, imageEmoji: '🐠' },
+  { id: 'goldfish',      name: '금붕어',       nameEn: 'Goldfish',       bioloadPerFish: 40,  minTankSize: 150, tempRange: [18, 24], temperament: 'peaceful',         minSchooling: 1, imageEmoji: '🐡' },
+  { id: 'zebra-danio',   name: '제브라 다니오', nameEn: 'Zebra Danio',    bioloadPerFish: 3,   minTankSize: 40,  tempRange: [18, 24], temperament: 'peaceful',         minSchooling: 6, imageEmoji: '🐟' },
+  { id: 'cherry-shrimp', name: '체리새우',     nameEn: 'Cherry Shrimp',  bioloadPerFish: 0.5, minTankSize: 10,  tempRange: [20, 26], temperament: 'peaceful',         minSchooling: 5, imageEmoji: '🦐', isInvertebrate: true },
+  { id: 'rasbora',       name: '라스보라',     nameEn: 'Rasbora',        bioloadPerFish: 2,   minTankSize: 40,  tempRange: [22, 26], temperament: 'peaceful',         minSchooling: 8, imageEmoji: '🐠' },
+  { id: 'discus',        name: '디스커스',     nameEn: 'Discus',         bioloadPerFish: 40,  minTankSize: 200, tempRange: [26, 30], temperament: 'peaceful',         minSchooling: 4, imageEmoji: '🐟' },
+  { id: 'cichlid',       name: '시클리드',     nameEn: 'Cichlid',        bioloadPerFish: 30,  minTankSize: 150, tempRange: [24, 28], temperament: 'aggressive',       minSchooling: 1, imageEmoji: '🐠' },
 ];
 
 interface CartItem {
@@ -46,6 +48,9 @@ interface CartItem {
 
 export default function AquariumCalcClient() {
   const t = useTranslations('AquariumBioload');
+  const locale = useLocale();
+  const isKo = locale === 'ko';
+  const fishLabel = useCallback((f: Fish) => (isKo ? f.name : f.nameEn), [isKo]);
 
   const [tankLength, setTankLength] = useState<number>(60);
   const [tankWidth, setTankWidth] = useState<number>(30);
@@ -55,24 +60,32 @@ export default function AquariumCalcClient() {
   const [selectedFishId, setSelectedFishId] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const calculateLiters = (l: number, w: number, h: number) => {
     return (l * w * h) / 1000;
   };
 
   const handleDimensionChange = (dimension: 'length' | 'width' | 'height', value: number) => {
-    if (dimension === 'length') setTankLength(value);
-    if (dimension === 'width') setTankWidth(value);
-    if (dimension === 'height') setTankHeight(value);
+    const safeValue = Math.max(0, value);
+    if (dimension === 'length') setTankLength(safeValue);
+    if (dimension === 'width')  setTankWidth(safeValue);
+    if (dimension === 'height') setTankHeight(safeValue);
 
-    const newLength = dimension === 'length' ? value : tankLength;
-    const newWidth = dimension === 'width' ? value : tankWidth;
-    const newHeight = dimension === 'height' ? value : tankHeight;
+    const newLength = dimension === 'length' ? safeValue : tankLength;
+    const newWidth  = dimension === 'width'  ? safeValue : tankWidth;
+    const newHeight = dimension === 'height' ? safeValue : tankHeight;
 
     if (!useCustomLiters) {
       setTankLiters(parseFloat(calculateLiters(newLength, newWidth, newHeight).toFixed(1)));
     }
   };
+
+  const switchToAutoMode = () => {
+    setUseCustomLiters(false);
+    setTankLiters(parseFloat(calculateLiters(tankLength, tankWidth, tankHeight).toFixed(1)));
+  };
+  const switchToCustomMode = () => setUseCustomLiters(true);
 
   const handleAddFish = () => {
     if (!selectedFishId || quantity <= 0) return;
@@ -125,23 +138,73 @@ export default function AquariumCalcClient() {
 
   const alerts = useMemo(() => {
     const warnings: Array<{ type: 'warning' | 'error'; message: string }> = [];
+
     cart.forEach(item => {
-      if (tankLiters < item.fish.minTankSize) {
-        warnings.push({ type: 'error', message: t('alertTankTooSmall', { fishName: item.fish.name, minSize: item.fish.minTankSize }) });
+      const name = fishLabel(item.fish);
+      if (tankLiters > 0 && tankLiters < item.fish.minTankSize) {
+        warnings.push({ type: 'error', message: t('alertTankTooSmall', { fishName: name, minSize: item.fish.minTankSize }) });
       }
       if (item.quantity < item.fish.minSchooling) {
-        warnings.push({ type: 'warning', message: t('alertSchooling', { fishName: item.fish.name, minCount: item.fish.minSchooling }) });
+        const msgKey = item.fish.isInvertebrate ? 'alertShrimpSchooling' : 'alertSchooling';
+        warnings.push({ type: 'warning', message: t(msgKey, { fishName: name, minCount: item.fish.minSchooling }) });
       }
     });
+
+    // 합사 호환성 (성격)
     const hasAggressive = cart.some(item => item.fish.temperament === 'aggressive');
     const hasPeaceful = cart.some(item => item.fish.temperament === 'peaceful');
     if (hasAggressive && hasPeaceful) {
       warnings.push({ type: 'warning', message: t('alertCompatibility') });
     }
+
+    // 수온 충돌 — 두 어종의 tempRange가 겹치지 않는 경우
+    for (let i = 0; i < cart.length; i++) {
+      for (let j = i + 1; j < cart.length; j++) {
+        const a = cart[i].fish;
+        const b = cart[j].fish;
+        const overlapMin = Math.max(a.tempRange[0], b.tempRange[0]);
+        const overlapMax = Math.min(a.tempRange[1], b.tempRange[1]);
+        if (overlapMin > overlapMax) {
+          warnings.push({
+            type: 'error',
+            message: t('alertTempConflict', {
+              fish1: fishLabel(a),
+              fish2: fishLabel(b),
+              range1: `${a.tempRange[0]}-${a.tempRange[1]}`,
+              range2: `${b.tempRange[0]}-${b.tempRange[1]}`,
+            }),
+          });
+        }
+      }
+    }
+
     return warnings;
-  }, [cart, tankLiters, t]);
+  }, [cart, tankLiters, t, fishLabel]);
+
+  // handleCopy is defined as a plain function so it can safely reference
+  // values (bioloadMetrics, status) that are declared further down.
+  // JS evaluates the body at call time, after all hooks have run.
 
   const status = getBioloadStatus(bioloadMetrics.usagePercent);
+
+  const handleCopy = () => {
+    if (cart.length === 0) return;
+    const lines: string[] = [t('title')];
+    lines.push(`${t('tankLiters')}: ${tankLiters}L`);
+    lines.push('---');
+    cart.forEach(item => {
+      lines.push(`${fishLabel(item.fish)} × ${item.quantity} = ${(item.fish.bioloadPerFish * item.quantity).toFixed(1)}L`);
+    });
+    lines.push('---');
+    lines.push(`${t('totalBioload')}: ${bioloadMetrics.totalBioload.toFixed(1)}L`);
+    lines.push(`${t('bioloadUsage')}: ${bioloadMetrics.usagePercent.toFixed(1)}% (${status.label})`);
+    lines.push(`${t('remainingCapacity')}: ${bioloadMetrics.remainingCapacity.toFixed(1)}L`);
+    try {
+      navigator.clipboard.writeText(lines.join('\n'));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* ignore */ }
+  };
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -208,9 +271,47 @@ export default function AquariumCalcClient() {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                {t('tankLiters')} (L)
-              </label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  {t('tankLiters')} (L)
+                </label>
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                  <button
+                    type="button"
+                    onClick={switchToAutoMode}
+                    aria-label={t('modeAuto')}
+                    style={{
+                      padding: '0.35rem 0.7rem',
+                      borderRadius: '0.5rem',
+                      border: `1px solid ${!useCustomLiters ? '#06b6d4' : 'var(--border)'}`,
+                      background: !useCustomLiters ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                      color: !useCustomLiters ? '#06b6d4' : 'var(--text-secondary)',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {t('modeAuto')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={switchToCustomMode}
+                    aria-label={t('modeCustom')}
+                    style={{
+                      padding: '0.35rem 0.7rem',
+                      borderRadius: '0.5rem',
+                      border: `1px solid ${useCustomLiters ? '#06b6d4' : 'var(--border)'}`,
+                      background: useCustomLiters ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                      color: useCustomLiters ? '#06b6d4' : 'var(--text-secondary)',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {t('modeCustom')}
+                  </button>
+                </div>
+              </div>
               <input
                 type="number"
                 value={tankLiters}
@@ -218,7 +319,16 @@ export default function AquariumCalcClient() {
                   setUseCustomLiters(true);
                   setTankLiters(parseFloat(e.target.value) || 0);
                 }}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                min={0}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border)',
+                  background: useCustomLiters ? 'rgba(255,255,255,0.05)' : 'rgba(6, 182, 212, 0.05)',
+                  color: 'var(--text-primary)',
+                }}
+                readOnly={!useCustomLiters}
               />
             </div>
           </div>
@@ -241,7 +351,7 @@ export default function AquariumCalcClient() {
                 <option value="">{t('selectFishPlaceholder')}</option>
                 {FISH_DATABASE.map(fish => (
                   <option key={fish.id} value={fish.id}>
-                    {fish.imageEmoji} {fish.name} ({fish.nameEn})
+                    {fish.imageEmoji} {fishLabel(fish)}{isKo ? ` (${fish.nameEn})` : ''}
                   </option>
                 ))}
               </select>
@@ -314,9 +424,9 @@ export default function AquariumCalcClient() {
                   >
                     <span style={{ fontSize: '1.5rem' }}>{item.fish.imageEmoji}</span>
                     <div>
-                      <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.fish.name}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{fishLabel(item.fish)}</div>
                       <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                        {item.fish.bioloadPerFish}L × {item.quantity} = {item.fish.bioloadPerFish * item.quantity}L
+                        {item.fish.bioloadPerFish}L × {item.quantity} = {(item.fish.bioloadPerFish * item.quantity).toFixed(1)}L
                       </div>
                     </div>
                     <input
@@ -344,9 +454,33 @@ export default function AquariumCalcClient() {
           {cart.length > 0 ? (
             <>
               <div className="glass-panel animate-scale-in" style={{ padding: '2rem', border: `2px solid ${status.color}` }}>
-                <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--primary)' }}>
-                  📊 {t('dashboard')}
-                </h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontSize: '1.5rem', color: 'var(--primary)', margin: 0 }}>
+                    📊 {t('dashboard')}
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={handleCopy}
+                    aria-label={t('copyResult')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      padding: '0.5rem 0.85rem',
+                      borderRadius: '0.65rem',
+                      border: `1px solid ${copied ? '#22c55e' : 'var(--border)'}`,
+                      background: copied ? 'rgba(34,197,94,0.1)' : 'var(--card-bg)',
+                      color: copied ? '#22c55e' : 'var(--text-primary)',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    {copied ? <Check size={14} /> : <Copy size={14} />}
+                    {copied ? t('copyDone') : t('copyResult')}
+                  </button>
+                </div>
 
                 {/* Progress Bar */}
                 <div style={{ marginBottom: '2rem' }}>
@@ -449,7 +583,7 @@ export default function AquariumCalcClient() {
             <div className="glass-panel flex items-center justify-center" style={{ padding: '4rem', opacity: 0.5, minHeight: '400px' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🐠</div>
-                <p style={{ color: 'var(--text-secondary)' }}>수조에 물고기를 추가해보세요</p>
+                <p style={{ color: 'var(--text-secondary)' }}>{t('emptyTankMsg')}</p>
               </div>
             </div>
           )}
@@ -498,7 +632,7 @@ export default function AquariumCalcClient() {
         fontSize: '0.875rem',
         margin: '2rem 0'
       }}>
-        광고 영역
+        AD
       </div>
 
       <SeoSection
