@@ -255,6 +255,15 @@
   "Tax33": {
     "title": "🧾 Freelancer 3.3% Tax Calculator",
     "description": "Calculate your take-home pay after Korean 3.3% withholding tax deduction.",
+    "mode_normal": "Gross → Net",
+    "mode_reverse": "Reverse: Net → Gross",
+    "input_label_net": "Desired Net Amount",
+    "result_label_required_gross": "Required Gross Amount",
+    "copy_button": "Copy Result",
+    "copy_done": "Copied",
+    "ins_pension": "National Pension",
+    "ins_health": "Health Insurance",
+    "ins_care": "Long-term Care",
     "label": {
       "gross": "Gross Pay (Contract Amount)",
       "insurance": "Include 4 Major Insurance Premiums",

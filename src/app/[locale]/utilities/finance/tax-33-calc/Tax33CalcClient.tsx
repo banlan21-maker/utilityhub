@@ -2,40 +2,35 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-  Building2,
-  Calculator,
-  Wallet,
-  ShieldCheck,
-  Hospital,
-  Scale,
-  DollarSign,
-  Copy,
-  CheckCircle2,
-  ArrowRight,
-  Info,
-  TrendingUp,
-  Coins,
-  Receipt,
-  Umbrella
-} from 'lucide-react';
+import { Wallet, Copy, CheckCircle2, Receipt } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './tax.module.css';
 
-/* ─── Insurance Rates (2024 Reference) ─── */
+/* ─── Insurance Rates (2024 Reference)
+ *  지역가입자 기준 간이 추정치.
+ *  - 국민연금: 4.5%
+ *  - 건강보험: 3.545%
+ *  - 장기요양: 건강보험료 × 12.95% → grossNum 기준으로는 약 0.4591%
+ *    (실제 공식: 장기요양 = 건강보험료 × 0.1295, 본 계산기는 grossNum 직접 비율로 단순화)
+ *  - 합계 약 8.5%, 고용보험·산재보험은 지역가입자 미적용
+ */
 const INSURANCE = {
-  national: { rate: 0.045, labelKo: '국민연금', labelEn: 'Nat. Pension' },
-  health: { rate: 0.03545, labelKo: '건강보험', labelEn: 'Health Ins.' },
-  care: { rate: 0.004591, labelKo: '장기요양', labelEn: 'Long-term Care' },
+  national: { rate: 0.045 },
+  health: { rate: 0.03545 },
+  care: { rate: 0.03545 * 0.1295 }, // = 0.0045907
 };
+const INSURANCE_TOTAL_RATE =
+  INSURANCE.national.rate + INSURANCE.health.rate + INSURANCE.care.rate;
+const WITHHOLD_RATE = 0.033;
 
 export default function Tax33CalcClient() {
   const t = useTranslations('Tax33');
   const locale = useLocale();
   const isKo = locale === 'ko';
+  const unit = isKo ? '원' : ' KRW';
 
   const [calcMode, setCalcMode] = useState<'normal' | 'reverse'>('normal');
   const [gross, setGross] = useState('');
@@ -46,8 +41,13 @@ export default function Tax33CalcClient() {
   useEffect(() => { setIsClient(true); }, []);
 
   const inputNum = parseFloat(gross.replace(/,/g, '')) || 0;
-  // normal: 입력값 = 세전, reverse: 입력값 = 원하는 실수령액 → 세전 역산
-  const grossNum = calcMode === 'reverse' ? inputNum / (1 - 0.033) : inputNum;
+
+  // 역산 모드: 보험 토글 상태에 따라 실효 차감률이 달라짐
+  const effectiveDeductionRate =
+    WITHHOLD_RATE + (applyInsurance ? INSURANCE_TOTAL_RATE : 0);
+  const grossNum = calcMode === 'reverse'
+    ? inputNum / (1 - effectiveDeductionRate)
+    : inputNum;
 
   // 3.3% Withholding Tax
   const businessTax = grossNum * 0.03;
@@ -66,11 +66,27 @@ export default function Tax33CalcClient() {
   const fmt = (n: number) => Math.round(n).toLocaleString(isKo ? 'ko-KR' : 'en-US');
 
   const copyResult = useCallback(() => {
-    const text = `${t('title')}\n${t('result.gross')}: ${fmt(grossNum)}원\n${t('result.withholding')}: ${fmt(withholding)}원\n${t('result.net')}: ${fmt(net)}원`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [grossNum, withholding, net, t, isKo]);
+    const lines: string[] = [t('title')];
+    if (calcMode === 'reverse') {
+      lines.push(`${t('input_label_net')}: ${fmt(inputNum)}${unit}`);
+      lines.push(`${t('result_label_required_gross')}: ${fmt(grossNum)}${unit}`);
+    } else {
+      lines.push(`${t('result.gross')}: ${fmt(grossNum)}${unit}`);
+    }
+    lines.push(`${t('result.withholding')}: -${fmt(withholding)}${unit}`);
+    if (applyInsurance) {
+      lines.push(`${t('ins_pension')} (4.5%): -${fmt(natPension)}${unit}`);
+      lines.push(`${t('ins_health')} (3.545%): -${fmt(healthIns)}${unit}`);
+      lines.push(`${t('ins_care')}: -${fmt(careIns)}${unit}`);
+      lines.push(`${t('result.totalInsurance')}: -${fmt(totalInsurance)}${unit}`);
+    }
+    lines.push(`${t('result.net')}: ${fmt(net)}${unit}`);
+    try {
+      navigator.clipboard.writeText(lines.join('\n'));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* ignore */ }
+  }, [calcMode, inputNum, grossNum, withholding, natPension, healthIns, careIns, totalInsurance, net, applyInsurance, t, unit]);
 
   if (!isClient) return null;
 
@@ -98,23 +114,23 @@ export default function Tax33CalcClient() {
           <button
             className={`${s.tax_mode_btn} ${calcMode === 'normal' ? s.tax_mode_btn_active : ''}`}
             onClick={() => { setCalcMode('normal'); setGross(''); }}
+            aria-label={t('mode_normal')}
           >
-            {isKo ? '세전 → 세후' : 'Gross → Net'}
+            {t('mode_normal')}
           </button>
           <button
             className={`${s.tax_mode_btn} ${calcMode === 'reverse' ? s.tax_mode_btn_active : ''}`}
             onClick={() => { setCalcMode('reverse'); setGross(''); }}
+            aria-label={t('mode_reverse')}
           >
-            {isKo ? '역산: 받고 싶은 금액 → 세전' : 'Reverse: Net → Gross'}
+            {t('mode_reverse')}
           </button>
         </div>
 
         {/* Input */}
         <div className={s.tax_input_group}>
           <label className={s.tax_label}>
-            {calcMode === 'normal'
-              ? t('label.gross')
-              : (isKo ? '원하는 실수령액' : 'Desired Net Amount')}
+            {calcMode === 'normal' ? t('label.gross') : t('input_label_net')}
           </label>
           <div style={{ position: 'relative' }}>
             <input
@@ -158,7 +174,7 @@ export default function Tax33CalcClient() {
 
         {/* Results Area */}
         {inputNum > 0 && (
-          <div className={s.tax_result_card} style={{ animation: 'bounceIn 0.5s ease-out' }}>
+          <div className={s.tax_result_card}>
             <div className={s.tax_result_header}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -167,44 +183,49 @@ export default function Tax33CalcClient() {
                 </div>
                 <button
                   onClick={copyResult}
+                  aria-label={t('copy_button')}
                   style={{ background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '0.5rem', color: '#fff', padding: '0.4rem 0.8rem', fontSize: '0.75rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                 >
                   {copied ? <CheckCircle2 size={14} /> : <Copy size={14} />}
-                  {copied ? (isKo ? '복사됨' : 'Copied') : (isKo ? '결과 복사' : 'Copy Result')}
+                  {copied ? t('copy_done') : t('copy_button')}
                 </button>
               </div>
             </div>
 
-            {/* 역산 모드: 필요한 세전 금액 강조 */}
-            {calcMode === 'reverse' && (
-              <div className={s.tax_result_row} style={{ background: '#fdfbff' }}>
-                <span className={s.tax_result_label} style={{ color: '#8b5cf6', fontWeight: 800 }}>
-                  {isKo ? '필요한 세전 계약금' : 'Required Gross Amount'}
-                </span>
-                <span className={s.tax_net_value}>{fmt(grossNum)}{isKo ? '원' : ''}</span>
-              </div>
-            )}
-
-            <div className={s.tax_result_row}>
-              <span className={s.tax_result_label}>{t('result.gross')}</span>
-              <span className={s.tax_result_value}>{fmt(grossNum)}{isKo ? '원' : ''}</span>
+            {/* 총 급여 — 역산 모드면 라벨 변경 + 강조 */}
+            <div className={s.tax_result_row} style={calcMode === 'reverse' ? { background: '#fdfbff' } : undefined}>
+              <span
+                className={s.tax_result_label}
+                style={calcMode === 'reverse' ? { color: '#8b5cf6', fontWeight: 800 } : undefined}
+              >
+                {calcMode === 'reverse' ? t('result_label_required_gross') : t('result.gross')}
+              </span>
+              <span
+                className={calcMode === 'reverse' ? s.tax_net_value : s.tax_result_value}
+              >
+                {fmt(grossNum)}{unit}
+              </span>
             </div>
 
             <div className={s.tax_result_row}>
               <span className={s.tax_result_label}>{t('result.withholding')} (3.3%)</span>
-              <span className={s.tax_result_value} style={{ color: '#ef4444' }}>-{fmt(withholding)}{isKo ? '원' : ''}</span>
+              <span className={s.tax_result_value} style={{ color: '#ef4444' }}>-{fmt(withholding)}{unit}</span>
             </div>
 
             {applyInsurance && (
               <>
-                <div className={s.tax_insurance_section}>{t('result.insuranceSection')} (Regional Est.)</div>
+                <div className={s.tax_insurance_section}>{t('result.insuranceSection')}</div>
                 <div className={s.tax_result_row}>
-                  <span className={s.tax_result_label}>{isKo ? '국민연금 (4.5%)' : 'Nat. Pension'}</span>
-                  <span className={s.tax_result_value} style={{ color: '#f59e0b' }}>-{fmt(natPension)}{isKo ? '원' : ''}</span>
+                  <span className={s.tax_result_label}>{t('ins_pension')} (4.5%)</span>
+                  <span className={s.tax_result_value} style={{ color: '#f59e0b' }}>-{fmt(natPension)}{unit}</span>
                 </div>
                 <div className={s.tax_result_row}>
-                  <span className={s.tax_result_label}>{isKo ? '건강보험 (3.545%~)' : 'Health Insurance'}</span>
-                  <span className={s.tax_result_value} style={{ color: '#f59e0b' }}>-{fmt(healthIns)}{isKo ? '원' : ''}</span>
+                  <span className={s.tax_result_label}>{t('ins_health')} (3.545%)</span>
+                  <span className={s.tax_result_value} style={{ color: '#f59e0b' }}>-{fmt(healthIns)}{unit}</span>
+                </div>
+                <div className={s.tax_result_row}>
+                  <span className={s.tax_result_label}>{t('ins_care')}</span>
+                  <span className={s.tax_result_value} style={{ color: '#f59e0b' }}>-{fmt(careIns)}{unit}</span>
                 </div>
               </>
             )}
@@ -214,7 +235,7 @@ export default function Tax33CalcClient() {
                 <Wallet size={18} color="#8b5cf6" />
                 <span className={`${s.tax_result_label} ${s.tax_net_label}`}>{t('result.net')}</span>
               </div>
-              <span className={`${s.tax_result_value} ${s.tax_net_value}`}>{fmt(net)}{isKo ? '원' : ''}</span>
+              <span className={`${s.tax_result_value} ${s.tax_net_value}`}>{fmt(net)}{unit}</span>
             </div>
           </div>
         )}
