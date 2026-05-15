@@ -131,6 +131,10 @@
     "metal-weight-calc": {
       "title": "Metal Weight & Area Calculator",
       "desc": "Calculate weight, paint area, and cost for 11 metal shapes including H-beam, pipe, and plate. 19 material densities, KS presets, and quote basket included."
+    },
+    "piping-calc": {
+      "title": "Piping Calculator",
+      "desc": "Instant KS pipe spec lookup, slope drop calculation, and hydro test water volume. Mobile-first tool built for field workers."
     }
   },
   "TextCounter": {
@@ -1603,5 +1607,38 @@
     "download_done": "✅ Downloaded!",
     "about_title": "What is the Bubble Pop Art Text Generator?",
     "about": "The Bubble Pop Art Text Generator instantly creates pop art-style images with rounded bubble fonts, vivid multicolor letters, thick bold outlines, and glossy highlights. Perfect for store POP (Point of Purchase) signs, social media event graphics, banners, and stickers. You can freely customize the background color, text color (multicolor or single), font size, and output resolution. All processing happens entirely in your browser — files are never uploaded to a server. Download high-resolution PNG images in multiple aspect ratios including square, 16:9 landscape, 9:16 portrait, and A4 ratio for both print and digital use."
+  },
+  "PipingCalc": {
+    "title": "Piping Calculator",
+    "description": "Instantly look up KS pipe specs, calculate slope drop, and estimate water volume for hydro testing. Mobile-optimized for field workers.",
+    "tab_spec": "📋 Spec Lookup",
+    "tab_slope": "📐 Slope",
+    "tab_hydro": "💧 Hydro Test",
+    "material": "Material",
+    "material_carbon": "Carbon Steel (KS D 3562 / SPPS)",
+    "material_sus": "Stainless Steel (KS D 3576 / SUS304)",
+    "nominal_size": "Nominal Size",
+    "schedule": "Schedule",
+    "spec_od": "Outside Diameter (O.D)",
+    "spec_thickness": "Thickness (t)",
+    "spec_id": "Inside Diameter (I.D)",
+    "spec_weight": "Weight per meter",
+    "spec_area": "Inner cross-section area",
+    "spec_inch": "Inch size",
+    "copy_result": "📋 Copy result",
+    "copy_done": "✅ Copied!",
+    "slope_length": "Pipe length (m)",
+    "slope_preset": "Slope preset",
+    "slope_custom": "Custom",
+    "slope_drop": "Total drop (start to end)",
+    "slope_tip": "💡 Field tip",
+    "hydro_length": "Total pipe length (m)",
+    "hydro_safety": "Safety margin",
+    "hydro_volume_net": "Net inner volume",
+    "hydro_volume_total": "Required water (with margin)",
+    "hydro_weight": "🚛 Water weight",
+    "hydro_truck": "💡 Truck recommendation",
+    "disclaimer": "⚠️ Results are based on KS/JIS standards and are for reference only. Always cross-check with design drawings and on-site supervision before construction.",
+    "sus_note": "Stainless steel weight is calculated for SUS304 (density 7.93 g/cm³). SUS304 and SUS316 share the same coefficient with <0.1% error."
   }
 }

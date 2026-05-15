@@ -131,6 +131,10 @@
     "metal-weight-calc": {
       "title": "금속 중량 & 면적 계산기",
       "desc": "H빔·파이프·판재 등 11가지 형상의 중량, 도장 면적, 예상 단가를 실시간 계산. 19종 재질·KS 규격 프리셋·견적 바구니 제공."
+    },
+    "piping-calc": {
+      "title": "배관 종합 계산기",
+      "desc": "강관·SUS KS 규격 즉시 조회, 구배 단차 계산, 수압 테스트 물량 산출. 현장 작업자용 모바일 최적화 툴."
     }
   },
   "TextCounter": {
@@ -1753,5 +1757,38 @@
     "download_done": "✅ 다운로드 완료!",
     "about_title": "버블 팝아트 글씨 생성기란?",
     "about": "버블 팝아트 글씨 생성기는 텍스트를 입력하면 둥글둥글한 버블 폰트에 멀티컬러, 두꺼운 외곽선, 광택 하이라이트 효과가 적용된 팝아트 스타일 이미지를 즉시 생성해주는 도구입니다. 매장 POP(Point of Purchase) 제작, SNS 이벤트 이미지, 현수막, 스티커 등 다양한 용도로 활용할 수 있습니다. 배경색, 글자 색상(멀티컬러/단색), 글자 크기, 출력 해상도를 자유롭게 설정할 수 있으며, 모든 처리가 브라우저 안에서만 이루어져 파일이 서버로 전송되지 않습니다. 정사각형, 16:9 가로형, 9:16 세로형, A4 비율 등 다양한 크기로 고해상도 PNG를 바로 다운로드할 수 있습니다."
+  },
+  "PipingCalc": {
+    "title": "배관 종합 계산기",
+    "description": "강관·SUS KS 규격 즉시 조회, 배관 구배 단차 계산, 수압 테스트 물량 산출. 현장 작업자를 위한 모바일 최적화 배관 계산기.",
+    "tab_spec": "📋 배관 규격 조회",
+    "tab_slope": "📐 구배 계산",
+    "tab_hydro": "💧 수압 테스트",
+    "material": "재질",
+    "material_carbon": "탄소강관 (KS D 3562 / SPPS)",
+    "material_sus": "스테인리스강관 (KS D 3576 / SUS304)",
+    "nominal_size": "호칭경",
+    "schedule": "스케줄",
+    "spec_od": "외경 (O.D)",
+    "spec_thickness": "두께 (t)",
+    "spec_id": "내경 (I.D)",
+    "spec_weight": "1m당 중량",
+    "spec_area": "단면적 (내부)",
+    "spec_inch": "인치 호칭",
+    "copy_result": "📋 결과 복사",
+    "copy_done": "✅ 복사됨!",
+    "slope_length": "배관 길이 (m)",
+    "slope_preset": "경사율 프리셋",
+    "slope_custom": "직접 입력",
+    "slope_drop": "시작~끝 단차",
+    "slope_tip": "💡 시공 팁",
+    "hydro_length": "배관 총 길이 (m)",
+    "hydro_safety": "여유율",
+    "hydro_volume_net": "순 내용적",
+    "hydro_volume_total": "필요 물량 (여유 포함)",
+    "hydro_weight": "🚛 물 무게",
+    "hydro_truck": "💡 물차 추천",
+    "disclaimer": "⚠️ 본 계산기의 결과는 KS/JIS 규격 기반 참고용입니다. 실제 시공 전 설계도서 및 현장 감리 기준과 반드시 대조하세요.",
+    "sus_note": "스테인리스 중량은 SUS304(밀도 7.93 g/cm³) 기준입니다. SUS304/316 동일 계수 적용 시 오차 0.1% 미만."
   }
 }

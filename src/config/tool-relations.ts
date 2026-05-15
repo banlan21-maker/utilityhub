@@ -81,6 +81,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/utility/yt-thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기', en: 'YouTube Thumbnail Downloader', category: 'utility' },
   { id: 'utilities/utility/lotto-generator', icon: '🎰', ko: '운명 로또 번호 생성기', en: 'Destiny Lotto Picker', category: 'utility' },
   { id: 'utilities/utility/decision-master', icon: '🎡', ko: 'Decision Master', en: 'Decision Master', category: 'utility' },
+  { id: 'utilities/utility/piping-calc', icon: '🔧', ko: '배관 종합 계산기', en: 'Piping Calculator', category: 'utility' },
 
   // Dev
   { id: 'utilities/dev/json-formatter', icon: '🗂️', ko: 'JSON 포맷터 & 뷰어', en: 'JSON Formatter & Viewer', category: 'dev' },
@@ -387,6 +388,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/utility/image-resizer',
     'utilities/marketing/qr-generator',
     'utilities/marketing/shorturl',
+  ],
+  'utilities/utility/piping-calc': [
+    'utilities/utility/unit-converter',
+    'utilities/utility/pyeong-calc',
+    'utilities/dev/kec-grounding',
   ],
 
   // ── Dev ────────────────────────────────────────────────────
