@@ -108,6 +108,25 @@ export default function Tax33CalcClient() {
         <p className={s.tax_subtitle}>{t('description')}</p>
       </header>
 
+      {/* 한국 전용 안내 배너 */}
+      <div
+        role="note"
+        style={{
+          maxWidth: '720px',
+          margin: '0 auto 1.5rem',
+          padding: '0.85rem 1.1rem',
+          background: '#fef3c7',
+          border: '1px solid #fcd34d',
+          borderRadius: '0.85rem',
+          color: '#92400e',
+          fontSize: '0.85rem',
+          lineHeight: 1.55,
+          textAlign: 'center',
+        }}
+      >
+        {t('country_notice')}
+      </div>
+
       <section className={s.tax_panel}>
         {/* Mode Tabs */}
         <div className={s.tax_mode_tabs}>
@@ -264,8 +283,8 @@ export default function Tax33CalcClient() {
             ],
             faqs: [
               { q: '3.3% 원천징수는 어떻게 구성되나요?', a: '사업소득세 3.0%와 지방소득세 0.3%로 구성되며, 총 3.3%가 계약 금액에서 자동 공제됩니다. 이는 소득세법 제127조에 따라 사업소득 지급 시 의무적으로 원천징수해야 하는 금액입니다.' },
+              { q: '미국·유럽 프리랜서도 이 계산기를 사용할 수 있나요?', a: '아니요. 3.3% 원천징수는 한국 고유 제도입니다. 미국은 자영업세(Self-Employment Tax 15.3% = Social Security 12.4% + Medicare 2.9%)와 연방·주 소득세를 본인이 분기별 납부하며, 클라이언트가 원천징수를 하지 않습니다(W-9 양식 작성 후 1099-NEC 수령). 유럽 각국도 VAT와 소득세 체계가 다릅니다. 이 계산기는 한국 거주 또는 한국 기업과 계약하는 프리랜서 전용입니다.' },
               { q: '원천징수된 세금은 나중에 돌려받을 수 있나요?', a: '5월 종합소득세 신고 시 연간 총소득과 경비를 정산하여 최종 세액을 계산합니다. 원천징수액이 실제 납부할 세액보다 많으면 환급받고, 적으면 추가 납부해야 합니다.' },
-              { q: '지역가입자 4대보험료는 정확한가요?', a: '본 계산기는 2024년 기준 간이 예측치로, 실제 보험료는 전년도 소득, 재산, 자동차 등 여러 요소를 반영하여 국민건강보험공단과 국민연금공단이 개별 고지합니다. 정확한 금액은 해당 기관에 문의하세요.' },
               { q: '월급과 프리랜서 소득을 동시에 받으면?', a: '직장 근로소득과 프리랜서 사업소득을 동시에 받는 경우, 종합소득세 신고 시 두 소득을 합산하여 누진세율이 적용되므로 예상보다 세금이 높아질 수 있습니다. 세무사 상담을 권장합니다.' }
             ]
           }}
@@ -285,10 +304,10 @@ export default function Tax33CalcClient() {
               { step: 'Copy and Save Results', desc: 'Click "Copy Result" to save the breakdown to your clipboard, then paste it into a spreadsheet or note app for record-keeping.' }
             ],
             faqs: [
-              { q: 'What does the 3.3% withholding tax include?', a: 'It consists of 3.0% business income tax and 0.3% local income tax, totaling 3.3%. This is mandated by Article 127 of the Income Tax Act for all business income payments.' },
+              { q: 'What does the 3.3% withholding tax include?', a: 'It consists of 3.0% business income tax and 0.3% local income tax, totaling 3.3%. This is mandated by Article 127 of the Korean Income Tax Act for all business income payments made to freelancers and independent contractors in South Korea.' },
+              { q: 'Can US or European freelancers use this calculator?', a: 'No. The 3.3% withholding tax is a South Korea-only system. In the US, freelancers handle their own quarterly estimated taxes including Self-Employment Tax (15.3% = Social Security 12.4% + Medicare 2.9%) plus federal and state income tax — clients do not withhold taxes (they issue Form 1099-NEC after collecting Form W-9). European countries each have their own VAT and income tax systems. This calculator is intended for freelancers residing in or contracting with companies based in South Korea.' },
               { q: 'Can I get a refund on withheld taxes?', a: 'Yes, during the comprehensive income tax filing in May, your total annual income and expenses are reconciled. If withheld taxes exceed your actual tax liability, you\'ll receive a refund.' },
-              { q: 'Are the insurance estimates accurate?', a: 'The insurance amounts shown are simplified 2024 estimates. Actual premiums are calculated by the National Health Insurance Service and National Pension Service based on prior year income, assets, and vehicles. Contact them for exact figures.' },
-              { q: 'What if I have both salary and freelance income?', a: 'If you receive both employment income and freelance business income, they are combined during tax filing, potentially pushing you into a higher progressive tax bracket. Consult a tax professional for personalized advice.' }
+              { q: 'What if I have both salary and freelance income?', a: 'If you receive both employment income and freelance business income, they are combined during tax filing, potentially pushing you into a higher progressive tax bracket. Consult a Korean tax accountant (세무사) for personalized advice.' }
             ]
           }}
         />
