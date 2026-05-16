@@ -10,6 +10,9 @@ type Country = 'KR' | 'US';
 interface CostItem { id: string; name: string; amount: number; }
 
 // ── Tax Logic ──
+// ── KR Tax (2024 종합소득세 누진 + 지방세 10% + 지역가입자 건강보험 추정치)
+// 건강보험 7.09%는 지역가입자 소득 보험료율 단순화. 실제는 재산·자동차 점수가
+// 추가되므로 본 계산은 과소 추정될 수 있음 (UI에 명시).
 function calcKRTax(grossMonthly: number): number {
   const annual = grossMonthly * 12;
   const brackets = [
@@ -33,12 +36,17 @@ function calcKRTax(grossMonthly: number): number {
   return (tax + localTax) / 12 + healthIns;
 }
 
+// ── US Tax (2024 Self-Employment Tax + Federal Income Tax)
+// Single filer 표준공제 $14,600 적용. 부부합산($29,200)·세대주($21,900) 등은
+// 별도 필요. State income tax는 미포함 (안내문에 명시).
+const US_STANDARD_DEDUCTION_2024 = 14_600;
 function calcUSTax(grossMonthly: number): number {
   const annual = grossMonthly * 12;
   const seTaxBase = annual * 0.9235;
   const seTax = seTaxBase * 0.153;
   const seDeduction = seTax * 0.5;
-  const agi = annual - seDeduction;
+  // AGI에서 표준공제까지 차감해야 실제 과세표준이 됨
+  const taxableIncome = Math.max(0, annual - seDeduction - US_STANDARD_DEDUCTION_2024);
   const brackets = [
     { limit: 11_600,   rate: 0.10 },
     { limit: 47_150,   rate: 0.12 },
@@ -50,8 +58,8 @@ function calcUSTax(grossMonthly: number): number {
   ];
   let fedTax = 0, prev = 0;
   for (const b of brackets) {
-    if (agi <= prev) break;
-    fedTax += (Math.min(agi, b.limit) - prev) * b.rate;
+    if (taxableIncome <= prev) break;
+    fedTax += (Math.min(taxableIncome, b.limit) - prev) * b.rate;
     prev = b.limit;
   }
   return (seTax + fedTax) / 12;
@@ -397,6 +405,26 @@ export default function FreelanceRateCalculatorClient() {
               <p className={s.frc_breakdown_item_val}>{(monthlyHours * efficiency / 100).toFixed(0)}h</p>
             </div>
           </div>
+
+          {/* 국가별 미반영 항목 안내 */}
+          <p style={{
+            marginTop: '1.25rem',
+            padding: '0.75rem 1rem',
+            background: 'rgba(254, 243, 199, 0.6)',
+            border: '1px solid rgba(252, 211, 77, 0.5)',
+            borderRadius: '0.6rem',
+            fontSize: '0.78rem',
+            color: '#78350f',
+            lineHeight: 1.55,
+          }}>
+            {country === 'KR'
+              ? (isKo
+                  ? '⚠️ 건강보험은 지역가입자 소득 보험료율 7.09% 단순 적용. 부동산·자동차 보유 시 재산점수가 추가되어 실제 부담은 더 클 수 있습니다. 산재·고용보험은 임의가입이라 미포함.'
+                  : '⚠️ Health insurance uses a simplified 7.09% income-based rate. Real burden is higher if you own real estate or a car (property scores apply). Industrial accident & employment insurance are optional and excluded.')
+              : (isKo
+                  ? '⚠️ Single filer 표준공제 $14,600 적용. 부부합산($29,200)·세대주($21,900)는 별도이며, 주(State) 소득세(0~13%)는 미포함입니다.'
+                  : '⚠️ Applies 2024 Single filer standard deduction ($14,600). Married-filing-jointly ($29,200) & head-of-household ($21,900) are separate. State income tax (0–13%) NOT included.')}
+          </p>
         </div>
       </div>
 
@@ -463,13 +491,13 @@ export default function FreelanceRateCalculatorClient() {
         <ul>
           {isKo ? (
             <>
-              <li><strong>한국:</strong> 3.3% 원천징수(사업소득세) + 6~45% 누진소득세 + 지방소득세 10% + 지역건강보험료(약 7.09%). 특히 지역 건강보험료는 소득 외 재산·자동차도 반영되어 실제 부담이 크게 늘 수 있습니다.</li>
-              <li><strong>미국:</strong> 자영업세(SE Tax) 15.3% (소득의 92.35% 기준) + 연방소득세 10~37% 누진. SE Tax의 50%는 소득공제 가능. 주(State)세는 별도로 계산하세요.</li>
+              <li><strong>한국:</strong> 6~45% 누진소득세 + 지방소득세 10% + 지역가입자 건강보험료(소득 보험료율 약 7.09% 단순 적용). ⚠️ 실제 지역건강보험은 소득점수 + 재산점수 + 자동차점수로 계산되므로 부동산·차량 보유 시 실제 부담은 더 클 수 있습니다. 4대보험 중 산재·고용은 임의가입이라 제외.</li>
+              <li><strong>미국:</strong> 자영업세(SE Tax) 15.3% (소득의 92.35% 기준) + 연방소득세 10~37% 누진. <strong>Single filer 표준공제 $14,600 자동 적용</strong>. SE Tax의 50%는 소득공제. ⚠️ 부부합산($29,200), 세대주($21,900) 공제는 별도이며, 주(State) 소득세도 미포함 — 거주 주에 따라 0~13% 추가됩니다.</li>
             </>
           ) : (
             <>
-              <li><strong>Korea:</strong> 3.3% withholding tax (business income) + 6–45% progressive income tax + 10% local income tax + regional health insurance (~7.09%). Health insurance is also calculated on assets/vehicles, making actual burden higher.</li>
-              <li><strong>United States:</strong> SE Tax 15.3% (on 92.35% of net SE income) + Federal income tax 10–37% progressive. 50% of SE Tax is deductible. State taxes not included — add your state rate separately.</li>
+              <li><strong>Korea:</strong> 6–45% progressive income tax + 10% local income tax + regional health insurance (~7.09% as a simplified income-based rate). ⚠️ Actual regional health insurance is computed from income, property, and vehicle scores combined — real burden is typically higher if you own real estate or a car.</li>
+              <li><strong>United States:</strong> SE Tax 15.3% (on 92.35% of net SE income) + Federal income tax 10–37% progressive. <strong>2024 Single filer standard deduction $14,600 applied automatically</strong>. 50% of SE Tax is deductible. ⚠️ Married-filing-jointly ($29,200) and head-of-household ($21,900) deductions are separate; State income tax (0–13% depending on state) is NOT included — add it manually.</li>
             </>
           )}
         </ul>
