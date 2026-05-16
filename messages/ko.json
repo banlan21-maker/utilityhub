@@ -911,15 +911,44 @@
       "clear": "지우기"
     },
     "placeholder": {
-      "test": "테스트할 문자열을 입력하세요..."
+      "test": "테스트할 문자열을 입력하세요...",
+      "empty_result": "— 테스트 문자열을 입력하세요 —"
     },
     "status": {
-      "matches": "개 일치"
+      "matches": "개 일치",
+      "no_match": "일치 항목 없음",
+      "more_results": "+{n}개 더",
+      "error_prefix": "정규식 오류"
     },
     "cheat": {
       "title": "자주 쓰는 패턴",
-      "quickRef": "빠른 참고"
-    }
+      "quickRef": "빠른 참고",
+      "items": {
+        "email": "이메일",
+        "phone_kr": "한국 전화번호",
+        "url": "URL",
+        "ssn_kr": "한국 주민번호",
+        "digits": "숫자만",
+        "ipv4": "IPv4 주소",
+        "hex": "16진수 색상",
+        "date": "날짜 YYYY-MM-DD",
+        "hangul": "한글 문자"
+      }
+    },
+    "quickRef": {
+      "any_char": "임의 문자 (줄바꿈 제외)",
+      "digit": "숫자 [0-9]",
+      "word": "단어 문자 [a-zA-Z0-9_]",
+      "space": "공백 문자",
+      "start": "문자열 시작",
+      "end": "문자열 끝",
+      "zero_or_more": "0회 이상 반복",
+      "one_or_more": "1회 이상 반복",
+      "zero_or_one": "0 또는 1회",
+      "n_to_m": "n~m회 반복",
+      "or": "a 또는 b"
+    },
+    "ad_text": "AD"
   },
   "DevPassword": {
     "title": "🔑 비밀번호 생성기 & 강도 분석기",

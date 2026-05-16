@@ -911,15 +911,44 @@
       "clear": "Clear"
     },
     "placeholder": {
-      "test": "Enter text to test against the pattern..."
+      "test": "Enter text to test against the pattern...",
+      "empty_result": "— Enter a test string —"
     },
     "status": {
-      "matches": "match(es)"
+      "matches": "match(es)",
+      "no_match": "No matches",
+      "more_results": "+{n} more",
+      "error_prefix": "Regex error"
     },
     "cheat": {
       "title": "Common Patterns",
-      "quickRef": "Quick Reference"
-    }
+      "quickRef": "Quick Reference",
+      "items": {
+        "email": "Email",
+        "phone_kr": "KR Phone",
+        "url": "URL",
+        "ssn_kr": "KR SSN",
+        "digits": "Digits only",
+        "ipv4": "IPv4 address",
+        "hex": "Hex color",
+        "date": "Date YYYY-MM-DD",
+        "hangul": "Korean chars"
+      }
+    },
+    "quickRef": {
+      "any_char": "Any char (except newline)",
+      "digit": "Digit [0-9]",
+      "word": "Word char [a-zA-Z0-9_]",
+      "space": "Whitespace",
+      "start": "Start of string",
+      "end": "End of string",
+      "zero_or_more": "0 or more",
+      "one_or_more": "1 or more",
+      "zero_or_one": "0 or 1",
+      "n_to_m": "n to m times",
+      "or": "a or b"
+    },
+    "ad_text": "AD"
   },
   "DevPassword": {
     "title": "🔑 Password Generator & Strength Analyzer",
