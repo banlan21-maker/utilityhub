@@ -256,25 +256,37 @@ export default function BrainBoostClient() {
   };
 
   const finishSession = () => {
-    // 채점
-    let posCorrect = 0, posTotal = 0;
-    let soundCorrect = 0, soundTotal = 0;
+    // F1 기반 채점 — 단순 정확도는 "가만히 있어도 80%" 문제가 있음
+    let posTP = 0, posFP = 0, posFN = 0;
+    let sndTP = 0, sndFP = 0, sndFN = 0;
 
     for (let i = 0; i < sequence.length; i++) {
-      if (i < n) continue; // 첫 N개는 비교 불가
+      if (i < n) continue;
       const isPosMatch = sequence[i].position === sequence[i - n].position;
       const isSoundMatch = sequence[i].letterIdx === sequence[i - n].letterIdx;
       const resp = responsesRef.current[i] ?? { pos: false, sound: false };
 
-      posTotal++;
-      soundTotal++;
-      if (isPosMatch === resp.pos) posCorrect++;
-      if (isSoundMatch === resp.sound) soundCorrect++;
+      if (isPosMatch && resp.pos) posTP++;
+      else if (!isPosMatch && resp.pos) posFP++;
+      else if (isPosMatch && !resp.pos) posFN++;
+      // else: TN (불일치 + 안 누름) — F1에 사용 안 함
+
+      if (isSoundMatch && resp.sound) sndTP++;
+      else if (!isSoundMatch && resp.sound) sndFP++;
+      else if (isSoundMatch && !resp.sound) sndFN++;
     }
 
-    const posAcc = posTotal > 0 ? Math.round((posCorrect / posTotal) * 100) : 0;
-    const soundAcc = soundTotal > 0 ? Math.round((soundCorrect / soundTotal) * 100) : 0;
-    const score = Math.round(((posAcc + soundAcc) / 2) * (n * 10) / 10); // n에 따른 가중치
+    const f1 = (tp: number, fp: number, fn: number): number => {
+      // 매치 자체가 없고 사용자도 누르지 않은 경우 만점 (특수 케이스, 거의 발생 안 함)
+      if (tp + fp === 0 && tp + fn === 0) return 100;
+      const precision = tp + fp === 0 ? 0 : tp / (tp + fp);
+      const recall = tp + fn === 0 ? 0 : tp / (tp + fn);
+      if (precision + recall === 0) return 0;
+      return Math.round((2 * precision * recall) / (precision + recall) * 100);
+    };
+    const posAcc = f1(posTP, posFP, posFN);
+    const soundAcc = f1(sndTP, sndFP, sndFN);
+    const score = Math.round(((posAcc + soundAcc) / 2) * n);
 
     const result: SessionStats = {
       date: new Date().toISOString(),
@@ -289,11 +301,10 @@ export default function BrainBoostClient() {
     saveStats(newHistory);
     setLastResult(result);
 
-    // 어댑티브 N 조정
+    // 어댑티브 N 조정 — 표준 Dual N-Back 규칙: 둘 다 80%+ → N+1, 어느 하나 50%- → N-1
     if (adaptive) {
-      const avgAcc = (posAcc + soundAcc) / 2;
-      if (avgAcc >= 80) setN((prev) => Math.min(prev + 1, 9));
-      else if (avgAcc < 50) setN((prev) => Math.max(prev - 1, 1));
+      if (posAcc >= 80 && soundAcc >= 80) setN((prev) => Math.min(prev + 1, 9));
+      else if (posAcc < 50 || soundAcc < 50) setN((prev) => Math.max(prev - 1, 1));
     }
 
     setState('finished');
@@ -313,20 +324,20 @@ export default function BrainBoostClient() {
 
   const stats = aggregate(history);
 
-  // 다음 N 추천 메시지
+  // 다음 N 추천 — Adaptive ON이면 실제 자동 조정된 N과 일치, OFF면 추천만 표시
   const nextN = useMemo(() => {
     if (!lastResult) return n;
-    const avg = (lastResult.posAcc + lastResult.soundAcc) / 2;
-    if (avg >= 80) return Math.min(lastResult.n + 1, 9);
-    if (avg < 50) return Math.max(lastResult.n - 1, 1);
-    return lastResult.n;
+    const { posAcc, soundAcc, n: lastN } = lastResult;
+    if (posAcc >= 80 && soundAcc >= 80) return Math.min(lastN + 1, 9);
+    if (posAcc < 50 || soundAcc < 50) return Math.max(lastN - 1, 1);
+    return lastN;
   }, [lastResult, n]);
 
   const recommendationKey: 'result_level_up' | 'result_level_down' | 'result_level_same' = useMemo(() => {
     if (!lastResult) return 'result_level_same';
-    const avg = (lastResult.posAcc + lastResult.soundAcc) / 2;
-    if (avg >= 80) return 'result_level_up';
-    if (avg < 50) return 'result_level_down';
+    const { posAcc, soundAcc } = lastResult;
+    if (posAcc >= 80 && soundAcc >= 80) return 'result_level_up';
+    if (posAcc < 50 || soundAcc < 50) return 'result_level_down';
     return 'result_level_same';
   }, [lastResult]);
 
@@ -578,6 +589,13 @@ export default function BrainBoostClient() {
 
           <div className={s.result_recommendation}>
             {t(recommendationKey, { n: nextN })}
+            {!adaptive && nextN !== lastResult.n && (
+              <div style={{ fontSize: '0.78rem', marginTop: '0.4rem', color: 'rgba(212,175,55,0.85)', fontWeight: 500 }}>
+                {isKo
+                  ? '※ 어댑티브 OFF — 다시 도전 시 N은 직접 조절하세요'
+                  : '※ Adaptive OFF — manually change N before retrying'}
+              </div>
+            )}
           </div>
 
           <div className={s.result_actions}>
