@@ -325,7 +325,114 @@
   margin-top: var(--section-gap);
 }
 
+/* ── 인라인 에러 / 팁 / 차이 박스 ────────────────────────── */
+.error_box {
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.95rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  color: #b91c1c;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.tip_box {
+  margin-bottom: 1rem;
+  padding: 0.7rem 0.95rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.75rem;
+  color: #1e40af;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.diff_box {
+  margin-bottom: 1rem;
+  padding: 0.7rem 0.95rem;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 0.75rem;
+  color: #92400e;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* ── 캡처 헤더 + 푸터 (브랜드 노출용) ──────────────────── */
+.capture_header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #8b5cf6;
+  letter-spacing: -0.2px;
+}
+.capture_footer {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+}
+
+/* ── radio 선택 시 강조 ──────────────────────────────────── */
+.radio_label_active {
+  border-color: #8b5cf6 !important;
+  background: rgba(139, 92, 246, 0.08) !important;
+  color: #8b5cf6 !important;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 모바일 컴팩트 ───────────────────────────────────────── */
+@media (max-width: 640px) {
+  .result_area {
+    padding: 1.25rem 1rem;
+    gap: 1rem;
+  }
+  .tool_panel {
+    padding: 1.25rem 1rem;
+  }
+  .section_title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .result_card {
+    padding: 1.5rem 1rem;
+  }
+  .result_value {
+    font-size: 2.5rem;
+  }
+  .barbell_visual {
+    padding: 1.25rem 0.5rem;
+    gap: 0.25rem;
+  }
+  .barbell_bar {
+    width: 60px;
+  }
+  .barbell_weight {
+    font-size: 0.65rem;
+  }
+  .plate {
+    font-size: 0.7rem;
+  }
+  .save_button {
+    padding: 0.75rem 1.1rem;
+    font-size: 0.88rem;
+    width: 100%;
+    justify-content: center;
+  }
+  .ad_placeholder {
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
+  }
 }
