@@ -163,59 +163,64 @@ export default function DdayCalcClient() {
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
       </header>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: '640px', margin: '0 auto', width: '100%' }}>
         {/* Main D-Day Section */}
-        <div className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center' }}>
-          <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-            {t('targetDateLabel')}
-          </label>
-          <input
-            type="date"
-            value={targetDate}
-            onChange={(e) => setTargetDate(e.target.value)}
-            className="glass-panel"
-            aria-label={t('targetDateLabel')}
-            style={{
-              padding: '1rem',
-              fontSize: '1.25rem',
-              borderRadius: 'var(--radius-md)',
-              border: '2px solid var(--border)',
-              outline: 'none',
-              background: 'var(--surface)',
-              color: 'var(--text-primary)',
-              marginBottom: '2rem',
-              width: '100%',
-              maxWidth: '300px',
-            }}
-          />
+        <div className="glass-panel" style={{ padding: '2.5rem 2rem' }}>
+          {/* 날짜 입력 (위) */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
+            <label style={{ fontWeight: 700, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+              {t('targetDateLabel')}
+            </label>
+            <input
+              type="date"
+              value={targetDate}
+              onChange={(e) => setTargetDate(e.target.value)}
+              aria-label={t('targetDateLabel')}
+              style={{
+                padding: '0.85rem 1rem',
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                borderRadius: '0.85rem',
+                border: '2px solid var(--border)',
+                outline: 'none',
+                background: 'var(--surface)',
+                color: 'var(--text-primary)',
+                width: '100%',
+                maxWidth: '280px',
+                textAlign: 'center',
+              }}
+            />
+          </div>
 
+          {/* 결과 카드 (아래) */}
           {ddayData && (
             <div
               style={{
-                marginTop: '1rem',
-                padding: '2rem',
-                background: 'var(--surface-hover)',
-                borderRadius: 'var(--radius-lg)',
-                display: 'inline-block',
-                minWidth: '240px',
+                padding: '2rem 1.5rem',
+                background: 'linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(139,92,246,0.02) 100%)',
+                borderRadius: '1.25rem',
+                border: '1px solid rgba(139,92,246,0.15)',
+                textAlign: 'center',
+                width: '100%',
               }}
             >
-              <p style={{ fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                 {t('dDayResult')}
               </p>
               <p
                 style={{
-                  fontSize: '4rem',
-                  fontWeight: 800,
+                  fontSize: '4.5rem',
+                  fontWeight: 900,
                   color: 'var(--primary)',
                   margin: 0,
-                  letterSpacing: '-2px',
+                  letterSpacing: '-3px',
+                  lineHeight: 1,
                 }}
               >
                 {ddayData.label}
               </p>
               {ddayData.isToday && (
-                <p style={{ color: '#10b981', fontWeight: 700, marginTop: '0.5rem' }}>
+                <p style={{ color: '#10b981', fontWeight: 700, marginTop: '0.75rem', fontSize: '0.95rem' }}>
                   {t('isToday')}
                 </p>
               )}
@@ -224,38 +229,37 @@ export default function DdayCalcClient() {
                 <>
                   <div
                     style={{
-                      marginTop: '1.5rem',
+                      marginTop: '1.75rem',
                       paddingTop: '1.5rem',
-                      borderTop: '1px solid var(--border)',
-                      display: 'flex',
-                      gap: '1.5rem',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
+                      borderTop: '1px dashed rgba(139,92,246,0.25)',
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      gap: '0.5rem',
                     }}
                   >
-                    <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('months')}</p>
-                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{ddayData.months}</p>
+                    <div>
+                      <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>{t('months')}</p>
+                      <p style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{ddayData.months}</p>
                     </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('weeks')}</p>
-                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                    <div style={{ borderLeft: '1px solid rgba(139,92,246,0.15)', borderRight: '1px solid rgba(139,92,246,0.15)' }}>
+                      <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>{t('weeks')}</p>
+                      <p style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
                         {ddayData.weeks}
                         {ddayData.daysRemainder > 0 && (
-                          <span style={{ fontSize: '0.875rem', fontWeight: 400, marginLeft: '2px' }}>
+                          <span style={{ fontSize: '0.85rem', fontWeight: 500, marginLeft: '2px', color: 'var(--text-muted)' }}>
                             {` +${ddayData.daysRemainder}d`}
                           </span>
                         )}
                       </p>
                     </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('hours')}</p>
-                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                    <div>
+                      <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>{t('hours')}</p>
+                      <p style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
                         {ddayData.hours.toLocaleString(locale === 'ko' ? 'ko-KR' : 'en-US')}
                       </p>
                     </div>
                   </div>
-                  <p style={{ marginTop: '0.85rem', fontSize: '0.72rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                  <p style={{ marginTop: '0.85rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                     {t('stats_note')}
                   </p>
                 </>
@@ -266,16 +270,16 @@ export default function DdayCalcClient() {
                 onClick={handleCopy}
                 aria-label={t('copy_button')}
                 style={{
-                  marginTop: '1.25rem',
+                  marginTop: '1.5rem',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  padding: '0.55rem 1.1rem',
-                  borderRadius: '0.7rem',
-                  border: `1px solid ${copied ? '#10b981' : 'var(--border)'}`,
-                  background: copied ? 'rgba(16,185,129,0.1)' : 'transparent',
-                  color: copied ? '#10b981' : 'var(--text-secondary)',
-                  fontSize: '0.85rem',
+                  padding: '0.55rem 1.15rem',
+                  borderRadius: '2rem',
+                  border: `1px solid ${copied ? '#10b981' : 'rgba(139,92,246,0.3)'}`,
+                  background: copied ? 'rgba(16,185,129,0.1)' : 'rgba(255,255,255,0.6)',
+                  color: copied ? '#10b981' : 'var(--primary)',
+                  fontSize: '0.82rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                   transition: 'all 0.2s',
