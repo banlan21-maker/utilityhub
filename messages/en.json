@@ -151,13 +151,13 @@
     "description": "Never forget important days! Calculate remaining days and perform date arithmetic in one place.",
     "targetDateLabel": "Select Target Date",
     "calculateButton": "Calculate",
-    "today": "Today",
+    "today": "D-Day",
     "daysLeft": "days left",
     "daysPassed": "days passed",
     "dDayResult": "D-Day Result",
     "dateAddTitle": "Add/Subtract Days",
-    "addDays": "Days after",
-    "addMonths": "Months after",
+    "addDays": "Days (negative for past)",
+    "addMonths": "Months (negative for past)",
     "result": "Result Date",
     "placeholderDays": "e.g., 100",
     "isToday": "It's today!",
@@ -165,7 +165,10 @@
     "weeks": "weeks",
     "hours": "hours",
     "and": "and",
-    "remainingDetails": "Remaining Details"
+    "remainingDetails": "Remaining Details",
+    "copy_button": "Copy Result",
+    "copy_done": "Copied!",
+    "stats_note": "* Months / weeks / hours are independent conversions. Do not sum them."
   },
   "DocumentBoard": {
     "subtitle": "Collection of document conversion and editing tools.",

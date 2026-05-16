@@ -151,13 +151,13 @@
     "description": "중요한 날을 잊지 마세요! 남은 날짜 계산과 날짜 연산을 한곳에서 해결하세요.",
     "targetDateLabel": "기준 날짜 선택",
     "calculateButton": "계산하기",
-    "today": "오늘",
+    "today": "D-Day",
     "daysLeft": "남음",
     "daysPassed": "지남",
     "dDayResult": "D-Day 결과",
     "dateAddTitle": "날짜 더하기/빼기",
-    "addDays": "일 후는?",
-    "addMonths": "개월 후는?",
+    "addDays": "일 후는? (음수: 이전)",
+    "addMonths": "개월 후는? (음수: 이전)",
     "result": "결과 날짜",
     "placeholderDays": "예: 100",
     "isToday": "오늘입니다!",
@@ -165,7 +165,10 @@
     "weeks": "주",
     "hours": "시간",
     "and": "및",
-    "remainingDetails": "상세 남은 시간"
+    "remainingDetails": "상세 남은 시간",
+    "copy_button": "결과 복사",
+    "copy_done": "복사됨!",
+    "stats_note": "※ 개월/주/시간은 각각 독립적인 환산값입니다. 더하면 중복됩니다."
   },
   "DocumentBoard": {
     "subtitle": "문서 변환 및 편집 도구 모음입니다.",

@@ -1,111 +1,162 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { useState, useEffect } from 'react';
-import { CalendarDays } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { CalendarDays, Copy, Check } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 
+// ── Date helpers ─────────────────────────────────────────────────────────
+// `<input type="date">`는 "YYYY-MM-DD" 문자열을 주는데, `new Date(str)`는
+// 이를 UTC 자정으로 파싱하므로 KST 환경에서 9시간 어긋남.
+// 항상 로컬 자정으로 파싱한다.
+function parseLocalDate(s: string): Date {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, (m ?? 1) - 1, d ?? 1, 0, 0, 0, 0);
+}
+
+function todayLocal(): Date {
+  const t = new Date();
+  t.setHours(0, 0, 0, 0);
+  return t;
+}
+
+function formatLocalDateInput(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+// 월 더하기 — 월말 보호 (Jan 31 + 1 month → Feb 28/29, not Mar 2/3)
+function addMonthsSafe(base: Date, months: number): Date {
+  const result = new Date(base.getTime());
+  const originalDay = result.getDate();
+  result.setDate(1);
+  result.setMonth(result.getMonth() + months);
+  // 새 달의 마지막 날
+  const lastDayOfNewMonth = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+  result.setDate(Math.min(originalDay, lastDayOfNewMonth));
+  return result;
+}
+
 export default function DdayCalcClient() {
   const t = useTranslations('DDay');
-  const catT = useTranslations('Categories');
+  const locale = useLocale();
 
-  const [targetDate, setTargetDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [dDayResult, setDDayResult] = useState<string | number>('');
-
-  const [detailedStats, setDetailedStats] = useState<{
-    months: number;
-    weeks: number;
-    daysRemainder: number;
-    hours: number;
-  } | null>(null);
-
+  const [isMounted, setIsMounted] = useState(false);
+  const [targetDate, setTargetDate] = useState<string>('');
   const [addDays, setAddDays] = useState<string>('');
   const [addMonths, setAddMonths] = useState<string>('');
-  const [calcResult, setCalcResult] = useState<string>('');
+  const [copied, setCopied] = useState(false);
 
-  // D-Day Calculation
+  // SSR/CSR hydration mismatch 방지 — 마운트 후에만 today를 초기화
   useEffect(() => {
-    if (!targetDate) return;
+    setTargetDate(formatLocalDateInput(todayLocal()));
+    setIsMounted(true);
+  }, []);
 
-    const now = new Date();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  // ── D-Day 메인 결과 (자정 기준 일관) ───────────────────────────────
+  const ddayData = useMemo(() => {
+    if (!targetDate) return null;
+    const target = parseLocalDate(targetDate);
+    const today = todayLocal();
+    const diffMs = target.getTime() - today.getTime();
+    const diffDays = Math.round(diffMs / 86400000); // 자정-자정이라 정수, round로 DST 보정
 
-    const target = new Date(targetDate);
-    const targetMidnight = new Date(targetDate);
-    targetMidnight.setHours(0, 0, 0, 0);
+    const label =
+      diffDays === 0 ? t('today') : diffDays > 0 ? `D-${diffDays}` : `D+${Math.abs(diffDays)}`;
 
-    const diffTime = targetMidnight.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    // 상세 — 자정 기준 통일
+    const absDays = Math.abs(diffDays);
+    const totalWeeks = Math.floor(absDays / 7);
+    const daysRemainder = absDays % 7;
+    const totalHours = absDays * 24;
 
-    if (diffDays === 0) {
-      setDDayResult(t('today'));
-    } else if (diffDays > 0) {
-      setDDayResult(`D-${diffDays}`);
-    } else {
-      setDDayResult(`D+${Math.abs(diffDays)}`);
-    }
+    // 개월 — 자정 기준 (today, target 모두 자정)
+    let m = (target.getFullYear() - today.getFullYear()) * 12 + (target.getMonth() - today.getMonth());
+    if (target.getDate() < today.getDate() && m > 0) m--;
+    if (target.getDate() > today.getDate() && m < 0) m++;
 
-    // Detailed Stats Calculation
-    const diffTimeAbsolute = Math.abs(target.getTime() - now.getTime());
-    const diffHours = Math.floor(diffTimeAbsolute / (1000 * 60 * 60));
-
-    const absDiffDays = Math.abs(diffDays);
-    const totalWeeks = Math.floor(absDiffDays / 7);
-    const daysRemainder = absDiffDays % 7;
-
-    let m = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
-    // Adjust month if the day of month hasn't been reached yet
-    if (target.getDate() < now.getDate() && m > 0) m--;
-    if (target.getDate() > now.getDate() && m < 0) m++;
-
-    setDetailedStats({
+    return {
+      diffDays,
+      label,
+      isToday: diffDays === 0,
       months: Math.abs(m),
       weeks: totalWeeks,
-      daysRemainder: daysRemainder,
-      hours: diffHours
-    });
+      daysRemainder,
+      hours: totalHours,
+    };
   }, [targetDate, t]);
 
-  // Date Arithmetic Calculation
-  const calculateFutureDate = () => {
-    const base = new Date(targetDate);
-    if (isNaN(base.getTime())) return;
+  // ── 날짜 더하기/빼기 결과 ───────────────────────────────────────────
+  const calcResult = useMemo(() => {
+    if (!targetDate) return '';
+    let base = parseLocalDate(targetDate);
+    if (isNaN(base.getTime())) return '';
 
-    if (addDays) {
-      base.setDate(base.getDate() + parseInt(addDays));
-    }
-    if (addMonths) {
-      base.setMonth(base.getMonth() + parseInt(addMonths));
+    const daysNum = addDays.trim() === '' ? 0 : parseInt(addDays, 10);
+    const monthsNum = addMonths.trim() === '' ? 0 : parseInt(addMonths, 10);
+    if (isNaN(daysNum) || isNaN(monthsNum)) return '';
+
+    if (monthsNum !== 0) base = addMonthsSafe(base, monthsNum);
+    if (daysNum !== 0) {
+      const tmp = new Date(base.getTime());
+      tmp.setDate(tmp.getDate() + daysNum);
+      base = tmp;
     }
 
-    setCalcResult(base.toLocaleDateString(undefined, {
+    return base.toLocaleDateString(locale === 'ko' ? 'ko-KR' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      weekday: 'long'
-    }));
-  };
+      weekday: 'long',
+    });
+  }, [targetDate, addDays, addMonths, locale]);
 
-  useEffect(() => {
-    calculateFutureDate();
-  }, [targetDate, addDays, addMonths]);
+  // ── 결과 복사 ───────────────────────────────────────────────────────
+  const handleCopy = useCallback(() => {
+    if (!ddayData) return;
+    const isKo = locale === 'ko';
+    const lines = [
+      t('title'),
+      `${t('targetDateLabel')}: ${targetDate}`,
+      `${t('dDayResult')}: ${ddayData.label}`,
+    ];
+    if (!ddayData.isToday) {
+      lines.push(`${t('months')}: ${ddayData.months}`);
+      lines.push(`${t('weeks')}: ${ddayData.weeks}${ddayData.daysRemainder > 0 ? ` + ${ddayData.daysRemainder}d` : ''}`);
+      lines.push(`${t('hours')}: ${ddayData.hours.toLocaleString(isKo ? 'ko-KR' : 'en-US')}`);
+    }
+    if (calcResult) {
+      lines.push(`${t('result')}: ${calcResult}`);
+    }
+    try {
+      navigator.clipboard.writeText(lines.join('\n'));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* ignore */ }
+  }, [ddayData, targetDate, calcResult, t, locale]);
+
+  // SSR mismatch 방지
+  if (!isMounted) return null;
 
   return (
     <div>
       <NavigationActions />
       <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            padding: '1rem',
+            background: 'white',
+            borderRadius: '1.5rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            marginBottom: '1.5rem',
+          }}
+        >
           <CalendarDays size={40} color="#8b5cf6" />
         </div>
         <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
@@ -113,7 +164,6 @@ export default function DdayCalcClient() {
       </header>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-
         {/* Main D-Day Section */}
         <div className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center' }}>
           <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -124,6 +174,7 @@ export default function DdayCalcClient() {
             value={targetDate}
             onChange={(e) => setTargetDate(e.target.value)}
             className="glass-panel"
+            aria-label={t('targetDateLabel')}
             style={{
               padding: '1rem',
               fontSize: '1.25rem',
@@ -134,69 +185,107 @@ export default function DdayCalcClient() {
               color: 'var(--text-primary)',
               marginBottom: '2rem',
               width: '100%',
-              maxWidth: '300px'
+              maxWidth: '300px',
             }}
           />
 
-          <div style={{
-            marginTop: '1rem',
-            padding: '2rem',
-            background: 'var(--surface-hover)',
-            borderRadius: 'var(--radius-lg)',
-            display: 'inline-block',
-            minWidth: '240px'
-          }}>
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-              {t('dDayResult')}
-            </p>
-            <p style={{
-              fontSize: '4rem',
-              fontWeight: 800,
-              color: 'var(--primary)',
-              margin: 0,
-              letterSpacing: '-2px'
-            }}>
-              {dDayResult}
-            </p>
-            {dDayResult === t('today') && (
-              <p style={{ color: 'var(--secondary)', fontWeight: 600, marginTop: '0.5rem' }}>
-                {t('isToday')}
+          {ddayData && (
+            <div
+              style={{
+                marginTop: '1rem',
+                padding: '2rem',
+                background: 'var(--surface-hover)',
+                borderRadius: 'var(--radius-lg)',
+                display: 'inline-block',
+                minWidth: '240px',
+              }}
+            >
+              <p style={{ fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+                {t('dDayResult')}
               </p>
-            )}
+              <p
+                style={{
+                  fontSize: '4rem',
+                  fontWeight: 800,
+                  color: 'var(--primary)',
+                  margin: 0,
+                  letterSpacing: '-2px',
+                }}
+              >
+                {ddayData.label}
+              </p>
+              {ddayData.isToday && (
+                <p style={{ color: '#10b981', fontWeight: 700, marginTop: '0.5rem' }}>
+                  {t('isToday')}
+                </p>
+              )}
 
-            {/* Detailed Stats */}
-            {detailedStats && dDayResult !== t('today') && (
-              <div style={{
-                marginTop: '1.5rem',
-                paddingTop: '1.5rem',
-                borderTop: '1px solid var(--border)',
-                display: 'flex',
-                gap: '1.5rem',
-                justifyContent: 'center',
-                flexWrap: 'wrap'
-              }}>
-                <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('months')}</p>
-                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{detailedStats.months}</p>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('weeks')}</p>
-                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                    {detailedStats.weeks}
-                    {detailedStats.daysRemainder > 0 && (
-                      <span style={{ fontSize: '0.875rem', fontWeight: 400, marginLeft: '2px' }}>
-                        {` +${detailedStats.daysRemainder}d`}
-                      </span>
-                    )}
+              {!ddayData.isToday && (
+                <>
+                  <div
+                    style={{
+                      marginTop: '1.5rem',
+                      paddingTop: '1.5rem',
+                      borderTop: '1px solid var(--border)',
+                      display: 'flex',
+                      gap: '1.5rem',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <div style={{ textAlign: 'center' }}>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('months')}</p>
+                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{ddayData.months}</p>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('weeks')}</p>
+                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        {ddayData.weeks}
+                        {ddayData.daysRemainder > 0 && (
+                          <span style={{ fontSize: '0.875rem', fontWeight: 400, marginLeft: '2px' }}>
+                            {` +${ddayData.daysRemainder}d`}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('hours')}</p>
+                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        {ddayData.hours.toLocaleString(locale === 'ko' ? 'ko-KR' : 'en-US')}
+                      </p>
+                    </div>
+                  </div>
+                  <p style={{ marginTop: '0.85rem', fontSize: '0.72rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                    {t('stats_note')}
                   </p>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{t('hours')}</p>
-                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{detailedStats.hours.toLocaleString()}</p>
-                </div>
-              </div>
-            )}
-          </div>
+                </>
+              )}
+
+              <button
+                type="button"
+                onClick={handleCopy}
+                aria-label={t('copy_button')}
+                style={{
+                  marginTop: '1.25rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.55rem 1.1rem',
+                  borderRadius: '0.7rem',
+                  border: `1px solid ${copied ? '#10b981' : 'var(--border)'}`,
+                  background: copied ? 'rgba(16,185,129,0.1)' : 'transparent',
+                  color: copied ? '#10b981' : 'var(--text-secondary)',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? t('copy_done') : t('copy_button')}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Date Arithmetic Section */}
@@ -210,10 +299,12 @@ export default function DdayCalcClient() {
               <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{t('addDays')}</label>
               <input
                 type="number"
+                inputMode="numeric"
                 value={addDays}
                 onChange={(e) => setAddDays(e.target.value)}
                 placeholder={t('placeholderDays')}
                 className="glass-panel"
+                aria-label={t('addDays')}
                 style={{
                   padding: '0.75rem',
                   fontSize: '1rem',
@@ -221,7 +312,7 @@ export default function DdayCalcClient() {
                   border: '1px solid var(--border)',
                   outline: 'none',
                   background: 'var(--surface)',
-                  color: 'var(--text-primary)'
+                  color: 'var(--text-primary)',
                 }}
               />
             </div>
@@ -230,10 +321,12 @@ export default function DdayCalcClient() {
               <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{t('addMonths')}</label>
               <input
                 type="number"
+                inputMode="numeric"
                 value={addMonths}
                 onChange={(e) => setAddMonths(e.target.value)}
                 placeholder="0"
                 className="glass-panel"
+                aria-label={t('addMonths')}
                 style={{
                   padding: '0.75rem',
                   fontSize: '1rem',
@@ -241,20 +334,22 @@ export default function DdayCalcClient() {
                   border: '1px solid var(--border)',
                   outline: 'none',
                   background: 'var(--surface)',
-                  color: 'var(--text-primary)'
+                  color: 'var(--text-primary)',
                 }}
               />
             </div>
           </div>
 
-          <div style={{
-            marginTop: '2rem',
-            padding: '1.5rem',
-            background: 'var(--surface)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border)',
-            textAlign: 'center'
-          }}>
+          <div
+            style={{
+              marginTop: '2rem',
+              padding: '1.5rem',
+              background: 'var(--surface)',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--border)',
+              textAlign: 'center',
+            }}
+          >
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
               {t('result')}
             </p>
@@ -263,7 +358,6 @@ export default function DdayCalcClient() {
             </p>
           </div>
         </div>
-
       </div>
 
       {/* 공유하기 */}
@@ -273,26 +367,29 @@ export default function DdayCalcClient() {
       <RelatedTools toolId="utilities/lifestyle/dday-calc" />
 
       {/* 광고 영역 */}
-      <div style={{
-        width: '100%',
-        minHeight: '90px',
-        background: 'rgba(226, 232, 240, 0.3)',
-        border: '1px dashed #cbd5e1',
-        borderRadius: '0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#94a3b8',
-        fontSize: '0.875rem',
-        margin: '2rem 0'
-      }}>
-        광고 영역
+      <div
+        style={{
+          width: '100%',
+          minHeight: '90px',
+          background: 'rgba(226, 232, 240, 0.3)',
+          border: '1px dashed #cbd5e1',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#94a3b8',
+          fontSize: '0.875rem',
+          margin: '2rem 0',
+        }}
+      >
+        AD
       </div>
 
       <SeoSection
         ko={{
-          title: "D-Day & 날짜 계산기란 무엇인가요?",
-          description: "D-Day 계산기는 특정 목표일까지 남은 날짜를 하루도 빠짐없이 정확하게 계산해주는 온라인 도구입니다. 수능·공무원 시험·결혼식·여행·프로젝트 마감일 등 중요한 날까지 몇 일이 남았는지 한눈에 파악할 수 있습니다. 또한 날짜 더하기/빼기 기능을 통해 계약 만료일, 수습 기간 종료일, 납기일 계산 등 업무에 필요한 날짜 산술도 간편하게 처리합니다. D-Day 계산기는 스마트폰 없이 PC에서도 빠르게 쓸 수 있는 필수 도구입니다.",
+          title: 'D-Day & 날짜 계산기란 무엇인가요?',
+          description:
+            'D-Day 계산기는 특정 목표일까지 남은 날짜를 하루도 빠짐없이 정확하게 계산해주는 온라인 도구입니다. 수능·공무원 시험·결혼식·여행·프로젝트 마감일 등 중요한 날까지 몇 일이 남았는지 한눈에 파악할 수 있습니다. 또한 날짜 더하기/빼기 기능을 통해 계약 만료일, 수습 기간 종료일, 납기일 계산 등 업무에 필요한 날짜 산술도 간편하게 처리합니다. 모든 계산은 사용자의 로컬 자정 기준이라 타임존 오차 없이 동작하며, 월 더하기 시 월말이 보호되어 "1월 31일 + 1개월"이 "2월 28일/29일"로 정확히 계산됩니다.',
           useCases: [
             { icon: '📚', title: '시험 준비 D-Day 관리', desc: '수능, 토익, 공무원 시험 등 목표 시험일까지 남은 일수를 확인해 학습 계획을 세우고 동기를 유지합니다.' },
             { icon: '💍', title: '결혼 & 기념일 카운트다운', desc: '결혼식 D-day, 100일·1주년 기념일 등 소중한 날까지 남은 날을 계산하고 준비 일정을 역산합니다.' },
@@ -300,21 +397,22 @@ export default function DdayCalcClient() {
             { icon: '✈️', title: '여행 & 이벤트 준비', desc: '해외여행 출발일, 콘서트·페스티벌 날짜까지 D-day를 설정해두고 준비물·예약 일정을 단계적으로 챙깁니다.' },
           ],
           steps: [
-            { step: '목표 날짜 선택', desc: '달력 입력창에서 D-Day로 지정할 날짜를 선택합니다. 오늘 이전 날짜를 선택하면 "경과일"로 표시됩니다.' },
-            { step: 'D-Day 결과 확인', desc: '선택 즉시 오늘로부터 며칠 남았는지(또는 며칠이 지났는지) 자동으로 계산됩니다.' },
-            { step: '날짜 더하기/빼기 활용', desc: '기준 날짜에 일수나 개월 수를 더하거나 빼서 정확한 결과 날짜를 계산합니다. 계약서·납기일 산정에 유용합니다.' },
-            { step: '결과 활용 & 공유', desc: '계산된 D-Day 결과를 메모하거나 SNS 공유 버튼을 눌러 친구에게 전달하세요. 즐겨찾기에 추가하면 언제든지 빠르게 재방문할 수 있습니다.' },
+            { step: '목표 날짜 선택', desc: '달력 입력창에서 D-Day로 지정할 날짜를 선택합니다. 오늘 이전 날짜를 선택하면 "D+경과일"로 표시됩니다.' },
+            { step: 'D-Day 결과 확인', desc: '선택 즉시 오늘로부터 며칠 남았는지(또는 며칠이 지났는지) 자동으로 계산되며, 상세 통계(개월/주/시간)도 함께 표시됩니다.' },
+            { step: '날짜 더하기/빼기 활용', desc: '기준 날짜에 일수나 개월 수를 더하거나 빼서 정확한 결과 날짜를 계산합니다. 음수를 입력하면 과거로 거슬러 갑니다. 월말 보호로 "1월 31일 + 1개월"은 "2월 말일"로 정확히 계산됩니다.' },
+            { step: '결과 활용 & 공유', desc: '계산된 D-Day 결과를 "결과 복사" 버튼으로 클립보드에 저장하거나 SNS 공유 버튼으로 친구에게 전달하세요.' },
           ],
           faqs: [
-            { q: 'D-Day 계산 시 오늘 날짜도 포함되나요?', a: '일반적으로 D-Day 계산은 오늘을 기준으로 내일을 D-1, 목표일 당일을 D-0으로 계산합니다. 이 도구도 동일한 방식을 따르며, 오늘이 목표일이면 "D-Day!"로 표시됩니다.' },
-            { q: '날짜 더하기 계산 시 윤년·월별 일수 차이가 적용되나요?', a: '네. 이 날짜 계산기는 JavaScript 내장 Date 객체를 사용하므로 윤년(2월 29일)과 각 월의 정확한 일수가 자동 반영됩니다. 별도로 신경 쓰실 필요가 없습니다.' },
-            { q: '모바일에서도 D-Day 계산이 가능한가요?', a: '네, 이 D-Day 계산기는 모바일 브라우저에서도 완벽하게 동작합니다. 앱 설치 없이 즐겨찾기에 추가해 언제든지 빠르게 접근하세요.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
+            { q: 'D-Day 계산 시 오늘 날짜도 포함되나요?', a: '오늘이 목표일이면 "D-Day"로 표시되고 내일은 D-1, 모레는 D-2로 계산됩니다. 한국 시간 자정(00:00)을 기준으로 하므로 KST 사용자에게 타임존 오차가 발생하지 않습니다.' },
+            { q: '월 더하기 시 1월 31일 + 1개월은 어떻게 계산되나요?', a: '본 계산기는 월말 보호 로직을 적용하여 "1월 31일 + 1개월"을 "2월 28일(평년) 또는 2월 29일(윤년)"로 정확히 계산합니다. 자동 보정으로 3월로 넘어가지 않습니다. 계약 만기일/수습 기간 종료일 계산에서도 안심하고 사용할 수 있습니다.' },
+            { q: '상세 통계의 개월/주/시간은 합산해도 되나요?', a: '안 됩니다. 각각은 동일한 D-day를 다른 단위로 환산한 독립적인 값입니다. 예를 들어 D-100이면 "약 3개월", "14주 + 2일", "2,400시간"이며 모두 동일한 기간을 의미합니다.' },
+            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로 제공됩니다. 법적 효력이 있는 날짜(계약 만기일, 법정 기한 등)는 반드시 공식 캘린더와 대조하거나 전문가와 상의하세요.' },
           ],
         }}
         en={{
-          title: "What is a D-Day & Date Calculator?",
-          description: "A D-Day calculator tells you exactly how many days remain until an important target date — or how many days have passed since one. It's perfect for tracking exam prep countdowns, wedding dates, travel departures, and project deadlines. The date arithmetic feature also handles contract expiration dates, probation period endings, and due date calculations with precision. D-Day calculators are an essential productivity tool accessible right from your browser.",
+          title: 'What is a D-Day & Date Calculator?',
+          description:
+            'A D-Day calculator tells you exactly how many days remain until an important target date — or how many days have passed since one. It is perfect for tracking exam prep countdowns, wedding dates, travel departures, and project deadlines. The date arithmetic feature handles contract expiration dates, probation period endings, and due date calculations with precision. All calculations use local midnight as reference (no timezone drift) and the month-add operation is end-of-month safe — so "Jan 31 + 1 month" correctly returns "Feb 28/29", not "Mar 2/3".',
           useCases: [
             { icon: '📚', title: 'Exam Preparation Countdown', desc: 'Track days remaining until major exams or certifications to stay motivated and structure your study plan.' },
             { icon: '💍', title: 'Anniversaries & Special Events', desc: 'Count down to weddings, 100-day milestones, anniversaries, and other special occasions.' },
@@ -322,16 +420,16 @@ export default function DdayCalcClient() {
             { icon: '✈️', title: 'Travel & Event Preparation', desc: 'Set a D-day for your trip departure or concert date and use the countdown to prepare step-by-step.' },
           ],
           steps: [
-            { step: 'Select your target date', desc: 'Pick a date from the calendar input. Selecting a past date will show elapsed days instead of a countdown.' },
-            { step: 'View your D-Day result', desc: 'Days remaining (or elapsed) are calculated instantly upon selection, displayed as a large D-number at the center.' },
-            { step: 'Use date arithmetic', desc: 'Add or subtract days and months from a base date to calculate exact result dates for contracts, probation periods, and deadlines.' },
-            { step: 'Share or bookmark', desc: 'Tap the share buttons to send your D-Day result to friends, or bookmark the page for quick access from any device.' },
+            { step: 'Select your target date', desc: 'Pick a date from the calendar input. Selecting a past date will show elapsed days as "D+N" instead of a countdown.' },
+            { step: 'View your D-Day result', desc: 'Days remaining (or elapsed) are calculated instantly, displayed as a large D-number with month/week/hour breakdowns.' },
+            { step: 'Use date arithmetic', desc: 'Add or subtract days and months from the base date. Negative numbers go into the past. Month-add is end-of-month safe: "Jan 31 + 1 month" returns "Feb 28/29".' },
+            { step: 'Copy & share', desc: 'Click "Copy Result" to save the full breakdown to your clipboard, or use the share buttons to send your D-Day to friends.' },
           ],
           faqs: [
-            { q: 'Is today included in the D-Day count?', a: "The standard convention counts tomorrow as D-1 and the target date itself as D-0. This tool follows the same convention — if today is the target date, it displays \"D-Day!\"" },
-            { q: 'Are leap years and month lengths handled correctly?', a: "Yes. This calculator uses JavaScript's built-in Date object, so leap years (Feb 29) and varying month lengths are automatically accounted for. No manual adjustment is needed." },
-            { q: 'Does this work on mobile?', a: "Yes, the D-Day calculator works perfectly in mobile browsers. Add it to your bookmarks for quick access anytime — no app installation needed." },
-            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
+            { q: 'Is today included in the D-Day count?', a: 'If today is the target date, the result shows "D-Day"; tomorrow is D-1 and the day after is D-2. The calculator uses your local midnight as reference, so there is no timezone drift for KST or any other zone.' },
+            { q: 'How does "Jan 31 + 1 month" work?', a: 'This calculator applies end-of-month protection — "Jan 31 + 1 month" correctly returns "Feb 28" in regular years or "Feb 29" in leap years, not "Mar 2/3" as JavaScript would do by default. This makes it safe for contract expiration and probation end calculations.' },
+            { q: 'Can I sum the months/weeks/hours stats?', a: 'No. Each stat is an independent conversion of the same D-Day into a different unit. For example, D-100 = "about 3 months" = "14 weeks + 2 days" = "2,400 hours" — all describing the same period.' },
+            { q: 'Can I use this result as official data?', a: 'Results are provided for reference only. For legally binding dates (contract expirations, statutory deadlines), always cross-check with official calendars or consult a professional.' },
           ],
         }}
       />
