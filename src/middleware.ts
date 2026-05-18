@@ -9,11 +9,14 @@ export default function middleware(request: NextRequest): NextResponse {
   const proto = request.headers.get('x-forwarded-proto') || 'https';
 
   // non-www → www 강제 리디렉션 (production만)
+  // 308 = Permanent Redirect (메소드 보존). Next.js App Router에서는
+  // 두 번째 인자가 ResponseInit이므로 status 명시 객체 형태로 전달해야
+  // 실제 응답 코드가 308로 나간다 (그냥 301/308 숫자 전달은 무시되어 307로 처리됨).
   if (host === 'theutilhub.com') {
     const url = new URL(request.url);
     url.host = 'www.theutilhub.com';
     url.protocol = 'https:';
-    return NextResponse.redirect(url, 301);
+    return NextResponse.redirect(url, { status: 308 });
   }
 
   // HTTP → HTTPS 강제 (production만)
@@ -21,7 +24,7 @@ export default function middleware(request: NextRequest): NextResponse {
     const url = new URL(request.url);
     url.protocol = 'https:';
     url.host = 'www.theutilhub.com';
-    return NextResponse.redirect(url, 301);
+    return NextResponse.redirect(url, { status: 308 });
   }
 
   const response = intlMiddleware(request) as NextResponse;
