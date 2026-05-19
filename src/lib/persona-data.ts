@@ -773,8 +773,443 @@ export const MISSIONS: Mission[] = [
       },
     ],
   },
-  { id: 'mission_07', emoji: '🏴‍☠️', ko: { title: '우주 해적 탈출', desc: '우주 해적에게 납치됐습니다. 탈출하세요.' },          en: { title: 'Space Pirates',     desc: 'Captured by space pirates. Escape.' },                  situations: [] },
-  { id: 'mission_08', emoji: '⏰', ko: { title: '타임머신 고장',     desc: '타임머신이 고장났습니다. 현재로 돌아오세요.' },       en: { title: 'Time Malfunction',  desc: 'Time machine broke. Get back to present.' },            situations: [] },
-  { id: 'mission_09', emoji: '📝', ko: { title: '학교 시험 위기',   desc: '내일 시험인데 아무것도 모릅니다. 통과하세요.' },     en: { title: 'Exam Crisis',       desc: 'Exam tomorrow, you know nothing. Pass it.' },           situations: [] },
-  { id: 'mission_10', emoji: '👽', ko: { title: '외계인 협상',       desc: '지구를 침략하려는 외계인과 협상하세요.' },           en: { title: 'Alien Negotiation', desc: 'Negotiate with aliens planning to invade Earth.' },     situations: [] },
+  // ════════════════════ 미션 7: 우주 해적 탈출 ════════════════════
+  {
+    id: 'mission_07',
+    emoji: '🏴‍☠️',
+    ko: { title: '우주 해적 탈출', desc: '우주 해적에게 납치됐습니다. 탈출하세요.' },
+    en: { title: 'Space Pirates', desc: 'Captured by space pirates. Escape.' },
+    situations: [
+      // 1. 의식 회복
+      {
+        text: { ko: '해적선 감옥에서 눈을 떴다. 손목엔 에너지 수갑이 채워져 있다.', en: 'You wake in a pirate brig, energy cuffs on your wrists.' },
+        choices: [
+          { text: { ko: '감옥 환경·간수 패턴·잠금장치를 차분히 관찰', en: 'Calmly observe the cell, guard patterns, lock type' }, tags: ['cautious', 'detective', 'sensing'], baseScore: 100 },
+          { text: { ko: '수갑을 부수려 힘껏 비튼다', en: 'Wrench the cuffs apart with brute force' }, tags: ['brave', 'fighting', '반대_cautious'], baseScore: 25 },
+          { text: { ko: '큰 소리로 해적을 부른다', en: 'Yell to summon the pirates' }, tags: ['talkative', 'impulsive', '반대_cautious'], baseScore: 15 },
+          { text: { ko: '체념하고 다시 잔다', en: 'Give up and go back to sleep' }, tags: ['lazy', 'sleeping', '반대_brave'], baseScore: 0 },
+        ],
+      },
+      // 2. 옆 감방 동료
+      {
+        text: { ko: '옆 감방의 인질이 자신을 도와달라 속삭인다.', en: 'A prisoner in the next cell whispers for help.' },
+        choices: [
+          { text: { ko: '신뢰성 검증 후 함께 탈출 계획을 수립', en: 'Verify trustworthiness, then plan escape together' }, tags: ['cautious', 'detective', 'negotiation'], baseScore: 100 },
+          { text: { ko: '협력 의사를 표시하되 자신의 정보는 숨김', en: 'Show willingness to cooperate but conceal your info' }, tags: ['sneaky', 'cautious', 'spy'], baseScore: 90 },
+          { text: { ko: '바로 믿고 모든 정보를 공유', en: 'Trust immediately and share everything' }, tags: ['honest', 'optimist', '반대_cautious'], baseScore: 45 },
+          { text: { ko: '무시한다. 함정일 수 있다', en: 'Ignore — could be a trap' }, tags: ['pessimist', 'selfish'], baseScore: 35 },
+        ],
+      },
+      // 3. 간수 식사 시간
+      {
+        text: { ko: '간수가 식사를 가져왔다. 잠시 방심한 상태.', en: 'A guard brings food, briefly distracted.' },
+        choices: [
+          { text: { ko: '대화로 정보를 끌어내며 신뢰를 쌓는다', en: 'Strike up conversation, extract info, build trust' }, tags: ['negotiation', 'persuasion', 'spy'], baseScore: 100 },
+          { text: { ko: '식판으로 머리를 가격해 제압', en: 'Bash the guard\'s head with the tray' }, tags: ['brave', 'fighting', 'impulsive'], baseScore: 70 },
+          { text: { ko: '음식을 거부하며 항의한다', en: 'Refuse the food and protest' }, tags: ['stubborn', 'talkative', '반대_cautious'], baseScore: 25 },
+          { text: { ko: '독약이라 생각해 안 먹는다', en: 'Refuse — assume it\'s poison' }, tags: ['coward', 'pessimist'], baseScore: 40 },
+        ],
+      },
+      // 4. 수갑 해제
+      {
+        text: { ko: '수갑을 풀 도구가 필요하다. 무엇을 활용할까?', en: 'You need something to remove the cuffs. What to use?' },
+        choices: [
+          { text: { ko: '주위 부품으로 즉석 해킹 도구 제작', en: 'Build a makeshift hacking tool from scrap parts' }, tags: ['inventing', 'hacking', 'engineer'], baseScore: 100 },
+          { text: { ko: '식판 모서리·머리핀 등으로 자물쇠 따기', en: 'Pick the lock with a tray edge or hairpin' }, tags: ['sneaky', 'creative', 'spy'], baseScore: 90 },
+          { text: { ko: '간수가 졸 때 열쇠를 훔친다', en: 'Steal the key while the guard naps' }, tags: ['sneaky', 'hiding', 'ninja'], baseScore: 85 },
+          { text: { ko: '수갑을 자기 손에 잘라낸다', en: 'Try to cut through your own wrist binding' }, tags: ['stubborn', 'clumsy', '반대_cautious'], baseScore: 10 },
+        ],
+      },
+      // 5. 복도 탈출
+      {
+        text: { ko: '감옥을 나왔다. 복도에 순찰 경비가 보인다.', en: 'You\'re out of the cell. Guards patrol the corridor.' },
+        choices: [
+          { text: { ko: '순찰 주기를 파악하고 빈틈을 노린다', en: 'Time the patrol cycle and slip through the gap' }, tags: ['cautious', 'sensing', 'tracking'], baseScore: 100 },
+          { text: { ko: '벽에 붙어 그림자 속을 이동', en: 'Hug the walls and move through shadows' }, tags: ['hiding', 'ninja', 'sneaky'], baseScore: 95 },
+          { text: { ko: '경비 한 명을 빠르게 제압하고 진행', en: 'Take out one guard fast, then proceed' }, tags: ['brave', 'fighting', 'impulsive'], baseScore: 60 },
+          { text: { ko: '대놓고 걸어간다', en: 'Walk down the corridor openly' }, tags: ['stubborn', 'brave', '반대_cautious'], baseScore: 5 },
+        ],
+      },
+      // 6. 통신실 진입
+      {
+        text: { ko: '통신실에 도착했다. 구조 신호를 보낼 기회.', en: 'You reach the comms room — a chance to send a distress signal.' },
+        choices: [
+          { text: { ko: '암호화된 비상 신호로 정확히 송신', en: 'Send an encrypted distress signal correctly' }, tags: ['hacking', 'genius', 'engineer'], baseScore: 100 },
+          { text: { ko: '익숙한 주파수로 음성 SOS 송신', en: 'Send a voice SOS on a known frequency' }, tags: ['cautious', 'pilot'], baseScore: 85 },
+          { text: { ko: '아무 채널로나 도와달라 외친다', en: 'Yell for help on every open channel' }, tags: ['impulsive', 'talkative', '반대_cautious'], baseScore: 35 },
+          { text: { ko: '통신 장비를 부순다', en: 'Smash the comms gear' }, tags: ['stubborn', 'fighting', '반대_genius'], baseScore: 0 },
+        ],
+      },
+      // 7. 해적 두목 마주침
+      {
+        text: { ko: '해적 두목과 갑자기 마주쳤다. 무장 상태다.', en: 'You suddenly face the pirate captain — armed.' },
+        choices: [
+          { text: { ko: '두목의 이익으로 협상해 시간을 번다', en: 'Negotiate on the captain\'s interests to buy time' }, tags: ['negotiation', 'persuasion', 'detective'], baseScore: 100 },
+          { text: { ko: '거짓 정보를 흘려 혼란을 준다', en: 'Plant false info to confuse them' }, tags: ['lying', 'mysterious', 'spy'], baseScore: 85 },
+          { text: { ko: '바로 격투를 시작한다', en: 'Start a fight immediately' }, tags: ['brave', 'fighting', '반대_cautious'], baseScore: 30 },
+          { text: { ko: '무릎 꿇고 항복한다', en: 'Drop to your knees and surrender' }, tags: ['coward', 'lazy', '반대_brave'], baseScore: 10 },
+        ],
+      },
+      // 8. 무기고 발견
+      {
+        text: { ko: '무기고를 발견했다. 가져갈 시간이 빠듯하다.', en: 'You find the armory — but time is short.' },
+        choices: [
+          { text: { ko: '가벼우면서 효과적인 핵심 장비 1~2개만 챙김', en: 'Grab 1-2 light yet effective key items' }, tags: ['cautious', 'perfectionist', 'engineer'], baseScore: 100 },
+          { text: { ko: '비상 신호기·치료 키트를 우선 챙김', en: 'Priority: flare and medkit' }, tags: ['cautious', 'healing', 'doctor'], baseScore: 90 },
+          { text: { ko: '가능한 한 많이 챙긴다', en: 'Pack as much as possible' }, tags: ['greedy', 'impulsive', '반대_cautious'], baseScore: 30 },
+          { text: { ko: '무기고를 무시하고 지나친다', en: 'Skip the armory entirely' }, tags: ['lazy', 'pessimist', '반대_cautious'], baseScore: 25 },
+        ],
+      },
+      // 9. 탈출 셔틀
+      {
+        text: { ko: '탈출 셔틀 앞이다. 셔틀 조종법은 모른다.', en: 'You reach the escape shuttle — but don\'t know how to fly it.' },
+        choices: [
+          { text: { ko: '계기판 매뉴얼을 빠르게 학습 후 자동 모드로 출항', en: 'Skim the manual, launch in auto mode' }, tags: ['genius', 'curious', 'pilot'], baseScore: 100 },
+          { text: { ko: '동료 인질에게 조종을 맡긴다', en: 'Let your fellow prisoner pilot it' }, tags: ['negotiation', 'cautious'], baseScore: 85 },
+          { text: { ko: '버튼을 닥치는 대로 눌러 발진시킨다', en: 'Smash random buttons until liftoff' }, tags: ['impulsive', 'brave', '반대_perfectionist'], baseScore: 30 },
+          { text: { ko: '셔틀을 포기하고 다시 도망친다', en: 'Abandon the shuttle and flee back' }, tags: ['coward', 'pessimist', '반대_brave'], baseScore: 10 },
+        ],
+      },
+      // 10. 추격 회피
+      {
+        text: { ko: '해적선이 우주에서 셔틀을 추격해 온다.', en: 'The pirate ship pursues your shuttle through space.' },
+        choices: [
+          { text: { ko: '소행성대로 진입해 정밀 회피 기동', en: 'Dive into an asteroid belt for precision evasion' }, tags: ['pilot', 'genius', 'navigation'], baseScore: 100 },
+          { text: { ko: '미끼·플레어로 표적 락온을 흔든다', en: 'Drop decoys and flares to break the lock-on' }, tags: ['creative', 'inventing', 'spy'], baseScore: 90 },
+          { text: { ko: '직선으로 가속해 도망친다', en: 'Burn straight ahead at full speed' }, tags: ['impulsive', 'brave', '반대_cautious'], baseScore: 45 },
+          { text: { ko: '셔틀의 통신으로 항복한다', en: 'Open comms and surrender' }, tags: ['coward', 'pessimist', '반대_brave'], baseScore: 5 },
+        ],
+      },
+    ],
+  },
+
+  // ════════════════════ 미션 8: 타임머신 고장 ════════════════════
+  {
+    id: 'mission_08',
+    emoji: '⏰',
+    ko: { title: '타임머신 고장', desc: '타임머신이 고장났습니다. 현재로 돌아오세요.' },
+    en: { title: 'Time Malfunction', desc: 'Time machine broke. Get back to present.' },
+    situations: [
+      // 1. 어디로?
+      {
+        text: { ko: '깨어보니 1800년대 거리다. 타임머신은 연기를 뿜고 있다.', en: 'You wake in a 1800s street. The time machine is smoking.' },
+        choices: [
+          { text: { ko: '주변 환경·연도를 정확히 파악 후 행동 결정', en: 'Pinpoint the era and surroundings before acting' }, tags: ['cautious', 'detective', 'archaeologist'], baseScore: 100 },
+          { text: { ko: '눈에 띄지 않게 숨어 시대 분위기를 학습', en: 'Stay low-profile and study the period' }, tags: ['hiding', 'curious', 'mysterious'], baseScore: 90 },
+          { text: { ko: '큰 소리로 시민에게 도움을 청한다', en: 'Loudly ask passersby for help' }, tags: ['talkative', 'impulsive', '반대_cautious'], baseScore: 20 },
+          { text: { ko: '드러누워 운명에 맡긴다', en: 'Lay down and surrender to fate' }, tags: ['lazy', 'pessimist', 'sleeping'], baseScore: 0 },
+        ],
+      },
+      // 2. 의상 조달
+      {
+        text: { ko: '현대 옷차림이 너무 튄다. 시대에 맞는 옷이 필요.', en: 'Modern clothes stand out. You need period-correct attire.' },
+        choices: [
+          { text: { ko: '세탁소 같은 곳에서 값을 두고 빌린다', en: 'Borrow from a laundry, leaving payment' }, tags: ['honest', 'creative', 'negotiation'], baseScore: 100 },
+          { text: { ko: '빨랫줄에서 몰래 한 벌 가져온다', en: 'Quietly take one outfit from a clothesline' }, tags: ['sneaky', 'hiding', 'spy'], baseScore: 70 },
+          { text: { ko: '거리에서 비싼 옷을 도둑질', en: 'Steal expensive clothes from the street' }, tags: ['greedy', 'selfish', '반대_honest'], baseScore: 15 },
+          { text: { ko: '현대 옷 그대로 활보', en: 'Strut around in modern clothes' }, tags: ['stubborn', 'brave', '반대_cautious'], baseScore: 10 },
+        ],
+      },
+      // 3. 역사 인물 마주침
+      {
+        text: { ko: '유명 역사 인물과 우연히 마주쳤다. 자신을 어떻게 소개?', en: 'You bump into a famous historical figure. How do you introduce yourself?' },
+        choices: [
+          { text: { ko: '시대에 어울리는 가명·직업으로 자연스럽게 소개', en: 'Use a believable era-appropriate alias and occupation' }, tags: ['lying', 'spy', 'mysterious'], baseScore: 100 },
+          { text: { ko: '여행자라고 모호하게 답하며 대화 회피', en: 'Vaguely say "traveler" and avoid deep talk' }, tags: ['cautious', 'mysterious'], baseScore: 90 },
+          { text: { ko: '미래에서 왔다고 사실대로 말한다', en: 'Honestly admit you\'re from the future' }, tags: ['honest', 'curious', '반대_cautious'], baseScore: 20 },
+          { text: { ko: '미래 지식으로 충고한다', en: 'Lecture them with future knowledge' }, tags: ['greedy', 'stubborn', '반대_cautious'], baseScore: 10 },
+        ],
+      },
+      // 4. 부품 조달
+      {
+        text: { ko: '타임머신 수리에는 구리선·자석·배터리 비슷한 부품이 필요하다.', en: 'Repairs need copper wire, magnets, and battery-like parts.' },
+        choices: [
+          { text: { ko: '대장간·전신소를 찾아 정당하게 구매·교환', en: 'Find a smithy/telegraph station; trade legitimately' }, tags: ['honest', 'negotiation', 'engineer'], baseScore: 100 },
+          { text: { ko: '지역 발명가와 협상해 부품을 얻는다', en: 'Negotiate with a local inventor for parts' }, tags: ['negotiation', 'inventing', 'scientist'], baseScore: 90 },
+          { text: { ko: '집에 몰래 들어가 가져온다', en: 'Sneak into a home and take what you need' }, tags: ['sneaky', 'hiding', '반대_honest'], baseScore: 35 },
+          { text: { ko: '시대 부품이 부족하다고 단념', en: 'Give up — too primitive' }, tags: ['pessimist', 'lazy', '반대_optimist'], baseScore: 10 },
+        ],
+      },
+      // 5. 누설된 미래 지식
+      {
+        text: { ko: '대화 중 미래 사건을 실수로 흘려버렸다.', en: "You accidentally leaked a future event in conversation." },
+        choices: [
+          { text: { ko: '농담·예언자 행세로 자연스럽게 무마', en: 'Pass it off as a joke or prophecy' }, tags: ['creative', 'lying', 'mysterious'], baseScore: 100 },
+          { text: { ko: '바로 화제를 돌린다', en: 'Quickly change the subject' }, tags: ['cautious', 'persuasion'], baseScore: 85 },
+          { text: { ko: '미래에서 왔음을 인정한다', en: 'Confess you came from the future' }, tags: ['honest', '반대_cautious'], baseScore: 25 },
+          { text: { ko: '아무 일 없는 척 그 자리를 떠난다', en: 'Pretend nothing happened and walk off' }, tags: ['sneaky', 'cautious'], baseScore: 75 },
+        ],
+      },
+      // 6. 시대 의술 위기
+      {
+        text: { ko: '동행한 동료가 시대 풍토병에 감염됐다.', en: 'Your companion catches an era-specific disease.' },
+        choices: [
+          { text: { ko: '현대 의학 지식으로 신중히 처치', en: 'Apply modern medical knowledge carefully' }, tags: ['doctor', 'healing', 'genius'], baseScore: 100 },
+          { text: { ko: '시대 약초·민간요법을 활용', en: 'Use period-appropriate herbs and folk remedies' }, tags: ['cautious', 'farming', 'creative'], baseScore: 85 },
+          { text: { ko: '시대 의사에게 위임한다', en: 'Hand them over to the local doctor' }, tags: ['lazy', 'honest'], baseScore: 50 },
+          { text: { ko: '치료를 포기한다', en: 'Give up on treating them' }, tags: ['selfish', 'pessimist', '반대_kindhearted'], baseScore: 0 },
+        ],
+      },
+      // 7. 시간 역설 위기
+      {
+        text: { ko: '실수로 역사적 사건의 직전 단계에 영향을 줄 뻔했다.', en: 'You almost altered a critical historical event.' },
+        choices: [
+          { text: { ko: '즉시 멈추고 원상태로 복원', en: 'Stop immediately and restore the timeline' }, tags: ['cautious', 'perfectionist', 'detective'], baseScore: 100 },
+          { text: { ko: '영향이 최소화되도록 보정', en: 'Minimize the impact carefully' }, tags: ['genius', 'creative', 'engineer'], baseScore: 90 },
+          { text: { ko: '아예 역사를 바꿔보고 결과를 본다', en: 'Try to change history just to see what happens' }, tags: ['curious', 'impulsive', '반대_cautious'], baseScore: 10 },
+          { text: { ko: '못 본 척 외면한다', en: 'Pretend it never happened' }, tags: ['lazy', 'coward', '반대_honest'], baseScore: 35 },
+        ],
+      },
+      // 8. 동지애의 시험
+      {
+        text: { ko: '시대 친구가 함께 미래로 가달라 부탁한다.', en: 'A friend from the era begs to be taken to the future.' },
+        choices: [
+          { text: { ko: '인과를 설명하고 정중히 거절', en: 'Explain the causality risk and decline kindly' }, tags: ['honest', 'kindhearted', 'persuasion'], baseScore: 100 },
+          { text: { ko: '시대에 남는 게 본인에게도 좋다고 설득', en: 'Persuade them their place is here, for their own sake' }, tags: ['negotiation', 'teacher', 'kindhearted'], baseScore: 90 },
+          { text: { ko: '함께 데려간다', en: 'Take them with you' }, tags: ['kindhearted', 'impulsive', '반대_cautious'], baseScore: 25 },
+          { text: { ko: '쌀쌀맞게 무시한다', en: 'Coldly ignore them' }, tags: ['selfish', '반대_kindhearted'], baseScore: 10 },
+        ],
+      },
+      // 9. 시간 좌표 설정
+      {
+        text: { ko: '타임머신 수리가 거의 끝났다. 좌표 입력만 남았다.', en: 'Repairs nearly done. Only coordinates remain to enter.' },
+        choices: [
+          { text: { ko: '원래 시간·장소를 정확히 계산해서 입력', en: 'Precisely calculate your original time and place' }, tags: ['genius', 'perfectionist', 'scientist'], baseScore: 100 },
+          { text: { ko: '안전 마진을 두고 출발 1시간 후로 설정', en: 'Set it 1 hour after departure as a safety margin' }, tags: ['cautious', 'engineer'], baseScore: 90 },
+          { text: { ko: '대충 어림짐작해서 입력', en: 'Eyeball the coordinates' }, tags: ['impulsive', 'clumsy', '반대_perfectionist'], baseScore: 20 },
+          { text: { ko: '미래 다른 시점으로 도전', en: 'Try jumping to a different future point' }, tags: ['curious', 'greedy', '반대_cautious'], baseScore: 30 },
+        ],
+      },
+      // 10. 발진
+      {
+        text: { ko: '타임머신이 작동한다. 출발 직전 시대 친구가 손을 흔든다.', en: 'The machine activates. Your era-friend waves goodbye.' },
+        choices: [
+          { text: { ko: '추억을 간직하고 정중히 작별 인사', en: 'Cherish the memory, say a proper goodbye' }, tags: ['kindhearted', 'honest', 'optimist'], baseScore: 100 },
+          { text: { ko: '미소만 짓고 떠난다', en: 'Smile and leave without words' }, tags: ['mysterious', 'kindhearted'], baseScore: 85 },
+          { text: { ko: '미래에서 다시 만나러 오겠다고 약속', en: 'Promise to return from the future' }, tags: ['lying', 'optimist', '반대_honest'], baseScore: 40 },
+          { text: { ko: '뒤도 안 돌아보고 떠난다', en: 'Leave without looking back' }, tags: ['selfish', 'cold', '반대_kindhearted'], baseScore: 20 },
+        ],
+      },
+    ],
+  },
+
+  // ════════════════════ 미션 9: 학교 시험 위기 ════════════════════
+  {
+    id: 'mission_09',
+    emoji: '📝',
+    ko: { title: '학교 시험 위기', desc: '내일 시험인데 아무것도 모릅니다. 통과하세요.' },
+    en: { title: 'Exam Crisis', desc: 'Exam tomorrow, you know nothing. Pass it.' },
+    situations: [
+      // 1. 현실 인식
+      {
+        text: { ko: '내일 아침 시험. 책은 아직 안 펴봤다.', en: 'Exam is tomorrow morning. You haven\'t opened the book yet.' },
+        choices: [
+          { text: { ko: '핵심 출제 범위를 분석해 우선순위 학습 계획 수립', en: 'Analyze the likely exam scope and plan priority study' }, tags: ['genius', 'perfectionist', 'detective'], baseScore: 100 },
+          { text: { ko: '교과서 목차부터 빠르게 훑어 개요 파악', en: 'Skim the table of contents to map topics quickly' }, tags: ['cautious', 'curious', 'teacher'], baseScore: 90 },
+          { text: { ko: '아무 페이지나 펴서 본다', en: 'Open a random page and start reading' }, tags: ['impulsive', 'clumsy', '반대_perfectionist'], baseScore: 25 },
+          { text: { ko: '낮잠을 잔다. 컨디션이 중요하다', en: 'Take a nap. Rest is everything' }, tags: ['lazy', 'sleeping', '반대_perfectionist'], baseScore: 0 },
+        ],
+      },
+      // 2. 친구의 도움 제안
+      {
+        text: { ko: '친구가 정리 노트를 빌려주겠다고 한다.', en: 'A friend offers their summary notes.' },
+        choices: [
+          { text: { ko: '감사히 받아 핵심을 빠르게 흡수', en: 'Gratefully accept, absorb the key points fast' }, tags: ['kindhearted', 'genius', 'curious'], baseScore: 100 },
+          { text: { ko: '친구에게 함께 공부하자고 제안', en: 'Propose studying together' }, tags: ['kindhearted', 'persuasion', 'teacher'], baseScore: 95 },
+          { text: { ko: '필요 없다고 거절한다', en: 'Refuse — say you don\'t need it' }, tags: ['stubborn', 'selfish', '반대_kindhearted'], baseScore: 20 },
+          { text: { ko: '노트만 빼앗고 친구를 무시', en: 'Snatch the notes and ignore them' }, tags: ['greedy', 'sneaky', '반대_kindhearted'], baseScore: 10 },
+        ],
+      },
+      // 3. 학습 방법
+      {
+        text: { ko: '4시간이 남았다. 어떻게 공부할까?', en: '4 hours left. How to study?' },
+        choices: [
+          { text: { ko: '핵심 개념·예제·기출 위주로 분배해 효율 학습', en: 'Distribute time across key concepts, examples, past exams' }, tags: ['perfectionist', 'genius', 'teacher'], baseScore: 100 },
+          { text: { ko: '문제풀이 위주로 반복 학습', en: 'Drill problems repeatedly' }, tags: ['stubborn', 'cautious'], baseScore: 90 },
+          { text: { ko: '교과서를 처음부터 끝까지 정독', en: 'Read the textbook cover to cover' }, tags: ['perfectionist', 'stubborn', '반대_cautious'], baseScore: 50 },
+          { text: { ko: '유튜브 영상만 본다', en: 'Just watch YouTube videos' }, tags: ['lazy', 'curious', '반대_perfectionist'], baseScore: 35 },
+        ],
+      },
+      // 4. 집중력 위기
+      {
+        text: { ko: '졸음·휴대폰 유혹이 밀려온다.', en: 'Sleepiness and phone temptation hit hard.' },
+        choices: [
+          { text: { ko: '휴대폰을 다른 방에 두고 짧은 휴식·물 마시기', en: 'Phone in another room, short breaks, drink water' }, tags: ['cautious', 'perfectionist'], baseScore: 100 },
+          { text: { ko: '잠시 일어나 스트레칭 후 복귀', en: 'Stand up, stretch briefly, then refocus' }, tags: ['athlete', 'creative'], baseScore: 90 },
+          { text: { ko: '잠깐만 SNS 본다', en: 'Just a quick scroll on social media' }, tags: ['impulsive', 'lazy', '반대_perfectionist'], baseScore: 20 },
+          { text: { ko: '책상에 엎드려 잔다', en: 'Crash on the desk and sleep' }, tags: ['lazy', 'sleeping', '반대_brave'], baseScore: 5 },
+        ],
+      },
+      // 5. 어려운 단원
+      {
+        text: { ko: '도저히 이해 못 하는 단원이 있다. 시간은 부족하다.', en: 'There\'s one unit you can\'t understand. Time is short.' },
+        choices: [
+          { text: { ko: '핵심 결론·공식만 외우고 시간을 다른 곳에 분배', en: 'Memorize just the conclusion/formula, redistribute time' }, tags: ['perfectionist', 'cautious', 'genius'], baseScore: 100 },
+          { text: { ko: '친구에게 5분 요약 설명을 부탁', en: 'Ask a friend for a 5-minute explanation' }, tags: ['negotiation', 'persuasion', 'teacher'], baseScore: 95 },
+          { text: { ko: '단원을 완전 정복할 때까지 집착한다', en: 'Refuse to move on until you fully master it' }, tags: ['stubborn', 'perfectionist', '반대_cautious'], baseScore: 30 },
+          { text: { ko: '그 단원 자체를 포기', en: 'Skip the unit entirely' }, tags: ['lazy', 'pessimist'], baseScore: 40 },
+        ],
+      },
+      // 6. 부정행위 유혹
+      {
+        text: { ko: '친구가 컨닝 페이퍼를 같이 만들자고 한다.', en: 'A friend suggests making a cheat sheet together.' },
+        choices: [
+          { text: { ko: '정중히 거절하고 정공법으로 학습', en: 'Politely decline and study legitimately' }, tags: ['honest', 'kindhearted', 'perfectionist'], baseScore: 100 },
+          { text: { ko: '대신 함께 정리 노트를 만들자고 제안', en: 'Offer to make legitimate study notes together' }, tags: ['kindhearted', 'creative', 'teacher'], baseScore: 95 },
+          { text: { ko: '컨닝 페이퍼만 받고 사용은 안 함', en: 'Take the cheat sheet but pledge not to use it' }, tags: ['sneaky', 'cautious', '반대_honest'], baseScore: 30 },
+          { text: { ko: '같이 만들고 사용한다', en: 'Make it together and use it' }, tags: ['sneaky', 'lying', '반대_honest'], baseScore: 5 },
+        ],
+      },
+      // 7. 모의 문제
+      {
+        text: { ko: '기출문제집을 발견했다.', en: 'You find a book of past exam questions.' },
+        choices: [
+          { text: { ko: '시간 재고 실전처럼 풀어보며 약점 파악', en: 'Time yourself, solve like a real test, identify gaps' }, tags: ['perfectionist', 'detective', 'athlete'], baseScore: 100 },
+          { text: { ko: '답만 외우는 식으로 빠르게 학습', en: 'Speed-learn by memorizing answers' }, tags: ['lazy', 'sneaky', '반대_perfectionist'], baseScore: 50 },
+          { text: { ko: '난이도가 너무 높아 포기', en: 'Too hard, give up' }, tags: ['pessimist', 'coward', '반대_brave'], baseScore: 15 },
+          { text: { ko: '책을 들고 잔다', en: 'Sleep with the book under your pillow' }, tags: ['lazy', 'sleeping', '반대_genius'], baseScore: 0 },
+        ],
+      },
+      // 8. 새벽 시간
+      {
+        text: { ko: '새벽 4시. 마지막 점검 시간이다.', en: '4 AM — your last revision window.' },
+        choices: [
+          { text: { ko: '취약 부분만 짧게 복습 후 1~2시간 수면', en: 'Review weak spots briefly, then sleep 1-2 hours' }, tags: ['cautious', 'perfectionist', 'healing'], baseScore: 100 },
+          { text: { ko: '전체를 빠르게 한 번 더 훑는다', en: 'Skim the entire material once more' }, tags: ['stubborn', 'genius'], baseScore: 80 },
+          { text: { ko: '새벽까지 더 공부한다', en: 'Pull an all-nighter' }, tags: ['stubborn', 'perfectionist', '반대_cautious'], baseScore: 40 },
+          { text: { ko: '곧장 침대로 가서 푹 잔다', en: 'Crash hard and sleep deep' }, tags: ['lazy', 'sleeping'], baseScore: 50 },
+        ],
+      },
+      // 9. 시험 직전
+      {
+        text: { ko: '시험장 도착 5분 전. 머리가 새하얗다.', en: '5 minutes before the exam. Your mind is blank.' },
+        choices: [
+          { text: { ko: '깊은 호흡으로 안정, 핵심 한두 가지만 떠올림', en: 'Deep breaths, recall just one or two core points' }, tags: ['cautious', 'optimist', 'sensing'], baseScore: 100 },
+          { text: { ko: '친구와 마지막 핵심을 짧게 공유', en: 'Briefly swap key points with a friend' }, tags: ['kindhearted', 'persuasion', 'teacher'], baseScore: 90 },
+          { text: { ko: '뇌가 굳을까 봐 책을 끝까지 본다', en: 'Cram from the book until the last second' }, tags: ['stubborn', 'pessimist', '반대_cautious'], baseScore: 50 },
+          { text: { ko: '시험장을 외면하고 도망친다', en: 'Run away from the exam hall' }, tags: ['coward', 'lazy', '반대_brave'], baseScore: 0 },
+        ],
+      },
+      // 10. 시험 중
+      {
+        text: { ko: '시험 문제 중 한 문제가 너무 어렵다. 시간은 흐른다.', en: 'One question is brutally hard. The clock is ticking.' },
+        choices: [
+          { text: { ko: '일단 건너뛰고 다른 문제 푼 뒤 돌아옴', en: 'Skip it, solve other questions, return later' }, tags: ['perfectionist', 'cautious', 'genius'], baseScore: 100 },
+          { text: { ko: '아는 부분만 부분 점수를 노린다', en: 'Write what you know for partial credit' }, tags: ['cautious', 'creative', 'honest'], baseScore: 90 },
+          { text: { ko: '한 문제에 끝까지 매달린다', en: 'Pour everything into solving this one' }, tags: ['stubborn', 'perfectionist', '반대_cautious'], baseScore: 30 },
+          { text: { ko: '아무 답이나 적고 잔다', en: 'Scribble anything and nap' }, tags: ['lazy', 'pessimist', '반대_brave'], baseScore: 5 },
+        ],
+      },
+    ],
+  },
+
+  // ════════════════════ 미션 10: 외계인 협상 ════════════════════
+  {
+    id: 'mission_10',
+    emoji: '👽',
+    ko: { title: '외계인 협상', desc: '지구를 침략하려는 외계인과 협상하세요.' },
+    en: { title: 'Alien Negotiation', desc: 'Negotiate with aliens planning to invade Earth.' },
+    situations: [
+      // 1. 첫 만남
+      {
+        text: { ko: '거대한 외계 함선이 도시 위에 떴다. 대표로 만나야 한다.', en: 'A massive alien ship hovers over the city. You must meet them as Earth\'s envoy.' },
+        choices: [
+          { text: { ko: '존중과 평등을 표현하는 보편 인사를 준비', en: 'Prepare a universal greeting expressing respect and equality' }, tags: ['negotiation', 'kindhearted', 'persuasion'], baseScore: 100 },
+          { text: { ko: '지구 언어·문화 샘플을 정리해 전달', en: 'Compile samples of Earth\'s languages and cultures' }, tags: ['genius', 'teacher', 'creative'], baseScore: 90 },
+          { text: { ko: '바로 무기 위협으로 첫인사', en: 'Open with a weapons display as warning' }, tags: ['brave', 'fighting', '반대_cautious'], baseScore: 15 },
+          { text: { ko: '도망친다', en: 'Run away from the meeting' }, tags: ['coward', 'lazy', '반대_brave'], baseScore: 0 },
+        ],
+      },
+      // 2. 언어 장벽
+      {
+        text: { ko: '외계인의 언어가 인간과 다르다. 통역이 시급.', en: 'Their language is unlike anything human. Translation urgent.' },
+        choices: [
+          { text: { ko: '수학·기호·도식 등 보편 언어로 의사소통 시도', en: 'Use math, symbols, diagrams as universal language' }, tags: ['genius', 'scientist', 'drawing'], baseScore: 100 },
+          { text: { ko: 'AI 번역기를 빠르게 보정 학습', en: 'Rapidly train an AI translator on the fly' }, tags: ['hacking', 'inventing', 'engineer'], baseScore: 90 },
+          { text: { ko: '몸짓·표정으로만 소통', en: 'Use only gestures and facial expressions' }, tags: ['creative', 'persuasion'], baseScore: 65 },
+          { text: { ko: '한국어로 천천히 말하면 알아들을 거다', en: 'Just speak Korean slowly — they\'ll catch on' }, tags: ['stubborn', 'optimist', '반대_genius'], baseScore: 10 },
+        ],
+      },
+      // 3. 침공 이유 파악
+      {
+        text: { ko: '외계인이 침공을 결정한 이유를 알아내야 한다.', en: 'You need to learn why they decided to invade.' },
+        choices: [
+          { text: { ko: '직접 정중하게 질문해 동기·고충을 청취', en: 'Politely ask directly about their motives and concerns' }, tags: ['honest', 'curious', 'detective'], baseScore: 100 },
+          { text: { ko: '심리·표정 관찰로 단서 수집', en: 'Read their behavior and body language for clues' }, tags: ['sensing', 'detective', 'spy'], baseScore: 90 },
+          { text: { ko: '도청·해킹으로 정보 빼냄', en: 'Eavesdrop or hack their systems for info' }, tags: ['sneaky', 'hacking', '반대_honest'], baseScore: 60 },
+          { text: { ko: '협박해서 알아낸다', en: 'Threaten them into telling' }, tags: ['stubborn', 'fighting', '반대_cautious'], baseScore: 15 },
+        ],
+      },
+      // 4. 지구의 입장 전달
+      {
+        text: { ko: '인류 대표로서 지구의 가치·존엄을 설명해야 한다.', en: 'As humanity\'s envoy, you must convey Earth\'s value and dignity.' },
+        choices: [
+          { text: { ko: '평화·예술·과학 성취를 균형 있게 소개', en: 'Showcase peace, art, science achievements in balance' }, tags: ['persuasion', 'artist', 'scientist'], baseScore: 100 },
+          { text: { ko: '지구의 약점을 솔직히 인정하며 협력 제안', en: 'Honestly admit Earth\'s flaws, propose cooperation' }, tags: ['honest', 'negotiation', 'kindhearted'], baseScore: 95 },
+          { text: { ko: '인류의 군사력만 자랑한다', en: 'Brag only about Earth\'s military strength' }, tags: ['brave', 'stubborn', '반대_negotiation'], baseScore: 20 },
+          { text: { ko: '아무 말 못 하고 침묵', en: 'Say nothing, stay silent' }, tags: ['coward', 'lazy', '반대_brave'], baseScore: 5 },
+        ],
+      },
+      // 5. 자원 요구
+      {
+        text: { ko: '외계인이 "지구의 특정 자원만 받으면 떠난다"고 한다.', en: 'They offer: "Give us a specific resource and we leave."' },
+        choices: [
+          { text: { ko: '지속 가능한 양·교환 조건 등 구체적 협상안 제시', en: 'Propose concrete terms: sustainable volume + reciprocal trade' }, tags: ['negotiation', 'perfectionist', 'detective'], baseScore: 100 },
+          { text: { ko: '대체 자원 또는 기술 교환을 역제안', en: 'Counter-propose alternatives or technology exchange' }, tags: ['creative', 'inventing', 'persuasion'], baseScore: 90 },
+          { text: { ko: '요구를 그대로 수락', en: 'Accept their demand as-is' }, tags: ['impulsive', 'kindhearted', '반대_cautious'], baseScore: 35 },
+          { text: { ko: '단호히 거절한다', en: 'Flatly refuse' }, tags: ['stubborn', 'brave', '반대_negotiation'], baseScore: 25 },
+        ],
+      },
+      // 6. 외계인 내부 갈등
+      {
+        text: { ko: '외계인 진영 내에서 강경파·온건파 갈등이 보인다.', en: 'You spot a hawk vs dove split among the aliens.' },
+        choices: [
+          { text: { ko: '온건파와 신뢰를 쌓아 협상 기반 마련', en: 'Build trust with the dove faction as a base' }, tags: ['negotiation', 'detective', 'spy'], baseScore: 100 },
+          { text: { ko: '양측의 공통 이익 지점을 정리해 제시', en: 'Identify shared interests and bridge both sides' }, tags: ['creative', 'persuasion', 'genius'], baseScore: 95 },
+          { text: { ko: '강경파를 이간질해 약화시킨다', en: 'Drive a wedge into the hawk faction' }, tags: ['sneaky', 'lying', '반대_honest'], baseScore: 55 },
+          { text: { ko: '내부 분열을 무시한다', en: 'Ignore the split entirely' }, tags: ['lazy', 'stubborn', '반대_detective'], baseScore: 25 },
+        ],
+      },
+      // 7. 적대 행위 시도
+      {
+        text: { ko: '한 외계인이 갑자기 무기를 꺼낸다.', en: 'One alien suddenly draws a weapon.' },
+        choices: [
+          { text: { ko: '제스처로 진정시키고 다른 외계인과 대화 유지', en: 'Calm them with gestures, keep talking to others' }, tags: ['cautious', 'persuasion', 'kindhearted'], baseScore: 100 },
+          { text: { ko: '두 손을 들어 비무장임을 시각적으로 보여줌', en: 'Raise both hands to visibly signal unarmed' }, tags: ['honest', 'cautious'], baseScore: 90 },
+          { text: { ko: '바로 같이 무기를 꺼낸다', en: 'Draw your own weapon in response' }, tags: ['brave', 'fighting', '반대_cautious'], baseScore: 25 },
+          { text: { ko: '얼어붙어 아무것도 못 한다', en: 'Freeze and do nothing' }, tags: ['coward', 'pessimist', '반대_brave'], baseScore: 5 },
+        ],
+      },
+      // 8. 지도자 호출
+      {
+        text: { ko: '외계 지도자가 직접 나섰다. 결정적 순간이다.', en: 'The alien leader steps forward — pivotal moment.' },
+        choices: [
+          { text: { ko: '준비한 협정안의 핵심을 명확하게 제시', en: 'Clearly present the core of your prepared treaty' }, tags: ['perfectionist', 'persuasion', 'honest'], baseScore: 100 },
+          { text: { ko: '지도자 개인의 명예·이해관계에 호소', en: 'Appeal to the leader\'s personal honor and stakes' }, tags: ['negotiation', 'persuasion', 'mysterious'], baseScore: 95 },
+          { text: { ko: '농담으로 분위기를 깬다', en: 'Crack a joke to ease the tension' }, tags: ['talkative', 'optimist', '반대_perfectionist'], baseScore: 50 },
+          { text: { ko: '협박조로 말한다', en: 'Threaten them' }, tags: ['stubborn', 'brave', '반대_kindhearted'], baseScore: 10 },
+        ],
+      },
+      // 9. 협정 조항
+      {
+        text: { ko: '협정문 초안이 완성됐다. 마지막 검토.', en: 'Treaty draft is ready. Final review.' },
+        choices: [
+          { text: { ko: '양측 권리·의무·이행 보장 조항을 정밀 점검', en: 'Precisely audit rights, duties, and enforcement clauses' }, tags: ['perfectionist', 'detective', 'teacher'], baseScore: 100 },
+          { text: { ko: '인류·지구 환경 보호 조항을 추가 제안', en: 'Propose extra clauses protecting humanity and Earth\'s biosphere' }, tags: ['kindhearted', 'cautious', 'farmer'], baseScore: 95 },
+          { text: { ko: '대충 읽고 서명', en: 'Skim quickly and sign' }, tags: ['lazy', 'impulsive', '반대_perfectionist'], baseScore: 15 },
+          { text: { ko: '본인에게 유리한 비밀 조항 삽입', en: 'Slip in a secret clause favoring yourself' }, tags: ['greedy', 'sneaky', '반대_honest'], baseScore: 0 },
+        ],
+      },
+      // 10. 협정 체결
+      {
+        text: { ko: '협정 체결식. 양측 대표가 서명할 시간.', en: 'The signing ceremony — both leaders step up to sign.' },
+        choices: [
+          { text: { ko: '공식 의례를 존중하며 진심을 담아 서명', en: 'Respect the formal ceremony, sign with full sincerity' }, tags: ['honest', 'perfectionist', 'kindhearted'], baseScore: 100 },
+          { text: { ko: '인류 화합 메시지를 짧게 연설 후 서명', en: 'Deliver a brief unity message, then sign' }, tags: ['persuasion', 'optimist', 'teacher'], baseScore: 95 },
+          { text: { ko: '체결 후 자기 공적을 부풀려 발표', en: 'After signing, exaggerate your own role to the media' }, tags: ['greedy', 'lying', '반대_honest'], baseScore: 25 },
+          { text: { ko: '서명 직전 도망친다', en: 'Bail right before signing' }, tags: ['coward', 'lazy', '반대_brave'], baseScore: 0 },
+        ],
+      },
+    ],
+  },
 ];
