@@ -139,6 +139,10 @@
     "elbow-offset": {
       "title": "Pipe Elbow Offset Calculator",
       "desc": "Instantly calculate simple/rolling offset and pipe cut length using ASME B16.9 specs. Supports 90°/45° long & short radius elbows."
+    },
+    "construction-dictionary": {
+      "title": "Construction Site Glossary",
+      "desc": "Searchable glossary of 120+ Korean construction-site jargon terms with standard equivalents, origins, and field examples. Includes unit converter."
     }
   },
   "TextCounter": {
@@ -1708,6 +1712,41 @@
     "hydro_truck": "💡 Truck recommendation",
     "disclaimer": "⚠️ Results are based on KS/JIS standards and are for reference only. Always cross-check with design drawings and on-site supervision before construction.",
     "sus_note": "Stainless steel weight is calculated for SUS304 (density 7.93 g/cm³). SUS304 and SUS316 share the same coefficient with <0.1% error."
+  },
+  "ConstructionDict": {
+    "title": "📖 Construction Site Glossary",
+    "subtitle": "Search 120+ Korean construction site jargon terms by trade",
+    "search_placeholder": "Search terms (e.g., 다루끼, 헤베, 나라시...)",
+    "search_clear": "Clear",
+    "no_results": "No results. Try a different spelling.",
+    "results_count": "{n} terms",
+    "cat_all": "All",
+    "cat_common": "Common",
+    "cat_structure": "Structure",
+    "cat_carpentry": "Carpentry",
+    "cat_plaster": "Plaster",
+    "cat_tile": "Tile/Finish",
+    "cat_plumbing": "Plumbing",
+    "cat_electric": "Electric",
+    "cat_scaffold": "Scaffold",
+    "cat_paint": "Paint",
+    "origin_japanese": "🇯🇵 Japanese",
+    "origin_english": "🔤 English",
+    "origin_korean": "🇰🇷 Korean",
+    "card_standard": "Standard",
+    "card_example": "Field example",
+    "converter_title": "📐 Unit Converter",
+    "converter_pyeong_m2": "Pyeong ↔ ㎡",
+    "converter_pyeong_label": "Pyeong",
+    "converter_m2_label": "㎡",
+    "converter_jacchi_cm": "Ja·Chi ↔ cm",
+    "converter_ja_label": "Ja",
+    "converter_chi_label": "Chi",
+    "converter_cm_label": "cm",
+    "converter_swap": "↔ Swap",
+    "converter_clear": "Reset",
+    "tip_disclaimer": "⚠️ This glossary documents jargon, slang, and Japanese-origin terms used on Korean construction sites. We recommend using standard Korean equivalents whenever possible.",
+    "ad_text": "AD"
   },
   "ElbowOffset": {
     "title": "Pipe Elbow Offset Calculator",

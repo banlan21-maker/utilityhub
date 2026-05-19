@@ -84,6 +84,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/utility/decision-master', icon: '🎡', ko: 'Decision Master', en: 'Decision Master', category: 'utility' },
   { id: 'utilities/utility/piping-calc', icon: '🔧', ko: '배관 종합 계산기', en: 'Piping Calculator', category: 'utility' },
   { id: 'utilities/utility/elbow-offset', icon: '📐', ko: '배관 엘보 오프셋 계산기', en: 'Pipe Elbow Offset Calculator', category: 'utility' },
+  { id: 'utilities/utility/construction-dictionary', icon: '📖', ko: '건설현장 용어 사전', en: 'Construction Site Glossary', category: 'utility' },
 
   // Dev
   { id: 'utilities/dev/json-formatter', icon: '🗂️', ko: 'JSON 포맷터 & 뷰어', en: 'JSON Formatter & Viewer', category: 'dev' },
@@ -404,7 +405,12 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   'utilities/utility/elbow-offset': [
     'utilities/utility/piping-calc',
     'utilities/utility/metal-weight-calc',
-    'utilities/utility/unit-converter',
+    'utilities/utility/construction-dictionary',
+  ],
+  'utilities/utility/construction-dictionary': [
+    'utilities/utility/piping-calc',
+    'utilities/utility/interior-material-calc',
+    'utilities/utility/elbow-offset',
   ],
 
   // ── Dev ────────────────────────────────────────────────────

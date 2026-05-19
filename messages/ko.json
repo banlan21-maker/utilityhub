@@ -139,6 +139,10 @@
     "elbow-offset": {
       "title": "배관 엘보 오프셋 계산기",
       "desc": "단순·롤링 오프셋과 직관 절단길이를 ASME B16.9 규격으로 즉시 계산. 90°/45° 장·단반경 엘보 지원."
+    },
+    "construction-dictionary": {
+      "title": "건설현장 용어 사전",
+      "desc": "다루끼·헤베·루베·아시바 등 건설 현장 은어 120여 개를 직종별로 검색·확인. 단위 변환기 포함."
     }
   },
   "TextCounter": {
@@ -1858,6 +1862,41 @@
     "hydro_truck": "💡 물차 추천",
     "disclaimer": "⚠️ 본 계산기의 결과는 KS/JIS 규격 기반 참고용입니다. 실제 시공 전 설계도서 및 현장 감리 기준과 반드시 대조하세요.",
     "sus_note": "스테인리스 중량은 SUS304(밀도 7.93 g/cm³) 기준입니다. SUS304/316 동일 계수 적용 시 오차 0.1% 미만."
+  },
+  "ConstructionDict": {
+    "title": "📖 건설현장 용어 사전",
+    "subtitle": "다루끼·헤베·아시바 등 현장 은어 120여 개를 직종별로 검색하세요",
+    "search_placeholder": "용어 검색 (예: 다루끼, 헤베, 나라시...)",
+    "search_clear": "지우기",
+    "no_results": "검색 결과가 없습니다. 다른 철자로 검색해보세요.",
+    "results_count": "{n}개 용어",
+    "cat_all": "전체",
+    "cat_common": "공통·공정",
+    "cat_structure": "골조·철근",
+    "cat_carpentry": "목공",
+    "cat_plaster": "미장·방수",
+    "cat_tile": "타일·마감",
+    "cat_plumbing": "설비·배관",
+    "cat_electric": "전기",
+    "cat_scaffold": "비계·가설",
+    "cat_paint": "도장·도배",
+    "origin_japanese": "🇯🇵 일본어",
+    "origin_english": "🔤 영어",
+    "origin_korean": "🇰🇷 한국",
+    "card_standard": "표준어",
+    "card_example": "현장 예시",
+    "converter_title": "📐 단위 변환기",
+    "converter_pyeong_m2": "평 ↔ ㎡",
+    "converter_pyeong_label": "평",
+    "converter_m2_label": "㎡",
+    "converter_jacchi_cm": "자·치 ↔ cm",
+    "converter_ja_label": "자",
+    "converter_chi_label": "치",
+    "converter_cm_label": "cm",
+    "converter_swap": "↔ 교체",
+    "converter_clear": "초기화",
+    "tip_disclaimer": "⚠️ 본 사전은 한국 건설 현장에서 실제 쓰이는 은어·속어·일본어 잔재 용어를 정리한 참고용 자료입니다. 표준어 사용을 권장합니다.",
+    "ad_text": "AD"
   },
   "ElbowOffset": {
     "title": "배관 엘보 오프셋 계산기",
