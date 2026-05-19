@@ -143,6 +143,10 @@
     "construction-dictionary": {
       "title": "Construction Site Glossary",
       "desc": "Searchable glossary of 120+ Korean construction-site jargon terms with standard equivalents, origins, and field examples. Includes unit converter."
+    },
+    "persona-build": {
+      "title": "Persona Build",
+      "desc": "Daily solo card game. Random character (job + personality + skill) + new mission each day. Score 0–1000 across 10 situational choices."
     }
   },
   "TextCounter": {
@@ -1712,6 +1716,35 @@
     "hydro_truck": "💡 Truck recommendation",
     "disclaimer": "⚠️ Results are based on KS/JIS standards and are for reference only. Always cross-check with design drawings and on-site supervision before construction.",
     "sus_note": "Stainless steel weight is calculated for SUS304 (density 7.93 g/cm³). SUS304 and SUS316 share the same coefficient with <0.1% error."
+  },
+  "PersonaBuild": {
+    "title": "🎭 Persona Build",
+    "subtitle": "Use today's character to solve the mission",
+    "loading": "Loading today's character...",
+    "today_character": "Today's Character",
+    "label_job": "Job",
+    "label_personality": "Personality",
+    "label_skill": "Skill",
+    "today_mission": "Today's Mission",
+    "start_button": "🎬 Start Mission",
+    "already_played": "You've already played today",
+    "progress": "{current} / {total}",
+    "score_earned": "+{n} pts",
+    "result_title": "🏆 Mission Result",
+    "result_total": "Total",
+    "result_max": "/ 1000 pts",
+    "result_usage": "Character Usage",
+    "result_share": "📤 Share Result",
+    "result_share_link": "🔗 Copy Link",
+    "result_share_kakao": "💬 KakaoTalk",
+    "result_share_x": "𝕏 Twitter",
+    "result_share_telegram": "✈️ Telegram",
+    "result_copied": "✅ Copied!",
+    "countdown_prefix": "Next character in",
+    "countdown_h": "h",
+    "countdown_m": "m",
+    "countdown_s": "s",
+    "ad_text": "AD"
   },
   "ConstructionDict": {
     "title": "📖 Construction Site Glossary",

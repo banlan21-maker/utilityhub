@@ -143,6 +143,10 @@
     "construction-dictionary": {
       "title": "건설현장 용어 사전",
       "desc": "다루끼·헤베·루베·아시바 등 건설 현장 은어 120여 개를 직종별로 검색·확인. 단위 변환기 포함."
+    },
+    "persona-build": {
+      "title": "페르소나 카드",
+      "desc": "매일 새 캐릭터(직업·성격·특기)와 미션을 받아 10개의 상황 선택으로 점수를 겨루는 1인용 데일리 카드 게임."
     }
   },
   "TextCounter": {
@@ -1862,6 +1866,35 @@
     "hydro_truck": "💡 물차 추천",
     "disclaimer": "⚠️ 본 계산기의 결과는 KS/JIS 규격 기반 참고용입니다. 실제 시공 전 설계도서 및 현장 감리 기준과 반드시 대조하세요.",
     "sus_note": "스테인리스 중량은 SUS304(밀도 7.93 g/cm³) 기준입니다. SUS304/316 동일 계수 적용 시 오차 0.1% 미만."
+  },
+  "PersonaBuild": {
+    "title": "🎭 페르소나 카드",
+    "subtitle": "오늘의 캐릭터로 미션을 해결하라",
+    "loading": "오늘의 캐릭터 불러오는 중...",
+    "today_character": "오늘의 캐릭터",
+    "label_job": "직업",
+    "label_personality": "성격",
+    "label_skill": "특기",
+    "today_mission": "오늘의 미션",
+    "start_button": "🎬 미션 시작",
+    "already_played": "오늘은 이미 플레이했어요",
+    "progress": "{current} / {total}",
+    "score_earned": "+{n}점",
+    "result_title": "🏆 미션 결과",
+    "result_total": "총점",
+    "result_max": "/ 1000점",
+    "result_usage": "캐릭터 활용도",
+    "result_share": "📤 결과 공유",
+    "result_share_link": "🔗 링크 복사",
+    "result_share_kakao": "💬 카카오톡",
+    "result_share_x": "𝕏 트위터",
+    "result_share_telegram": "✈️ 텔레그램",
+    "result_copied": "✅ 복사됨!",
+    "countdown_prefix": "다음 캐릭터까지",
+    "countdown_h": "시간",
+    "countdown_m": "분",
+    "countdown_s": "초",
+    "ad_text": "AD"
   },
   "ConstructionDict": {
     "title": "📖 건설현장 용어 사전",
