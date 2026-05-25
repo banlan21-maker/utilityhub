@@ -46,6 +46,18 @@ const nextConfig: NextConfig = {
         destination: '/ko',
         permanent: true,
       },
+      // 과거 'ai' 카테고리는 V4.3 리팩토링에서 marketing으로 병합됨.
+      // 구글이 옛 색인 기억으로 /ko/ai, /en/ai를 재크롤하므로 marketing으로 301.
+      {
+        source: '/:locale(ko|en)/ai',
+        destination: '/:locale/utilities/marketing',
+        permanent: true,
+      },
+      {
+        source: '/:locale(ko|en)/ai/:path*',
+        destination: '/:locale/utilities/marketing',
+        permanent: true,
+      },
       // /{locale}/{category} → /{locale}/utilities/{category}
       {
         source: '/:locale(ko|en)/:cat(performance|document|finance|productivity|design|marketing|lifestyle|security|utility|dev)',
