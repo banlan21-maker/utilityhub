@@ -760,6 +760,10 @@
     "block-ai-crawlers": {
       "title": "AI 학습 차단 코드 생성기",
       "desc": "GPTBot·ClaudeBot·Google-Extended 등 AI 크롤러 차단용 robots.txt·메타태그·서버헤더를 즉시 생성. 일반 검색은 유지."
+    },
+    "peek-proof": {
+      "title": "어깨너머 시선 차단 에디터",
+      "desc": "카페·지하철·사무실에서 내가 보는 줄만 선명하게, 나머지는 흐리게. 어깨너머 시선으로부터 글을 보호하세요."
     }
   },
   "Redact": {
@@ -1953,6 +1957,52 @@
     "expired_desc": "비밀 링크는 생성 후 1시간 동안만 유효합니다. 보낸 사람에게 새 링크를 요청하세요.",
     "clock_skew_notice": "※ 발신자와 수신자의 기기 시간이 다를 경우 만료 오류가 발생할 수 있습니다. 시계 동기화 후 다시 시도해 보세요.",
     "new_message_btn": "새 메시지 만들기",
+    "ad_text": "AD"
+  },
+  "PeekProof": {
+    "title": "어깨너머 시선 차단 에디터",
+    "subtitle": "카페·지하철·사무실에서 내가 보는 줄만 선명하게 — 나머지는 흐리게 가립니다",
+    "settings_title": "설정",
+    "strength_label": "보호 강도",
+    "strength_hint": "흐림 정도 (블러 px)",
+    "fontsize_label": "글자 크기",
+    "active_zone_title": "활성 영역 안내",
+    "active_zone_focus": "커서 줄 — 선명한 네온 그린",
+    "active_zone_adjacent": "위·아래 줄 — 살짝 보임",
+    "active_zone_masked": "나머지 줄 — 흐리게 가림",
+    "esc_guide_title": "단축키 안내",
+    "esc_guide_body": "ESC 키 또는 👁️ 버튼으로 모든 줄을 즉시 가릴 수 있습니다 (패닉 모드)",
+    "single_line_tip": "💡 한 줄에 한 문장 단위로 작성하면 보호 효과가 가장 좋습니다 (Enter로 줄바꿈)",
+    "clipboard_auto_clear_label": "복사 후 30초 뒤 클립보드 자동 비우기",
+    "clipboard_auto_clear_help": "보안에 민감한 정보를 다룰 때 활성화하세요. 30초 후 클립보드를 자동으로 비웁니다.",
+    "clipboard_countdown_label": "클립보드 비우기까지 {seconds}초",
+    "clipboard_countdown_cancel": "취소하려면 클릭",
+    "clipboard_cleared_toast": "🗑️ 클립보드를 비웠습니다",
+    "clipboard_clear_failed": "⚠️ 클립보드 비우기 실패. 직접 비워주세요.",
+    "clipboard_security_notice": "민감한 정보입니다. 사용 후 클립보드를 직접 비워주세요.",
+    "copy_btn": "원본 복사",
+    "reset_btn": "입력 초기화",
+    "panic_label": "전체 가리기 (패닉)",
+    "panic_active": "패닉 모드 ON",
+    "current_line": "현재 {line}번째 줄",
+    "placeholder": "여기에 글을 입력하세요. 커서가 있는 줄과 위아래 한 줄만 선명하게 보이고, 나머지는 흐려집니다.\n한 줄에 한 문장씩 쓰면 가장 좋아요.",
+    "empty_hint": "글을 입력하면 보호가 시작됩니다",
+    "copy_done": "✅ 복사됨!",
+    "copy_failed": "복사에 실패했습니다. 직접 선택해 복사해주세요.",
+    "reset_done": "입력을 초기화했습니다",
+    "copy_confirm_title": "원본 텍스트를 복사할까요?",
+    "copy_confirm_body": "복사하면 흐림 효과 없이 전체 내용이 클립보드에 담깁니다. 옆 사람의 시선이 없는지 확인하셨나요?",
+    "copy_confirm_ok": "복사하기",
+    "reset_confirm_title": "입력을 모두 지울까요?",
+    "reset_confirm_body": "작성한 내용이 모두 삭제되며 되돌릴 수 없습니다.",
+    "reset_confirm_ok": "초기화",
+    "modal_cancel": "취소",
+    "tips_title": "사용 팁",
+    "tip_1": "ESC 키를 누르면 모든 줄이 즉시 흐려집니다 — 누가 다가올 때 빠르게 가리세요",
+    "tip_2": "보호 강도 슬라이더로 흐림 정도를 상황에 맞게 조절하세요",
+    "tip_3": "복사·초기화는 실수를 막기 위해 한 번 더 확인합니다",
+    "tip_4": "모든 처리는 브라우저 안에서만 — 입력한 글은 서버로 전송되지 않습니다",
+    "tip_single_line": "한 줄에 한 문장: 보호 효과 ↑",
     "ad_text": "AD"
   },
   "PersonaBuild": {

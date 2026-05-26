@@ -760,6 +760,10 @@
     "block-ai-crawlers": {
       "title": "Block AI Crawlers",
       "desc": "Instantly generate robots.txt, meta tags, and server headers to block AI training crawlers like GPTBot, ClaudeBot, and Google-Extended — while keeping normal search."
+    },
+    "peek-proof": {
+      "title": "Peek-Proof Editor",
+      "desc": "Only the line you're reading stays sharp; the rest blurs out. Protect your writing from over-the-shoulder peeking in cafes, subways, and offices."
     }
   },
   "Redact": {
@@ -1803,6 +1807,52 @@
     "expired_desc": "Secret links are valid for only 1 hour after creation. Ask the sender for a new link.",
     "clock_skew_notice": "* If the sender's and recipient's device clocks differ, an expiry error may occur. Sync your clock and try again.",
     "new_message_btn": "Create New Message",
+    "ad_text": "AD"
+  },
+  "PeekProof": {
+    "title": "Peek-Proof Editor",
+    "subtitle": "Only the line you're reading stays sharp — everything else blurs, shielding your text from over-the-shoulder eyes",
+    "settings_title": "Settings",
+    "strength_label": "Protection Strength",
+    "strength_hint": "Blur amount (px)",
+    "fontsize_label": "Font Size",
+    "active_zone_title": "Active Zone Guide",
+    "active_zone_focus": "Cursor line — sharp neon green",
+    "active_zone_adjacent": "Lines above & below — faintly visible",
+    "active_zone_masked": "All other lines — blurred out",
+    "esc_guide_title": "Shortcut",
+    "esc_guide_body": "Press ESC or the 👁️ button to instantly blur every line (panic mode)",
+    "single_line_tip": "💡 Writing one sentence per line gives the best protection (press Enter to break lines)",
+    "clipboard_auto_clear_label": "Auto-clear clipboard 30s after copy",
+    "clipboard_auto_clear_help": "Enable this when handling sensitive info. The clipboard is automatically cleared after 30 seconds.",
+    "clipboard_countdown_label": "Clearing clipboard in {seconds}s",
+    "clipboard_countdown_cancel": "Click to cancel",
+    "clipboard_cleared_toast": "🗑️ Clipboard cleared",
+    "clipboard_clear_failed": "⚠️ Failed to clear clipboard. Please clear it manually.",
+    "clipboard_security_notice": "This is sensitive info. Please clear your clipboard manually after use.",
+    "copy_btn": "Copy Original",
+    "reset_btn": "Clear Input",
+    "panic_label": "Blur All (Panic)",
+    "panic_active": "Panic Mode ON",
+    "current_line": "Line {line}",
+    "placeholder": "Type here. Only the line with your cursor and one line above/below stay sharp; the rest blur out.\nOne sentence per line works best.",
+    "empty_hint": "Start typing and protection kicks in",
+    "copy_done": "✅ Copied!",
+    "copy_failed": "Copy failed. Please select and copy manually.",
+    "reset_done": "Input cleared",
+    "copy_confirm_title": "Copy the original text?",
+    "copy_confirm_body": "Copying puts the full content on your clipboard with no blur. Have you made sure no one is looking over your shoulder?",
+    "copy_confirm_ok": "Copy",
+    "reset_confirm_title": "Clear everything?",
+    "reset_confirm_body": "All your text will be deleted and this cannot be undone.",
+    "reset_confirm_ok": "Clear",
+    "modal_cancel": "Cancel",
+    "tips_title": "Tips",
+    "tip_1": "Press ESC to instantly blur every line — hide fast when someone approaches",
+    "tip_2": "Use the protection strength slider to tune the blur to your situation",
+    "tip_3": "Copy and clear ask for one more confirmation to prevent mistakes",
+    "tip_4": "Everything runs in your browser — your text is never sent to any server",
+    "tip_single_line": "One sentence per line: stronger protection",
     "ad_text": "AD"
   },
   "PersonaBuild": {

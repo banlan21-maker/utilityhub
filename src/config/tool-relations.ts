@@ -73,6 +73,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/security/url-safety', icon: '🛡️', ko: 'URL 피싱/악성코드 검사기', en: 'URL Safety Checker', category: 'security' },
   { id: 'utilities/security/burn-message', icon: '💣', ko: '일회용 비밀 메모', en: 'Burn Message', category: 'security' },
   { id: 'utilities/security/block-ai-crawlers', icon: '🛡️', ko: 'AI 학습 차단 코드 생성기', en: 'Block AI Crawlers', category: 'security' },
+  { id: 'utilities/security/peek-proof', icon: '👁️', ko: '어깨너머 시선 차단 에디터', en: 'Peek-Proof Editor', category: 'security' },
 
   // Utility
   { id: 'utilities/utility/counter', icon: '📝', ko: '글자 수 & 바이트 계산기', en: 'Character Counter', category: 'utility' },
@@ -361,7 +362,12 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   'utilities/security/block-ai-crawlers': [
     'utilities/security/url-safety',
     'utilities/dev/json-formatter',
-    'utilities/performance/ttfb-check',
+    'utilities/security/peek-proof',
+  ],
+  'utilities/security/peek-proof': [
+    'utilities/security/burn-message',
+    'utilities/security/privacy-masking',
+    'utilities/security/password-generator',
   ],
 
   // ── Utility ────────────────────────────────────────────────
