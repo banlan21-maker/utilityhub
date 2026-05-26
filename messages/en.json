@@ -752,6 +752,10 @@
     "url-safety": {
       "title": "URL Phishing & Safety Check",
       "desc": "Check suspicious links for threats via Google Safe Browsing."
+    },
+    "burn-message": {
+      "title": "Burn Message",
+      "desc": "Send self-destructing secret messages that vanish after one read. 100% browser-side, no server storage, 1-hour auto-expiry."
     }
   },
   "Redact": {
@@ -1716,6 +1720,40 @@
     "hydro_truck": "💡 Truck recommendation",
     "disclaimer": "⚠️ Results are based on KS/JIS standards and are for reference only. Always cross-check with design drawings and on-site supervision before construction.",
     "sus_note": "Stainless steel weight is calculated for SUS304 (density 7.93 g/cm³). SUS304 and SUS316 share the same coefficient with <0.1% error."
+  },
+  "BurnMessage": {
+    "title": "Burn Message",
+    "subtitle": "Self-destructing secret notes that vanish after one read — 100% browser-side",
+    "compat_title": "Unsupported Browser",
+    "compat_desc": "This tool uses modern browser technologies. Please use one of the browsers below.",
+    "compat_browser_list": "Chrome / Edge (latest) · Safari 16.4+ · Firefox 113+",
+    "placeholder": "Type your secret message here (max 1,500 characters)",
+    "char_unit": "chars",
+    "security_notice": "⚠️ This tool prevents accidental exposure. If the recipient screenshots it or opens it in incognito mode, the burn feature may not work.",
+    "generate_btn": "💣 Create 1-hour secret link",
+    "copy_btn": "Copy Link",
+    "copy_done": "✅ Copied!",
+    "copy_fallback_notice": "Press Ctrl+C to copy",
+    "url_warning_medium": "⚠️ The link is long and may be truncated by some email clients. KakaoTalk and Slack work fine.",
+    "url_warning_high": "🚨 The link is very long and may be cut off in messengers.",
+    "expiry_note": "This link self-destructs within 1 hour of creation, or on first read.",
+    "unlock_title": "An encrypted message has arrived",
+    "unlock_warning": "This message can be opened only once. Once read, it is gone forever.",
+    "remaining_time": "Time until expiry",
+    "reveal_btn": "👁️ Reveal Message",
+    "auto_destruct_in": "Self-destruct in",
+    "seconds": "s",
+    "minutes": "m",
+    "copy_message": "Copy Message",
+    "view_again": "View Again",
+    "permanent_destroyed_notice": "The message has been permanently destroyed. You cannot view it again after refresh.",
+    "burned_title": "💥 This message has already been destroyed",
+    "burned_desc": "This link was already opened and the message is permanently gone. Ask the sender for a new link.",
+    "expired_title": "⏱️ This link has expired",
+    "expired_desc": "Secret links are valid for only 1 hour after creation. Ask the sender for a new link.",
+    "clock_skew_notice": "* If the sender's and recipient's device clocks differ, an expiry error may occur. Sync your clock and try again.",
+    "new_message_btn": "Create New Message",
+    "ad_text": "AD"
   },
   "PersonaBuild": {
     "title": "🎭 Persona Build",

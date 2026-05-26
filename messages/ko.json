@@ -752,6 +752,10 @@
     "url-safety": {
       "title": "URL 피싱 & 악성코드 검사",
       "desc": "의심스러운 링크의 안전성을 구글 세이프 브라우징으로 검사합니다."
+    },
+    "burn-message": {
+      "title": "일회용 비밀 메모",
+      "desc": "한 번 열람 후 자동 파괴되는 비밀 메시지를 100% 브라우저에서만 전달. 서버 저장 없음, 1시간 자동 만료."
     }
   },
   "Redact": {
@@ -1866,6 +1870,40 @@
     "hydro_truck": "💡 물차 추천",
     "disclaimer": "⚠️ 본 계산기의 결과는 KS/JIS 규격 기반 참고용입니다. 실제 시공 전 설계도서 및 현장 감리 기준과 반드시 대조하세요.",
     "sus_note": "스테인리스 중량은 SUS304(밀도 7.93 g/cm³) 기준입니다. SUS304/316 동일 계수 적용 시 오차 0.1% 미만."
+  },
+  "BurnMessage": {
+    "title": "일회용 비밀 메모",
+    "subtitle": "한 번 열람 후 자동 파괴되는 비밀 메시지 — 100% 브라우저 처리",
+    "compat_title": "지원되지 않는 브라우저입니다",
+    "compat_desc": "이 도구는 최신 브라우저 기술을 사용합니다. 아래 브라우저 중 하나로 이용해 주세요.",
+    "compat_browser_list": "Chrome / Edge / Whale (최신 버전) · Safari 16.4 이상 · Firefox 113 이상",
+    "placeholder": "여기에 비밀 메시지를 입력하세요 (최대 1,500자)",
+    "char_unit": "자",
+    "security_notice": "⚠️ 이 도구는 우발적 노출을 막기 위한 것입니다. 수신자가 캡처하거나 시크릿 모드로 열면 폭파 기능이 작동하지 않을 수 있습니다.",
+    "generate_btn": "💣 1시간짜리 비밀 링크 생성",
+    "copy_btn": "링크 복사",
+    "copy_done": "✅ 복사됨!",
+    "copy_fallback_notice": "Ctrl+C로 복사하세요",
+    "url_warning_medium": "⚠️ 링크가 길어 일부 이메일 클라이언트에서 잘릴 수 있습니다. 카카오톡·슬랙은 정상 작동합니다.",
+    "url_warning_high": "🚨 링크가 매우 길어 메신저에서 잘릴 위험이 있습니다.",
+    "expiry_note": "이 링크는 생성 후 1시간 이내, 또는 첫 열람 시 자동 파괴됩니다.",
+    "unlock_title": "암호화된 메시지가 도착했습니다",
+    "unlock_warning": "이 메시지는 단 1회만 열람할 수 있으며, 한 번 열면 영구히 사라집니다.",
+    "remaining_time": "만료까지 남은 시간",
+    "reveal_btn": "👁️ 메시지 열람하기",
+    "auto_destruct_in": "자동 파괴까지",
+    "seconds": "초",
+    "minutes": "분",
+    "copy_message": "메시지 복사",
+    "view_again": "다시 보기",
+    "permanent_destroyed_notice": "메시지가 영구히 파괴되었습니다. 새로고침하면 다시 볼 수 없습니다.",
+    "burned_title": "💥 이 메시지는 이미 파괴되었습니다",
+    "burned_desc": "이 링크는 이미 열람되어 메시지가 영구히 파괴되었습니다. 보낸 사람에게 새 링크를 요청하세요.",
+    "expired_title": "⏱️ 이 링크는 만료되었습니다",
+    "expired_desc": "비밀 링크는 생성 후 1시간 동안만 유효합니다. 보낸 사람에게 새 링크를 요청하세요.",
+    "clock_skew_notice": "※ 발신자와 수신자의 기기 시간이 다를 경우 만료 오류가 발생할 수 있습니다. 시계 동기화 후 다시 시도해 보세요.",
+    "new_message_btn": "새 메시지 만들기",
+    "ad_text": "AD"
   },
   "PersonaBuild": {
     "title": "🎭 페르소나 카드",

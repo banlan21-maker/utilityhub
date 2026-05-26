@@ -71,6 +71,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/security/privacy-masking', icon: '🔏', ko: '개인정보 마스킹 도구', en: 'Privacy Masking Tool', category: 'security' },
   { id: 'utilities/security/password-generator', icon: '🔑', ko: '비밀번호 생성기', en: 'Password Generator', category: 'security' },
   { id: 'utilities/security/url-safety', icon: '🛡️', ko: 'URL 피싱/악성코드 검사기', en: 'URL Safety Checker', category: 'security' },
+  { id: 'utilities/security/burn-message', icon: '💣', ko: '일회용 비밀 메모', en: 'Burn Message', category: 'security' },
 
   // Utility
   { id: 'utilities/utility/counter', icon: '📝', ko: '글자 수 & 바이트 계산기', en: 'Character Counter', category: 'utility' },
@@ -350,6 +351,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/marketing/shorturl',
     'utilities/security/privacy-masking',
     'utilities/performance/ttfb-check',
+  ],
+  'utilities/security/burn-message': [
+    'utilities/security/privacy-masking',
+    'utilities/security/password-generator',
+    'utilities/marketing/shorturl',
   ],
 
   // ── Utility ────────────────────────────────────────────────
