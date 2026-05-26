@@ -756,6 +756,10 @@
     "burn-message": {
       "title": "Burn Message",
       "desc": "Send self-destructing secret messages that vanish after one read. 100% browser-side, no server storage, 1-hour auto-expiry."
+    },
+    "block-ai-crawlers": {
+      "title": "Block AI Crawlers",
+      "desc": "Instantly generate robots.txt, meta tags, and server headers to block AI training crawlers like GPTBot, ClaudeBot, and Google-Extended — while keeping normal search."
     }
   },
   "Redact": {
@@ -1720,6 +1724,52 @@
     "hydro_truck": "💡 Truck recommendation",
     "disclaimer": "⚠️ Results are based on KS/JIS standards and are for reference only. Always cross-check with design drawings and on-site supervision before construction.",
     "sus_note": "Stainless steel weight is calculated for SUS304 (density 7.93 g/cm³). SUS304 and SUS316 share the same coefficient with <0.1% error."
+  },
+  "BlockAiCrawlers": {
+    "title": "🛡️ Block AI Crawlers Code Generator",
+    "subtitle": "Stop AI crawlers from scraping your content for training — normal Google search stays intact",
+    "step_bots": "1. Select AI bots to block",
+    "step_scope": "2. Block scope",
+    "step_output": "3. Output type",
+    "bots_major": "Major AI bots",
+    "bots_more": "More AI bots",
+    "bots_more_count": "{n} selected",
+    "select_all_major": "Select all major bots",
+    "deselect_all": "Deselect all",
+    "no_bots_title": "Select at least one AI bot to block",
+    "no_bots_recover": "Re-select major bots",
+    "scope_all": "Block entire site",
+    "scope_all_desc": "Exclude the whole site from AI training",
+    "scope_folder": "Block specific folders",
+    "scope_folder_desc": "e.g. /blog/, /shop/ (comma-separated)",
+    "scope_image": "Block images only",
+    "scope_image_desc": "Allow text, block image AI training only",
+    "folder_placeholder": "/blog/  (comma-separated for multiple)",
+    "path_normalized": "Path auto-normalized to {path}",
+    "path_empty_changed": "Path was empty — switched to 'Block entire site'",
+    "path_wildcard_warning": "⚠️ Wildcards (*, ?) are supported by only some bots",
+    "output_robots": "robots.txt",
+    "output_meta": "HTML meta tag",
+    "output_header": "Server header",
+    "output_llms": "llms.txt",
+    "meta_folder_warning": "⚠️ HTML meta tags apply per-page only. For folder blocking, use robots.txt or server headers.",
+    "llms_folder_warning": "⚠️ llms.txt is a site-wide policy file. For folder blocking, use robots.txt.",
+    "copy_btn": "Copy",
+    "copy_done": "✓ Copied",
+    "copy_fallback": "Press Ctrl+C to copy",
+    "download_btn": "Download",
+    "guide_robots": "📁 Upload this file to your site root (/robots.txt).",
+    "guide_meta": "📄 Add this tag inside the <head> of each HTML page.",
+    "guide_header_apache": "⚙️ Apache: add to .htaccess or httpd.conf.",
+    "guide_header_nginx": "⚙️ Nginx: add to the server block, then reload.",
+    "guide_llms": "📁 Upload this file to your site root (/llms.txt).",
+    "effect_title": "🤖 Blocking Effect by AI Bot",
+    "effect_bot": "Bot",
+    "effect_company": "Operator",
+    "effect_purpose": "Purpose",
+    "verify_title": "✅ How to Verify",
+    "verify_desc": "After deployment, visit yoursite.com/robots.txt in a browser — if the code appears, it is applied correctly. Actual bot blocking can be confirmed by a drop in requests from those User-agents in your server access logs.",
+    "ad_text": "AD"
   },
   "BurnMessage": {
     "title": "Burn Message",

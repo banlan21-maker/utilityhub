@@ -756,6 +756,10 @@
     "burn-message": {
       "title": "일회용 비밀 메모",
       "desc": "한 번 열람 후 자동 파괴되는 비밀 메시지를 100% 브라우저에서만 전달. 서버 저장 없음, 1시간 자동 만료."
+    },
+    "block-ai-crawlers": {
+      "title": "AI 학습 차단 코드 생성기",
+      "desc": "GPTBot·ClaudeBot·Google-Extended 등 AI 크롤러 차단용 robots.txt·메타태그·서버헤더를 즉시 생성. 일반 검색은 유지."
     }
   },
   "Redact": {
@@ -1870,6 +1874,52 @@
     "hydro_truck": "💡 물차 추천",
     "disclaimer": "⚠️ 본 계산기의 결과는 KS/JIS 규격 기반 참고용입니다. 실제 시공 전 설계도서 및 현장 감리 기준과 반드시 대조하세요.",
     "sus_note": "스테인리스 중량은 SUS304(밀도 7.93 g/cm³) 기준입니다. SUS304/316 동일 계수 적용 시 오차 0.1% 미만."
+  },
+  "BlockAiCrawlers": {
+    "title": "🛡️ AI 학습 차단 코드 생성기",
+    "subtitle": "AI 크롤러의 무단 학습 수집을 차단하세요 — 구글 일반 검색은 그대로 유지",
+    "step_bots": "1. 차단할 AI 봇 선택",
+    "step_scope": "2. 차단 범위",
+    "step_output": "3. 산출물 종류",
+    "bots_major": "메이저 AI 봇",
+    "bots_more": "추가 AI 봇",
+    "bots_more_count": "{n}개 선택됨",
+    "select_all_major": "메이저 봇 전체 선택",
+    "deselect_all": "모두 해제",
+    "no_bots_title": "차단할 AI 봇을 1개 이상 선택해주세요",
+    "no_bots_recover": "메이저 봇 다시 선택",
+    "scope_all": "전체 사이트 차단",
+    "scope_all_desc": "사이트 전체를 AI 학습에서 제외",
+    "scope_folder": "특정 폴더만 차단",
+    "scope_folder_desc": "예: /blog/, /shop/ (쉼표로 여러 개)",
+    "scope_image": "이미지만 차단",
+    "scope_image_desc": "텍스트는 허용, 이미지 AI 학습만 차단",
+    "folder_placeholder": "/blog/  (여러 개는 쉼표로 구분)",
+    "path_normalized": "경로가 자동으로 {path}(으)로 정규화되었습니다",
+    "path_empty_changed": "경로가 비어 있어 '전체 사이트 차단'으로 변경되었습니다",
+    "path_wildcard_warning": "⚠️ 와일드카드(*, ?)는 일부 봇만 지원합니다",
+    "output_robots": "robots.txt",
+    "output_meta": "HTML 메타태그",
+    "output_header": "서버 헤더",
+    "output_llms": "llms.txt",
+    "meta_folder_warning": "⚠️ HTML 메타태그는 페이지 단위로만 적용됩니다. 특정 폴더 차단에는 robots.txt나 서버 헤더를 사용하세요.",
+    "llms_folder_warning": "⚠️ llms.txt는 사이트 전체 정책 파일입니다. 폴더별 차단에는 robots.txt를 사용하세요.",
+    "copy_btn": "복사",
+    "copy_done": "✓ 복사됨",
+    "copy_fallback": "Ctrl+C로 복사하세요",
+    "download_btn": "다운로드",
+    "guide_robots": "📁 사이트 루트(/robots.txt)에 이 파일을 업로드하세요.",
+    "guide_meta": "📄 각 HTML 페이지의 <head> 안에 이 태그를 넣으세요.",
+    "guide_header_apache": "⚙️ Apache: .htaccess 또는 httpd.conf에 추가하세요.",
+    "guide_header_nginx": "⚙️ Nginx: server 블록에 추가 후 reload 하세요.",
+    "guide_llms": "📁 사이트 루트(/llms.txt)에 이 파일을 업로드하세요.",
+    "effect_title": "🤖 AI 봇별 차단 효과",
+    "effect_bot": "봇",
+    "effect_company": "운영사",
+    "effect_purpose": "용도",
+    "verify_title": "✅ 적용 확인 방법",
+    "verify_desc": "배포 후 브라우저에서 yoursite.com/robots.txt 에 접속해 코드가 보이면 정상 적용된 것입니다. AI 봇의 실제 차단 여부는 서버 접근 로그에서 해당 User-agent 요청이 줄어드는 것으로 확인할 수 있습니다.",
+    "ad_text": "AD"
   },
   "BurnMessage": {
     "title": "일회용 비밀 메모",
