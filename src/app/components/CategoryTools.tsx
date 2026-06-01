@@ -98,7 +98,7 @@ function CardView({ tools, locale }: { tools: Tool[]; locale: string }) {
         const desc = isKo ? (tool.descKo ?? '') : (tool.descEn ?? '');
 
         return (
-          <Link key={tool.slug} href={`/${tool.href}` as any} className={s.card}>
+          <Link key={tool.slug} href={tool.href as any} className={s.card}>
             <div className={s.cardIconWrapper}>
               {IconComponent && <IconComponent size={36} color="#8b5cf6" />}
             </div>
@@ -127,7 +127,7 @@ function ListView({ tools, locale }: { tools: Tool[]; locale: string }) {
         const desc = isKo ? (tool.descKo ?? '') : (tool.descEn ?? '');
 
         return (
-          <Link key={tool.slug} href={`/${tool.href}` as any} className={s.listItem}>
+          <Link key={tool.slug} href={tool.href as any} className={s.listItem}>
             <div className={s.listIcon}>
               {IconComponent && <IconComponent size={22} color="#8b5cf6" />}
             </div>
