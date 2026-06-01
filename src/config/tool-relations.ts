@@ -66,6 +66,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/lifestyle/brain-boost', icon: '🧠', ko: '브레인 부스트 (N-Back)', en: 'Brain Boost N-Back', category: 'lifestyle' },
   { id: 'utilities/lifestyle/apnea-trainer', icon: '🫁', ko: 'Apnea Pro 드라이 트레이닝', en: 'Apnea Pro Dry Training', category: 'lifestyle' },
   { id: 'utilities/lifestyle/saju-compatibility', icon: '💕', ko: '사주 궁합 테스트', en: 'Saju Compatibility Test', category: 'lifestyle' },
+  { id: 'utilities/lifestyle/coffee-yield-calc', icon: '☕', ko: '커피 브루잉 수율 계산기', en: 'Coffee Extraction Calculator', category: 'lifestyle' },
 
   // Security
   { id: 'utilities/security/privacy-masking', icon: '🔏', ko: '개인정보 마스킹 도구', en: 'Privacy Masking Tool', category: 'security' },
@@ -336,6 +337,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/lifestyle/fortune-prompt',
     'utilities/lifestyle/mbti-test',
     'utilities/lifestyle/teto-egen-test',
+  ],
+  'utilities/lifestyle/coffee-yield-calc': [
+    'utilities/lifestyle/bmi-calc',
+    'utilities/lifestyle/pet-calorie',
+    'utilities/utility/unit-converter',
   ],
 
   // ── Security ───────────────────────────────────────────────
