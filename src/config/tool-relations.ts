@@ -34,6 +34,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/productivity/excel-mapper', icon: '📊', ko: '엑셀 데이터 매퍼', en: 'Excel Data Mapper', category: 'productivity' },
   { id: 'utilities/productivity/meeting-burner', icon: '⏱️', ko: 'Meeting Burner', en: 'Meeting Burner', category: 'productivity' },
   { id: 'utilities/productivity/solar-master', icon: '☀️', ko: 'Solar Master', en: 'Solar Master', category: 'productivity' },
+  { id: 'utilities/productivity/bulk-renamer', icon: '📝', ko: '스마트 대량 파일명 변환기', en: 'Smart Bulk Renamer', category: 'productivity' },
 
   // Design
   { id: 'utilities/design/color-palette', icon: '🎯', ko: '색상 팔레트 & 가독성 검사기', en: 'Color Palette Checker', category: 'design' },
@@ -202,6 +203,11 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/productivity/pomodoro',
     'utilities/finance/salary-calc',
     'utilities/productivity/world-time',
+  ],
+  'utilities/productivity/bulk-renamer': [
+    'utilities/productivity/excel-mapper',
+    'utilities/dev/json-formatter',
+    'utilities/utility/counter',
   ],
 
   // ── Design ─────────────────────────────────────────────────
