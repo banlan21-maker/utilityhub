@@ -227,7 +227,7 @@ export default function Tax33CalcClient() {
             </div>
 
             <div className={s.tax_result_row}>
-              <span className={s.tax_result_label}>{t('result.withholding')} (3.3%)</span>
+              <span className={s.tax_result_label}>{t('result.withholding')}</span>
               <span className={s.tax_result_value} style={{ color: '#ef4444' }}>-{fmt(withholding)}{unit}</span>
             </div>
 
