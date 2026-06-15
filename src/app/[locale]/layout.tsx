@@ -5,6 +5,7 @@ import {routing} from '@/i18n/routing';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Script from 'next/script';
+import type {Viewport} from 'next';
 import {Analytics} from '@vercel/analytics/next';
 import {SpeedInsights} from '@vercel/speed-insights/next';
 import '../globals.css';
@@ -12,6 +13,13 @@ import '../globals.css';
 export const metadata = {
   title: 'Utility Hub - All your daily tools in one place',
   description: 'A comprehensive suite of tools including performance monitoring, PDF conversion, productivity, and more.',
+};
+
+// 핀치 줌 허용 — 접근성(a11y) 및 모바일 사용성.
+// maximum-scale=1 / user-scalable=0 으로 확대를 막지 않는다.
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default async function LocaleLayout({
@@ -35,7 +43,6 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
         <script dangerouslySetInnerHTML={{__html: `
 (function(){try{var s=localStorage.getItem('utilhub-theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
         `}} />
