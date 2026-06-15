@@ -6,14 +6,12 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
-import { jsPDF } from 'jspdf';
-import * as pdfjsLib from 'pdfjs-dist';
 import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock, ShieldCheck } from 'lucide-react';
 
-// PDF.js worker 설정 (로컬 워커 사용 - pdfjs-dist v5 호환)
-if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.min.mjs';
-}
+// ⚠️ jsPDF / pdfjs-dist 는 모듈 최상단에서 import 하면 안 된다.
+// pdfjs-dist 가 import 시점에 브라우저 전용 전역(DOMMatrix)을 참조해
+// 서버(Node) SSR에서 ReferenceError 로 라우트 전체가 크래시 → raw HTML 이 빈 껍데기가 됨.
+// 따라서 두 라이브러리는 사용하는 핸들러 안에서 동적 import 한다(브라우저에서만 로드).
 
 interface DetectedInfo {
   id: string;
@@ -51,6 +49,8 @@ export default function PdfMaskingClient() {
     setProgress(0);
 
     try {
+      const pdfjsLib = await import('pdfjs-dist');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.min.mjs';
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const totalPages = pdf.numPages;
@@ -150,6 +150,7 @@ export default function PdfMaskingClient() {
     setProcessing(true);
 
     try {
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'px',

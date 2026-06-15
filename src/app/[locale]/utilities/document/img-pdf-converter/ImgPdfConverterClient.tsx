@@ -6,15 +6,13 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
-import { jsPDF } from 'jspdf';
 import JSZip from 'jszip';
-import * as pdfjsLib from 'pdfjs-dist';
 import { Upload, FileImage, FileText, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
 
-// PDF.js worker 설정 (로컬 워커 사용 - pdfjs-dist v5 호환)
-if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.min.mjs';
-}
+// ⚠️ jsPDF / pdfjs-dist 는 모듈 최상단에서 import 하면 안 된다.
+// pdfjs-dist 가 import 시점에 브라우저 전용 전역(DOMMatrix)을 참조해
+// 서버(Node) SSR에서 ReferenceError 로 라우트 전체가 크래시 → raw HTML 이 빈 껍데기가 됨.
+// 따라서 두 라이브러리는 사용하는 핸들러 안에서 동적 import 한다(브라우저에서만 로드).
 
 type ConversionMode = 'images-to-pdf' | 'pdf-to-images';
 type PaperSize = 'auto' | 'a4';
@@ -83,6 +81,8 @@ export default function ImgPdfConverterClient() {
     setProgress(0);
 
     try {
+      const pdfjsLib = await import('pdfjs-dist');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.min.mjs';
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const totalPages = pdf.numPages;
@@ -132,6 +132,7 @@ export default function ImgPdfConverterClient() {
     setProgress(0);
 
     try {
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF({
         orientation: orientation,
         unit: 'mm',
