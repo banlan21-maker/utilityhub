@@ -11,7 +11,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'PrivacyPolicy' });
   const BASE = 'https://www.theutilhub.com';
-  const canonical = locale === 'ko' ? `${BASE}/privacy` : `${BASE}/${locale}/privacy`;
+  const canonical = `${BASE}/${locale}/privacy`;
 
   return {
     title: `${t('title')} — Utility Hub`,
@@ -19,7 +19,7 @@ export async function generateMetadata({
     metadataBase: new URL(BASE),
     alternates: {
       canonical,
-      languages: { ko: `${BASE}/privacy`, en: `${BASE}/en/privacy` },
+      languages: { ko: `${BASE}/ko/privacy`, en: `${BASE}/en/privacy` },
     },
     robots: { index: true, follow: true },
   };
