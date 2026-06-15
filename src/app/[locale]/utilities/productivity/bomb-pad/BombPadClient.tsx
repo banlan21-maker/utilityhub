@@ -525,6 +525,15 @@ function BombPadContent() {
         <span className={s.srOnly}>{isKo ? '공유하기' : 'Share'}</span>
       </button>
 
+      <BombPadBottom isKo={isKo} />
+    </div>
+  );
+}
+
+// 하단 SEO 섹션 — Suspense fallback 과 본문 양쪽에서 재사용 (raw HTML SSR 보장)
+function BombPadBottom({ isKo }: { isKo: boolean }) {
+  return (
+    <>
       <ShareBar
         title={isKo ? '72시간 시한폭탄 패드 — 암호화된 공유 메모장' : '72H Bomb Pad — Encrypted Collaborative Notepad'}
         description={isKo ? '종단간 암호화로 내용이 보호되는 72시간 공유 메모장. 아무도 안 쓰면 폭발합니다!' : 'End-to-end encrypted shared notepad alive for 72h. Nobody writes = BOOM!'}
@@ -580,13 +589,35 @@ function BombPadContent() {
           ],
         }}
       />
+    </>
+  );
+}
+
+// useSearchParams() 가 Suspense 경계를 서버에서 CSR로 떨어뜨리므로,
+// fallback 에 SEO 콘텐츠(h1 + SeoSection)를 넣어 raw HTML 에 본문이 포함되게 한다.
+function BombPadFallback() {
+  const locale = useLocale();
+  const isKo = locale === 'ko';
+  return (
+    <div className={s.container}>
+      <NavigationActions />
+      <div className={s.header}>
+        <div className={s.iconWrapper}><Bomb size={48} color="#f97316" /></div>
+        <h1 className={s.title}>{isKo ? '💣 72시간 시한폭탄 패드' : '💣 72H Bomb Pad'}</h1>
+        <p className={s.subtitle}>
+          {isKo
+            ? '마지막 수정으로부터 72시간 동안만 살아있는 공유 메모장 — 아무도 안 쓰면 폭발'
+            : 'A shared notepad alive 72h from the last edit — nobody writes = BOOM'}
+        </p>
+      </div>
+      <BombPadBottom isKo={isKo} />
     </div>
   );
 }
 
 export default function BombPadClient() {
   return (
-    <Suspense>
+    <Suspense fallback={<BombPadFallback />}>
       <BombPadContent />
     </Suspense>
   );
