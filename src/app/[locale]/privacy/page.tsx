@@ -10,7 +10,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'PrivacyPolicy' });
-  const BASE = 'https://theutilhub.com';
+  const BASE = 'https://www.theutilhub.com';
   const canonical = locale === 'ko' ? `${BASE}/privacy` : `${BASE}/${locale}/privacy`;
 
   return {

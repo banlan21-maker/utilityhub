@@ -11,7 +11,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Index' });
 
-  const BASE = 'https://theutilhub.com';
+  const BASE = 'https://www.theutilhub.com';
   const canonical = locale === 'ko' ? BASE : `${BASE}/${locale}`;
 
   return {

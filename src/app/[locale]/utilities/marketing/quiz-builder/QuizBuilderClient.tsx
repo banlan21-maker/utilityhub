@@ -131,7 +131,7 @@ export default function QuizBuilderClient() {
     setErrors(errs);
     if (errs.length > 0) return;
     const encoded = encodeQuiz(quiz);
-    const url = `${window.location.origin}/${locale}/ux/quiz/play?d=${encoded}`;
+    const url = `${window.location.origin}/${locale}/utilities/marketing/quiz-builder/play?d=${encoded}`;
     setGeneratedUrl(url);
   }, [quiz, locale, isKo]);
 

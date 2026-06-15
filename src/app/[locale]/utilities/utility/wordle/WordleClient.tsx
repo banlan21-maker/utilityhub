@@ -393,7 +393,7 @@ export default function WordleClient() {
 
     const dayCount = getTodayIndex() + 1;
     const attempts = gameState.gameStatus === 'won' ? gameState.guesses.length : 'X';
-    const text = `Utility Hub Wordle #${dayCount} - ${attempts}/6\n\n${emoji}\n\nhttps://theutilhub.com`;
+    const text = `Utility Hub Wordle #${dayCount} - ${attempts}/6\n\n${emoji}\n\nhttps://www.theutilhub.com`;
 
     navigator.clipboard.writeText(text);
     alert(currentLanguage === 'ko' ? '클립보드에 복사되었습니다!' : 'Copied to clipboard!');

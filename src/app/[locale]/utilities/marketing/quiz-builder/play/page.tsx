@@ -272,7 +272,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
         <p style={{ fontSize: '0.85rem', opacity: 0.85, margin: '0 0 1.1rem', lineHeight: 1.6 }}>
           유틸허브에서 누구나 무료로 퀴즈를 만들고 SNS에 공유할 수 있어요
         </p>
-        <Link href="/ux/quiz"
+        <Link href="/utilities/marketing/quiz-builder"
           style={{ display: 'inline-block', padding: '0.65rem 1.75rem', background: 'white', color: '#6366f1', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
           나도 만들기 →
         </Link>
@@ -291,7 +291,7 @@ function PlayContent() {
   if (!encoded) return (
     <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
       <p style={{ marginBottom: '1rem' }}>유효한 퀴즈 링크가 아닙니다.</p>
-      <Link href="/ux/quiz" style={{ color: 'var(--primary)', fontWeight: 600 }}>퀴즈 만들러 가기 →</Link>
+      <Link href="/utilities/marketing/quiz-builder" style={{ color: 'var(--primary)', fontWeight: 600 }}>퀴즈 만들러 가기 →</Link>
     </div>
   );
 
