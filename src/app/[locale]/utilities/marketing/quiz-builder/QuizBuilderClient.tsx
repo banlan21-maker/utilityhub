@@ -64,9 +64,7 @@ export default function QuizBuilderClient() {
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => { setIsClient(true); }, []);
 
   // ── Updaters ──
   const setBasic = (patch: Partial<Pick<QuizDef, 'title' | 'description' | 'coverEmoji'>>) =>
@@ -137,7 +135,6 @@ export default function QuizBuilderClient() {
     setGeneratedUrl(url);
   }, [quiz, locale, isKo]);
 
-  if (!isClient) return null;
 
   return (
     <div className={s.quiz_container}>

@@ -528,7 +528,6 @@ export default function FormationPlannerClient() {
     return { type: 'alpha' as const, label: text };
   };
 
-  if (!isClient) return null;
 
   return (
     <div className={s.container}>

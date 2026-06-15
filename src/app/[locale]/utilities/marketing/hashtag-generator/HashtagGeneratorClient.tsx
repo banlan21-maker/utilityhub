@@ -85,16 +85,13 @@ export default function HashtagGeneratorClient() {
   const [platform, setPlatform] = useState<Platform>('instagram');
   const [submitted, setSubmitted] = useState('');
   const [copied, setCopied] = useState(false);
-  const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => { setIsClient(true); }, []);
 
   const tags = useMemo(() => {
     if (!submitted) return [];
     return findHashtags(submitted, platform);
   }, [submitted, platform]);
 
-  if (!isClient) return null;
 
   return (
     <div className={s.hashtag_container}>

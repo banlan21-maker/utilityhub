@@ -57,10 +57,8 @@ export default function InterestCalcClient() {
   const [duration, setDuration] = useState('');
   const [period, setPeriod] = useState<Period>('year');
   const [freq, setFreq] = useState<CompoundFreq>(12);
-  const [isClient, setIsClient] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => { setIsClient(true); }, []);
 
   const handleCopy = () => {
     const lines = [
@@ -112,7 +110,6 @@ export default function InterestCalcClient() {
   const maxTotal = yearlyData.length ? yearlyData[yearlyData.length - 1].total : 0;
   const hasResult = p > 0 && r > 0 && t_years > 0;
 
-  if (!isClient) return null;
 
   return (
     <div className={s.int_container}>

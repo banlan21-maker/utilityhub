@@ -131,10 +131,8 @@ export default function SalaryCalcClient() {
   const [holidayOn, setHolidayOn]   = useState(true);
   const [krDeduction, setKrDeduction] = useState<KRDeduction>('insurance');
   const [usDeduction, setUsDeduction] = useState<USDeduction>('fica');
-  const [isClient, setIsClient]     = useState(false);
   const [copied, setCopied]         = useState(false);
 
-  useEffect(() => { setIsClient(true); }, []);
 
   const isKRW = country === 'KR';
 
@@ -169,7 +167,6 @@ export default function SalaryCalcClient() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!isClient) return null;
 
   /* ─── Receipt rows helper ─── */
   const ReceiptRow = ({

@@ -52,7 +52,6 @@ export default function ElbowOffsetClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  const [isMounted, setIsMounted] = useState(false);
   const [size, setSize] = useState<Size>('50A');
   const [elbow, setElbow] = useState<ElbowType>('LR90');
   const [mode, setMode] = useState<Mode>('simple');
@@ -67,7 +66,6 @@ export default function ElbowOffsetClient() {
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  useEffect(() => { setIsMounted(true); }, []);
 
   // 모드 B(rolling) 선택 시 90°엘보 → 45°LR 자동 변경 + 토스트
   useEffect(() => {
@@ -178,7 +176,6 @@ export default function ElbowOffsetClient() {
     if (v === '' || /^[0-9]*\.?[0-9]*$/.test(v)) setter(v);
   };
 
-  if (!isMounted) return null;
 
   return (
     <div className={s.container}>

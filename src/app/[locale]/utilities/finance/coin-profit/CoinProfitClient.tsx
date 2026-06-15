@@ -156,7 +156,6 @@ export default function CoinProfitClient() {
   const profitRate     = totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
   const isProfit       = profit >= 0;
 
-  if (!isClient) return null;
 
   return (
     <div className={s.coin_container}>

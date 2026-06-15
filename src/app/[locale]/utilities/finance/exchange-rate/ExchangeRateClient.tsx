@@ -220,7 +220,6 @@ export default function ExchangeRateClient() {
     return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
   };
 
-  if (!isClient) return null;
 
   return (
     <div className={s.ex_container}>

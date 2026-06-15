@@ -37,10 +37,8 @@ export default function VatCalcClient() {
   const [mode, setMode] = useState<Mode>('add');
   const [amount, setAmount] = useState('');
   const [vatRate, setVatRate] = useState('10');
-  const [isClient, setIsClient] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => { setIsClient(true); }, []);
 
   const handleCopy = () => {
     const lines = mode === 'add'
@@ -73,7 +71,6 @@ export default function VatCalcClient() {
   const supplyAmount = val / (1 + rate / 100);
   const extractedVat = val - supplyAmount;
 
-  if (!isClient) return null;
 
   return (
     <div className={s.vat_container}>

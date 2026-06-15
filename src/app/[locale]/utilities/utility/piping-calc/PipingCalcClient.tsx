@@ -120,7 +120,6 @@ export default function PipingCalcClient() {
   const isKo = locale === 'ko';
 
   const [activeTab, setActiveTab] = useState<Tab>('spec');
-  const [isMounted, setIsMounted] = useState(false);
 
   // Tab 1: spec
   const [specMaterial, setSpecMaterial] = useState<Material>('carbon');
@@ -139,7 +138,6 @@ export default function PipingCalcClient() {
   const [hydroLen, setHydroLen] = useState('');
   const [hydroSafety, setHydroSafety] = useState(10);
 
-  useEffect(() => { setIsMounted(true); }, []);
 
   // 재질 바꿀 때 스케줄 초기화
   useEffect(() => {
@@ -232,7 +230,6 @@ export default function PipingCalcClient() {
     } catch { /* ignore */ }
   };
 
-  if (!isMounted) return null;
 
   const schedules = specMaterial === 'carbon' ? CARBON_SCHEDULES : SUS_SCHEDULES;
 

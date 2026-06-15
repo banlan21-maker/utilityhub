@@ -37,7 +37,6 @@ export default function PercentageCalcClient() {
   const isKo = locale === 'ko';
 
   const [mode, setMode] = useState<Mode>('discount');
-  const [isClient, setIsClient] = useState(false);
 
   // States
   const [origPrice, setOrigPrice] = useState('');
@@ -49,7 +48,6 @@ export default function PercentageCalcClient() {
   const [finalPrice, setFinalPrice] = useState('');
   const [appliedRate, setAppliedRate] = useState('');
 
-  useEffect(() => { setIsClient(true); }, []);
 
   const fmt = (n: number, decimals = 2) => n.toLocaleString(isKo ? 'ko-KR' : 'en-US', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
 
@@ -103,7 +101,6 @@ export default function PercentageCalcClient() {
 
   const results = mode === 'discount' ? discountResults() : mode === 'change' ? changeResults() : mode === 'ratio' ? ratioResults() : reverseResults();
 
-  if (!isClient) return null;
 
   return (
     <div className={s.fin_container}>

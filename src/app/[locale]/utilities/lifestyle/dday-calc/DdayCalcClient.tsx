@@ -46,7 +46,6 @@ export default function DdayCalcClient() {
   const t = useTranslations('DDay');
   const locale = useLocale();
 
-  const [isMounted, setIsMounted] = useState(false);
   const [targetDate, setTargetDate] = useState<string>('');
   const [addDays, setAddDays] = useState<string>('');
   const [addMonths, setAddMonths] = useState<string>('');
@@ -55,7 +54,6 @@ export default function DdayCalcClient() {
   // SSR/CSR hydration mismatch 방지 — 마운트 후에만 today를 초기화
   useEffect(() => {
     setTargetDate(formatLocalDateInput(todayLocal()));
-    setIsMounted(true);
   }, []);
 
   // ── D-Day 메인 결과 (자정 기준 일관) ───────────────────────────────
@@ -139,9 +137,6 @@ export default function DdayCalcClient() {
       setTimeout(() => setCopied(false), 2000);
     } catch { /* ignore */ }
   }, [ddayData, targetDate, calcResult, t, locale]);
-
-  // SSR mismatch 방지
-  if (!isMounted) return null;
 
   return (
     <div>

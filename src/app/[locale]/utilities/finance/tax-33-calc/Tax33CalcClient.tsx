@@ -36,9 +36,7 @@ export default function Tax33CalcClient() {
   const [gross, setGross] = useState('');
   const [applyInsurance, setApplyInsurance] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => { setIsClient(true); }, []);
 
   const inputNum = parseFloat(gross.replace(/,/g, '')) || 0;
 
@@ -88,7 +86,6 @@ export default function Tax33CalcClient() {
     } catch { /* ignore */ }
   }, [calcMode, inputNum, grossNum, withholding, natPension, healthIns, careIns, totalInsurance, net, applyInsurance, t, unit]);
 
-  if (!isClient) return null;
 
   return (
     <div className={s.tax_container}>

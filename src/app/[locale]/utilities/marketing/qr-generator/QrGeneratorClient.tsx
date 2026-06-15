@@ -24,10 +24,8 @@ export default function QrGeneratorClient() {
   const isKo = locale === 'ko';
 
   const [inputValue, setInputValue] = useState('');
-  const [isClient, setIsClient] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  useEffect(() => { setIsClient(true); }, []);
 
   const handleDownload = () => {
     if (!svgRef.current) return;
@@ -63,7 +61,6 @@ export default function QrGeneratorClient() {
 
   const clear = () => setInputValue('');
 
-  if (!isClient) return null;
 
   return (
     <div className={s.qr_container}>

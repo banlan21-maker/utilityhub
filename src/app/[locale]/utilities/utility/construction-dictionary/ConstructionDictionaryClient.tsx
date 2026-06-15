@@ -19,7 +19,6 @@ export default function ConstructionDictionaryClient() {
 
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<TermCategory | 'all'>('all');
-  const [isMounted, setIsMounted] = useState(false);
 
   // 단위 변환 상태
   const [pyeong, setPyeong] = useState('');
@@ -28,7 +27,6 @@ export default function ConstructionDictionaryClient() {
   const [chi, setChi] = useState('');
   const [cm, setCm] = useState('');
 
-  useEffect(() => { setIsMounted(true); }, []);
 
   // ── 검색·필터링 ──────────────────────────────────────────
   const filtered = useMemo(() => {
@@ -89,7 +87,6 @@ export default function ConstructionDictionaryClient() {
     if (v === '' || /^[0-9]*\.?[0-9]*$/.test(v)) handler(v);
   };
 
-  if (!isMounted) return null;
 
   return (
     <div className={s.container}>

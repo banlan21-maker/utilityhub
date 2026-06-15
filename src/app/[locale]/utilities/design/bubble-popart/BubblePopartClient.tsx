@@ -288,7 +288,6 @@ export default function BubblePopartClient() {
     setTimeout(() => setDownloaded(false), 2000);
   };
 
-  if (!isMounted) return null;
 
   return (
     <div className={s.container}>
