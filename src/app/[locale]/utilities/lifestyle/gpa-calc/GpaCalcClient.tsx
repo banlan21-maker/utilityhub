@@ -113,7 +113,6 @@ export default function GpaCalcClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  const [isMounted, setIsMounted] = useState(false);
   const [scale, setScale] = useState<Scale>('4.5');
   const [courses, setCourses] = useState<Course[]>([]);
   const [filterType, setFilterType] = useState<'all' | CourseType>('all');
@@ -121,7 +120,6 @@ export default function GpaCalcClient() {
   const nextIdRef = useRef(1);
 
   useEffect(() => {
-    setIsMounted(true);
     const saved = loadCourses();
     if (saved.length > 0) {
       nextIdRef.current = Math.max(...saved.map((c) => c.id)) + 1;
@@ -232,7 +230,6 @@ export default function GpaCalcClient() {
     </div>
   );
 
-  if (!isMounted) return null;
 
   return (
     <div>

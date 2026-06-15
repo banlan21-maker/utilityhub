@@ -48,7 +48,6 @@ export default function OsmuFormatterClient() {
 
   const [originalText, setOriginalText] = useState('');
   const [activeTab, setActiveTab] = useState<TabType>('instagram');
-  const [isClient, setIsClient] = useState(false);
 
   const [result, setResult] = useState<PlatformResult>({
     instagram: '',
@@ -61,7 +60,6 @@ export default function OsmuFormatterClient() {
 
   // Handle hydration
   useEffect(() => {
-    setIsClient(true);
     const saved = localStorage.getItem('osmu-draft');
     if (saved) setOriginalText(saved);
   }, []);
@@ -192,7 +190,6 @@ export default function OsmuFormatterClient() {
     }
   };
 
-  if (!isClient) return null;
 
   return (
     <div className={s.osmu_container}>

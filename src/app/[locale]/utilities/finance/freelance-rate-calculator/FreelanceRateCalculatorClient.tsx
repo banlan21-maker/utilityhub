@@ -209,7 +209,6 @@ export default function FreelanceRateCalculatorClient() {
   const netSliderStep = country === 'KR' ? 100000 : 100;
   const hoursMax = 300;
 
-  if (!isClient) return null;
 
   const now = new Date();
   const dateStr = now.toLocaleDateString(isKo ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });

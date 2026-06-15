@@ -63,10 +63,8 @@ export default function ShortUrlClient() {
   const [error, setError] = useState('');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copiedUrl, setCopiedUrl] = useState('');
-  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
     setHistory(loadHistory());
   }, []);
 
@@ -119,7 +117,6 @@ export default function ShortUrlClient() {
     saveHistory(updated);
   };
 
-  if (!isClient) return null;
 
   return (
     <div className={s.url_container}>

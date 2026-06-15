@@ -138,7 +138,6 @@ export default function BrainBoostClient() {
 
   // ── Stats ──
   const [history, setHistory] = useState<SessionStats[]>([]);
-  const [isMounted, setIsMounted] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showTutorialOnce, setShowTutorialOnce] = useState(false);
 
@@ -149,7 +148,6 @@ export default function BrainBoostClient() {
 
   // Mount
   useEffect(() => {
-    setIsMounted(true);
     setHistory(loadStats());
     const seen = localStorage.getItem('uh_brain_boost_tutorial_seen');
     if (!seen) setShowTutorial(true);
@@ -343,7 +341,6 @@ export default function BrainBoostClient() {
 
   const currentStim = currentIdx >= 0 && currentIdx < sequence.length ? sequence[currentIdx] : null;
 
-  if (!isMounted) return null;
 
   return (
     <div className={s.container}>

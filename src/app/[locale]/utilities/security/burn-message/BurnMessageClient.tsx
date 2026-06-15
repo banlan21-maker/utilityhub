@@ -276,8 +276,10 @@ export default function BurnMessageClient() {
     return `${m}${t('minutes')} ${sec}${t('seconds')}`;
   }, [t]);
 
-  // 하단 섹션 표시 여부 (compat에서는 숨김)
-  const showBottomSections = state !== 'compat' && state !== 'loading';
+  // 하단 SEO 섹션 표시 여부 (compat 에러 화면에서만 숨김).
+  // ⚠️ 'loading'(서버 초기 상태)에서도 렌더해야 SeoSection 이 raw HTML 에 포함된다.
+  // 과거 'loading' 제외 → 서버 HTML 에 SEO 본문 누락 → 색인 실패.
+  const showBottomSections = state !== 'compat';
 
   return (
     <div className={s.container}>

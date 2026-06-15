@@ -290,7 +290,6 @@ export default function InvoiceMakerClient() {
     return dt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
-  if (!isClient) return null;
 
   const payQrValue = data.payLink || (data.countryMode === 'KR' ? 'https://toss.me/' : 'https://paypal.me/');
 
