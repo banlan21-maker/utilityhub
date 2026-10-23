@@ -1,494 +1,430 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useLocale } from 'next-intl';
-import { Zap, Copy, AlertTriangle } from 'lucide-react';
+import { Zap, Copy } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import {
+  calcWire, loadCurrentFromKw, voltageDropLimit, SYSTEMS, AMBIENT_TEMPS, MIN_INDOOR_SIZE,
+  type Insulation, type Method, type SystemType, type Supply, type Usage,
+} from '@/lib/wireSize';
 import s from './wire-size-calc.module.css';
 
-// ── Constants ──────────────────────────────────────────────────
+type WireKind = 'hfix' | 'cv' | 'pvc';
 
-type SystemType = '1P2W' | '1P3W' | '3P3W_220' | '3P3W_380' | '3P4W';
-type WireType = 'cv' | 'hiv' | 'hfix';
-
-const SQ_SIZES = [2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240];
-
-const AMPACITY_CV: Record<number, number> = {
-  2.5: 27, 4: 35, 6: 46, 10: 63, 16: 84,
-  25: 112, 35: 138, 50: 168, 70: 213,
-  95: 258, 120: 300, 150: 343, 185: 392, 240: 462,
+const WIRES: Record<WireKind, { insulation: Insulation; methods: Method[] }> = {
+  // 단심 절연전선은 전선관·몰드 안에만 시설
+  hfix: { insulation: 'xlpe', methods: ['A1', 'B1'] },
+  cv: { insulation: 'xlpe', methods: ['B1', 'B2', 'C', 'E'] },
+  pvc: { insulation: 'pvc', methods: ['A1', 'B1', 'B2', 'C', 'E'] },
 };
 
-const AMPACITY_HIV: Record<number, number> = {
-  2.5: 24, 4: 32, 6: 41, 10: 57, 16: 76,
-  25: 101, 35: 125, 50: 152, 70: 193,
-  95: 233, 120: 271, 150: 310, 185: 355, 240: 419,
-};
+const METHODS: Method[] = ['A1', 'B1', 'B2', 'C', 'E'];
 
-const AMPACITY_HFIX: Record<number, number> = {
-  2.5: 27, 4: 35, 6: 46, 10: 63, 16: 84,
-  25: 112, 35: 138, 50: 168, 70: 213,
-  95: 258, 120: 300, 150: 343, 185: 392, 240: 462,
-};
-
-function getAmpacityTable(wireType: WireType) {
-  if (wireType === 'hiv') return AMPACITY_HIV;
-  if (wireType === 'hfix') return AMPACITY_HFIX;
-  return AMPACITY_CV;
+/** 공사방법 단면 그림 */
+function MethodIcon({ m }: { m: Method }) {
+  const wall = <rect x="4" y="4" width="18" height="52" fill="currentColor" opacity="0.15" />;
+  const wire = (cx: number, cy: number) => <circle cx={cx} cy={cy} r="4" fill="currentColor" />;
+  return (
+    <svg viewBox="0 0 120 60" className={s.method_icon} aria-hidden="true">
+      {m === 'A1' && (<>
+        <rect x="4" y="4" width="112" height="52" rx="4" fill="currentColor" opacity="0.12" />
+        <circle cx="60" cy="30" r="16" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        {wire(54, 30)}{wire(66, 30)}
+      </>)}
+      {m === 'B1' && (<>
+        {wall}
+        <circle cx="62" cy="30" r="16" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        {wire(56, 30)}{wire(68, 30)}
+        <line x1="22" y1="30" x2="46" y2="30" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" />
+      </>)}
+      {m === 'B2' && (<>
+        {wall}
+        <circle cx="62" cy="30" r="17" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        <circle cx="62" cy="30" r="11" fill="none" stroke="currentColor" strokeWidth="2" />
+        {wire(58, 30)}{wire(66, 30)}
+      </>)}
+      {m === 'C' && (<>
+        {wall}
+        <circle cx="35" cy="30" r="11" fill="none" stroke="currentColor" strokeWidth="2" />
+        {wire(31, 30)}{wire(39, 30)}
+        <path d="M22 18 H40 M22 42 H40" stroke="currentColor" strokeWidth="2" />
+      </>)}
+      {m === 'E' && (<>
+        <path d="M8 22 V44 H112 V22" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        {[20, 40, 60, 80, 100].map(x => <line key={x} x1={x} y1="44" x2={x} y2="48" stroke="currentColor" strokeWidth="2" />)}
+        {[34, 60, 86].map(x => (
+          <g key={x}><circle cx={x} cy="33" r="9" fill="none" stroke="currentColor" strokeWidth="2" />{wire(x - 3, 33)}{wire(x + 3, 33)}</g>
+        ))}
+      </>)}
+    </svg>
+  );
 }
-
-interface SystemConfig {
-  K: number;
-  baseVoltage: number;
-  voltage: number;
-  labelKo: string;
-  labelEn: string;
-}
-
-const SYSTEM_CONFIG: Record<SystemType, SystemConfig> = {
-  '1P2W':     { K: 35.6, baseVoltage: 220, voltage: 220, labelKo: '단상 2선식 220V',   labelEn: 'Single-phase 2-wire 220V' },
-  '1P3W':     { K: 17.8, baseVoltage: 220, voltage: 220, labelKo: '단상 3선식 220V',   labelEn: 'Single-phase 3-wire 220V' },
-  '3P3W_220': { K: 30.8, baseVoltage: 220, voltage: 220, labelKo: '삼상 3선식 220V',   labelEn: '3-phase 3-wire 220V' },
-  '3P3W_380': { K: 30.8, baseVoltage: 380, voltage: 380, labelKo: '삼상 3선식 380V',   labelEn: '3-phase 3-wire 380V' },
-  '3P4W':     { K: 17.8, baseVoltage: 220, voltage: 380, labelKo: '삼상 4선식 380V',   labelEn: '3-phase 4-wire 380V' },
-};
-
-// ── Main component ─────────────────────────────────────────────
 
 export default function WireSizeCalcClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  // inputs
-  const [systemType, setSystemType] = useState<SystemType>('1P2W');
+  const [system, setSystem] = useState<SystemType>('1P2W');
   const [inputMode, setInputMode] = useState<'ampere' | 'kw'>('ampere');
-  const [ampStr, setAmpStr]   = useState('');
-  const [kwStr, setKwStr]     = useState('');
-  const [pf, setPf]           = useState(0.9);
-  const [lengthStr, setLengthStr] = useState('');
-  const [dropRate, setDropRate]   = useState(3);
-  const [wireType, setWireType]   = useState<WireType>('cv');
-  const [copyMsg, setCopyMsg]     = useState('');
+  const [ampText, setAmpText] = useState('');
+  const [kwText, setKwText] = useState('');
+  const [pf, setPf] = useState(0.9);
+  const [lengthText, setLengthText] = useState('');
+  const [wire, setWire] = useState<WireKind>('hfix');
+  const [method, setMethod] = useState<Method>('B1');
+  const [ambient, setAmbient] = useState(30);
+  const [circuitsText, setCircuitsText] = useState('1');
+  const [supply, setSupply] = useState<Supply>('lv');
+  const [usage, setUsage] = useState<Usage>('other');
+  const [dropOverride, setDropOverride] = useState('');
+  const [copyMsg, setCopyMsg] = useState('');
 
-  const cfg = SYSTEM_CONFIG[systemType];
-  const isThreePhase = systemType.startsWith('3P');
+  const loadA = inputMode === 'ampere'
+    ? parseFloat(ampText) || 0
+    : loadCurrentFromKw(parseFloat(kwText) || 0, system, pf);
+  const lengthM = parseFloat(lengthText) || 0;
+  const circuits = Math.max(1, parseInt(circuitsText, 10) || 1);
+  const autoLimit = voltageDropLimit(supply, usage, lengthM);
+  const dropLimit = dropOverride.trim() !== '' ? parseFloat(dropOverride) || autoLimit : autoLimit;
+  const wireSpec = WIRES[wire];
 
-  // kW → A conversion
-  const convertedCurrent = useMemo(() => {
-    const kw = parseFloat(kwStr);
-    if (isNaN(kw) || kw <= 0) return null;
-    if (!isThreePhase) {
-      return (kw * 1000) / (cfg.voltage * pf);
-    }
-    // 삼상: kW→A 환산은 선간전압(voltage) 그대로 사용 (3P4W도 380V)
-    return (kw * 1000) / (Math.sqrt(3) * cfg.voltage * pf);
-  }, [kwStr, cfg.voltage, pf, isThreePhase]);
+  const result = loadA > 0 && lengthM > 0
+    ? calcWire({ loadA, lengthM, system, insulation: wireSpec.insulation, method, ambientC: ambient, circuits, dropLimitPct: dropLimit })
+    : null;
 
-  const loadCurrent = useMemo(() => {
-    if (inputMode === 'ampere') return parseFloat(ampStr) || 0;
-    return convertedCurrent ?? 0;
-  }, [inputMode, ampStr, convertedCurrent]);
+  const chooseWire = (w: WireKind) => {
+    setWire(w);
+    if (!WIRES[w].methods.includes(method)) setMethod(WIRES[w].methods[w === 'cv' ? 3 : 1] ?? WIRES[w].methods[0]);
+  };
 
-  const length = parseFloat(lengthStr) || 0;
+  const fillExample = () => {
+    setSystem('1P2W'); setInputMode('ampere'); setAmpText('25'); setLengthText('15');
+    setWire('hfix'); setMethod('B1'); setAmbient(35); setCircuitsText('3');
+    setSupply('lv'); setUsage('other'); setDropOverride('');
+  };
 
-  // ── Calculation ──
-  const result = useMemo(() => {
-    if (loadCurrent <= 0 || length <= 0) return null;
+  const methodName = (m: Method) => ({
+    A1: isKo ? '단열벽 속 전선관' : 'Conduit in insulated wall',
+    B1: isKo ? '전선관·몰드 속 전선' : 'Single cores in conduit',
+    B2: isKo ? '전선관 속 다심케이블' : 'Multi-core cable in conduit',
+    C: isKo ? '벽·천장에 케이블 직접 고정' : 'Cable clipped to wall',
+    E: isKo ? '통풍형 트레이 위 다심케이블' : 'Multi-core on perforated tray',
+  })[m];
 
-    const { K, baseVoltage } = cfg;
-    const ampacityTable = getAmpacityTable(wireType);
+  const wireName = (w: WireKind) => ({
+    hfix: isKo ? 'HFIX 전선 (90°C)' : 'HFIX wire (90°C)',
+    cv: isKo ? 'CV·F-CV 케이블 (90°C)' : 'CV / F-CV cable (90°C)',
+    pvc: isKo ? 'PVC 계열 NR·VCT (70°C)' : 'PVC types NR / VCT (70°C)',
+  })[w];
 
-    // STEP 1: 허용전류 기준
-    const sqByAmpacity = SQ_SIZES.find(sq => ampacityTable[sq] >= loadCurrent) ?? 240;
+  const systemName = (k: SystemType) => ({
+    '1P2W': isKo ? '단상 2선식 220V' : 'Single-phase 2-wire 220 V',
+    '1P3W': isKo ? '단상 3선식 220/440V' : 'Single-phase 3-wire 220/440 V',
+    '3P3W_220': isKo ? '삼상 3선식 220V' : '3-phase 3-wire 220 V',
+    '3P3W_380': isKo ? '삼상 3선식 380V' : '3-phase 3-wire 380 V',
+    '3P4W': isKo ? '삼상 4선식 380/220V' : '3-phase 4-wire 380/220 V',
+  })[k];
 
-    // STEP 2: 전압강하 기준 (KEC 실무 공식)
-    const allowedDrop = baseVoltage * (dropRate / 100);
-    const requiredArea = (K * length * loadCurrent) / (1000 * allowedDrop);
-    const sqByVoltageDrop = SQ_SIZES.find(sq => sq >= requiredArea) ?? 240;
-
-    // STEP 3: 최종 권장
-    const recommendedSq = Math.max(sqByAmpacity, sqByVoltageDrop);
-
-    // STEP 4: 파생 계산
-    const actualDrop = (K * length * loadCurrent) / (1000 * recommendedSq);
-    const actualDropRate = (actualDrop / baseVoltage) * 100;
-    const actualAmpacity = ampacityTable[recommendedSq];
-
-    return {
-      sqByAmpacity,
-      sqByVoltageDrop,
-      recommendedSq,
-      actualDrop,
-      actualDropRate,
-      actualAmpacity,
-      K,
-      baseVoltage,
-    };
-  }, [loadCurrent, length, dropRate, wireType, cfg]);
-
-  // ── Copy ──
   const handleCopy = async () => {
     if (!result) return;
-    const wireLabelKo = wireType === 'cv' ? 'CV케이블' : wireType === 'hiv' ? 'HIV전선' : 'HFIX전선';
-    const wireLabelEn = wireType === 'cv' ? 'CV Cable' : wireType === 'hiv' ? 'HIV Wire' : 'HFIX Wire';
-    const text = `[${isKo ? '전선 굵기 산정 결과' : 'Wire Size Calculation Result'}]
-${isKo ? '전압' : 'Voltage'}: ${isKo ? cfg.labelKo : cfg.labelEn} / K=${result.K}
-${isKo ? '부하전류' : 'Load Current'}: ${loadCurrent.toFixed(1)}A
-${isKo ? '배선길이' : 'Cable Length'}: ${length}m
-${isKo ? '권장 규격' : 'Recommended'}: ${result.recommendedSq} SQ (${isKo ? wireLabelKo : wireLabelEn})
-${isKo ? '허용전류 기준' : 'Ampacity basis'}: ${result.sqByAmpacity} SQ
-${isKo ? '전압강하 기준' : 'Voltage drop basis'}: ${result.sqByVoltageDrop} SQ
-${isKo ? '실제 전압강하율' : 'Actual drop rate'}: ${result.actualDropRate.toFixed(2)}% (${isKo ? '기준전압' : 'base'}: ${result.baseVoltage}V)
-※ ${isKo ? '허용전류는 공기 중 단심 기준 약식 계산입니다.' : 'Ampacity is calculated for single-core, open-air installation.'}
-📐 theutilhub.com/utilities/utility/wire-size-calc`;
+    const lines = [
+      `[${isKo ? '전선 굵기 산정 결과' : 'Wire Size Result'}]`,
+      `${systemName(system)} · ${isKo ? '부하전류' : 'Load'} ${loadA.toFixed(1)}A · ${isKo ? '편도' : 'one-way'} ${lengthM}m`,
+      `${wireName(wire)} · ${method} ${methodName(method)} · ${ambient}°C · ${circuits}${isKo ? '회로' : ' circuit(s)'}`,
+      `${isKo ? '권장 굵기' : 'Recommended'}: ${result.recommended ?? '-'} mm²`,
+      `${isKo ? '차단기' : 'Breaker'}: ${result.breakerA ?? '-'}A · IZ ${result.izA?.toFixed(1) ?? '-'}A`,
+      `${isKo ? '전압강하' : 'Voltage drop'}: ${result.dropV?.toFixed(2) ?? '-'}V (${result.dropPct?.toFixed(2) ?? '-'}% / ${isKo ? '한도' : 'limit'} ${dropLimit.toFixed(2)}%)`,
+      `theutilhub.com/${locale}/utilities/utility/wire-size-calc`,
+    ];
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(lines.join('\n'));
       setCopyMsg(isKo ? '✓ 복사됨' : '✓ Copied');
     } catch {
-      setCopyMsg(isKo ? '❌ 복사 실패' : '❌ Copy failed');
+      setCopyMsg(isKo ? '복사 실패 — 직접 선택해 복사하세요' : 'Copy failed — select and copy manually');
     }
     setTimeout(() => setCopyMsg(''), 2500);
   };
 
-  const wireLabel = wireType === 'cv'
-    ? (isKo ? 'CV케이블' : 'CV Cable')
-    : wireType === 'hiv'
-    ? (isKo ? 'HIV전선' : 'HIV Wire')
-    : (isKo ? 'HFIX전선' : 'HFIX Wire');
+  const titleStr = isKo ? '전선 굵기 계산기 (KEC 허용전류·전압강하)' : 'Wire Size Calculator (KEC ampacity & voltage drop)';
+  const descStr = isKo
+    ? '부하전류와 거리, 전선 종류와 공사방법을 넣으면 차단기 정격, 허용전류, 전압강하를 모두 만족하는 전선 굵기(㎟)를 계산합니다.'
+    : 'Enter load, length, wire type and installation method to get the conductor size that satisfies breaker rating, ampacity and voltage drop.';
 
-  const titleStr = isKo ? '전선 굵기 산정 계산기' : 'Wire Size Calculator';
-  const descStr  = isKo
-    ? 'KEC 실무 표준 공식 적용. 전류·용량·배선 거리 입력으로 적합한 전선 SQ 규격 즉시 산정.'
-    : 'Calculate the right wire size (SQ) using KEC standard formulas. Supports single-phase and three-phase systems.';
+  const maxBar = result ? Math.max(result.sizeByAmpacity ?? 300, result.sizeByDrop ?? 300, result.sizeByMin) : 1;
+  const barPct = (v: number | null) => `${Math.max(6, ((v ?? 300) / maxBar) * 100)}%`;
+  const izOk = result?.izA != null && result.breakerA != null && result.izA >= result.breakerA;
 
   return (
     <div className={s.container}>
       <NavigationActions />
 
       <header className={s.header}>
-        <div className={s.icon_wrap}>
-          <Zap size={40} color="#8b5cf6" />
-        </div>
+        <div className={s.icon_wrap}><Zap size={40} /></div>
         <h1 className={s.title}>{titleStr}</h1>
         <p className={s.subtitle}>{descStr}</p>
       </header>
 
-      {/* Input Panel */}
-      <section className={s.panel} aria-label={isKo ? '입력' : 'Input'}>
-
-        {/* 전압 유형 */}
-        <div className={s.field}>
-          <label className={s.field_label}>{isKo ? '전압 유형' : 'Voltage System'}</label>
-          <select
-            className={s.field_select}
-            value={systemType}
-            onChange={e => setSystemType(e.target.value as SystemType)}
-            aria-label={isKo ? '전압 유형 선택' : 'Select voltage system'}
-          >
-            <option value="1P2W">{isKo ? '단상 2선식 220V' : 'Single-phase 2-wire 220V'}</option>
-            <option value="1P3W">{isKo ? '단상 3선식 220V' : 'Single-phase 3-wire 220V'}</option>
-            <option value="3P3W_220">{isKo ? '삼상 3선식 220V' : '3-phase 3-wire 220V'}</option>
-            <option value="3P3W_380">{isKo ? '삼상 3선식 380V' : '3-phase 3-wire 380V'}</option>
-            <option value="3P4W">{isKo ? '삼상 4선식 380V' : '3-phase 4-wire 380V'}</option>
+      {/* ── 부하 ── */}
+      <section className={s.card}>
+        <div className={s.step_label}>STEP 1</div>
+        <h2 className={s.card_title}>{isKo ? '전원과 부하' : 'Supply and load'}</h2>
+        <button type="button" className={s.example_btn} onClick={fillExample}>
+          {isKo ? '예시 채우기: 분전반 → 에어컨 25A, 15m, 같은 관 3회로' : 'Example: panel → A/C 25 A, 15 m, 3 circuits in one conduit'}
+        </button>
+        <div>
+          <label className={s.field_label} htmlFor="ws-system">{isKo ? '전기 방식' : 'System'}</label>
+          <select id="ws-system" className={s.select} value={system} onChange={e => setSystem(e.target.value as SystemType)}>
+            {(Object.keys(SYSTEMS) as SystemType[]).map(k => <option key={k} value={k}>{systemName(k)}</option>)}
           </select>
         </div>
-
-        {/* 부하 입력 방식 토글 */}
-        <div className={s.toggle_row}>
-          <button
-            className={`${s.toggle_btn} ${inputMode === 'ampere' ? s.toggle_active : ''}`}
-            onClick={() => setInputMode('ampere')}
-            aria-pressed={inputMode === 'ampere'}
-            aria-label={isKo ? '전류 직접 입력 모드' : 'Direct ampere input mode'}
-          >{isKo ? '전류(A) 직접 입력' : 'Direct current (A)'}</button>
-          <button
-            className={`${s.toggle_btn} ${inputMode === 'kw' ? s.toggle_active : ''}`}
-            onClick={() => setInputMode('kw')}
-            aria-pressed={inputMode === 'kw'}
-            aria-label={isKo ? '용량 kW 입력 모드' : 'kW capacity input mode'}
-          >{isKo ? '용량(kW)으로 환산' : 'Convert from kW'}</button>
+        <div className={s.chips} role="group" aria-label={isKo ? '부하 입력 방식' : 'Load input'}>
+          <button type="button" className={`${s.chip} ${inputMode === 'ampere' ? s.chip_active : ''}`} aria-pressed={inputMode === 'ampere'} onClick={() => setInputMode('ampere')}>
+            {isKo ? '전류(A)로 입력' : 'Current (A)'}
+          </button>
+          <button type="button" className={`${s.chip} ${inputMode === 'kw' ? s.chip_active : ''}`} aria-pressed={inputMode === 'kw'} onClick={() => setInputMode('kw')}>
+            {isKo ? '용량(kW)으로 입력' : 'Power (kW)'}
+          </button>
         </div>
-
-        {/* 전류 / kW 입력 + 역률 */}
-        <div className={inputMode === 'kw' ? s.two_col : ''}>
-          <div className={s.field}>
-            <label className={s.field_label}>
-              {inputMode === 'ampere'
-                ? (isKo ? '부하 전류 (A)' : 'Load Current (A)')
-                : (isKo ? '부하 용량 (kW)' : 'Load Capacity (kW)')}
-            </label>
-            {inputMode === 'ampere' ? (
-              <input
-                type="number" step="0.1" min="0"
-                placeholder={isKo ? '예: 30' : 'e.g. 30'}
-                className={s.field_input}
-                value={ampStr}
-                onChange={e => setAmpStr(e.target.value)}
-                aria-label={isKo ? '부하 전류 입력' : 'Load current input'}
-              />
-            ) : (
-              <>
-                <input
-                  type="number" step="0.1" min="0"
-                  placeholder={isKo ? '예: 7.5' : 'e.g. 7.5'}
-                  className={s.field_input}
-                  value={kwStr}
-                  onChange={e => setKwStr(e.target.value)}
-                  aria-label={isKo ? '부하 용량 입력' : 'Load capacity input'}
-                />
-                {convertedCurrent !== null && (
-                  <p className={s.converted_current}>
-                    = {isKo ? '약' : '≈'} {convertedCurrent.toFixed(1)} A
-                  </p>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* 역률 슬라이더 (kW 모드일 때만) */}
-          {inputMode === 'kw' && (
-            <div className={s.field}>
-              <label className={s.field_label}>{isKo ? '역률 (Power Factor)' : 'Power Factor'}</label>
-              <p className={s.pf_value}>{pf.toFixed(2)}</p>
-              <div className={s.slider_wrap}>
-                <input
-                  type="range" min={0.7} max={1.0} step={0.01}
-                  className={s.slider}
-                  value={pf}
-                  onChange={e => setPf(parseFloat(e.target.value))}
-                  aria-label={isKo ? '역률 슬라이더' : 'Power factor slider'}
-                />
-                <div className={s.slider_label}><span>0.70</span><span>1.00</span></div>
-              </div>
+        <div className={s.grid2}>
+          {inputMode === 'ampere' ? (
+            <div>
+              <label className={s.field_label} htmlFor="ws-amp">{isKo ? '부하전류 IB (A)' : 'Load current IB (A)'}</label>
+              <input id="ws-amp" className={s.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 25' : 'e.g. 25'}
+                value={ampText} onChange={e => setAmpText(e.target.value)} />
             </div>
+          ) : (
+            <>
+              <div>
+                <label className={s.field_label} htmlFor="ws-kw">{isKo ? '부하 용량 (kW)' : 'Load (kW)'}</label>
+                <input id="ws-kw" className={s.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 5' : 'e.g. 5'}
+                  value={kwText} onChange={e => setKwText(e.target.value)} />
+                {loadA > 0 && <p className={s.field_hint}>{isKo ? `환산 전류 ${loadA.toFixed(1)}A` : `= ${loadA.toFixed(1)} A`}</p>}
+              </div>
+              <div>
+                <label className={s.field_label} htmlFor="ws-pf">{isKo ? '역률' : 'Power factor'}</label>
+                <select id="ws-pf" className={s.select} value={pf} onChange={e => setPf(Number(e.target.value))}>
+                  {[1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7].map(v => <option key={v} value={v}>{v.toFixed(2)}</option>)}
+                </select>
+              </div>
+            </>
           )}
-        </div>
-
-        {/* 배선 길이 + 허용 전압강하율 */}
-        <div className={s.two_col}>
-          <div className={s.field}>
-            <label className={s.field_label}>{isKo ? '배선 길이 (m)' : 'Cable Length (m)'}</label>
-            <input
-              type="number" step="1" min="0"
-              placeholder={isKo ? '예: 50' : 'e.g. 50'}
-              className={s.field_input}
-              value={lengthStr}
-              onChange={e => setLengthStr(e.target.value)}
-              aria-label={isKo ? '배선 길이 입력' : 'Cable length input'}
-            />
-            <p className={s.field_hint}>
-              {isKo ? '분전반에서 부하(장비)까지의 편도 거리' : 'One-way distance from panel to load'}
-            </p>
+          <div>
+            <label className={s.field_label} htmlFor="ws-len">{isKo ? '배선 길이 (편도, m)' : 'Cable length (one-way, m)'}</label>
+            <input id="ws-len" className={s.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 35' : 'e.g. 35'}
+              value={lengthText} onChange={e => setLengthText(e.target.value)} />
           </div>
-
-          <div className={s.field}>
-            <label className={s.field_label}>{isKo ? '허용 전압강하율 (%)' : 'Allowed Voltage Drop (%)'}</label>
-            <select
-              className={s.field_select}
-              value={dropRate}
-              onChange={e => setDropRate(Number(e.target.value))}
-              aria-label={isKo ? '허용 전압강하율 선택' : 'Select allowed voltage drop rate'}
-            >
-              <option value={2}>{isKo ? '2% (정밀 기기·의료장비 권장)' : '2% (Precision equipment)'}</option>
-              <option value={3}>{isKo ? '3% (일반 동력 권장)' : '3% (General power, recommended)'}</option>
-              <option value={5}>{isKo ? '5% (조명·일반 콘센트 허용)' : '5% (Lighting / outlets)'}</option>
-            </select>
-            <p className={s.field_hint}>
-              {isKo ? 'KEC 기준: 간선 2% + 분기 2% = 합계 4% 이내' : 'KEC: feeder 2% + branch 2% = 4% total'}
-            </p>
-          </div>
-        </div>
-
-        {/* 배선 방식 */}
-        <div className={s.field} style={{ marginBottom: 0 }}>
-          <label className={s.field_label}>{isKo ? '배선 방식' : 'Wire Type'}</label>
-          <select
-            className={s.field_select}
-            value={wireType}
-            onChange={e => setWireType(e.target.value as WireType)}
-            aria-label={isKo ? '배선 방식 선택' : 'Select wire type'}
-          >
-            <option value="cv">{isKo ? 'CV케이블 (600V 가교폴리에틸렌)' : 'CV Cable (600V XLPE)'}</option>
-            <option value="hiv">{isKo ? 'HIV전선 (내열 비닐절연전선)' : 'HIV Wire (Heat-resistant PVC)'}</option>
-            <option value="hfix">{isKo ? 'HFIX전선 (저독성 난연전선)' : 'HFIX Wire (Low-smoke flame-retardant)'}</option>
-          </select>
         </div>
       </section>
 
-      {/* Result */}
-      {result && (
-        <div className={s.result_section}>
-
-          {/* Hero */}
-          <div className={s.hero_card}>
-            <p className={s.hero_label}>{isKo ? '권장 전선 규격' : 'Recommended Wire Size'}</p>
-            <div>
-              <span className={s.hero_sq}>{result.recommendedSq}</span>
-              <span className={s.hero_unit}> SQ</span>
-            </div>
-            <p className={s.hero_sub}>{wireLabel} · K={result.K} · {isKo ? '기준전압' : 'base'} {result.baseVoltage}V</p>
-          </div>
-
-          {/* Basis cards */}
-          <div className={s.basis_grid}>
-            <div className={`${s.basis_card} ${result.recommendedSq === result.sqByAmpacity ? s.basis_card_highlight : ''}`}>
-              <div className={s.basis_card_title}>{isKo ? '허용전류 기준' : 'Ampacity Basis'}</div>
-              <div className={s.basis_sq}>{result.sqByAmpacity} <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>SQ</span></div>
-              <div className={s.basis_sub}>({isKo ? '허용전류' : 'rated'} {getAmpacityTable(wireType)[result.sqByAmpacity]}A)</div>
-              {result.recommendedSq === result.sqByAmpacity && result.sqByAmpacity > result.sqByVoltageDrop && (
-                <span className={s.basis_badge}>{isKo ? '✓ 결정 요인' : '✓ Decisive'}</span>
-              )}
-            </div>
-            <div className={`${s.basis_card} ${result.recommendedSq === result.sqByVoltageDrop ? s.basis_card_highlight : ''}`}>
-              <div className={s.basis_card_title}>{isKo ? '전압강하 기준' : 'Voltage Drop Basis'}</div>
-              <div className={s.basis_sq}>{result.sqByVoltageDrop} <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>SQ</span></div>
-              <div className={s.basis_sub}>({isKo ? '강하율' : 'drop'} {result.actualDropRate.toFixed(2)}%)</div>
-              {result.sqByVoltageDrop >= result.sqByAmpacity && (
-                <span className={s.basis_badge}>{isKo ? '✓ 결정 요인' : '✓ Decisive'}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className={s.stats_grid}>
-            <div className={s.stat_card}>
-              <div className={s.stat_value}>{result.actualAmpacity}A</div>
-              <div className={s.stat_label}>{isKo ? '허용전류' : 'Ampacity'}</div>
-            </div>
-            <div className={s.stat_card}>
-              <div className={s.stat_value}>{result.actualDropRate.toFixed(2)}%</div>
-              <div className={s.stat_label}>{isKo ? '실제 강하율' : 'Actual Drop'}</div>
-            </div>
-            <div className={s.stat_card}>
-              <div className={s.stat_value}>{result.recommendedSq}</div>
-              <div className={s.stat_label}>{isKo ? '최종 SQ' : 'Final SQ'}</div>
-            </div>
-          </div>
-
-          {/* SQ bar visualization */}
-          <div style={{ background: 'white', borderRadius: '1rem', border: '1px solid #f1f5f9', padding: '1.25rem 1.5rem' }}>
-            <p style={{ fontSize: '0.78rem', fontWeight: 600, color: '#64748b', marginBottom: '0.75rem' }}>
-              {isKo ? 'SQ 규격 비교' : 'SQ Size Comparison'}
-            </p>
-            <div className={s.sq_bar_wrap}>
-              {SQ_SIZES.map(sq => {
-                const maxSq = 240;
-                const pct = (sq / maxSq) * 100;
-                const isRec = sq === result.recommendedSq;
-                const isBelow = sq < result.recommendedSq;
-                return (
-                  <div key={sq} className={s.sq_bar_row}>
-                    <span className={s.sq_bar_label} style={{ color: isRec ? '#8b5cf6' : undefined, fontWeight: isRec ? 800 : undefined }}>
-                      {sq}
-                    </span>
-                    <div className={s.sq_bar_bg}>
-                      <div
-                        className={`${s.sq_bar_fill} ${isRec ? s.sq_bar_rec : isBelow ? s.sq_bar_below : s.sq_bar_above}`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                    {isRec && <span style={{ fontSize: '0.7rem', color: '#8b5cf6', fontWeight: 700, flexShrink: 0 }}>← {isKo ? '권장' : 'rec'}</span>}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 경고 박스 (조건부) */}
-          {result.actualDropRate > 5 && (
-            <div className={s.warning_box}>
-              ⚠️ {isKo
-                ? `실제 전압강하율 ${result.actualDropRate.toFixed(2)}%가 5%를 초과합니다. 배선 거리를 줄이거나 더 굵은 전선 사용을 검토하세요.`
-                : `Actual voltage drop ${result.actualDropRate.toFixed(2)}% exceeds 5%. Consider shorter cable runs or a larger wire size.`}
-            </div>
-          )}
-          {result.recommendedSq >= 240 && (
-            <div className={s.warning_box}>
-              ⚠️ {isKo
-                ? '240SQ는 최대 규격입니다. 실제 필요 단면적이 더 클 수 있으니 전문가 설계 검토가 필요합니다.'
-                : '240 SQ is the maximum in this table. A professional design review may be required.'}
-            </div>
-          )}
-
-          {/* 허용전류 면책 조항 — 항상 표시 */}
-          <div className={s.disclaimer_box}>
-            <AlertTriangle size={18} color="#92400E" className={s.disclaimer_icon} />
-            <div>
-              <p className={s.disclaimer_title}>
-                {isKo ? '⚠️ 허용전류 적용 시 주의사항' : '⚠️ Ampacity Notice'}
-              </p>
-              <p className={s.disclaimer_body}>
-                {isKo
-                  ? '본 계산기의 허용전류는 KEC 규정 기준 \'공기 중 단심 노출\' 등 가장 기본적인 조건을 기준으로 한 약식 계산입니다. 전선관 매입, 다조 포설 등 실제 공사방법(A~F) 및 주위 온도에 따라 허용전류가 30% 이상 감소할 수 있습니다. 최종 설계 시 반드시 KEC 표준 규격표를 확인하십시오.'
-                  : 'Ampacity values in this calculator are based on single-core, open-air installation (the most favorable condition per KEC). Conduit installation, bundled cables, or elevated ambient temperatures may reduce ampacity by 30% or more. Always verify against KEC standard tables before final design.'}
-              </p>
-            </div>
-          </div>
-
-          {/* Copy */}
-          <div>
-            <button className={s.copy_btn} onClick={handleCopy} aria-label={isKo ? '결과 복사' : 'Copy results'}>
-              <Copy size={14} /> {isKo ? '결과 복사' : 'Copy results'}
+      {/* ── 전선과 공사방법 ── */}
+      <section className={s.card}>
+        <div className={s.step_label}>STEP 2</div>
+        <h2 className={s.card_title}>{isKo ? '전선 종류와 공사방법' : 'Wire type and installation'}</h2>
+        <div className={s.chips} role="radiogroup" aria-label={isKo ? '전선 종류' : 'Wire type'}>
+          {(Object.keys(WIRES) as WireKind[]).map(w => (
+            <button key={w} type="button" role="radio" aria-checked={wire === w}
+              className={`${s.chip} ${wire === w ? s.chip_active : ''}`} onClick={() => chooseWire(w)}>
+              {wireName(w)}
             </button>
-            {copyMsg && (
-              <p className={`${s.copy_msg} ${copyMsg.includes('❌') ? s.copy_msg_fail : ''}`}>{copyMsg}</p>
-            )}
+          ))}
+        </div>
+        <div className={s.method_grid} role="radiogroup" aria-label={isKo ? '공사방법' : 'Installation method'}>
+          {METHODS.map(m => {
+            const allowed = wireSpec.methods.includes(m);
+            return (
+              <button key={m} type="button" role="radio" aria-checked={method === m} disabled={!allowed}
+                className={`${s.method_card} ${method === m ? s.method_active : ''}`} onClick={() => setMethod(m)}>
+                <MethodIcon m={m} />
+                <span className={s.method_code}>{isKo ? `공사방법 ${m}` : `Method ${m}`}</span>
+                <span className={s.method_name}>{methodName(m)}</span>
+              </button>
+            );
+          })}
+        </div>
+        {wire === 'hfix' && (
+          <p className={s.field_hint}>{isKo ? '절연전선(HFIX)은 전선관이나 몰드 안에만 시설할 수 있어 A1·B1만 선택됩니다.' : 'Insulated wires (HFIX) must run in conduit, so only A1 and B1 apply.'}</p>
+        )}
+        <div className={s.grid2}>
+          <div>
+            <label className={s.field_label} htmlFor="ws-amb">{isKo ? '주위온도 (°C)' : 'Ambient temperature (°C)'}</label>
+            <select id="ws-amb" className={s.select} value={ambient} onChange={e => setAmbient(Number(e.target.value))}>
+              {AMBIENT_TEMPS.map(t => <option key={t} value={t}>{t}°C{t === 30 ? (isKo ? ' (기준)' : ' (reference)') : ''}</option>)}
+            </select>
+            <p className={s.field_hint}>{isKo ? '천장 속·기계실은 35~40°C로 보는 것이 안전합니다.' : 'Use 35–40 °C for ceiling voids and plant rooms.'}</p>
+          </div>
+          <div>
+            <label className={s.field_label} htmlFor="ws-cir">{isKo ? '같은 관·트레이의 회로 수' : 'Circuits sharing the route'}</label>
+            <input id="ws-cir" className={s.input} type="number" inputMode="numeric" min="1" step="1"
+              value={circuitsText} onChange={e => setCircuitsText(e.target.value)} />
+            <p className={s.field_hint}>{isKo ? '이 회로를 포함한 수. 회로가 많을수록 허용전류가 줄어듭니다.' : 'Including this one. More circuits reduce ampacity.'}</p>
           </div>
         </div>
+      </section>
+
+      {/* ── 전압강하 한도 ── */}
+      <section className={s.card}>
+        <div className={s.step_label}>STEP 3</div>
+        <h2 className={s.card_title}>{isKo ? '전압강하 한도 (KEC 232.3.9)' : 'Voltage drop limit (KEC 232.3.9)'}</h2>
+        <div className={s.grid2}>
+          <div>
+            <span className={s.field_label}>{isKo ? '수전 방식' : 'Supply'}</span>
+            <div className={s.chips}>
+              <button type="button" className={`${s.chip} ${supply === 'lv' ? s.chip_active : ''}`} aria-pressed={supply === 'lv'} onClick={() => setSupply('lv')}>{isKo ? '저압 수전' : 'LV supply'}</button>
+              <button type="button" className={`${s.chip} ${supply === 'hv' ? s.chip_active : ''}`} aria-pressed={supply === 'hv'} onClick={() => setSupply('hv')}>{isKo ? '고압 이상 수전' : 'HV supply'}</button>
+            </div>
+          </div>
+          <div>
+            <span className={s.field_label}>{isKo ? '용도' : 'Use'}</span>
+            <div className={s.chips}>
+              <button type="button" className={`${s.chip} ${usage === 'lighting' ? s.chip_active : ''}`} aria-pressed={usage === 'lighting'} onClick={() => setUsage('lighting')}>{isKo ? '조명' : 'Lighting'}</button>
+              <button type="button" className={`${s.chip} ${usage === 'other' ? s.chip_active : ''}`} aria-pressed={usage === 'other'} onClick={() => setUsage('other')}>{isKo ? '기타(동력·콘센트)' : 'Other'}</button>
+            </div>
+          </div>
+        </div>
+        <div className={s.grid2}>
+          <div>
+            <label className={s.field_label} htmlFor="ws-drop">{isKo ? '이 회로에 적용할 한도 (%)' : 'Limit for this circuit (%)'}</label>
+            <input id="ws-drop" className={s.input} type="number" inputMode="decimal" min="0.5" step="0.1"
+              placeholder={autoLimit.toFixed(2)} value={dropOverride} onChange={e => setDropOverride(e.target.value)} />
+            <p className={s.field_hint}>
+              {isKo
+                ? `KEC 한도 ${autoLimit.toFixed(2)}%(인입구~기기 전체). 간선과 나눠 쓴다면 이 회로 몫만 입력하세요.`
+                : `KEC limit ${autoLimit.toFixed(2)}% (origin to equipment). Enter this circuit's share if the feeder uses part of it.`}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 결과 ── */}
+      {result && (
+        <section className={s.card} aria-live="polite">
+          <div className={s.step_label}>{isKo ? '결과' : 'RESULT'}</div>
+          {result.recommended === null ? (
+            <div className={s.warn_box}>
+              {isKo
+                ? '300㎟로도 조건을 만족하지 못합니다. 병렬 포설, 전압 상향, 배선 경로 단축 등 설계 검토가 필요합니다.'
+                : 'Even 300 mm² does not satisfy the conditions. Consider parallel conductors, a higher voltage or a shorter route.'}
+            </div>
+          ) : (
+            <>
+              <div className={s.hero}>
+                <span className={s.hero_num}>{result.recommended}</span>
+                <span className={s.hero_unit}>mm² (SQ)</span>
+              </div>
+              <p className={s.hero_sub}>
+                {result.governing === 'ampacity' && (isKo ? '차단기 정격을 견디는 허용전류 기준으로 결정' : 'Governed by ampacity for the breaker rating')}
+                {result.governing === 'drop' && (isKo ? '전압강하 한도 기준으로 결정' : 'Governed by voltage drop')}
+                {result.governing === 'min' && (isKo ? `저압 옥내배선 최소 굵기 ${MIN_INDOOR_SIZE}㎟ (KEC 231.3.1)` : `Minimum indoor wiring size ${MIN_INDOOR_SIZE} mm² (KEC 231.3.1)`)}
+              </p>
+
+              <h3 className={s.card_title} style={{ fontSize: '1rem' }}>{isKo ? '과부하 보호 협조 (KEC 212.4)' : 'Overload coordination (KEC 212.4)'}</h3>
+              <div className={s.chain}>
+                <div className={s.chain_box}>
+                  <div className={s.chain_val}>{loadA.toFixed(1)}A</div>
+                  <div className={s.chain_lbl}>{isKo ? 'IB 부하전류' : 'IB load'}</div>
+                </div>
+                <span className={s.chain_op}>≤</span>
+                <div className={s.chain_box}>
+                  <div className={s.chain_val}>{result.breakerA ?? '-'}A</div>
+                  <div className={s.chain_lbl}>{isKo ? 'In 차단기 정격' : 'In breaker'}</div>
+                </div>
+                <span className={`${s.chain_op} ${izOk ? '' : s.chain_op_fail}`}>{izOk ? '≤' : '>'}</span>
+                <div className={s.chain_box}>
+                  <div className={s.chain_val}>{result.izA?.toFixed(1)}A</div>
+                  <div className={s.chain_lbl}>{isKo ? `IZ 전선 허용전류 (${result.recommended}㎟, 보정 후)` : `IZ ampacity (${result.recommended} mm², corrected)`}</div>
+                </div>
+              </div>
+              <div className={`${s.verdict} ${izOk ? s.verdict_pass : s.verdict_fail}`}>
+                {izOk
+                  ? (isKo ? `차단기 ${result.breakerA}A가 전선을 보호합니다.` : `The ${result.breakerA} A breaker protects this cable.`)
+                  : (isKo ? '차단기 정격이 전선 허용전류보다 큽니다. 굵기를 올리세요.' : 'Breaker exceeds cable ampacity. Increase the size.')}
+              </div>
+
+              <h3 className={s.card_title} style={{ fontSize: '1rem' }}>{isKo ? '기준별 필요 굵기' : 'Size needed by each check'}</h3>
+              <div className={s.bars}>
+                {([
+                  ['ampacity', isKo ? '허용전류' : 'Ampacity', result.sizeByAmpacity, s.bar_amp],
+                  ['drop', isKo ? '전압강하' : 'Voltage drop', result.sizeByDrop, s.bar_drop],
+                  ['min', isKo ? '최소 굵기' : 'Minimum', result.sizeByMin, s.bar_min],
+                ] as const).map(([key, label, v, cls]) => (
+                  <div key={key} className={s.bar_row}>
+                    <span className={result.governing === key ? s.bar_governing : ''}>{label}{result.governing === key ? ' ★' : ''}</span>
+                    <div className={s.bar_track}><div className={`${s.bar_fill} ${cls}`} style={{ width: barPct(v) }} /></div>
+                    <span className={s.bar_val}>{v ?? '>300'}㎟</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className={s.stats}>
+                <div className={s.stat}><span>{isKo ? '전압강하' : 'Voltage drop'}</span><strong>{result.dropV?.toFixed(2)}V</strong></div>
+                <div className={s.stat}><span>{isKo ? '전압강하율 / 한도' : 'Drop / limit'}</span><strong>{result.dropPct?.toFixed(2)}% / {dropLimit.toFixed(2)}%</strong></div>
+                <div className={s.stat}><span>{isKo ? '온도 보정' : 'Temp. factor'}</span><strong>×{result.tempFactor.toFixed(2)}</strong></div>
+                <div className={s.stat}><span>{isKo ? '복수 회로 보정' : 'Grouping factor'}</span><strong>×{result.groupFactor.toFixed(2)}</strong></div>
+              </div>
+            </>
+          )}
+
+          <p className={s.source_note}>
+            {isKo
+              ? `근거: 허용전류 KS C IEC 60364-5-52 부속서 B 표 B.52.2~B.52.5·B.52.10·B.52.12(동 도체, 기중 30°C), 보정계수 표 B.52.14·B.52.17(${method === 'E' ? '트레이 1단 배열' : '묶음 배열'}), 보호 협조 KEC 212.4.1, 전압강하 한도 KEC 232.3.9, 전압강하 e = K·L·I/(1000·A) 약식(역률 1). 최종 설계는 실제 케이블 제조사 허용전류와 설계도서로 확인하세요.`
+              : `Basis: ampacity from IEC 60364-5-52 Annex B tables B.52.2–B.52.5, B.52.10, B.52.12 (copper, 30 °C air), correction tables B.52.14 and B.52.17 (${method === 'E' ? 'single layer on tray' : 'bunched'}), coordination KEC 212.4.1, drop limit KEC 232.3.9, drop e = K·L·I/(1000·A) simplified (pf 1). Verify with the cable maker's data for final design.`}
+          </p>
+
+          <button type="button" className={s.copy_btn} onClick={handleCopy}><Copy size={16} /> {isKo ? '결과 복사' : 'Copy result'}</button>
+          {copyMsg && <p className={`${s.copy_msg} ${copyMsg.startsWith('✓') ? '' : s.copy_fail}`} role="status">{copyMsg}</p>}
+        </section>
       )}
 
-      {/* Bottom 7 sections */}
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/wire-size-calc" />
-      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
+      <div className={s.ad_slot}>AD</div>
       <SeoSection
         ko={{
-          title: '전선 굵기 산정 계산기란 무엇인가요?',
-          description: '전선 굵기 산정 계산기는 전기공사 현장에서 부하 전류, 배선 거리, 전압 종류에 따라 적합한 전선 SQ 규격을 즉시 계산해주는 실무 도구입니다. KEC(한국전기설비규정) 실무 표준 공식을 적용하여 전선 방식별 전압강하 상수(K값: 단상 2선식 35.6, 삼상 3선식 30.8, 단상 3선식·삼상 4선식 17.8)를 자동으로 분기해 계산합니다. 특히 삼상 4선식 380V의 경우 전압강하 기준 전압을 상전압(220V)으로 올바르게 적용하여 과도한 굵기 산정 오류를 방지합니다. 허용전류 기준과 전압강하 기준을 동시에 계산하여 둘 중 더 큰 값을 최종 권장 규격으로 제시하며, 결과에는 실제 공사방법에 따른 허용전류 감소 주의사항을 함께 안내합니다.',
+          title: '전선 굵기 계산기는 어떻게 굵기를 정하나요?',
+          description: '전선 굵기는 세 가지 조건을 모두 만족해야 합니다. 첫째, 부하전류보다 큰 차단기를 고르고 그 차단기 정격보다 전선의 허용전류가 커야 합니다(KEC 212.4.1, IB ≤ In ≤ IZ). 허용전류는 KEC가 준용하는 KS C IEC 60364-5-52 부속서 B 표에서 전선 절연(PVC 70°C, XLPE 90°C)과 공사방법(A1 단열벽 속 전선관, B1 전선관 속 전선, B2 전선관 속 케이블, C 직접 고정, E 트레이)에 따라 찾고, 주위온도와 같은 경로의 회로 수로 보정합니다. 둘째, 인입구에서 기기까지 전압강하가 KEC 232.3.9 한도(저압 수전 조명 3%·기타 5%, 고압 이상 수전 조명 6%·기타 8%)를 넘지 않아야 합니다. 셋째, 저압 옥내배선은 2.5㎟ 이상이어야 합니다. 이 계산기는 세 조건 중 가장 큰 굵기를 권장값으로 보여주고, 어떤 조건이 결정했는지 막대로 비교합니다. 예를 들어 단상 220V 25A 에어컨 회로를 HFIX 전선관(B1)으로 15m 배선할 때, 관에 이 회로만 있고 주위 30°C면 2.5㎟로 충분하지만, 같은 관에 3회로가 들어가고 주위가 35°C면 차단기 30A를 견디는 허용전류 기준으로 6㎟가 필요합니다.',
           useCases: [
-            { icon: '⚡', title: '분전반 간선 굵기 산정', desc: '분전반에서 각 부하까지의 전선 굵기를 배선 거리와 부하 전류에 따라 즉시 계산할 수 있습니다. KEC 실무 K 상수를 자동 적용하여 허용전류와 전압강하를 동시에 검토합니다.' },
-            { icon: '🏭', title: '동력 설비 전선 선정', desc: '에어컨·모터·펌프 등 삼상 동력 설비의 전선 굵기를 kW 용량과 배선 거리만 입력해 즉시 산정할 수 있습니다. 삼상 3선식·4선식 회로에 맞는 K 상수를 자동 분기합니다.' },
-            { icon: '🔍', title: '기존 배선 적정성 검토', desc: '이미 설치된 전선 규격이 현재 부하에 적합한지 역으로 검토할 수 있습니다. 실제 전압강하율이 KEC 기준 이내인지 확인하고, 필요 시 교체 규격을 즉시 확인하세요.' },
-            { icon: '📱', title: '현장 즉석 설계 변경 대응', desc: '현장에서 부하가 추가되거나 배선 경로가 변경될 때 스마트폰으로 바로 계산해 설계사 확인 전 현장 판단의 근거로 활용할 수 있습니다.' },
+            { icon: '❄️', title: '에어컨·전열기 전용회로', desc: '25A 에어컨 회로도 같은 전선관에 3회로가 들어가고 천장 속이 35°C라면 허용전류가 0.67배로 줄어 2.5㎟ 대신 6㎟가 필요합니다. 회로 수 보정을 놓치기 쉬운 경우를 바로 확인할 수 있습니다.' },
+            { icon: '🏭', title: '동력 간선 트레이 배선', desc: '삼상 380V 100A 동력 간선을 CV 케이블로 트레이(E)에 4회로 포설하고 주위 40°C인 기계실이라면, 온도·회로 수 보정을 반영해 35㎟와 차단기 100A 조합이 맞는지 검토합니다.' },
+            { icon: '📏', title: '긴 배선의 전압강하 검토', desc: '창고·주차장처럼 배선이 100m를 넘으면 허용전류보다 전압강하가 굵기를 결정하는 경우가 많습니다. KEC 100m 초과 가산(1m당 0.005%, 최대 0.5%)까지 반영합니다.' },
+            { icon: '🔍', title: '기존 배선·차단기 적정성 점검', desc: '이미 설치된 차단기 정격이 전선 허용전류보다 큰지 IB ≤ In ≤ IZ 사슬 그림으로 확인해, 과부하 시 전선이 먼저 과열될 위험이 있는 회로를 찾아낼 수 있습니다.' },
           ],
           steps: [
-            { step: '전압 유형 선택', desc: '전압 유형을 선택합니다. 단상 2선식·3선식, 삼상 3선식(220V/380V), 삼상 4선식 380V 중 해당 회로의 전압 방식을 선택하면 이후 모든 계산에 K 상수와 기준 전압이 자동 반영됩니다.' },
-            { step: '부하 전류 입력', desc: '부하 전류(A)를 직접 입력하거나, kW 용량과 역률을 입력해 자동 환산할 수 있습니다. 장비 명판의 전류값 또는 설계서의 부하 용량을 참고하세요.' },
-            { step: '배선 조건 입력', desc: '분전반에서 부하까지의 편도 배선 거리(m)와 허용 전압강하율(%)을 입력합니다. KEC 기준상 간선은 2%, 분기회로는 2%로 합계 4% 이내가 권장됩니다.' },
-            { step: '결과 확인 및 적용', desc: '결과에서 최종 권장 SQ와 근거 두 가지를 확인합니다. 결과 하단의 허용전류 주의사항을 반드시 확인하고, 실제 공사방법에 따라 전문가와 최종 검토하세요.' },
+            { step: '전원과 부하 입력', desc: '전기 방식(단상·삼상)을 고르고 부하전류(A)나 용량(kW)과 역률을 입력합니다. 분전반에서 부하까지의 편도 배선 길이(m)도 넣습니다. 예시 채우기 버튼으로 에어컨 회로 예를 불러올 수 있습니다.' },
+            { step: '전선과 공사방법 선택', desc: 'HFIX 전선, CV·F-CV 케이블, PVC 계열 중 실제 쓰는 전선을 고르고 그림을 보며 공사방법(A1·B1·B2·C·E)을 선택합니다. 주위온도와 같은 관·트레이를 쓰는 회로 수도 입력합니다.' },
+            { step: '전압강하 한도 확인', desc: '저압 수전인지 고압 이상 수전인지, 조명인지 동력·콘센트인지 선택하면 KEC 한도가 자동으로 들어갑니다. 간선과 한도를 나눠 쓴다면 이 회로에 배정할 몫만 직접 입력하세요.' },
+            { step: '결과와 보호 협조 확인', desc: '권장 굵기와 결정 근거, 부하전류 ≤ 차단기 ≤ 전선 허용전류 사슬, 기준별 필요 굵기 막대, 실제 전압강하율을 확인하고 결과를 복사해 공유합니다.' },
           ],
           faqs: [
-            { q: '전압강하 계산에서 K 상수가 무엇인가요?', a: 'K 상수는 KEC(한국전기설비규정) 실무에서 사용하는 전압강하 공식 상수로, 온도 상승에 따른 전선 저항 증가를 반영한 값입니다. 회로 방식에 따라 단상 2선식은 35.6, 삼상 3선식은 30.8, 단상 3선식·삼상 4선식은 17.8을 적용합니다. 이 계산기는 전압 유형 선택에 따라 K 상수를 자동으로 분기합니다.' },
-            { q: '삼상 4선식 380V에서 전압강하 기준이 220V인 이유는 무엇인가요?', a: '삼상 4선식 회로에서는 각 상이 중성선과 함께 독립적으로 부하에 전력을 공급합니다. 이때 각 상의 전압강하는 선간전압(380V)이 아닌 상전압(220V)을 기준으로 계산해야 KEC 실무 기준에 맞습니다. 380V 기준으로 계산하면 전선 굵기가 지나치게 굵게 산출되어 재료비가 과다하게 산정됩니다.' },
-            { q: '허용전류 기준과 전압강하 기준 중 어떤 게 더 중요한가요?', a: '두 기준 모두 반드시 만족해야 합니다. 허용전류 기준은 전선의 과열 및 화재 방지를 위한 안전 기준이고, 전압강하 기준은 장비의 정상 작동을 위한 성능 기준입니다. 배선 거리가 짧으면 허용전류가 결정 요인이 되고, 거리가 길어질수록 전압강하가 결정 요인이 됩니다.' },
-            { q: '결과의 허용전류가 실제 현장과 다를 수 있나요?', a: '네, 반드시 확인이 필요합니다. 본 계산기의 허용전류는 KEC 규정 기준 공기 중 단심 노출 조건을 기준으로 한 약식 계산입니다. 전선관 매입, 다조 포설 등 실제 공사방법(KEC 공사방법 A~F) 및 주위 온도에 따라 허용전류가 30% 이상 감소할 수 있습니다. 최종 설계 시에는 반드시 KEC 표준 규격표와 감리 기준을 확인하시기 바랍니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 실제 시공 시에는 반드시 KEC(한국전기설비규정), 설계도서, 감리 지침을 기준으로 확인하시기 바랍니다.' },
+            { q: '전압강하 기준이 "간선 2%, 분기 2%" 아닌가요?', a: '그 값은 KEC 시행 전 내선규정의 기준입니다. 현행 KEC 232.3.9는 수용가 설비의 인입구에서 기기까지 전체 전압강하를 저압 수전 시 조명 3%·기타 5%, 고압 이상 수전 시 조명 6%·기타 8% 이하로 정하고, 배선이 100m를 넘으면 초과 1m당 0.005%(최대 0.5%)를 더할 수 있게 합니다.' },
+            { q: '왜 같은 전류인데 공사방법에 따라 굵기가 달라지나요?', a: '전선이 열을 얼마나 잘 내보내는지가 다르기 때문입니다. 같은 XLPE 2.5㎟ 전선도 3상 부하 기준으로 단열벽 속 전선관(A1)은 23A, 전선관(B1)은 28A, 벽에 직접 고정(C)은 30A까지 흘릴 수 있습니다. 주위온도가 40°C로 오르면 XLPE는 0.91배, 같은 관에 2회로가 들어가면 0.8배로 더 줄어듭니다.' },
+            { q: '차단기와 전선 굵기는 어떻게 맞추나요?', a: 'KEC 212.4.1에 따라 부하전류 IB ≤ 차단기 정격 In ≤ 전선 허용전류 IZ가 되어야 합니다. 이 계산기는 부하전류 이상인 표준 차단기 정격(15·20·30·40·50A…)을 먼저 고르고, 보정 후 허용전류가 그 정격 이상인 가장 가는 전선을 찾습니다. 전선만 부하에 맞추고 차단기를 크게 달면 과부하 때 전선이 보호되지 않습니다.' },
+            { q: 'HFIX와 CV 케이블은 어떻게 다른가요?', a: '둘 다 도체 허용온도 90°C인 가교 절연이라 같은 XLPE 허용전류 표를 씁니다. 다만 HFIX는 시스가 없는 절연전선이라 전선관이나 몰드 안(A1·B1)에만 시설할 수 있고, CV·F-CV는 시스가 있는 케이블이라 직접 고정(C)이나 트레이(E)에도 시설할 수 있습니다. PVC 계열(NR·VCT)은 70°C 기준이라 허용전류가 더 낮습니다.' },
           ],
         }}
         en={{
-          title: 'What is the Wire Size Calculator?',
-          description: 'The Wire Size Calculator helps electrical workers instantly determine the correct wire gauge (SQ) based on load current, cable length, and voltage system type — using KEC standard voltage drop constants. The calculator automatically selects the correct K constant for each wiring method: K=35.6 for single-phase 2-wire, K=30.8 for 3-phase 3-wire, and K=17.8 for single-phase 3-wire and 3-phase 4-wire circuits. For 3-phase 4-wire 380V systems, the voltage drop base is correctly set to the phase voltage (220V) rather than the line voltage (380V), preventing the overestimation error common with simplified calculations. The tool simultaneously calculates the minimum wire size by ampacity (to prevent overheating) and by voltage drop (to ensure equipment performance), then recommends the larger of the two. Results include an always-visible ampacity disclaimer noting that the values assume single-core, open-air installation — the most favorable condition — and that bundled or conduit-installed wiring may require derating by 30% or more. kW-to-ampere conversion is built in with an adjustable power factor slider. CV cable, HIV, and HFIX wire ampacity tables are all supported. All calculations run client-side with no server required.',
+          title: 'How does this wire size calculator choose a size?',
+          description: 'A conductor must pass three checks. First, pick a breaker at or above the load current, and the cable ampacity must be at least the breaker rating (KEC 212.4.1, IB ≤ In ≤ IZ). Ampacity comes from the IEC 60364-5-52 Annex B tables that the Korean Electrical Code adopts, by insulation (PVC 70 °C, XLPE 90 °C) and installation method (A1 conduit in insulated wall, B1 wires in conduit, B2 cable in conduit, C clipped direct, E perforated tray), then corrected for ambient temperature and the number of circuits sharing the route. Second, the voltage drop from the origin to the equipment must stay within KEC 232.3.9 (LV supply: lighting 3 %, other 5 %; HV supply: 6 % and 8 %). Third, indoor LV wiring must be at least 2.5 mm². The calculator recommends the largest size required by the three checks and shows which one governed. For example, a 25 A single-phase 220 V air-conditioner circuit in HFIX wire in conduit (B1), 15 m long, is fine at 2.5 mm² alone at 30 °C, but with three circuits in the conduit at 35 °C it needs 6 mm² to carry the ampacity required by a 30 A breaker.',
           useCases: [
-            { icon: '⚡', title: 'Distribution Panel Feeder Sizing', desc: 'Quickly size the feeder wire from a distribution panel to each load by entering the load current and one-way cable distance — K constants are applied automatically for the selected voltage system.' },
-            { icon: '🏭', title: 'Three-Phase Motor Wiring', desc: 'Enter kW capacity and distance for air conditioners, motors, or pumps on 3-phase circuits and let the calculator select the right K constant and base voltage automatically.' },
-            { icon: '🔍', title: 'Existing Wiring Adequacy Check', desc: 'Verify whether currently installed wire sizes are adequate for the actual load by entering the existing current and cable length — see the real voltage drop percentage and compare against KEC limits.' },
-            { icon: '📱', title: 'On-Site Design Change Response', desc: 'When loads are added or cable routes change on-site, use this tool on your phone to get an immediate size recommendation before a formal design review — with copy-to-clipboard for quick sharing.' },
+            { icon: '❄️', title: 'Dedicated A/C Circuits', desc: 'With three circuits in one conduit in a 35 °C ceiling void, ampacity falls to 0.67 times, pushing a 25 A air-conditioner circuit from 2.5 mm² to 6 mm². See it instantly instead of guessing.' },
+            { icon: '🏭', title: 'Power Feeders on Tray', desc: 'Check a 100 A, 380 V three-phase feeder in CV cable on a perforated tray with four circuits in a 40 °C plant room, including temperature and grouping corrections.' },
+            { icon: '📏', title: 'Long Runs and Voltage Drop', desc: 'On runs over 100 m, voltage drop often decides the size. The calculator applies the KEC allowance of 0.005 % per metre beyond 100 m, up to 0.5 %.' },
+            { icon: '🔍', title: 'Auditing Existing Circuits', desc: 'Use the IB ≤ In ≤ IZ chain to spot circuits where the installed breaker is larger than the cable ampacity, so the cable would overheat before the breaker trips.' },
           ],
           steps: [
-            { step: 'Select voltage system', desc: 'Choose the circuit type from the dropdown: single-phase 2-wire, single-phase 3-wire, 3-phase 3-wire (220V or 380V), or 3-phase 4-wire 380V. The K constant and base voltage are automatically set for all downstream calculations.' },
-            { step: 'Enter load', desc: 'Type the load current in amperes directly, or switch to kW mode and enter the equipment capacity with power factor to get the auto-converted current. Use the nameplate current or design specification as your reference.' },
-            { step: 'Enter cable conditions', desc: 'Enter the one-way cable distance in meters from the panel to the load, select the allowed voltage drop percentage (2% for precision equipment, 3% for general power, 5% for lighting), and choose the wire insulation type.' },
-            { step: 'Review and apply results', desc: 'Check the recommended SQ and the two basis cards showing which criterion was decisive. Read the ampacity disclaimer and verify the final wire size with a qualified engineer before procurement and installation.' },
+            { step: 'Enter Supply and Load', desc: 'Choose the system (single or three phase), enter load current or kW with power factor, and the one-way cable length from the panel to the load. The example button loads an A/C circuit.' },
+            { step: 'Choose Wire and Method', desc: 'Pick HFIX wire, CV/F-CV cable or PVC types, then the installation method from the pictures. Enter ambient temperature and how many circuits share the conduit or tray.' },
+            { step: 'Set the Drop Limit', desc: 'Select LV or HV supply and lighting or other loads to fill in the KEC limit. If the feeder uses part of the budget, enter only this circuit\'s share.' },
+            { step: 'Read the Result', desc: 'See the recommended size and what governed it, the load ≤ breaker ≤ ampacity chain, a bar comparison of each check and the actual voltage drop, then copy the result.' },
           ],
           faqs: [
-            { q: 'What is the K constant in the voltage drop formula?', a: 'The K constant is the voltage drop coefficient used in KEC (Korean Electrical Code) field practice. It incorporates resistance increase due to temperature rise, giving more accurate results than pure resistivity calculations. K=35.6 for single-phase 2-wire, K=30.8 for 3-phase 3-wire, and K=17.8 for single-phase 3-wire and 3-phase 4-wire systems. The calculator selects the correct K automatically.' },
-            { q: 'Why is the voltage drop base 220V for a 3-phase 4-wire 380V system?', a: 'In a 3-phase 4-wire system, each phase supplies its load independently via the neutral conductor. Voltage drop across each phase should be calculated against the phase voltage (220V), not the line-to-line voltage (380V). Using 380V as the base would significantly overestimate the required wire size, leading to unnecessarily expensive material costs.' },
-            { q: 'Which criterion matters more — ampacity or voltage drop?', a: 'Both must be satisfied simultaneously. Ampacity is a safety limit to prevent overheating and fire; voltage drop is a performance limit to ensure equipment operates correctly. Short cable runs are typically governed by ampacity, while long runs become governed by voltage drop. This calculator computes both and returns the larger (more conservative) recommendation.' },
-            { q: 'Could the ampacity in the result differ from my actual installation?', a: 'Yes — always verify. The ampacity values assume single-core wire in free air (the most favorable KEC installation condition). Conduit installation, multiple cables bundled together, or high ambient temperatures can reduce allowable ampacity by 30% or more. Consult KEC installation method tables (A through F) and your supervising engineer before finalizing the design.' },
-            { q: 'Can I use these results as official data?', a: 'Results are for reference only. For all actual construction work, verify the final specifications against KEC (Korean Electrical Code), your project design documents, and supervision guidelines before procurement or installation.' },
+            { q: 'Isn\'t the voltage drop rule 2 % feeder plus 2 % branch?', a: 'That was the old Korean wiring code before KEC. KEC 232.3.9 limits the total drop from the origin to the equipment to 3 % for lighting and 5 % for other loads on an LV supply, or 6 % and 8 % on an HV supply, plus 0.005 % per metre beyond 100 m (max 0.5 %).' },
+            { q: 'Why does the installation method change the size?', a: 'Heat escapes differently. A 2.5 mm² XLPE conductor with three loaded conductors carries 23 A in conduit in an insulated wall (A1), 28 A in conduit (B1) and 30 A clipped direct (C). At 40 °C it drops by 0.91, and two circuits together reduce it by a further 0.8.' },
+            { q: 'How are the breaker and cable matched?', a: 'KEC 212.4.1 requires IB ≤ In ≤ IZ. The calculator picks the standard breaker at or above the load (15, 20, 30, 40, 50 A…) and then the smallest cable whose corrected ampacity is at least that rating. Sizing the cable to the load but fitting a bigger breaker leaves the cable unprotected.' },
+            { q: 'What is the difference between HFIX and CV?', a: 'Both use 90 °C cross-linked insulation, so they share the XLPE table. HFIX is an unsheathed wire that must run in conduit (A1, B1), while CV/F-CV are sheathed cables that can also be clipped direct (C) or laid on tray (E). PVC types (NR, VCT) are rated 70 °C and carry less current.' },
           ],
         }}
       />
