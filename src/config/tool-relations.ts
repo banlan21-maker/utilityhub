@@ -24,7 +24,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/finance/vat-calc', icon: '🧾', ko: '부가세(VAT) 계산기', en: 'VAT Calculator', category: 'finance' },
   { id: 'utilities/finance/interest-calc', icon: '💰', ko: '이자 계산기', en: 'Interest Calculator', category: 'finance' },
   { id: 'utilities/finance/tax-33-calc', icon: '🧾', ko: '3.3% 세금 계산기', en: 'Freelancer 3.3% Tax Calculator', category: 'finance' },
-  { id: 'utilities/finance/salary-calc', icon: '💼', ko: '급여 계산기', en: 'Salary Calculator', category: 'finance' },
+  { id: 'utilities/finance/salary-calc', icon: '💼', ko: '연봉 실수령액 계산기', en: 'Salary Take-Home Calculator', category: 'finance' },
   { id: 'utilities/finance/smart-percent', icon: '💹', ko: '스마트 퍼센트 계산기', en: 'Smart Percentage Calculator', category: 'finance' },
   { id: 'utilities/finance/freelance-rate-calculator', icon: '⚡', ko: '프리랜서 단가 계산기', en: 'Freelance Rate Calculator', category: 'finance' },
   { id: 'utilities/finance/invoice-maker', icon: '🧾', ko: '인보이스 & 견적서 메이커', en: 'Invoice & Quote Maker', category: 'finance' },

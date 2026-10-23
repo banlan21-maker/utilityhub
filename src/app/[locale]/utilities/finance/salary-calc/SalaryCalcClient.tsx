@@ -8,9 +8,11 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import { CURRENT_DATA, WEEKS_PER_MONTH } from '@/constants/wageConfig';
+import AnnualSalaryPanel from './AnnualSalaryPanel';
 import s from './salary.module.css';
 
 type Country = 'KR' | 'US';
+type KRMode = 'annual' | 'hourly';
 type KRDeduction = 'none' | 'withholdingTax' | 'insurance';
 type USDeduction = 'none' | 'fica' | 'ficaFederal';
 
@@ -124,7 +126,10 @@ export default function SalaryCalcClient() {
   const isKo = locale === 'ko';
 
   const [country, setCountry]       = useState<Country>('KR');
-  const [hourlyWage, setHourlyWage] = useState(CURRENT_DATA.KR.minWage);
+  const [krMode, setKrMode]         = useState<KRMode>('annual');
+  // 입력 중인 문자열을 그대로 보관해야 "7." 같은 소수점 입력이 가능하다
+  const [wageText, setWageText]     = useState(String(CURRENT_DATA.KR.minWage));
+  const hourlyWage = parseFloat(wageText) || 0;
   const [regular, setRegular]       = useState<WorkBlock>(DEFAULT_REG);
   const [overtime, setOvertime]     = useState<WorkBlock>(DEFAULT_OT);
   const [special, setSpecial]       = useState<WorkBlock>(DEFAULT_OT);
@@ -135,10 +140,12 @@ export default function SalaryCalcClient() {
 
 
   const isKRW = country === 'KR';
+  const showAnnual = isKRW && krMode === 'annual';
+  const insurancePct = (CURRENT_DATA.KR.deductions.insurance * 100).toFixed(2);
 
   const switchCountry = (c: Country) => {
     setCountry(c);
-    setHourlyWage(c === 'KR' ? CURRENT_DATA.KR.minWage : CURRENT_DATA.US.minWage);
+    setWageText(String(c === 'KR' ? CURRENT_DATA.KR.minWage : CURRENT_DATA.US.minWage));
     setRegular(DEFAULT_REG);
     setOvertime(DEFAULT_OT);
     setSpecial(DEFAULT_OT);
@@ -188,8 +195,8 @@ export default function SalaryCalcClient() {
         <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
           <Wallet size={40} color="#8b5cf6" />
         </div>
-        <h1 className={s.sal_title}>{isKo ? '급여 & 실수령액 계산기' : 'Salary & Net Pay Calc'}</h1>
-        <p className={s.sal_subtitle}>{isKo ? '일반·잔업·특근 수당을 포함한 실수령액을 계산하세요' : 'Calculate take-home pay with regular, overtime & holiday pay.'}</p>
+        <h1 className={s.sal_title}>{isKo ? '2026 연봉·급여 실수령액 계산기' : '2026 Salary & Take-Home Pay Calculator'}</h1>
+        <p className={s.sal_subtitle}>{isKo ? '연봉·월급은 4대보험과 소득세까지, 시급은 주휴수당·잔업·특근까지 계산합니다' : 'Korean salary after social insurance and income tax, plus hourly pay with overtime.'}</p>
       </header>
 
       {/* Country Tabs */}
@@ -206,6 +213,26 @@ export default function SalaryCalcClient() {
         ))}
       </div>
 
+      {/* KR 계산 방식: 연봉·월급 / 시급·알바 */}
+      {isKRW && (
+        <div role="tablist" aria-label={isKo ? '계산 방식' : 'Calculation mode'} style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+          {(['annual', 'hourly'] as KRMode[]).map(m => (
+            <button key={m} role="tab" aria-selected={krMode === m} onClick={() => setKrMode(m)} style={{
+              padding: '0.6rem 1.5rem', borderRadius: '0.75rem',
+              border: `1.5px solid ${krMode === m ? 'var(--primary)' : 'var(--border)'}`,
+              background: krMode === m ? 'var(--surface-hover)' : 'var(--surface)',
+              color: krMode === m ? 'var(--primary)' : 'var(--text-secondary)',
+              fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer',
+            }}>
+              {m === 'annual'
+                ? (isKo ? '💼 연봉·월급 실수령액' : '💼 Annual / Monthly Salary')
+                : (isKo ? '⏱️ 시급·알바 (주휴수당)' : '⏱️ Hourly / Part-time')}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {showAnnual ? <AnnualSalaryPanel isKo={isKo} /> : (
       <div className={s.sal_main_grid}>
         {/* ── Left: Input Panel ── */}
         <div className={s.sal_card}>
@@ -216,8 +243,12 @@ export default function SalaryCalcClient() {
             <div style={{ position: 'relative' }}>
               <input
                 className={s.sal_input}
-                value={hourlyWage}
-                onChange={e => setHourlyWage(parseFloat(e.target.value.replace(/[^0-9.]/g, '')) || 0)}
+                inputMode="decimal"
+                value={wageText}
+                onChange={e => {
+                  const [int, ...dec] = e.target.value.replace(/[^0-9.]/g, '').split('.');
+                  setWageText(dec.length ? `${int}.${dec.join('').slice(0, 2)}` : int);
+                }}
                 placeholder="0"
               />
               <span style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 900, color: '#94a3b8', fontSize: '1.25rem' }}>
@@ -363,7 +394,7 @@ export default function SalaryCalcClient() {
                       color: krDeduction === k ? '#8b5cf6' : '#64748b',
                       fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer',
                     }}>
-                      {k === 'none' ? (isKo ? '공제 전' : 'Gross') : k === 'withholdingTax' ? '3.3%' : (isKo ? '4대보험 9.4%' : '9.4% Insurance')}
+                      {k === 'none' ? (isKo ? '공제 전' : 'Gross') : k === 'withholdingTax' ? '3.3%' : (isKo ? `4대보험 ${insurancePct}%` : `${insurancePct}% Insurance`)}
                     </button>
                   ))}
                 </div>
@@ -468,9 +499,13 @@ export default function SalaryCalcClient() {
           </div>
 
           <div style={{ padding: '1rem 2rem', background: '#f8fafc', borderTop: '1px solid #f1f5f9', fontSize: '0.68rem', color: '#94a3b8', lineHeight: 1.6 }}>
-            {isKo
-              ? '* 지방세 및 개인 소득 수준에 따라 실제 수령액은 차이가 있을 수 있습니다.'
-              : '* State/local taxes and personal deductions may further reduce net pay.'}
+            {isKRW
+              ? (isKo
+                ? '* 4대보험 모드는 보험료만 공제하며 근로소득세·지방소득세는 포함하지 않습니다. 세금까지 반영한 실수령액은 상단 "연봉·월급 실수령액" 탭에서 확인하세요.'
+                : '* Insurance mode deducts social insurance only, not income tax. Use the "Annual / Monthly Salary" tab for take-home pay after income tax.')
+              : (isKo
+                ? '* 주·지방 세금 및 개인 공제에 따라 실제 수령액은 달라질 수 있습니다.'
+                : '* State/local taxes and personal deductions may further reduce net pay.')}
           </div>
           <div className={s.sal_copy_row}>
             <button
@@ -483,55 +518,56 @@ export default function SalaryCalcClient() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
-        <ShareBar title={isKo ? '급여 & 실수령액 계산기' : 'Salary Calculator'} description={isKo ? '일반·잔업·특근 수당 포함 실수령액 계산' : 'Calculate net pay with overtime & holiday pay'} />
+        <ShareBar title={isKo ? '2026 연봉·급여 실수령액 계산기' : 'Korean Salary & Take-Home Pay Calculator'} description={isKo ? '4대보험·소득세 공제 후 월 실수령액 계산' : 'Monthly take-home pay after insurance and income tax'} />
         <RelatedTools toolId="utilities/finance/salary-calc" />
         <div className={s.sal_ad_placeholder}>AD</div>
         <SeoSection
           ko={{
-            title: '급여 및 실수령액 계산기란 무엇인가요?',
-            description: '시간당 임금을 기반으로 일반근무·잔업(연장근로)·특근(휴일근로) 수당을 각각 설정하고, 세금과 보험료를 공제한 실제 통장 입금액을 계산해주는 도구입니다. 한국의 경우 근로기준법에 따른 주휴수당(주 15시간 이상 근무 시 자동 적용), 3.3% 원천징수세, 4대보험(국민연금·건강보험·고용보험·산재보험 근로자 부담분 약 9.4%)을 지원합니다. 미국은 연방 FLSA 기준 연장근로 수당(1.5x), FICA 세금(사회보장세 6.2% + 메디케어 1.45% = 7.65%), 연방소득세 추정(FICA 포함 약 22%)을 지원합니다. 잔업은 일반근무 뒤 연장하는 개념으로 일·주 단위로 시간과 배율(1.5x~3x)을 별도 설정할 수 있으며, 특근은 휴일이나 별도 근무일에 해당합니다. 아르바이트생, 계약직, 일용직, 교대 근무자, HR 담당자 등 다양한 근무 형태를 가진 누구나 자신의 패턴에 맞게 입력하면 주급과 월급을 즉시 비교할 수 있습니다.',
+            title: '연봉·급여 실수령액 계산기란 무엇인가요?',
+            description: '세전 연봉이나 월급을 입력하면 2026년 기준 4대보험(국민연금 4.75%, 건강보험 3.595%, 장기요양보험, 고용보험 0.9%)과 근로소득세·지방소득세를 공제한 실제 통장 입금액을 계산해 주는 도구입니다. 근로소득세는 국세청이 회사의 매월 원천징수 기준으로 쓰는 근로소득 간이세액표(2026년 3월 1일 이후 지급분)를 그대로 적용하므로, 부양가족 수와 8~20세 자녀 수에 따라 달라지는 세액까지 반영됩니다. 예를 들어 연봉 4,000만 원(퇴직금 별도, 식대 비과세 20만 원, 본인 1명)이라면 월 세전 약 333만 원에서 약 39만 8천 원이 공제되어 월 실수령액은 약 293만 원입니다. 아르바이트나 교대 근무처럼 시급으로 받는 경우에는 "시급·알바" 탭에서 2026년 최저시급 10,320원 기준으로 주휴수당·잔업·특근 수당을 포함한 월급을 계산할 수 있습니다. 연봉 협상, 이직 제안 비교, 생활비 계획처럼 "그래서 한 달에 실제로 얼마를 받는지"가 궁금할 때 바로 활용해 보세요.',
             useCases: [
-              { icon: '💰', title: '취업 전 연봉 협상', desc: '제안받은 시급과 예상 근무 패턴을 입력해 세후 실수령액을 미리 계산하고, 생활비 대비 적정 여부를 판단하여 협상에 활용하세요.' },
-              { icon: '⏰', title: '잔업·특근 수당 확인', desc: '잔업 시간과 배율을 설정해 연장근로 수당이 월급에 얼마나 더해지는지 즉시 계산할 수 있습니다. 계약서와 비교하는 용도로도 활용하세요.' },
-              { icon: '🏦', title: '아르바이트 월 수입 예측', desc: '주휴수당 포함 여부와 4대보험 공제를 선택해 실제 통장에 입금되는 금액을 정확히 파악하고 월별 생활비 계획을 세울 수 있습니다.' },
-              { icon: '🌍', title: '한미 급여 체계 비교', desc: '한국과 미국 버튼을 전환하며 각국의 세금·수당 체계에 따른 실수령액 차이를 비교하여 이직이나 해외취업 결정에 활용하세요.' },
+              { icon: '💼', title: '이직·연봉 협상 전 비교', desc: '제안받은 연봉 두 개를 차례로 입력해 월 실수령액 차이를 확인하세요. 연봉 500만 원 차이가 실제 통장에서는 월 약 30만~40만 원 차이라는 것처럼, 세후 기준으로 판단할 수 있습니다.' },
+              { icon: '👨‍👩‍👧', title: '부양가족에 따른 세금 차이 확인', desc: '배우자와 8~20세 자녀 수를 바꿔 가며 매월 떼이는 근로소득세가 얼마나 줄어드는지 확인할 수 있습니다. 같은 연봉 5,000만 원도 4인 가족(자녀 2명)이면 소득세가 월 약 4만 원으로 줄어듭니다.' },
+              { icon: '⏰', title: '알바 월급과 주휴수당 계산', desc: '시급·알바 탭에서 하루 근무 시간과 주 근무일수를 넣으면 주 15시간 이상일 때 붙는 주휴수당과 잔업·특근 수당까지 합친 월급을 바로 계산합니다.' },
+              { icon: '📋', title: '급여명세서 검증', desc: '회사에서 받은 급여명세서의 국민연금·건강보험·소득세 금액이 계산 결과와 크게 다르다면 비과세 항목이나 부양가족 신고 내용이 맞는지 인사팀에 확인해 볼 수 있습니다.' },
             ],
             steps: [
-              { step: '국가 선택', desc: '상단 🇰🇷 KOREA 또는 🇺🇸 USA 버튼을 클릭하면 해당 국가의 최저임금과 세금 체계가 자동 적용됩니다. 시급을 입력하면 이후 모든 계산에 반영됩니다.' },
-              { step: '근무형태 설정', desc: '일반근무, 잔업(연장근로), 특근(휴일근로) 각각의 하루 시간과 주당 근무일수를 +/- 버튼으로 설정합니다. 잔업과 특근은 시급 배율(1.5x~3x)도 선택하세요.' },
-              { step: '추가 옵션 선택', desc: '한국: 주휴수당 ON/OFF 토글과 공제 방식(공제 전·3.3%·4대보험 9.4%)을 선택합니다. 미국: FICA 또는 FICA+연방세 추정 중 선택합니다.' },
-              { step: '영수증 확인', desc: '오른쪽 영수증에서 주급 상세(일반·잔업·특근·주휴), 월 총급여, 공제액, 최종 실수령액을 한눈에 확인합니다.' },
+              { step: '계산 방식 선택', desc: '월급이나 연봉을 받는 직장인은 "연봉·월급 실수령액" 탭을, 시급으로 받는 아르바이트·교대 근무자는 "시급·알바" 탭을 선택합니다.' },
+              { step: '연봉 또는 월급 입력', desc: '세전 금액을 입력합니다. 연봉에 퇴직금이 포함된 계약(연봉을 13으로 나눠 지급)이라면 "퇴직금 포함" 체크박스를 켜면 월 급여가 1/13로 계산됩니다.' },
+              { step: '비과세액과 가족 수 설정', desc: '식대처럼 세금이 붙지 않는 금액(식대는 월 20만 원까지 비과세)을 입력하고, 본인을 포함한 부양가족 수와 8~20세 자녀 수를 +/- 버튼으로 설정합니다.' },
+              { step: '공제 내역 확인', desc: '오른쪽 영수증에서 국민연금·건강보험·장기요양·고용보험·근로소득세·지방소득세가 각각 얼마인지, 최종 월 실수령액과 연 실수령액이 얼마인지 확인합니다.' },
             ],
             faqs: [
-              { q: '주휴수당 계산 기준이 어떻게 되나요?', a: '주휴수당은 일반근무(소정근로시간) 기준으로만 계산됩니다. 잔업·특근 시간은 포함되지 않습니다. 공식은 (소정근로시간 ÷ 40) × 8 × 시급이며, 주 15시간 이상 근무 시 자동 적용됩니다. 최대는 주 40시간 이상 시 8시간분 시급입니다.' },
-              { q: '잔업과 특근의 차이가 무엇인가요?', a: '잔업(연장근로)은 정규 근무 뒤 같은 날 추가로 일하는 것을 의미하며, 특근(휴일근로)은 주휴일이나 별도로 지정된 날에 출근하는 것입니다. 둘 다 시급 배율(1.5x~3x)을 설정할 수 있으며, 실제 계약서에 명시된 배율을 입력하면 됩니다.' },
-              { q: '4대보험 9.4%는 정확한가요?', a: '본 계산기는 국민연금 4.5%, 건강보험 3.545%, 장기요양보험 0.455%, 고용보험 0.9%를 합산한 근사치를 사용합니다. 실제 공제액은 소득 수준 및 회사 규모에 따라 소폭 차이가 있으며, 정확한 금액은 급여명세서에서 확인하세요.' },
-              { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
+              { q: '연봉 3,000만·4,000만·5,000만 원의 월 실수령액은 얼마인가요?', a: '본인 1명, 식대 비과세 월 20만 원, 퇴직금 별도 기준으로 연봉 3,000만 원은 월 약 224만 원, 4,000만 원은 월 약 293만 원, 5,000만 원은 월 약 357만 원입니다. 부양가족이 늘어나면 근로소득세가 줄어 실수령액이 더 많아지며, 페이지의 연봉별 실수령액 표에서 다른 연봉도 확인할 수 있습니다.' },
+              { q: '2026년 4대보험 요율은 얼마인가요?', a: '근로자 부담 기준으로 국민연금 4.75%(2026년부터 보험료율 9.5%), 건강보험 3.595%(보험료율 7.19%), 장기요양보험은 건강보험료의 13.14%, 고용보험 0.9%로 합계 약 9.72%입니다. 산재보험은 사업주가 전액 부담하므로 월급에서 공제되지 않습니다. 국민연금은 기준소득월액 상한(659만 원)이 있어 그 이상 소득에는 더 붙지 않습니다.' },
+              { q: '근로소득세는 어떻게 계산되나요?', a: '회사는 매달 국세청 근로소득 간이세액표에 따라 소득세를 원천징수하고, 지방소득세는 그 소득세의 10%입니다. 이 계산기는 2026년 3월 1일 이후 지급분에 적용되는 간이세액표(100% 기준)와 8~20세 자녀 세액공제(1명 20,830원, 2명 45,830원)를 그대로 반영합니다. 최종 세금은 다음 해 연말정산에서 확정됩니다.' },
+              { q: '주휴수당은 어떻게 계산되나요?', a: '시급·알바 탭에서 1주 소정근로시간이 15시간 이상이면 (주 소정근로시간 ÷ 40) × 8 × 시급만큼 주휴수당이 붙습니다. 주 40시간 이상 일하면 8시간분이 최대이며, 잔업·특근 시간은 주휴수당 계산에 포함되지 않습니다. 2026년 최저시급 10,320원으로 주 40시간 일하면 주휴수당 포함 월 약 215만 원입니다.' },
             ],
           }}
           en={{
-            title: 'What is a Salary & Net Pay Calculator?',
-            description: 'This calculator lets you configure regular work, overtime, and holiday/special shifts separately — each with their own hours, days, and pay multiplier — then calculates your actual take-home pay after taxes and deductions. For Korea, it supports Weekly Holiday Pay (auto-applied when regular hours exceed 15/week), 3.3% withholding tax, and the Four Major Insurances (~9.4% employee share). For the US, it supports overtime pay (1.5x–3x multiplier), FICA taxes (7.65%), and combined FICA + estimated federal income tax (~22%). Whether you work a standard 5-day schedule, add overtime shifts, or take on weekend special work, you can model any combination and instantly see the weekly and monthly pay breakdown.',
+            title: 'What is the Korean Salary & Take-Home Pay Calculator?',
+            description: 'Enter a gross annual salary or monthly pay and this calculator shows what actually lands in your bank account in Korea after the 2026 social insurance contributions (National Pension 4.75%, Health Insurance 3.595%, Long-term Care, Employment Insurance 0.9%) and income tax. Income tax follows the official simplified withholding tax table that Korean employers use every month (payments from March 1, 2026), so it reflects the number of dependents and children aged 8 to 20. For example, a ₩40,000,000 salary with severance paid separately, a ₩200,000 tax-free meal allowance and no dependents comes to about ₩3,333,000 gross per month, roughly ₩398,000 in deductions and about ₩2,936,000 take-home. Paid by the hour? The Hourly tab uses the 2026 Korean minimum wage of ₩10,320 and adds weekly holiday pay, overtime and holiday shifts. A US mode with FICA and an estimated federal rate is also included for comparison.',
             useCases: [
-              { icon: '💼', title: 'Job Offer Evaluation', desc: 'Input the proposed hourly wage and your expected work pattern to calculate take-home pay and determine whether it meets your financial needs before accepting.' },
-              { icon: '⏰', title: 'Overtime Pay Verification', desc: 'Set your overtime hours and multiplier to see exactly how much extra pay you earn per month — useful for checking whether your payslip matches your contract.' },
-              { icon: '🎓', title: 'Part-time Budget Planning', desc: 'Calculate monthly income from part-time or shift work, including weekly holiday pay in Korea, to accurately plan your monthly budget and expenses.' },
-              { icon: '🌏', title: 'Korea vs. US Pay Comparison', desc: 'Switch between countries to compare how each tax system affects your take-home pay — helpful for evaluating international job offers or relocation decisions.' },
+              { icon: '💼', title: 'Comparing Job Offers in Korea', desc: 'Enter two salary offers one after the other to see the real monthly difference after tax. A ₩5,000,000 gap in annual salary is often only ₩300,000–400,000 more per month in your account.' },
+              { icon: '👨‍👩‍👧', title: 'Effect of Dependents on Tax', desc: 'Change the number of dependents and children aged 8–20 to see how much monthly income tax drops. A family of four on ₩50,000,000 pays roughly ₩42,000 a month in income tax instead of ₩190,000.' },
+              { icon: '⏰', title: 'Part-time and Shift Pay', desc: 'Use the Hourly tab to enter daily hours and days per week. It adds Korea\'s weekly holiday pay for 15+ hours a week, plus overtime and holiday multipliers.' },
+              { icon: '📋', title: 'Checking Your Payslip', desc: 'If the pension, health insurance or income tax on your payslip differs a lot from this estimate, ask HR whether your non-taxable items and dependent declaration are recorded correctly.' },
             ],
             steps: [
-              { step: 'Select Country', desc: 'Click 🇰🇷 KOREA or 🇺🇸 USA to switch wage systems. Each country preloads its minimum wage and auto-applies its respective tax/insurance rules.' },
-              { step: 'Configure Work Blocks', desc: 'Set hours/day and days/week for Regular Work, Overtime, and Holiday/Special Work separately. For overtime and holiday, select a pay multiplier (1.5x to 3x) that matches your contract.' },
-              { step: 'Set Deductions', desc: 'Korea: toggle Weekly Holiday Pay and choose your deduction type (Gross / 3.3% / 9.4% insurance). USA: select None, FICA only (7.65%), or FICA + estimated Federal (~22%).' },
-              { step: 'Review Pay Receipt', desc: 'The right panel shows a full weekly breakdown (regular, overtime, holiday, weekly holiday pay), monthly gross, deductions, and your final net take-home amount.' },
+              { step: 'Choose a Mode', desc: 'Salaried employees should use "Annual / Monthly Salary". Part-time or shift workers paid by the hour should use the "Hourly / Part-time" tab.' },
+              { step: 'Enter Your Pay', desc: 'Type your gross annual salary or monthly pay. If your contract bundles severance into the annual figure (paid in 13 parts), tick "includes severance" to divide by 13.' },
+              { step: 'Set Allowances and Dependents', desc: 'Enter monthly non-taxable pay such as the meal allowance (tax-free up to ₩200,000), then set dependents including yourself and the number of children aged 8–20.' },
+              { step: 'Review the Breakdown', desc: 'The receipt lists pension, health, long-term care, employment insurance, income tax and local income tax separately, with your monthly and annual take-home pay.' },
             ],
             faqs: [
-              { q: 'How is Weekly Holiday Pay calculated in Korea?', a: 'Only regular (scheduled) work hours count toward weekly holiday pay eligibility — overtime and special shifts are excluded. The formula is: (regular weekly hours ÷ 40) × 8 × hourly wage. The maximum is 8 hours of pay when regular hours reach or exceed 40 per week.' },
-              { q: 'What is the difference between Overtime and Holiday Work?', a: 'Overtime refers to extended hours worked after regular shifts on the same day. Holiday/Special Work refers to working on designated rest days or public holidays. Both can be assigned separate multipliers (1.5x–3x) to match your actual employment contract.' },
-              { q: 'Is the Korean 9.4% insurance rate accurate?', a: 'The 9.4% is a simplified employee-side estimate: National Pension 4.5%, Health Insurance 3.545%, Long-term Care 0.455%, Employment Insurance 0.9%. Actual deductions vary slightly by income level and company size — always verify against your payslip.' },
-              { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
+              { q: 'How much is take-home pay on a ₩40 million salary in Korea?', a: 'With severance paid separately, a ₩200,000 monthly tax-free meal allowance and no dependents, a ₩40,000,000 salary gives about ₩2,936,000 per month after insurance and tax. ₩30,000,000 gives about ₩2,244,000 and ₩50,000,000 about ₩3,572,000. More dependents lower income tax and raise take-home pay.' },
+              { q: 'What are the 2026 Korean social insurance rates?', a: 'The employee share is National Pension 4.75% (total rate rose to 9.5% in 2026), Health Insurance 3.595% (total 7.19%), Long-term Care at 13.14% of the health premium and Employment Insurance 0.9%, about 9.72% in total. Industrial accident insurance is paid entirely by the employer. Pension is capped at a ₩6,590,000 monthly income base.' },
+              { q: 'How is Korean income tax withheld?', a: 'Employers withhold income tax each month using the National Tax Service simplified withholding table, and local income tax is 10% of that amount. This calculator uses the table for payments from March 1, 2026 at the 100% option, including the child credit of ₩20,830 for one child and ₩45,830 for two. The final tax is settled in the year-end tax adjustment.' },
+              { q: 'How is weekly holiday pay calculated?', a: 'In the Hourly tab, if scheduled hours are 15 or more per week, weekly holiday pay is (weekly scheduled hours ÷ 40) × 8 × hourly wage, capped at 8 hours of pay at 40 hours. Overtime and holiday shifts do not count. At the 2026 minimum wage of ₩10,320 and 40 hours a week, monthly pay including holiday pay is about ₩2,152,000.' },
             ],
           }}
         />

@@ -9,7 +9,7 @@ export interface KRYearData {
   deductions: {
     none: number;
     withholdingTax: number;  // 3.3% = 0.033
-    insurance: number;       // 4대보험 근로자 부담분 ≈ 9.4%
+    insurance: number;       // 4대보험 근로자 부담분 ≈ 9.72% (2026)
   };
   weeklyHoliday: {
     minHoursForEligibility: number;  // 15h
@@ -38,16 +38,33 @@ export interface WageDataYear {
   US: USYearData;
 }
 
+// ─── 2026 4대보험 근로자 부담 요율 ───────────────────────────────────────────
+// 국민연금 9.5%(근로자 4.75%), 건강보험 7.19%(3.595%),
+// 장기요양 = 건강보험료 × 13.14%, 고용보험 근로자 0.9%. 산재보험은 사업주 전액 부담.
+export const KR_INSURANCE_2026 = {
+  pension: 0.0475,
+  pensionBaseMin: 410_000,    // 기준소득월액 하한 (2026.7 ~ 2027.6)
+  pensionBaseMax: 6_590_000,  // 기준소득월액 상한 (2026.7 ~ 2027.6)
+  health: 0.03595,
+  longTermCareOfHealth: 0.1314,
+  employment: 0.009,
+} as const;
+
+const KR_INSURANCE_TOTAL_2026 =
+  KR_INSURANCE_2026.pension +
+  KR_INSURANCE_2026.health * (1 + KR_INSURANCE_2026.longTermCareOfHealth) +
+  KR_INSURANCE_2026.employment; // ≈ 9.72%
+
 export const WAGE_DATA: Record<string, WageDataYear> = {
   Y2026: {
     KR: {
-      minWage: 10030,
-      lastUpdated: '2026-01-01',
+      minWage: 10320,
+      lastUpdated: '2026-07-01',
       currency: 'KRW',
       deductions: {
         none: 0,
         withholdingTax: 0.033,
-        insurance: 0.094,
+        insurance: KR_INSURANCE_TOTAL_2026,
       },
       weeklyHoliday: {
         minHoursForEligibility: 15,
