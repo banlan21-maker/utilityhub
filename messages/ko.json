@@ -2308,8 +2308,6 @@
     "elbow_SR90_desc": "좁은 공간용",
     "elbow_LR45": "45° 장반경 (LR)",
     "elbow_LR45_desc": "완만한 방향 전환",
-    "elbow_SR45": "45° 단반경 (SR)",
-    "elbow_SR45_desc": "좁은 공간 45°",
     "mode_simple": "📐 단순 오프셋",
     "mode_rolling": "🔄 롤링 오프셋",
     "mode_cut": "✂️ 직관 절단길이",

@@ -13,34 +13,34 @@ import s from './elbow-offset.module.css';
 type Size = '15A' | '20A' | '25A' | '32A' | '40A' | '50A' | '65A' | '80A' | '100A' | '125A' | '150A' | '200A';
 const SIZES: Size[] = ['15A','20A','25A','32A','40A','50A','65A','80A','100A','125A','150A','200A'];
 
-interface SizeSpec { nps: number; od: number; LR90: number; LR45: number; }
+// 중심~끝단 치수(mm). LR90 = A(1.5D), LR45 = B, SR90 = A(1.0D, NPS 1" 이상만 규격 존재)
+interface SizeSpec { nps: number; od: number; LR90: number; LR45: number; SR90: number | null; }
 const SIZE_DATA: Record<Size, SizeSpec> = {
-  '15A':  { nps: 15,  od: 21.7,  LR90: 38,  LR45: 16  },
-  '20A':  { nps: 20,  od: 27.2,  LR90: 38,  LR45: 19  },
-  '25A':  { nps: 25,  od: 34.0,  LR90: 38,  LR45: 22  },
-  '32A':  { nps: 32,  od: 42.7,  LR90: 48,  LR45: 25  },
-  '40A':  { nps: 40,  od: 48.6,  LR90: 57,  LR45: 29  },
-  '50A':  { nps: 50,  od: 60.5,  LR90: 76,  LR45: 35  },
-  '65A':  { nps: 65,  od: 76.3,  LR90: 95,  LR45: 44  },
-  '80A':  { nps: 80,  od: 89.1,  LR90: 114, LR45: 51  },
-  '100A': { nps: 100, od: 114.3, LR90: 152, LR45: 64  },
-  '125A': { nps: 125, od: 139.8, LR90: 190, LR45: 79  },
-  '150A': { nps: 150, od: 165.2, LR90: 229, LR45: 95  },
-  '200A': { nps: 200, od: 216.3, LR90: 305, LR45: 127 },
+  '15A':  { nps: 15,  od: 21.7,  LR90: 38,  LR45: 16,  SR90: null },
+  '20A':  { nps: 20,  od: 27.2,  LR90: 38,  LR45: 19,  SR90: null },
+  '25A':  { nps: 25,  od: 34.0,  LR90: 38,  LR45: 22,  SR90: 25  },
+  '32A':  { nps: 32,  od: 42.7,  LR90: 48,  LR45: 25,  SR90: 32  },
+  '40A':  { nps: 40,  od: 48.6,  LR90: 57,  LR45: 29,  SR90: 38  },
+  '50A':  { nps: 50,  od: 60.5,  LR90: 76,  LR45: 35,  SR90: 51  },
+  '65A':  { nps: 65,  od: 76.3,  LR90: 95,  LR45: 44,  SR90: 64  },
+  '80A':  { nps: 80,  od: 89.1,  LR90: 114, LR45: 51,  SR90: 76  },
+  '100A': { nps: 100, od: 114.3, LR90: 152, LR45: 64,  SR90: 102 },
+  '125A': { nps: 125, od: 139.8, LR90: 190, LR45: 79,  SR90: 127 },
+  '150A': { nps: 150, od: 165.2, LR90: 229, LR45: 95,  SR90: 152 },
+  '200A': { nps: 200, od: 216.3, LR90: 305, LR45: 127, SR90: 203 },
 };
 
-type ElbowType = 'LR90' | 'SR90' | 'LR45' | 'SR45';
-const ELBOW_TYPES: ElbowType[] = ['LR90', 'SR90', 'LR45', 'SR45'];
-const SR_RATIO = 0.667;
+// ASME B16.9에 45° 단반경 엘보는 없으므로 제외
+type ElbowType = 'LR90' | 'SR90' | 'LR45';
+const ELBOW_TYPES: ElbowType[] = ['LR90', 'SR90', 'LR45'];
 
-// Take-out 계산: LR은 DB 직접, SR은 LR × 0.667
+const isElbowAvailable = (size: Size, elbow: ElbowType) => elbow !== 'SR90' || SIZE_DATA[size].SR90 !== null;
+
 function getTakeout(size: Size, elbow: ElbowType): number {
   const d = SIZE_DATA[size];
   if (elbow === 'LR90') return d.LR90;
   if (elbow === 'LR45') return d.LR45;
-  if (elbow === 'SR90') return Math.round(d.LR90 * SR_RATIO * 10) / 10;
-  if (elbow === 'SR45') return Math.round(d.LR45 * SR_RATIO * 10) / 10;
-  return 0;
+  return d.SR90 ?? d.LR90;
 }
 
 type Mode = 'simple' | 'rolling' | 'cut';
@@ -88,7 +88,7 @@ export default function ElbowOffsetClient() {
       const O = parseFloat(offset);
       if (!O || O <= 0) return null;
 
-      const is45 = elbow === 'LR45' || elbow === 'SR45';
+      const is45 = elbow === 'LR45';
       const run = is45 ? O * SQRT2 : O;
       const cut = run - TO * 2;
       const minRequired = TO * 2;
@@ -200,7 +200,10 @@ export default function ElbowOffsetClient() {
             <button
               key={sz}
               className={`${s.size_btn} ${size === sz ? s.size_btn_active : ''}`}
-              onClick={() => setSize(sz)}
+              onClick={() => {
+                setSize(sz);
+                if (!isElbowAvailable(sz, elbow)) setElbow('LR90');
+              }}
               aria-label={sz}
             >
               {sz}
@@ -218,6 +221,8 @@ export default function ElbowOffsetClient() {
               key={et}
               className={`${s.elbow_card} ${elbow === et ? s.elbow_card_active : ''}`}
               onClick={() => setElbow(et)}
+              disabled={!isElbowAvailable(size, et)}
+              style={isElbowAvailable(size, et) ? undefined : { opacity: 0.4, cursor: 'not-allowed' }}
               aria-label={t(`elbow_${et}` as 'elbow_LR90')}
             >
               <span className={s.elbow_name}>{t(`elbow_${et}` as 'elbow_LR90')}</span>
@@ -225,6 +230,11 @@ export default function ElbowOffsetClient() {
             </button>
           ))}
         </div>
+        {!isElbowAvailable(size, 'SR90') && (
+          <p className={s.elbow_desc} style={{ marginTop: '0.5rem' }}>
+            {isKo ? '단반경(SR) 엘보는 ASME B16.9 규격상 25A(1") 이상만 있습니다.' : 'Short-radius (SR) elbows exist only from NPS 1" (25A) in ASME B16.9.'}
+          </p>
+        )}
       </section>
 
       {/* STEP 3: 모드 선택 */}
@@ -448,7 +458,7 @@ export default function ElbowOffsetClient() {
         ko={{
           title: '배관 엘보 오프셋 계산기란?',
           description:
-            '배관 엘보 오프셋 계산기는 현장 배관 작업자가 장애물을 피하거나 배관 경로를 변경할 때 필요한 엘보 테이크아웃과 직관 절단길이를 즉시 계산해주는 실무 도구입니다. 단순 오프셋, 가로·세로 동시 이동이 필요한 롤링 오프셋, 두 연결점 사이의 직관 절단길이 등 3가지 계산 모드를 제공합니다. 호칭경(15A~200A)과 엘보 종류(90°·45° 장·단반경)를 선택하면 ASME B16.9 규격 테이블의 테이크아웃 값이 자동 적용되어 현장에서 바로 파이프를 절단할 수 있는 수치가 출력됩니다. SVG 배관 도식도로 배관 형태를 시각적으로 확인할 수 있으며, 5%/10% 여유분 권장 주문 길이도 함께 제공해 시공 오차를 사전에 보완할 수 있습니다.',
+            '배관 엘보 오프셋 계산기는 현장 배관 작업자가 장애물을 피하거나 배관 경로를 변경할 때 필요한 엘보 테이크아웃과 직관 절단길이를 즉시 계산해주는 실무 도구입니다. 단순 오프셋, 가로·세로 동시 이동이 필요한 롤링 오프셋, 두 연결점 사이의 직관 절단길이 등 3가지 계산 모드를 제공합니다. 호칭경(15A~200A)과 엘보 종류(90° 장·단반경, 45° 장반경)를 선택하면 ASME B16.9 규격 테이블의 테이크아웃 값이 자동 적용되어 현장에서 바로 파이프를 절단할 수 있는 수치가 출력됩니다. SVG 배관 도식도로 배관 형태를 시각적으로 확인할 수 있으며, 5%/10% 여유분 권장 주문 길이도 함께 제공해 시공 오차를 사전에 보완할 수 있습니다.',
           useCases: [
             { icon: '🔧', title: '장애물 우회 배관 계산', desc: '구조물이나 다른 배관을 피해 우회해야 할 때 오프셋 거리를 입력하면 엘보 2개 사이의 직관 절단길이가 즉시 계산됩니다. 현장에서 줄자 하나로 바로 파이프를 절단할 수 있습니다.' },
             { icon: '🔄', title: '롤링 오프셋 3D 계산', desc: '가로와 세로 방향을 동시에 이동해야 하는 롤링 오프셋은 현장에서 계산하기 가장 어려운 케이스입니다. 가로·세로 이동거리를 입력하면 대각선 Travel 거리와 절단길이가 자동 계산됩니다.' },
@@ -463,7 +473,7 @@ export default function ElbowOffsetClient() {
           ],
           faqs: [
             { q: '테이크아웃(Take-out)이란 무엇인가요?', a: '테이크아웃은 엘보의 중심점에서 파이프 접합면(끝단)까지의 거리입니다. 배관을 설치할 때 두 엘보 사이의 직관 길이를 구하려면 목표 거리에서 양쪽 테이크아웃을 빼야 합니다. 본 계산기는 누적 오차를 방지하기 위해 약식 공식(NPS×1.5) 대신 ASME B16.9 표준 규격 데이터를 직접 적용했습니다. 약식 계산과 최대 1~4mm 차이가 날 수 있습니다.' },
-            { q: '장반경(LR)과 단반경(SR) 엘보는 어떻게 다른가요?', a: '장반경(LR) 엘보는 굽힘반경이 공칭 파이프 직경의 1.5배로, 유체 흐름이 완만하고 압력 손실이 적어 대부분의 현장에서 표준으로 사용됩니다. 단반경(SR) 엘보는 굽힘반경이 공칭 직경과 같아 크기가 작아 좁은 공간에 적합하지만, 흐름 저항이 상대적으로 큽니다. 본 계산기는 SR 테이크아웃을 LR × 0.667 비율로 계산합니다 (굽힘반경 비례).' },
+            { q: '장반경(LR)과 단반경(SR) 엘보는 어떻게 다른가요?', a: '장반경(LR) 엘보는 굽힘반경이 공칭 파이프 직경의 1.5배로, 유체 흐름이 완만하고 압력 손실이 적어 대부분의 현장에서 표준으로 사용됩니다. 단반경(SR) 엘보는 굽힘반경이 공칭 직경과 같아 크기가 작아 좁은 공간에 적합하지만, 흐름 저항이 상대적으로 큽니다. 본 계산기는 SR 테이크아웃도 ASME B16.9 규격값(호칭경 × 1.0, 예: 50A 51mm)을 그대로 씁니다. 45° 엘보는 규격상 장반경만 있고, 단반경 엘보는 25A(1") 이상만 있습니다.' },
             { q: '롤링 오프셋은 언제 사용하나요?', a: '배관이 수평면과 수직면을 동시에 이동해야 할 때 사용합니다. 예를 들어 배관이 오른쪽으로 200mm, 위쪽으로 150mm 동시에 이동해야 한다면 롤링 오프셋 모드에서 가로 200, 세로 150을 입력하면 됩니다. 대각선 이동거리와 배관 기울기 각도, 직관 절단길이가 자동으로 계산됩니다. 이 모드는 구조상 45° 엘보로만 동작합니다.' },
             { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 현장 참고용으로만 제공됩니다. 엘보 제조사마다 실제 테이크아웃 치수에 약간의 공차가 있을 수 있으며, 나사식 엘보는 나사 물림 길이를 추가로 고려해야 합니다. 중요한 시공 전에는 반드시 실제 엘보 제품의 치수를 실측하여 확인하시기 바랍니다.' },
           ],
@@ -471,7 +481,7 @@ export default function ElbowOffsetClient() {
         en={{
           title: 'What is the Pipe Elbow Offset Calculator?',
           description:
-            'The Pipe Elbow Offset Calculator instantly computes elbow take-out and pipe cut length for the three most common piping field scenarios: simple offset (one-direction obstacle bypass), rolling offset (horizontal + vertical movement, 3D), and exact cut length between two connection points. Choose your nominal pipe size (15A–200A) and elbow type (90°/45° long or short radius), and the calculator auto-applies the ASME B16.9 standard take-out value to output the exact cut length you need on site. The tool includes an SVG pipe diagram for visual confirmation and 5% / 10% margin order-length suggestions to absorb installation tolerances.',
+            'The Pipe Elbow Offset Calculator instantly computes elbow take-out and pipe cut length for the three most common piping field scenarios: simple offset (one-direction obstacle bypass), rolling offset (horizontal + vertical movement, 3D), and exact cut length between two connection points. Choose your nominal pipe size (15A–200A) and elbow type (90° long or short radius, 45° long radius), and the calculator auto-applies the ASME B16.9 standard take-out value to output the exact cut length you need on site. The tool includes an SVG pipe diagram for visual confirmation and 5% / 10% margin order-length suggestions to absorb installation tolerances.',
           useCases: [
             { icon: '🔧', title: 'Obstacle Bypass', desc: 'When routing around structures or other pipes, enter the offset distance and the cut length between the two elbows is instantly shown. Walk to the cutter with just a tape measure.' },
             { icon: '🔄', title: '3D Rolling Offset', desc: 'Rolling offsets (horizontal + vertical at the same time) are the hardest to estimate by hand. Enter horizontal and vertical travel — diagonal Travel distance, tilt angle, and cut length appear automatically.' },
@@ -486,7 +496,7 @@ export default function ElbowOffsetClient() {
           ],
           faqs: [
             { q: 'What is take-out?', a: 'Take-out is the distance from the centerline of an elbow to its weld face (end). To find the cut length between two elbows, you subtract take-out from the centerline distance. This calculator uses ASME B16.9 standard data directly instead of the rough NPS×1.5 formula, which can differ by 1–4 mm and accumulate when multiple elbows are involved.' },
-            { q: "What's the difference between LR and SR elbows?", a: 'A Long Radius (LR) elbow has a bend radius 1.5× the nominal pipe diameter, giving smoother flow and lower pressure loss — the standard for most installations. A Short Radius (SR) elbow has a bend radius equal to the nominal diameter, fitting tight spaces but adding flow resistance. SR take-out is calculated as LR × 0.667 (ratio of bend radii).' },
+            { q: "What's the difference between LR and SR elbows?", a: 'A Long Radius (LR) elbow has a bend radius 1.5× the nominal pipe diameter, giving smoother flow and lower pressure loss — the standard for most installations. A Short Radius (SR) elbow has a bend radius equal to the nominal diameter, fitting tight spaces but adding flow resistance. SR take-outs also use the ASME B16.9 values (1.0 × nominal size, e.g. 51 mm for 2"). 45° elbows are long-radius only, and short-radius elbows start at NPS 1".' },
             { q: 'When do I use rolling offset?', a: 'Use it whenever a pipe must move both horizontally and vertically at the same time. For example, 200 mm right and 150 mm up simultaneously — enter 200 horizontal, 150 vertical, and the calculator returns the diagonal travel, pipe tilt angle, and exact cut length. This mode uses 45° elbows by design.' },
             { q: 'Can I use these results as official data?', a: 'These results are for on-site reference only. Real elbow manufacturers have small tolerance variations in take-out, and threaded elbows must also account for thread engagement. Always verify against the actual elbow datasheet and field measurement before final installation.' },
           ],

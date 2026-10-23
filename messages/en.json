@@ -2158,8 +2158,6 @@
     "elbow_SR90_desc": "Tight space",
     "elbow_LR45": "45° Long Radius (LR)",
     "elbow_LR45_desc": "Gentle direction change",
-    "elbow_SR45": "45° Short Radius (SR)",
-    "elbow_SR45_desc": "Tight 45° turn",
     "mode_simple": "📐 Simple Offset",
     "mode_rolling": "🔄 Rolling Offset",
     "mode_cut": "✂️ Cut Length",
