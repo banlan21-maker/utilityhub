@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/pomodoro',
         en: 'https://www.theutilhub.com/en/utilities/productivity/pomodoro',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/pomodoro',
       },
     },
     openGraph: {

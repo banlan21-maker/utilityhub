@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/design/formation-planner',
         en: 'https://www.theutilhub.com/en/utilities/design/formation-planner',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/design/formation-planner',
       },
     },
     openGraph: {

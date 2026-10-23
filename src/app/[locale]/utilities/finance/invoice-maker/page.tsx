@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/invoice-maker',
         en: 'https://www.theutilhub.com/en/utilities/finance/invoice-maker',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/invoice-maker',
       },
     },
     openGraph: {

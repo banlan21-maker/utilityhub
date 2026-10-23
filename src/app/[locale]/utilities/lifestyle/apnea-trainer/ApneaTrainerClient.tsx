@@ -548,7 +548,7 @@ export default function ApneaTrainerClient() {
         />
 
         {/* 0-1. Related Tools */}
-        <RelatedTools toolId="lifestyle/apnea-trainer" />
+        <RelatedTools toolId="utilities/lifestyle/apnea-trainer" />
 
         {/* 0-2. Ad */}
         <div style={{

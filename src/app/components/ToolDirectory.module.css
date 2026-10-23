@@ -1,0 +1,60 @@
+.directory {
+  padding: 1rem 0 3rem;
+}
+
+.title {
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem 2rem;
+}
+
+.group {
+  min-width: 0;
+}
+
+.groupTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.groupTitle a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.groupTitle a:hover {
+  color: var(--primary);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.link {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}

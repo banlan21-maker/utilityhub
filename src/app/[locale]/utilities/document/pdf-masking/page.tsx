@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/document/pdf-masking',
         en: 'https://www.theutilhub.com/en/utilities/document/pdf-masking',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/document/pdf-masking',
       },
     },
     openGraph: {

@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: `https://www.theutilhub.com/ko/utilities/utility/counter`,
         en: `https://www.theutilhub.com/en/utilities/utility/counter`,
+        'x-default': `https://www.theutilhub.com/ko/utilities/utility/counter`,
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

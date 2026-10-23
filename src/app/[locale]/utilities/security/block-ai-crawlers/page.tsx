@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/security/block-ai-crawlers',
         en: 'https://www.theutilhub.com/en/utilities/security/block-ai-crawlers',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/security/block-ai-crawlers',
       },
     },
     openGraph: {

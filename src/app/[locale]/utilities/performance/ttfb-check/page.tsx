@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/performance/ttfb-check',
         en: 'https://www.theutilhub.com/en/utilities/performance/ttfb-check',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/performance/ttfb-check',
       },
     },
     openGraph: {

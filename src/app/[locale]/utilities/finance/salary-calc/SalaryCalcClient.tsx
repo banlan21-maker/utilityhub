@@ -487,7 +487,7 @@ export default function SalaryCalcClient() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={isKo ? '급여 & 실수령액 계산기' : 'Salary Calculator'} description={isKo ? '일반·잔업·특근 수당 포함 실수령액 계산' : 'Calculate net pay with overtime & holiday pay'} />
-        <RelatedTools toolId="finance/salary-calc" />
+        <RelatedTools toolId="utilities/finance/salary-calc" />
         <div className={s.sal_ad_placeholder}>AD</div>
         <SeoSection
           ko={{

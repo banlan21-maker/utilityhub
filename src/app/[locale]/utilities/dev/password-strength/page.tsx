@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/dev/password-strength',
         en: 'https://www.theutilhub.com/en/utilities/dev/password-strength',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/dev/password-strength',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

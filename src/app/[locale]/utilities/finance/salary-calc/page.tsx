@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/salary-calc',
         en: 'https://www.theutilhub.com/en/utilities/finance/salary-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/salary-calc',
       },
     },
     openGraph: {

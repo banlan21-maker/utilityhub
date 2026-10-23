@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/vat-calc',
         en: 'https://www.theutilhub.com/en/utilities/finance/vat-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/vat-calc',
       },
     },
     openGraph: {

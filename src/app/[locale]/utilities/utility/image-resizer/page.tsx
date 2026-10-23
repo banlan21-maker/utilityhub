@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: `https://www.theutilhub.com/ko/utilities/utility/image-resizer`,
         en: `https://www.theutilhub.com/en/utilities/utility/image-resizer`,
+        'x-default': `https://www.theutilhub.com/ko/utilities/utility/image-resizer`,
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

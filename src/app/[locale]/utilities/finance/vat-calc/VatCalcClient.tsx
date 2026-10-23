@@ -192,7 +192,7 @@ export default function VatCalcClient() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="finance/vat-calc" />
+        <RelatedTools toolId="utilities/finance/vat-calc" />
         <div className={s.vat_ad_placeholder}>AD</div>
         <SeoSection
           ko={{

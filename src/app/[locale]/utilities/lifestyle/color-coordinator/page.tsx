@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/color-coordinator',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

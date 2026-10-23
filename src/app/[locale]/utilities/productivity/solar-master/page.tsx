@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/solar-master',
         en: 'https://www.theutilhub.com/en/utilities/productivity/solar-master',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/solar-master',
       },
     },
     openGraph: {

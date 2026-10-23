@@ -713,7 +713,7 @@ export default function InteriorMaterialCalcClient() {
         title={isKo ? '타일 및 도배지 로스율 산출기' : 'Tile & Wallpaper Calculator'}
         description={isKo ? '타일 소요량(박스)과 도배지 롤 수를 SVG 시각화와 함께 즉시 계산합니다.' : 'Calculate tile boxes and wallpaper rolls with visual preview.'}
       />
-      <RelatedTools toolId="utility/interior-material-calc" />
+      <RelatedTools toolId="utilities/utility/interior-material-calc" />
       <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
       <SeoSection
         ko={{

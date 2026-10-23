@@ -496,7 +496,7 @@ export default function GridPokerClient() {
         title={isKo ? '데일리 그리드 포커' : 'Daily Grid Poker'}
         description={isKo ? '5×5 그리드에 카드를 배치해 포커 족보 점수를 최대화하세요!' : 'Place cards on a 5×5 grid and maximize your poker hand scores!'}
       />
-      <RelatedTools toolId="utility/grid-poker" />
+      <RelatedTools toolId="utilities/utility/grid-poker" />
       <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
       <SeoSection ko={seoKo} en={seoEn} />
     </div>

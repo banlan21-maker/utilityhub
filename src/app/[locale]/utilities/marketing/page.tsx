@@ -1,20 +1,22 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { Megaphone } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import CategoryTools from '@/app/components/CategoryTools';
 import s from './marketing_list.module.css';
+import { buildCategoryMetadata } from '@/lib/category-metadata';
 
-export default function MarketingDashboardPage() {
-  const catT = useTranslations('Categories');
-  const boardT = useTranslations('MarketingBoard');
-  const [isClient, setIsClient] = useState(false);
+type Props = { params: Promise<{ locale: string }> };
 
-  useEffect(() => { setIsClient(true); }, []);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return buildCategoryMetadata(locale, 'marketing', 'MarketingBoard');
+}
 
-  if (!isClient) return null;
+export default async function MarketingDashboardPage({ params }: Props) {
+  const { locale } = await params;
+  const catT = await getTranslations({ locale, namespace: 'Categories' });
+  const boardT = await getTranslations({ locale, namespace: 'MarketingBoard' });
 
   return (
     <div className={s.marketing_list_container}>
@@ -30,6 +32,10 @@ export default function MarketingDashboardPage() {
           {boardT('subtitle')}
         </p>
       </header>
+
+      <p className={s.marketing_list_subtitle} style={{ maxWidth: '720px', margin: '0 auto 2rem', lineHeight: 1.7 }}>
+        {boardT('intro')}
+      </p>
 
       <CategoryTools categorySlug="marketing" />
     </div>

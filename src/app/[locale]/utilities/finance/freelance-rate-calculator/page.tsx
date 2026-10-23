@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/freelance-rate-calculator',
         en: 'https://www.theutilhub.com/en/utilities/finance/freelance-rate-calculator',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/freelance-rate-calculator',
       },
     },
     openGraph: {

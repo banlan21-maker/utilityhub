@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/design/photo-batch-master',
         en: 'https://www.theutilhub.com/en/utilities/design/photo-batch-master',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/design/photo-batch-master',
       },
     },
     openGraph: {

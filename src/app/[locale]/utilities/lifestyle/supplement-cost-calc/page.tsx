@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/supplement-cost-calc',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/supplement-cost-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/supplement-cost-calc',
       },
     },
     openGraph: {

@@ -359,7 +359,7 @@ export default function CarbonFootprintClient() {
 
       {/* Bottom 7 sections */}
       <ShareBar title={t('title')} description={t('description')} />
-      <RelatedTools toolId="performance/carbon-footprint" />
+      <RelatedTools toolId="utilities/performance/carbon-footprint" />
       <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">
         AD
       </div>

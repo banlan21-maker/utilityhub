@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/persona-build',
         en: 'https://www.theutilhub.com/en/utilities/utility/persona-build',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/persona-build',
       },
     },
     openGraph: {

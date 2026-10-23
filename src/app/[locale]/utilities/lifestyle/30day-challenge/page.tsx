@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/30day-challenge',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/30day-challenge',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/30day-challenge',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

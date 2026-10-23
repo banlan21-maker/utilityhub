@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/bulk-renamer',
         en: 'https://www.theutilhub.com/en/utilities/productivity/bulk-renamer',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/bulk-renamer',
       },
     },
     openGraph: {

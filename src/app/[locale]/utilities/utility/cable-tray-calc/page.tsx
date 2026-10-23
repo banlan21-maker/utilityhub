@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/cable-tray-calc',
         en: 'https://www.theutilhub.com/en/utilities/utility/cable-tray-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/cable-tray-calc',
       },
     },
     openGraph: {

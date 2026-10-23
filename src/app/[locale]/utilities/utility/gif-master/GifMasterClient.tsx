@@ -136,7 +136,7 @@ export default function GifMasterClient() {
           ? 'GIF 압축, 이미지·텍스트·동영상→GIF 통합 툴'
           : 'All-in-one GIF compressor & generator'}
       />
-      <RelatedTools toolId="utility/gif-master" />
+      <RelatedTools toolId="utilities/utility/gif-master" />
       <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
       <SeoSection
         ko={{

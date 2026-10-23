@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: `https://www.theutilhub.com/ko/utilities/utility/image-processor`,
         en: `https://www.theutilhub.com/en/utilities/utility/image-processor`,
+        'x-default': `https://www.theutilhub.com/ko/utilities/utility/image-processor`,
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

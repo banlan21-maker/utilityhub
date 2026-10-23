@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: `https://www.theutilhub.com/ko/utilities/design/tile-visualizer`,
         en: `https://www.theutilhub.com/en/utilities/design/tile-visualizer`,
+        'x-default': `https://www.theutilhub.com/ko/utilities/design/tile-visualizer`,
       },
     },
     openGraph: {

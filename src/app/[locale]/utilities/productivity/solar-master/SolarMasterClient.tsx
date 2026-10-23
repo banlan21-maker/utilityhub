@@ -8,6 +8,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer,
 } from 'recharts';
 import NavigationActions from '@/app/components/NavigationActions';
+import RelatedTools from '@/app/components/RelatedTools';
 import s from './solar-master.module.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -723,6 +724,9 @@ export default function SolarMasterClient() {
           </div>
         </div>
       </div>
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/productivity/solar-master" />
     </div>
   );
 }

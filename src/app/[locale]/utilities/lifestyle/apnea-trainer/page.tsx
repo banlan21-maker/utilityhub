@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/apnea-trainer',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/apnea-trainer',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/apnea-trainer',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

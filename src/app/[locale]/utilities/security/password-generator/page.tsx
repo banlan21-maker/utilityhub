@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/security/password-generator',
         en: 'https://www.theutilhub.com/en/utilities/security/password-generator',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/security/password-generator',
       },
     },
     openGraph: {

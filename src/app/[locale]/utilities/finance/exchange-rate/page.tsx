@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/exchange-rate',
         en: 'https://www.theutilhub.com/en/utilities/finance/exchange-rate',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/exchange-rate',
       },
     },
     openGraph: {

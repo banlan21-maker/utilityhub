@@ -236,7 +236,7 @@ export default function PercentageCalcClient() {
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
         <ShareBar title={t('title')} description={t('description')} />
-        <RelatedTools toolId="finance/percentage-calc" />
+        <RelatedTools toolId="utilities/finance/percentage-calc" />
         <div className={s.fin_ad_placeholder}>AD</div>
         <SeoSection
           ko={{

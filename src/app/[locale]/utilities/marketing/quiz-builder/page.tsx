@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/marketing/quiz-builder',
         en: 'https://www.theutilhub.com/en/utilities/marketing/quiz-builder',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/marketing/quiz-builder',
       },
     },
     openGraph: {

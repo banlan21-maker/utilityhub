@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/interior-material-calc',
         en: 'https://www.theutilhub.com/en/utilities/utility/interior-material-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/interior-material-calc',
       },
     },
     openGraph: {

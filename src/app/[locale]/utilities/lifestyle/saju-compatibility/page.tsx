@@ -23,6 +23,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/saju-compatibility',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/saju-compatibility',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/saju-compatibility',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

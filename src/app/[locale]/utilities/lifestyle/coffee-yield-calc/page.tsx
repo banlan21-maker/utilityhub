@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/coffee-yield-calc',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/coffee-yield-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/coffee-yield-calc',
       },
     },
     openGraph: {

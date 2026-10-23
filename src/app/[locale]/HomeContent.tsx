@@ -22,6 +22,8 @@ const CATEGORIES_BASE = [
 interface HomeContentProps {
   toolCounts: Record<string, number>;
   totalTools: number;
+  /** 서버에서 렌더된 전체 도구 디렉터리 (카테고리 섹션 아래에 표시) */
+  directory?: React.ReactNode;
 }
 
 const FEATURES = [
@@ -30,7 +32,7 @@ const FEATURES = [
   { icon: '🎁', titleKey: 'feature3Title', descKey: 'feature3Desc' },
 ] as const;
 
-export default function HomeContent({ toolCounts, totalTools }: HomeContentProps) {
+export default function HomeContent({ toolCounts, totalTools, directory }: HomeContentProps) {
   const t = useTranslations('Index');
   const catT = useTranslations('Categories');
   const nav = useTranslations('Navigation');
@@ -128,6 +130,9 @@ export default function HomeContent({ toolCounts, totalTools }: HomeContentProps
             ))}
           </div>
       </section>
+
+      {/* ── ALL TOOLS DIRECTORY (server-rendered links) ── */}
+      {directory}
 
       {/* ── AD SLOT 2 · 300×250 Rectangle ── */}
       <div className={`${styles.adSlot} ${styles.adSlotRect}`} role="complementary" aria-label="Advertisement">

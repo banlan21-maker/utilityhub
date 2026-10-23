@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/design/font-preview',
         en: 'https://www.theutilhub.com/en/utilities/design/font-preview',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/design/font-preview',
       },
     },
     openGraph: {

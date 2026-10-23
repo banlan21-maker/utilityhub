@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/coin-profit',
         en: 'https://www.theutilhub.com/en/utilities/finance/coin-profit',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/coin-profit',
       },
     },
     openGraph: {

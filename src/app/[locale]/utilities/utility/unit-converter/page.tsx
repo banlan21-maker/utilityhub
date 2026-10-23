@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: `https://www.theutilhub.com/ko/utilities/utility/unit-converter`,
         en: `https://www.theutilhub.com/en/utilities/utility/unit-converter`,
+        'x-default': `https://www.theutilhub.com/ko/utilities/utility/unit-converter`,
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

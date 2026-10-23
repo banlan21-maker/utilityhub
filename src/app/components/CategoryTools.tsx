@@ -19,8 +19,8 @@ interface CategoryToolsProps {
 export default function CategoryTools({ categorySlug }: CategoryToolsProps) {
   const locale = useLocale();
   const isKo = locale === 'ko';
+  // 서버 렌더에서는 항상 카드뷰로 툴 링크를 출력하고(크롤러용), 저장된 보기 방식은 마운트 후 적용한다.
   const [viewMode, setViewMode] = useState<ViewMode>('card');
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(VIEW_MODE_KEY) as ViewMode | null;
@@ -29,7 +29,6 @@ export default function CategoryTools({ categorySlug }: CategoryToolsProps) {
     } else if (window.innerWidth < 768) {
       setViewMode('list');
     }
-    setMounted(true);
   }, []);
 
   const handleViewModeChange = (mode: ViewMode) => {
@@ -41,8 +40,6 @@ export default function CategoryTools({ categorySlug }: CategoryToolsProps) {
   const categoryName = isKo
     ? (categoryTools[0]?.categoryNameKo ?? categorySlug)
     : (categoryTools[0]?.categoryNameEn ?? categorySlug);
-
-  if (!mounted) return null;
 
   return (
     <>

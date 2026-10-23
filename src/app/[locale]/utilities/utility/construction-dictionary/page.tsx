@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/construction-dictionary',
         en: 'https://www.theutilhub.com/en/utilities/utility/construction-dictionary',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/construction-dictionary',
       },
     },
     openGraph: {

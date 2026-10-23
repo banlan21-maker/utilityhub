@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/dev/regex-tester',
         en: 'https://www.theutilhub.com/en/utilities/dev/regex-tester',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/dev/regex-tester',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

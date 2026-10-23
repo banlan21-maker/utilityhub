@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/design/color-palette',
         en: 'https://www.theutilhub.com/en/utilities/design/color-palette',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/design/color-palette',
       },
     },
     openGraph: {

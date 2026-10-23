@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: `https://www.theutilhub.com/ko/utilities/utility/lotto-generator`,
         en: `https://www.theutilhub.com/en/utilities/utility/lotto-generator`,
+        'x-default': `https://www.theutilhub.com/ko/utilities/utility/lotto-generator`,
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

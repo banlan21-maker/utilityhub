@@ -1,20 +1,22 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { Wrench } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import CategoryTools from '@/app/components/CategoryTools';
 import s from './utility_list.module.css';
+import { buildCategoryMetadata } from '@/lib/category-metadata';
 
-export default function UtilityDashboardPage() {
-  const catT = useTranslations('Categories');
-  const boardT = useTranslations('UtilityBoard');
-  const [isClient, setIsClient] = useState(false);
+type Props = { params: Promise<{ locale: string }> };
 
-  useEffect(() => { setIsClient(true); }, []);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return buildCategoryMetadata(locale, 'utility', 'UtilityBoard');
+}
 
-  if (!isClient) return null;
+export default async function UtilityDashboardPage({ params }: Props) {
+  const { locale } = await params;
+  const catT = await getTranslations({ locale, namespace: 'Categories' });
+  const boardT = await getTranslations({ locale, namespace: 'UtilityBoard' });
 
   return (
     <div className={s.utility_list_container}>
@@ -26,6 +28,10 @@ export default function UtilityDashboardPage() {
         <h1 className={s.utility_list_title}>{catT('utility')}</h1>
         <p className={s.utility_list_subtitle}>{boardT('subtitle')}</p>
       </header>
+
+      <p className={s.utility_list_subtitle} style={{ maxWidth: '720px', margin: '0 auto 2rem', lineHeight: 1.7 }}>
+        {boardT('intro')}
+      </p>
 
       <CategoryTools categorySlug="utility" />
     </div>

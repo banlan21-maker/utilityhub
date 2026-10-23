@@ -405,7 +405,7 @@ export default function ThirtyDayChallengeClient() {
       )}
 
       <ShareBar title={isKorean ? '📅 30일 챌린지 트래커' : '📅 30 Day Challenge Tracker'} description={isKorean ? '새로운 습관을 만드는 30일의 여정' : 'Build new habits in 30 days'} />
-      <RelatedTools toolId="utilities/lifestyle/30day-challenge" limit={3} />
+      <RelatedTools toolId="utilities/lifestyle/30day-challenge" />
       <div className={s.ad_placeholder}>{isKorean ? '광고 영역' : 'Ad Space'}</div>
 
       <SeoSection

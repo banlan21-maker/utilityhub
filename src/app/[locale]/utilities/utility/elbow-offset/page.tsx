@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/elbow-offset',
         en: 'https://www.theutilhub.com/en/utilities/utility/elbow-offset',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/elbow-offset',
       },
     },
     openGraph: {

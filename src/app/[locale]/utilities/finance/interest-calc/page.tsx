@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/interest-calc',
         en: 'https://www.theutilhub.com/en/utilities/finance/interest-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/interest-calc',
       },
     },
     openGraph: {

@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/brain-boost',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/brain-boost',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/brain-boost',
       },
     },
     openGraph: {

@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/fortune-prompt',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/fortune-prompt',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/fortune-prompt',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

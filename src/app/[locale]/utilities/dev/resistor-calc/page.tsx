@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/dev/resistor-calc',
         en: 'https://www.theutilhub.com/en/utilities/dev/resistor-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/dev/resistor-calc',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

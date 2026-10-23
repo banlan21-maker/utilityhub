@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/tax-33-calc',
         en: 'https://www.theutilhub.com/en/utilities/finance/tax-33-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/tax-33-calc',
       },
     },
     openGraph: {

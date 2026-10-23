@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/gif-master',
         en: 'https://www.theutilhub.com/en/utilities/utility/gif-master',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/gif-master',
       },
     },
     openGraph: {

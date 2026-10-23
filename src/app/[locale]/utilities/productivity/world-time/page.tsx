@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/world-time',
         en: 'https://www.theutilhub.com/en/utilities/productivity/world-time',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/world-time',
       },
     },
     openGraph: {

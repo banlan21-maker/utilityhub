@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/marketing/osmu-formatter',
         en: 'https://www.theutilhub.com/en/utilities/marketing/osmu-formatter',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/marketing/osmu-formatter',
       },
     },
     openGraph: {

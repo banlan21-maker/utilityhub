@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/pet-calorie',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/pet-calorie',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/pet-calorie',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

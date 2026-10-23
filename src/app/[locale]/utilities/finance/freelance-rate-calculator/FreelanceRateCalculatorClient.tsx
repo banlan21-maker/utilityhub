@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
+import RelatedTools from '@/app/components/RelatedTools';
 import s from './frc.module.css';
 
 // ── Types ──
@@ -546,6 +547,9 @@ export default function FreelanceRateCalculatorClient() {
             : 'This calculator is for informational purposes only and does not constitute tax or legal advice. Actual tax obligations vary significantly based on individual circumstances. Always consult a qualified CPA or tax professional for accurate tax calculations.'}
         </p>
       </section>
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/finance/freelance-rate-calculator" />
     </div>
   );
 }

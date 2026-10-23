@@ -4,6 +4,8 @@
  * toolId format: "utilities/{category}/{slug}" — matches the Next.js route path under /[locale]/
  */
 
+import { tools as registryTools } from '@/lib/tools-registry';
+
 export interface ToolMeta {
   id: string;
   icon: string;
@@ -110,15 +112,32 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/performance/sla-uptime-calc', icon: '📊', ko: 'SLA 가동률 계산기', en: 'SLA Uptime Calculator', category: 'performance' },
 ];
 
+/**
+ * TOOLS + tools-registry에만 등록된 툴.
+ * 레지스트리에 추가됐지만 위 목록에 빠진 툴도 관련 도구로 노출·연결되도록 자동 보완한다.
+ */
+const ALL_TOOLS: ToolMeta[] = [
+  ...TOOLS,
+  ...registryTools
+    .filter(t => t.available && !TOOLS.some(m => m.id === t.href.slice(1)))
+    .map(t => ({
+      id: t.href.slice(1),
+      icon: t.emoji,
+      ko: t.nameKo ?? t.slug,
+      en: t.nameEn ?? t.slug,
+      category: t.category,
+    })),
+];
+
 /** Build a lookup map: toolId → ToolMeta */
 export const TOOL_MAP: Record<string, ToolMeta> = Object.fromEntries(
-  TOOLS.map(t => [t.id, t])
+  ALL_TOOLS.map(t => [t.id, t])
 );
 
 /**
  * Curated relationship map.
  * Each key is a toolId; value is an ordered list of related toolIds (most relevant first).
- * At most the first 3 entries are shown in the UI.
+ * Up to 6 tools are shown in the UI; shorter lists are filled from the same category.
  */
 export const TOOL_RELATIONS: Record<string, string[]> = {
   // ── Finance ────────────────────────────────────────────────
@@ -516,7 +535,7 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
  * Returns up to `limit` related tools for the given toolId.
  * Pulls from TOOL_RELATIONS if available; otherwise returns random tools from the same category.
  */
-export function getRelatedTools(toolId: string, limit = 3): ToolMeta[] {
+export function getRelatedTools(toolId: string, limit = 6): ToolMeta[] {
   const relatedIds = TOOL_RELATIONS[toolId] || [];
 
   // Map IDs to metadata, filtering out any that don't exist
@@ -534,8 +553,8 @@ export function getRelatedTools(toolId: string, limit = 3): ToolMeta[] {
   const currentTool = TOOL_MAP[toolId];
   if (!currentTool) return related;
 
-  const sameCategory = TOOLS
-    .filter(t => t.category === currentTool.category && t.id !== toolId)
+  const sameCategory = ALL_TOOLS
+    .filter(t => t.category === currentTool.category && t.id !== toolId && !related.includes(t))
     .slice(0, limit - related.length);
 
   return [...related, ...sameCategory].slice(0, limit);

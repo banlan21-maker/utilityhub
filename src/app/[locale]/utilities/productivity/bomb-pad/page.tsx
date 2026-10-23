@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/bomb-pad',
         en: 'https://www.theutilhub.com/en/utilities/productivity/bomb-pad',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/bomb-pad',
       },
     },
     openGraph: {

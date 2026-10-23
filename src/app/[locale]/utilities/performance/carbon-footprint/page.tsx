@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/performance/carbon-footprint',
         en: 'https://www.theutilhub.com/en/utilities/performance/carbon-footprint',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/performance/carbon-footprint',
       },
     },
     openGraph: {

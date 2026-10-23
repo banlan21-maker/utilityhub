@@ -678,7 +678,7 @@ export default function ColorCoordinatorClient() {
         description={isKo ? seoKo.description : seoEn.description}
       />
 
-      <RelatedTools toolId="color-coordinator" />
+      <RelatedTools toolId="utilities/lifestyle/color-coordinator" />
 
       <SeoSection ko={seoKo} en={seoEn} />
     </div>

@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/security/burn-message',
         en: 'https://www.theutilhub.com/en/utilities/security/burn-message',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/security/burn-message',
       },
     },
     openGraph: {

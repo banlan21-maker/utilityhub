@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/marketing/hashtag-generator',
         en: 'https://www.theutilhub.com/en/utilities/marketing/hashtag-generator',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/marketing/hashtag-generator',
       },
     },
     openGraph: {

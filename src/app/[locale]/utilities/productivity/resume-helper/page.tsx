@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/resume-helper',
         en: 'https://www.theutilhub.com/en/utilities/productivity/resume-helper',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/resume-helper',
       },
     },
     openGraph: {

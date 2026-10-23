@@ -6,11 +6,11 @@ import { getRelatedTools } from '@/config/tool-relations';
 
 interface RelatedToolsProps {
   toolId: string;
-  /** Number of cards to show (default 3) */
+  /** Number of cards to show (default 6) */
   limit?: number;
 }
 
-export default function RelatedTools({ toolId, limit = 3 }: RelatedToolsProps) {
+export default function RelatedTools({ toolId, limit = 6 }: RelatedToolsProps) {
   const locale = useLocale();
   const tools = getRelatedTools(toolId, limit);
 

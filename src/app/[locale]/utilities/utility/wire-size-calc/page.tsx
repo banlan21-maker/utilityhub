@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/wire-size-calc',
         en: 'https://www.theutilhub.com/en/utilities/utility/wire-size-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/wire-size-calc',
       },
     },
     openGraph: {

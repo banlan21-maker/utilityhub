@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/utility/grid-poker',
         en: 'https://www.theutilhub.com/en/utilities/utility/grid-poker',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/utility/grid-poker',
       },
     },
     openGraph: {

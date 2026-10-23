@@ -147,7 +147,10 @@
     "persona-build": {
       "title": "Persona Build",
       "desc": "Daily solo card game. Random character (job + personality + skill) + new mission each day. Score 0–1000 across 10 situational choices."
-    }
+    },
+    "metaTitle": "Everyday Utilities — Unit Converter, Image Resizer, GIF Maker & Engineering Calculators | Utility Hub",
+    "metaDescription": "Free everyday utilities: unit converter, image resizer, GIF maker, YouTube thumbnail downloader, lottery number generator, plus field calculators for wire size, pipe offsets, cable tray fill and metal weight.",
+    "intro": "This collection ranges from small daily chores to on-site engineering work. Convert units, resize images to exact dimensions, and grab the full-resolution thumbnail of any YouTube video. Electricians and pipefitters can use the field calculators to size wires by ampacity, work out elbow offsets, check cable tray fill ratios and estimate the weight of steel plates and pipes."
   },
   "TextCounter": {
     "title": "Character & Byte Counter",
@@ -199,7 +202,10 @@
     "pdf-ocr": {
       "title": "PDF OCR Converter",
       "desc": "Make scanned contracts, official documents, and faxes searchable with Ctrl+F. 100% local processing for complete privacy protection."
-    }
+    },
+    "metaTitle": "Free Document Tools — HWP to PDF, Image to PDF, PDF OCR & Redaction | Utility Hub",
+    "metaDescription": "Free document tools that run in your browser: convert Korean HWP files to PDF, merge images into a PDF, make scanned PDFs searchable with OCR, and redact personal data in PDFs. Files never leave your device.",
+    "intro": "These tools cover the everyday document chores: opening a Korean HWP file without Hangul Office, turning phone photos into a single PDF, making a scanned contract searchable with Ctrl+F, and blacking out ID numbers before you send a file. Every conversion happens inside your browser, so sensitive documents are never uploaded to a server."
   },
   "MarketingBoard": {
     "subtitle": "AI-powered marketing content creation and automation tools.",
@@ -222,7 +228,10 @@
     "quiz-builder": {
       "title": "Quiz / Personality Test Builder",
       "desc": "Create shareable quizzes and personality tests instantly with simple inputs."
-    }
+    },
+    "metaTitle": "Marketing Tools — QR Code Generator, URL Shortener, Hashtags & Quiz Builder | Utility Hub",
+    "metaDescription": "Free marketing tools for small teams: a QR code generator, URL shortener, hashtag generator, an OSMU formatter that adapts one post for every social network, and a shareable quiz builder.",
+    "intro": "Everyday promotion tasks live here: create a QR code for a flyer or business card, shorten long campaign links, and get hashtag suggestions that match your post. The OSMU formatter rewrites one blog post to fit the length limits of Instagram, X and Threads, and quizzes made with the quiz builder can be shared with a single link to boost follower engagement."
   },
   "FinanceBoard": {
     "subtitle": "Financial utilities for payments, exchange rates, and more.",
@@ -265,7 +274,10 @@
     "invoice-maker": {
       "title": "Invoice & Quote Maker",
       "desc": "Create professional KR/US invoices with PDF, Excel export & encrypted share links. Free, no sign-up."
-    }
+    },
+    "metaTitle": "Finance Calculators — VAT, Salary, Interest, Exchange Rate & Invoices | Utility Hub",
+    "metaDescription": "Free finance calculators: VAT and sales tax, take-home salary, simple and compound interest, live currency exchange rates, crypto profit, freelance hourly rates and a one-minute invoice maker. No login needed.",
+    "intro": "Whether you are splitting a price into net amount and VAT, working out a freelance hourly rate from an income goal, or comparing simple and compound interest on savings, the calculators here give you the number in seconds. The currency converter covers 20 currencies with a 30-day trend chart, and the invoice maker produces a clean PDF quote in about a minute. Results are estimates; confirm tax figures with a qualified professional."
   },
   "Tax33": {
     "title": "🧾 Korean Freelancer 3.3% Tax Calculator",
@@ -496,7 +508,10 @@
     "bulk-renamer": {
       "title": "Smart Bulk Renamer",
       "desc": "Apply find/replace, 001 numbering, date insertion, and regex in one click, then download as ZIP or save straight to a folder. Files never leave your browser."
-    }
+    },
+    "metaTitle": "Productivity Tools — Pomodoro Timer, Bulk File Renamer & Excel Mapper | Utility Hub",
+    "metaDescription": "Free productivity tools: a Pomodoro focus timer, a bulk file renamer with numbering and regex, an Excel column mapper, a world time zone converter and a live meeting cost meter. Runs in your browser.",
+    "intro": "These tools are built to cut down repetitive work. Rename hundreds of files at once using dates, sequence numbers or regular expressions, map columns between Excel sheets with different layouts, and keep a steady work rhythm with 25-minute Pomodoro sessions. Planning a call across time zones? Use the world time converter, and check the meeting cost meter when a meeting starts to run long."
   },
   "Pomodoro": {
     "title": "🍅 Pomodoro Timer",
@@ -562,7 +577,10 @@
     "bubble-popart": {
       "title": "Bubble Pop Art Text Generator",
       "desc": "Generate cute bubble-style pop art text images with multicolor, glossy highlights, and bold outlines. Download as PNG instantly."
-    }
+    },
+    "metaTitle": "Design Tools — Color Palette, Logo & Favicon Maker, Font Preview | Utility Hub",
+    "metaDescription": "Free design tools: generate harmonious color palettes and check WCAG contrast, create text logos and favicons, preview Google Fonts, batch-resize photos and visualize bathroom tiles. No design software required.",
+    "intro": "These tools help you produce polished visuals without a design background. Build a full palette from a single brand color and check it against WCAG contrast rules, generate a text logo plus 16, 32 and 180 px favicons in one go, and preview Google Fonts with your own copy. You can also batch-edit product photos to the same size or preview tile combinations before a bathroom remodel."
   },
   "FontCompare": {
     "title": "🔤 Multilingual Font Comparer",
@@ -639,7 +657,10 @@
     "core-web-vitals": {
       "title": "Core Web Vitals Checker",
       "desc": "Enter your LCP, INP, and CLS scores to instantly get Google's Good / Needs Work / Poor ratings."
-    }
+    },
+    "metaTitle": "Web Performance Tools — TTFB, Core Web Vitals & SLA Calculator | Utility Hub",
+    "metaDescription": "Free browser-based web performance tools: measure TTFB, check Core Web Vitals (LCP, CLS, INP), calculate SLA uptime and allowed downtime, and estimate your website carbon footprint. No sign-up required.",
+    "intro": "Slow pages lose visitors within seconds and drag down search rankings. This category collects tools for measuring server response time (TTFB), checking the Core Web Vitals scores Google uses as a ranking signal, and converting SLA targets such as 99.9% or 99.99% into the exact downtime they allow per month. Use them to audit a live site or to verify the uptime your hosting provider promises."
   },
   "CarbonFootprint": {
     "title": "Website Carbon Footprint Calculator",
@@ -749,7 +770,10 @@
     "supplement-cost-calc": {
       "title": "Supplement Cost Analyzer",
       "desc": "Compare total capsules, serving size, active mg, and purity to find the true value winner between two supplements."
-    }
+    },
+    "metaTitle": "Lifestyle & Health Calculators — BMI, Age, Countdown, GPA & Personality Tests | Utility Hub",
+    "metaDescription": "Free lifestyle and health tools: BMI calculator, exact age calculator, countdown timer, GPA calculator, air conditioner sizing, supplement cost-per-dose analysis, plus MBTI-style personality tests and fun quizzes.",
+    "intro": "This category gathers the calculations people look up in everyday life. Check your BMI from height and weight, count the days until an anniversary or exam, work out your exact age, and pick the right air conditioner capacity for a room. The supplement analyzer compares real cost per daily dose, and personality tests and quizzes give you something fun to share with friends."
   },
   "SecurityBoard": {
     "subtitle": "Security tools for privacy protection and safe internet usage.",
@@ -776,7 +800,10 @@
     "peek-proof": {
       "title": "Peek-Proof Editor",
       "desc": "Only the line you're reading stays sharp; the rest blurs out. Protect your writing from over-the-shoulder peeking in cafes, subways, and offices."
-    }
+    },
+    "metaTitle": "Security & Privacy Tools — Password Generator, Data Masking & URL Checker | Utility Hub",
+    "metaDescription": "Free security and privacy tools: a strong password generator, automatic masking of personal data in text, a URL safety checker for suspicious links, self-destructing secret notes and a robots.txt generator that blocks AI crawlers.",
+    "intro": "These tools help you protect personal data. Generate a unique 16-plus character password for every account, mask phone numbers, emails and ID numbers hidden in customer lists or logs, and check a suspicious link before you open it. Site owners can also generate robots.txt rules that block AI training crawlers such as GPTBot in a few clicks."
   },
   "Redact": {
     "title": "🔏 Personal Info Redactor",
@@ -909,7 +936,10 @@
     "kec-grounding": {
       "title": "KEC Grounding Calculator",
       "desc": "Calculate grounding conductor sizes based on KEC standards."
-    }
+    },
+    "metaTitle": "Developer Tools — JSON Formatter, Regex Tester & Password Strength Checker | Utility Hub",
+    "metaDescription": "Free browser-based developer tools: format, validate and minify JSON, test regular expressions in real time, check password strength, decode resistor color bands and size grounding conductors.",
+    "intro": "These are the tools developers keep open while coding and debugging. Pretty-print minified JSON from an API response and pinpoint syntax errors, and watch exactly which strings a regular expression matches as you type. For hardware work, decode resistor color bands into resistance values and size grounding conductors under the Korean Electrical Code (KEC)."
   },
   "JsonFormatter": {
     "title": "🗂️ JSON Formatter & Viewer",

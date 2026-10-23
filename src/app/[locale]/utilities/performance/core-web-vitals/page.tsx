@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/performance/core-web-vitals',
         en: 'https://www.theutilhub.com/en/utilities/performance/core-web-vitals',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/performance/core-web-vitals',
       },
     },
     openGraph: {

@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/marketing/shorturl',
         en: 'https://www.theutilhub.com/en/utilities/marketing/shorturl',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/marketing/shorturl',
       },
     },
     openGraph: {

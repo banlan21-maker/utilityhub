@@ -613,7 +613,7 @@ export default function TileVisualizerClient() {
       </div>
 
       <ShareBar title={t('title')} description={t('description')} />
-      <RelatedTools toolId="design/tile-visualizer" />
+      <RelatedTools toolId="utilities/design/tile-visualizer" />
       <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">
         AD
       </div>

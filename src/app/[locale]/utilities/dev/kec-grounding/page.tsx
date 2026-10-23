@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/dev/kec-grounding',
         en: 'https://www.theutilhub.com/en/utilities/dev/kec-grounding',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/dev/kec-grounding',
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },

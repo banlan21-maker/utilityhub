@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { QRCodeSVG } from 'qrcode.react';
 import NavigationActions from '@/app/components/NavigationActions';
+import RelatedTools from '@/app/components/RelatedTools';
 import s from './ivm.module.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -654,6 +655,9 @@ export default function InvoiceMakerClient() {
       </section>
 
       {toast && <div className={s.ivm_toast}>{toast}</div>}
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/finance/invoice-maker" />
     </div>
   );
 }

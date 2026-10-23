@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/design/feedback',
         en: 'https://www.theutilhub.com/en/utilities/design/feedback',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/design/feedback',
       },
     },
     openGraph: {

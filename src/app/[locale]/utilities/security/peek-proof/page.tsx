@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/security/peek-proof',
         en: 'https://www.theutilhub.com/en/utilities/security/peek-proof',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/security/peek-proof',
       },
     },
     openGraph: {

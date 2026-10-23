@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/ac-capacity-calc',
         en: 'https://www.theutilhub.com/en/utilities/lifestyle/ac-capacity-calc',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/ac-capacity-calc',
       },
     },
     openGraph: {

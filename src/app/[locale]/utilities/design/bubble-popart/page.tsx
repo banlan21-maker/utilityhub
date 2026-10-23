@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/design/bubble-popart',
         en: 'https://www.theutilhub.com/en/utilities/design/bubble-popart',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/design/bubble-popart',
       },
     },
     openGraph: {

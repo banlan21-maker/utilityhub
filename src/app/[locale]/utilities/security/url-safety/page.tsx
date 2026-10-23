@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/security/url-safety',
         en: 'https://www.theutilhub.com/en/utilities/security/url-safety',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/security/url-safety',
       },
     },
     openGraph: {

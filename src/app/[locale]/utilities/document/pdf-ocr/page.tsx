@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/document/pdf-ocr',
         en: 'https://www.theutilhub.com/en/utilities/document/pdf-ocr',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/document/pdf-ocr',
       },
     },
     openGraph: {

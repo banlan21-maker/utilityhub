@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/document/img-pdf-converter',
         en: 'https://www.theutilhub.com/en/utilities/document/img-pdf-converter',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/document/img-pdf-converter',
       },
     },
     openGraph: {

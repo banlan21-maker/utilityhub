@@ -442,7 +442,7 @@ export default function GymPlateCalcClient() {
       />
 
       {/* Related Tools */}
-      <RelatedTools toolId="utilities/lifestyle/gym-plate-calc" limit={3} />
+      <RelatedTools toolId="utilities/lifestyle/gym-plate-calc" />
 
       {/* Ad */}
       <div className={s.ad_placeholder}>{t('ad_text')}</div>

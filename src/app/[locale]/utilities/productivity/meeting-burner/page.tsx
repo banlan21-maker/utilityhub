@@ -21,6 +21,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/meeting-burner',
         en: 'https://www.theutilhub.com/en/utilities/productivity/meeting-burner',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/meeting-burner',
       },
     },
     openGraph: {

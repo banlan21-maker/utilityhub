@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/security/privacy-masking',
         en: 'https://www.theutilhub.com/en/utilities/security/privacy-masking',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/security/privacy-masking',
       },
     },
     openGraph: {

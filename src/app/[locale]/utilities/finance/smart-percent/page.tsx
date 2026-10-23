@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/finance/smart-percent',
         en: 'https://www.theutilhub.com/en/utilities/finance/smart-percent',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/smart-percent',
       },
     },
     openGraph: {

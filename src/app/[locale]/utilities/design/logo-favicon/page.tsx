@@ -24,6 +24,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/design/logo-favicon',
         en: 'https://www.theutilhub.com/en/utilities/design/logo-favicon',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/design/logo-favicon',
       },
     },
     openGraph: {

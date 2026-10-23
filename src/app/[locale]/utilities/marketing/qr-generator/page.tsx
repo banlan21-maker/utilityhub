@@ -22,6 +22,7 @@ export async function generateMetadata({
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/marketing/qr-generator',
         en: 'https://www.theutilhub.com/en/utilities/marketing/qr-generator',
+        'x-default': 'https://www.theutilhub.com/ko/utilities/marketing/qr-generator',
       },
     },
     openGraph: {
