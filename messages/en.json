@@ -366,7 +366,7 @@
   },
   "Vat": {
     "title": "🧾 VAT Calculator",
-    "description": "Add VAT to a net price or extract the supply amount from a VAT-inclusive total.",
+    "description": "Add or split Korean VAT, and estimate the VAT you will pay at your return, including simplified taxpayers.",
     "mode": {
       "add": "Add VAT",
       "extract": "Extract VAT"
