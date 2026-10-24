@@ -1,99 +1,94 @@
 import type { Metadata } from 'next';
 import AcCapacityCalcClient from './AcCapacityCalcClient';
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/lifestyle/ac-capacity-calc';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? '에어컨 용량 산정기 — 평형 자동 계산 | Utility Hub'
-    : 'Air Conditioner Capacity Calculator | Utility Hub';
+    ? '에어컨 평형 계산기 — 방·아파트 거실·매장 몇 평형? kW 환산 | Utility Hub'
+    : 'Air Conditioner Size Calculator — Pyeong Class & kW for Rooms, Apartments, Shops | Utility Hub';
   const description = isKo
-    ? '식당·카페·사무실·아파트 등 실평수와 환경 조건 입력으로 적정 에어컨 용량(kW·평형)을 즉시 산정. 층고·업종·일사량·단열 상태 반영 상세 리포트 제공.'
-    : 'Calculate the right air conditioner capacity (kW) for commercial and residential spaces. Factors in ceiling height, sun exposure, insulation, floor level, and occupancy load.';
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/lifestyle/ac-capacity-calc`;
+    ? '방 면적, 아파트 평형, 매장 업종과 인원으로 몇 평형 에어컨이 맞는지 계산합니다. 34평형 아파트 거실은 17평형 스탠드처럼 제조사 기준(냉방면적 1㎡당 약 123W)으로 냉방능력 kW까지 알려 줍니다.'
+    : 'Find the right air conditioner pyeong class and cooling capacity (kW) for a room, an apartment living room or a shop, based on manufacturer cooling-area ratings.';
+  const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,
     description,
     alternates: {
       canonical,
       languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/ac-capacity-calc',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/ac-capacity-calc',
-        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/ac-capacity-calc',
+        ko: `${BASE}/ko${PATH}`,
+        en: `${BASE}/en${PATH}`,
+        'x-default': `${BASE}/ko${PATH}`,
       },
     },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: 'Utility Hub',
-      locale: isKo ? 'ko_KR' : 'en_US',
-      type: 'website',
-    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
     twitter: { card: 'summary_large_image', title, description },
   };
 }
 
-const softwareSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: '에어컨 용량 산정기',
-  alternateName: 'Air Conditioner Capacity Calculator',
-  operatingSystem: 'Web Browser',
-  applicationCategory: 'UtilitiesApplication',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-  url: 'https://www.theutilhub.com/ko/utilities/lifestyle/ac-capacity-calc',
-  description: '식당·카페·사무실·아파트 등 실평수와 환경 조건 입력으로 적정 에어컨 용량(kW·평형)을 즉시 산정. 층고·업종·일사량·단열 상태 반영 상세 리포트 제공.',
-};
+const SCHEMA_TEXT = {
+  ko: {
+    name: '에어컨 평형 계산기',
+    description: '방·아파트 거실·매장에 맞는 에어컨 평형과 냉방능력(kW)을 제조사 냉방면적 기준으로 계산하는 무료 도구입니다.',
+    faqs: [
+      { q: '34평 아파트면 34평형 에어컨을 사야 하나요?', a: '아닙니다. 거실 스탠드는 공급면적의 절반 이상을 기준으로 고르므로 34평형 아파트는 17평형 스탠드가 기본이고, 남향·베란다 확장형이면 18~20평형을 봅니다.' },
+      { q: '평형과 kW는 어떻게 바꿔 보나요?', a: '제조사 사양표 기준 냉방면적 1㎡당 약 123W입니다. 6평형은 약 2.4kW, 10평형은 약 4.1kW, 17평형은 약 6.9kW, 30평형은 약 12.2kW입니다.' },
+      { q: '용량을 넉넉하게 사면 더 좋지 않나요?', a: '너무 크면 켜졌다 꺼졌다를 반복해 습기를 덜 빼고 구입비도 오릅니다. 한 단계 큰 정도는 괜찮지만 두세 단계 이상 키우는 것은 권하지 않습니다.' },
+      { q: '천장이 높으면 얼마나 더 필요한가요?', a: '일반 천장 2.4m 기준으로 높이에 비례해 2.7m는 약 12.5%, 3m는 25%, 3.6m는 50% 더 필요합니다.' },
+      { q: '보정 비율은 어디서 나온 값인가요?', a: '평형·냉방면적·kW 관계와 거실 기준은 제조사 사양표와 LG전자 선택 가이드를 따랐고, 창 방향·층·업종 가산치는 현장 경험치입니다.' },
+    ],
+  },
+  en: {
+    name: 'Air Conditioner Size Calculator',
+    description: 'Free tool to find the right air conditioner pyeong class and cooling capacity (kW) for rooms, apartment living rooms and shops.',
+    faqs: [
+      { q: 'Does a 34-pyeong apartment need a 34-pyeong AC?', a: 'No. A living-room floor unit is sized from at least half the supply area, so a 34-pyeong apartment needs a 17-pyeong unit, or 18–20 if it faces south with an enclosed balcony.' },
+      { q: 'How do pyeong classes convert to kW?', a: 'Spec sheets give about 123 W per ㎡ of cooling area: 6-pyeong ≈ 2.4 kW, 10-pyeong ≈ 4.1 kW, 17-pyeong ≈ 6.9 kW, 30-pyeong ≈ 12.2 kW.' },
+      { q: 'Is a bigger unit always better?', a: 'An oversized unit cycles on and off and removes less humidity. One class up is fine; two or three classes larger is not recommended.' },
+      { q: 'Where do the add-on percentages come from?', a: 'The class, area and kW relationship follows manufacturer spec sheets and LG Electronics\' guide; direction, floor and business add-ons are installer rules of thumb.' },
+    ],
+  },
+} as const;
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: '30평이면 30평형 에어컨을 사면 되지 않나요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '아닙니다. 에어컨 \'평형\'은 단순 면적 기준이 아니라 냉방 능력(kW) 기준입니다. 실제 냉방 부하는 층고, 창문 방향, 단열 상태, 층 위치, 업종 발열, 수용 인원에 따라 크게 달라집니다. 예를 들어 오픈 천장 서향 30평 고기집은 단순 30평형보다 2배 이상 큰 용량이 필요할 수 있습니다.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '층고(천장 높이)가 왜 중요한가요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '냉방 부하는 평면 면적뿐 아니라 공간의 부피(면적 × 층고)에 비례합니다. 표준 층고(2.5m)를 기준으로 계산할 때, 오픈 천장(3m 이상)인 경우 같은 평수라도 냉방해야 할 공기량이 1.2~1.5배 더 많아집니다. 최근 인기 있는 오픈 천장 카페나 복층 식당에서 에어컨이 힘을 못 쓰는 주된 이유입니다.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '고기집이나 PC방은 왜 그렇게 용량이 많이 필요한가요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '고기집은 테이블마다 직화 불판을 사용하고 주방에서도 강한 화력을 씁니다. PC방은 수십~수백 대의 PC와 모니터가 지속적으로 열을 발생시킵니다. 이런 내부 발열은 에어컨이 제거해야 할 열 부하에 그대로 추가됩니다. 고기집의 경우 동일 면적 사무실 대비 최대 1.6배, PC방은 1.4배의 냉방 용량이 필요합니다.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '결과에서 최소~최대 범위로 알려주는 이유는 무엇인가요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '냉방 부하 계산은 입력 조건의 정확도에 따라 실제값과 차이가 있을 수 있습니다. 최솟값은 입력 조건 그대로 산정한 이론값이며, 최댓값은 10% 안전 마진을 더한 권장값입니다. 일반적으로 최댓값 이상의 제품을 선택하는 것이 안정적인 냉방을 위해 권장됩니다.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '이 툴의 결과를 공식 자료로 사용해도 되나요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '이 툴의 계산 결과는 KRAQ 기준 약식 계산법을 참고한 추정치로, 참고용으로만 제공됩니다. 실제 에어컨 용량 선정 및 설비 공사는 반드시 전문 냉동공조 업체의 현장 실사와 정밀 부하 계산을 통해 결정하시기 바랍니다.',
-      },
-    },
-  ],
-};
+export default async function AcCapacityCalcPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const text = locale === 'ko' ? SCHEMA_TEXT.ko : SCHEMA_TEXT.en;
 
-export default function AcCapacityCalcPage() {
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: text.name,
+    operatingSystem: 'Web Browser',
+    applicationCategory: 'UtilitiesApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    url: `${BASE}/${locale}${PATH}`,
+    inLanguage: locale,
+    description: text.description,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: text.faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />

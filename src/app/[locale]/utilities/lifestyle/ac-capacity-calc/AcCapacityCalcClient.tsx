@@ -1,746 +1,395 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useLocale } from 'next-intl';
-import { Wind, AlertTriangle, Copy, Check } from 'lucide-react';
+import { Snowflake, Copy, Check } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import {
+  calcAc, splitUnits, classToKw, SQM_PER_PYEONG, BUSINESS_EXTRA, SUN_EXTRA,
+  WALL_CLASSES, STAND_CLASSES, type SpaceMode, type SunSide, type Business,
+} from '@/lib/acCapacity';
 import s from './ac-capacity-calc.module.css';
 
-const CEILING_FACTOR: Record<string, number> = { standard: 1.0, high: 1.2, open: 1.5 };
-const FLOOR_FACTOR: Record<string, number> = { basement: 1.05, ground: 1.05, middle: 1.0, top: 1.15 };
-const SUN_FACTOR: Record<string, number> = { north: 0.9, east: 1.0, south: 1.1, west: 1.15, none: 0.85 };
-const WINDOW_FACTOR: Record<string, number> = { single: 1.1, double: 1.0, full: 1.25 };
-const INSULATION_FACTOR: Record<string, number> = { old: 1.15, normal: 1.0, new: 0.9 };
-const BUSINESS_HEAT_FACTOR: Record<string, number> = {
-  office: 1.0,
-  cafe: 1.15,
-  restaurant: 1.25,
-  korean_bbq: 1.60,
-  gym: 1.35,
-  pc_room: 1.40,
-  academy: 1.20,
-  retail: 1.05,
-  salon: 1.15,
+const decimalInput = (v: string) => {
+  const [int, ...dec] = v.replace(/[^0-9.]/g, '').split('.');
+  return dec.length ? `${int}.${dec.join('').slice(0, 2)}` : int;
 };
-const ROOM_FACTOR: Record<string, number> = {
-  living: 1.0,
-  bedroom: 0.85,
-  kitchen: 1.2,
-  home_office: 1.1,
-};
+
+const BUSINESSES: Business[] = ['office', 'retail', 'cafe', 'salon', 'academy', 'restaurant', 'gym', 'pc_room', 'bbq'];
+const SUNS: SunSide[] = ['north', 'east', 'south', 'west'];
+const CEILINGS = [2.4, 2.7, 3, 3.5, 4];
+const LIVING_PRESETS = [24, 32, 34, 45];
+const pct = (r: number) => `+${Math.round(r * 100)}%`;
+
+const TEXT = {
+  ko: {
+    title: '에어컨 평형 계산기',
+    subtitle: '방·원룸, 아파트 거실, 매장의 면적과 조건으로 몇 평형 에어컨이 맞는지, 냉방능력(kW)은 얼마인지 계산합니다.',
+    tabs: { room: ['방·원룸', '방 면적 = 냉방면적'], living: ['아파트 거실', '스탠드, 평형 ÷ 2'], commercial: ['매장·사무실', '업종 발열·인원'] },
+    areaRoom: '냉방할 방 면적', areaCommercial: '냉방할 매장 면적', areaLiving: '아파트 평형',
+    areaHintRoom: '침대·가구 포함 방 바닥 면적입니다. 방 여러 개를 한 대로 식히려면 합친 면적을 넣으세요.',
+    areaHintCommercial: '주방을 뺀 홀·작업 공간 면적입니다.',
+    livingHint: (supply: string, half: string) => `공급면적 약 ${supply}㎡의 절반인 ${half}㎡를 거실·주방 냉방면적으로 봅니다(제조사 안내 기준).`,
+    sun: '주로 햇빛이 드는 창 방향', business: '업종', ceiling: '천장 높이', occupants: '평소 머무는 인원',
+    occupantsHint: '2명까지는 기본에 포함, 그 이상은 1명당 약 120W를 더합니다.',
+    conditions: '조건', suns: { north: '북향', east: '동향', south: '남향', west: '서향' },
+    bigWindow: '큰 창·베란다 확장', topFloor: '꼭대기층(지붕 아래)', oldInsulation: '오래된 단열·홑창', kitchen: '거실과 이어진 주방',
+    businesses: { office: '사무실', retail: '일반 매장', cafe: '카페', salon: '미용실', academy: '학원', restaurant: '식당', gym: '헬스장', pc_room: 'PC방', bbq: '고기집(직화)' },
+    resultTitle: '계산 결과', recommend: '추천 제품', classUnit: '평형',
+    units: { wall: '벽걸이', stand: '스탠드', multi: '여러 대로 나눠 설치' },
+    unitHint: { wall: '이 크기는 벽걸이가 일반적입니다.', stand: '매장은 같은 평형의 천장형(카세트)도 고를 수 있습니다.', multi: '40평형을 넘으면 한 대로는 부족합니다.' },
+    split: (n: number, c: number) => `예: ${c}평형 스탠드·천장형 ${n}대`,
+    neededArea: '필요 냉방면적', capacity: '필요 냉방능력', capSub: (kcal: string) => `약 ${kcal} kcal/h`,
+    pyUnit: '평', breakdown: '어디서 늘었나',
+    bk: { base: '기본 면적', sun: '창 방향', bigWindow: '큰 창·확장', topFloor: '꼭대기층', insulation: '단열', kitchen: '주방', ceiling: '천장 높이', business: '업종 발열', occupants: '추가 인원' } as Record<string, string>,
+    capped: '가산 비율 합계가 80%를 넘어 80%로 맞췄습니다. 이런 공간은 현장 부하 계산을 꼭 받으세요.',
+    copy: '결과 복사', copied: '복사됨',
+    copyText: (cls: string, sqm: string, py: string, kw: string) => `에어컨 추천: ${cls} / 필요 냉방면적 ${sqm}㎡(${py}평) / 냉방능력 약 ${kw}kW`,
+    empty: '면적을 입력하면 결과가 나옵니다.',
+    tableTitle: '평형별 냉방면적·냉방능력',
+    tableHead: ['제품 평형', '종류', '냉방면적', '냉방능력'],
+    wallLabel: '벽걸이', standLabel: '스탠드',
+    source: '기준: 제품 평형 = 냉방면적 ÷ 3.3㎡, 냉방능력 ≈ 냉방면적 × 123W(제조사 사양표 6평형 18.7㎡·2.3kW, 17평형 56.9㎡·7.0kW). 거실은 공급면적의 ½ 이상, 남향·확장형은 한 단계 위(LG전자 선택 가이드). 창 방향·층·단열·업종·인원 가산은 현장 경험치이며 정밀 부하 계산을 대신하지 않습니다.',
+  },
+  en: {
+    title: 'Air Conditioner Size Calculator',
+    subtitle: 'Find the right Korean AC "pyeong class" and cooling capacity (kW) for a room, an apartment living room or a shop.',
+    tabs: { room: ['Room / studio', 'Room area = cooling area'], living: ['Apartment living', 'Floor-standing, class ÷ 2'], commercial: ['Shop / office', 'Business heat, people'] },
+    areaRoom: 'Room area to cool', areaCommercial: 'Shop floor area to cool', areaLiving: 'Apartment pyeong class',
+    areaHintRoom: 'Floor area of the room. To cool several rooms with one unit, add their areas.',
+    areaHintCommercial: 'Seating and work area, excluding the kitchen.',
+    livingHint: (supply: string, half: string) => `Half of the ≈${supply}㎡ supply area (${half}㎡) is treated as the living room and kitchen, as manufacturers advise.`,
+    sun: 'Direction of the main windows', business: 'Business type', ceiling: 'Ceiling height', occupants: 'People usually inside',
+    occupantsHint: 'Two people are included; each extra person adds about 120 W.',
+    conditions: 'Conditions', suns: { north: 'North', east: 'East', south: 'South', west: 'West' },
+    bigWindow: 'Large windows / enclosed balcony', topFloor: 'Top floor (under the roof)', oldInsulation: 'Old insulation / single glazing', kitchen: 'Open kitchen',
+    businesses: { office: 'Office', retail: 'Retail shop', cafe: 'Café', salon: 'Hair salon', academy: 'Tutoring academy', restaurant: 'Restaurant', gym: 'Gym', pc_room: 'PC café', bbq: 'Korean BBQ (grill)' },
+    resultTitle: 'Result', recommend: 'Recommended unit', classUnit: '-pyeong class',
+    units: { wall: 'Wall-mounted', stand: 'Floor-standing', multi: 'Split across several units' },
+    unitHint: { wall: 'A wall-mounted unit is usual at this size.', stand: 'Shops can also use a ceiling cassette of the same class.', multi: 'Above a 40-pyeong class one unit is not enough.' },
+    split: (n: number, c: number) => `e.g. ${n} × ${c}-pyeong floor or ceiling units`,
+    neededArea: 'Cooling area needed', capacity: 'Cooling capacity needed', capSub: (btu: string) => `≈ ${btu} BTU/h`,
+    pyUnit: 'py', breakdown: 'Where it comes from',
+    bk: { base: 'Base area', sun: 'Window direction', bigWindow: 'Large windows', topFloor: 'Top floor', insulation: 'Insulation', kitchen: 'Kitchen', ceiling: 'Ceiling height', business: 'Business heat', occupants: 'Extra people' } as Record<string, string>,
+    capped: 'The add-ons exceeded 80% and were capped at 80%. Get an on-site load calculation for a space like this.',
+    copy: 'Copy result', copied: 'Copied',
+    copyText: (cls: string, sqm: string, py: string, kw: string) => `AC: ${cls} / cooling area ${sqm}㎡ (${py} py) / about ${kw} kW`,
+    empty: 'Enter an area to see the result.',
+    tableTitle: 'Cooling area and capacity by class',
+    tableHead: ['Class', 'Type', 'Cooling area', 'Capacity'],
+    wallLabel: 'Wall', standLabel: 'Floor',
+    source: 'Basis: product class = cooling area ÷ 3.3㎡; capacity ≈ cooling area × 123 W (spec sheets: 6-pyeong 18.7㎡ / 2.3 kW, 17-pyeong 56.9㎡ / 7.0 kW). Living rooms use at least half the supply area; south-facing or enclosed-balcony homes go one class up (LG Electronics buying guide). Direction, floor, insulation, business and occupancy add-ons are rules of thumb, not a full load calculation.',
+  },
+} as const;
 
 export default function AcCapacityCalcClient() {
-  const locale = useLocale();
-  const isKo = locale === 'ko';
+  const isKo = useLocale() === 'ko';
+  const T = isKo ? TEXT.ko : TEXT.en;
+  const nf = (n: number, d = 1) => n.toLocaleString(isKo ? 'ko-KR' : 'en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
 
-  const [spaceType, setSpaceType] = useState<'commercial' | 'residential'>('residential');
-  const [pyeong, setPyeong] = useState<string>('');
-  const [ceiling, setCeiling] = useState<'standard' | 'high' | 'open'>('standard');
-  const [floorPos, setFloorPos] = useState<string>('middle');
-  const [sunDir, setSunDir] = useState<string>('east');
-  const [windowType, setWindowType] = useState<string>('double');
-  const [insulation, setInsulation] = useState<string>('normal');
-  const [businessType, setBusinessType] = useState<string>('office');
-  const [maxOccupants, setMaxOccupants] = useState<string>('');
-  const [roomUsage, setRoomUsage] = useState<string>('living');
-  const [occupants, setOccupants] = useState<string>('');
+  const [mode, setMode] = useState<SpaceMode>('room');
+  const [areaText, setAreaText] = useState('');
+  const [areaUnit, setAreaUnit] = useState<'sqm' | 'pyeong'>('sqm');
+  const [sun, setSun] = useState<SunSide>('east');
+  const [bigWindow, setBigWindow] = useState(false);
+  const [topFloor, setTopFloor] = useState(false);
+  const [oldInsulation, setOldInsulation] = useState(false);
+  const [kitchen, setKitchen] = useState(false);
+  const [ceilingM, setCeilingM] = useState(2.4);
+  const [occText, setOccText] = useState('2');
+  const [business, setBusiness] = useState<Business>('cafe');
   const [copied, setCopied] = useState(false);
 
-  const result = useMemo(() => {
-    const p = parseFloat(pyeong);
-    if (!p || p <= 0) return null;
-    if (spaceType === 'commercial' && (!parseFloat(maxOccupants) || parseFloat(maxOccupants) <= 0)) return null;
-    if (spaceType === 'residential' && (!parseFloat(occupants) || parseFloat(occupants) <= 0)) return null;
+  const areaNum = Number(areaText) || 0;
+  // 거실은 아파트 평형 그대로, 방·매장은 ㎡로 맞춰서 넘긴다
+  const area = mode === 'living' ? areaNum : areaUnit === 'pyeong' ? areaNum * SQM_PER_PYEONG : areaNum;
+  const r = calcAc({
+    mode, area, sun, bigWindow, topFloor, oldInsulation,
+    kitchen: mode === 'living' && kitchen, ceilingM, occupants: Number(occText) || 0, business,
+  });
 
-    const BASE_LOAD_PER_PYEONG = spaceType === 'commercial' ? 200 : 150;
-    const areaSqm = p * 3.3058;
-    const baseLoad = p * BASE_LOAD_PER_PYEONG;
+  // 가산 비율이 상한(80%)에 걸리면 항목별 몫도 같은 비율로 줄여서 보여 준다
+  const extraSum = r ? r.extras.reduce((sum, e) => sum + e.ratio, 0) : 0;
+  const scale = extraSum > 0 && r ? (r.factor - 1) / extraSum : 1;
+  const rows = r ? [
+    { key: 'base', sqm: r.baseSqm, extra: false },
+    ...r.extras.map(e => ({ key: e.key, sqm: r.baseSqm * e.ratio * scale, extra: true })),
+    ...(r.occupantSqm > 0 ? [{ key: 'occupants', sqm: r.occupantSqm, extra: true }] : []),
+  ] : [];
 
-    const factor_floor = FLOOR_FACTOR[floorPos];
-    const factor_sun = SUN_FACTOR[sunDir];
-    const factor_window = WINDOW_FACTOR[windowType];
-    const factor_insulation = INSULATION_FACTOR[insulation];
-    const factor_ceiling = CEILING_FACTOR[ceiling];
-
-    const floorExtra = baseLoad * (factor_floor - 1);
-    const floorAdjusted = baseLoad + floorExtra;
-    const sunExtra = floorAdjusted * (factor_sun - 1);
-    const sunAdjusted = floorAdjusted + sunExtra;
-    const windowExtra = sunAdjusted * (factor_window - 1);
-    const windowAdjusted = sunAdjusted + windowExtra;
-    const insulationExtra = windowAdjusted * (factor_insulation - 1);
-    const insulationAdjusted = windowAdjusted + insulationExtra;
-
-    const ceilingExtra = insulationAdjusted * (factor_ceiling - 1);
-    const envAdjustedLoad = insulationAdjusted + ceilingExtra;
-
-    let spaceFactorExtra = 0;
-    if (spaceType === 'commercial') {
-      spaceFactorExtra = envAdjustedLoad * (BUSINESS_HEAT_FACTOR[businessType] - 1);
-    } else {
-      spaceFactorExtra = envAdjustedLoad * (ROOM_FACTOR[roomUsage] - 1);
-    }
-
-    const occ = spaceType === 'commercial' ? parseFloat(maxOccupants) : parseFloat(occupants);
-    const occupantLoad = spaceType === 'commercial' ? occ * 100 : occ * 80;
-
-    const totalLoadW = envAdjustedLoad + spaceFactorExtra + occupantLoad;
-    const totalLoadKw = totalLoadW / 1000;
-    // 기준: 기저부하 기반 단위환산 (상업 0.2kW/평형, 가정 0.15kW/평형)
-    const kWPerPyeong = BASE_LOAD_PER_PYEONG / 1000;
-    const recommendedPyeong = Math.ceil(totalLoadKw / kWPerPyeong);
-    const recommendedKwMin = totalLoadKw;
-    const recommendedKwMax = totalLoadKw * 1.1;
-    const simpleCapacityKw = p * kWPerPyeong; // 보정 없이 평수만 반영한 기준값
-    const loadMultiplier = Number((totalLoadKw / simpleCapacityKw).toFixed(1));
-
-    const loadBreakdown = {
-      baseLoad,
-      floorExtra,
-      sunExtra,
-      windowExtra,
-      insulationExtra,
-      ceilingExtra,
-      businessExtra: spaceType === 'commercial' ? spaceFactorExtra : 0,
-      roomExtra: spaceType === 'residential' ? spaceFactorExtra : 0,
-      occupantLoad,
-    };
-
-    return {
-      areaSqm,
-      totalLoadW,
-      totalLoadKw,
-      recommendedPyeong,
-      recommendedKwMin,
-      recommendedKwMax,
-      loadMultiplier,
-      simpleCapacityKw,
-      loadBreakdown,
-    };
-  }, [spaceType, pyeong, ceiling, floorPos, sunDir, windowType, insulation, businessType, maxOccupants, roomUsage, occupants]);
-
-  const getAcTypeRecommendation = (pyeongRating: number) => {
-    if (pyeongRating <= 10) return 0;
-    if (pyeongRating <= 25) return 1;
-    if (pyeongRating <= 50) return 2;
-    return 3;
-  };
-
-  const acTypes = isKo
-    ? [
-        { range: '~10평형', label: '벽걸이형 1대' },
-        { range: '11~25평형', label: '스탠드형 1대 또는 벽걸이 2대' },
-        { range: '26~50평형', label: '스탠드형 + 벽걸이 조합 또는 중형 시스템에어컨' },
-        { range: '51평형~', label: '대형 시스템에어컨 (멀티형) 또는 패키지에어컨' },
-      ]
-    : [
-        { range: '~10 pyeong', label: 'Wall-mount (single unit)' },
-        { range: '11~25 pyeong', label: 'Standing unit or 2 wall-mounts' },
-        { range: '26~50 pyeong', label: 'Standing + wall-mount combo or mid-size system AC' },
-        { range: '51+ pyeong', label: 'Large system AC (multi-type) or package AC' },
-      ];
-
-  const activeAcType = result ? getAcTypeRecommendation(result.recommendedPyeong) : -1;
-
-  const breakdownLabels: Record<string, { ko: string; en: string }> = {
-    baseLoad: { ko: '기본 냉방 부하', en: 'Base cooling load' },
-    floorExtra: { ko: '층위 보정', en: 'Floor adjustment' },
-    sunExtra: { ko: '일사 보정', en: 'Solar adjustment' },
-    windowExtra: { ko: '창문 보정', en: 'Window adjustment' },
-    insulationExtra: { ko: '단열 보정', en: 'Insulation adjustment' },
-    ceilingExtra: { ko: '층고 보정', en: 'Ceiling adjustment' },
-    businessExtra: { ko: '업종 발열 부하', en: 'Business heat load' },
-    roomExtra: { ko: '공간 용도 조정', en: 'Room usage adjustment' },
-    occupantLoad: { ko: '인원 발열 부하', en: 'Occupant heat load' },
-  };
-
-  const ceilingLabel = isKo
-    ? ({ standard: '표준 층고 (2.3~2.5m)', high: '높은 층고 (2.5~3.0m)', open: '오픈 천장 (3.0m+)' } as Record<string, string>)[ceiling]
-    : ({ standard: 'Standard (2.3~2.5m)', high: 'High (2.5~3.0m)', open: 'Open ceiling (3.0m+)' } as Record<string, string>)[ceiling];
-
-  const spaceLabel = isKo
-    ? (spaceType === 'commercial' ? '상업 공간' : '가정용')
-    : (spaceType === 'commercial' ? 'Commercial' : 'Residential');
-
-  const copyText = result
-    ? `[에어컨 용량 산정 결과]
-공간: ${spaceLabel} / ${pyeong}평 (${result.areaSqm.toFixed(1)}m²)
-층고: ${ceilingLabel}
-총 냉방 부하: ${result.totalLoadKw.toFixed(1)}kW
-권장 용량: 최소 ${result.recommendedKwMin.toFixed(1)}kW ~ ${result.recommendedKwMax.toFixed(1)}kW
-권장 평형: 약 ${result.recommendedPyeong}평형 이상
-단순 평수 대비: ${result.loadMultiplier}배 용량 필요
-※ KRAQ 기준 약식 계산 / 전문 업체 확인 권장
-🌬️ theutilhub.com/utilities/lifestyle/ac-capacity-calc`
+  const split = r && r.productClass === null ? splitUnits(r.neededPyeong) : null;
+  const classLabel = r
+    ? r.productClass !== null
+      ? (isKo ? `${r.productClass}평형 ${T.units[r.unit]}` : `${r.productClass}${T.classUnit} ${T.units[r.unit].toLowerCase()}`)
+      : T.split(split!.count, split!.cls)
     : '';
 
-  async function handleCopy() {
-    if (!result) return;
+  // 거실 스탠드는 설명이 필요 없고, 매장 스탠드에만 천장형 안내를 붙인다
+  const unitHint = !r ? '' : r.unit === 'stand' ? (mode === 'commercial' ? T.unitHint.stand : '') : T.unitHint[r.unit];
+
+  const copy = async () => {
+    if (!r) return;
     try {
-      await navigator.clipboard.writeText(copyText);
+      await navigator.clipboard.writeText(T.copyText(classLabel, nf(r.neededSqm), nf(r.neededPyeong), nf(r.capacityKw)));
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      alert(isKo ? '❌ 복사 실패: 브라우저 설정을 확인하세요' : '❌ Copy failed: check browser settings');
-      setTimeout(() => setCopied(false), 3000);
-    }
-  }
+      setTimeout(() => setCopied(false), 1500);
+    } catch { /* 클립보드 권한이 없으면 무시 */ }
+  };
 
-  const breakdownKeys = [
-    'baseLoad',
-    'floorExtra',
-    'sunExtra',
-    'windowExtra',
-    'insulationExtra',
-    'ceilingExtra',
-    'businessExtra',
-    'roomExtra',
-    'occupantLoad',
-  ] as const;
+  const toggle = (on: boolean, set: (v: boolean) => void, label: string, extra: string) => (
+    <label className={`${s.toggle} ${on ? s.toggle_on : ''}`}>
+      <input type="checkbox" checked={on} onChange={e => set(e.target.checked)} />
+      {label}
+      <small>{extra}</small>
+    </label>
+  );
 
-  const totalAbsLoad = result
-    ? breakdownKeys.reduce((sum, key) => sum + Math.abs(result.loadBreakdown[key as keyof typeof result.loadBreakdown]), 0)
-    : 1;
-
-  const title = isKo ? '에어컨 용량 산정기' : 'AC Capacity Calculator';
-  const desc = isKo
-    ? '실평수와 환경 조건 입력으로 적정 에어컨 용량(kW·평형)을 즉시 산정하세요.'
-    : 'Calculate the right air conditioner capacity (kW) for your space instantly.';
+  const livingSupply = areaNum * SQM_PER_PYEONG;
+  const unitSuffix = mode === 'living' ? (isKo ? '평형' : 'py') : areaUnit === 'sqm' ? '㎡' : (isKo ? '평' : 'py');
 
   return (
     <div className={s.container}>
       <NavigationActions />
 
-      {/* Header */}
-      <header className={s.fin_header}>
-        <div
-          style={{
-            display: 'inline-flex',
-            padding: '1rem',
-            background: 'white',
-            borderRadius: '1.5rem',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <Wind size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.fin_title}>{isKo ? '에어컨 용량 산정기' : 'AC Capacity Calculator'}</h1>
-        <p className={s.fin_subtitle}>
-          {isKo
-            ? '실평수·층고·환경 조건으로 적정 에어컨 용량(kW)을 즉시 산정합니다'
-            : 'Instantly calculate the right AC capacity (kW) based on area, ceiling height, and environmental conditions'}
-        </p>
+      <header className={s.header}>
+        <div className={s.icon_wrap}><Snowflake size={40} /></div>
+        <h1 className={s.title}>{T.title}</h1>
+        <p className={s.subtitle}>{T.subtitle}</p>
       </header>
 
-      {/* Input Panel */}
-      <section className={s.fin_panel}>
-        {/* Space Type Selection */}
-        <div className={s.type_grid}>
-          <button
-            className={`${s.type_card} ${spaceType === 'commercial' ? s.type_card_active : ''}`}
-            onClick={() => setSpaceType('commercial')}
-            aria-label={isKo ? '상업 공간 선택' : 'Select commercial space'}
-          >
-            <span className={s.type_emoji}>🏪</span>
-            <span className={s.type_label}>{isKo ? '상업 공간' : 'Commercial'}</span>
+      <div className={s.tabs} role="tablist" aria-label={isKo ? '공간 종류' : 'Space type'}>
+        {(['room', 'living', 'commercial'] as SpaceMode[]).map(m => (
+          <button key={m} type="button" role="tab" aria-selected={mode === m}
+            className={`${s.tab} ${mode === m ? s.tab_active : ''}`}
+            onClick={() => { setMode(m); setAreaText(''); }}>
+            {T.tabs[m][0]}<small>{T.tabs[m][1]}</small>
           </button>
-          <button
-            className={`${s.type_card} ${spaceType === 'residential' ? s.type_card_active : ''}`}
-            onClick={() => setSpaceType('residential')}
-            aria-label={isKo ? '가정용 선택' : 'Select residential space'}
-          >
-            <span className={s.type_emoji}>🏠</span>
-            <span className={s.type_label}>{isKo ? '가정용' : 'Residential'}</span>
-          </button>
-        </div>
+        ))}
+      </div>
 
-        {/* Common Inputs */}
-        <div className={s.input_grid}>
-          {/* 실평수 */}
-          <div className={s.input_group}>
-            <label className={s.label} htmlFor="pyeong">
-              {isKo ? '실평수 (평)' : 'Floor Area (pyeong)'}
+      <section className={s.card}>
+        <div className={s.grid2}>
+          <div>
+            <label className={s.field_label} htmlFor="ac-area">
+              {mode === 'living' ? T.areaLiving : mode === 'room' ? T.areaRoom : T.areaCommercial}
             </label>
-            <input
-              id="pyeong"
-              type="number"
-              className={s.input}
-              value={pyeong}
-              onChange={(e) => setPyeong(e.target.value)}
-              placeholder={isKo ? '예: 30' : 'e.g. 30'}
-              min={1}
-              step={0.5}
-              aria-label={isKo ? '실평수 입력' : 'Enter floor area in pyeong'}
-            />
-          </div>
-
-          {/* 층고 */}
-          <div className={s.input_group}>
-            <label className={s.label} htmlFor="ceiling">
-              {isKo ? '층고 (천장 높이)' : 'Ceiling Height'}
-            </label>
-            <select
-              id="ceiling"
-              className={s.select}
-              value={ceiling}
-              onChange={(e) => setCeiling(e.target.value as 'standard' | 'high' | 'open')}
-              aria-label={isKo ? '층고 선택' : 'Select ceiling height'}
-            >
-              <option value="standard">{isKo ? '표준 층고 (2.3~2.5m)' : 'Standard (2.3~2.5m)'}</option>
-              <option value="high">{isKo ? '높은 층고 (2.5~3.0m)' : 'High (2.5~3.0m)'}</option>
-              <option value="open">{isKo ? '오픈 천장 (3.0m+)' : 'Open ceiling (3.0m+)'}</option>
-            </select>
-          </div>
-
-          {/* 층 위치 */}
-          <div className={s.input_group}>
-            <label className={s.label} htmlFor="floorPos">
-              {isKo ? '층 위치' : 'Floor Position'}
-            </label>
-            <select
-              id="floorPos"
-              className={s.select}
-              value={floorPos}
-              onChange={(e) => setFloorPos(e.target.value)}
-              aria-label={isKo ? '층 위치 선택' : 'Select floor position'}
-            >
-              <option value="basement">{isKo ? '지하층' : 'Basement'}</option>
-              <option value="ground">{isKo ? '지상 1층' : 'Ground floor'}</option>
-              <option value="middle">{isKo ? '중간층' : 'Middle floor'}</option>
-              <option value="top">{isKo ? '최상층' : 'Top floor'}</option>
-            </select>
-          </div>
-
-          {/* 창문 방향 */}
-          <div className={s.input_group}>
-            <label className={s.label} htmlFor="sunDir">
-              {isKo ? '창문 방향 (일사 방향)' : 'Window Direction (Sun exposure)'}
-            </label>
-            <select
-              id="sunDir"
-              className={s.select}
-              value={sunDir}
-              onChange={(e) => setSunDir(e.target.value)}
-              aria-label={isKo ? '창문 방향 선택' : 'Select window direction'}
-            >
-              <option value="north">{isKo ? '북향' : 'North'}</option>
-              <option value="east">{isKo ? '동향' : 'East'}</option>
-              <option value="south">{isKo ? '남향' : 'South'}</option>
-              <option value="west">{isKo ? '서향' : 'West'}</option>
-              <option value="none">{isKo ? '창문 없음' : 'No windows'}</option>
-            </select>
-          </div>
-
-          {/* 창문 유형 */}
-          <div className={s.input_group}>
-            <label className={s.label} htmlFor="windowType">
-              {isKo ? '창문 유형' : 'Window Type'}
-            </label>
-            <select
-              id="windowType"
-              className={s.select}
-              value={windowType}
-              onChange={(e) => setWindowType(e.target.value)}
-              aria-label={isKo ? '창문 유형 선택' : 'Select window type'}
-            >
-              <option value="single">{isKo ? '단창 (일반 유리)' : 'Single pane (standard glass)'}</option>
-              <option value="double">{isKo ? '복층 유리 (이중창)' : 'Double pane (insulated glass)'}</option>
-              <option value="full">{isKo ? '통유리 / 대형 창' : 'Full glass / Large window'}</option>
-            </select>
-          </div>
-
-          {/* 단열 상태 */}
-          <div className={s.input_group}>
-            <label className={s.label} htmlFor="insulation">
-              {isKo ? '단열 상태' : 'Insulation Quality'}
-            </label>
-            <select
-              id="insulation"
-              className={s.select}
-              value={insulation}
-              onChange={(e) => setInsulation(e.target.value)}
-              aria-label={isKo ? '단열 상태 선택' : 'Select insulation quality'}
-            >
-              <option value="old">{isKo ? '노후 (15년 이상 건물)' : 'Poor (15+ year old building)'}</option>
-              <option value="normal">{isKo ? '보통 (5~15년)' : 'Normal (5~15 years)'}</option>
-              <option value="new">{isKo ? '신축 (5년 이내)' : 'New (within 5 years)'}</option>
-            </select>
-          </div>
-
-          {/* Commercial-only fields */}
-          {spaceType === 'commercial' && (
-            <>
-              <div className={s.divider} />
-              <div className={`${s.input_group} ${s.full_width} ${s.conditional_section}`}>
-                <label className={s.label} htmlFor="businessType">
-                  {isKo ? '업종 선택' : 'Business Type'}
-                </label>
-                <select
-                  id="businessType"
-                  className={s.select}
-                  value={businessType}
-                  onChange={(e) => setBusinessType(e.target.value)}
-                  aria-label={isKo ? '업종 선택' : 'Select business type'}
-                >
-                  <option value="office">{isKo ? '사무실' : 'Office'}</option>
-                  <option value="cafe">{isKo ? '카페' : 'Cafe'}</option>
-                  <option value="restaurant">{isKo ? '일반 식당' : 'Restaurant'}</option>
-                  <option value="korean_bbq">{isKo ? '고기집 (직화)' : 'Korean BBQ'}</option>
-                  <option value="gym">{isKo ? '헬스장·스포츠센터' : 'Gym / Sports center'}</option>
-                  <option value="pc_room">{isKo ? 'PC방' : 'PC Room'}</option>
-                  <option value="academy">{isKo ? '학원·교육시설' : 'Academy / Education'}</option>
-                  <option value="retail">{isKo ? '소매점·편의점' : 'Retail / Convenience store'}</option>
-                  <option value="salon">{isKo ? '미용실·네일샵' : 'Hair salon / Nail shop'}</option>
-                </select>
-              </div>
-              <div className={`${s.input_group} ${s.conditional_section}`}>
-                <label className={s.label} htmlFor="maxOccupants">
-                  {isKo ? '최대 수용 인원 (명)' : 'Max Occupancy (persons)'}
-                </label>
-                <input
-                  id="maxOccupants"
-                  type="number"
-                  className={s.input}
-                  value={maxOccupants}
-                  onChange={(e) => setMaxOccupants(e.target.value)}
-                  placeholder={isKo ? '예: 30' : 'e.g. 30'}
-                  min={1}
-                  step={1}
-                  aria-label={isKo ? '최대 수용 인원 입력' : 'Enter max occupancy'}
-                />
-                <span className={s.hint_text}>
-                  {isKo ? '최대 동시 이용 인원 기준' : 'Maximum simultaneous occupants'}
-                </span>
-              </div>
-            </>
-          )}
-
-          {/* Residential-only fields */}
-          {spaceType === 'residential' && (
-            <>
-              <div className={s.divider} />
-              <div className={`${s.input_group} ${s.conditional_section}`}>
-                <label className={s.label} htmlFor="roomUsage">
-                  {isKo ? '공간 용도' : 'Room Usage'}
-                </label>
-                <select
-                  id="roomUsage"
-                  className={s.select}
-                  value={roomUsage}
-                  onChange={(e) => setRoomUsage(e.target.value)}
-                  aria-label={isKo ? '공간 용도 선택' : 'Select room usage'}
-                >
-                  <option value="living">{isKo ? '거실' : 'Living room'}</option>
-                  <option value="bedroom">{isKo ? '침실' : 'Bedroom'}</option>
-                  <option value="kitchen">{isKo ? '주방 포함 공간' : 'Kitchen area'}</option>
-                  <option value="home_office">{isKo ? '홈오피스·서재' : 'Home office / Study'}</option>
-                </select>
-              </div>
-              <div className={`${s.input_group} ${s.conditional_section}`}>
-                <label className={s.label} htmlFor="occupants">
-                  {isKo ? '거주 인원 (명)' : 'Occupants (persons)'}
-                </label>
-                <input
-                  id="occupants"
-                  type="number"
-                  className={s.input}
-                  value={occupants}
-                  onChange={(e) => setOccupants(e.target.value)}
-                  placeholder={isKo ? '예: 4' : 'e.g. 4'}
-                  min={1}
-                  step={1}
-                  aria-label={isKo ? '거주 인원 입력' : 'Enter number of occupants'}
-                />
-                <span className={s.hint_text}>
-                  {isKo ? '해당 공간 동시 사용 인원' : 'Simultaneous occupants in this space'}
-                </span>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Result Section */}
-      {result && (
-        <div className={s.result_section}>
-          {/* Main Result Box */}
-          <div className={s.result_main}>
-            <p className={s.result_label}>
-              {isKo ? '권장 에어컨 용량' : 'Recommended AC Capacity'}
-            </p>
-            <p className={s.result_kw}>
-              {isKo
-                ? `최소 ${result.recommendedKwMin.toFixed(1)}kW ~ ${result.recommendedKwMax.toFixed(1)}kW`
-                : `Min ${result.recommendedKwMin.toFixed(1)}kW ~ ${result.recommendedKwMax.toFixed(1)}kW`}
-            </p>
-            <p className={s.result_pyeong}>
-              {isKo
-                ? `(약 ${result.recommendedPyeong}평형 이상 권장)`
-                : `(approx. ${result.recommendedPyeong} pyeong rating or above)`}
-            </p>
-          </div>
-
-          {/* Load Breakdown Report */}
-          <div className={s.report_section}>
-            <p className={s.report_title}>{isKo ? '📊 냉방 부하 항목별 분석' : '📊 Cooling Load Breakdown'}</p>
-            {breakdownKeys.map((key) => {
-              const value = result.loadBreakdown[key as keyof typeof result.loadBreakdown];
-              const label = isKo ? breakdownLabels[key].ko : breakdownLabels[key].en;
-              const absValue = Math.abs(value);
-              const barWidthPct = totalAbsLoad > 0 ? (absValue / totalAbsLoad) * 100 : 0;
-              const isPositive = value > 0;
-              const isZero = value === 0;
-
-              // Skip zero-value business/room extras that don't apply to current space type
-              if (key === 'businessExtra' && spaceType === 'residential') return null;
-              if (key === 'roomExtra' && spaceType === 'commercial') return null;
-
-              return (
-                <div key={key} className={s.report_row}>
-                  <span className={s.report_label}>{label}</span>
-                  <div className={s.report_bar_wrap}>
-                    {isZero ? (
-                      <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>—</span>
-                    ) : (
-                      <div
-                        className={s.report_bar}
-                        style={{
-                          width: `${Math.max(barWidthPct, 2)}%`,
-                          background: isPositive ? 'var(--color-primary)' : '#BFDBFE',
-                        }}
-                        role="progressbar"
-                        aria-valuenow={Math.round(barWidthPct)}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    )}
-                  </div>
-                  <span className={s.report_value}>
-                    {isZero ? '—' : `${value > 0 ? '+' : ''}${Math.round(value)}W`}
-                    {!isPositive && !isZero && (
-                      <span style={{ color: '#94a3b8', fontSize: '0.7rem', marginLeft: '4px' }}>
-                        {isKo ? '(부하 감소)' : '(load reduction)'}
-                      </span>
-                    )}
-                  </span>
-                  <span className={s.report_pct}>
-                    {isZero ? '' : `${Math.round(barWidthPct)}%`}
-                  </span>
+            <div className={s.input_wrap}>
+              <input id="ac-area" className={s.input} inputMode="decimal" placeholder={mode === 'living' ? '34' : areaUnit === 'sqm' ? '33' : '10'}
+                value={areaText} onChange={e => setAreaText(decimalInput(e.target.value))} />
+              <span className={s.suffix}>{unitSuffix}</span>
+            </div>
+            {mode === 'living' ? (
+              <>
+                <div className={s.chips} style={{ marginTop: '0.5rem' }}>
+                  {LIVING_PRESETS.map(p => (
+                    <button key={p} type="button" className={`${s.chip} ${areaText === String(p) ? s.chip_active : ''}`} onClick={() => setAreaText(String(p))}>
+                      {isKo ? `${p}평형` : `${p} py`}
+                    </button>
+                  ))}
                 </div>
-              );
-            })}
-            <div className={`${s.report_row} ${s.report_total}`}>
-              <span className={s.report_label} style={{ fontWeight: 700, color: '#1e293b' }}>
-                {isKo ? '합계' : 'Total'}
-              </span>
-              <div className={s.report_bar_wrap} />
-              <span className={s.report_value} style={{ fontWeight: 700, color: '#8b5cf6' }}>
-                {Math.round(result.totalLoadW)}W
-              </span>
-              <span className={s.report_pct} style={{ fontWeight: 700, color: '#8b5cf6' }}>
-                {result.totalLoadKw.toFixed(2)}kW
-              </span>
-            </div>
-          </div>
-
-          {/* Comparison Box */}
-          <div className={s.compare_box}>
-            <p className={s.compare_title}>{isKo ? '단순 평수 vs 실제 부하 비교' : 'Simple Area vs Actual Load Comparison'}</p>
-            <div className={s.compare_row}>
-              <span>{isKo ? `단순 ${pyeong}평형 기준` : `Simple ${pyeong} pyeong estimate`}</span>
-              <span>{result.simpleCapacityKw.toFixed(1)} kW</span>
-            </div>
-            <div className={s.compare_row}>
-              <span>{isKo ? '본 계산기 권장' : 'This calculator recommends'}</span>
-              <span>{result.recommendedKwMin.toFixed(1)} kW</span>
-            </div>
-            <p className={s.compare_multiplier}>
-              {isKo
-                ? `→ 단순 평수의 ${result.loadMultiplier}배 용량이 필요합니다`
-                : `→ ${result.loadMultiplier}x the capacity of a simple area estimate`}
-            </p>
-          </div>
-
-          {/* AC Type Recommendation */}
-          <div className={s.ac_type_section}>
-            <p className={s.ac_type_title}>{isKo ? '추천 에어컨 유형' : 'Recommended AC Type'}</p>
-            {acTypes.map((type, idx) => (
-              <div
-                key={idx}
-                className={`${s.ac_type_row} ${idx === activeAcType ? s.ac_type_active : s.ac_type_inactive}`}
-              >
-                <span style={{ minWidth: '100px', fontSize: '0.85rem' }}>{type.range}</span>
-                <span style={{ fontSize: '0.9rem' }}>{type.label}</span>
-              </div>
-            ))}
-            {spaceType === 'commercial' && result.recommendedPyeong >= 26 && (
-              <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '0.75rem' }}>
-                {isKo
-                  ? '※ 상업 공간에는 천장형 시스템에어컨 또는 중앙 공조 시스템을 권장합니다.'
-                  : '※ For commercial spaces, ceiling-type system AC or central HVAC is recommended.'}
-              </p>
+                <p className={s.field_hint}>{areaNum > 0 ? T.livingHint(nf(livingSupply), nf(livingSupply / 2)) : T.livingHint('112', '56')}</p>
+              </>
+            ) : (
+              <>
+                <div className={s.chips} style={{ marginTop: '0.5rem' }}>
+                  {(['sqm', 'pyeong'] as const).map(u => (
+                    <button key={u} type="button" className={`${s.chip} ${areaUnit === u ? s.chip_active : ''}`} onClick={() => setAreaUnit(u)}>
+                      {u === 'sqm' ? '㎡' : (isKo ? '평' : 'pyeong')}
+                    </button>
+                  ))}
+                </div>
+                <p className={s.field_hint}>{mode === 'room' ? T.areaHintRoom : T.areaHintCommercial}</p>
+              </>
             )}
           </div>
 
-          {/* Disclaimer */}
-          <div className={s.disclaimer}>
-            <AlertTriangle size={18} color="#92400E" style={{ flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
-            <p className={s.disclaimer_text}>
-              {isKo
-                ? '이 계산 결과는 KRAQ(한국냉동공조산업협회) 기준 약식 계산법을 참고한 추정치입니다. 실제 에어컨 용량 선정 및 설비 공사는 반드시 전문 냉동공조 업체의 현장 실사와 정밀 부하 계산을 통해 결정하시기 바랍니다.'
-                : 'These results are estimates based on the KRAQ (Korea Refrigeration and Air-conditioning Industry Association) simplified calculation method. Actual AC sizing and installation should always be confirmed by a licensed HVAC professional conducting an on-site load assessment.'}
-            </p>
+          <div>
+            {mode === 'commercial' && (
+              <div style={{ marginBottom: '1rem' }}>
+                <label className={s.field_label} htmlFor="ac-business">{T.business}</label>
+                <select id="ac-business" className={s.select} value={business} onChange={e => setBusiness(e.target.value as Business)}>
+                  {BUSINESSES.map(b => (
+                    <option key={b} value={b}>{T.businesses[b]}{BUSINESS_EXTRA[b] > 0 ? ` (${pct(BUSINESS_EXTRA[b])})` : ''}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <label className={s.field_label} htmlFor="ac-occ">{T.occupants}</label>
+            <div className={s.input_wrap}>
+              <input id="ac-occ" className={s.input} inputMode="numeric" value={occText}
+                onChange={e => setOccText(e.target.value.replace(/[^0-9]/g, '').slice(0, 3))} />
+              <span className={s.suffix}>{isKo ? '명' : 'ppl'}</span>
+            </div>
+            <p className={s.field_hint}>{T.occupantsHint}</p>
           </div>
-
-          {/* Copy Button */}
-          <button
-            className={s.copy_btn}
-            onClick={handleCopy}
-            aria-label={isKo ? '결과 복사' : 'Copy results'}
-          >
-            {copied ? <Check size={18} aria-hidden="true" /> : <Copy size={18} aria-hidden="true" />}
-            {copied
-              ? (isKo ? '복사 완료!' : 'Copied!')
-              : (isKo ? '결과 복사하기' : 'Copy Results')}
-          </button>
         </div>
-      )}
 
-      <ShareBar title={title} description={desc} />
+        <div>
+          <span className={s.field_label}>{T.sun}</span>
+          <div className={s.chips}>
+            {SUNS.map(d => (
+              <button key={d} type="button" className={`${s.chip} ${sun === d ? s.chip_active : ''}`} onClick={() => setSun(d)} aria-pressed={sun === d}>
+                {T.suns[d]}{SUN_EXTRA[d] > 0 ? ` ${pct(SUN_EXTRA[d])}` : ''}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <span className={s.field_label}>{T.ceiling}</span>
+          <div className={s.chips}>
+            {CEILINGS.map(h => (
+              <button key={h} type="button" className={`${s.chip} ${ceilingM === h ? s.chip_active : ''}`} onClick={() => setCeilingM(h)} aria-pressed={ceilingM === h}>
+                {h.toFixed(1)}m{h > 2.4 ? ` ${pct(h / 2.4 - 1)}` : ''}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <span className={s.field_label}>{T.conditions}</span>
+          <div className={s.toggles}>
+            {toggle(bigWindow, setBigWindow, T.bigWindow, '+10%')}
+            {toggle(topFloor, setTopFloor, T.topFloor, '+10%')}
+            {toggle(oldInsulation, setOldInsulation, T.oldInsulation, '+10%')}
+            {mode === 'living' && toggle(kitchen, setKitchen, T.kitchen, '+10%')}
+          </div>
+        </div>
+      </section>
+
+      <section className={s.card} aria-live="polite">
+        <h2 className={s.card_title}>{T.resultTitle}</h2>
+        {!r ? (
+          <p className={s.hint}>{T.empty}</p>
+        ) : (
+          <>
+            <div className={s.hero}>
+              <div className={s.hero_label}>{T.recommend}</div>
+              {r.productClass !== null ? (
+                <div className={s.hero_num}>
+                  {r.productClass}<span className={s.hero_unit}>{isKo ? '평형' : '-pyeong class'}</span>
+                </div>
+              ) : (
+                <div className={s.hero_num} style={{ fontSize: '1.6rem' }}>{T.split(split!.count, split!.cls)}</div>
+              )}
+              <div className={s.hero_sub}>{T.units[r.unit]}{unitHint ? ` · ${unitHint}` : ''}</div>
+            </div>
+
+            <div className={s.stats}>
+              <div className={s.stat}>
+                <div className={s.stat_num}>{nf(r.neededSqm)}㎡</div>
+                <div className={s.stat_label}>{T.neededArea} ({nf(r.neededPyeong)}{T.pyUnit})</div>
+              </div>
+              <div className={s.stat}>
+                <div className={s.stat_num}>{nf(r.capacityKw, 2)} kW</div>
+                <div className={s.stat_label}>{T.capacity}</div>
+              </div>
+              <div className={s.stat}>
+                <div className={s.stat_num}>{isKo ? Math.round(r.capacityKw * 860).toLocaleString('ko-KR') : Math.round(r.capacityKw * 3412).toLocaleString('en-US')}</div>
+                <div className={s.stat_label}>{isKo ? 'kcal/h (1kW = 860)' : 'BTU/h (1 kW = 3,412)'}</div>
+              </div>
+            </div>
+
+            <div>
+              <span className={s.field_label}>{T.breakdown}</span>
+              <div className={s.breakdown}>
+                {rows.map(row => (
+                  <div key={row.key} className={s.bk_row}>
+                    <span>{T.bk[row.key]}</span>
+                    <div className={s.bk_track}>
+                      <div className={`${s.bk_fill} ${row.extra ? s.bk_fill_extra : ''}`} style={{ width: `${Math.max(2, (row.sqm / r.neededSqm) * 100)}%` }} />
+                    </div>
+                    <span className={s.bk_val}>{row.extra ? '+' : ''}{nf(row.sqm)}㎡</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {extraSum > 0.8 && <div className={s.note}>{T.capped}</div>}
+
+            <button type="button" className={s.copy_btn} onClick={copy}>
+              {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? T.copied : T.copy}
+            </button>
+          </>
+        )}
+      </section>
+
+      <section className={s.card}>
+        <h2 className={s.card_title}>{T.tableTitle}</h2>
+        <div className={s.table_wrap}>
+          <table className={s.table}>
+            <thead>
+              <tr>{T.tableHead.map(h => <th key={h} scope="col">{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {[...WALL_CLASSES.map(c => [c, T.wallLabel] as const), ...STAND_CLASSES.map(c => [c, T.standLabel] as const)].map(([c, type]) => {
+                const hit = r?.productClass === c && (type === T.standLabel) === (r.unit === 'stand');
+                return (
+                  <tr key={`${type}-${c}`}>
+                    <td>{hit ? <strong>{c}{isKo ? '평형' : ' py'} ◀</strong> : <>{c}{isKo ? '평형' : ' py'}</>}</td>
+                    <td>{type}</td>
+                    <td>{nf(c * SQM_PER_PYEONG)}㎡</td>
+                    <td>{nf(classToKw(c))} kW</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className={s.source_note}>{T.source}</p>
+      </section>
+
+      <ShareBar title={T.title} description={T.subtitle} />
       <RelatedTools toolId="utilities/lifestyle/ac-capacity-calc" />
-      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">
-        AD
-      </div>
+      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{
-          title: '에어컨 용량 산정기란 무엇인가요?',
-          description:
-            '에어컨 용량 산정기는 식당·카페·학원·헬스장 등 상업 공간과 아파트·빌라 등 가정용 공간에 적합한 에어컨 용량(kW)을 정확하게 산정해주는 도구입니다. 단순히 평수에 맞는 평형을 선택하면 된다는 오해와 달리, 실제 냉방 부하는 층고(천장 높이), 층 위치, 창문 방향과 일사량, 단열 상태, 업종별 발열, 수용 인원 등 다양한 요소에 따라 크게 달라집니다. 특히 오픈 천장 카페나 식당은 표준 층고 대비 최대 1.5배의 냉방 용량이 필요합니다. 본 계산기는 KRAQ(한국냉동공조산업협회) 기준 약식 계산법을 참고하여 항목별 부하를 분석한 상세 리포트를 제공하며, 브랜드 추천 없이 순수 용량과 에어컨 유형만 안내합니다.',
+          title: '에어컨 평형 계산기: 방·거실·매장에 맞는 평형과 kW',
+          description: '에어컨의 "평형"은 그 제품이 식힐 수 있는 냉방면적을 3.3㎡로 나눈 값입니다. 제조사 사양표를 보면 6평형은 냉방면적 약 19㎡에 냉방능력 약 2.3kW, 17평형은 약 57㎡에 7.0kW로, 냉방면적 1㎡당 약 123W의 냉방능력이 잡혀 있습니다. 그래서 방이나 원룸은 방 면적과 같은 평형을 고르면 되지만, 아파트 거실 스탠드는 집 평형이 아니라 공급면적의 절반 이상을 기준으로 고릅니다. 34평형 아파트라면 공급면적 약 112㎡의 절반인 56㎡, 곧 17평형 스탠드가 기본이고, 남향에 베란다를 확장했다면 한 단계 위인 20평형을 봅니다. 이 계산기는 이 제조사 기준에 남향·서향 창, 큰 창과 확장 베란다, 꼭대기층, 오래된 단열, 거실과 이어진 주방, 높은 천장, 인원 수를 더해 필요한 냉방면적(㎡·평)과 냉방능력(kW·kcal/h)을 구하고, 매장에서 파는 벽걸이 6~16평형, 스탠드 15~40평형 가운데 맞는 제품을 골라 줍니다. 카페·식당·고기집·PC방·헬스장 같은 매장은 업종별 내부 발열을 반영하고, 40평형을 넘으면 몇 대로 나눠 달지 제안합니다. 창 방향·층·업종 가산치는 현장 경험치이므로, 공사가 필요한 매장은 설치 업체의 현장 부하 계산과 함께 보세요.',
           useCases: [
-            {
-              icon: '🍽️',
-              title: '식당·카페 창업 시 에어컨 선정',
-              desc: '오픈 천장 카페나 고기집 창업 시 층고, 주방 열기, 업종별 발열, 수용 인원을 모두 반영한 실제 필요 냉방 용량을 산정하세요. 단순 평수 선택으로 에어컨 용량이 부족해지는 실수를 방지할 수 있습니다.',
-            },
-            {
-              icon: '🏠',
-              title: '아파트·빌라 이사 전 용량 확인',
-              desc: '새 집으로 이사 전 거실·침실의 층위, 창문 방향, 단열 상태를 고려한 최적 에어컨 용량을 미리 산정해 불필요하게 과도한 용량을 구입하는 낭비를 줄일 수 있습니다.',
-            },
-            {
-              icon: '🏢',
-              title: '사무실·학원 리모델링 시 설비 계획',
-              desc: '사무실, 학원, PC방 등 상업 공간 리모델링 시 인원 밀집도와 내부 발열 장비를 반영한 냉방 부하를 사전에 산정해 설비 업체와 정확한 스펙을 협의하세요.',
-            },
-            {
-              icon: '📱',
-              title: '기존 에어컨 용량 적정성 검토',
-              desc: '현재 사용 중인 에어컨이 충분한지 확인하고 싶을 때 활용하세요. 실제 필요 용량과 현재 설치 용량을 비교해 교체·추가 설치 필요 여부를 판단할 수 있습니다.',
-            },
+            { icon: '🛏️', title: '방·원룸 벽걸이 고르기', desc: '방 면적이 10평(약 33㎡)이면 10평형 벽걸이(약 4.1kW), 20㎡ 원룸이면 6평형이 기준입니다. 같은 20㎡ 원룸도 서향 꼭대기층이면 7평형으로 올라갑니다.' },
+            { icon: '🛋️', title: '아파트 거실 스탠드 평형', desc: '24평형 아파트는 거실 냉방면적이 약 40㎡라 15평형, 34평형은 17평형, 45평형은 23평형 스탠드가 기본입니다. 2in1을 살 때 스탠드 평형을 정하는 데 씁니다.' },
+            { icon: '☕', title: '카페·식당 매장 용량', desc: '66㎡(20평) 카페에 손님과 직원 15명이 있으면 업종 발열과 인원을 더해 필요 냉방면적이 약 89㎡, 30평형급(약 10.9kW)입니다. 천장을 3.3m로 노출하면 36평형급이 됩니다.' },
+            { icon: '📋', title: '견적서·사양표 kW 비교', desc: '설치 업체 견적이나 제품 사양표의 정격 냉방능력(kW)을 결과와 견줘 봅니다. 고기집 66㎡에 30명, 천장 3m라면 약 18kW가 필요해 23평형 2대로 나눠 다는 조합이 나옵니다.' },
           ],
           steps: [
-            {
-              step: '공간 유형 선택',
-              desc: "상단에서 '상업 공간' 또는 '가정용'을 선택합니다. 공간 유형에 따라 입력 항목이 달라지며, 상업 공간은 업종과 수용 인원을 추가로 입력합니다.",
-            },
-            {
-              step: '실평수와 층고 입력',
-              desc: '실평수와 층고(천장 높이)를 입력합니다. 오픈 천장이나 복층 구조는 표준 층고 대비 냉방 부하가 최대 1.5배 증가하므로 정확한 층고를 선택하는 것이 중요합니다.',
-            },
-            {
-              step: '환경 조건 선택',
-              desc: '층 위치, 창문 방향, 창문 유형, 단열 상태를 선택합니다. 서향 통유리 최상층처럼 불리한 조건이 겹칠수록 필요 용량이 크게 올라가는 것을 실시간으로 확인할 수 있습니다.',
-            },
-            {
-              step: '결과 확인 및 공유',
-              desc: '결과에서 권장 최소~최대 용량(kW)과 평형을 확인하고, 부하 항목별 분석 리포트에서 어떤 요소가 냉방 부하를 높이는지 파악하세요. 결과 복사 버튼으로 설비 업체와 공유할 수 있습니다.',
-            },
+            { step: '공간 종류 고르기', desc: '침실·원룸·작은 방은 "방·원룸", 거실 스탠드는 "아파트 거실", 카페·식당·사무실처럼 사람과 기기가 많은 곳은 "매장·사무실"을 고릅니다.' },
+            { step: '면적 입력', desc: '방과 매장은 냉방할 공간의 실제 바닥 면적을 ㎡나 평으로 넣고, 아파트 거실은 집의 평형(예: 34평형)을 넣으면 공급면적의 절반을 거실 냉방면적으로 잡습니다.' },
+            { step: '조건 선택', desc: '창 방향, 큰 창·베란다 확장, 꼭대기층, 오래된 단열, 천장 높이, 평소 인원을 고릅니다. 매장은 업종을 고르면 주방 불과 기기에서 나오는 열이 더해집니다.' },
+            { step: '결과 확인', desc: '추천 평형과 벽걸이·스탠드 구분, 필요한 냉방면적과 냉방능력(kW), 항목별로 늘어난 면적을 보고, 아래 평형별 표로 사려는 제품의 사양표와 비교합니다.' },
           ],
           faqs: [
-            {
-              q: '30평이면 30평형 에어컨을 사면 되지 않나요?',
-              a: "아닙니다. 에어컨 '평형'은 단순 면적 기준이 아니라 냉방 능력(kW) 기준입니다. 실제 냉방 부하는 층고, 창문 방향, 단열 상태, 층 위치, 업종 발열, 수용 인원에 따라 크게 달라집니다. 예를 들어 오픈 천장 서향 30평 고기집은 단순 30평형보다 2배 이상 큰 용량이 필요할 수 있습니다.",
-            },
-            {
-              q: '층고(천장 높이)가 왜 중요한가요?',
-              a: '냉방 부하는 평면 면적뿐 아니라 공간의 부피(면적 × 층고)에 비례합니다. 표준 층고(2.5m)를 기준으로 계산할 때, 오픈 천장(3m 이상)인 경우 같은 평수라도 냉방해야 할 공기량이 1.2~1.5배 더 많아집니다. 최근 인기 있는 오픈 천장 카페나 복층 식당에서 에어컨이 힘을 못 쓰는 주된 이유입니다.',
-            },
-            {
-              q: '고기집이나 PC방은 왜 그렇게 용량이 많이 필요한가요?',
-              a: '고기집은 테이블마다 직화 불판을 사용하고 주방에서도 강한 화력을 씁니다. PC방은 수십~수백 대의 PC와 모니터가 지속적으로 열을 발생시킵니다. 이런 내부 발열은 에어컨이 제거해야 할 열 부하에 그대로 추가됩니다. 고기집의 경우 동일 면적 사무실 대비 최대 1.6배, PC방은 1.4배의 냉방 용량이 필요합니다.',
-            },
-            {
-              q: '이 툴의 결과를 공식 자료로 사용해도 되나요?',
-              a: '이 툴의 계산 결과는 KRAQ 기준 약식 계산법을 참고한 추정치로, 참고용으로만 제공됩니다. 실제 에어컨 용량 선정 및 설비 공사는 반드시 전문 냉동공조 업체의 현장 실사와 정밀 부하 계산을 통해 결정하시기 바랍니다.',
-            },
+            { q: '34평 아파트면 34평형 에어컨을 사야 하나요?', a: '아닙니다. 에어컨 평형은 그 제품이 감당하는 냉방면적이고, 거실 스탠드는 보통 거실과 주방 쪽만 맡습니다. 제조사도 아파트 거실은 공급면적의 절반 이상을 권하므로 34평형 아파트는 17평형 스탠드가 기본이고, 남향·베란다 확장형이면 18~20평형을 봅니다. 방에는 6~7평형 벽걸이를 따로 다는 것이 일반적입니다.' },
+            { q: '평형과 kW는 어떻게 바꿔 보나요?', a: '제조사 사양표의 냉방면적과 정격 냉방능력을 견주면 1㎡당 약 123W입니다. 6평형(약 19.8㎡)은 약 2.4kW, 10평형은 약 4.1kW, 17평형은 약 6.9kW, 30평형은 약 12.2kW입니다. 같은 평형이라도 제품마다 조금씩 다르니 최종 비교는 사양표의 kW 숫자로 하세요.' },
+            { q: '용량을 넉넉하게 사면 더 좋지 않나요?', a: '너무 크면 금방 설정 온도에 닿아 켜졌다 꺼졌다를 반복하면서 습기를 덜 빼고, 구입비도 올라갑니다. 요즘 인버터 제품은 낮은 출력으로 오래 돌 수 있어 한 단계 큰 정도는 큰 문제가 없지만, 두세 단계 이상 키우는 것은 권하지 않습니다. 결과가 두 평형 사이라면 큰 쪽을 고르면 됩니다.' },
+            { q: '천장이 높으면 얼마나 더 필요한가요?', a: '식혀야 할 공기량이 늘어 그만큼 부하가 커집니다. 이 계산기는 일반 천장 2.4m를 기준으로 높이에 비례해 더하므로 2.7m는 약 12.5%, 3m는 25%, 3.6m는 50%가 늘어납니다. 노출 천장 카페나 복층 매장에서 에어컨이 약하게 느껴지는 흔한 이유입니다.' },
+            { q: '보정 비율은 어디서 나온 값인가요?', a: '평형·냉방면적·kW의 관계와 거실 기준은 제조사 사양표와 LG전자 에어컨 선택 가이드를 따랐습니다. 서향 +10%, 꼭대기층 +10%, 업종 발열처럼 나머지 가산치는 설치 현장에서 흔히 쓰는 경험치입니다. 공사가 필요한 매장이나 40평형을 넘는 공간은 업체에 현장 실측과 부하 계산을 함께 요청하세요.' },
           ],
         }}
         en={{
-          title: 'What is the Air Conditioner Capacity Calculator?',
-          description:
-            'The Air Conditioner Capacity Calculator helps you find the right AC capacity (kW) for both commercial spaces like restaurants, cafes, and offices, and residential spaces like apartments and houses. Unlike the common misconception that you simply match the AC unit size (pyeong rating) to the room size, actual cooling load varies dramatically based on ceiling height, floor position, sun exposure, window type, insulation quality, business type heat output, and occupancy. The ceiling height correction factor (1.0 for standard, 1.2 for high ceilings 2.5–3m, 1.5 for open ceilings above 3m) is especially critical — open-ceiling cafes and restaurants often need 1.5x the cooling capacity of an equivalent standard-height space. Business types also carry significant heat multipliers: Korean BBQ restaurants require 1.6x the capacity of a standard office, while PC rooms require 1.4x due to continuous equipment heat generation. The calculator applies KRAQ (Korea Refrigeration and Air-conditioning Industry Association) simplified calculation methodology, providing a detailed load breakdown report that shows exactly how each factor contributes to your total cooling requirement. All calculations run client-side with no data sent to any server.',
+          title: 'Air conditioner size calculator: the right class and kW',
+          description: 'In Korea air conditioners are sold by "pyeong class", which is simply the cooling area divided by 3.3㎡. Spec sheets show a 6-pyeong unit covering about 19㎡ with roughly 2.3 kW of cooling and a 17-pyeong unit covering about 57㎡ with 7.0 kW, which works out to about 123 W per square metre. A bedroom or studio therefore needs a class equal to its floor area, but a living-room floor-standing unit is chosen from at least half of the apartment\'s supply area rather than the apartment class itself: a 34-pyeong apartment (about 112㎡ supply) needs a 17-pyeong unit, or a 20-pyeong unit if it faces south with an enclosed balcony. This calculator starts from that manufacturer basis and adds south or west windows, large glazing, top-floor heat, old insulation, an open kitchen, high ceilings and extra occupants. It then shows the cooling area, capacity in kW and BTU/h, and the matching wall-mounted (6–16) or floor-standing (15–40) class. Shops such as cafés, restaurants, Korean BBQ, PC cafés and gyms include business heat, and loads above a 40-pyeong class are split across several units. The add-ons are rules of thumb, so commercial installs should still get an on-site load calculation.',
           useCases: [
-            {
-              icon: '🍽️',
-              title: 'Restaurant & Cafe Setup',
-              desc: 'When opening a restaurant or cafe, factor in ceiling height, kitchen heat, business type multipliers, and maximum occupancy to find the true cooling capacity needed — avoiding the common mistake of undersizing.',
-            },
-            {
-              icon: '🏠',
-              title: 'Home AC Sizing Before Moving',
-              desc: 'Before moving to a new apartment or house, calculate the optimal AC capacity for each room by considering floor level, window direction, and insulation age to avoid overspending or undersizing.',
-            },
-            {
-              icon: '🏢',
-              title: 'Office & Academy Renovation Planning',
-              desc: 'During commercial space renovation, pre-calculate cooling loads based on occupancy density and internal heat sources to negotiate accurate specifications with HVAC contractors.',
-            },
-            {
-              icon: '📱',
-              title: 'Verify Existing AC Adequacy',
-              desc: 'Use the calculator to check whether your current AC unit is appropriately sized for your space. Compare the calculated required capacity against your installed unit to determine if replacement or supplementation is needed.',
-            },
+            { icon: '🛏️', title: 'Pick a Wall Unit for a Room', desc: 'A 33㎡ (10-pyeong) room needs a 10-pyeong wall unit of about 4.1 kW, and a 20㎡ studio a 6-pyeong unit — or 7-pyeong if it faces west on the top floor.' },
+            { icon: '🛋️', title: 'Living-Room Floor Unit', desc: 'A 24-pyeong apartment needs a 15-pyeong floor unit, a 34-pyeong apartment 17, and a 45-pyeong apartment 23. Use it to choose the floor unit of a two-in-one set.' },
+            { icon: '☕', title: 'Cafés and Restaurants', desc: 'A 66㎡ café with 15 people needs about 89㎡ of cooling area, a 30-pyeong class of roughly 10.9 kW, rising to a 36-pyeong class with a 3.3 m exposed ceiling.' },
+            { icon: '📋', title: 'Check Quotes in kW', desc: 'Compare installer quotes or rated capacity on spec sheets. A 66㎡ BBQ restaurant with 30 people and a 3 m ceiling needs about 18 kW, for example two 23-pyeong units.' },
           ],
           steps: [
-            {
-              step: 'Select Space Type',
-              desc: "Choose 'Commercial' or 'Residential' at the top. Commercial spaces require additional inputs for business type and maximum occupancy, which significantly affect the heat load calculation.",
-            },
-            {
-              step: 'Enter Area & Ceiling Height',
-              desc: 'Input the actual usable floor area in pyeong and select ceiling height. Open ceilings (3m+) increase cooling load by up to 1.5x compared to standard height — this is one of the most impactful factors in the calculation.',
-            },
-            {
-              step: 'Set Environmental Conditions',
-              desc: 'Select floor position, window direction, window type, and insulation quality. Unfavorable combinations (e.g., west-facing, full-glass windows, top floor, poor insulation) can significantly increase required capacity.',
-            },
-            {
-              step: 'Review Results & Share',
-              desc: 'Check the recommended capacity range (min–max kW) and pyeong rating. Use the load breakdown report to understand which factors drive your cooling requirements, then copy the results to share with HVAC contractors.',
-            },
+            { step: 'Choose the Space', desc: 'Use Room for bedrooms and studios, Apartment living for a floor-standing living-room unit, and Shop / office for spaces with many people or appliances.' },
+            { step: 'Enter the Area', desc: 'Type the floor area in ㎡ or pyeong, or the apartment class for a living room; half of its supply area becomes the cooling area.' },
+            { step: 'Set the Conditions', desc: 'Choose window direction, large windows, top floor, old insulation, ceiling height and usual occupants. For shops, pick the business type.' },
+            { step: 'Read the Result', desc: 'See the recommended class and unit type, cooling area, capacity in kW, and each add-on, then compare with spec sheets in the table.' },
           ],
           faqs: [
-            {
-              q: 'Can I just buy a unit that matches my room size in pyeong?',
-              a: 'Not exactly. The pyeong rating on AC units refers to cooling capacity in kW, not just floor area. Actual cooling load depends on ceiling height, sun exposure, insulation, floor position, business type heat output, and occupancy. A 30-pyeong Korean BBQ restaurant with open ceilings and west-facing windows may need more than double the capacity of a standard 30-pyeong office.',
-            },
-            {
-              q: 'Why does ceiling height matter so much?',
-              a: 'Cooling load is proportional to the volume of air that needs to be cooled, not just the floor area. An open ceiling space (3m+) contains 1.2 to 1.5 times more air volume than a standard-height room of the same floor area. This is why many trendy open-ceiling cafes and restaurants suffer from inadequate cooling despite having large AC units.',
-            },
-            {
-              q: 'Why do BBQ restaurants and PC rooms need so much more capacity?',
-              a: 'Korean BBQ restaurants use direct-flame grills at every table plus high-heat commercial kitchens, adding massive internal heat loads. PC rooms run dozens to hundreds of PCs and monitors continuously, each generating significant heat. These internal heat sources add directly to the cooling load — BBQ restaurants typically need 1.6x and PC rooms 1.4x the capacity of equivalent standard offices.',
-            },
-            {
-              q: 'Can I use these results as official specifications?',
-              a: 'Results are for reference only, based on KRAQ simplified calculation methodology. Actual AC sizing for installation should always be confirmed by a licensed HVAC professional conducting an on-site load assessment, as building-specific factors like airtightness, equipment placement, and duct configuration can affect actual requirements.',
-            },
+            { q: 'Does a 34-pyeong apartment need a 34-pyeong AC?', a: 'No. The class is the area one unit can cool, and a living-room floor unit usually covers just the living room and kitchen. Manufacturers advise at least half the supply area, so a 34-pyeong apartment needs a 17-pyeong unit, or 18–20 if it faces south with an enclosed balcony. Bedrooms get separate 6–7-pyeong wall units.' },
+            { q: 'How do pyeong classes convert to kW?', a: 'Comparing cooling area and rated capacity on spec sheets gives about 123 W per square metre: a 6-pyeong unit is about 2.4 kW, 10-pyeong about 4.1 kW, 17-pyeong about 6.9 kW and 30-pyeong about 12.2 kW. Models vary slightly, so compare the kW printed on the spec sheet.' },
+            { q: 'Is a bigger unit always better?', a: 'An oversized unit reaches the set temperature quickly and cycles on and off, removing less humidity and costing more to buy. Modern inverter units can run slowly, so one class up is fine, but going two or three classes larger is not recommended. If the result falls between two classes, take the larger one.' },
+            { q: 'Where do the add-on percentages come from?', a: 'The class, area and kW relationship and the living-room rule follow manufacturer spec sheets and LG Electronics\' buying guide. The other add-ons, such as +10% for west windows or the top floor and business heat, are common installer rules of thumb. Large shops should get an on-site survey and load calculation.' },
           ],
         }}
       />
