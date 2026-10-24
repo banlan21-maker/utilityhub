@@ -78,7 +78,7 @@
     "subtitle": "A collection of various extra tools you need in your daily life.",
     "wordle": {
       "title": "Daily Word Puzzle",
-      "desc": "Guess a new word every day! Supports Korean and English with streak tracking."
+      "desc": "Guess a new word every day in six tries — classic English Wordle plus a Korean jamo version."
     },
     "counter": {
       "title": "Character & Byte Counter",

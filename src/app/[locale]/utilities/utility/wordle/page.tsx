@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import WordleClient from './WordleClient';
 
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/utility/wordle';
+
 export async function generateMetadata({
   params,
 }: {
@@ -8,20 +11,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isKo = locale === 'ko';
-  const title = isKo ? '일일 단어 퍼즐 – 매일 새로운 한/영 단어 게임 | Utility Hub' : 'Daily Word Puzzle – New Korean & English Word Game Every Day | Utility Hub';
+  const title = isKo
+    ? '한글 워들 — 자모로 맞히는 일일 단어 퍼즐 (영어 워들 포함) | Utility Hub'
+    : 'Daily Word Puzzle — Free Wordle in English and Korean | Utility Hub';
   const description = isKo
-    ? '매일 새로운 단어를 맞추는 두뇌 게임입니다. 한국어(3글자)와 영어(5글자)를 지원하며 연승 기록을 추적합니다.'
-    : 'A daily brain game to guess a new word every day. Supports Korean (3 letters) and English (5 letters) with streak tracking.';
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/utility/wordle`;
+    ? '매일 하나의 단어를 여섯 번 안에 맞히는 한글 워들입니다. 단어를 자음·모음 6칸으로 풀어 힌트를 주고, 영어 5글자 워들도 함께 즐길 수 있습니다. 연승·승률·결과 공유 지원.'
+    : 'Guess the daily word in six tries. Play the classic five-letter English Wordle or a Korean version that splits words into six jamo tiles. Streaks, stats and spoiler-free sharing.';
+  const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,
     description,
     alternates: {
       canonical,
       languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/utility/wordle`,
-        en: `https://www.theutilhub.com/en/utilities/utility/wordle`,
-        'x-default': `https://www.theutilhub.com/ko/utilities/utility/wordle`,
+        ko: `${BASE}/ko${PATH}`,
+        en: `${BASE}/en${PATH}`,
+        'x-default': `${BASE}/ko${PATH}`,
       },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
@@ -29,30 +34,60 @@ export async function generateMetadata({
   };
 }
 
-const softwareSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: '일일 단어 퍼즐',
-  alternateName: 'Daily Word Puzzle',
-  operatingSystem: 'Web Browser',
-  applicationCategory: 'GameApplication',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-  url: 'https://www.theutilhub.com/ko/utilities/utility/wordle',
-  description: '매일 새로운 단어를 맞추는 두뇌 게임입니다. 한국어(3글자)와 영어(5글자)를 지원하며 연승 기록을 추적합니다.',
-};
+const SCHEMA_TEXT = {
+  ko: {
+    name: '일일 단어 퍼즐 (한글 워들)',
+    description: '단어를 자음·모음 6칸으로 풀어 맞히는 한글 워들과 영어 5글자 워들을 무료로 즐기는 일일 단어 게임입니다.',
+    faqs: [
+      { q: '한글은 왜 글자가 아니라 자모로 맞히나요?', a: '글자 단위로 비교하면 한 칸에 올 수 있는 글자가 1만 개가 넘어 힌트가 거의 나오지 않습니다. 자모로 나누면 자음과 모음의 위치를 추리해 여섯 번 안에 풀 수 있습니다.' },
+      { q: '겹모음과 받침은 칸을 어떻게 나누나요?', a: '두벌식 자판에서 누르는 순서대로입니다. ㅘ 같은 겹모음과 ㄺ 같은 겹받침은 두 칸, ㄲ 같은 된소리는 한 칸입니다. "과일"은 ㄱ·ㅗ·ㅏ·ㅇ·ㅣ·ㄹ 여섯 칸입니다.' },
+      { q: '입력한 단어가 목록에 없다고 나와요.', a: '한글은 자모가 정확히 6개인 약 1,500개 단어를 입력할 수 있습니다. 목록에 없는 단어는 기회를 쓰지 않으니 다른 단어로 다시 입력하세요.' },
+      { q: '새 문제는 언제 나오고, 연승은 어떻게 세나요?', a: '기기 시계 기준 자정마다 새 문제가 열립니다. 맞히면 연승이 1 늘고, 하루를 건너뛰거나 실패하면 0이 되며 최대 연승은 남습니다.' },
+    ],
+  },
+  en: {
+    name: 'Daily Word Puzzle',
+    description: 'Free daily word game: classic five-letter English Wordle plus a Korean version played with six jamo tiles.',
+    faqs: [
+      { q: 'Why does the Korean board use jamo instead of syllables?', a: 'There are more than 11,000 possible syllables, so syllable matching gives almost no hints. Jamo tiles let you deduce consonants and vowels within six tries.' },
+      { q: 'How are compound vowels and final consonants counted?', a: 'As you type them on a 2-set keyboard: compound vowels and double finals take two tiles, tense consonants like ㄲ take one.' },
+      { q: 'Why is my word "not in word list"?', a: 'Korean accepts about 1,500 six-jamo words and English about 6,400 five-letter words. Invalid words do not use up a try.' },
+      { q: 'When does a new puzzle appear?', a: 'At midnight on your device. Solving adds to your streak; skipping a day or failing resets it, while your best streak is kept.' },
+    ],
+  },
+} as const;
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: '매일 새로운 단어가 나오나요?', acceptedAnswer: { '@type': 'Answer', text: '네! 매일 자정(00:00)이 되면 새로운 단어 퍼즐이 생성됩니다. 날짜 기반 알고리즘을 사용하여 모든 사용자에게 동일한 단어가 제공됩니다.' } },
-    { '@type': 'Question', name: '연승이 끊기면 어떻게 되나요?', acceptedAnswer: { '@type': 'Answer', text: '하루를 건너뛰거나 퍼즐을 실패하면 현재 연승이 0으로 초기화됩니다. 하지만 최대 연승 기록은 유지되므로, 다시 도전하여 새로운 기록을 세워보세요!' } },
-    { '@type': 'Question', name: '무료로 플레이할 수 있나요?', acceptedAnswer: { '@type': 'Answer', text: '네! 일일 단어 퍼즐은 100% 무료로 제공됩니다. 회원가입이나 로그인 없이 바로 플레이하고, 데이터는 브라우저에 안전하게 저장됩니다.' } },
-    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
-  ],
-};
+export default async function WordlePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const text = locale === 'ko' ? SCHEMA_TEXT.ko : SCHEMA_TEXT.en;
 
-export default function WordlePage() {
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: text.name,
+    operatingSystem: 'Web Browser',
+    applicationCategory: 'GameApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    url: `${BASE}/${locale}${PATH}`,
+    inLanguage: locale,
+    description: text.description,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: text.faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />

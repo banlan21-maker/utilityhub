@@ -7,1196 +7,464 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import {
+  WORD_LENGTH, MAX_GUESSES, compose, evaluate, keyStatuses, dayNumber, answerFor, toTiles,
+  emptyStats, recordResult, liveStreak, type Lang, type Stats, type TileStatus,
+} from '@/lib/wordle';
+import { KO_ANSWERS, KO_VALID } from '@/constants/wordle/ko';
+import { EN_ANSWERS } from '@/constants/wordle/en-answers';
+import s from './wordle.module.css';
 
-// 한국어 3글자 단어 데이터 (테마별 200개, 안전장치로 3글자만 허용)
-const KOREAN_WORDS = [
-  // ── 자연 및 식물 ──
-  '무지개', '소나무', '대나무', '보름달', '초승달',
-  '민들레', '진달래', '개나리', '할미꽃', '무궁화',
-  '봉선화', '백합꽃', '장미꽃', '국화꽃', '해오라기', // 해오라기(4글자) → 필터 제외
-  // ── 동물 및 곤충 ──
-  '강아지', '고양이', '호랑이', '코끼리', '다람쥐',
-  '너구리', '송아지', '망아지', '기러기', '거북이',
-  '가오리', '송사리', '오징어', '고등어', '갈매기',
-  '독수리', '앵무새', '꾀꼬리', '사마귀', '메뚜기',
-  '개구리', '두꺼비',
-  // ── 음식 및 채소 ──
-  '복숭아', '옥수수', '고구마', '도라지', '미나리',
-  '고사리', '비빔밥', '미역국', '된장국', '삼계탕',
-  '설렁탕', '갈비탕', '비빔면', '깍두기',
-  // ── 사물 및 가전 ──
-  '지우개', '주전자', '바구니', '돋보기', '계산기',
-  '컴퓨터', '모니터', '키보드', '라디오', '카메라',
-  '정수기', '냉장고', '세탁기', '청소기', '선풍기',
-  '다리미', '가습기', '손전등', '손거울', '빗자루',
-  '일기장', '연습장', '그림책', '물감통', '크레용',
-  '장난감', '안경테', '귀걸이', '목걸이',
-  // ── 장소 및 이동수단 ──
-  '운동장', '수영장', '정류장', '놀이터', '도서관',
-  '영화관', '박물관', '미술관', '백화점', '편의점',
-  '비행기', '자동차', '자전거', '유모차', '소방차',
-  '구급차',
-  // ── 직업 및 관념 ──
-  '소방관', '경찰관', '요리사', '변호사',
+type Status = 'playing' | 'won' | 'lost';
+interface Game { day: number; guesses: string[]; status: Status }
+interface Store { games: Partial<Record<Lang, Game>>; stats: Record<Lang, Stats> }
 
-  // ── 자연 및 풍경 ──
-  '시냇물', '소나기', '이슬비', '가랑비', '밤하늘',
-  '그림자', '실안개', '비바람', '옹달샘', '골짜기',
-  '바윗돌', '지평선', '수평선', '웅덩이', '흙먼지',
-  // ── 동물 및 생물 ──
-  '꽃사슴', '멧돼지', '산토끼', '불여우', '풍뎅이',
-  '잠자리', '돌고래', '얼룩말', '코뿔소', '바닷가',
-  '돌멩이', '나뭇잎', '나뭇결', '꽃게장', '해파리',
-  '산호초',
-  // ── 음식 및 간식 ──
-  '떡볶이', '김치전', '빈대떡', '순두부', '청국장',
-  '콩나물', '취나물', '시금치', '도토리', '산딸기',
-  '무화과', '토마토', '양배추', '소금빵', '꽈배기',
-  '붕어빵', '솜사탕', '인절미', '바람떡', '팥빙수',
-  // ── 생활 사물 및 도구 ──
-  '손수건', '돗자리', '보따리', '도시락', '주머니',
-  '옷걸이', '빨랫줄', '뒤집개', '가마솥', '뚝배기',
-  '놋그릇', '자물쇠', '휴지통', '재떨이', '화장대',
-  '머리빗', '장식장', '서랍장', '바늘통', '손잡이',
-  // ── 추상 및 감정 ──
-  '그리움', '기다림', '고요함', '편안함', '서운함',
-  '아쉬움', '즐거움', '괴로움', '외로움', '두려움',
-  '간절함', '어색함', '미안함', '고마움', '뿌듯함',
-  // ── 현대 사회 및 장소 ──
-  '동영상', '메시지', '스케줄', '갤러리', '이메일',
-  '아이디', '배터리', '노트북', '태블릿', '리모컨',
-  '주유소', '정비소', '세탁소', '대합실', '골목길',
-].filter(w => w.length === 3); // 안전장치: 3글자만 허용
+const STORAGE_KEY = 'theutilhub-wordle-v2';
+const OLD_STORAGE_KEY = 'theutilhub-wordle-storage';
+const KO_SET = new Set([...KO_ANSWERS, ...KO_VALID]);
+const PAGE_URL = 'https://www.theutilhub.com/{locale}/utilities/utility/wordle';
 
-// 영어 5글자 단어 데이터 (100개 이상)
-const ENGLISH_WORDS = [
-  'APPLE', 'BREAD', 'CHAIR', 'DANCE', 'EAGLE',
-  'FANCY', 'GHOST', 'HAPPY', 'IMAGE', 'JUICE',
-  'KNIFE', 'LEMON', 'MAGIC', 'NIGHT', 'OCEAN',
-  'PEACE', 'QUEEN', 'RADIO', 'SMILE', 'TIGER',
-  'UNCLE', 'VOICE', 'WATER', 'YOUTH', 'ZEBRA',
-  'ABOUT', 'BEACH', 'CLOUD', 'DREAM', 'EARTH',
-  'FLAME', 'GRACE', 'HEART', 'IDEAL', 'JEWEL',
-  'KIOSK', 'LIGHT', 'MATCH', 'NOBLE', 'ORBIT',
-  'PANEL', 'QUEST', 'RIVER', 'STONE', 'TRUTH',
-  'UNITY', 'VALUE', 'WORLD', 'XENON', 'YIELD',
-  'ABUSE', 'BRAVE', 'CRIME', 'DEPTH', 'ELITE',
-  'FAITH', 'GLOBE', 'HONOR', 'INDEX', 'JOINT',
-  'KARMA', 'LOGIC', 'METAL', 'NERVE', 'ORBIT',
-  'PRIDE', 'QUIRK', 'REALM', 'SHOCK', 'THEME',
-  'URBAN', 'VITAL', 'WASTE', 'XENON', 'YACHT',
-  'ADAPT', 'BATCH', 'CRISP', 'DEVIL', 'EVOKE',
-  'FLARE', 'GRAIN', 'HOTEL', 'INPUT', 'JUDGE',
-  'KNIGHT', 'LABEL', 'MOUNT', 'NURSE', 'OCCUR',
-  'PLANT', 'QUOTA', 'RANCH', 'SCALE', 'TRADE',
-  'UPSET', 'VAULT', 'WHEAT', 'XEROX', 'YEARN',
-  'ABIDE', 'BOUND', 'CRAFT', 'DWELL', 'EQUIP',
-  'FORGE', 'GRANT', 'HASTE', 'INFER', 'JOUST',
-  'KNEAD', 'LEASE', 'MIRTH', 'NOTCH', 'OPTIC',
-  'PLUME', 'QUELL', 'ROAST', 'SWIFT', 'TRIAL',
-  'UNIFY', 'VIGOR', 'WRECK', 'XYLEM', 'YODEL',
+// 두벌식 자판 (물리 키 위치 → 자모). 한/영 전환 상태와 무관하게 e.code로 읽는다
+const KO_CODE: Record<string, [string, string?]> = {
+  KeyQ: ['ㅂ', 'ㅃ'], KeyW: ['ㅈ', 'ㅉ'], KeyE: ['ㄷ', 'ㄸ'], KeyR: ['ㄱ', 'ㄲ'], KeyT: ['ㅅ', 'ㅆ'],
+  KeyY: ['ㅛ'], KeyU: ['ㅕ'], KeyI: ['ㅑ'], KeyO: ['ㅐ', 'ㅒ'], KeyP: ['ㅔ', 'ㅖ'],
+  KeyA: ['ㅁ'], KeyS: ['ㄴ'], KeyD: ['ㅇ'], KeyF: ['ㄹ'], KeyG: ['ㅎ'], KeyH: ['ㅗ'], KeyJ: ['ㅓ'], KeyK: ['ㅏ'], KeyL: ['ㅣ'],
+  KeyZ: ['ㅋ'], KeyX: ['ㅌ'], KeyC: ['ㅊ'], KeyV: ['ㅍ'], KeyB: ['ㅠ'], KeyN: ['ㅜ'], KeyM: ['ㅡ'],
+};
+const KO_ROWS = [
+  ['KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP'],
+  ['KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL'],
+  ['SHIFT', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'BACK'],
+];
+const EN_ROWS = [
+  [...'QWERTYUIOP'],
+  [...'ASDFGHJKL'],
+  ['ENTER', ...'ZXCVBNM', 'BACK'],
 ];
 
-type GameStatus = 'playing' | 'won' | 'lost';
-type TileStatus = 'empty' | 'filled' | 'correct' | 'present' | 'absent';
+const TEXT = {
+  ko: {
+    title: '일일 단어 퍼즐 (한글 워들)',
+    subtitle: '하루 한 문제, 여섯 번 안에 오늘의 단어를 맞혀 보세요. 한글은 자음·모음 6칸, 영어는 5글자입니다.',
+    tabKo: ['한글', '자모 6칸'], tabEn: ['English', '5글자'],
+    puzzle: (d: number) => `${d}번 문제`, streak: '연승', winRate: '승률',
+    typing: '입력', enter: '입력', back: '지우기',
+    short: (n: number) => (n === 6 ? '자모 6개를 모두 입력하세요' : '5글자를 모두 입력하세요'),
+    notWord: '단어 목록에 없는 단어예요',
+    loading: '단어 목록을 불러오는 중이에요',
+    kbHintKo: '컴퓨터에서는 한/영 전환 없이 키보드로 바로 입력됩니다. 된소리·ㅒ·ㅖ는 Shift(⇧)와 함께 누르세요.',
+    kbHintEn: 'Type with the keyboard or the keys below.',
+    showResult: '결과 보기',
+    won: ['천재!', '훌륭해요!', '멋져요!', '잘했어요!', '좋아요!', '휴, 아슬아슬!'],
+    lost: '아쉬워요, 내일 다시 도전!',
+    answerIs: '오늘의 정답',
+    meaning: '표준국어대사전에서 뜻 보기 ↗',
+    played: '플레이', rate: '승률', cur: '현재 연승', max: '최대 연승',
+    dist: '맞힌 횟수 분포', next: '다음 문제까지',
+    share: '결과 복사', close: '닫기', copied: '결과를 복사했어요. 붙여 넣어 공유하세요!', copyFail: '복사하지 못했어요',
+    shareHead: (d: number, lang: Lang, t: string) => `일일 단어 퍼즐 ${d}번 (${lang === 'ko' ? '한글' : '영어'}) ${t}/6`,
+    helpTitle: '게임 방법',
+    help1: '여섯 번 안에 오늘의 단어를 맞히면 됩니다. 단어를 넣으면 칸 색깔로 힌트가 나옵니다.',
+    help2: '초록 = 자리까지 맞음 · 노랑 = 단어에 있지만 자리가 다름 · 회색 = 단어에 없음',
+    help3: '한글은 두벌식 자판으로 누르는 순서대로 자모 6칸입니다. 겹모음 ㅘ는 ㅗ+ㅏ 두 칸, 된소리 ㄲ은 한 칸입니다.',
+    exampleLabel: '예: 과일 →',
+  },
+  en: {
+    title: 'Daily Word Puzzle',
+    subtitle: 'One puzzle a day: guess the word in six tries. Korean uses 6 jamo tiles, English uses 5 letters.',
+    tabKo: ['한글', '6 jamo'], tabEn: ['English', '5 letters'],
+    puzzle: (d: number) => `Puzzle #${d}`, streak: 'Streak', winRate: 'Win rate',
+    typing: 'Typing', enter: 'ENTER', back: 'Delete',
+    short: (n: number) => (n === 6 ? 'Enter all 6 jamo' : 'Not enough letters'),
+    notWord: 'Not in word list',
+    loading: 'Loading word list…',
+    kbHintKo: 'On a computer, just type on the keyboard — no need to switch to Korean input. Use Shift for ㄲ ㄸ ㅃ ㅆ ㅉ ㅒ ㅖ.',
+    kbHintEn: 'Type with the keyboard or the keys below.',
+    showResult: 'Show result',
+    won: ['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'],
+    lost: 'So close — try again tomorrow!',
+    answerIs: "Today's answer",
+    meaning: 'Look it up ↗',
+    played: 'Played', rate: 'Win %', cur: 'Streak', max: 'Max streak',
+    dist: 'Guess distribution', next: 'Next puzzle in',
+    share: 'Copy result', close: 'Close', copied: 'Result copied — paste it to share!', copyFail: 'Could not copy',
+    shareHead: (d: number, lang: Lang, t: string) => `Daily Word Puzzle #${d} (${lang === 'ko' ? 'Korean' : 'English'}) ${t}/6`,
+    helpTitle: 'How to play',
+    help1: 'Guess today’s word in six tries. After each guess the tiles change colour.',
+    help2: 'Green = right spot · Yellow = in the word, wrong spot · Grey = not in the word',
+    help3: 'Korean words are split into the jamo you type on a 2-set keyboard: 6 tiles. A compound vowel like ㅘ takes two tiles (ㅗ+ㅏ); ㄲ takes one.',
+    exampleLabel: 'e.g. 과일 →',
+  },
+} as const;
 
-interface GameState {
-  guesses: string[];
-  currentGuess: string;
-  gameStatus: GameStatus;
-  lastPlayedDate: string;
-}
-
-interface Stats {
-  gamesPlayed: number;
-  gamesWon: number;
-  currentStreak: number;
-  maxStreak: number;
-  lastWinDate: string;
-}
-
-const STORAGE_KEY = 'theutilhub-wordle-storage';
-const BASE_DATE = new Date('2026-01-01');
-
-// 정확한 Wordle 매칭 로직 (동일 글자 중복 처리)
-const evaluateGuess = (guess: string, answer: string): TileStatus[] => {
-  const result: TileStatus[] = Array(guess.length).fill('absent');
-  const answerChars = answer.split('');
-
-  // 1차 패스: 정확한 위치(correct) 확인
-  for (let i = 0; i < guess.length; i++) {
-    if (guess[i] === answerChars[i]) {
-      result[i] = 'correct';
-      answerChars[i] = ''; // 사용됨 표시
+const loadStore = (): Store => {
+  const fresh: Store = { games: {}, stats: { ko: emptyStats(), en: emptyStats() } };
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const data = JSON.parse(raw) as Store;
+      return { games: data.games ?? {}, stats: { ko: { ...emptyStats(), ...data.stats?.ko }, en: { ...emptyStats(), ...data.stats?.en } } };
     }
-  }
-
-  // 2차 패스: 포함(present) 확인
-  for (let i = 0; i < guess.length; i++) {
-    if (result[i] !== 'correct' && answerChars.includes(guess[i])) {
-      result[i] = 'present';
-      answerChars[answerChars.indexOf(guess[i])] = ''; // 사용됨 표시
+    // 이전 버전 기록(언어 구분 없음)은 한글 기록으로 옮긴다
+    const old = JSON.parse(localStorage.getItem(OLD_STORAGE_KEY) ?? 'null');
+    if (old?.stats) {
+      fresh.stats.ko = { ...emptyStats(), played: old.stats.gamesPlayed ?? 0, won: old.stats.gamesWon ?? 0, maxStreak: old.stats.maxStreak ?? 0 };
     }
-  }
+  } catch { /* 저장소를 쓸 수 없으면 새로 시작 */ }
+  return fresh;
+};
 
-  return result;
+const saveStore = (store: Store) => {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch { /* 비공개 모드 등 */ }
+};
+
+const untilMidnight = () => {
+  const now = new Date();
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const sec = Math.max(0, Math.floor((next.getTime() - now.getTime()) / 1000));
+  return [Math.floor(sec / 3600), Math.floor((sec % 3600) / 60), sec % 60].map(n => String(n).padStart(2, '0')).join(':');
 };
 
 export default function WordleClient() {
   const locale = useLocale();
-  const isKorean = locale === 'ko';
+  const isKo = locale === 'ko';
+  const T = isKo ? TEXT.ko : TEXT.en;
 
-  const [currentLanguage, setCurrentLanguage] = useState<'ko' | 'en'>('ko');
-  const maxLength = currentLanguage === 'ko' ? 3 : 5;
-  const [gameState, setGameState] = useState<GameState>({
-    guesses: [],
-    currentGuess: '',
-    gameStatus: 'playing',
-    lastPlayedDate: '',
-  });
-  const [stats, setStats] = useState<Stats>({
-    gamesPlayed: 0,
-    gamesWon: 0,
-    currentStreak: 0,
-    maxStreak: 0,
-    lastWinDate: '',
-  });
-  const [showStats, setShowStats] = useState(false);
-  const [showInvalidWord, setShowInvalidWord] = useState(false);
+  const [lang, setLang] = useState<Lang>(isKo ? 'ko' : 'en');
+  const [ready, setReady] = useState(false);
+  const [day, setDay] = useState(0);
+  const [store, setStore] = useState<Store>({ games: {}, stats: { ko: emptyStats(), en: emptyStats() } });
+  const [current, setCurrent] = useState<string[]>([]);
+  const [shift, setShift] = useState(false);
+  const [toast, setToast] = useState('');
   const [shake, setShake] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [countdown, setCountdown] = useState('');
+  const [enValid, setEnValid] = useState<Set<string> | null>(null);
+  const gameRef = useRef<HTMLDivElement>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 오늘의 단어 인덱스 계산
-  const getTodayIndex = useCallback(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diffTime = today.getTime() - BASE_DATE.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+  const length = WORD_LENGTH[lang];
+  const answerWord = day ? answerFor(day, lang === 'ko' ? KO_ANSWERS : EN_ANSWERS) : '';
+  const answer = answerWord ? toTiles(lang, answerWord) : [];
+  const game: Game = store.games[lang]?.day === day ? store.games[lang]! : { day, guesses: [], status: 'playing' };
+  const guessTiles = game.guesses.map(g => toTiles(lang, g));
+  const stats = store.stats[lang];
+  const keys = answer.length ? keyStatuses(guessTiles, answer) : {};
+  const playing = ready && game.status === 'playing';
+
+  // 저장된 기록은 브라우저에서만 읽는다 (서버 HTML에는 빈 판이 들어간다)
+  useEffect(() => {
+    setStore(loadStore());
+    setDay(dayNumber());
+    setReady(true);
   }, []);
 
-  // 오늘의 정답 가져오기
-  const getTodayAnswer = useCallback(() => {
-    const index = getTodayIndex();
-    const words = currentLanguage === 'ko' ? KOREAN_WORDS : ENGLISH_WORDS;
-    return words[index % words.length];
-  }, [currentLanguage, getTodayIndex]);
-
-  const getTodayDateString = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  };
-
-  // localStorage 로드
+  // 자정이 지나면 새 문제로 넘어간다
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        setStats(data.stats || stats);
-
-        const todayDate = getTodayDateString();
-        if (data.gameState && data.gameState.lastPlayedDate === todayDate && data.gameState.language === currentLanguage) {
-          setGameState(data.gameState);
-        } else {
-          // 새로운 날이면 게임 상태 초기화
-          setGameState({
-            guesses: [],
-            currentGuess: '',
-            gameStatus: 'playing',
-            lastPlayedDate: todayDate,
-          });
-        }
-      } catch (e) {
-        console.error('Failed to load game state:', e);
-      }
-    }
-  }, [currentLanguage]);
-
-  // 게임 상태 저장
-  const saveGameState = useCallback((newGameState: GameState, newStats: Stats) => {
-    const data = {
-      gameState: { ...newGameState, language: currentLanguage },
-      stats: newStats,
+    const tick = () => {
+      setCountdown(untilMidnight());
+      const now = dayNumber();
+      setDay(prev => (prev && prev !== now ? now : prev));
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [currentLanguage]);
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
 
-  // 키 입력 처리
-  const handleKeyPress = useCallback((key: string) => {
-    if (gameState.gameStatus !== 'playing') return;
+  // 날짜가 바뀌면 입력 중이던 줄은 비운다
+  useEffect(() => { setCurrent([]); }, [day]);
 
-    const answer = getTodayAnswer();
-
-    if (key === 'ENTER') {
-      if (gameState.currentGuess.length !== maxLength) {
-        setShowInvalidWord(true);
-        setShake(true);
-        setTimeout(() => {
-          setShowInvalidWord(false);
-          setShake(false);
-        }, 500);
-        return;
-      }
-
-      const newGuesses = [...gameState.guesses, gameState.currentGuess];
-      const won = gameState.currentGuess === answer;
-      const lost = newGuesses.length >= 6 && !won;
-
-      let newStats = { ...stats };
-      let newGameStatus: GameStatus = 'playing';
-
-      if (won) {
-        newGameStatus = 'won';
-        newStats.gamesPlayed += 1;
-        newStats.gamesWon += 1;
-
-        const todayDate = getTodayDateString();
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayDate = yesterday.toISOString().split('T')[0];
-
-        if (stats.lastWinDate === yesterdayDate) {
-          newStats.currentStreak += 1;
-        } else if (stats.lastWinDate === todayDate) {
-          // 같은 날 이미 이겼음
-        } else {
-          newStats.currentStreak = 1;
-        }
-
-        newStats.maxStreak = Math.max(newStats.maxStreak, newStats.currentStreak);
-        newStats.lastWinDate = todayDate;
-
-        setTimeout(() => setShowStats(true), 1500);
-      } else if (lost) {
-        newGameStatus = 'lost';
-        newStats.gamesPlayed += 1;
-        setTimeout(() => setShowStats(true), 1500);
-      }
-
-      const newGameState = {
-        guesses: newGuesses,
-        currentGuess: '',
-        gameStatus: newGameStatus,
-        lastPlayedDate: getTodayDateString(),
-      };
-
-      setGameState(newGameState);
-      setStats(newStats);
-      saveGameState(newGameState, newStats);
-
-    } else if (key === 'BACKSPACE') {
-      setGameState(prev => ({
-        ...prev,
-        currentGuess: prev.currentGuess.slice(0, -1),
-      }));
-    } else if (gameState.currentGuess.length < maxLength) {
-      setGameState(prev => ({
-        ...prev,
-        currentGuess: prev.currentGuess + key,
-      }));
-    }
-  }, [gameState, stats, currentLanguage, getTodayAnswer, saveGameState]);
-
-  // 한글 입력 처리 — ref 기반 (state 렌더링이 IME를 깨뜨리는 문제 방지)
-  const composingRef = useRef(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // input → React state 동기화 (조합 중이 아닐 때만)
-  const syncInputToState = useCallback(() => {
-    if (!inputRef.current) return;
-    const raw = inputRef.current.value;
-    // 완성된 한글 + 조합 중인 자모 모두 허용
-    const filtered = raw.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
-    const clamped = filtered.slice(0, maxLength);
-    // DOM 값도 보정
-    if (inputRef.current.value !== clamped) {
-      inputRef.current.value = clamped;
-    }
-    setGameState(prev => ({ ...prev, currentGuess: clamped }));
-  }, [maxLength]);
-
-  // state → DOM 동기화 (ENTER 후 input 초기화, 언어 전환 등)
+  // 영어 입력 허용 목록(약 35KB)은 영어 판을 열 때만 받는다
   useEffect(() => {
-    if (inputRef.current && !composingRef.current) {
-      if (inputRef.current.value !== gameState.currentGuess) {
-        inputRef.current.value = gameState.currentGuess;
-      }
-    }
-  }, [gameState.currentGuess]);
+    if (lang !== 'en' || enValid) return;
+    let alive = true;
+    import('@/constants/wordle/en-valid').then(m => { if (alive) setEnValid(new Set([...m.EN_VALID, ...EN_ANSWERS])); });
+    return () => { alive = false; };
+  }, [lang, enValid]);
 
-  // 키보드 이벤트 (영어 전용 — 한글은 input 이벤트로 처리)
+  const flash = useCallback((msg: string, doShake = false) => {
+    setToast(msg);
+    if (doShake) { setShake(true); setTimeout(() => setShake(false), 450); }
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(''), 1600);
+  }, []);
+
+  const submit = useCallback(() => {
+    if (!playing) return;
+    if (current.length < length) { flash(T.short(length), true); return; }
+    let word: string;
+    if (lang === 'ko') {
+      word = compose(current);
+      if (!KO_SET.has(word)) { flash(T.notWord, true); return; }
+    } else {
+      if (!enValid) { flash(T.loading); return; }
+      word = current.join('');
+      if (!enValid.has(word.toLowerCase())) { flash(T.notWord, true); return; }
+    }
+    const guesses = [...game.guesses, word];
+    const won = current.join('') === answer.join('');
+    const status: Status = won ? 'won' : guesses.length >= MAX_GUESSES ? 'lost' : 'playing';
+    const nextStats = status === 'playing' ? stats : recordResult(stats, day, won, guesses.length);
+    const next: Store = { games: { ...store.games, [lang]: { day, guesses, status } }, stats: { ...store.stats, [lang]: nextStats } };
+    setStore(next);
+    saveStore(next);
+    setCurrent([]);
+    if (status !== 'playing') setTimeout(() => setShowResult(true), length * 120 + 600);
+  }, [playing, current, length, lang, enValid, game.guesses, answer, stats, day, store, flash, T]);
+
+  const typeKey = useCallback((k: string) => {
+    if (!playing) return;
+    if (k === 'ENTER') { submit(); return; }
+    if (k === 'BACK') { setCurrent(c => c.slice(0, -1)); return; }
+    setCurrent(c => (c.length < length ? [...c, k] : c));
+  }, [playing, submit, length]);
+
+  // 물리 키보드
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (document.activeElement?.tagName === 'INPUT') return;
+    const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-      if (e.key === 'Enter') {
-        handleKeyPress('ENTER');
-      } else if (e.key === 'Backspace') {
-        handleKeyPress('BACKSPACE');
-      } else if (/^[a-zA-Z]$/.test(e.key) && currentLanguage === 'en') {
-        handleKeyPress(e.key.toUpperCase());
+      const el = document.activeElement;
+      // 게임 밖의 입력창·버튼(FAQ 등)에 초점이 있으면 건드리지 않는다
+      if (el && el !== document.body && !gameRef.current?.contains(el)) return;
+      if (e.key === 'Enter') { e.preventDefault(); typeKey('ENTER'); return; }
+      if (e.key === 'Backspace') { e.preventDefault(); typeKey('BACK'); return; }
+      if (!e.code.startsWith('Key')) return;
+      if (lang === 'ko') {
+        const m = KO_CODE[e.code];
+        if (!m) return;
+        e.preventDefault();
+        typeKey(e.shiftKey && m[1] ? m[1] : m[0]);
+      } else {
+        e.preventDefault();
+        typeKey(e.code.slice(3));
       }
     };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lang, typeKey]);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPress, currentLanguage]);
-
-  // 타일 상태 가져오기
-  const getTileStatus = (rowIndex: number, colIndex: number): TileStatus => {
-    const answer = getTodayAnswer();
-    const guess = gameState.guesses[rowIndex];
-
-    if (!guess) return 'empty';
-    if (!guess[colIndex]) return 'empty';
-
-    const evaluated = evaluateGuess(guess, answer);
-    return evaluated[colIndex];
-  };
-
-  // 키보드 키 상태
-  const getKeyStatus = (key: string): TileStatus => {
-    const answer = getTodayAnswer();
-    let bestStatus: TileStatus = 'empty';
-
-    for (const guess of gameState.guesses) {
-      const evaluated = evaluateGuess(guess, answer);
-      for (let i = 0; i < guess.length; i++) {
-        if (guess[i] === key) {
-          const status = evaluated[i];
-          if (status === 'correct') {
-            return 'correct'; // 초록색은 무조건 최우선
-          } else if (status === 'present') {
-            bestStatus = 'present'; // 노란색은 회색/빈칸보다 우선
-          } else if (status === 'absent' && bestStatus === 'empty') {
-            bestStatus = 'absent';
-          }
-        }
-      }
-    }
-
-    return bestStatus;
-  };
-
-  // 공유하기
-  const handleShare = () => {
-    const answer = getTodayAnswer();
-    const emoji = gameState.guesses.map(guess => {
-      const evaluated = evaluateGuess(guess, answer);
-      return evaluated.map(status => {
-        if (status === 'correct') return '🟩';
-        if (status === 'present') return '🟨';
-        return '⬛';
-      }).join('');
-    }).join('\n');
-
-    const dayCount = getTodayIndex() + 1;
-    const attempts = gameState.gameStatus === 'won' ? gameState.guesses.length : 'X';
-    const text = `Utility Hub Wordle #${dayCount} - ${attempts}/6\n\n${emoji}\n\nhttps://www.theutilhub.com`;
-
-    navigator.clipboard.writeText(text);
-    alert(currentLanguage === 'ko' ? '클립보드에 복사되었습니다!' : 'Copied to clipboard!');
-  };
-
-  // 언어 변경
-  const handleLanguageToggle = (lang: 'ko' | 'en') => {
-    setCurrentLanguage(lang);
-    setGameState({
-      guesses: [],
-      currentGuess: '',
-      gameStatus: 'playing',
-      lastPlayedDate: getTodayDateString(),
-    });
-  };
-
-  // 영어 키보드 레이아웃
-  const englishKeyboard = [
-    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE'],
-  ];
-
-  // 다음 퍼즐까지 남은 시간
-  const [timeUntilNext, setTimeUntilNext] = useState('');
-
+  // 결과 창: Esc로 닫기
   useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const tomorrow = new Date(now);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
+    if (!showResult) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowResult(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showResult]);
 
-      const diff = tomorrow.getTime() - now.getTime();
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  const switchLang = (l: Lang) => {
+    if (l === lang) return;
+    setLang(l);
+    setCurrent([]);
+    setShift(false);
+    setShowResult(false);
+  };
 
-      setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
-    };
+  const share = async () => {
+    const grid = guessTiles.map(g => evaluate(g, answer).map(st => (st === 'correct' ? '🟩' : st === 'present' ? '🟨' : '⬜')).join('')).join('\n');
+    const tries = game.status === 'won' ? String(game.guesses.length) : 'X';
+    const text = `${T.shareHead(day, lang, tries)}\n\n${grid}\n\n${PAGE_URL.replace('{locale}', locale)}`;
+    try { await navigator.clipboard.writeText(text); flash(T.copied); } catch { flash(T.copyFail); }
+  };
 
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const tileClass = (st?: TileStatus, filled?: boolean) =>
+    `${s.tile} ${st ? s[`tile_${st}`] : filled ? s.tile_filled : ''}`;
 
-  const winRate = stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0;
+  const renderKey = (code: string) => {
+    if (code === 'SHIFT') {
+      return (
+        <button key={code} type="button" className={`${s.key} ${s.key_wide} ${shift ? s.key_shift_on : ''}`}
+          aria-pressed={shift} aria-label="Shift" disabled={!playing} onClick={() => setShift(v => !v)}>⇧</button>
+      );
+    }
+    if (code === 'BACK') {
+      return <button key={code} type="button" className={`${s.key} ${s.key_wide}`} aria-label={T.back} disabled={!playing} onClick={() => typeKey('BACK')}>⌫</button>;
+    }
+    if (code === 'ENTER') {
+      return <button key={code} type="button" className={`${s.key} ${s.key_wide}`} disabled={!playing} onClick={() => typeKey('ENTER')}>{T.enter}</button>;
+    }
+    const label = lang === 'ko' ? (shift && KO_CODE[code][1] ? KO_CODE[code][1]! : KO_CODE[code][0]) : code;
+    const st = keys[label];
+    return (
+      <button key={code} type="button" className={`${s.key} ${st ? s[`key_${st}`] : ''}`} disabled={!playing}
+        onClick={() => { typeKey(label); if (shift) setShift(false); }}>
+        {label}
+      </button>
+    );
+  };
+
+  const winRate = stats.played ? Math.round((stats.won / stats.played) * 100) : 0;
+  const streakNow = day ? liveStreak(stats, day) : 0;
+  const maxDist = Math.max(1, ...stats.dist);
+  const dictUrl = lang === 'ko'
+    ? `https://stdict.korean.go.kr/search/searchResult.do?searchKeyword=${encodeURIComponent(answerWord)}`
+    : `https://en.wiktionary.org/wiki/${answerWord}`;
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className={s.container}>
       <NavigationActions />
 
-      {/* Header */}
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Grid3x3 size={40} color="#8b5cf6" />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', margin: 0 }}>
-            {currentLanguage === 'ko' ? '일일 단어 퍼즐' : 'Daily Word Puzzle'}
-          </h1>
-          <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--surface)', padding: '0.5rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-            <button
-              onClick={() => handleLanguageToggle('ko')}
-              style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                border: 'none',
-                background: currentLanguage === 'ko' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'transparent',
-                color: currentLanguage === 'ko' ? 'white' : 'var(--text-secondary)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-              }}
-            >
-              KR
-            </button>
-            <button
-              onClick={() => handleLanguageToggle('en')}
-              style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                border: 'none',
-                background: currentLanguage === 'en' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'transparent',
-                color: currentLanguage === 'en' ? 'white' : 'var(--text-secondary)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-              }}
-            >
-              EN
-            </button>
-          </div>
-        </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {currentLanguage === 'ko'
-            ? `매일 새로운 ${maxLength}글자 단어를 맞춰보세요!`
-            : `Guess the ${maxLength}-letter word every day!`}
-        </p>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-          {currentLanguage === 'ko' ? `퍼즐 #${getTodayIndex() + 1}` : `Puzzle #${getTodayIndex() + 1}`}
-        </p>
+      <header className={s.header}>
+        <div className={s.icon_wrap}><Grid3x3 size={40} /></div>
+        <h1 className={s.title}>{T.title}</h1>
+        <p className={s.subtitle}>{T.subtitle}</p>
       </header>
 
-      {/* Game Board */}
-      <div className="flex flex-col items-center gap-6 animate-slide-up">
-        {/* Status Bar */}
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <div className="glass-panel" style={{ padding: '0.75rem 1.5rem', borderRadius: '12px' }}>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
-              {currentLanguage === 'ko' ? '현재 연승' : 'Current Streak'}
-            </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#10b981' }}>
-              {stats.currentStreak} 🔥
-            </div>
-          </div>
-          <div className="glass-panel" style={{ padding: '0.75rem 1.5rem', borderRadius: '12px' }}>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
-              {currentLanguage === 'ko' ? '최대 연승' : 'Max Streak'}
-            </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f59e0b' }}>
-              {stats.maxStreak} 👑
-            </div>
-          </div>
-          <div className="glass-panel" style={{ padding: '0.75rem 1.5rem', borderRadius: '12px' }}>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
-              {currentLanguage === 'ko' ? '승률' : 'Win Rate'}
-            </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#06b6d4' }}>
-              {winRate}% 📊
-            </div>
-          </div>
+      <div className={s.game} ref={gameRef}>
+        <div className={s.tabs} role="tablist" aria-label={isKo ? '언어' : 'Language'}>
+          {(['ko', 'en'] as Lang[]).map(l => (
+            <button key={l} type="button" role="tab" aria-selected={lang === l}
+              className={`${s.tab} ${lang === l ? s.tab_active : ''}`} onClick={() => switchLang(l)}>
+              {(l === 'ko' ? T.tabKo : T.tabEn)[0]}<small>{(l === 'ko' ? T.tabKo : T.tabEn)[1]}</small>
+            </button>
+          ))}
         </div>
 
-        {/* Invalid Word Message */}
-        {showInvalidWord && (
-          <div style={{
-            color: '#ef4444',
-            fontWeight: 600,
-            fontSize: '0.95rem',
-            animation: 'pulse 0.5s ease-in-out'
-          }}>
-            {currentLanguage === 'ko' ? `${maxLength}글자를 입력하세요!` : `Enter ${maxLength} letters!`}
-          </div>
-        )}
+        <div className={s.meta} aria-live="polite">
+          {ready && <span><strong>{T.puzzle(day)}</strong></span>}
+          <span>{T.streak} <strong>{streakNow}</strong></span>
+          <span>{T.winRate} <strong>{winRate}%</strong></span>
+        </div>
 
-        {/* Grid */}
-        <div className={shake ? 'shake' : ''} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', width: '100%' }}>
-          {Array.from({ length: 6 }).map((_, rowIndex) => {
-            const isCurrentRow = rowIndex === gameState.guesses.length;
-            const guess = gameState.guesses[rowIndex] || '';
-            const displayGuess = isCurrentRow ? gameState.currentGuess : guess;
+        {toast && <div className={s.toast} role="status">{toast}</div>}
 
+        <div className={s.board} role="grid" aria-label={isKo ? '단어 판' : 'Word board'}>
+          {Array.from({ length: MAX_GUESSES }, (_, r) => {
+            const done = guessTiles[r];
+            const isCurrent = r === game.guesses.length && game.status === 'playing';
+            const tiles = done ?? (isCurrent ? current : []);
+            const result = done ? evaluate(done, answer) : null;
             return (
-              <div key={rowIndex} style={{ display: 'flex', gap: '0.5rem' }}>
-                {Array.from({ length: maxLength }).map((_, colIndex) => {
-                  const char = displayGuess[colIndex] || '';
-                  const status = getTileStatus(rowIndex, colIndex);
-                  const isFilled = char !== '' && isCurrentRow;
-
-                  return (
-                    <div
-                      key={colIndex}
-                      className="tile"
-                      data-status={status}
-                      data-filled={isFilled}
-                      style={{
-                        width: currentLanguage === 'ko' ? '70px' : '62px',
-                        height: currentLanguage === 'ko' ? '70px' : '62px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: currentLanguage === 'ko' ? '1.75rem' : '2rem',
-                        fontWeight: 700,
-                        border: '2px solid',
-                        borderRadius: '8px',
-                        transition: 'all 0.3s ease',
-                        animation: status !== 'empty' && !isCurrentRow ? `flip 0.5s ease ${colIndex * 0.1}s` : 'none',
-                      }}
-                    >
-                      {char}
+              <div key={r} className={`${s.row} ${isCurrent && shake ? s.shake : ''}`} role="row">
+                <div className={`${s.tiles} ${lang === 'ko' ? s.tiles_ko : s.tiles_en}`}>
+                  {Array.from({ length }, (_, c) => (
+                    <div key={c} role="gridcell" className={tileClass(result?.[c], !!tiles[c])}
+                      style={result ? { animationDelay: `${c * 0.12}s` } : undefined}
+                      aria-label={tiles[c] ? `${tiles[c]}${result ? ` ${result[c]}` : ''}` : undefined}>
+                      {tiles[c] ?? ''}
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+                {lang === 'ko' && done && <span className={s.row_word}>{game.guesses[r]}</span>}
               </div>
             );
           })}
         </div>
 
-        {/* Korean Input Field — Uncontrolled (모바일 IME 호환) */}
-        {currentLanguage === 'ko' && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-            <input
-              ref={inputRef}
-              type="text"
-              autoFocus
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              disabled={gameState.gameStatus !== 'playing'}
-              placeholder="여기에 한글 입력 (3글자)"
-              onChange={() => {
-                if (composingRef.current) {
-                  // 조합 중: 타일 표시용 state만 업데이트, DOM은 절대 건드리지 않음
-                  if (inputRef.current) {
-                    const raw = inputRef.current.value;
-                    const filtered = raw.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
-                    const clamped = filtered.slice(0, maxLength);
-                    setGameState(prev => ({ ...prev, currentGuess: clamped }));
-                  }
-                  return;
-                }
-                syncInputToState();
-              }}
-              onCompositionStart={() => {
-                composingRef.current = true;
-              }}
-              onCompositionEnd={() => {
-                composingRef.current = false;
-                // 조합 완료 후 동기화 — setTimeout으로 Android 이벤트 순서 차이 대응
-                setTimeout(() => syncInputToState(), 0);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !composingRef.current) {
-                  e.preventDefault();
-                  // 제출 시에만 완성된 한글 검증
-                  if (inputRef.current) {
-                    const final = inputRef.current.value.replace(/[^가-힣]/g, '');
-                    inputRef.current.value = final;
-                    setGameState(prev => ({ ...prev, currentGuess: final }));
-                  }
-                  // 다음 틱에서 ENTER 처리 (state 반영 후)
-                  setTimeout(() => handleKeyPress('ENTER'), 0);
-                }
-              }}
-              style={{
-                padding: '1rem',
-                fontSize: '1.5rem',
-                textAlign: 'center',
-                width: '100%',
-                maxWidth: '300px',
-                borderRadius: '8px',
-                border: '2px solid var(--border)',
-                background: 'var(--surface)',
-                color: 'var(--text-primary)',
-                fontWeight: 700,
-                outline: 'none',
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#10b981';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'var(--border)';
-              }}
-            />
-          </div>
+        {lang === 'ko' && game.status === 'playing' && (
+          <div className={s.preview}><span>{T.typing}</span>{compose(current)}</div>
         )}
 
-        {/* Virtual Keyboard / Korean Input Hint */}
-        <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: '16px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
-          {currentLanguage === 'ko' ? (
-            // 한글 모드: 입력 안내 및 버튼
-            <div style={{ textAlign: 'center', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                👆 위의 입력창에 한글을 타이핑하세요 (3글자)
+        {ready && game.status !== 'playing' ? (
+          <button type="button" className={s.result_btn} onClick={() => setShowResult(true)}>{T.showResult}</button>
+        ) : (
+          <div className={s.keyboard}>
+            {(lang === 'ko' ? KO_ROWS : EN_ROWS).map((row, i) => (
+              <div key={i} className={s.krow}>{row.map(renderKey)}</div>
+            ))}
+            {lang === 'ko' && (
+              <div className={s.krow}>
+                <button type="button" className={`${s.key} ${s.key_enter}`} disabled={!playing} onClick={() => typeKey('ENTER')}>{T.enter}</button>
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                <button
-                  onClick={() => {
-                    if (inputRef.current) {
-                      const cur = inputRef.current.value;
-                      inputRef.current.value = cur.slice(0, -1);
-                      syncInputToState();
-                      inputRef.current.focus();
-                    }
-                  }}
-                  disabled={gameState.gameStatus !== 'playing'}
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    background: 'var(--surface)',
-                    color: 'var(--text-primary)',
-                    fontWeight: 600,
-                    cursor: gameState.gameStatus === 'playing' ? 'pointer' : 'not-allowed',
-                    opacity: gameState.gameStatus !== 'playing' ? 0.5 : 1,
-                  }}
-                >
-                  ⌫ 지우기
-                </button>
-                <button
-                  onClick={() => {
-                    if (inputRef.current) {
-                      const final = inputRef.current.value.replace(/[^가-힣]/g, '');
-                      inputRef.current.value = final;
-                      setGameState(prev => ({ ...prev, currentGuess: final }));
-                      setTimeout(() => handleKeyPress('ENTER'), 0);
-                    }
-                  }}
-                  disabled={gameState.gameStatus !== 'playing'}
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                    color: 'white',
-                    fontWeight: 600,
-                    cursor: gameState.gameStatus === 'playing' ? 'pointer' : 'not-allowed',
-                    opacity: gameState.gameStatus !== 'playing' ? 0.5 : 1,
-                  }}
-                >
-                  ↵ 확인
-                </button>
-              </div>
-            </div>
-          ) : (
-            // 영어 모드: 가상 키보드 표시
-            englishKeyboard.map((row, rowIndex) => (
-              <div key={rowIndex} style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center', marginBottom: rowIndex < englishKeyboard.length - 1 ? '0.4rem' : 0 }}>
-                {row.map((key) => {
-                  const status = key.length === 1 ? getKeyStatus(key) : 'empty';
-                  const isSpecial = key === 'ENTER' || key === 'BACKSPACE';
-
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => handleKeyPress(key)}
-                      className="keyboard-key"
-                      data-status={status}
-                      disabled={gameState.gameStatus !== 'playing'}
-                      style={{
-                        padding: isSpecial ? '0 1.5rem' : '0',
-                        height: '58px',
-                        minWidth: isSpecial ? '80px' : '40px',
-                        fontSize: isSpecial ? '0.75rem' : '1.1rem',
-                        fontWeight: 600,
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: gameState.gameStatus === 'playing' ? 'pointer' : 'not-allowed',
-                        transition: 'all 0.2s',
-                        opacity: gameState.gameStatus !== 'playing' ? 0.5 : 1,
-                      }}
-                    >
-                      {key === 'BACKSPACE' ? '⌫' : key === 'ENTER' ? '↵' : key}
-                    </button>
-                  );
-                })}
-              </div>
-            ))
-          )}
-        </div>
+            )}
+          </div>
+        )}
+        <p className={s.kb_hint}>{lang === 'ko' ? T.kbHintKo : T.kbHintEn}</p>
       </div>
 
-      {/* Stats Modal */}
-      {showStats && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowStats(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            animation: 'fadeIn 0.3s ease',
-          }}
-        >
-          <div
-            className="glass-panel modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              padding: '2rem',
-              borderRadius: '16px',
-              maxWidth: '500px',
-              width: '90%',
-              animation: 'slideUp 0.3s ease',
-            }}
-          >
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1.5rem', textAlign: 'center', color: 'var(--primary)' }}>
-              {gameState.gameStatus === 'won'
-                ? (currentLanguage === 'ko' ? '🎉 축하합니다!' : '🎉 Congratulations!')
-                : (currentLanguage === 'ko' ? '😢 아쉽네요!' : '😢 Better luck tomorrow!')}
-            </h2>
+      <details className={s.help}>
+        <summary>{T.helpTitle}</summary>
+        <p>{T.help1}</p>
+        <p>{T.help2}</p>
+        <p>{T.help3}</p>
+        <div className={s.help_row}>
+          <span>{T.exampleLabel}</span>
+          {['ㄱ', 'ㅗ', 'ㅏ', 'ㅇ', 'ㅣ', 'ㄹ'].map((j, i) => (
+            <span key={i} className={`${s.tile} ${s.mini} ${i === 0 ? s.tile_correct : i === 3 ? s.tile_present : ''}`}>{j}</span>
+          ))}
+        </div>
+      </details>
 
-            {gameState.gameStatus === 'lost' && (
-              <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>
-                {currentLanguage === 'ko' ? '정답은' : 'The answer was'}: <strong style={{ color: '#10b981', fontSize: '1.25rem' }}>{getTodayAnswer()}</strong>
-              </p>
-            )}
-
-            {/* Statistics */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div style={{ textAlign: 'center', padding: '1rem', background: 'var(--surface)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 700, color: '#10b981' }}>{stats.gamesPlayed}</div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                  {currentLanguage === 'ko' ? '플레이' : 'Played'}
-                </div>
-              </div>
-              <div style={{ textAlign: 'center', padding: '1rem', background: 'var(--surface)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 700, color: '#f59e0b' }}>{winRate}%</div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                  {currentLanguage === 'ko' ? '승률' : 'Win Rate'}
-                </div>
-              </div>
-              <div style={{ textAlign: 'center', padding: '1rem', background: 'var(--surface)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 700, color: '#06b6d4' }}>{stats.currentStreak}</div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                  {currentLanguage === 'ko' ? '현재 연승' : 'Current'}
-                </div>
-              </div>
-              <div style={{ textAlign: 'center', padding: '1rem', background: 'var(--surface)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 700, color: '#8b5cf6' }}>{stats.maxStreak}</div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                  {currentLanguage === 'ko' ? '최대 연승' : 'Max Streak'}
-                </div>
-              </div>
+      {showResult && game.status !== 'playing' && (
+        <div className={s.overlay} onClick={() => setShowResult(false)}>
+          <div className={s.modal} role="dialog" aria-modal="true" aria-labelledby="wd-result-title" onClick={e => e.stopPropagation()}>
+            <h2 id="wd-result-title">{game.status === 'won' ? T.won[game.guesses.length - 1] : T.lost}</h2>
+            <div className={s.answer}>
+              {T.answerIs}
+              <strong>{answerWord.toUpperCase()}</strong>
+              <a href={dictUrl} target="_blank" rel="noopener noreferrer">{T.meaning}</a>
             </div>
-
-            {/* Next Puzzle Countdown */}
-            <div style={{
-              textAlign: 'center',
-              padding: '1.5rem',
-              background: 'var(--surface)',
-              borderRadius: '12px',
-              marginBottom: '1.5rem',
-              border: '1px solid var(--border)'
-            }}>
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-                {currentLanguage === 'ko' ? '다음 퍼즐까지' : 'Next Puzzle In'}
-              </div>
-              <div style={{ fontSize: '2rem', fontWeight: 700, color: '#10b981', fontFamily: 'monospace' }}>
-                {timeUntilNext}
-              </div>
+            <div className={s.stat_grid}>
+              {[[stats.played, T.played], [`${winRate}%`, T.rate], [streakNow, T.cur], [stats.maxStreak, T.max]].map(([n, l]) => (
+                <div key={String(l)}><div className={s.stat_num}>{n}</div><div className={s.stat_label}>{l}</div></div>
+              ))}
             </div>
-
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button
-                onClick={handleShare}
-                style={{
-                  flex: 1,
-                  padding: '1rem',
-                  borderRadius: '12px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                  color: 'white',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  transition: 'transform 0.2s',
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                {currentLanguage === 'ko' ? '🎯 공유하기' : '🎯 Share'}
-              </button>
-              <button
-                onClick={() => setShowStats(false)}
-                style={{
-                  flex: 1,
-                  padding: '1rem',
-                  borderRadius: '12px',
-                  border: '1px solid var(--border)',
-                  background: 'var(--surface)',
-                  color: 'var(--text-primary)',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  transition: 'transform 0.2s',
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                {currentLanguage === 'ko' ? '닫기' : 'Close'}
-              </button>
+            <div className={s.dist}>
+              <div className={s.dist_title}>{T.dist}</div>
+              {stats.dist.map((n, i) => (
+                <div key={i} className={s.dist_row}>
+                  <span>{i + 1}</span>
+                  <div className={`${s.dist_bar} ${game.status === 'won' && game.guesses.length === i + 1 ? s.dist_bar_now : ''}`}
+                    style={{ width: `${Math.max(8, (n / maxDist) * 100)}%` }}>{n}</div>
+                </div>
+              ))}
+            </div>
+            <div className={s.countdown}>{T.next}<strong>{countdown}</strong></div>
+            <div className={s.modal_actions}>
+              <button type="button" className={s.btn_primary} onClick={share}>{T.share}</button>
+              <button type="button" className={s.btn_ghost} onClick={() => setShowResult(false)} autoFocus>{T.close}</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Styles */}
-      <style jsx>{`
-        .tile[data-status="empty"] {
-          background: var(--surface);
-          border-color: var(--border);
-          color: var(--text-primary);
-        }
-
-        .tile[data-status="filled"] {
-          background: var(--surface);
-          border-color: var(--text-secondary);
-          color: var(--text-primary);
-          transform: scale(1.05);
-        }
-
-        .tile[data-status="correct"] {
-          background: #10b981;
-          border-color: #10b981;
-          color: white;
-        }
-
-        .tile[data-status="present"] {
-          background: #f59e0b;
-          border-color: #f59e0b;
-          color: white;
-        }
-
-        .tile[data-status="absent"] {
-          background: #64748b;
-          border-color: #64748b;
-          color: white;
-        }
-
-        .keyboard-key[data-status="empty"] {
-          background: var(--surface);
-          color: var(--text-primary);
-        }
-
-        .keyboard-key[data-status="correct"] {
-          background: #10b981;
-          color: white;
-        }
-
-        .keyboard-key[data-status="present"] {
-          background: #f59e0b;
-          color: white;
-        }
-
-        .keyboard-key[data-status="absent"] {
-          background: #64748b;
-          color: white;
-        }
-
-        .keyboard-key:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .shake {
-          animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-10px); }
-          75% { transform: translateX(10px); }
-        }
-
-        @keyframes flip {
-          0% { transform: rotateX(0); }
-          50% { transform: rotateX(90deg); }
-          100% { transform: rotateX(0); }
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-      `}</style>
-
-      {/* 공유하기 */}
-      <ShareBar
-        title={currentLanguage === 'ko' ? '일일 단어 퍼즐' : 'Daily Word Puzzle'}
-        description={currentLanguage === 'ko' ? `매일 새로운 ${maxLength}글자 단어를 맞춰보세요!` : `Guess the ${maxLength}-letter word every day!`}
-      />
-
-      {/* 추천 도구 */}
+      <ShareBar title={T.title} description={T.subtitle} />
       <RelatedTools toolId="utilities/utility/wordle" />
+      <div className={s.ad_slot}>AD</div>
 
-      {/* 광고 영역 */}
-      <div style={{
-        width: '100%',
-        minHeight: '90px',
-        background: 'rgba(226, 232, 240, 0.3)',
-        border: '1px dashed #cbd5e1',
-        borderRadius: '0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#94a3b8',
-        fontSize: '0.875rem',
-        margin: '2rem 0'
-      }}>
-        광고 영역
-      </div>
-
-      {/* SEO Section */}
       <SeoSection
         ko={{
-          title: currentLanguage === 'ko' ? '일일 단어 퍼즐 - 매일 새로운 도전!' : 'Daily Word Puzzle - New Challenge Every Day!',
-          description: currentLanguage === 'ko'
-            ? 'Utility Hub의 일일 단어 퍼즐은 매일 새로운 5글자 단어를 맞추는 두뇌 게임입니다. 한국어와 영어를 지원하며, 연승 기록을 추적하여 매일 재방문을 유도합니다. 100% 무료로 플레이하고 친구들과 결과를 공유하세요!'
-            : 'Utility Hub\'s Daily Word Puzzle is a brain game where you guess a new 5-letter word every day. Supports Korean and English, tracks your winning streak to encourage daily visits. Play 100% free and share your results with friends!',
+          title: '일일 단어 퍼즐: 자모로 맞히는 한글 워들',
+          description: '일일 단어 퍼즐은 하루에 한 번, 모든 사람에게 같은 단어가 나오는 워들(Wordle) 방식의 단어 맞히기 게임입니다. 한글 판은 단어를 두벌식 자판에서 누르는 순서대로 자음과 모음으로 풀어 6칸에 맞춥니다. 예를 들어 "학생"은 ㅎ·ㅏ·ㄱ·ㅅ·ㅐ·ㅇ, "과일"은 겹모음 ㅘ를 ㅗ와 ㅏ로 나눠 ㄱ·ㅗ·ㅏ·ㅇ·ㅣ·ㄹ이 됩니다. 글자(음절) 단위로 비교하면 한 칸에 올 수 있는 글자가 1만 개가 넘어 힌트가 거의 나오지 않지만, 자모로 나누면 자음과 모음의 위치를 하나씩 좁혀 가며 여섯 번 안에 추리로 정답에 다가갈 수 있습니다. 정답은 국립국어원 「한국어 학습용 어휘 목록」의 1·2단계 명사 가운데 자모가 6개인 388개 단어에서 나오고, 입력할 수 있는 단어는 약 1,500개입니다. 목록에 없는 단어를 넣으면 기회를 쓰지 않고 다시 입력하게 합니다. 영어 판은 원조 워들처럼 알파벳 5글자이며 약 6,400개의 영어 단어를 입력할 수 있습니다. 기기 시계 기준 자정마다 새 문제가 열리고, 한글·영어 판의 진행 상황과 연승·승률·맞힌 횟수 분포는 브라우저에 따로 저장됩니다. 결과는 정답이 드러나지 않는 색깔 칸으로 복사해 친구에게 보낼 수 있습니다.',
           useCases: [
-            {
-              icon: '🧠',
-              title: currentLanguage === 'ko' ? '두뇌 트레이닝' : 'Brain Training',
-              desc: currentLanguage === 'ko'
-                ? '매일 단어 퍼즐을 풀면서 어휘력과 추론 능력을 향상시키세요. 규칙적인 두뇌 활동으로 집중력을 높일 수 있습니다.'
-                : 'Improve your vocabulary and reasoning skills by solving word puzzles daily. Regular brain activity enhances concentration.',
-            },
-            {
-              icon: '🔥',
-              title: currentLanguage === 'ko' ? '연승 도전' : 'Streak Challenge',
-              desc: currentLanguage === 'ko'
-                ? '매일 퍼즐을 풀고 연승 기록을 쌓아보세요. 최대 연승 기록에 도전하고, 친구들과 경쟁할 수 있습니다.'
-                : 'Solve puzzles daily and build your winning streak. Challenge your max streak record and compete with friends.',
-            },
-            {
-              icon: '🌏',
-              title: currentLanguage === 'ko' ? '글로벌 지원' : 'Global Support',
-              desc: currentLanguage === 'ko'
-                ? '한국어와 영어 두 언어를 모두 지원합니다. 언어 토글 버튼으로 간편하게 전환하며 다양한 단어를 경험하세요.'
-                : 'Supports both Korean and English languages. Easily switch between languages and experience diverse words.',
-            },
-            {
-              icon: '🎯',
-              title: currentLanguage === 'ko' ? '바이럴 공유' : 'Viral Sharing',
-              desc: currentLanguage === 'ko'
-                ? '퍼즐 결과를 이모지로 표현하여 SNS에 공유하세요. 스포일러 없이 친구들에게 도전장을 내밀 수 있습니다.'
-                : 'Share your puzzle results using emojis on social media. Challenge friends without spoilers.',
-            },
+            { icon: '☕', title: '하루 5분 두뇌 운동', desc: '출근길이나 점심시간에 하루 한 문제만 풀면 됩니다. 자음과 모음의 자리를 따져 보는 추리라 단순 암기보다 집중력과 어휘 감각을 함께 씁니다.' },
+            { icon: '👨‍👩‍👧', title: '가족·친구와 같은 문제 겨루기', desc: '모든 사람이 같은 날 같은 단어를 풀기 때문에, 결과 복사로 🟩🟨⬜ 칸을 단톡방에 올려 누가 더 적은 횟수로 맞혔는지 정답을 드러내지 않고 비교할 수 있습니다.' },
+            { icon: '📚', title: '한국어 학습', desc: '정답은 국립국어원이 한국어 학습자용으로 고른 기초 어휘라 받침과 겹모음 구조를 익히기 좋고, 게임이 끝나면 표준국어대사전 뜻풀이로 바로 이동할 수 있습니다.' },
+            { icon: '🔤', title: '영어 단어 연습', desc: 'English 탭에서는 원조 워들처럼 다섯 글자 영어 단어를 맞힙니다. 영어 단어를 공부하는 학생이 철자 감각과 자주 쓰는 단어를 익히는 연습용으로 쓸 수 있습니다.' },
           ],
           steps: [
-            {
-              step: currentLanguage === 'ko' ? '1. 언어 선택' : '1. Choose Language',
-              desc: currentLanguage === 'ko'
-                ? '상단의 KR/EN 토글 버튼으로 한국어 또는 영어를 선택합니다.'
-                : 'Select Korean or English using the KR/EN toggle button at the top.',
-            },
-            {
-              step: currentLanguage === 'ko' ? '2. 단어 입력' : '2. Enter Word',
-              desc: currentLanguage === 'ko'
-                ? '키보드 또는 화면의 가상 키보드를 사용하여 단어를 입력합니다. 한국어는 3글자, 영어는 5글자입니다.'
-                : 'Use your keyboard or the on-screen virtual keyboard to enter words. Korean uses 3 characters, English uses 5 letters.',
-            },
-            {
-              step: currentLanguage === 'ko' ? '3. 색상 힌트 확인' : '3. Check Color Hints',
-              desc: currentLanguage === 'ko'
-                ? '🟩 초록색은 정답, 🟨 노란색은 위치 오류, ⬛ 회색은 단어에 없는 글자입니다.'
-                : '🟩 Green means correct, 🟨 Yellow means wrong position, ⬛ Gray means not in the word.',
-            },
-            {
-              step: currentLanguage === 'ko' ? '4. 결과 공유' : '4. Share Results',
-              desc: currentLanguage === 'ko'
-                ? '게임 종료 후 통계 모달에서 공유 버튼을 눌러 결과를 복사하고 SNS에 공유하세요.'
-                : 'After the game ends, click the share button in the stats modal to copy and share your results on social media.',
-            },
+            { step: '언어 고르기', desc: '한글(자모 6칸) 또는 English(5글자)를 고릅니다. 두 판은 따로 진행되며 하루에 각각 한 번씩 풀 수 있고, 언어를 바꿔도 풀던 판은 그대로 남습니다.' },
+            { step: '단어 입력', desc: '화면 자판이나 컴퓨터 키보드로 입력합니다. 한글은 한/영 전환 없이 키보드 자리 그대로 누르면 자모가 들어가고, 된소리와 ㅒ·ㅖ는 Shift(⇧)를 함께 누릅니다.' },
+            { step: '색깔 힌트 읽기', desc: '초록은 자리까지 맞은 칸, 노랑은 단어에 있지만 자리가 다른 칸, 회색은 단어에 없는 자모입니다. 자판에도 같은 색이 표시되어 남은 자모를 고르기 쉽습니다.' },
+            { step: '결과 확인·공유', desc: '여섯 번 안에 맞히면 연승이 쌓이고, 결과 창에서 정답의 뜻을 확인하거나 색깔 칸 결과를 복사해 공유합니다. 다음 문제까지 남은 시간도 표시됩니다.' },
           ],
           faqs: [
-            {
-              q: currentLanguage === 'ko' ? '매일 새로운 단어가 나오나요?' : 'Is there a new word every day?',
-              a: currentLanguage === 'ko'
-                ? '네! 매일 자정(00:00)이 되면 새로운 단어 퍼즐이 생성됩니다. 날짜 기반 알고리즘을 사용하여 모든 사용자에게 동일한 단어가 제공됩니다.'
-                : 'Yes! A new word puzzle is generated every day at midnight (00:00). The date-based algorithm ensures all users get the same word.',
-            },
-            {
-              q: currentLanguage === 'ko' ? '연승이 끊기면 어떻게 되나요?' : 'What happens if my streak breaks?',
-              a: currentLanguage === 'ko'
-                ? '하루를 건너뛰거나 퍼즐을 실패하면 현재 연승이 0으로 초기화됩니다. 하지만 최대 연승 기록은 유지되므로, 다시 도전하여 새로운 기록을 세워보세요!'
-                : 'If you skip a day or fail a puzzle, your current streak resets to 0. However, your max streak record is preserved, so challenge yourself to set a new record!',
-            },
-            {
-              q: currentLanguage === 'ko' ? '무료로 플레이할 수 있나요?' : 'Is it free to play?',
-              a: currentLanguage === 'ko'
-                ? '네! 일일 단어 퍼즐은 100% 무료로 제공됩니다. 회원가입이나 로그인 없이 바로 플레이하고, 데이터는 브라우저에 안전하게 저장됩니다.'
-                : 'Yes! The Daily Word Puzzle is 100% free. Play immediately without registration or login, and your data is safely stored in your browser.',
-            },
-            {
-              q: currentLanguage === 'ko' ? '한국어와 영어 중 선택할 수 있나요?' : 'Can I choose between Korean and English?',
-              a: currentLanguage === 'ko'
-                ? '네! 상단의 KR/EN 토글 버튼으로 언제든지 언어를 전환할 수 있습니다. 각 언어마다 독립적인 단어 리스트가 있으며, 게임 기록도 별도로 관리됩니다.'
-                : 'Yes! You can switch languages anytime using the KR/EN toggle button at the top. Each language has an independent word list, and game records are managed separately.',
-            },
-            {
-              q: currentLanguage === 'ko' ? '이 툴의 결과를 공식 자료로 사용해도 되나요?' : 'Can I use this result as official data?',
-              a: currentLanguage === 'ko'
-                ? '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.'
-                : 'Results are for reference only. Please consult a professional or official source for accurate figures.',
-            },
+            { q: '한글은 왜 글자가 아니라 자모로 맞히나요?', a: '글자 단위로 비교하면 한 칸에 들어갈 수 있는 글자가 1만 개가 넘어 노란색·초록색 힌트가 거의 나오지 않고, 사실상 운으로 맞히게 됩니다. 자모로 나누면 자음 19개와 모음 몇 개 안에서 위치를 추리하게 되어 원조 워들처럼 여섯 번 안에 풀 수 있는 난이도가 됩니다.' },
+            { q: '겹모음과 받침은 칸을 어떻게 나누나요?', a: '두벌식 자판에서 누르는 순서 그대로입니다. ㅘ·ㅝ·ㅢ 같은 겹모음은 ㅗ+ㅏ처럼 두 칸, ㄺ·ㄳ 같은 겹받침도 두 칸이고, ㄲ·ㅆ 같은 된소리와 ㅐ·ㅔ는 키 하나라서 한 칸입니다. 그래서 "과일"은 ㄱ·ㅗ·ㅏ·ㅇ·ㅣ·ㄹ 여섯 칸입니다.' },
+            { q: '입력한 단어가 목록에 없다고 나와요.', a: '입력할 수 있는 한글 단어는 국립국어원 학습용 어휘와 보충 단어 가운데 자모가 정확히 6개인 약 1,500개입니다. "사과"(ㅅㅏㄱㅗㅏ, 5칸)처럼 자모 수가 6개가 아닌 단어는 넣을 수 없습니다. 목록에 없는 단어는 기회를 쓰지 않으니 다른 단어로 다시 시도해 보세요.' },
+            { q: '새 문제는 언제 나오고, 연승은 어떻게 세나요?', a: '기기 시계 기준 자정마다 새 문제가 열립니다. 문제를 맞히면 연승이 1 늘고, 하루를 건너뛰거나 여섯 번 안에 맞히지 못하면 연승은 0이 되지만 최대 연승과 맞힌 횟수 분포는 남습니다. 기록은 이 기기의 브라우저에만 저장되며 서버로 보내지 않습니다.' },
           ],
         }}
         en={{
-          title: currentLanguage === 'ko' ? '일일 단어 퍼즐 - 매일 새로운 도전!' : 'Daily Word Puzzle - New Challenge Every Day!',
-          description: currentLanguage === 'ko'
-            ? 'Utility Hub의 일일 단어 퍼즐은 매일 새로운 5글자 단어를 맞추는 두뇌 게임입니다. 한국어와 영어를 지원하며, 연승 기록을 추적하여 매일 재방문을 유도합니다. 100% 무료로 플레이하고 친구들과 결과를 공유하세요!'
-            : 'Utility Hub\'s Daily Word Puzzle is a brain game where you guess a new 5-letter word every day. Supports Korean and English, tracks your winning streak to encourage daily visits. Play 100% free and share your results with friends!',
+          title: 'Daily Word Puzzle: Wordle in Korean and English',
+          description: 'The Daily Word Puzzle is a free Wordle-style game: everyone gets the same word each day and has six tries to find it. The English board uses five letters and accepts about 6,400 English words, with answers drawn from roughly 840 common words. The Korean board works differently from a simple syllable match: each word is split into the jamo you press on a standard 2-set Korean keyboard, giving six tiles. "학생" becomes ㅎ·ㅏ·ㄱ·ㅅ·ㅐ·ㅇ, and "과일" splits its compound vowel ㅘ into ㅗ and ㅏ. Comparing whole syllables gives almost no hints because there are more than 11,000 possible syllables, while jamo tiles let you narrow down consonants and vowels one by one. Korean answers are 388 everyday nouns from the National Institute of Korean Language learner vocabulary list. A new puzzle opens at midnight on your device, words that are not in the list do not use up a try, and your progress, streak, win rate and guess distribution are stored separately for each language in your browser. Share your result as coloured squares without spoiling the answer.',
           useCases: [
-            {
-              icon: '🧠',
-              title: currentLanguage === 'ko' ? '두뇌 트레이닝' : 'Brain Training',
-              desc: currentLanguage === 'ko'
-                ? '매일 단어 퍼즐을 풀면서 어휘력과 추론 능력을 향상시키세요. 규칙적인 두뇌 활동으로 집중력을 높일 수 있습니다.'
-                : 'Improve your vocabulary and reasoning skills by solving word puzzles daily. Regular brain activity enhances concentration.',
-            },
-            {
-              icon: '🔥',
-              title: currentLanguage === 'ko' ? '연승 도전' : 'Streak Challenge',
-              desc: currentLanguage === 'ko'
-                ? '매일 퍼즐을 풀고 연승 기록을 쌓아보세요. 최대 연승 기록에 도전하고, 친구들과 경쟁할 수 있습니다.'
-                : 'Solve puzzles daily and build your winning streak. Challenge your max streak record and compete with friends.',
-            },
-            {
-              icon: '🌏',
-              title: currentLanguage === 'ko' ? '글로벌 지원' : 'Global Support',
-              desc: currentLanguage === 'ko'
-                ? '한국어와 영어 두 언어를 모두 지원합니다. 언어 토글 버튼으로 간편하게 전환하며 다양한 단어를 경험하세요.'
-                : 'Supports both Korean and English languages. Easily switch between languages and experience diverse words.',
-            },
-            {
-              icon: '🎯',
-              title: currentLanguage === 'ko' ? '바이럴 공유' : 'Viral Sharing',
-              desc: currentLanguage === 'ko'
-                ? '퍼즐 결과를 이모지로 표현하여 SNS에 공유하세요. 스포일러 없이 친구들에게 도전장을 내밀 수 있습니다.'
-                : 'Share your puzzle results using emojis on social media. Challenge friends without spoilers.',
-            },
+            { icon: '☕', title: 'A Five-Minute Daily Habit', desc: 'Solve one puzzle on your commute or lunch break and keep your streak alive; it exercises deduction and vocabulary rather than memorisation.' },
+            { icon: '👨‍👩‍👧', title: 'Compete with Friends', desc: 'Everyone gets the same word each day, so you can post your coloured squares in a group chat and compare tries without revealing the answer.' },
+            { icon: '📚', title: 'Learn Korean', desc: 'Korean answers come from a basic learner vocabulary list, which makes the jamo board good practice for final consonants and compound vowels.' },
+            { icon: '🔤', title: 'English Spelling Practice', desc: 'The English board plays like the original Wordle and suits students building spelling instincts with common five-letter words.' },
           ],
           steps: [
-            {
-              step: currentLanguage === 'ko' ? '1. 언어 선택' : '1. Choose Language',
-              desc: currentLanguage === 'ko'
-                ? '상단의 KR/EN 토글 버튼으로 한국어 또는 영어를 선택합니다.'
-                : 'Select Korean or English using the KR/EN toggle button at the top.',
-            },
-            {
-              step: currentLanguage === 'ko' ? '2. 단어 입력' : '2. Enter Word',
-              desc: currentLanguage === 'ko'
-                ? '키보드 또는 화면의 가상 키보드를 사용하여 단어를 입력합니다. 한국어는 3글자, 영어는 5글자입니다.'
-                : 'Use your keyboard or the on-screen virtual keyboard to enter words. Korean uses 3 characters, English uses 5 letters.',
-            },
-            {
-              step: currentLanguage === 'ko' ? '3. 색상 힌트 확인' : '3. Check Color Hints',
-              desc: currentLanguage === 'ko'
-                ? '🟩 초록색은 정답, 🟨 노란색은 위치 오류, ⬛ 회색은 단어에 없는 글자입니다.'
-                : '🟩 Green means correct, 🟨 Yellow means wrong position, ⬛ Gray means not in the word.',
-            },
-            {
-              step: currentLanguage === 'ko' ? '4. 결과 공유' : '4. Share Results',
-              desc: currentLanguage === 'ko'
-                ? '게임 종료 후 통계 모달에서 공유 버튼을 눌러 결과를 복사하고 SNS에 공유하세요.'
-                : 'After the game ends, click the share button in the stats modal to copy and share your results on social media.',
-            },
+            { step: 'Pick a Board', desc: 'Choose 한글 (6 jamo) or English (5 letters). Each board has its own daily puzzle and keeps its progress when you switch.' },
+            { step: 'Type a Word', desc: 'Use the on-screen keys or your keyboard. For Korean you can type on the physical key positions without switching input; hold Shift for ㄲ ㄸ ㅃ ㅆ ㅉ ㅒ ㅖ.' },
+            { step: 'Read the Colours', desc: 'Green is the right spot, yellow is in the word but elsewhere, and grey is not in the word. The keyboard shows the same colours.' },
+            { step: 'Share Your Result', desc: 'Solve it within six tries to build your streak, look up the answer in a dictionary and copy your coloured result to share.' },
           ],
           faqs: [
-            {
-              q: currentLanguage === 'ko' ? '매일 새로운 단어가 나오나요?' : 'Is there a new word every day?',
-              a: currentLanguage === 'ko'
-                ? '네! 매일 자정(00:00)이 되면 새로운 단어 퍼즐이 생성됩니다. 날짜 기반 알고리즘을 사용하여 모든 사용자에게 동일한 단어가 제공됩니다.'
-                : 'Yes! A new word puzzle is generated every day at midnight (00:00). The date-based algorithm ensures all users get the same word.',
-            },
-            {
-              q: currentLanguage === 'ko' ? '연승이 끊기면 어떻게 되나요?' : 'What happens if my streak breaks?',
-              a: currentLanguage === 'ko'
-                ? '하루를 건너뛰거나 퍼즐을 실패하면 현재 연승이 0으로 초기화됩니다. 하지만 최대 연승 기록은 유지되므로, 다시 도전하여 새로운 기록을 세워보세요!'
-                : 'If you skip a day or fail a puzzle, your current streak resets to 0. However, your max streak record is preserved, so challenge yourself to set a new record!',
-            },
-            {
-              q: currentLanguage === 'ko' ? '무료로 플레이할 수 있나요?' : 'Is it free to play?',
-              a: currentLanguage === 'ko'
-                ? '네! 일일 단어 퍼즐은 100% 무료로 제공됩니다. 회원가입이나 로그인 없이 바로 플레이하고, 데이터는 브라우저에 안전하게 저장됩니다.'
-                : 'Yes! The Daily Word Puzzle is 100% free. Play immediately without registration or login, and your data is safely stored in your browser.',
-            },
-            {
-              q: currentLanguage === 'ko' ? '한국어와 영어 중 선택할 수 있나요?' : 'Can I choose between Korean and English?',
-              a: currentLanguage === 'ko'
-                ? '네! 상단의 KR/EN 토글 버튼으로 언제든지 언어를 전환할 수 있습니다. 각 언어마다 독립적인 단어 리스트가 있으며, 게임 기록도 별도로 관리됩니다.'
-                : 'Yes! You can switch languages anytime using the KR/EN toggle button at the top. Each language has an independent word list, and game records are managed separately.',
-            },
-            {
-              q: currentLanguage === 'ko' ? '이 툴의 결과를 공식 자료로 사용해도 되나요?' : 'Can I use this result as official data?',
-              a: currentLanguage === 'ko'
-                ? '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.'
-                : 'Results are for reference only. Please consult a professional or official source for accurate figures.',
-            },
+            { q: 'Why does the Korean board use jamo instead of syllables?', a: 'With more than 11,000 possible syllables, a syllable-by-syllable match almost never gives a yellow or green hint. Splitting words into jamo means you work with 19 consonants and a handful of vowels, which makes six tries a fair challenge.' },
+            { q: 'How are compound vowels and final consonants counted?', a: 'Exactly as you type them on a 2-set keyboard: compound vowels like ㅘ and double finals like ㄺ take two tiles, while tense consonants like ㄲ and vowels like ㅐ are one key and one tile.' },
+            { q: 'Why is my word "not in word list"?', a: 'The Korean board accepts about 1,500 words with exactly six jamo, and the English board about 6,400 five-letter words. Words outside the list do not use up a try, so just enter another word.' },
+            { q: 'When does a new puzzle appear?', a: 'At midnight on your device clock. Solving it adds one to your streak; skipping a day or failing resets it to zero, but your best streak and guess distribution stay in your browser.' },
           ],
         }}
       />
