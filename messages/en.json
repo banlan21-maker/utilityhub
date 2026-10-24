@@ -281,7 +281,7 @@
   },
   "Tax33": {
     "title": "🧾 Korean Freelancer 3.3% Tax Calculator",
-    "description": "Calculate your take-home pay after the South Korean 3.3% withholding tax. For Korean freelancers and independent contractors only.",
+    "description": "Net pay after Korea's 3.3% freelancer withholding, your May income tax refund estimate and monthly health insurance and pension. For freelancers working in Korea.",
     "country_notice": "🇰🇷 This calculator is specifically for the South Korean 3.3% withholding tax system. It does NOT apply to US, EU, or other countries — freelancers in those jurisdictions use different tax frameworks (US Self-Employment Tax 15.3%, etc.).",
     "mode_normal": "Gross → Net",
     "mode_reverse": "Reverse: Net → Gross",

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import Tax33CalcClient from './Tax33CalcClient';
 
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/finance/tax-33-calc';
+
 export async function generateMetadata({
   params,
 }: {
@@ -9,12 +12,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? '프리랜서 3.3% 원천징수 계산기 (한국 전용) | Utility Hub'
-    : 'Korean Freelancer 3.3% Withholding Tax Calculator | Utility Hub';
+    ? '3.3% 세금 계산기 — 프리랜서 실수령액·종합소득세 환급 예상 | Utility Hub'
+    : 'Korean 3.3% Freelancer Tax Calculator — Net Pay & May Refund | Utility Hub';
   const description = isKo
-    ? '한국 프리랜서 계약금에서 3.3% 원천징수를 공제한 실수령액을 즉시 계산하는 무료 도구. 미국·유럽 등 해외 프리랜서에는 적용되지 않습니다.'
-    : 'Free 3.3% withholding tax calculator for South Korean freelancers — instantly compute net pay after deductions. Korea-specific; does not apply to US or EU jurisdictions.';
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/finance/tax-33-calc`;
+    ? '프리랜서 계약금에서 3.3%를 뗀 실수령액(10원 미만 절사)과 역산, 5월 종합소득세 환급·추가 납부 예상액, 지역가입자 건강보험·국민연금 월 보험료를 2026년 기준으로 계산합니다.'
+    : 'Net pay after Korea\'s 3.3% freelancer withholding, a May income tax refund estimate and monthly regional health insurance and pension, using 2026 rates.';
+  const canonical = `${BASE}/${locale}${PATH}`;
 
   return {
     title,
@@ -22,9 +25,9 @@ export async function generateMetadata({
     alternates: {
       canonical,
       languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/finance/tax-33-calc',
-        en: 'https://www.theutilhub.com/en/utilities/finance/tax-33-calc',
-        'x-default': 'https://www.theutilhub.com/ko/utilities/finance/tax-33-calc',
+        ko: `${BASE}/ko${PATH}`,
+        en: `${BASE}/en${PATH}`,
+        'x-default': `${BASE}/ko${PATH}`,
       },
     },
     openGraph: {
@@ -39,32 +42,61 @@ export async function generateMetadata({
   };
 }
 
-const softwareSchema = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "프리랜서 3.3% 원천징수 계산기 (한국 전용)",
-  "alternateName": "Korean Freelancer 3.3% Withholding Tax Calculator",
-  "operatingSystem": "Web Browser",
-  "applicationCategory": "FinanceApplication",
-  "audience": { "@type": "Audience", "geographicArea": { "@type": "Country", "name": "South Korea" } },
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
-  "url": "https://www.theutilhub.com/ko/utilities/finance/tax-33-calc",
-  "description": "한국 프리랜서 계약금에서 3.3% 원천징수(사업소득세 3% + 지방소득세 0.3%)를 공제한 실수령액을 즉시 계산하는 무료 도구입니다. 한국 세법 전용으로, 미국·유럽 등 해외 프리랜서에게는 적용되지 않습니다."
-};
+const SCHEMA_TEXT = {
+  ko: {
+    name: '프리랜서 3.3% 세금 계산기 (실수령액·종합소득세 환급)',
+    description: '프리랜서 계약금의 3.3% 원천징수 실수령액, 5월 종합소득세 환급 예상액, 지역가입자 건강보험·국민연금 월 보험료를 계산하는 무료 도구입니다.',
+    faqs: [
+      { q: '3.3%는 왜 3.3%인가요?', a: '사업소득을 지급하는 쪽이 소득세 3%를 원천징수하고 그 소득세의 10%를 지방소득세로 함께 떼어 3.3%가 됩니다. 세금은 10원 미만을 버리므로 3.3%보다 몇 원 적을 수 있습니다.' },
+      { q: '3.3% 뗀 돈은 돌려받을 수 있나요?', a: '다음 해 5월 종합소득세 신고 때 수입에서 경비를 빼고 공제를 적용한 실제 세금과 비교해, 미리 낸 3.3%가 더 많으면 차액을 돌려받고 적으면 더 냅니다.' },
+      { q: '경비율은 어디서 알 수 있나요?', a: '홈택스 → 조회/발급 → 기준·단순경비율에서 본인 업종코드로 조회할 수 있습니다. 직전 연도 수입이 많으면 단순경비율 대신 기준경비율이나 장부 기장이 필요합니다.' },
+      { q: '프리랜서 건강보험료는 얼마나 나오나요?', a: '지역가입자는 월 소득(소득금액 ÷ 12)의 7.19%에 장기요양보험료(건강보험료의 13.14%)를 더해 내고, 국민연금은 월 소득의 9.5%를 전액 본인이 냅니다(2026년). 재산분 보험료는 별도입니다.' },
+    ],
+  },
+  en: {
+    name: 'Korean 3.3% Freelancer Tax Calculator',
+    description: 'Free calculator for net pay after Korea\'s 3.3% freelancer withholding, the May income tax refund and monthly regional health insurance and pension.',
+    faqs: [
+      { q: 'Why exactly 3.3%?', a: 'The payer withholds 3% income tax plus 10% of it as local income tax, totalling 3.3%. Tax is rounded down to 10 KRW.' },
+      { q: 'Can I get the 3.3% back?', a: 'At the May comprehensive income tax filing the real tax after expenses and deductions is compared with what was withheld; any excess is refunded and any shortfall is paid.' },
+      { q: 'Where do I find my expense rate?', a: 'On Hometax under 기준·단순경비율, by business code. Above certain revenue levels the simple rate no longer applies.' },
+      { q: 'How much health insurance will I pay?', a: 'Regional subscribers pay 7.19% of monthly business income plus 13.14% of that for long-term care, and 9.5% national pension in full (2026). Property-based premiums are extra.' },
+    ],
+  },
+} as const;
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "3.3% 원천징수는 어떻게 구성되나요?", "acceptedAnswer": { "@type": "Answer", "text": "사업소득세 3.0%와 지방소득세 0.3%로 구성되며, 총 3.3%가 계약 금액에서 자동 공제됩니다. 이는 소득세법 제127조에 따라 사업소득 지급 시 의무적으로 원천징수해야 하는 금액입니다." } },
-    { "@type": "Question", "name": "원천징수된 세금은 나중에 돌려받을 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "5월 종합소득세 신고 시 연간 총소득과 경비를 정산하여 최종 세액을 계산합니다. 원천징수액이 실제 납부할 세액보다 많으면 환급받고, 적으면 추가 납부해야 합니다." } },
-    { "@type": "Question", "name": "지역가입자 4대보험료는 정확한가요?", "acceptedAnswer": { "@type": "Answer", "text": "본 계산기는 2024년 기준 간이 예측치로, 실제 보험료는 전년도 소득, 재산, 자동차 등 여러 요소를 반영하여 국민건강보험공단과 국민연금공단이 개별 고지합니다. 정확한 금액은 해당 기관에 문의하세요." } },
-    { "@type": "Question", "name": "월급과 프리랜서 소득을 동시에 받으면?", "acceptedAnswer": { "@type": "Answer", "text": "직장 근로소득과 프리랜서 사업소득을 동시에 받는 경우, 종합소득세 신고 시 두 소득을 합산하여 누진세율이 적용되므로 예상보다 세금이 높아질 수 있습니다. 세무사 상담을 권장합니다." } },
-    { "@type": "Question", "name": "미국·유럽 프리랜서도 이 계산기를 사용할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "아니요. 3.3% 원천징수는 한국 소득세법 제127조에 따른 한국 고유 제도입니다. 미국 프리랜서는 자영업세(Self-Employment Tax 15.3% = Social Security 12.4% + Medicare 2.9%)와 연방·주 소득세를 본인이 분기별로 납부하며, 클라이언트가 원천징수를 하지 않습니다. 유럽 각국도 VAT와 소득세 체계가 한국과 완전히 다릅니다. 이 계산기는 한국 거주 또는 한국 기업과 계약하는 프리랜서 전용입니다." } }
-  ]
-};
+export default async function Tax33CalcPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const text = locale === 'ko' ? SCHEMA_TEXT.ko : SCHEMA_TEXT.en;
 
-export default function Tax33CalcPage() {
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: text.name,
+    operatingSystem: 'Web Browser',
+    applicationCategory: 'FinanceApplication',
+    audience: { '@type': 'Audience', geographicArea: { '@type': 'Country', name: 'South Korea' } },
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    url: `${BASE}/${locale}${PATH}`,
+    inLanguage: locale,
+    description: text.description,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: text.faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
