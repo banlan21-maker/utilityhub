@@ -126,7 +126,7 @@
     },
     "interior-material-calc": {
       "title": "Tile & Wallpaper Calculator",
-      "desc": "Calculate tile boxes and wallpaper rolls with SVG grid visualization. Supports staggered/brick patterns and automatic safety margin."
+      "desc": "Tile boxes and wallpaper rolls counted the way installers lay and cut them."
     },
     "metal-weight-calc": {
       "title": "Metal Weight & Area Calculator",
