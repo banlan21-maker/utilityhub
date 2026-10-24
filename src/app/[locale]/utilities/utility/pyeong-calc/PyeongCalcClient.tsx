@@ -1,373 +1,401 @@
 'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Ruler } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import {
+  toPyeong, toSqm, supplyFromExclusive, pyeongClass, exclusiveFromClass, unitPrice,
+  EXCLUSIVE_RATIO, COMMON_EXCLUSIVE, type BuildingType,
+} from '@/lib/pyeong';
+import s from './pyeong.module.css';
 
-/* 1 평 = 3.30579 m² (법정 환산 계수) */
-const PYEONG_TO_SQM = 3.30579;
+type Tab = 'convert' | 'class' | 'price';
 
-/* 아파트 표준 전용면적 프리셋 */
-interface Preset {
-  sqm: number;
-  nameKo: string;
-  nameEn: string;
-}
-const PRESETS: Preset[] = [
-  { sqm: 33,  nameKo: '10평형',  nameEn: '10 pyeong' },
-  { sqm: 49,  nameKo: '15평형',  nameEn: '15 pyeong' },
-  { sqm: 59,  nameKo: '59㎡ (17.8평)', nameEn: '59㎡ (17.8 py)' },
-  { sqm: 74,  nameKo: '74㎡ (22.4평)', nameEn: '74㎡ (22.4 py)' },
-  { sqm: 84,  nameKo: '84㎡ (25.4평)', nameEn: '84㎡ (25.4 py)' },
-  { sqm: 102, nameKo: '102㎡ (30.9평)', nameEn: '102㎡ (30.9 py)' },
-  { sqm: 115, nameKo: '115㎡ (34.8평)', nameEn: '115㎡ (34.8 py)' },
-  { sqm: 135, nameKo: '135㎡ (40.8평)', nameEn: '135㎡ (40.8 py)' },
-  { sqm: 165, nameKo: '165㎡ (49.9평)', nameEn: '165㎡ (49.9 py)' },
-];
+const decimalInput = (v: string) => {
+  const [int, ...dec] = v.replace(/[^0-9.]/g, '').split('.');
+  return dec.length ? `${int}.${dec.join('').slice(0, 4)}` : int;
+};
+const digits = (v: string) => Number(v.replace(/[^0-9]/g, '')) || 0;
 
-function CopyButton({ value }: { value: string }) {
+function CopyButton({ value, isKo }: { value: string; isKo: boolean }) {
   const [copied, setCopied] = useState(false);
-  const copy = useCallback(() => {
-    navigator.clipboard.writeText(value).then(() => {
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    });
-  }, [value]);
+    } catch { /* 클립보드 권한이 없으면 무시 */ }
+  };
   return (
-    <button
-      onClick={copy}
-      style={{
-        padding: '0.3rem 0.75rem',
-        fontSize: '0.78rem',
-        fontWeight: 600,
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-sm)',
-        background: copied ? 'var(--primary)' : 'var(--surface-hover)',
-        color: copied ? '#fff' : 'var(--text-muted)',
-        cursor: 'pointer',
-        transition: 'all 0.15s',
-      }}
-    >
-      {copied ? '✓ 복사됨' : '📋 복사'}
+    <button type="button" onClick={copy} className={`${s.copy} ${copied ? s.copy_done : ''}`}>
+      {copied ? (isKo ? '✓ 복사됨' : '✓ Copied') : (isKo ? '복사' : 'Copy')}
     </button>
   );
 }
 
-type Direction = 'pyeong2sqm' | 'sqm2pyeong';
-
 export default function PyeongCalcClient() {
   const t = useTranslations('Area');
   const locale = useLocale();
+  const isKo = locale === 'ko';
 
-  const [direction, setDirection] = useState<Direction>('sqm2pyeong');
+  const [tab, setTab] = useState<Tab>('convert');
+
+  // ① ㎡ ↔ 평
+  const [direction, setDirection] = useState<'sqm2pyeong' | 'pyeong2sqm'>('sqm2pyeong');
   const [inputVal, setInputVal] = useState('');
   const [decimals, setDecimals] = useState(2);
 
+  // ② 전용면적 ↔ 평형
+  const [classMode, setClassMode] = useState<'toClass' | 'toExclusive'>('toClass');
+  const [classInput, setClassInput] = useState('');
+  const [building, setBuilding] = useState<BuildingType>('apartment');
+  const [ratioText, setRatioText] = useState('');
+
+  // ③ 평당 가격
+  const [priceText, setPriceText] = useState('');
+  const [priceArea, setPriceArea] = useState('');
+
+  const fmt = (n: number, d = decimals) => n.toLocaleString(isKo ? 'ko-KR' : 'en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const pyUnit = isKo ? '평' : 'py';
+
   const num = parseFloat(inputVal) || 0;
+  const sqm = direction === 'sqm2pyeong' ? num : toSqm(num);
+  const pyeong = direction === 'pyeong2sqm' ? num : toPyeong(num);
 
-  const sqm    = direction === 'sqm2pyeong' ? num : num * PYEONG_TO_SQM;
-  const pyeong = direction === 'pyeong2sqm' ? num : num / PYEONG_TO_SQM;
+  const range = EXCLUSIVE_RATIO[building];
+  const customRatio = parseFloat(ratioText);
+  const ratio = customRatio > 10 && customRatio < 100 ? customRatio / 100 : range.typical;
+  const classNum = parseFloat(classInput) || 0;
 
-  const fmtNum = (n: number) => n.toFixed(decimals);
+  const price = digits(priceText);
+  const area = parseFloat(priceArea) || 0;
+  const up = unitPrice(price, area);
+  const upSupply = unitPrice(price, supplyFromExclusive(area, EXCLUSIVE_RATIO.apartment.typical));
 
-  const resultSqm    = fmtNum(sqm);
-  const resultPyeong = fmtNum(pyeong);
+  /** 원 → "3억 9,354만 원" / "39,354,583원" 식 표기 */
+  const krw = (n: number) => {
+    if (!isKo) return `₩${Math.round(n).toLocaleString('en-US')}`;
+    const v = Math.round(n / 10000);
+    const eok = Math.floor(v / 10000), man = v % 10000;
+    return eok > 0 ? `${eok.toLocaleString('ko-KR')}억${man ? ` ${man.toLocaleString('ko-KR')}만` : ''} 원` : `${man.toLocaleString('ko-KR')}만 원`;
+  };
 
-  const hasResult = num > 0;
+  const buildingName = (b: BuildingType) => ({
+    apartment: isKo ? '아파트' : 'Apartment',
+    mixed: isKo ? '주상복합' : 'Mixed-use',
+    officetel: isKo ? '오피스텔' : 'Officetel',
+  })[b];
 
-  /* 가장 가까운 아파트 프리셋 */
-  const nearestPreset = hasResult
-    ? PRESETS.reduce((best, p) =>
-        Math.abs(p.sqm - sqm) < Math.abs(best.sqm - sqm) ? p : best
-      )
-    : null;
-
-  const handlePreset = (p: Preset) => {
-    if (direction === 'sqm2pyeong') {
-      setInputVal(String(p.sqm));
-    } else {
-      setInputVal(fmtNum(p.sqm / PYEONG_TO_SQM));
-    }
+  const setPreset = (exclusive: number) => {
+    setTab('convert');
+    setDirection('sqm2pyeong');
+    setInputVal(String(exclusive));
   };
 
   return (
-    <div>
+    <div className={s.container}>
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Ruler size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
+      <header className={s.header}>
+        <div className={s.icon_wrap}><Ruler size={40} /></div>
+        <h1 className={s.title}>{t('title')}</h1>
+        <p className={s.subtitle}>{t('description')}</p>
       </header>
 
-      <div className="glass-panel" style={{ padding: 'var(--page-padding)', maxWidth: '520px', margin: '0 auto' }}>
+      <div className={s.tabs} role="tablist" aria-label={isKo ? '계산 종류' : 'Calculator type'}>
+        {([
+          ['convert', isKo ? '㎡ ↔ 평 변환' : '㎡ ↔ pyeong', isKo ? '단위만 바꾸기' : 'Unit conversion'],
+          ['class', isKo ? '몇 평형? (전용 ↔ 평형)' : 'Pyeong class', isKo ? '84㎡ = 34평형' : '84㎡ = 34-pyeong class'],
+          ['price', isKo ? '평당 가격' : 'Price per pyeong', isKo ? '매매가 ÷ 면적' : 'Price ÷ area'],
+        ] as const).map(([k, label, sub]) => (
+          <button key={k} type="button" role="tab" aria-selected={tab === k}
+            className={`${s.tab} ${tab === k ? s.tab_active : ''}`} onClick={() => setTab(k)}>
+            {label}<small>{sub}</small>
+          </button>
+        ))}
+      </div>
 
-        {/* Direction toggle */}
-        <div style={{ display: 'flex', background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '4px', marginBottom: '1.5rem' }}>
-          {(['sqm2pyeong', 'pyeong2sqm'] as Direction[]).map(d => (
-            <button
-              key={d}
-              onClick={() => { setDirection(d); setInputVal(''); }}
-              style={{
-                flex: 1,
-                padding: '0.6rem',
-                borderRadius: 'calc(var(--radius-md) - 2px)',
-                border: 'none',
-                background: direction === d ? 'var(--primary)' : 'transparent',
-                color: direction === d ? '#fff' : 'var(--text-secondary)',
-                fontWeight: 600,
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-            >
-              {d === 'sqm2pyeong' ? `㎡ → ${t('unit.pyeong')}` : `${t('unit.pyeong')} → ㎡`}
-            </button>
-          ))}
-        </div>
-
-        {/* Input */}
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            {direction === 'sqm2pyeong' ? t('label.sqm') : t('label.pyeong')}
-          </label>
-          <div style={{ position: 'relative' }}>
-            <input
-              type="text"
-              inputMode="decimal"
-              placeholder={direction === 'sqm2pyeong' ? '84' : '25.4'}
-              value={inputVal}
-              onChange={e => setInputVal(e.target.value.replace(/[^0-9.]/g, ''))}
-              style={{
-                width: '100%',
-                padding: '0.9rem 3.5rem 0.9rem 1rem',
-                fontSize: '1.4rem',
-                fontWeight: 700,
-                border: '2px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--surface)',
-                color: 'var(--text-primary)',
-                outline: 'none',
-                boxSizing: 'border-box',
-                transition: 'border-color 0.2s',
-              }}
-              onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
-            />
-            <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600, fontSize: '1rem' }}>
-              {direction === 'sqm2pyeong' ? '㎡' : t('unit.pyeong')}
-            </span>
-          </div>
-        </div>
-
-        {/* Decimal precision */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
-          <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-            {t('label.decimals')}
-          </span>
-          {[0, 1, 2, 3, 4].map(d => (
-            <button
-              key={d}
-              onClick={() => setDecimals(d)}
-              style={{
-                padding: '0.2rem 0.5rem',
-                borderRadius: 'var(--radius-sm)',
-                border: '1.5px solid',
-                borderColor: decimals === d ? 'var(--primary)' : 'var(--border)',
-                background: decimals === d ? 'rgba(79,70,229,0.1)' : 'var(--surface)',
-                color: decimals === d ? 'var(--primary)' : 'var(--text-muted)',
-                fontWeight: 600,
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-              }}
-            >
-              {d}
-            </button>
-          ))}
-        </div>
-
-        {/* Preset buttons */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-            {t('label.presets')}
-          </p>
-          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-            {PRESETS.map(p => (
-              <button
-                key={p.sqm}
-                onClick={() => handlePreset(p)}
-                style={{
-                  padding: '0.3rem 0.65rem',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border)',
-                  background: nearestPreset?.sqm === p.sqm && hasResult ? 'rgba(79,70,229,0.1)' : 'var(--surface-hover)',
-                  borderColor: nearestPreset?.sqm === p.sqm && hasResult ? 'var(--primary)' : 'var(--border)',
-                  color: nearestPreset?.sqm === p.sqm && hasResult ? 'var(--primary)' : 'var(--text-muted)',
-                  fontSize: '0.78rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {locale === 'ko' ? p.nameKo : p.nameEn}
+      {/* ── ① ㎡ ↔ 평 ── */}
+      {tab === 'convert' && (
+        <section className={s.card}>
+          <div className={s.chips}>
+            {(['sqm2pyeong', 'pyeong2sqm'] as const).map(d => (
+              <button key={d} type="button" aria-pressed={direction === d}
+                className={`${s.chip} ${direction === d ? s.chip_active : ''}`}
+                onClick={() => { setDirection(d); setInputVal(''); }}>
+                {d === 'sqm2pyeong' ? `㎡ → ${pyUnit}` : `${pyUnit} → ㎡`}
               </button>
             ))}
           </div>
-        </div>
-
-        {/* Result */}
-        {hasResult && (
-          <div style={{ borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', overflow: 'hidden' }}>
-            <div style={{ background: 'var(--primary)', padding: '0.7rem 1.25rem' }}>
-              <span style={{ color: '#fff', fontWeight: 700, fontSize: '0.88rem' }}>{t('result.title')}</span>
+          <div>
+            <label className={s.field_label} htmlFor="py-in">{direction === 'sqm2pyeong' ? t('label.sqm') : t('label.pyeong')}</label>
+            <div className={s.input_wrap}>
+              <input id="py-in" className={s.input} inputMode="decimal" placeholder={direction === 'sqm2pyeong' ? '84' : '34'}
+                value={inputVal} onChange={e => setInputVal(decimalInput(e.target.value))} />
+              <span className={s.suffix}>{direction === 'sqm2pyeong' ? '㎡' : pyUnit}</span>
             </div>
+          </div>
+          <div className={s.decimals}>
+            <span>{t('label.decimals')}</span>
+            {[0, 1, 2, 3, 4].map(d => (
+              <button key={d} type="button" aria-pressed={decimals === d} className={`${s.mini} ${decimals === d ? s.mini_active : ''}`} onClick={() => setDecimals(d)}>{d}</button>
+            ))}
+          </div>
+          <div className={s.chips} aria-label={t('label.presets')}>
+            {COMMON_EXCLUSIVE.map(e => (
+              <button key={e} type="button" className={`${s.mini} ${direction === 'sqm2pyeong' && num === e ? s.mini_active : ''}`} onClick={() => setPreset(e)}>
+                {isKo ? `전용 ${e}㎡` : `${e}㎡`}
+              </button>
+            ))}
+          </div>
 
-            <div style={{ background: 'var(--surface)' }}>
-              {/* Primary result */}
-              <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border)', background: 'linear-gradient(135deg, rgba(79,70,229,0.07), rgba(16,185,129,0.07))' }}>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
-                  {direction === 'sqm2pyeong'
-                    ? `${inputVal} ㎡ =`
-                    : `${inputVal} ${t('unit.pyeong')} =`}
+          {num > 0 && (
+            <div className={s.result} aria-live="polite">
+              <div className={s.result_main}>
+                <div>
+                  <div className={s.result_from}>{direction === 'sqm2pyeong' ? `${inputVal} ㎡ =` : `${inputVal} ${pyUnit} =`}</div>
+                  <span className={s.result_num}>{direction === 'sqm2pyeong' ? fmt(pyeong) : fmt(sqm)}</span>
+                  <span className={s.result_unit}>{direction === 'sqm2pyeong' ? pyUnit : '㎡'}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '-1px' }}>
-                      {direction === 'sqm2pyeong' ? resultPyeong : resultSqm}
-                    </span>
-                    <span style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontWeight: 600, marginLeft: '0.4rem' }}>
-                      {direction === 'sqm2pyeong' ? t('unit.pyeong') : '㎡'}
-                    </span>
-                  </div>
-                  <CopyButton value={direction === 'sqm2pyeong' ? resultPyeong : resultSqm} />
-                </div>
+                <CopyButton value={direction === 'sqm2pyeong' ? fmt(pyeong) : fmt(sqm)} isKo={isKo} />
               </div>
-
-              {/* Reverse reference */}
-              <div style={{ padding: '0.85rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                  {direction === 'sqm2pyeong' ? `${t('result.ref')} (㎡)` : `${t('result.ref')} (${t('unit.pyeong')})`}
-                </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                    {direction === 'sqm2pyeong' ? `${resultSqm} ㎡` : `${resultPyeong} ${t('unit.pyeong')}`}
+              {direction === 'sqm2pyeong' && (
+                <div className={s.row}>
+                  <span>
+                    {isKo ? '이 면적이 전용면적이라면 아파트 기준' : 'If this is the exclusive area (apartment)'}
+                    <span className={s.row_sub}>{isKo ? '공급면적(전용률 약 75%) 기준 평형' : 'pyeong class by supply area (≈75% ratio)'}</span>
                   </span>
-                  <CopyButton value={direction === 'sqm2pyeong' ? resultSqm : resultPyeong} />
-                </div>
-              </div>
-
-              {/* Nearest preset match */}
-              {nearestPreset && (
-                <div style={{ padding: '0.75rem 1.25rem', background: 'rgba(245,158,11,0.06)', borderTop: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#d97706', fontWeight: 600 }}>🏠 {t('result.nearest')}</span>
-                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                    {locale === 'ko' ? nearestPreset.nameKo : nearestPreset.nameEn}
-                    {' '}({nearestPreset.sqm}㎡ ≈ {fmtNum(nearestPreset.sqm / PYEONG_TO_SQM)}{t('unit.pyeong')})
-                  </span>
+                  <span className={s.val}>{isKo ? `약 ${pyeongClass(sqm, EXCLUSIVE_RATIO.apartment.typical)}평형` : `≈ ${pyeongClass(sqm, EXCLUSIVE_RATIO.apartment.typical)}-pyeong class`}</span>
                 </div>
               )}
             </div>
-          </div>
-        )}
-
-        {/* Conversion table */}
-        <div style={{ marginTop: '1.5rem' }}>
-          <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.6rem' }}>
-            {t('table.title')}
+          )}
+          <p className={s.field_hint}>
+            {isKo
+              ? '※ 1평 = 400/121㎡(약 3.3058㎡). 평은 법정 계량단위가 아니어서 계약서·등기부에는 ㎡로 적습니다.'
+              : '※ 1 pyeong = 400/121 ㎡ (≈ 3.3058 ㎡). Pyeong is not a legal unit in Korea; contracts and registries use ㎡.'}
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden', fontSize: '0.82rem' }}>
-            <div style={{ padding: '0.5rem 0.75rem', background: 'var(--surface-hover)', fontWeight: 700, color: 'var(--text-muted)' }}>㎡</div>
-            <div style={{ padding: '0.5rem 0.75rem', background: 'var(--surface-hover)', fontWeight: 700, color: 'var(--text-muted)' }}>{t('unit.pyeong')}</div>
-            {[33, 49, 59, 74, 84, 102, 115, 135, 165].map(s => (
-              <>
-                <div key={`s${s}`} style={{ padding: '0.45rem 0.75rem', borderTop: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontWeight: 500 }}>{s} ㎡</div>
-                <div key={`p${s}`} style={{ padding: '0.45rem 0.75rem', borderTop: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontWeight: 600 }}>{(s / PYEONG_TO_SQM).toFixed(1)} {t('unit.pyeong')}</div>
-              </>
-            ))}
+        </section>
+      )}
+
+      {/* ── ② 전용 ↔ 평형 ── */}
+      {tab === 'class' && (
+        <section className={s.card}>
+          <h2 className={s.card_title}>{isKo ? '전용면적 ↔ 평형' : 'Exclusive area ↔ pyeong class'}</h2>
+          <p className={s.hint}>
+            {isKo
+              ? '"34평형"처럼 부르는 평형은 공용 계단·복도까지 더한 공급면적 기준이라, 광고에 나오는 전용면적을 평으로 바꾼 값보다 큽니다. 전용 84㎡는 전용 기준 25.4평이지만 공급면적이 약 112㎡라 34평형으로 부릅니다.'
+              : 'Korean "pyeong classes" are based on supply area, which adds shared stairs and corridors to the exclusive area. An 84㎡ unit is 25.4 pyeong exclusive but about 112㎡ supply, so it is called a 34-pyeong class.'}
+          </p>
+          <div className={s.chips}>
+            <button type="button" aria-pressed={classMode === 'toClass'} className={`${s.chip} ${classMode === 'toClass' ? s.chip_active : ''}`} onClick={() => { setClassMode('toClass'); setClassInput(''); }}>
+              {isKo ? '전용면적 → 몇 평형' : 'Exclusive ㎡ → class'}
+            </button>
+            <button type="button" aria-pressed={classMode === 'toExclusive'} className={`${s.chip} ${classMode === 'toExclusive' ? s.chip_active : ''}`} onClick={() => { setClassMode('toExclusive'); setClassInput(''); }}>
+              {isKo ? '평형 → 전용면적' : 'Class → exclusive ㎡'}
+            </button>
           </div>
+          <div className={s.grid2}>
+            <div>
+              <label className={s.field_label} htmlFor="py-class">{classMode === 'toClass' ? (isKo ? '전용면적 (㎡)' : 'Exclusive area (㎡)') : (isKo ? '평형' : 'Pyeong class')}</label>
+              <div className={s.input_wrap}>
+                <input id="py-class" className={s.input} inputMode="decimal" placeholder={classMode === 'toClass' ? '84' : '34'}
+                  value={classInput} onChange={e => setClassInput(decimalInput(e.target.value))} />
+                <span className={s.suffix}>{classMode === 'toClass' ? '㎡' : (isKo ? '평형' : 'py')}</span>
+              </div>
+            </div>
+            <div>
+              <span className={s.field_label}>{isKo ? '건물 유형' : 'Building type'}</span>
+              <div className={s.chips}>
+                {(Object.keys(EXCLUSIVE_RATIO) as BuildingType[]).map(b => (
+                  <button key={b} type="button" aria-pressed={building === b} className={`${s.mini} ${building === b ? s.mini_active : ''}`} onClick={() => { setBuilding(b); setRatioText(''); }}>
+                    {buildingName(b)}
+                  </button>
+                ))}
+              </div>
+              <div className={s.input_wrap} style={{ marginTop: '0.5rem' }}>
+                <input className={s.input} style={{ fontSize: '1rem', minHeight: 44 }} inputMode="decimal" aria-label={isKo ? '전용률' : 'Exclusive ratio'}
+                  placeholder={`${Math.round(range.typical * 100)}`} value={ratioText} onChange={e => setRatioText(decimalInput(e.target.value))} />
+                <span className={s.suffix}>%</span>
+              </div>
+              <p className={s.field_hint}>
+                {isKo
+                  ? `전용률(전용 ÷ ${building === 'officetel' ? '계약' : '공급'}면적). ${buildingName(building)}은 보통 ${Math.round(range.min * 100)}~${Math.round(range.max * 100)}%. 분양 공고의 공급면적을 알면 직접 넣으세요.`
+                  : `Exclusive ratio; ${buildingName(building)} is usually ${Math.round(range.min * 100)}–${Math.round(range.max * 100)}%.`}
+              </p>
+            </div>
+          </div>
+
+          {classNum > 0 && (
+            <div className={s.result} aria-live="polite">
+              {classMode === 'toClass' ? (
+                <>
+                  <div className={s.result_main}>
+                    <div>
+                      <div className={s.result_from}>{isKo ? `전용 ${classInput}㎡ (${buildingName(building)})` : `${classInput}㎡ exclusive (${buildingName(building)})`}</div>
+                      <span className={s.result_num}>{isKo ? '약 ' : '≈ '}{pyeongClass(classNum, ratio)}</span>
+                      <span className={s.result_unit}>{isKo ? '평형' : '-pyeong class'}</span>
+                    </div>
+                  </div>
+                  <div className={s.row}><span>{isKo ? '전용면적 평수' : 'Exclusive area'}</span><span className={s.val}>{fmt(toPyeong(classNum), 1)} {pyUnit}</span></div>
+                  <div className={s.row}><span>{isKo ? `${building === 'officetel' ? '계약' : '공급'}면적 (추정)` : 'Supply area (est.)'}<span className={s.row_sub}>{isKo ? `전용률 ${Math.round(ratio * 100)}% 가정` : `${Math.round(ratio * 100)}% ratio`}</span></span><span className={s.val}>{fmt(supplyFromExclusive(classNum, ratio), 1)} ㎡</span></div>
+                  {!ratioText && (
+                    <div className={s.row}><span>{isKo ? '단지에 따라' : 'Typical range'}</span><span className={s.val}>{pyeongClass(classNum, range.max)}~{pyeongClass(classNum, range.min)}{isKo ? '평형' : ' py'}</span></div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className={s.result_main}>
+                    <div>
+                      <div className={s.result_from}>{isKo ? `${classInput}평형 (${buildingName(building)})` : `${classInput}-pyeong class (${buildingName(building)})`}</div>
+                      <span className={s.result_num}>{isKo ? '전용 약 ' : '≈ '}{fmt(exclusiveFromClass(classNum, ratio), 0)}</span>
+                      <span className={s.result_unit}>㎡</span>
+                    </div>
+                  </div>
+                  <div className={s.row}><span>{isKo ? `${building === 'officetel' ? '계약' : '공급'}면적` : 'Supply area'}</span><span className={s.val}>{fmt(toSqm(classNum), 1)} ㎡</span></div>
+                  <div className={s.row}><span>{isKo ? '전용면적 평수' : 'Exclusive pyeong'}</span><span className={s.val}>{fmt(toPyeong(exclusiveFromClass(classNum, ratio)), 1)} {pyUnit}</span></div>
+                  {!ratioText && (
+                    <div className={s.row}><span>{isKo ? '단지에 따라 전용' : 'Typical exclusive range'}</span><span className={s.val}>{fmt(exclusiveFromClass(classNum, range.min), 0)}~{fmt(exclusiveFromClass(classNum, range.max), 0)} ㎡</span></div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+          {building === 'officetel' && (
+            <div className={s.note}>
+              {isKo
+                ? '오피스텔은 아파트와 달리 공용 주차장·관리실까지 포함한 계약면적으로 분양하는 경우가 많아, 같은 "평형"이라도 실제 쓰는 전용면적이 아파트보다 훨씬 작습니다.'
+                : 'Officetels are often sold by contract area including parking and facilities, so the same "class" has much less usable space than an apartment.'}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ── ③ 평당 가격 ── */}
+      {tab === 'price' && (
+        <section className={s.card}>
+          <h2 className={s.card_title}>{isKo ? '평당 가격 계산' : 'Price per pyeong'}</h2>
+          <div className={s.grid2}>
+            <div>
+              <label className={s.field_label} htmlFor="py-price">{isKo ? '매매가·분양가 (원)' : 'Price (KRW)'}</label>
+              <div className={s.input_wrap}>
+                <input id="py-price" className={s.input} inputMode="numeric" placeholder="1,000,000,000"
+                  value={priceText} onChange={e => { const n = digits(e.target.value); setPriceText(n ? n.toLocaleString('ko-KR') : ''); }} />
+                <span className={s.suffix}>{isKo ? '원' : 'KRW'}</span>
+              </div>
+              {price > 0 && <p className={s.field_hint}>{krw(price)}</p>}
+            </div>
+            <div>
+              <label className={s.field_label} htmlFor="py-parea">{isKo ? '전용면적 (㎡)' : 'Exclusive area (㎡)'}</label>
+              <div className={s.input_wrap}>
+                <input id="py-parea" className={s.input} inputMode="decimal" placeholder="84"
+                  value={priceArea} onChange={e => setPriceArea(decimalInput(e.target.value))} />
+                <span className={s.suffix}>㎡</span>
+              </div>
+            </div>
+          </div>
+          {price > 0 && area > 0 && (
+            <div className={s.result} aria-live="polite">
+              <div className={s.result_main}>
+                <div>
+                  <div className={s.result_from}>{isKo ? `평형 기준 (약 ${pyeongClass(area, EXCLUSIVE_RATIO.apartment.typical)}평형) 평당가` : `Per pyeong (class ≈ ${pyeongClass(area, EXCLUSIVE_RATIO.apartment.typical)})`}</div>
+                  <span className={s.result_num} style={{ fontSize: '1.9rem' }}>{krw(upSupply.perPyeong)}</span>
+                </div>
+              </div>
+              <div className={s.row}>
+                <span>{isKo ? '전용면적 기준 평당가' : 'Per exclusive pyeong'}<span className={s.row_sub}>{isKo ? `전용 ${fmt(toPyeong(area), 1)}평으로 나눔` : `÷ ${fmt(toPyeong(area), 1)} py`}</span></span>
+                <span className={s.val}>{krw(up.perPyeong)}</span>
+              </div>
+              <div className={s.row}><span>{isKo ? '전용 ㎡당 가격' : 'Per exclusive ㎡'}</span><span className={s.val}>{krw(up.perSqm)}</span></div>
+            </div>
+          )}
+          <p className={s.field_hint}>
+            {isKo
+              ? '※ 시세 기사나 분양 광고의 "평당가"는 보통 공급면적(평형) 기준이라 전용면적 기준보다 낮게 나옵니다. 비교할 때는 같은 기준끼리 비교하세요. 평형 기준은 아파트 전용률 75%로 추정한 값입니다.'
+              : '※ Prices quoted "per pyeong" in Korean media usually use supply area (the class), which gives a lower figure than exclusive area. The class basis assumes a 75% apartment ratio.'}
+          </p>
+        </section>
+      )}
+
+      {/* ── 환산표 (서버 렌더에도 포함) ── */}
+      <section className={s.card} aria-labelledby="py-table">
+        <h2 id="py-table" className={s.card_title}>{isKo ? '아파트 전용면적별 평수·평형 환산표' : 'Apartment exclusive area → pyeong and class'}</h2>
+        <div className={s.table_wrap}>
+          <table className={s.table}>
+            <thead>
+              <tr>
+                <th scope="col">{isKo ? '전용면적' : 'Exclusive'}</th>
+                <th scope="col">{isKo ? '전용 평수' : 'Exclusive py'}</th>
+                <th scope="col">{isKo ? '공급면적(추정)' : 'Supply (est.)'}</th>
+                <th scope="col">{isKo ? '통상 평형' : 'Class'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {COMMON_EXCLUSIVE.map(e => (
+                <tr key={e}>
+                  <th scope="row" style={{ fontWeight: 600 }}>{e}㎡</th>
+                  <td>{fmt(toPyeong(e), 1)}{pyUnit}</td>
+                  <td>{fmt(supplyFromExclusive(e, EXCLUSIVE_RATIO.apartment.typical), 0)}㎡</td>
+                  <td><strong>{isKo ? `약 ${pyeongClass(e, EXCLUSIVE_RATIO.apartment.typical)}평형` : `≈ ${pyeongClass(e, EXCLUSIVE_RATIO.apartment.typical)}`}</strong></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
+        <p className={s.field_hint}>{isKo ? '전용률 75% 기준 추정치입니다. 실제 평형은 단지 설계에 따라 1~2평 차이가 날 수 있습니다.' : 'Estimated with a 75% exclusive ratio; actual classes vary by complex.'}</p>
+      </section>
 
-      {/* 공유하기 */}
       <ShareBar title={t('title')} description={t('description')} />
-
-      {/* 추천 도구 */}
       <RelatedTools toolId="utilities/utility/pyeong-calc" />
-
-      {/* 광고 영역 */}
-      <div style={{
-        width: '100%',
-        minHeight: '90px',
-        background: 'rgba(226, 232, 240, 0.3)',
-        border: '1px dashed #cbd5e1',
-        borderRadius: '0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#94a3b8',
-        fontSize: '0.875rem',
-        margin: '2rem 0'
-      }}>
-        광고 영역
-      </div>
+      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{
-          title: '평수-제곱미터(㎡) 변환기란 무엇인가요?',
-          description: '평(坪)은 한국·일본에서 사용하는 전통 면적 단위로, 1평은 약 3.30579㎡에 해당합니다. 아파트, 오피스텔, 상가 등 부동산 매물을 볼 때 공급면적, 전용면적이 ㎡로 표기되어 있어 직관적으로 이해하기 어렵습니다. 이 변환기는 ㎡를 평으로, 평을 ㎡로 즉시 변환하며, 59㎡·84㎡ 등 아파트 표준 전용면적 프리셋과 소수점 자리수 조절 기능을 제공해 부동산 거래에 필요한 면적 계산을 빠르게 처리합니다.',
+          title: '평수 계산기: ㎡를 평으로, 전용면적을 평형으로',
+          description: '1평은 400/121㎡, 약 3.3058㎡입니다. ㎡를 3.3058로 나누면 평, 평에 3.3058을 곱하면 ㎡가 됩니다. 그런데 아파트를 "34평형", "24평형"처럼 부를 때의 평형은 광고에 적힌 전용면적이 아니라 계단·복도 같은 주거공용면적까지 더한 공급면적 기준입니다. 그래서 전용 84㎡는 전용 기준으로는 25.4평이지만 공급면적이 약 112㎡라 34평형, 전용 59㎡는 17.8평이지만 약 24평형으로 부릅니다. 이 계산기는 단순 단위 변환과 함께 전용면적을 평형으로, 평형을 전용면적으로 바꿔 주며, 아파트(전용률 약 72~80%), 주상복합, 오피스텔(계약면적 기준 약 45~60%)처럼 건물 유형에 따라 달라지는 전용률을 반영합니다. 매매가나 분양가를 넣으면 평형 기준과 전용면적 기준 평당 가격, ㎡당 가격도 함께 계산합니다. 2007년부터 상거래에서는 평 대신 ㎡를 쓰도록 되어 있어 계약서와 등기부에는 ㎡로 적힌다는 점도 기억해 두세요.',
           useCases: [
-            { icon: '🏠', title: '아파트 전용면적 파악', desc: '59㎡, 84㎡ 등 흔히 표기되는 전용면적이 실제 몇 평인지 즉시 확인합니다.' },
-            { icon: '🏢', title: '상가·오피스 면적 계산', desc: '임대차 계약서의 ㎡ 기준 면적을 평으로 환산해 평당 임대료를 계산합니다.' },
-            { icon: '🌐', title: '해외 부동산 비교', desc: '㎡ 단위로 표기되는 해외 부동산 매물을 평 기준으로 변환해 국내 기준으로 비교합니다.' },
-            { icon: '📐', title: '인테리어·리모델링 설계', desc: '시공 면적을 평과 ㎡로 동시 확인해 자재 발주량이나 단가 계산에 활용합니다.' },
+            { icon: '🏠', title: '"84㎡는 몇 평형?" 바로 확인', desc: '분양 공고나 매물 광고의 전용 59㎡·84㎡가 흔히 말하는 몇 평형인지(약 24평형·34평형) 확인하고, 전용 기준 평수(17.8평·25.4평)와 함께 비교합니다.' },
+            { icon: '🔁', title: '평형으로 들은 집을 ㎡로 환산', desc: '"34평형 아파트"라고 들었을 때 실제 전용면적이 약 84㎡인지, 오피스텔이라면 전용이 훨씬 작은지 건물 유형별 전용률로 역산합니다.' },
+            { icon: '💰', title: '평당 가격 비교', desc: '매매가 10억 원 전용 84㎡라면 평형(약 34평) 기준 평당 약 2,952만 원, 전용(25.4평) 기준 약 3,935만 원입니다. 기사 속 평당가와 같은 기준으로 비교할 수 있습니다.' },
+            { icon: '📐', title: '인테리어·상가 면적 계산', desc: '도배·장판 견적이나 상가 임대료처럼 평 단위로 말하는 견적을 ㎡와 오가며 확인하고, 소수점 자리수를 골라 복사합니다.' },
           ],
           steps: [
-            { step: '변환 방향 선택', desc: '㎡ → 평 또는 평 → ㎡ 방향을 상단 토글 버튼으로 선택합니다. 방향을 바꾸면 입력값이 초기화되므로 방향을 먼저 선택하는 것이 좋습니다.' },
-            { step: '면적 입력 또는 프리셋 선택', desc: '숫자를 직접 입력하거나, 59㎡·84㎡ 등 아파트 표준 프리셋 버튼을 클릭합니다. 소수점 입력도 지원하며, 입력과 동시에 결과가 계산됩니다.' },
-            { step: '소수점 자리수 조절', desc: '결과 정밀도를 0~4자리까지 선택할 수 있습니다. 계약서 작성 시에는 2자리, 빠른 참고용으로는 0~1자리가 적합합니다.' },
-            { step: '결과 확인 및 복사', desc: '변환 결과가 즉시 표시됩니다. 복사 버튼으로 평 또는 ㎡ 값을 클립보드에 저장하여 메모장, 이메일, 부동산 앱에 바로 붙여넣을 수 있습니다.' },
+            { step: '계산 종류 고르기', desc: '단위만 바꾸려면 "㎡ ↔ 평 변환", 몇 평형인지 알고 싶으면 "몇 평형?", 가격 비교는 "평당 가격" 탭을 고릅니다.' },
+            { step: '면적 입력', desc: '㎡나 평을 입력하거나 전용 59㎡·84㎡ 같은 대표 면적 버튼을 누릅니다. 평형 계산에서는 아파트·주상복합·오피스텔 중 유형을 고르고, 공급면적을 알면 전용률을 직접 넣습니다.' },
+            { step: '결과 확인', desc: '변환된 평수나 ㎡, 추정 평형과 단지별 범위, 공급면적, 평당 가격(평형 기준·전용 기준)과 ㎡당 가격을 확인합니다.' },
+            { step: '복사·비교', desc: '복사 버튼으로 결과를 붙여 넣거나, 아래 환산표로 대표 전용면적별 평수와 평형을 한눈에 비교합니다.' },
           ],
           faqs: [
-            { q: '1평은 몇 ㎡인가요?', a: '1평은 정확히 3.30578512㎡이며, 통상 3.3058㎡로 계산합니다. 법적으로는 1평 = 400/121㎡(약 3.30579㎡)로 정의됩니다. 이 계산기는 법정 환산 계수 3.30579를 사용합니다.' },
-            { q: '아파트 전용면적 84㎡는 몇 평인가요?', a: '84 ÷ 3.30579 ≈ 25.4평입니다. 흔히 "25평형 아파트"라고 부르는 평형입니다. 프리셋 버튼에서 84㎡를 클릭하면 바로 확인할 수 있습니다.' },
-            { q: '공급면적과 전용면적의 차이는 무엇인가요?', a: '전용면적은 현관문 안쪽 실내 면적만을 의미하고, 공급면적은 전용면적에 계단·복도 등 공용 면적(주거공용면적)을 합산한 면적입니다. 부동산 광고에서는 보통 전용면적 기준으로 표기하며, 실제 거주 공간의 크기는 전용면적으로 비교하는 것이 정확합니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
+            { q: '전용 84㎡는 왜 25평형이 아니라 34평형인가요?', a: '84㎡를 3.3058로 나누면 25.4평이지만, 평형은 전용면적에 계단·복도·엘리베이터 같은 주거공용면적을 더한 공급면적으로 부르기 때문입니다. 전용 84㎡ 아파트의 공급면적은 보통 110~115㎡로, 평으로 바꾸면 약 34평입니다.' },
+            { q: '1평은 정확히 몇 ㎡인가요?', a: '1평은 사방 6자(1자 = 10/33m)인 정사각형 넓이로 400/121㎡, 약 3.305785㎡입니다. 보통 3.3058로 계산하며, ㎡ × 0.3025로 평을 구하기도 합니다.' },
+            { q: '오피스텔 평형은 아파트와 어떻게 다른가요?', a: '오피스텔은 공용 주차장·관리시설까지 포함한 계약면적으로 분양하는 경우가 많아 전용률이 45~60% 정도입니다. 그래서 같은 "20평형"이라도 아파트보다 실제 쓰는 전용면적이 훨씬 작습니다.' },
+            { q: '평당 가격은 어떤 면적으로 나누나요?', a: '언론 기사나 분양 광고의 평당가는 보통 공급면적(평형) 기준입니다. 같은 집도 전용면적으로 나누면 평당가가 더 높게 나오므로, 두 가격을 비교할 때는 같은 기준끼리 비교해야 합니다.' },
           ],
         }}
         en={{
-          title: 'What is a Pyeong to Square Meter (㎡) Converter?',
-          description: 'Pyeong (평) is a traditional area unit used in South Korea and Japan. One pyeong equals approximately 3.30579 m². Real estate listings in Korea display apartment sizes in ㎡ (exclusive area), which can be hard to visualize for those accustomed to pyeong. This converter instantly switches between ㎡ and pyeong, offers preset buttons for standard apartment sizes (59㎡, 84㎡, etc.), and lets you control decimal precision — everything you need for property research and transactions.',
+          title: 'Pyeong calculator: ㎡ to pyeong and Korean apartment classes',
+          description: 'One pyeong is 400/121 ㎡, about 3.3058 ㎡: divide square metres by 3.3058 for pyeong, or multiply pyeong by 3.3058 for square metres. Korean apartments, however, are described by a "pyeong class" such as 34 or 24, which is based on supply area — the exclusive area shown in listings plus shared stairs and corridors. An 84㎡ unit is 25.4 pyeong exclusive but about 112㎡ of supply area, so it is a 34-pyeong class; a 59㎡ unit is 17.8 pyeong but roughly a 24-pyeong class. Besides plain conversion, this calculator turns exclusive area into a class and back, using typical exclusive ratios for apartments (about 72–80%), mixed-use towers and officetels (about 45–60% of contract area). Enter a price to get the price per pyeong on both the class and exclusive basis, plus the price per ㎡. Since 2007, contracts and registries in Korea must use ㎡ rather than pyeong.',
           useCases: [
-            { icon: '🏠', title: 'Apartment Size Check', desc: 'Instantly convert 59㎡, 84㎡, and other common exclusive areas into pyeong to understand actual living space.' },
-            { icon: '🏢', title: 'Commercial Lease Calculation', desc: 'Convert ㎡-based lease areas to pyeong to calculate per-pyeong rent and compare locations.' },
-            { icon: '🌐', title: 'Overseas Property Comparison', desc: 'Convert international property listings from m² into pyeong for familiar Korean-market comparison.' },
-            { icon: '📐', title: 'Interior & Renovation Planning', desc: 'View construction areas in both units simultaneously for accurate material ordering and cost estimation.' },
+            { icon: '🏠', title: 'What Class Is 84㎡?', desc: 'See that exclusive 59㎡ and 84㎡ units are roughly 24- and 34-pyeong classes, alongside their exclusive pyeong (17.8 and 25.4).' },
+            { icon: '🔁', title: 'From Class Back to ㎡', desc: 'Heard "34-pyeong apartment"? Estimate the exclusive area (about 84㎡), or see how much smaller an officetel of the same class is.' },
+            { icon: '💰', title: 'Compare Price per Pyeong', desc: 'A ₩1 billion 84㎡ flat is about ₩29.5 million per pyeong on the class basis and ₩39.4 million per exclusive pyeong.' },
+            { icon: '📐', title: 'Interiors and Shops', desc: 'Switch between pyeong and ㎡ for flooring quotes or shop rents, choose decimal places and copy the result.' },
           ],
           steps: [
-            { step: 'Choose Conversion Direction', desc: 'Select ㎡ → pyeong or pyeong → ㎡ using the toggle at the top. It is best to choose direction first, as switching resets the input value.' },
-            { step: 'Enter Area or Select Preset', desc: 'Type in a value manually or click a preset button for standard apartment sizes like 59㎡ or 84㎡. Decimal inputs are supported and results update instantly.' },
-            { step: 'Adjust Decimal Precision', desc: 'Choose 0 to 4 decimal places to control result precision. Use 2 decimal places for contract documents, or 0–1 for quick reference.' },
-            { step: 'View Result & Copy', desc: 'The converted value appears instantly. Copy the pyeong or ㎡ value to your clipboard with one click, then paste it into a notepad, email, or real estate app.' },
+            { step: 'Pick a Tab', desc: 'Use unit conversion, the pyeong class tab, or the price per pyeong tab.' },
+            { step: 'Enter an Area', desc: 'Type ㎡ or pyeong, or tap a common size like 59㎡ or 84㎡. For classes choose apartment, mixed-use or officetel, or enter a known exclusive ratio.' },
+            { step: 'Read the Result', desc: 'See the converted value, estimated class and typical range, supply area, and prices per pyeong and per ㎡.' },
+            { step: 'Copy or Compare', desc: 'Copy the result or use the table to compare common apartment sizes at a glance.' },
           ],
           faqs: [
-            { q: 'How many square meters is one pyeong?', a: 'One pyeong equals exactly 400/121 m² ≈ 3.30579 m². In practice, 3.3058 m² is commonly used for quick calculations. This converter uses the legal conversion factor of 3.30579.' },
-            { q: 'How many pyeong is an 84㎡ apartment?', a: '84 ÷ 3.30579 ≈ 25.4 pyeong. This is commonly referred to as a "25-pyeong apartment" in Korea. Click the 84㎡ preset button to verify instantly.' },
-            { q: 'What is the difference between exclusive area and supply area?', a: 'Exclusive area (전용면적) covers only the interior of your unit — everything inside the front door. Supply area (공급면적) adds shared spaces like hallways and stairwells. For comparing living space between properties, always use the exclusive area.' },
-            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
+            { q: 'Why is 84㎡ a 34-pyeong class, not 25?', a: '84 ÷ 3.3058 is 25.4 pyeong, but classes use supply area, which adds shared stairs, corridors and lifts. An 84㎡ apartment usually has 110–115㎡ of supply area, about 34 pyeong.' },
+            { q: 'Exactly how big is one pyeong?', a: 'A square six ja on each side, with one ja being 10/33 m: 400/121 ㎡ ≈ 3.305785 ㎡. Multiplying ㎡ by 0.3025 also gives pyeong.' },
+            { q: 'How do officetel classes differ?', a: 'Officetels are often sold by contract area including parking and facilities, with an exclusive ratio of about 45–60%, so the same class has much less usable space than an apartment.' },
+            { q: 'Which area is used for price per pyeong?', a: 'Korean media and sales ads usually divide by supply area. Dividing by exclusive area gives a higher figure, so compare like with like.' },
           ],
         }}
       />

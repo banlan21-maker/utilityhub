@@ -310,8 +310,8 @@
     "notice": "* This is for reference only. Actual tax may differ based on year-end settlement. Consult a tax professional for precise figures."
   },
   "Area": {
-    "title": "📐 Pyeong ↔ ㎡ Converter",
-    "description": "Instantly convert between pyeong and square meters. Includes standard apartment size presets.",
+    "title": "📐 Pyeong Calculator (㎡ ↔ pyeong · classes · price)",
+    "description": "Convert ㎡ and pyeong, find the Korean apartment pyeong class and price per pyeong.",
     "unit": {
       "pyeong": "py"
     },
@@ -319,7 +319,7 @@
       "sqm": "Square Meters (㎡)",
       "pyeong": "Pyeong (평)",
       "decimals": "Decimal places:",
-      "presets": "Apartment Size Presets"
+      "presets": "Common apartment sizes"
     },
     "result": {
       "title": "Conversion Result",

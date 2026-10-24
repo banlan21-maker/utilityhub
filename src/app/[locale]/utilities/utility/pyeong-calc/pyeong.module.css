@@ -1,0 +1,189 @@
+/* Pyeong Calc — CSS Module (CSS 변수 + 다크모드) */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  --py-accent-bg: rgba(79, 70, 229, 0.08);
+  --py-note-bg: #fef3c7;
+  --py-note-text: #92400e;
+
+  max-width: 896px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 1rem 3rem;
+  animation: fadeIn 0.6s ease-out;
+}
+
+:global([data-theme='dark']) .container {
+  --py-accent-bg: rgba(129, 140, 248, 0.14);
+  --py-note-bg: #422006;
+  --py-note-text: #fde68a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container { animation: none; }
+}
+
+.header { text-align: center; }
+
+.icon_wrap {
+  display: inline-flex;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem; word-break: keep-all; }
+.subtitle { color: var(--text-secondary); font-size: 1.05rem; word-break: keep-all; line-height: 1.6; }
+
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+@media (max-width: 520px) { .tabs { grid-template-columns: 1fr; } }
+
+.tab {
+  min-height: 52px;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+.tab small { display: block; font-weight: 500; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem; }
+.tab_active { border-color: var(--primary); background: var(--surface-hover); color: var(--primary); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card_title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+.hint { font-size: 0.88rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+
+.chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.chip {
+  flex: 1;
+  min-width: 100px;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.chip_active { border-color: var(--primary); background: var(--surface-hover); color: var(--primary); }
+
+.mini {
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mini_active { border-color: var(--primary); color: var(--primary); background: var(--py-accent-bg); }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } }
+
+.field_label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem; }
+.field_hint { font-size: 0.8rem; color: var(--text-muted); margin: 0.35rem 0 0; line-height: 1.5; }
+
+.input_wrap { position: relative; }
+
+.input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.7rem 3.2rem 0.7rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 0.85rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.input:focus { outline: 2px solid var(--primary); outline-offset: 1px; border-color: var(--primary); }
+.suffix { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-weight: 700; }
+
+.decimals { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+
+.result { border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; }
+.result_main { padding: 1.1rem 1.25rem; background: var(--py-accent-bg); display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.result_from { font-size: 0.85rem; color: var(--text-secondary); }
+.result_num { font-size: 2.4rem; font-weight: 900; color: var(--primary); letter-spacing: -0.02em; line-height: 1.1; }
+.result_unit { font-size: 1.1rem; font-weight: 700; color: var(--text-secondary); margin-left: 0.3rem; }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.row_sub { display: block; font-size: 0.78rem; color: var(--text-muted); }
+.val { font-weight: 700; color: var(--text-primary); white-space: nowrap; }
+
+.copy {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.copy_done { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+.note { border-radius: 0.75rem; padding: 0.8rem 1rem; background: var(--py-note-bg); color: var(--py-note-text); font-size: 0.88rem; line-height: 1.6; }
+
+.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.table th, .table td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); text-align: right; color: var(--text-primary); }
+.table th { color: var(--text-secondary); font-weight: 700; background: var(--surface-hover); }
+.table th:first-child, .table td:first-child { text-align: left; }
+.table td strong { color: var(--primary); }
+.table_wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 0.85rem; }
+
+.ad_slot {
+  width: 100%;
+  min-height: 90px;
+  border: 1px dashed var(--border);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
