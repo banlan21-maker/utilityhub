@@ -8,7 +8,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import {
-  WORD_LENGTH, MAX_GUESSES, compose, evaluate, keyStatuses, dayNumber, answerFor, toTiles,
+  WORD_LENGTH, MAX_GUESSES, compose, decompose, evaluate, keyStatuses, dayNumber, answerFor, toTiles,
   emptyStats, recordResult, liveStreak, type Lang, type Stats, type TileStatus,
 } from '@/lib/wordle';
 import { KO_ANSWERS, KO_VALID } from '@/constants/wordle/ko';
@@ -42,6 +42,14 @@ const EN_ROWS = [
   ['ENTER', ...'ZXCVBNM', 'BACK'],
 ];
 
+// 게임 방법 예시 (정답 "생일"로 가정 — 실제 정답과 무관)
+const HELP_WORDS = [['학생', 'two'], ['바나나', 'three'], ['과일', 'compound'], ['꽃잎', 'tense']] as const;
+const HELP_ANSWER = '생일';
+const HELP_GUESSES = ['학생', '생선', '생일'] as const;
+const splitBySyllable = (word: string) => [...word].map(ch => decompose(ch));
+/** 입력 중인 자모가 완성된 글자 몇 개로 조합되는지 */
+const syllableCount = (jamo: string[]) => [...compose(jamo)].filter(ch => /[가-힣]/.test(ch)).length;
+
 const TEXT = {
   ko: {
     title: '일일 단어 퍼즐 (한글 워들)',
@@ -63,11 +71,37 @@ const TEXT = {
     dist: '맞힌 횟수 분포', next: '다음 문제까지',
     share: '결과 복사', close: '닫기', copied: '결과를 복사했어요. 붙여 넣어 공유하세요!', copyFail: '복사하지 못했어요',
     shareHead: (d: number, lang: Lang, t: string) => `일일 단어 퍼즐 ${d}번 (${lang === 'ko' ? '한글' : '영어'}) ${t}/6`,
+    ruleKo: '정답은 자모 6칸 = 받침 있는 2글자(예: 학생) 또는 받침 없는 3글자(예: 바나나)',
+    ruleEn: '정답은 영어 5글자 단어입니다',
+    previewCount: (syl: number, n: number) => ` · ${syl}글자 · 자모 ${n}/6`,
     helpTitle: '게임 방법',
-    help1: '여섯 번 안에 오늘의 단어를 맞히면 됩니다. 단어를 넣으면 칸 색깔로 힌트가 나옵니다.',
-    help2: '초록 = 자리까지 맞음 · 노랑 = 단어에 있지만 자리가 다름 · 회색 = 단어에 없음',
-    help3: '한글은 두벌식 자판으로 누르는 순서대로 자모 6칸입니다. 겹모음 ㅘ는 ㅗ+ㅏ 두 칸, 된소리 ㄲ은 한 칸입니다.',
-    exampleLabel: '예: 과일 →',
+    h1: '1. 정답은 몇 글자? — 자모 6칸 = 2글자 또는 3글자',
+    h1p: '오늘의 정답은 자음과 모음을 합쳐 정확히 6개인 단어입니다. 그래서 받침 있는 글자 2개(정답의 약 86%)이거나 받침 없는 글자 3개(약 14%)입니다. 자모는 두벌식 자판에서 누르는 순서대로 한 칸씩 들어갑니다.',
+    notes: { two: '받침 있는 글자 2개', three: '받침 없는 글자 3개', compound: '겹모음 ㅘ는 ㅗ+ㅏ 두 칸', tense: '된소리 ㄲ은 한 칸 (⇧+ㄱ)' },
+    h2: '2. 입력하는 방법',
+    h2list: [
+      '화면 자판이나 컴퓨터 키보드로 자모를 하나씩 누릅니다. 컴퓨터에서는 한/영 전환 없이 그대로 쳐도 됩니다.',
+      'ㄲ·ㄸ·ㅃ·ㅆ·ㅉ·ㅒ·ㅖ는 ⇧(Shift)를 누른 다음 해당 키를 누릅니다.',
+      '판 아래 "입력" 줄에 조합된 글자와 자모 개수(예: 고양 · 2글자 · 자모 4/6)가 보입니다. 6칸을 채우고 [입력]을 누르세요.',
+      '단어 목록에 없는 단어는 기회를 쓰지 않고 다시 입력할 수 있습니다.',
+    ],
+    h3: '3. 색깔 힌트 읽기 (예: 정답이 "생일"일 때)',
+    h3p: '단어를 넣으면 칸마다 색이 바뀝니다. 초록은 자리까지 맞음, 노랑은 정답에 있지만 자리가 다름, 회색은 정답에 없음입니다.',
+    guessNotes: {
+      학생: 'ㅅ·ㅐ·ㅇ은 정답에 있지만 자리가 달라 노랑, ㅎ·ㅏ·ㄱ은 없어서 회색',
+      생선: '"생"이 자리까지 맞아 초록. 뒤의 ㅅ은 정답에 ㅅ이 하나뿐이라 회색',
+      생일: '6칸 모두 초록 — 정답!',
+    } as Record<string, string>,
+    h3list: [
+      '자판 버튼에도 같은 색이 칠해져 남은 자모를 고르기 쉽습니다.',
+      '같은 자모를 두 번 넣으면 정답에 들어 있는 개수만큼만 초록·노랑으로 표시됩니다.',
+    ],
+    h4: '4. 하루 한 문제',
+    h4list: [
+      '여섯 번 안에 맞히면 성공이고 연승이 1 늘어납니다. 못 맞히거나 하루를 건너뛰면 연승은 0이 됩니다.',
+      '자정(기기 시계 기준)마다 새 문제가 열리고, 한글 판과 English 판은 따로 하루 한 번씩 풀 수 있습니다.',
+      '게임이 끝나면 정답의 뜻을 사전에서 보고, 정답이 드러나지 않는 색깔 칸 결과를 복사해 공유할 수 있습니다.',
+    ],
   },
   en: {
     title: 'Daily Word Puzzle',
@@ -89,11 +123,37 @@ const TEXT = {
     dist: 'Guess distribution', next: 'Next puzzle in',
     share: 'Copy result', close: 'Close', copied: 'Result copied — paste it to share!', copyFail: 'Could not copy',
     shareHead: (d: number, lang: Lang, t: string) => `Daily Word Puzzle #${d} (${lang === 'ko' ? 'Korean' : 'English'}) ${t}/6`,
+    ruleKo: 'Answer: a Korean word of exactly 6 jamo — 2 syllables with final consonants (학생) or 3 open syllables (바나나)',
+    ruleEn: 'Answer: a five-letter English word',
+    previewCount: (syl: number, n: number) => ` · ${syl} syllable${syl === 1 ? '' : 's'} · ${n}/6 jamo`,
     helpTitle: 'How to play',
-    help1: 'Guess today’s word in six tries. After each guess the tiles change colour.',
-    help2: 'Green = right spot · Yellow = in the word, wrong spot · Grey = not in the word',
-    help3: 'Korean words are split into the jamo you type on a 2-set keyboard: 6 tiles. A compound vowel like ㅘ takes two tiles (ㅗ+ㅏ); ㄲ takes one.',
-    exampleLabel: 'e.g. 과일 →',
+    h1: '1. How long is the Korean answer? — 6 jamo = 2 or 3 syllables',
+    h1p: 'The Korean answer always has exactly six consonants and vowels in total, so it is either two syllables that both end in a consonant (about 86% of answers) or three open syllables (about 14%). Jamo fill the tiles in the order you type them on a 2-set keyboard. The English board is simply a five-letter word.',
+    notes: { two: 'two syllables with final consonants', three: 'three open syllables', compound: 'compound vowel ㅘ takes two tiles (ㅗ+ㅏ)', tense: 'tense ㄲ takes one tile (⇧+ㄱ)' },
+    h2: '2. Typing',
+    h2list: [
+      'Use the on-screen keys or your keyboard; on a computer there is no need to switch to Korean input.',
+      'For ㄲ ㄸ ㅃ ㅆ ㅉ ㅒ ㅖ press ⇧ (Shift) first.',
+      'The "Typing" line under the board shows the composed word and jamo count (e.g. 고양 · 2 syllables · 4/6 jamo). Fill all six and press ENTER.',
+      'Words that are not in the list do not use up a try.',
+    ],
+    h3: '3. Reading the colours (example answer: 생일)',
+    h3p: 'Green means the right spot, yellow means in the answer but elsewhere, grey means not in the answer.',
+    guessNotes: {
+      학생: 'ㅅ, ㅐ and ㅇ are in the answer but elsewhere (yellow); ㅎ, ㅏ, ㄱ are not (grey)',
+      생선: '"생" is in the right place (green); the second ㅅ is grey because the answer has only one',
+      생일: 'All six green — solved!',
+    } as Record<string, string>,
+    h3list: [
+      'The keyboard keys take the same colours, so you can see which jamo are left.',
+      'A repeated jamo is only coloured as many times as it appears in the answer.',
+    ],
+    h4: '4. One puzzle a day',
+    h4list: [
+      'Solve it within six tries to add one to your streak; failing or skipping a day resets it.',
+      'A new puzzle opens at midnight on your device, separately for the Korean and English boards.',
+      'Afterwards, look up the meaning and copy a spoiler-free coloured result to share.',
+    ],
   },
 } as const;
 
@@ -328,6 +388,8 @@ export default function WordleClient() {
 
         {toast && <div className={s.toast} role="status">{toast}</div>}
 
+        <p className={s.rule}>{lang === 'ko' ? T.ruleKo : T.ruleEn}</p>
+
         <div className={s.board} role="grid" aria-label={isKo ? '단어 판' : 'Word board'}>
           {Array.from({ length: MAX_GUESSES }, (_, r) => {
             const done = guessTiles[r];
@@ -352,7 +414,10 @@ export default function WordleClient() {
         </div>
 
         {lang === 'ko' && game.status === 'playing' && (
-          <div className={s.preview}><span>{T.typing}</span>{compose(current)}</div>
+          <div className={s.preview}>
+            <span>{T.typing}</span>{compose(current) || '—'}
+            <small>{T.previewCount(syllableCount(current), current.length)}</small>
+          </div>
         )}
 
         {ready && game.status !== 'playing' ? (
@@ -372,18 +437,48 @@ export default function WordleClient() {
         <p className={s.kb_hint}>{lang === 'ko' ? T.kbHintKo : T.kbHintEn}</p>
       </div>
 
-      <details className={s.help}>
-        <summary>{T.helpTitle}</summary>
-        <p>{T.help1}</p>
-        <p>{T.help2}</p>
-        <p>{T.help3}</p>
-        <div className={s.help_row}>
-          <span>{T.exampleLabel}</span>
-          {['ㄱ', 'ㅗ', 'ㅏ', 'ㅇ', 'ㅣ', 'ㄹ'].map((j, i) => (
-            <span key={i} className={`${s.tile} ${s.mini} ${i === 0 ? s.tile_correct : i === 3 ? s.tile_present : ''}`}>{j}</span>
+      <section className={s.help} aria-labelledby="wd-help">
+        <h2 id="wd-help" className={s.help_title}>{T.helpTitle}</h2>
+
+        <h3 className={s.help_sub}>{T.h1}</h3>
+        <p>{T.h1p}</p>
+        <div className={s.help_examples}>
+          {HELP_WORDS.map(([word, note]) => (
+            <div key={word} className={s.help_ex}>
+              <div className={s.help_tiles}>
+                {splitBySyllable(word).map((syl, i) => (
+                  <span key={i} className={s.help_syl}>
+                    {syl.map((j, k) => <span key={k} className={`${s.tile} ${s.mini}`}>{j}</span>)}
+                  </span>
+                ))}
+              </div>
+              <span className={s.help_word}><b>{word}</b> {T.notes[note]}</span>
+            </div>
           ))}
         </div>
-      </details>
+
+        <h3 className={s.help_sub}>{T.h2}</h3>
+        <ul className={s.help_list}>{T.h2list.map(x => <li key={x}>{x}</li>)}</ul>
+
+        <h3 className={s.help_sub}>{T.h3}</h3>
+        <p>{T.h3p}</p>
+        <div className={s.help_examples}>
+          {HELP_GUESSES.map(g => (
+            <div key={g} className={s.help_ex}>
+              <div className={s.help_tiles}>
+                {evaluate(decompose(g), decompose(HELP_ANSWER)).map((st, i) => (
+                  <span key={i} className={`${s.tile} ${s.mini} ${s[`tile_${st}`]}`} style={{ animation: 'none' }}>{decompose(g)[i]}</span>
+                ))}
+              </div>
+              <span className={s.help_word}><b>{g}</b> {T.guessNotes[g]}</span>
+            </div>
+          ))}
+        </div>
+        <ul className={s.help_list}>{T.h3list.map(x => <li key={x}>{x}</li>)}</ul>
+
+        <h3 className={s.help_sub}>{T.h4}</h3>
+        <ul className={s.help_list}>{T.h4list.map(x => <li key={x}>{x}</li>)}</ul>
+      </section>
 
       {showResult && game.status !== 'playing' && (
         <div className={s.overlay} onClick={() => setShowResult(false)}>

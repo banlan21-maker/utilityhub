@@ -280,3 +280,18 @@
   color: var(--text-muted);
   font-size: 0.85rem;
 }
+
+/* 판 위 규칙 안내 */
+.rule { margin: 0; padding: 0.45rem 0.8rem; border-radius: 0.6rem; background: var(--background); color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; text-align: center; line-height: 1.5; word-break: keep-all; }
+.preview small { margin-left: 0.35rem; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+
+/* 게임 방법 (펼친 상태) */
+.help_title { margin: 0 0 0.4rem; font-size: 1.15rem; font-weight: 800; color: var(--text-primary); }
+.help_sub { margin: 1.1rem 0 0.4rem; font-size: 0.98rem; font-weight: 800; color: var(--text-primary); word-break: keep-all; }
+.help_examples { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.6rem; }
+.help_ex { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.help_tiles { display: flex; gap: 8px; }
+.help_syl { display: flex; gap: 3px; }
+.help_word { font-size: 0.88rem; color: var(--text-secondary); word-break: keep-all; }
+.help_word b { color: var(--text-primary); margin-right: 0.25rem; }
+.help_list { margin: 0.4rem 0 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem; }
