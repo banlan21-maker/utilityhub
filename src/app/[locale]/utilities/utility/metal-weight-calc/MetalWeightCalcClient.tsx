@@ -1,1003 +1,554 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
-import { Weight, Copy, ShoppingCart, Plus, X } from 'lucide-react';
+import { Weight, Copy, ShoppingCart, Plus, Trash2 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import {
+  SHAPES, PRESETS, SAMPLE_DIMS, shapeDef, calc, validate, isComplete, specLabel,
+  type ShapeId, type DimKey, type Dims, type ErrorCode,
+} from '@/lib/metalWeight';
+import CrossSection from './CrossSection';
 import s from './metal-weight-calc.module.css';
 
-// ── Types ────────────────────────────────────────────
-type ShapeId = 'round' | 'pipe' | 'square' | 'sqtube' | 'hex' | 'flat' | 'plate' | 'angle' | 'channel' | 'hbeam' | 'tshape' | 'checkered';
-
-interface Dims { D: number; W: number; H: number; L: number; t: number; t1: number; t2: number; S: number; }
-interface Material { name: string; density: number; custom?: boolean; }
+interface Material { id: string; ko: string; en: string; density: number; custom?: boolean }
 interface BasketItem {
-  id: string; shape: ShapeId; shapeName: string; spec: string;
-  material: string; density: number;
-  length: number; qty: number; lossRate: number;
-  unitWeight: number; totalWeight: number; orderWeight: number;
-  paintArea: number; pricePerKg: number; pricePerM2: number;
-  materialCost: number; paintCost: number; total: number;
+  id: string; shape: ShapeId; spec: string; material: string; materialEn?: string;
+  lengthM: number; qty: number; lossPct: number; orderKg: number; paintM2: number; cost: number;
 }
-
-// ── Constants ────────────────────────────────────────
-const ZERO_DIMS: Dims = { D: 0, W: 0, H: 0, L: 0, t: 0, t1: 0, t2: 0, S: 0 };
 
 const BASE_MATERIALS: Material[] = [
-  { name: '강철/탄소강', density: 7.85 },
-  { name: '스테인리스 (304/310)', density: 7.93 },
-  { name: '스테인리스 (316/321)', density: 7.98 },
-  { name: '스테인리스 (410/430)', density: 7.75 },
-  { name: '알루미늄', density: 2.70 },
-  { name: '황동(신주)', density: 8.50 },
-  { name: '구리(동)', density: 8.96 },
-  { name: '청동', density: 8.80 },
-  { name: '주철', density: 7.20 },
-  { name: '아연', density: 7.14 },
-  { name: '납', density: 11.34 },
-  { name: '니켈', density: 8.90 },
-  { name: '티타늄', density: 4.51 },
-  { name: '주석', density: 7.30 },
-  { name: '텅스텐', density: 19.25 },
-  { name: '인코넬', density: 8.44 },
-  { name: 'MC나일론', density: 1.16 },
-  { name: '아세탈(POM)', density: 1.41 },
-  { name: '테프론(PTFE)', density: 2.20 },
+  { id: 'steel', ko: '강철·탄소강 (SS275 등)', en: 'Carbon steel', density: 7.85 },
+  { id: 'sus304', ko: '스테인리스 304·310', en: 'Stainless 304/310', density: 7.93 },
+  { id: 'sus316', ko: '스테인리스 316·321', en: 'Stainless 316/321', density: 7.98 },
+  { id: 'sus430', ko: '스테인리스 410·430', en: 'Stainless 410/430', density: 7.75 },
+  { id: 'al', ko: '알루미늄', en: 'Aluminium', density: 2.70 },
+  { id: 'brass', ko: '황동(신주)', en: 'Brass', density: 8.50 },
+  { id: 'cu', ko: '구리(동)', en: 'Copper', density: 8.96 },
+  { id: 'bronze', ko: '청동', en: 'Bronze', density: 8.80 },
+  { id: 'castiron', ko: '주철', en: 'Cast iron', density: 7.20 },
+  { id: 'zn', ko: '아연', en: 'Zinc', density: 7.14 },
+  { id: 'pb', ko: '납', en: 'Lead', density: 11.34 },
+  { id: 'ni', ko: '니켈', en: 'Nickel', density: 8.90 },
+  { id: 'ti', ko: '티타늄', en: 'Titanium', density: 4.51 },
+  { id: 'sn', ko: '주석', en: 'Tin', density: 7.30 },
+  { id: 'w', ko: '텅스텐', en: 'Tungsten', density: 19.25 },
+  { id: 'inconel', ko: '인코넬', en: 'Inconel', density: 8.44 },
+  { id: 'mcnylon', ko: 'MC나일론', en: 'MC nylon', density: 1.16 },
+  { id: 'pom', ko: '아세탈(POM)', en: 'Acetal (POM)', density: 1.41 },
+  { id: 'ptfe', ko: '테프론(PTFE)', en: 'PTFE', density: 2.20 },
 ];
 
-const KS_PRESETS: Record<ShapeId, { label: string; dims: Partial<Dims> }[]> = {
-  hbeam: [
-    { label: 'H-100×100×6×8',   dims: { W: 100, H: 100, t1: 6,   t2: 8  } },
-    { label: 'H-150×150×7×10',  dims: { W: 150, H: 150, t1: 7,   t2: 10 } },
-    { label: 'H-200×100×5.5×8', dims: { W: 100, H: 200, t1: 5.5, t2: 8  } },
-    { label: 'H-200×200×8×12',  dims: { W: 200, H: 200, t1: 8,   t2: 12 } },
-    { label: 'H-250×125×6×9',   dims: { W: 125, H: 250, t1: 6,   t2: 9  } },
-    { label: 'H-300×150×6.5×9', dims: { W: 150, H: 300, t1: 6.5, t2: 9  } },
-    { label: 'H-350×175×7×11',  dims: { W: 175, H: 350, t1: 7,   t2: 11 } },
-    { label: 'H-400×200×8×13',  dims: { W: 200, H: 400, t1: 8,   t2: 13 } },
-  ],
-  channel: [
-    { label: 'C-75×45×6',   dims: { W: 45, H: 75,  t1: 6, t2: 6  } },
-    { label: 'C-100×50×6',  dims: { W: 50, H: 100, t1: 6, t2: 6  } },
-    { label: 'C-125×65×6',  dims: { W: 65, H: 125, t1: 6, t2: 8  } },
-    { label: 'C-150×75×9',  dims: { W: 75, H: 150, t1: 9, t2: 9  } },
-    { label: 'C-180×75×9',  dims: { W: 75, H: 180, t1: 9, t2: 9  } },
-    { label: 'C-200×80×9',  dims: { W: 80, H: 200, t1: 9, t2: 10 } },
-  ],
-  angle: [
-    { label: 'L-50×50×4',    dims: { W: 50,  H: 50,  t: 4  } },
-    { label: 'L-65×65×6',    dims: { W: 65,  H: 65,  t: 6  } },
-    { label: 'L-75×75×6',    dims: { W: 75,  H: 75,  t: 6  } },
-    { label: 'L-90×90×7',    dims: { W: 90,  H: 90,  t: 7  } },
-    { label: 'L-100×100×7',  dims: { W: 100, H: 100, t: 7  } },
-    { label: 'L-125×125×8',  dims: { W: 125, H: 125, t: 8  } },
-    { label: 'L-150×150×12', dims: { W: 150, H: 150, t: 12 } },
-  ],
-  round: [], pipe: [], square: [], sqtube: [], hex: [], flat: [], plate: [], tshape: [], checkered: [],
+const SHAPE_NAMES: Record<ShapeId, [string, string]> = {
+  round: ['환봉', 'Round bar'], pipe: ['파이프·강관', 'Pipe'], square: ['사각봉', 'Square bar'], sqtube: ['각파이프', 'Square tube'],
+  hex: ['육각봉', 'Hex bar'], flat: ['평철', 'Flat bar'], plate: ['철판', 'Plate'], angle: ['앵글 (ㄱ형강)', 'Angle'],
+  channel: ['찬넬 (ㄷ형강)', 'Channel'], hbeam: ['H빔 (H형강)', 'H-beam'], tshape: ['T형강', 'T-section'], checkered: ['무늬강판', 'Checkered plate'],
 };
 
-const SHAPE_DEFS: { id: ShapeId; ko: string; en: string; fields: (keyof Dims)[]; hasLength: boolean }[] = [
-  { id: 'round',     ko: '환봉',       en: 'Round Bar',       fields: ['D'],                  hasLength: true  },
-  { id: 'pipe',      ko: '파이프',     en: 'Pipe/Tube',       fields: ['D', 't'],              hasLength: true  },
-  { id: 'square',    ko: '사각봉',     en: 'Square Bar',      fields: ['W', 'H'],             hasLength: true  },
-  { id: 'sqtube',    ko: '사각튜브',   en: 'Square Tube',     fields: ['W', 'H', 't'],        hasLength: true  },
-  { id: 'hex',       ko: '육각봉',     en: 'Hexagonal Bar',   fields: ['S'],                  hasLength: true  },
-  { id: 'flat',      ko: '평철',       en: 'Flat Bar',        fields: ['W', 'H'],             hasLength: true  },
-  { id: 'plate',     ko: '판재',       en: 'Plate',           fields: ['W', 'L', 't'],        hasLength: false },
-  { id: 'angle',     ko: '앵글',       en: 'Angle',           fields: ['W', 'H', 't'],        hasLength: true  },
-  { id: 'channel',   ko: 'ㄷ채널',     en: 'C-Channel',       fields: ['W', 'H', 't1', 't2'], hasLength: true  },
-  { id: 'hbeam',     ko: 'H/I빔',     en: 'H/I-Beam',        fields: ['W', 'H', 't1', 't2'], hasLength: true  },
-  { id: 'tshape',    ko: 'T형강',      en: 'T-Shape',         fields: ['W', 'H', 't1', 't2'], hasLength: true  },
-  { id: 'checkered', ko: '무늬철판',   en: 'Checkered Plate', fields: ['W', 'L', 't'],        hasLength: false },
-];
-
-const FIELD_LABELS: Record<keyof Dims, { ko: string; en: string; unit: string }> = {
-  D:  { ko: '외경 D',     en: 'Outer Dia. D', unit: 'mm' },
-  W:  { ko: '폭 W',       en: 'Width W',       unit: 'mm' },
-  H:  { ko: '높이 H',     en: 'Height H',      unit: 'mm' },
-  L:  { ko: '길이 L',     en: 'Length L',      unit: 'mm' },
-  t:  { ko: '두께 t',     en: 'Thickness t',   unit: 'mm' },
-  t1: { ko: '웹두께 t1',  en: 'Web t1',        unit: 'mm' },
-  t2: { ko: '플랜지 t2',  en: 'Flange t2',     unit: 'mm' },
-  S:  { ko: '대변거리 S', en: 'Flat-to-Flat S',unit: 'mm' },
+/** 칸 이름: [단면도용 짧은 이름, 입력칸 제목, 설명] */
+type FieldText = [string, string, string];
+const FIELD_KO: Record<ShapeId, Partial<Record<DimKey, FieldText>>> = {
+  round: { D: ['D', '지름 D', ''] },
+  pipe: { D: ['D', '외경 D', '바깥 지름'], t: ['t', '두께 t', '관 벽 두께'] },
+  square: { W: ['W', '가로 W', ''], H: ['H', '세로 H', ''] },
+  sqtube: { W: ['A', '가로 A', ''], H: ['B', '세로 B', ''], t: ['t', '두께 t', '벽 두께'], r: ['R', '모서리 R (선택)', '비우면 KS 기준 2t'] },
+  hex: { S: ['S', '맞변 거리 S', '평평한 면끼리 거리 (스패너 치수)'] },
+  flat: { W: ['W', '폭 W', ''], t: ['t', '두께 t', ''] },
+  plate: { W: ['W', '폭 W', '예: 4×8 판 = 1219'], L: ['L', '길이 L', '예: 4×8 판 = 2438'], t: ['t', '두께 t', ''] },
+  checkered: { W: ['W', '폭 W', ''], L: ['L', '길이 L', ''], t: ['t', '두께 t', '무늬를 뺀 바닥 두께'] },
+  angle: { W: ['A', '가로 변 A', ''], H: ['B', '세로 변 B', ''], t: ['t', '두께 t', ''], r1: ['r1', '안쪽 필렛 r1 (선택)', '두 변이 만나는 안쪽 둥근 부분'], r2: ['r2', '끝 모서리 r2 (선택)', '변 끝의 둥근 모서리'] },
+  channel: {
+    H: ['H', '높이 H', '등판(웹) 방향 전체 높이'], W: ['B', '폭 B', '날개(플랜지) 길이'],
+    t1: ['t1 웹', '웹 두께 t1', '세로로 선 등판의 두께'], t2: ['t2 플랜지', '플랜지 두께 t2', '위·아래 날개의 두께'],
+    r1: ['r1', '안쪽 필렛 r1 (선택)', '웹과 플랜지가 만나는 안쪽'], r2: ['r2', '플랜지 끝 r2 (선택)', '날개 끝 안쪽 모서리'],
+  },
+  hbeam: {
+    H: ['H', '높이 H', '위 플랜지 겉면 ~ 아래 플랜지 겉면'], W: ['B', '폭 B', '플랜지(가로판) 너비'],
+    t1: ['t1 웹', '웹 두께 t1', '가운데 세로판 두께'], t2: ['t2 플랜지', '플랜지 두께 t2', '위·아래 가로판 두께'],
+    r: ['r', '필렛 r (선택)', '웹과 플랜지가 만나는 안쪽 둥근 부분'],
+  },
+  tshape: {
+    H: ['H', '높이 H', '플랜지 윗면 ~ 웹 끝'], W: ['B', '폭 B', '플랜지(가로판) 너비'],
+    t1: ['t1 웹', '웹 두께 t1', '아래로 뻗은 세로판 두께'], t2: ['t2 플랜지', '플랜지 두께 t2', '위 가로판 두께'],
+    r: ['r', '필렛 r (선택)', '웹과 플랜지가 만나는 안쪽'],
+  },
+};
+const FIELD_EN: Record<ShapeId, Partial<Record<DimKey, FieldText>>> = {
+  round: { D: ['D', 'Diameter D', ''] },
+  pipe: { D: ['D', 'Outer diameter D', ''], t: ['t', 'Wall thickness t', ''] },
+  square: { W: ['W', 'Width W', ''], H: ['H', 'Height H', ''] },
+  sqtube: { W: ['A', 'Side A', ''], H: ['B', 'Side B', ''], t: ['t', 'Wall t', ''], r: ['R', 'Corner R (optional)', 'Blank = 2t (KS)'] },
+  hex: { S: ['S', 'Across flats S', 'Spanner size'] },
+  flat: { W: ['W', 'Width W', ''], t: ['t', 'Thickness t', ''] },
+  plate: { W: ['W', 'Width W', '4×8 sheet = 1219'], L: ['L', 'Length L', '4×8 sheet = 2438'], t: ['t', 'Thickness t', ''] },
+  checkered: { W: ['W', 'Width W', ''], L: ['L', 'Length L', ''], t: ['t', 'Base thickness t', 'Without the raised pattern'] },
+  angle: { W: ['A', 'Leg A', ''], H: ['B', 'Leg B', ''], t: ['t', 'Thickness t', ''], r1: ['r1', 'Root radius r1 (optional)', ''], r2: ['r2', 'Toe radius r2 (optional)', ''] },
+  channel: {
+    H: ['H', 'Depth H', 'Along the web'], W: ['B', 'Flange width B', ''],
+    t1: ['t1 web', 'Web thickness t1', 'The upright back'], t2: ['t2 flange', 'Flange thickness t2', 'Top and bottom legs'],
+    r1: ['r1', 'Root radius r1 (optional)', ''], r2: ['r2', 'Toe radius r2 (optional)', ''],
+  },
+  hbeam: {
+    H: ['H', 'Depth H', 'Outside of flange to outside of flange'], W: ['B', 'Flange width B', ''],
+    t1: ['t1 web', 'Web thickness t1', 'The vertical centre plate'], t2: ['t2 flange', 'Flange thickness t2', 'Top and bottom plates'],
+    r: ['r', 'Root radius r (optional)', 'Web-to-flange fillet'],
+  },
+  tshape: {
+    H: ['H', 'Depth H', ''], W: ['B', 'Flange width B', ''],
+    t1: ['t1 web', 'Web thickness t1', 'The stem'], t2: ['t2 flange', 'Flange thickness t2', 'The top plate'],
+    r: ['r', 'Root radius r (optional)', ''],
+  },
 };
 
-// ── Calculation ──────────────────────────────────────
-function calcSection(shape: ShapeId, dims: Dims): { area: number; perimeter: number } {
-  const { D, W, H, t, t1, t2, S } = dims;
-  switch (shape) {
-    case 'round':    return { area: Math.PI * (D/2)**2, perimeter: Math.PI * D };
-    case 'pipe':     return { area: Math.PI * ((D/2)**2 - (D/2 - t)**2), perimeter: Math.PI * D };
-    case 'square':
-    case 'flat':     return { area: W * H, perimeter: 2 * (W + H) };
-    case 'sqtube':   return { area: W*H - (W - 2*t)*(H - 2*t), perimeter: 2*(W+H) };
-    case 'hex':      return { area: 0.866025 * S**2, perimeter: 3.4641 * S };
-    case 'angle':    return { area: W*t + (H-t)*t, perimeter: 2*W + 2*H };
-    case 'channel':  return { area: 2*(W*t2) + (H - 2*t2)*t1, perimeter: 4*W + 2*H - 2*t1 };
-    case 'hbeam':    return { area: 2*(W*t2) + (H - 2*t2)*t1, perimeter: 4*W + 2*H - 2*t1 };
-    case 'tshape':   return { area: W*t2 + (H - t2)*t1, perimeter: 2*W + 2*H };
-    case 'plate':    return { area: 0, perimeter: 0 }; // handled in calcResults
-    case 'checkered':return { area: 0, perimeter: 0 };
-    default:         return { area: 0, perimeter: 0 };
-  }
-}
-
-interface CalcResult {
-  area: number; unitWeight: number; totalWeight: number;
-  paintArea: number; orderWeight: number;
-  materialCost: number; paintCost: number; total: number;
-  error: string | null;
-}
-
-function calcResults(
-  shape: ShapeId, dims: Dims, length: number, qty: number,
-  density: number, lossRate: number, pricePerKg: number, pricePerM2: number,
-): CalcResult {
-  const blank: CalcResult = { area: 0, unitWeight: 0, totalWeight: 0, paintArea: 0, orderWeight: 0, materialCost: 0, paintCost: 0, total: 0, error: null };
-
-  // Thickness validation
-  if (shape === 'pipe' && dims.t >= dims.D / 2) return { ...blank, error: '두께(t)가 외경의 절반을 초과할 수 없습니다.' };
-  if (shape === 'sqtube' && (dims.t >= dims.W / 2 || dims.t >= dims.H / 2)) return { ...blank, error: '두께(t)가 폭/높이의 절반을 초과할 수 없습니다.' };
-
-  const lengthMM = length * 1000; // m → mm
-
-  if (shape === 'plate') {
-    const { W, L, t } = dims;
-    if (W <= 0 || L <= 0 || t <= 0 || qty <= 0) return blank;
-    const volume = W * L * t * qty; // mm³
-    const totalWeight = volume / 1_000_000 * density;
-    const paintArea = 2 * (W * L) / 1_000_000 * qty; // both wide faces
-    const orderWeight = totalWeight * (1 + lossRate / 100);
-    const materialCost = pricePerKg > 0 ? orderWeight * pricePerKg : 0;
-    const paintCost = pricePerM2 > 0 ? paintArea * pricePerM2 : 0;
-    return { area: W*t, unitWeight: (W*L*t/1_000_000)*density, totalWeight, paintArea, orderWeight, materialCost, paintCost, total: materialCost + paintCost, error: null };
-  }
-
-  if (shape === 'checkered') {
-    const { W, L, t } = dims;
-    if (W <= 0 || L <= 0 || t <= 0 || qty <= 0) return blank;
-    // KS formula: ((t × density) + 1.67) × (W × L / 1,000,000) × qty
-    // Note: t is in mm, density in g/cm³ — DO NOT divide t by 1000
-    const totalWeight = (t * density + 1.67) * (W * L / 1_000_000) * qty;
-    const paintArea = 1 * (W * L) / 1_000_000 * qty; // back face only
-    const unitWeight = (dims.t * density + 1.67) * (W * L / 1_000_000);
-    const orderWeight = totalWeight * (1 + lossRate / 100);
-    const materialCost = pricePerKg > 0 ? orderWeight * pricePerKg : 0;
-    const paintCost = pricePerM2 > 0 ? paintArea * pricePerM2 : 0;
-    return { area: W*t, unitWeight, totalWeight, paintArea, orderWeight, materialCost, paintCost, total: materialCost + paintCost, error: null };
-  }
-
-  // All other shapes
-  const { area, perimeter } = calcSection(shape, dims);
-  if (area <= 0 || lengthMM <= 0 || qty <= 0) return blank;
-
-  const volume = area * lengthMM; // mm³ per piece
-  const unitWeight = volume / 1_000_000 * density; // kg per piece
-  const totalWeight = unitWeight * qty;
-  const paintArea = perimeter * lengthMM / 1_000_000 * qty; // m²
-  const orderWeight = totalWeight * (1 + lossRate / 100);
-  const materialCost = pricePerKg > 0 ? orderWeight * pricePerKg : 0;
-  const paintCost = pricePerM2 > 0 ? paintArea * pricePerM2 : 0;
-  return { area, unitWeight, totalWeight, paintArea, orderWeight, materialCost, paintCost, total: materialCost + paintCost, error: null };
-}
-
-// ── Shape spec string ─────────────────────────────────
-function makeSpec(shape: ShapeId, dims: Dims, length: number, qty: number): string {
-  const { D, W, H, L, t, t1, t2, S } = dims;
-  switch (shape) {
-    case 'round':    return `Ø${D}`;
-    case 'pipe':     return `Ø${D}×t${t}`;
-    case 'square':   return `□${W}×${H}`;
-    case 'sqtube':   return `□${W}×${H}×t${t}`;
-    case 'hex':      return `S${S}(대변)`;
-    case 'flat':     return `${W}×${H}`;
-    case 'plate':    return `${W}×${L}×t${t}`;
-    case 'angle':    return `L-${W}×${H}×${t}`;
-    case 'channel':  return `C-${H}×${W}×${t1}/${t2}`;
-    case 'hbeam':    return `H-${H}×${W}×${t1}×${t2}`;
-    case 'tshape':   return `T-${W}×${H}×${t1}/${t2}`;
-    case 'checkered':return `${W}×${L}×t${t}`;
-    default:         return '';
-  }
-}
-
-// ── Shape icon SVGs (for selection grid) ─────────────
-const SHAPE_ICONS: Record<ShapeId, React.ReactNode> = {
-  round:     <svg viewBox="0 0 40 40" width="36" height="36"><circle cx="20" cy="20" r="14" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2.5"/></svg>,
-  pipe:      <svg viewBox="0 0 40 40" width="36" height="36"><circle cx="20" cy="20" r="14" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2.5"/><circle cx="20" cy="20" r="8" fill="white" stroke="#8b5cf6" strokeWidth="1.5"/></svg>,
-  square:    <svg viewBox="0 0 40 40" width="36" height="36"><rect x="6" y="6" width="28" height="28" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2.5" rx="2"/></svg>,
-  sqtube:    <svg viewBox="0 0 40 40" width="36" height="36"><rect x="6" y="6" width="28" height="28" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2.5" rx="2"/><rect x="12" y="12" width="16" height="16" fill="white" stroke="#8b5cf6" strokeWidth="1.5" rx="1"/></svg>,
-  hex:       <svg viewBox="0 0 40 40" width="36" height="36"><polygon points="20,4 34,12 34,28 20,36 6,28 6,12" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2.5"/></svg>,
-  flat:      <svg viewBox="0 0 40 40" width="36" height="36"><rect x="4" y="14" width="32" height="12" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2.5" rx="2"/></svg>,
-  plate:     <svg viewBox="0 0 40 40" width="36" height="36"><rect x="4" y="17" width="32" height="6" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2.5" rx="1"/></svg>,
-  angle:     <svg viewBox="0 0 40 40" width="36" height="36"><path d="M8 6 L8 34 L34 34" fill="none" stroke="#8b5cf6" strokeWidth="7" strokeLinecap="square"/><path d="M8 6 L8 34 L34 34" fill="none" stroke="#ede9fe" strokeWidth="3" strokeLinecap="square"/></svg>,
-  channel:   <svg viewBox="0 0 40 40" width="36" height="36"><path d="M30 6 L10 6 L10 34 L30 34" fill="none" stroke="#8b5cf6" strokeWidth="6" strokeLinecap="square"/><path d="M30 6 L10 6 L10 34 L30 34" fill="none" stroke="#ede9fe" strokeWidth="2.5" strokeLinecap="square"/></svg>,
-  hbeam:     <svg viewBox="0 0 40 40" width="36" height="36"><rect x="4" y="4" width="32" height="6" fill="#8b5cf6" rx="1"/><rect x="4" y="30" width="32" height="6" fill="#8b5cf6" rx="1"/><rect x="17" y="10" width="6" height="20" fill="#8b5cf6"/></svg>,
-  tshape:    <svg viewBox="0 0 40 40" width="36" height="36"><rect x="4" y="6" width="32" height="7" fill="#8b5cf6" rx="1"/><rect x="17" y="13" width="6" height="22" fill="#8b5cf6"/></svg>,
-  checkered: <svg viewBox="0 0 40 40" width="36" height="36"><rect x="4" y="16" width="32" height="8" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="2" rx="1"/><line x1="10" y1="16" x2="14" y2="24" stroke="#8b5cf6" strokeWidth="1.5"/><line x1="18" y1="16" x2="22" y2="24" stroke="#8b5cf6" strokeWidth="1.5"/><line x1="26" y1="16" x2="30" y2="24" stroke="#8b5cf6" strokeWidth="1.5"/></svg>,
+const ERRORS: Record<NonNullable<ErrorCode>, [string, string]> = {
+  pipeWall: ['두께 t가 외경 D의 절반 이상이면 관이 될 수 없습니다.', 'Wall thickness must be less than half the outer diameter.'],
+  tubeWall: ['두께 t의 2배가 가로·세로보다 작아야 합니다.', 'Twice the wall thickness must be less than each side.'],
+  angleLeg: ['두께 t가 변 길이보다 작아야 합니다.', 'Thickness must be less than the leg length.'],
+  flangeTooThick: ['플랜지 두께 t2가 높이 H에 비해 너무 두껍습니다. t1·t2 칸이 바뀌지 않았는지 확인하세요.', 'Flange thickness t2 is too large for depth H — check that t1 and t2 are not swapped.'],
+  webTooThick: ['웹 두께 t1이 폭 B보다 두껍습니다. t1·t2 칸이 바뀌지 않았는지 확인하세요.', 'Web thickness t1 exceeds flange width B — check that t1 and t2 are not swapped.'],
 };
 
-// ── Cross-section SVG (STEP 5) ────────────────────────
-function CrossSectionSVG({ shape, dims, isKo }: { shape: ShapeId; dims: Dims; isKo: boolean }) {
-  const VW = 300, VH = 250;
-  const cx = VW / 2, cy = VH / 2;
-  const FILL = '#ede9fe', STROKE = '#8b5cf6', DC = '#475569', SW = 2;
-  const maxD = 160;
+const CUSTOM_KEY = 'metal-weight-custom-mats';
+const BASKET_KEY = 'metal-weight-basket-v1';
+const PAGE_URL = 'https://www.theutilhub.com/{locale}/utilities/utility/metal-weight-calc';
 
-  // Scale helper
-  function sc(v: number, ref: number): number {
-    if (ref <= 0) return 0;
-    return (v / ref) * maxD;
-  }
+const decimalInput = (raw: string) => {
+  const [int, ...dec] = raw.replace(/[^0-9.]/g, '').split('.');
+  return dec.length ? `${int}.${dec.join('').slice(0, 3)}` : int;
+};
+const toDims = (text: Partial<Record<DimKey, string>>): Dims =>
+  Object.fromEntries(Object.entries(text).map(([k, val]) => [k, val === '' || val === undefined ? null : Number(val)]));
+const toText = (d: Dims): Partial<Record<DimKey, string>> =>
+  Object.fromEntries(Object.entries(d).map(([k, val]) => [k, val === null || val === undefined ? '' : String(val)]));
 
-  // Dimension label
-  function dimLabel(x: number, y: number, label: string, anchor: 'middle' | 'start' | 'end' = 'middle') {
-    return <text x={x} y={y} textAnchor={anchor} fontSize="11" fill={DC} fontWeight="600">{label}</text>;
-  }
-  function dimArrow(x1: number, y1: number, x2: number, y2: number) {
-    return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={DC} strokeWidth="1" markerEnd="url(#arr)" markerStart="url(#arr)"/>;
-  }
-
-  const arrows = (
-    <defs>
-      <marker id="arr" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto">
-        <path d="M0,0 L5,2.5 L0,5 Z" fill={DC}/>
-      </marker>
-    </defs>
-  );
-
-  if (shape === 'round') {
-    const ref = Math.max(dims.D, 40);
-    const r = sc(dims.D / 2, ref);
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        {arrows}
-        <circle cx={cx} cy={cy} r={r} fill={FILL} stroke={STROKE} strokeWidth={SW}/>
-        <line x1={cx - r - 16} y1={cy} x2={cx + r + 16} y2={cy} stroke={DC} strokeWidth="1" strokeDasharray="4 3"/>
-        <line x1={cx - r - 2} y1={cy - 14} x2={cx - r - 2} y2={cy + 14} stroke={DC} strokeWidth="1"/>
-        <line x1={cx + r + 2} y1={cy - 14} x2={cx + r + 2} y2={cy + 14} stroke={DC} strokeWidth="1"/>
-        <line x1={cx - r - 2} y1={cy - 12} x2={cx + r + 2} y2={cy - 12} stroke={DC} strokeWidth="1"/>
-        <text x={cx} y={cy - 16} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700">Ø{dims.D}mm</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'pipe') {
-    const ref = Math.max(dims.D, 40);
-    const ro = sc(dims.D / 2, ref);
-    const ri = sc(dims.D / 2 - dims.t, ref);
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        {arrows}
-        <circle cx={cx} cy={cy} r={ro} fill={FILL} stroke={STROKE} strokeWidth={SW}/>
-        <circle cx={cx} cy={cy} r={Math.max(ri, 0)} fill="white" stroke={STROKE} strokeWidth={SW}/>
-        <line x1={cx - ro - 2} y1={cy - 14} x2={cx + ro + 2} y2={cy - 14} stroke={DC} strokeWidth="1"/>
-        <text x={cx} y={cy - 18} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700">Ø{dims.D}</text>
-        <text x={cx + ro * 0.7 + 8} y={cy - 4} textAnchor="start" fontSize="10" fill="#ef4444" fontWeight="600">t{dims.t}</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'hex') {
-    const ref = Math.max(dims.S, 30);
-    const r = sc(dims.S / 2, ref);
-    const pts = Array.from({ length: 6 }, (_, i) => {
-      const a = (i * 60 - 30) * Math.PI / 180;
-      return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
-    }).join(' ');
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        <polygon points={pts} fill={FILL} stroke={STROKE} strokeWidth={SW}/>
-        <line x1={cx - r} y1={cy - 14} x2={cx + r} y2={cy - 14} stroke={DC} strokeWidth="1"/>
-        <text x={cx} y={cy - 18} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700">S{dims.S}mm</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'square' || shape === 'flat') {
-    const refW = Math.max(dims.W, 30), refH = Math.max(dims.H, 10);
-    const scaleW = maxD / Math.max(refW, refH);
-    const pw = dims.W * scaleW, ph = dims.H * scaleW;
-    const rx = cx - pw/2, ry = cy - ph/2;
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        <rect x={rx} y={ry} width={pw} height={ph} fill={FILL} stroke={STROKE} strokeWidth={SW} rx="2"/>
-        <line x1={rx} y1={ry - 12} x2={rx + pw} y2={ry - 12} stroke={DC} strokeWidth="1"/>
-        <text x={cx} y={ry - 15} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700">W{dims.W}</text>
-        <line x1={rx + pw + 12} y1={ry} x2={rx + pw + 12} y2={ry + ph} stroke={DC} strokeWidth="1"/>
-        <text x={rx + pw + 26} y={cy} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700" transform={`rotate(90,${rx+pw+26},${cy})`}>H{dims.H}</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'sqtube') {
-    const ref = Math.max(dims.W, dims.H, 30);
-    const scale = maxD / ref;
-    const pw = dims.W * scale, ph = dims.H * scale;
-    const pt = dims.t * scale;
-    const rx = cx - pw/2, ry = cy - ph/2;
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        <rect x={rx} y={ry} width={pw} height={ph} fill={FILL} stroke={STROKE} strokeWidth={SW} rx="2"/>
-        <rect x={rx+pt} y={ry+pt} width={pw-2*pt} height={ph-2*pt} fill="white" stroke={STROKE} strokeWidth={1.5} rx="1"/>
-        <line x1={rx} y1={ry-12} x2={rx+pw} y2={ry-12} stroke={DC} strokeWidth="1"/>
-        <text x={cx} y={ry-15} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700">W{dims.W}</text>
-        <text x={cx} y={cy} textAnchor="middle" fontSize="11" fill="#ef4444" fontWeight="700">t{dims.t}</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'plate' || shape === 'checkered') {
-    // Show W × t cross-section (thin rectangle)
-    const ref = Math.max(dims.W, 30);
-    const scale = Math.min(maxD / ref, 3);
-    const pw = dims.W * scale;
-    const ph = Math.max(dims.t * scale, 8);
-    const rx = cx - pw/2, ry = cy - ph/2;
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        {shape === 'checkered' && (
-          <>
-            <line x1={rx+10} y1={ry} x2={rx+20} y2={ry+ph} stroke={STROKE} strokeWidth="1.5" opacity="0.5"/>
-            <line x1={rx+30} y1={ry} x2={rx+40} y2={ry+ph} stroke={STROKE} strokeWidth="1.5" opacity="0.5"/>
-          </>
-        )}
-        <rect x={rx} y={ry} width={pw} height={ph} fill={FILL} stroke={STROKE} strokeWidth={SW} rx="1"/>
-        <line x1={rx} y1={ry-12} x2={rx+pw} y2={ry-12} stroke={DC} strokeWidth="1"/>
-        <text x={cx} y={ry-15} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700">W{dims.W}</text>
-        <line x1={rx+pw+12} y1={ry} x2={rx+pw+12} y2={ry+ph} stroke={DC} strokeWidth="1"/>
-        <text x={rx+pw+22} y={cy+4} textAnchor="start" fontSize="11" fill={DC} fontWeight="700">t{dims.t}</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'angle') {
-    const ref = Math.max(dims.W, dims.H, 30);
-    const scale = maxD * 0.6 / ref;
-    const pw = dims.W * scale, ph = dims.H * scale, pt = dims.t * scale;
-    const ox = cx - pw/2, oy = cy - ph/2;
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        <path d={`M${ox},${oy} L${ox},${oy+ph} L${ox+pw},${oy+ph} L${ox+pw},${oy+ph-pt} L${ox+pt},${oy+ph-pt} L${ox+pt},${oy} Z`}
-          fill={FILL} stroke={STROKE} strokeWidth={SW}/>
-        <text x={cx} y={oy+ph+22} textAnchor="middle" fontSize="11" fill={DC} fontWeight="700">W{dims.W} × H{dims.H} × t{dims.t}</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'channel') {
-    const ref = Math.max(dims.W, dims.H, 30);
-    const scale = maxD * 0.55 / ref;
-    const pw = dims.W * scale, ph = dims.H * scale;
-    const pt1 = dims.t1 * scale, pt2 = dims.t2 * scale;
-    const ox = cx - pw/2 + 10, oy = cy - ph/2;
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        <path d={`M${ox+pw},${oy} L${ox},${oy} L${ox},${oy+ph} L${ox+pw},${oy+ph} L${ox+pw},${oy+ph-pt2} L${ox+pt1},${oy+ph-pt2} L${ox+pt1},${oy+pt2} L${ox+pw},${oy+pt2} Z`}
-          fill={FILL} stroke={STROKE} strokeWidth={SW}/>
-        <text x={cx+10} y={oy+ph+22} textAnchor="middle" fontSize="10" fill={DC} fontWeight="700">H{dims.H}×W{dims.W}×t1:{dims.t1}/t2:{dims.t2}</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'hbeam') {
-    const ref = Math.max(dims.W, dims.H, 30);
-    const scale = maxD * 0.55 / ref;
-    const pw = dims.W * scale, ph = dims.H * scale;
-    const pt1 = dims.t1 * scale, pt2 = dims.t2 * scale;
-    const ox = cx - pw/2, oy = cy - ph/2;
-    const midX1 = cx - pt1/2, midX2 = cx + pt1/2;
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        <rect x={ox} y={oy} width={pw} height={pt2} fill={FILL} stroke={STROKE} strokeWidth={SW} rx="1"/>
-        <rect x={ox} y={oy+ph-pt2} width={pw} height={pt2} fill={FILL} stroke={STROKE} strokeWidth={SW} rx="1"/>
-        <rect x={midX1} y={oy+pt2} width={pt1} height={ph-2*pt2} fill={FILL} stroke={STROKE} strokeWidth={SW}/>
-        <text x={cx} y={oy+ph+22} textAnchor="middle" fontSize="10" fill={DC} fontWeight="700">H{dims.H}×W{dims.W}×t1:{dims.t1}×t2:{dims.t2}</text>
-      </svg>
-    );
-  }
-
-  if (shape === 'tshape') {
-    const ref = Math.max(dims.W, dims.H, 30);
-    const scale = maxD * 0.55 / ref;
-    const pw = dims.W * scale, ph = dims.H * scale;
-    const pt1 = dims.t1 * scale, pt2 = dims.t2 * scale;
-    const ox = cx - pw/2, oy = cy - ph/2;
-    return (
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}>
-        <rect x={ox} y={oy} width={pw} height={pt2} fill={FILL} stroke={STROKE} strokeWidth={SW} rx="1"/>
-        <rect x={cx - pt1/2} y={oy+pt2} width={pt1} height={ph-pt2} fill={FILL} stroke={STROKE} strokeWidth={SW}/>
-        <text x={cx} y={oy+ph+22} textAnchor="middle" fontSize="10" fill={DC} fontWeight="700">W{dims.W}×H{dims.H}×t1:{dims.t1}/t2:{dims.t2}</text>
-      </svg>
-    );
-  }
-
-  return <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: 400 }}><text x={cx} y={cy} textAnchor="middle" fontSize="14" fill="#94a3b8">단면도 준비 중</text></svg>;
+function ShapeIcon({ id }: { id: ShapeId }) {
+  const c = { round: <circle cx="20" cy="20" r="14" className={s.ic_fill} />,
+    pipe: <><circle cx="20" cy="20" r="14" className={s.ic_fill} /><circle cx="20" cy="20" r="8" className={s.ic_hole} /></>,
+    square: <rect x="6" y="6" width="28" height="28" rx="2" className={s.ic_fill} />,
+    sqtube: <><rect x="6" y="6" width="28" height="28" rx="4" className={s.ic_fill} /><rect x="12" y="12" width="16" height="16" rx="2" className={s.ic_hole} /></>,
+    hex: <polygon points="20,4 34,12 34,28 20,36 6,28 6,12" className={s.ic_fill} />,
+    flat: <rect x="4" y="14" width="32" height="12" rx="2" className={s.ic_fill} />,
+    plate: <rect x="3" y="17" width="34" height="6" rx="1" className={s.ic_fill} />,
+    checkered: <><rect x="3" y="17" width="34" height="6" rx="1" className={s.ic_fill} /><path d="M8 17l3-3M16 17l3-3M24 17l3-3M32 17l3-3" className={s.ic_fill} /></>,
+    angle: <path d="M7 5h7v21h21v7H7z" className={s.ic_solid} />,
+    channel: <path d="M8 5h25v6H14v18h19v6H8z" className={s.ic_solid} />,
+    hbeam: <path d="M5 5h30v6H23v18h12v6H5v-6h12V11H5z" className={s.ic_solid} />,
+    tshape: <path d="M5 6h30v7H23v22h-6V13H5z" className={s.ic_solid} />,
+  }[id];
+  return <svg viewBox="0 0 40 40" className={s.shape_icon} aria-hidden="true">{c}</svg>;
 }
 
-// ── Main component ────────────────────────────────────
 export default function MetalWeightCalcClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
+  const L = (ko: string, en: string) => (isKo ? ko : en);
 
-  // STEP 1
-  const [shape, setShape] = useState<ShapeId | null>(null);
-  const [dims, setDims] = useState<Dims>({ ...ZERO_DIMS });
-  const [length, setLength] = useState<string>('1');
-  const [qty, setQty] = useState<string>('1');
-
-  // Loss rate
-  const [lossRateOpt, setLossRateOpt] = useState<string>('0');
-  const [lossRateCustom, setLossRateCustom] = useState<string>('0');
-  const lossRate = lossRateOpt === 'custom' ? (parseFloat(lossRateCustom) || 0) : parseFloat(lossRateOpt);
-
-  // Material
+  const [shape, setShape] = useState<ShapeId>('hbeam');
+  const [dimText, setDimText] = useState<Partial<Record<DimKey, string>>>({});
+  const [preset, setPreset] = useState('');
+  const [active, setActive] = useState<DimKey | null>(null);
+  const [lengthText, setLengthText] = useState('6');
+  const [qtyText, setQtyText] = useState('1');
+  const [lossText, setLossText] = useState('0');
+  const [plateFaces, setPlateFaces] = useState<1 | 2>(2);
   const [materials, setMaterials] = useState<Material[]>(BASE_MATERIALS);
-  const [selectedMat, setSelectedMat] = useState<string>('강철/탄소강');
-  const [showCustomForm, setShowCustomForm] = useState(false);
+  const [matId, setMatId] = useState('steel');
+  const [showCustom, setShowCustom] = useState(false);
   const [customName, setCustomName] = useState('');
   const [customDensity, setCustomDensity] = useState('');
-
-  // Pricing
-  const [pricePerKg, setPricePerKg] = useState<string>('');
-  const [pricePerM2, setPricePerM2] = useState<string>('');
-
-  // KS preset
-  const [ksPreset, setKsPreset] = useState<string>('');
-
-  // Basket
+  const [priceKg, setPriceKg] = useState('');
+  const [priceM2, setPriceM2] = useState('');
   const [basket, setBasket] = useState<BasketItem[]>([]);
   const [copyMsg, setCopyMsg] = useState('');
 
-  // Load custom materials from localStorage (useEffect only — SSR safe)
+  // 저장된 재질·견적 바구니는 브라우저에서만 읽는다
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('metal-weight-custom-mats');
-      if (raw) {
-        const custom: Material[] = JSON.parse(raw);
-        setMaterials([...BASE_MATERIALS, ...custom]);
-      }
-    } catch { /* ignore */ }
+      const raw = JSON.parse(localStorage.getItem(CUSTOM_KEY) ?? '[]') as { name: string; density: number }[];
+      if (raw.length) setMaterials([...BASE_MATERIALS, ...raw.map(m => ({ id: `custom:${m.name}`, ko: m.name, en: m.name, density: m.density, custom: true }))]);
+      setBasket(JSON.parse(localStorage.getItem(BASKET_KEY) ?? '[]'));
+    } catch { /* 저장소를 못 쓰면 기본값 */ }
   }, []);
 
-  const saveCustomMaterials = useCallback((mats: Material[]) => {
-    try {
-      const custom = mats.filter(m => m.custom);
-      localStorage.setItem('metal-weight-custom-mats', JSON.stringify(custom));
-    } catch { /* ignore */ }
-  }, []);
+  const saveBasket = (items: BasketItem[]) => {
+    setBasket(items);
+    try { localStorage.setItem(BASKET_KEY, JSON.stringify(items)); } catch { /* 무시 */ }
+  };
 
-  // Reset dims when shape changes
-  const handleShapeSelect = (id: ShapeId) => {
+  const def = shapeDef(shape);
+  const fieldText = (isKo ? FIELD_KO : FIELD_EN)[shape];
+  const dims = toDims(dimText);
+  const complete = isComplete(shape, dims);
+  const errorCode = validate(shape, dims);
+  // 입력이 없으면 예시 치수로 단면도를 보여 준다
+  const anyInput = def.fields.some(k => dimText[k]);
+  const merged: Dims = { ...SAMPLE_DIMS[shape], ...Object.fromEntries(Object.entries(dims).filter(([, val]) => (val ?? 0) > 0)) };
+  const drawDims: Dims = complete && !errorCode ? dims : anyInput && !validate(shape, merged) ? merged : SAMPLE_DIMS[shape];
+  const material = materials.find(m => m.id === matId) ?? BASE_MATERIALS[0];
+  const qty = Math.max(0, Math.floor(Number(qtyText) || 0));
+  const lossPct = Number(lossText) || 0;
+  const result = calc({ shape, dims, lengthM: Number(lengthText) || 0, qty, density: material.density, lossPct, plateFaces });
+  const matCost = result && Number(priceKg) > 0 ? Math.round(result.orderKg * Number(priceKg)) : 0;
+  const paintCost = result && Number(priceM2) > 0 ? Math.round(result.paintM2 * Number(priceM2)) : 0;
+
+  const selectShape = (id: ShapeId) => {
     setShape(id);
-    setDims({ ...ZERO_DIMS });
-    setKsPreset('');
+    setDimText({});
+    setPreset('');
+    setActive(null);
   };
 
-  const handleDim = (key: keyof Dims, val: string) => {
-    const num = Math.max(0, parseFloat(val) || 0);
-    setDims(prev => ({ ...prev, [key]: num }));
+  const applyPreset = (label: string) => {
+    setPreset(label);
+    const found = (PRESETS[shape] ?? []).flatMap(g => g.items).find(p => p.label === label);
+    if (found) setDimText(toText(found.dims));
   };
 
-  const handleKsPreset = (label: string) => {
-    if (!shape || !label) return;
-    const presets = KS_PRESETS[shape] || [];
-    const found = presets.find(p => p.label === label);
-    if (found) {
-      setDims(prev => ({ ...prev, ...found.dims }));
-      setKsPreset(label);
-    }
+  const addCustom = () => {
+    const density = Number(customDensity);
+    const name = customName.trim();
+    if (!name || !(density > 0)) return;
+    const mat: Material = { id: `custom:${name}`, ko: name, en: name, density, custom: true };
+    const next = [...materials.filter(m => m.id !== mat.id), mat];
+    setMaterials(next);
+    setMatId(mat.id);
+    try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(next.filter(m => m.custom).map(m => ({ name: m.ko, density: m.density })))); } catch { /* 무시 */ }
+    setCustomName(''); setCustomDensity(''); setShowCustom(false);
   };
 
-  const handleAddCustomMaterial = () => {
-    if (!customName.trim() || !customDensity) return;
-    const density = parseFloat(customDensity);
-    if (density <= 0 || isNaN(density)) return;
-    const mat: Material = { name: customName.trim(), density, custom: true };
-    const updated = [...materials, mat];
-    setMaterials(updated);
-    saveCustomMaterials(updated);
-    setSelectedMat(mat.name);
-    setCustomName('');
-    setCustomDensity('');
-    setShowCustomForm(false);
+  const addToBasket = () => {
+    if (!result) return;
+    saveBasket([...basket, {
+      id: `${Date.now()}`, shape, spec: specLabel(shape, dims), material: material.ko, materialEn: material.en,
+      lengthM: def.sheet ? 0 : Number(lengthText) || 0, qty, lossPct, orderKg: result.orderKg, paintM2: result.paintM2, cost: matCost + paintCost,
+    }]);
   };
 
-  // Calculation
-  const shapeDef = shape ? SHAPE_DEFS.find(s => s.id === shape) : null;
-  const density = materials.find(m => m.name === selectedMat)?.density ?? 7.85;
+  const totalKg = basket.reduce((sum, b) => sum + b.orderKg, 0);
+  const totalCost = basket.reduce((sum, b) => sum + b.cost, 0);
+  const totalPaint = basket.reduce((sum, b) => sum + b.paintM2, 0);
+  const won = (n: number) => (isKo ? `${n.toLocaleString('ko-KR')}원` : `₩${n.toLocaleString('en-US')}`);
+  const kg = (n: number, d = 2) => n.toLocaleString(isKo ? 'ko-KR' : 'en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
 
-  const result = useMemo(() => {
-    if (!shape) return null;
-    const len = parseFloat(length) || 0;
-    const qt = Math.max(1, parseInt(qty) || 1);
-    const ppk = parseFloat(pricePerKg) || 0;
-    const ppm = parseFloat(pricePerM2) || 0;
-    return calcResults(shape, dims, len, qt, density, lossRate, ppk, ppm);
-  }, [shape, dims, length, qty, density, lossRate, pricePerKg, pricePerM2]);
-
-  const hasResult = result && result.unitWeight > 0 && !result.error;
-
-  const handleAddToBasket = () => {
-    if (!shape || !result || !hasResult) return;
-    const len = parseFloat(length) || 0;
-    const qt = Math.max(1, parseInt(qty) || 1);
-    const def = SHAPE_DEFS.find(s => s.id === shape)!;
-    const item: BasketItem = {
-      id: Date.now().toString(),
-      shape, shapeName: isKo ? def.ko : def.en,
-      spec: makeSpec(shape, dims, len, qt),
-      material: selectedMat, density,
-      length: len, qty: qt, lossRate,
-      unitWeight: result.unitWeight, totalWeight: result.totalWeight, orderWeight: result.orderWeight,
-      paintArea: result.paintArea,
-      pricePerKg: parseFloat(pricePerKg) || 0,
-      pricePerM2: parseFloat(pricePerM2) || 0,
-      materialCost: result.materialCost, paintCost: result.paintCost, total: result.total,
-    };
-    setBasket(prev => [...prev, item]);
-  };
-
-  const handleDeleteBasketItem = (id: string) => setBasket(prev => prev.filter(b => b.id !== id));
-
-  const basketTotalWeight = basket.reduce((s, b) => s + b.orderWeight, 0);
-  const basketTotalCost = basket.reduce((s, b) => s + b.total, 0);
-
-  const handleCopy = async () => {
+  const copyOrder = async () => {
+    const lines = [
+      `[${L('금속 자재 발주 내역', 'Metal material order')}]`,
+      ...basket.map((b, i) => [
+        `${i + 1}. ${(isKo ? SHAPE_NAMES[b.shape][0] : SHAPE_NAMES[b.shape][1])} ${b.spec}`,
+        isKo ? b.material : b.materialEn ?? b.material,
+        b.lengthM > 0 ? `${b.lengthM}m` : '',
+        `${b.qty}${L('개', ' pcs')}`,
+        `${kg(b.orderKg, 1)}kg${b.lossPct > 0 ? ` (${L('로스', 'loss')} ${b.lossPct}%)` : ''}`,
+        b.cost > 0 ? won(b.cost) : '',
+      ].filter(Boolean).join(' | ')),
+      '──────────',
+      `${L('총 발주 중량', 'Total order weight')}: ${kg(totalKg, 1)} kg`,
+      totalPaint > 0 ? `${L('총 도장 면적', 'Total paint area')}: ${kg(totalPaint, 2)} ㎡` : '',
+      totalCost > 0 ? `${L('총 금액', 'Total cost')}: ${won(totalCost)}` : '',
+      PAGE_URL.replace('{locale}', locale),
+    ].filter(Boolean);
     try {
-      const lines = [
-        `[${isKo ? '금속 자재 발주서' : 'Metal Material Order'}]`,
-        '━━━━━━━━━━━━━━━━━━━━',
-        ...basket.map((b, i) => {
-          const loss = b.lossRate > 0 ? ` (${b.lossRate}%${isKo ? '할증' : ' loss'})` : '';
-          const cost = b.total > 0 ? ` | ${b.total.toLocaleString()}${isKo ? '원' : ' KRW'}` : '';
-          const len = b.length > 0 ? `${b.length}m` : '-';
-          return `${i+1}. ${b.shapeName} | ${b.spec} | ${b.material} | ${len} | ${b.qty}${isKo ? '개' : 'pcs'} | ${b.orderWeight.toFixed(1)}kg${loss}${cost}`;
-        }),
-        '━━━━━━━━━━━━━━━━━━━━',
-        `${isKo ? '총 발주 중량' : 'Total order weight'}: ${basketTotalWeight.toFixed(3)} kg (${isKo ? '로스율 반영' : 'incl. loss'})`,
-        basketTotalCost > 0 ? `${isKo ? '총 금액' : 'Total cost'}: ${basketTotalCost.toLocaleString()} ${isKo ? '원' : 'KRW'}` : '',
-        '📐 theutilhub.com/utilities/utility/metal-weight-calc',
-      ].filter(Boolean);
       await navigator.clipboard.writeText(lines.join('\n'));
-      setCopyMsg(isKo ? '✓ 복사됨' : '✓ Copied');
-    } catch {
-      setCopyMsg(isKo ? '❌ 복사 실패' : '❌ Failed');
-    }
+      setCopyMsg(L('✓ 복사했습니다', '✓ Copied'));
+    } catch { setCopyMsg(L('복사하지 못했습니다', 'Could not copy')); }
     setTimeout(() => setCopyMsg(''), 2500);
   };
 
-  const fmt = (v: number, d = 3) => v.toFixed(d);
-  const fmtW = (v: number) => v >= 1000 ? `${(v/1000).toFixed(3)}t` : `${fmt(v)}kg`;
-  const titleStr = isKo ? '금속 중량 & 면적 계산기' : 'Metal Weight & Area Calculator';
-  const descStr = isKo ? 'H빔·파이프·판재 등 12형상 중량·도장 면적·예상 단가 실시간 계산. 견적 바구니로 즉시 발주서 작성.' : 'Calculate weight, paint area and cost for 12 metal shapes. Build a quote basket and copy the order instantly.';
+  const presetGroups = PRESETS[shape];
+  const titleStr = L('금속 중량 & 면적 계산기', 'Metal Weight & Area Calculator');
+  const descStr = L('H빔·찬넬·앵글·파이프·철판 등 12가지 형상의 중량(kg/m)·도장 면적·자재비를 KS 규격 치수로 계산하고 발주 내역을 만듭니다.', 'Weight per metre, paint area and cost for 12 metal shapes with KS standard sizes, plus an order list.');
+  const names = Object.fromEntries(Object.entries(fieldText).map(([k, val]) => [k, val![0]])) as Partial<Record<DimKey, string>>;
 
   return (
     <div className={s.container}>
       <NavigationActions />
 
       <header className={s.header}>
-        <div className={s.icon_wrap}><Weight size={40} color="#8b5cf6" /></div>
+        <div className={s.icon_wrap}><Weight size={40} /></div>
         <h1 className={s.title}>{titleStr}</h1>
         <p className={s.subtitle}>{descStr}</p>
       </header>
 
-      {/* STEP 1 — Shape */}
-      <section className={s.step_card}>
-        <div className={s.step_label}>STEP 1</div>
-        <h2 className={s.step_title}>{isKo ? '금속 형상 선택' : 'Select Metal Shape'}</h2>
+      <section className={s.card}>
+        <div className={s.step}>STEP 1</div>
+        <h2 className={s.card_title}>{L('형상 선택', 'Shape')}</h2>
         <div className={s.shape_grid}>
-          {SHAPE_DEFS.map(def => (
-            <button
-              key={def.id}
-              className={`${s.shape_btn} ${shape === def.id ? s.shape_active : ''}`}
-              onClick={() => handleShapeSelect(def.id)}
-              aria-label={isKo ? def.ko : def.en}
-            >
-              {SHAPE_ICONS[def.id]}
-              {isKo ? def.ko : def.en}
+          {SHAPES.map(sh => (
+            <button key={sh.id} type="button" aria-pressed={shape === sh.id}
+              className={`${s.shape_btn} ${shape === sh.id ? s.shape_on : ''}`} onClick={() => selectShape(sh.id)}>
+              <ShapeIcon id={sh.id} />
+              {isKo ? SHAPE_NAMES[sh.id][0] : SHAPE_NAMES[sh.id][1]}
             </button>
           ))}
         </div>
+      </section>
 
-        {/* KS preset */}
-        {shape && KS_PRESETS[shape] && KS_PRESETS[shape].length > 0 && (
-          <div className={s.ks_row}>
-            <span className={s.ks_label}>{isKo ? 'KS 규격 불러오기' : 'KS Standard Preset'}</span>
-            <select
-              className={s.ks_select}
-              value={ksPreset}
-              onChange={e => handleKsPreset(e.target.value)}
-              aria-label={isKo ? 'KS 규격 선택' : 'Select KS standard'}
-            >
-              <option value="">{isKo ? '-- 직접 입력 --' : '-- Enter manually --'}</option>
-              {KS_PRESETS[shape].map(p => <option key={p.label} value={p.label}>{p.label}</option>)}
-            </select>
+      <section className={s.card}>
+        <div className={s.step}>STEP 2</div>
+        <h2 className={s.card_title}>{L('치수 입력', 'Dimensions')} — {isKo ? SHAPE_NAMES[shape][0] : SHAPE_NAMES[shape][1]}</h2>
+        <div className={s.layout}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+            {presetGroups && (
+              <div className={s.preset_row}>
+                <label className={s.field_label} htmlFor="mw-preset">{L('KS 규격에서 고르기', 'Pick a KS size')}</label>
+                <select id="mw-preset" className={s.select} value={preset} onChange={e => applyPreset(e.target.value)}>
+                  <option value="">{L('— 직접 입력 —', '— Enter manually —')}</option>
+                  {presetGroups.map((g, gi) => g.group
+                    ? <optgroup key={gi} label={g.group}>{g.items.map(p => <option key={p.label} value={p.label}>{p.label}</option>)}</optgroup>
+                    : g.items.map(p => <option key={p.label} value={p.label}>{p.label}</option>))}
+                </select>
+              </div>
+            )}
+            <div className={s.fields}>
+              {def.fields.map(k => {
+                const [, title, desc] = fieldText[k]!;
+                return (
+                  <div key={k} className={`${s.field} ${active === k ? s.field_active : ''}`}>
+                    <label className={s.field_label} htmlFor={`mw-${k}`}>{title}{desc && <small>{desc}</small>}</label>
+                    <div className={s.input_wrap}>
+                      <input id={`mw-${k}`} className={s.input} inputMode="decimal" autoComplete="off"
+                        placeholder={def.optional.includes(k) ? (shape === 'sqtube' ? '2t' : '0') : String(SAMPLE_DIMS[shape][k] ?? '')}
+                        value={dimText[k] ?? ''}
+                        onFocus={() => setActive(k)} onBlur={() => setActive(a => (a === k ? null : a))}
+                        onChange={e => { setDimText(prev => ({ ...prev, [k]: decimalInput(e.target.value) })); setPreset(''); }} />
+                      <span className={s.unit}>mm</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className={s.row3}>
+              {!def.sheet && (
+                <div className={s.field}>
+                  <label className={s.field_label} htmlFor="mw-len">{L('길이', 'Length')}</label>
+                  <div className={s.input_wrap}>
+                    <input id="mw-len" className={s.input} inputMode="decimal" value={lengthText} onChange={e => setLengthText(decimalInput(e.target.value))} />
+                    <span className={s.unit}>m</span>
+                  </div>
+                </div>
+              )}
+              <div className={s.field}>
+                <label className={s.field_label} htmlFor="mw-qty">{L('수량', 'Quantity')}</label>
+                <div className={s.input_wrap}>
+                  <input id="mw-qty" className={s.input} inputMode="numeric" value={qtyText} onChange={e => setQtyText(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))} />
+                  <span className={s.unit}>{L('개', 'pcs')}</span>
+                </div>
+              </div>
+              <div className={s.field}>
+                <label className={s.field_label} htmlFor="mw-loss">{L('로스(할증)', 'Waste allowance')}</label>
+                <div className={s.input_wrap}>
+                  <input id="mw-loss" className={s.input} inputMode="decimal" value={lossText} onChange={e => setLossText(decimalInput(e.target.value))} />
+                  <span className={s.unit}>%</span>
+                </div>
+              </div>
+            </div>
+            {def.sheet && (
+              <div className={s.field}>
+                <span className={s.field_label}>{L('도장 면', 'Painted faces')}</span>
+                <div className={s.chips}>
+                  {([2, 1] as const).map(f => (
+                    <button key={f} type="button" className={`${s.chip} ${plateFaces === f ? s.chip_on : ''}`} onClick={() => setPlateFaces(f)} aria-pressed={plateFaces === f}>
+                      {f === 2 ? L('양면', 'Both faces') : L('한 면', 'One face')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            <p className={s.hint}>{L('절단 자투리를 생각해 로스는 보통 3~5%를 잡습니다.', 'Allow 3–5% for cutting waste.')}</p>
           </div>
+
+          <div className={s.layout_diagram}>
+            <CrossSection shape={shape} dims={drawDims} active={active} names={names}
+              sample={!complete || !!errorCode} sampleLabel={L('예시 치수', 'Example size')}
+              exaggeratedNote={L('※ 얇은 두께는 보이도록 실제보다 두껍게 그렸습니다.', '※ Thin walls are drawn thicker so they stay visible.')} />
+            <div className={s.legend}>
+              {def.fields.map(k => (
+                <div key={k} className={active === k ? s.legend_on : ''}>
+                  <b>{fieldText[k]![0]}</b>{fieldText[k]![1]}{fieldText[k]![2] ? ` — ${fieldText[k]![2]}` : ''}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={s.card}>
+        <div className={s.step}>STEP 3</div>
+        <h2 className={s.card_title}>{L('재질 · 단가', 'Material · price')}</h2>
+        <div className={s.material_row}>
+          <select className={s.select} value={matId} onChange={e => setMatId(e.target.value)} aria-label={L('재질', 'Material')}>
+            {materials.map(m => <option key={m.id} value={m.id}>{isKo ? m.ko : m.en} ({m.density} g/㎤)</option>)}
+          </select>
+          <button type="button" className={s.ghost_btn} onClick={() => setShowCustom(v => !v)}><Plus size={14} />{L('재질 추가', 'Add material')}</button>
+        </div>
+        {showCustom && (
+          <div className={s.custom_form}>
+            <div className={s.field}>
+              <label className={s.field_label} htmlFor="mw-cname">{L('재질명', 'Name')}</label>
+              <input id="mw-cname" className={s.input} style={{ paddingRight: '0.8rem' }} value={customName} onChange={e => setCustomName(e.target.value)} placeholder={L('예: 인바', 'e.g. Invar')} />
+            </div>
+            <div className={s.field}>
+              <label className={s.field_label} htmlFor="mw-cden">{L('밀도', 'Density')}</label>
+              <div className={s.input_wrap}>
+                <input id="mw-cden" className={s.input} inputMode="decimal" value={customDensity} onChange={e => setCustomDensity(decimalInput(e.target.value))} placeholder="8.05" />
+                <span className={s.unit}>g/㎤</span>
+              </div>
+            </div>
+            <button type="button" className={s.primary_btn} onClick={addCustom}>{L('저장', 'Save')}</button>
+            <button type="button" className={s.ghost_btn} onClick={() => setShowCustom(false)}>{L('취소', 'Cancel')}</button>
+          </div>
+        )}
+        <div className={s.fields}>
+          <div className={s.field}>
+            <label className={s.field_label} htmlFor="mw-pkg">{L('자재 단가 (선택)', 'Material price (optional)')}</label>
+            <div className={s.input_wrap}>
+              <input id="mw-pkg" className={s.input} inputMode="numeric" value={priceKg} onChange={e => setPriceKg(e.target.value.replace(/[^0-9]/g, ''))} placeholder="1200" />
+              <span className={s.unit}>{L('원/kg', '₩/kg')}</span>
+            </div>
+          </div>
+          <div className={s.field}>
+            <label className={s.field_label} htmlFor="mw-pm2">{L('도장 단가 (선택)', 'Paint price (optional)')}</label>
+            <div className={s.input_wrap}>
+              <input id="mw-pm2" className={s.input} inputMode="numeric" value={priceM2} onChange={e => setPriceM2(e.target.value.replace(/[^0-9]/g, ''))} placeholder="15000" />
+              <span className={s.unit}>{L('원/㎡', '₩/㎡')}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={s.card} aria-live="polite">
+        <div className={s.step}>STEP 4</div>
+        <h2 className={s.card_title}>{L('계산 결과', 'Result')}{complete && !errorCode ? ` — ${specLabel(shape, dims)}` : ''}</h2>
+        {errorCode ? (
+          <div className={s.warn}>⚠️ {ERRORS[errorCode][isKo ? 0 : 1]}</div>
+        ) : !result ? (
+          <p className={s.hint}>{L('치수와 길이·수량을 넣으면 결과가 나옵니다. KS 규격에서 고르면 치수가 자동으로 채워집니다.', 'Enter dimensions, length and quantity, or pick a KS size.')}</p>
+        ) : (
+          <>
+            <div className={s.big_grid}>
+              <div className={s.big}>
+                <div><span className={s.big_num}>{kg(result.unitMass, def.sheet ? 2 : 3)}</span><span className={s.big_unit}>{def.sheet ? 'kg/㎡' : 'kg/m'}</span></div>
+                <div className={s.big_label}>{def.sheet ? L('㎡당 중량', 'Weight per ㎡') : L('m당 중량 (단위중량)', 'Weight per metre')}</div>
+              </div>
+              <div className={s.big}>
+                <div><span className={s.big_num}>{kg(result.pieceKg)}</span><span className={s.big_unit}>kg</span></div>
+                <div className={s.big_label}>{L('1개(본)당 중량', 'Per piece')}</div>
+              </div>
+              <div className={s.big}>
+                <div><span className={s.big_num}>{kg(result.orderKg)}</span><span className={s.big_unit}>kg</span></div>
+                <div className={s.big_label}>{L(`발주 중량 (로스 ${lossPct}% 포함)`, `Order weight (+${lossPct}%)`)}</div>
+              </div>
+            </div>
+            <div className={s.rows}>
+              <div className={s.res_row}><span>{L('단면적', 'Section area')}</span><strong>{kg(result.areaMm2, 1)} ㎟ ({kg(result.areaMm2 / 100, 2)} ㎠)</strong></div>
+              <div className={s.res_row}><span>{L(`순중량 (${qty}개)`, `Net weight (${qty} pcs)`)}</span><strong>{kg(result.netKg)} kg</strong></div>
+              <div className={s.res_row}><span>{L('도장 면적', 'Paint area')}</span><strong>{kg(result.paintM2, 3)} ㎡</strong></div>
+              {matCost > 0 && <div className={s.res_row}><span>{L('자재비 (발주 중량 기준)', 'Material cost')}</span><strong>{won(matCost)}</strong></div>}
+              {paintCost > 0 && <div className={s.res_row}><span>{L('도장비', 'Paint cost')}</span><strong>{won(paintCost)}</strong></div>}
+              {matCost + paintCost > 0 && <div className={`${s.res_row} ${s.res_total}`}><span>{L('합계', 'Total')}</span><strong>{won(matCost + paintCost)}</strong></div>}
+            </div>
+            <p className={s.hint}>{L(
+              `${isKo ? material.ko : material.en} ${material.density} g/㎤ 기준.${['hbeam', 'channel', 'angle', 'tshape'].includes(shape) ? ' 형강은 필렛(r)을 넣어야 KS 표 단위중량과 맞습니다.' : ''}${shape === 'sqtube' ? ' 각관은 모서리 R(기본 2t)을 반영한 KS D 3568 방식입니다.' : ''}${shape === 'checkered' ? ' 무늬 질량 1.67 kg/㎡(강판 기준)을 더했습니다.' : ''}`,
+              `Density ${material.density} g/cm³.${['hbeam', 'channel', 'angle', 'tshape'].includes(shape) ? ' Include the fillet radius to match KS table weights.' : ''}`,
+            )}</p>
+            <button type="button" className={s.primary_btn} onClick={addToBasket}><ShoppingCart size={18} />{L('견적 바구니에 담기', 'Add to order list')}</button>
+          </>
         )}
       </section>
 
-      {/* STEP 2 — Dimensions */}
-      {shapeDef && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>STEP 2</div>
-          <h2 className={s.step_title}>{isKo ? '치수 · 길이 · 수량 입력' : 'Dimensions · Length · Quantity'}</h2>
-          <p className={s.step_hint}>{isKo ? '치수: mm 단위' : 'All dimensions in mm'}</p>
-
-          {/* Shape-specific dimension inputs */}
-          <div className={s.dims_grid}>
-            {shapeDef.fields.map(field => (
-              <div key={field} className={s.dim_field}>
-                <label className={s.dim_label}>{isKo ? FIELD_LABELS[field].ko : FIELD_LABELS[field].en}</label>
-                <div className={s.dim_input_wrap}>
-                  <input
-                    type="number" step="0.1" min="0"
-                    className={s.dim_input}
-                    value={dims[field] || ''}
-                    onChange={e => handleDim(field, e.target.value)}
-                    aria-label={FIELD_LABELS[field].en}
-                  />
-                  <span className={s.dim_unit}>{FIELD_LABELS[field].unit}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Length (m) — not for plate/checkered */}
-          {shapeDef.hasLength && (
-            <div className={s.dim_field}>
-              <label className={s.dim_label}>{isKo ? '길이 (m)' : 'Length (m)'}</label>
-              <div className={s.dim_input_wrap}>
-                <input
-                  type="number" step="0.01" min="0"
-                  className={s.dim_input}
-                  value={length}
-                  onChange={e => setLength(e.target.value)}
-                  aria-label={isKo ? '길이 입력' : 'Length input'}
-                />
-                <span className={s.dim_unit}>m</span>
-              </div>
-            </div>
-          )}
-
-          {/* Common: quantity + loss rate */}
-          <div className={s.common_grid}>
-            <div>
-              <label className={s.field_label}>{isKo ? '수량 (개/본)' : 'Quantity (pcs)'}</label>
-              <input
-                type="number" step="1" min="1"
-                className={s.dim_input}
-                value={qty}
-                onChange={e => setQty(e.target.value)}
-                style={{ width: '100%', paddingRight: '2.5rem', boxSizing: 'border-box' }}
-                aria-label={isKo ? '수량 입력' : 'Quantity input'}
-              />
-            </div>
-            <div>
-              <label className={s.field_label}>{isKo ? '로스율 (할증, %)' : 'Loss Rate (%)'}</label>
-              <select
-                className={s.select_field}
-                value={lossRateOpt}
-                onChange={e => setLossRateOpt(e.target.value)}
-                aria-label={isKo ? '로스율 선택' : 'Loss rate'}
-              >
-                <option value="0">0%</option>
-                <option value="3">3%</option>
-                <option value="5">5%</option>
-                <option value="10">10%</option>
-                <option value="custom">{isKo ? '직접 입력' : 'Custom'}</option>
-              </select>
-            </div>
-            {lossRateOpt === 'custom' && (
-              <div>
-                <label className={s.field_label}>{isKo ? '로스율 직접 입력 (%)' : 'Custom loss rate (%)'}</label>
-                <input
-                  type="number" step="0.1" min="0" max="100"
-                  className={s.dim_input}
-                  value={lossRateCustom}
-                  onChange={e => setLossRateCustom(e.target.value)}
-                  style={{ width: '100%', paddingRight: '2.5rem', boxSizing: 'border-box' }}
-                  aria-label={isKo ? '로스율 직접 입력' : 'Custom loss rate input'}
-                />
-              </div>
-            )}
-          </div>
-          <p className={s.field_hint}>{isKo ? '절단 자투리 손실 반영. 현장 통상 3~5% 적용' : 'Add cutting waste. Typically 3–5% in the field.'}</p>
-        </section>
-      )}
-
-      {/* STEP 3 — Material */}
-      {shapeDef && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>STEP 3</div>
-          <h2 className={s.step_title}>{isKo ? '재질 선택' : 'Select Material'}</h2>
-          <div className={s.material_row}>
-            <select
-              className={s.material_select}
-              value={selectedMat}
-              onChange={e => setSelectedMat(e.target.value)}
-              aria-label={isKo ? '재질 선택' : 'Select material'}
-            >
-              {materials.map(m => (
-                <option key={m.name} value={m.name}>{m.name} ({m.density} g/cm³)</option>
-              ))}
-            </select>
-            <button
-              className={s.material_add_btn}
-              onClick={() => setShowCustomForm(v => !v)}
-              aria-label={isKo ? '새 재질 추가' : 'Add custom material'}
-            >
-              <Plus size={14} style={{ display: 'inline', marginRight: '0.3rem' }} />
-              {isKo ? '새 재질 추가' : 'Add material'}
-            </button>
-          </div>
-          {showCustomForm && (
-            <div className={s.custom_form}>
-              <div className={s.dim_field}>
-                <label className={s.dim_label}>{isKo ? '재질명' : 'Material name'}</label>
-                <input
-                  className={s.dim_input}
-                  style={{ paddingRight: '0.75rem' }}
-                  placeholder={isKo ? '예: 인바(Invar)' : 'e.g. Invar Alloy'}
-                  value={customName}
-                  onChange={e => setCustomName(e.target.value)}
-                  aria-label={isKo ? '재질명 입력' : 'Material name'}
-                />
-              </div>
-              <div className={s.dim_field}>
-                <label className={s.dim_label}>{isKo ? '밀도 (g/cm³)' : 'Density (g/cm³)'}</label>
-                <div className={s.dim_input_wrap}>
-                  <input
-                    type="number" step="0.01" min="0"
-                    className={s.dim_input}
-                    placeholder="8.00"
-                    value={customDensity}
-                    onChange={e => setCustomDensity(e.target.value)}
-                    aria-label={isKo ? '밀도 입력' : 'Density input'}
-                  />
-                  <span className={s.dim_unit}>g/cm³</span>
-                </div>
-              </div>
-              <button className={s.custom_save_btn} onClick={handleAddCustomMaterial} aria-label={isKo ? '저장' : 'Save'}>
-                {isKo ? '저장' : 'Save'}
-              </button>
-              <button className={s.custom_cancel_btn} onClick={() => setShowCustomForm(false)} aria-label={isKo ? '취소' : 'Cancel'}>
-                {isKo ? '취소' : 'Cancel'}
-              </button>
-            </div>
-          )}
-        </section>
-      )}
-
-      {/* STEP 4 — Pricing */}
-      {shapeDef && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>STEP 4</div>
-          <h2 className={s.step_title}>{isKo ? '단가 입력 (선택)' : 'Unit Price (optional)'}</h2>
-          <p className={s.step_hint}>{isKo ? '단가를 입력하지 않으면 중량과 면적만 계산됩니다.' : 'Leave blank to calculate weight and area only.'}</p>
-          <div className={s.price_grid}>
-            <div>
-              <label className={s.field_label}>{isKo ? 'kg당 자재 단가 (원)' : 'Material price (per kg)'}</label>
-              <div className={s.dim_input_wrap}>
-                <input
-                  type="number" step="1" min="0"
-                  className={s.dim_input}
-                  placeholder={isKo ? '예: 2000' : 'e.g. 2000'}
-                  value={pricePerKg}
-                  onChange={e => setPricePerKg(e.target.value)}
-                  style={{ paddingRight: '2.5rem' }}
-                  aria-label={isKo ? 'kg당 단가' : 'Price per kg'}
-                />
-                <span className={s.dim_unit}>{isKo ? '원/kg' : 'KRW/kg'}</span>
-              </div>
-            </div>
-            <div>
-              <label className={s.field_label}>{isKo ? 'm²당 도장 단가 (원)' : 'Paint price (per m²)'}</label>
-              <div className={s.dim_input_wrap}>
-                <input
-                  type="number" step="1" min="0"
-                  className={s.dim_input}
-                  placeholder={isKo ? '예: 15000' : 'e.g. 15000'}
-                  value={pricePerM2}
-                  onChange={e => setPricePerM2(e.target.value)}
-                  style={{ paddingRight: '2.5rem' }}
-                  aria-label={isKo ? 'm²당 도장 단가' : 'Paint price per m²'}
-                />
-                <span className={s.dim_unit}>{isKo ? '원/m²' : 'KRW/m²'}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* STEP 5 — Results + SVG */}
-      {shapeDef && result && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>STEP 5</div>
-          <h2 className={s.step_title}>{isKo ? 'SVG 단면도 & 계산 결과' : 'Cross-section & Results'}</h2>
-
-          {result.error ? (
-            <div className={s.warn_box}>⚠️ {result.error}</div>
-          ) : (
-            <>
-              {/* SVG cross-section */}
-              <div className={s.svg_wrap}>
-                <CrossSectionSVG shape={shape!} dims={dims} isKo={isKo} />
-              </div>
-
-              {hasResult && (
-                <>
-                  <div className={s.result_big_grid}>
-                    <div className={s.result_big}>
-                      <div>
-                        <span className={s.result_num}>{fmt(result.unitWeight)}</span>
-                        <span className={s.result_unit}>kg</span>
-                      </div>
-                      <div className={s.result_label}>{isKo ? '1개당 중량' : 'Unit weight'}</div>
-                    </div>
-                    <div className={s.result_big}>
-                      <div>
-                        <span className={s.result_num}>{fmt(result.orderWeight)}</span>
-                        <span className={s.result_unit}>kg</span>
-                      </div>
-                      <div className={s.result_label}>{isKo ? `발주 중량 (로스 ${lossRate}% 포함)` : `Order weight (${lossRate}% loss)`}</div>
-                    </div>
-                  </div>
-
-                  <div className={s.result_sub_grid}>
-                    <div className={s.result_sub}>
-                      <span>{isKo ? '총 순 중량' : 'Net weight'}</span>
-                      <strong>{fmt(result.totalWeight)} kg</strong>
-                    </div>
-                    <div className={s.result_sub}>
-                      <span>{isKo ? '도장 면적' : 'Paint area'}</span>
-                      <strong>{result.paintArea.toFixed(3)} m²</strong>
-                    </div>
-                    {result.materialCost > 0 && (
-                      <div className={s.result_sub}>
-                        <span>{isKo ? '예상 자재비' : 'Material cost'}</span>
-                        <strong className={s.result_cost}>{result.materialCost.toLocaleString()}{isKo ? '원' : ' KRW'}</strong>
-                      </div>
-                    )}
-                    {result.paintCost > 0 && (
-                      <div className={s.result_sub}>
-                        <span>{isKo ? '예상 도장비' : 'Paint cost'}</span>
-                        <strong className={s.result_cost}>{result.paintCost.toLocaleString()}{isKo ? '원' : ' KRW'}</strong>
-                      </div>
-                    )}
-                    {result.total > 0 && (
-                      <div className={s.result_sub} style={{ gridColumn: '1 / -1' }}>
-                        <span style={{ fontWeight: 800 }}>{isKo ? '합계' : 'Total'}</span>
-                        <strong className={s.result_total}>{result.total.toLocaleString()}{isKo ? '원' : ' KRW'}</strong>
-                      </div>
-                    )}
-                  </div>
-
-                  <button className={s.basket_btn} onClick={handleAddToBasket} aria-label={isKo ? '견적 바구니에 담기' : 'Add to quote basket'}>
-                    <ShoppingCart size={18} />
-                    {isKo ? '👇 견적 바구니에 담기' : '👇 Add to Quote Basket'}
-                  </button>
-                </>
-              )}
-            </>
-          )}
-        </section>
-      )}
-
-      {/* STEP 6 — Basket */}
-      <section className={s.step_card}>
-        <div className={s.step_label}>STEP 6</div>
-        <h2 className={s.step_title}>{isKo ? '견적 바구니 & 발주서' : 'Quote Basket & Order'}</h2>
-
+      <section className={s.card}>
+        <div className={s.step}>STEP 5</div>
+        <h2 className={s.card_title}>{L('견적 바구니 · 발주 내역', 'Order list')}</h2>
         {basket.length === 0 ? (
-          <p className={s.basket_empty}>{isKo ? '아직 담긴 항목이 없습니다.' : 'No items in basket yet.'}</p>
+          <p className={s.hint}>{L('담은 항목이 없습니다. 담은 내역은 이 브라우저에 저장됩니다.', 'Nothing added yet. The list is saved in this browser.')}</p>
         ) : (
           <>
-            <div className={s.basket_table_wrap}>
-              <table className={s.basket_table}>
+            <div className={s.table_wrap}>
+              <table className={s.table}>
                 <thead>
                   <tr>
-                    <th>{isKo ? '형상' : 'Shape'}</th>
-                    <th>{isKo ? '규격' : 'Spec'}</th>
-                    <th>{isKo ? '재질' : 'Material'}</th>
-                    <th>{isKo ? '길이' : 'Length'}</th>
-                    <th>{isKo ? '수량' : 'Qty'}</th>
-                    <th>{isKo ? '발주중량(kg)' : 'Order(kg)'}</th>
-                    <th>{isKo ? '금액(원)' : 'Cost'}</th>
-                    <th></th>
+                    <th>{L('규격', 'Spec')}</th><th>{L('재질', 'Material')}</th><th className={s.num}>{L('길이', 'Length')}</th>
+                    <th className={s.num}>{L('수량', 'Qty')}</th><th className={s.num}>{L('발주 중량', 'Order kg')}</th><th className={s.num}>{L('금액', 'Cost')}</th><th />
                   </tr>
                 </thead>
                 <tbody>
                   {basket.map(b => (
                     <tr key={b.id}>
-                      <td>{b.shapeName}</td>
-                      <td style={{ fontFamily: 'monospace', fontSize: '0.78rem' }}>{b.spec}</td>
-                      <td>{b.material}</td>
-                      <td>{b.length > 0 ? `${b.length}m` : '-'}</td>
-                      <td>{b.qty}{isKo ? '개' : 'pcs'}</td>
-                      <td><strong>{b.orderWeight.toFixed(1)}</strong>{b.lossRate > 0 ? <span style={{ fontSize: '0.7rem', color: '#f97316', marginLeft: '2px' }}>+{b.lossRate}%</span> : ''}</td>
-                      <td style={{ color: b.total > 0 ? '#ea580c' : '#94a3b8', fontWeight: 700 }}>{b.total > 0 ? b.total.toLocaleString() : '-'}</td>
-                      <td><button className={s.basket_delete_btn} onClick={() => handleDeleteBasketItem(b.id)} aria-label={isKo ? '삭제' : 'Delete'}>✕</button></td>
+                      <td><span className={s.spec}>{b.spec}</span></td>
+                      <td>{isKo ? b.material : b.materialEn ?? b.material}</td>
+                      <td className={s.num}>{b.lengthM > 0 ? `${b.lengthM}m` : '-'}</td>
+                      <td className={s.num}>{b.qty}</td>
+                      <td className={s.num}><strong>{kg(b.orderKg, 1)}</strong>{b.lossPct > 0 ? ` (+${b.lossPct}%)` : ''}</td>
+                      <td className={s.num}>{b.cost > 0 ? won(b.cost) : '-'}</td>
+                      <td><button type="button" className={s.del_btn} onClick={() => saveBasket(basket.filter(x => x.id !== b.id))} aria-label={L('삭제', 'Delete')}>✕</button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-
-            <div className={s.basket_total_row}>
-              <div className={s.basket_total_item}>
-                <div className={s.basket_total_label}>{isKo ? '총 발주 중량 (로스 반영)' : 'Total order weight (incl. loss)'}</div>
-                <div className={s.basket_total_num}>{basketTotalWeight.toFixed(3)} kg</div>
-              </div>
-              {basketTotalCost > 0 && (
-                <div className={s.basket_total_item}>
-                  <div className={s.basket_total_label}>{isKo ? '총 발주 금액' : 'Total cost'}</div>
-                  <div className={`${s.basket_total_num} ${s.basket_total_cost}`}>{basketTotalCost.toLocaleString()} {isKo ? '원' : 'KRW'}</div>
-                </div>
-              )}
+            <div className={s.totals}>
+              <div className={s.total_box}><div className={s.total_label}>{L('총 발주 중량', 'Total order weight')}</div><div className={s.total_num}>{kg(totalKg, 1)} kg</div></div>
+              <div className={s.total_box}><div className={s.total_label}>{L('총 금액', 'Total cost')}</div><div className={s.total_num}>{totalCost > 0 ? won(totalCost) : '-'}</div></div>
             </div>
-
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <button className={s.copy_btn} onClick={handleCopy} aria-label={isKo ? '발주서 복사' : 'Copy order'}>
-                <Copy size={14} />
-                {isKo ? '📋 발주서 내역 복사' : '📋 Copy Order Sheet'}
-              </button>
-              {copyMsg && <span className={`${s.copy_msg} ${copyMsg.includes('❌') ? s.copy_msg_fail : ''}`}>{copyMsg}</span>}
+            <div className={s.actions}>
+              <button type="button" className={s.primary_btn} onClick={copyOrder}><Copy size={16} />{L('발주 내역 복사', 'Copy order list')}</button>
+              <button type="button" className={s.ghost_btn} onClick={() => saveBasket([])}><Trash2 size={14} />{L('모두 비우기', 'Clear all')}</button>
+              {copyMsg && <span className={s.copy_msg}>{copyMsg}</span>}
             </div>
           </>
         )}
       </section>
 
-      {/* Bottom 7 sections */}
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/metal-weight-calc" />
-      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
+      <div className={s.ad_slot}>AD</div>
+
       <SeoSection
         ko={{
-          title: '금속 중량 & 면적 계산기란 무엇인가요?',
-          description: '금속 중량 & 면적 계산기는 가공·설비·철골 현장에서 철강재 발주 견적을 낼 때 필요한 모든 계산을 즉시 처리해주는 현장 실무 도구입니다. 환봉·파이프·H빔·판재 등 12가지 금속 형상의 단면적 공식을 내장하고, 강철·알루미늄·스테인리스 등 19가지 재질의 밀도를 제공합니다. KS 규격 프리셋으로 H빔·채널·앵글 규격을 버튼 하나로 불러올 수 있으며, 커스텀 재질을 추가하면 다음 방문에도 기억됩니다. 여러 자재를 견적 바구니에 담아 총 중량과 총 금액을 한눈에 확인하고, 발주서를 즉시 공유할 수 있습니다.',
+          title: '금속 중량 계산기: H빔·찬넬·앵글·파이프 kg/m와 도장 면적',
+          description: '금속 자재의 중량은 단면적(㎟) × 길이(m) × 밀도(g/㎤) ÷ 1000으로 구합니다. 이 계산기는 환봉·파이프·사각봉·각파이프·육각봉·평철·철판·앵글·찬넬·H빔·T형강·무늬강판 12가지 형상의 단면적을 계산해 m당 중량(단위중량), 1개당 중량, 로스를 더한 발주 중량, 도장 면적, 자재비·도장비를 한 번에 보여 줍니다. H형강·ㄷ형강·ㄱ형강은 KS D 3502 규격표처럼 웹과 플랜지가 만나는 안쪽의 둥근 필렛(r)까지 넣어 계산하므로, 규격에서 고르면 표의 단위중량과 맞습니다. 예를 들어 H-200×100×5.5×8(r=11)은 단면적 27.16㎠, 21.32 kg/m이고, 필렛을 빼고 계산하면 20.5 kg/m로 4%가량 가볍게 나옵니다. 각파이프는 KS D 3568의 모서리 반경(외측 2t)을 반영해 □100×100×3.2가 9.52 kg/m, 무늬강판은 같은 두께 평판에 무늬 1.67 kg/㎡를 더해 3.2t가 26.79 kg/㎡입니다. 배관용 SPP·SCH40 강관은 호칭경(15A~200A)으로 고를 수 있습니다. 단면도에서는 지금 입력하는 칸이 어느 부위인지 색으로 표시되어, H빔·찬넬의 t1(웹, 세로판)과 t2(플랜지, 가로판)를 헷갈리지 않고 넣을 수 있습니다.',
           useCases: [
-            { icon: '🏗️', title: '철골 구조물 발주 견적', desc: 'H빔·앵글·채널 등 여러 형상과 규격을 견적 바구니에 담아 총 중량과 예상 자재비를 한 번에 산출하세요. KS 규격 프리셋으로 규격 입력 오류도 방지할 수 있습니다.' },
-            { icon: '🎨', title: '도장 물량 산출', desc: '파이프·형강 등 도장이 필요한 자재의 표면적(도장 면적)을 형상별 기준에 맞게 자동 계산합니다. m²당 단가를 입력하면 예상 도장비도 즉시 산출됩니다.' },
-            { icon: '🔧', title: '설비 배관 자재 발주', desc: '파이프 규격(외경·두께)과 길이·수량을 입력하면 총 중량과 외경 기준 도장 면적을 즉시 계산합니다. 여러 규격의 파이프를 바구니에 담아 한 번에 발주서를 작성하세요.' },
-            { icon: '⚙️', title: '커스텀 재질 중량 계산', desc: '기본 제공 재질 외에 특수 합금이나 비금속 소재의 밀도를 직접 입력하고 저장하면, 다음 방문에도 사용할 수 있습니다.' },
+            { icon: '🏗️', title: '철골 자재 발주 중량', desc: 'H-300×150×6.5×9 6m 20본처럼 규격을 고르고 길이·수량을 넣으면 단위중량 36.72 kg/m 기준 순중량과 로스 포함 발주 중량이 나오고, 여러 규격을 바구니에 담아 총 톤수를 확인할 수 있습니다.' },
+            { icon: '🎨', title: '도장 물량 산출', desc: '형강은 겉으로 드러나는 둘레 전체, 파이프·각파이프는 바깥면, 철판은 양면 또는 한 면을 골라 도장 면적(㎡)을 계산하고, ㎡당 단가를 넣으면 도장비까지 함께 산출합니다.' },
+            { icon: '🔧', title: '배관 자재 무게', desc: 'SPP 50A(Ø60.5×3.8)는 5.31 kg/m, SCH40 100A(Ø114.3×6.0)처럼 호칭경으로 고르면 외경·두께가 자동으로 들어가 운반·양중 계획이나 지지대 하중 검토에 쓸 무게를 바로 확인합니다.' },
+            { icon: '⚙️', title: '가공품·특수 재질', desc: '스테인리스·알루미늄·황동·티타늄 등 19가지 재질 밀도를 고르거나, 인바 같은 특수 합금 밀도를 직접 저장해 가공 소재의 무게와 kg당 자재비를 계산합니다.' },
           ],
           steps: [
-            { step: '형상 선택', desc: '형상 아이콘 그리드에서 계산할 금속 형상을 선택합니다. H빔·채널·앵글은 KS 규격 드롭다운에서 규격을 선택하면 치수가 자동 입력됩니다.' },
-            { step: '치수 입력', desc: '선택한 형상에 맞는 치수(mm)와 길이(m), 수량을 입력합니다. 재질을 선택하고 단가를 입력하면 예상 비용까지 실시간으로 계산됩니다.' },
-            { step: '결과 확인', desc: 'SVG 단면도로 입력한 치수를 시각적으로 확인하고, 1개당 중량·총 중량·도장 면적·예상 금액을 확인합니다. 바구니에 담기 버튼으로 목록에 추가하세요.' },
-            { step: '발주서 복사', desc: '여러 자재를 바구니에 담은 뒤 발주서 복사 버튼을 클릭하면 모든 자재의 총 중량과 총 금액이 포함된 발주서가 클립보드에 복사됩니다.' },
+            { step: '형상 고르기', desc: '환봉, 파이프, 각파이프, 앵글, 찬넬, H빔, T형강, 철판 등 12가지 중 계산할 형상을 누릅니다. 오른쪽 단면도에 예시 치수와 각 기호의 위치가 바로 표시됩니다.' },
+            { step: '치수 넣기', desc: 'KS 규격 목록에서 고르면 필렛까지 자동으로 채워지고, 직접 넣을 때는 입력 중인 칸의 부위(예: t1 웹, t2 플랜지)가 단면도에서 색으로 강조됩니다. 길이(m)·수량·로스(%)도 넣습니다.' },
+            { step: '재질·단가 선택', desc: '재질을 고르고 필요하면 kg당 자재 단가와 ㎡당 도장 단가를 넣습니다. 목록에 없는 재질은 이름과 밀도를 저장해 다음에도 쓸 수 있습니다.' },
+            { step: '결과 확인·발주 내역', desc: 'm당 중량, 1개당 중량, 발주 중량, 도장 면적, 금액을 확인하고 견적 바구니에 담습니다. 담은 내역은 브라우저에 저장되며 복사 버튼으로 메신저에 붙여 넣을 수 있습니다.' },
           ],
           faqs: [
-            { q: '커스텀 재질은 어떻게 저장되나요?', a: '커스텀 재질은 사용자의 브라우저 로컬 저장소(localStorage)에 저장됩니다. 같은 기기·같은 브라우저에서 다음 방문 시에도 저장한 재질을 그대로 사용할 수 있습니다. 단, 다른 기기나 브라우저를 사용하거나 브라우저 데이터를 초기화하면 초기화됩니다. 파일이 서버로 전송되지 않아 보안상 안전합니다.' },
-            { q: '도장 면적 계산 기준이 형상마다 다른가요?', a: '네, 형상 특성에 맞게 다르게 적용됩니다. 파이프는 내경에 도장을 하지 않으므로 외경 둘레만 기준으로 계산합니다. 판재는 넓은 양면(앞뒤)만 기준으로 하며 절단면 4면은 제외합니다. 환봉·형강류는 단면 전체 둘레를 기준으로 계산합니다. 현장에서 실제 도장 방식에 따라 차이가 있을 수 있으므로 참고용으로 활용하세요.' },
-            { q: 'KS 규격 프리셋이 없는 형상은 어떻게 입력하나요?', a: 'H빔·채널·앵글 외의 형상(파이프·환봉·평철 등)은 KS 규격 드롭다운 없이 치수를 직접 입력합니다. 파이프의 경우 외경(D)과 벽두께(t)를 mm 단위로 입력하면 됩니다. 제품 카탈로그나 KS 규격표에서 치수를 확인하세요.' },
-            { q: '이 툴의 결과를 공식 발주 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 현장 참고용으로만 제공됩니다. 실제 발주 시에는 반드시 제조사 규격표와 현장 실측값을 기준으로 최종 확인하시기 바랍니다. 특히 도장 면적은 현장 도장 방식에 따라 실제값과 차이가 있을 수 있습니다.' },
+            { q: 'H빔·찬넬에서 t1과 t2는 각각 어디인가요?', a: 't1은 웹, 곧 H빔 가운데에 세로로 선 판(찬넬은 세로 등판)의 두께이고, t2는 플랜지, 곧 위·아래 가로판(찬넬은 날개)의 두께입니다. 규격 표기 H-200×100×5.5×8은 높이 H 200, 폭 B 100, 웹 t1 5.5, 플랜지 t2 8mm라는 뜻입니다. 두 값을 바꿔 넣으면 무게가 크게 달라지므로, 입력할 때 단면도에서 강조되는 부위를 확인하세요.' },
+            { q: '필렛(r)은 왜 넣어야 하나요?', a: '압연 형강은 웹과 플랜지가 만나는 안쪽이 둥글게 살이 붙어 있어, 단순히 판 세 장의 넓이만 더하면 규격표보다 1~4% 가볍게 나옵니다. KS 규격에서 고르면 r이 자동으로 들어가며, H-100×100×6×8(r=10)은 단면적 21.90㎠로 규격표와 같아집니다. 판을 용접해 만든 조립 형강이면 r을 비워 두면 됩니다.' },
+            { q: '각파이프는 모서리를 어떻게 계산하나요?', a: 'KS D 3568 일반구조용 각형강관의 단위질량 식 0.0157 × t × (A + B − 3.287t)는 모서리 바깥 반경을 두께의 2배로 본 값입니다. 이 계산기도 모서리 R을 비우면 2t로 계산해 □100×100×3.2가 9.52 kg/m로 나오고, 모서리를 직각으로 보면 9.73 kg/m로 약 2% 무겁게 나옵니다.' },
+            { q: '도장 면적은 어느 면을 기준으로 하나요?', a: '형강과 봉재는 단면 둘레 전체(H빔은 4B + 2H − 2t1), 파이프와 각파이프는 바깥면만 계산하고 안쪽은 빼며, 철판·무늬강판은 양면 또는 한 면을 고를 수 있고 절단면은 넣지 않습니다. 실제 도장 방식에 따라 차이가 있으니 견적용 참고값으로 쓰세요.' },
           ],
         }}
         en={{
-          title: 'What is the Metal Weight & Area Calculator?',
-          description: 'The Metal Weight & Area Calculator is a field-ready tool for fabrication, plant, and steel construction sites that need instant weight, paint area, and cost estimates for material orders. It covers 12 metal cross-sections including round bar, pipe, H-beam, and plate, with built-in density data for 19 standard materials. KS standard presets auto-fill dimensions for H-beams, C-channels, and angles. Custom materials are saved locally and remembered on your next visit. Add multiple items to a quote basket to get total weight and cost in one view, then copy a formatted order sheet to share instantly.',
+          title: 'Metal weight calculator: kg/m and paint area for steel sections',
+          description: 'Metal weight is section area (mm²) × length (m) × density (g/cm³) ÷ 1000. This calculator works out the section area of 12 shapes — round bar, pipe, square bar, square tube, hex bar, flat bar, plate, angle, channel, H-beam, T-section and checkered plate — and shows weight per metre, weight per piece, order weight with a waste allowance, paint area and cost. H-beams, channels and angles include the root fillet radius exactly as in the KS D 3502 / JIS G 3192 tables, so picking a standard size reproduces the published weight: H-200×100×5.5×8 (r = 11) has 27.16 cm² and weighs 21.32 kg/m, whereas ignoring the fillet gives about 20.5 kg/m. Square tubes follow the KS D 3568 corner radius (2t outside), giving 9.52 kg/m for □100×100×3.2, and checkered plate adds 1.67 kg/m² of raised pattern for steel. SPP and SCH40 pipes can be picked by nominal size from 15A to 200A. The cross-section highlights the part you are typing — for example the web (t1) or the flange (t2) — so the two thicknesses are never swapped.',
           useCases: [
-            { icon: '🏗️', title: 'Steel structure order quotes', desc: 'Add H-beams, angles, and channels of different sizes to the quote basket to get total weight and material cost in one step. KS standard presets prevent dimension entry errors.' },
-            { icon: '🎨', title: 'Paint area estimation', desc: 'Automatically calculates paint area for pipes and structural sections using shape-specific rules. Enter a per-m² rate to get the estimated painting cost alongside the material cost.' },
-            { icon: '🔧', title: 'Piping material orders', desc: 'Enter pipe outer diameter, wall thickness, length, and quantity to get total weight and outer-diameter-based paint area. Add multiple pipe sizes to the basket for a single order sheet.' },
-            { icon: '⚙️', title: 'Custom material weight calculation', desc: 'Add special alloys or non-metallic materials by entering a name and density. Saved locally in your browser, the custom material is available on your next visit.' },
+            { icon: '🏗️', title: 'Steel Order Weights', desc: 'Pick H-300×150×6.5×9, enter 6 m × 20 pieces and get net and order weight from 36.72 kg/m, then add more sizes to the list for a total tonnage.' },
+            { icon: '🎨', title: 'Paint Quantities', desc: 'Exposed perimeter for sections, outside only for tubes, and one or both faces for plate; add a price per m² to get the painting cost.' },
+            { icon: '🔧', title: 'Pipe Weights', desc: 'Choose SPP 50A (Ø60.5×3.8, 5.31 kg/m) or SCH40 sizes by nominal bore for lifting plans and support loads.' },
+            { icon: '⚙️', title: 'Other Materials', desc: 'Switch between 19 densities such as stainless, aluminium, brass and titanium, or save your own alloy.' },
           ],
           steps: [
-            { step: 'Select shape', desc: 'Tap a shape from the icon grid — round bar, pipe, H-beam, plate, etc. For H-beams, C-channels, and angles, choose a KS standard from the dropdown to auto-fill all dimensions.' },
-            { step: 'Enter dimensions', desc: 'Fill in the required dimensions in mm and the length in meters. Select a material, enter loss rate for cutting waste, and optionally enter unit prices to get cost estimates.' },
-            { step: 'Review results', desc: 'Check the SVG cross-section diagram for the shape, then read the unit weight, total weight, paint area, and estimated costs. Tap "Add to basket" to add to the order list.' },
-            { step: 'Copy order sheet', desc: 'After adding multiple materials to the basket, tap "Copy Order Sheet" to copy a formatted order with all items, total weight (including loss), and total cost to your clipboard.' },
+            { step: 'Choose a Shape', desc: 'Tap one of 12 shapes; the cross-section shows an example size and where each symbol sits.' },
+            { step: 'Enter Dimensions', desc: 'Pick a KS size to fill everything including fillets, or type values while the diagram highlights the part you are editing.' },
+            { step: 'Material and Price', desc: 'Select a material and optionally enter prices per kg and per m² of paint.' },
+            { step: 'Review and Save', desc: 'Check weight per metre, per piece, order weight, paint area and cost, then add the item to the order list and copy it.' },
           ],
           faqs: [
-            { q: 'How are custom materials saved?', a: 'Custom materials are saved in your browser\'s localStorage. They persist on the same device and browser across visits. If you clear browser data or switch devices, the custom materials will be gone. No data is sent to any server.' },
-            { q: 'Why does paint area calculation differ by shape?', a: 'Each shape has a different painting convention. Pipes use only the outer diameter perimeter because the inner surface is not normally painted. Plates use only the two wide faces, excluding the four cut edges. All other structural sections use the full cross-section perimeter.' },
-            { q: 'How do I enter dimensions for shapes without KS presets?', a: 'Shapes like pipe, round bar, and flat bar require manual dimension entry since there is no KS preset dropdown for them. For pipe, enter the outer diameter (D) and wall thickness (t) in millimeters. Refer to product catalogs or KS/JIS standards for the correct values.' },
-            { q: 'Can I use the results as official procurement data?', a: 'Results are for reference only. For actual procurement, always verify the final dimensions and quantities against manufacturer specifications and on-site measurements. Paint area in particular may differ from actual usage depending on your painting method.' },
+            { q: 'Which part is t1 and which is t2?', a: 't1 is the web, the vertical centre plate of an H-beam or the back of a channel; t2 is the flange, the top and bottom plates. H-200×100×5.5×8 means depth 200, width 100, web 5.5 and flange 8 mm. Swapping them changes the weight a lot, so watch the highlighted part in the diagram.' },
+            { q: 'Why include the fillet radius?', a: 'Rolled sections have extra material where the web meets the flange. Without it the result is 1–4% lighter than the standard table; with it, H-100×100×6×8 (r = 10) gives 21.90 cm² exactly. Leave r blank for welded built-up sections.' },
+            { q: 'How are square tube corners handled?', a: 'The KS D 3568 formula 0.0157 × t × (A + B − 3.287t) assumes an outside corner radius of 2t. Leaving R blank uses that, so □100×100×3.2 weighs 9.52 kg/m instead of 9.73 kg/m with sharp corners.' },
+            { q: 'Which faces count as paint area?', a: 'The full perimeter for bars and sections, the outside only for pipes and tubes, and one or both faces for plates, excluding cut edges. Treat it as an estimate.' },
           ],
         }}
       />

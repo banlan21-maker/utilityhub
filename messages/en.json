@@ -130,7 +130,7 @@
     },
     "metal-weight-calc": {
       "title": "Metal Weight & Area Calculator",
-      "desc": "Calculate weight, paint area, and cost for 11 metal shapes including H-beam, pipe, and plate. 19 material densities, KS presets, and quote basket included."
+      "desc": "Weight per metre, paint area and cost for 12 metal shapes with KS sizes including fillets; diagram marks t1 (web) and t2 (flange)."
     },
     "piping-calc": {
       "title": "Piping Calculator",
