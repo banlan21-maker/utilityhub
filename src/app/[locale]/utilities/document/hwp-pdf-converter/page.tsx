@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import HwpConverterClient from './HwpConverterClient';
 
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/document/hwp-pdf-converter';
+
 export async function generateMetadata({
   params,
 }: {
@@ -9,12 +12,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? 'HWP → PDF 변환기 | Utility Hub'
-    : 'HWP to PDF Converter | Utility Hub';
+    ? 'HWP·HWPX → PDF·Word 변환기 (한컴오피스 없이, 브라우저에서) | Utility Hub'
+    : 'HWP / HWPX to PDF & Word Converter — No Hancom Office | Utility Hub';
   const description = isKo
-    ? 'HWP(한글) 및 HWPX 파일을 PDF 또는 Word(DOCX)로 변환. 한컴오피스 없이 맥·리눅스·모바일에서 즉시 사용.'
-    : 'Convert HWP and HWPX files to PDF or Word (DOCX) online — no Hancom Office needed, works on Mac, Linux, and mobile.';
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/document/hwp-pdf-converter`;
+    ? '한글 파일(.hwp, .hwpx)의 본문과 표를 문서 끝까지 PDF나 Word(.docx)로 변환합니다. 파일은 서버로 전송되지 않고 브라우저에서만 처리되며, 맥·아이폰·안드로이드에서도 바로 쓸 수 있습니다.'
+    : 'Convert the full text and tables of Hangul .hwp and .hwpx files to PDF or Word (.docx). Files never leave your browser; works on Mac and mobile without Hancom Office.';
+  const canonical = `${BASE}/${locale}${PATH}`;
 
   return {
     title,
@@ -22,9 +25,9 @@ export async function generateMetadata({
     alternates: {
       canonical,
       languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/document/hwp-pdf-converter',
-        en: 'https://www.theutilhub.com/en/utilities/document/hwp-pdf-converter',
-        'x-default': 'https://www.theutilhub.com/ko/utilities/document/hwp-pdf-converter',
+        ko: `${BASE}/ko${PATH}`,
+        en: `${BASE}/en${PATH}`,
+        'x-default': `${BASE}/ko${PATH}`,
       },
     },
     openGraph: {
@@ -35,38 +38,64 @@ export async function generateMetadata({
       locale: isKo ? 'ko_KR' : 'en_US',
       type: 'website',
     },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 
-const softwareSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'HWP PDF 변환기',
-  alternateName: 'HWP to PDF Converter',
-  operatingSystem: 'Web Browser',
-  applicationCategory: 'UtilitiesApplication',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-  url: 'https://www.theutilhub.com/ko/utilities/document/hwp-pdf-converter',
-  description: 'HWP(한글) 및 HWPX 파일을 PDF 또는 Word(DOCX)로 변환하는 무료 온라인 도구입니다. 한컴오피스가 설치되지 않은 맥, 리눅스, 스마트폰에서도 즉시 사용할 수 있습니다.',
-};
+const SCHEMA_TEXT = {
+  ko: {
+    name: 'HWP·HWPX → PDF·Word 변환기',
+    description: '한글 파일(.hwp, .hwpx)의 본문과 표를 PDF나 Word로 변환하는 무료 도구입니다. 파일은 서버로 전송되지 않고 브라우저에서만 처리됩니다.',
+    faqs: [
+      { q: 'HWP와 HWPX 모두 끝까지 변환되나요?', a: '네. HWP는 압축된 본문을 풀어서, HWPX는 본문 XML을 읽어서 문서 끝까지 글자와 표를 변환합니다. 암호가 걸렸거나 배포용으로 잠긴 문서는 미리보기(앞부분)만 변환되며 경고가 표시됩니다.' },
+      { q: '원본과 모양이 똑같이 나오나요?', a: '아니요. 글자와 표 내용을 옮기는 방식이라 글꼴, 글자 크기, 줄 간격, 이미지, 쪽 나눔은 원본과 다릅니다. 모양 그대로의 PDF가 필요하면 한글 프로그램이나 한컴독스에서 PDF로 저장하세요.' },
+      { q: '파일이 서버에 저장되나요?', a: '아니요. 파일은 어디에도 전송되지 않고 지금 쓰는 브라우저 안에서만 변환됩니다.' },
+      { q: 'PDF에서 글자를 검색하거나 복사할 수 있나요?', a: '현재 PDF는 쪽마다 이미지로 만들어져 검색·복사가 되지 않습니다. 글자를 복사해야 하면 Word(.docx)로 변환하세요.' },
+    ],
+  },
+  en: {
+    name: 'HWP / HWPX to PDF & Word Converter',
+    description: 'Free converter for the text and tables of Hangul .hwp and .hwpx files to PDF or Word. Files are processed only in your browser.',
+    faqs: [
+      { q: 'Are both HWP and HWPX converted to the end?', a: 'Yes. HWP bodies are decompressed and HWPX XML is read through to the end, including tables. Password-protected or distribution documents only convert their preview, with a warning.' },
+      { q: 'Will it look exactly like the original?', a: 'No. Text and tables are carried over; fonts, sizes, spacing, images and page breaks differ. Use "Save as PDF" in Hangul for an exact copy.' },
+      { q: 'Is my file uploaded?', a: 'No. Conversion happens entirely inside your browser.' },
+      { q: 'Can I search or copy text in the PDF?', a: 'Not yet — PDF pages are images. Convert to Word (.docx) for selectable text.' },
+    ],
+  },
+} as const;
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: 'HWP와 HWPX 중 어느 형식이 더 잘 변환되나요?', acceptedAnswer: { '@type': 'Answer', text: 'HWPX 형식이 훨씬 정확하게 변환됩니다. HWPX는 국제 표준 XML 기반이라 구조 파악이 용이하고, HWP(바이너리)는 레거시 형식이라 일부 요소가 다르게 표현될 수 있습니다. 한컴오피스 2014 이상에서 "다른 이름으로 저장 → HWPX"로 먼저 변환 후 업로드를 권장합니다.' } },
-    { '@type': 'Question', name: '변환된 PDF에서 글꼴이 깨집니다', acceptedAnswer: { '@type': 'Answer', text: '서버에 설치된 폰트와 원본 문서에서 사용한 폰트가 다를 경우 대체 폰트로 표시됩니다. 주요 한글 폰트(맑은 고딕, 나눔고딕 등)는 기본 지원되며, 특수 폰트는 깨질 수 있습니다.' } },
-    { '@type': 'Question', name: '업로드한 파일은 서버에 저장되나요?', acceptedAnswer: { '@type': 'Answer', text: '변환에 사용된 파일은 처리 후 즉시 삭제되며 서버에 보관되지 않습니다. 개인정보가 포함된 중요 문서도 안심하고 변환하실 수 있습니다.' } },
-    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
-  ],
-};
+export default async function HwpConverterPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const text = locale === 'ko' ? SCHEMA_TEXT.ko : SCHEMA_TEXT.en;
 
-export default function HwpConverterPage() {
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: text.name,
+    operatingSystem: 'Web Browser',
+    applicationCategory: 'UtilitiesApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    url: `${BASE}/${locale}${PATH}`,
+    inLanguage: locale,
+    description: text.description,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: text.faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />

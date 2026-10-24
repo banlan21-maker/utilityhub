@@ -1,15 +1,29 @@
 import JSZip from 'jszip';
+import { inflateSync } from 'fflate';
 
-/**
- * HWPX Parser Logic
- * HWPX is a ZIP container containing XML files.
- * The main content is located at Contents/section0.xml (and following sections).
+export interface HwpParseResult {
+  paragraphs: string[];
+  /** 본문을 읽지 못해 미리보기(앞부분)만 추출한 경우 */
+  partial: boolean;
+  /** partial 인 이유 */
+  reason?: 'encrypted' | 'distribution' | 'no-body';
+}
+
+/** 확장자로 HWP/HWPX를 구분해 본문 텍스트를 추출한다 */
+export async function parseHwpFile(file: File): Promise<HwpParseResult> {
+  if (file.name.toLowerCase().endsWith('.hwpx')) {
+    return { paragraphs: await parseHwpx(file), partial: false };
+  }
+  return parseHwpBuffer(await file.arrayBuffer());
+}
+
+/* ───────────────────────── HWPX ─────────────────────────
+ * HWPX는 ZIP 안에 XML이 들어 있는 형식. 본문은 Contents/section0.xml, section1.xml …
  */
-export async function parseHwpx(file: File): Promise<string[]> {
+export async function parseHwpx(file: File | ArrayBuffer): Promise<string[]> {
   const zip = await JSZip.loadAsync(file);
   const contents: string[] = [];
 
-  // HWPX content files are usually named Contents/sectionX.xml
   const sectionFiles = Object.keys(zip.files).filter(
     name => name.startsWith('Contents/section') && name.endsWith('.xml')
   );
@@ -18,7 +32,6 @@ export async function parseHwpx(file: File): Promise<string[]> {
     throw new Error('HWPX 파일에서 섹션 파일을 찾을 수 없습니다.');
   }
 
-  // Sort sections numerically
   sectionFiles.sort((a, b) => {
     const matchA = a.match(/\d+/);
     const matchB = b.match(/\d+/);
@@ -31,8 +44,6 @@ export async function parseHwpx(file: File): Promise<string[]> {
     const xmlText = await zip.files[fileName].async('text');
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-
-    // Process document structure in order: paragraphs and tables separately
     processHwpxNode(xmlDoc.documentElement, contents, false);
   }
 
@@ -40,31 +51,25 @@ export async function parseHwpx(file: File): Promise<string[]> {
 }
 
 /**
- * Recursively traverse HWPX XML tree.
- * - tbl: extract as table rows (cells joined with tab)
- * - p (outside table): extract as paragraph
- * - other: recurse into children
- * insideTable flag prevents p elements inside cells being double-processed.
+ * HWPX XML 트리를 순서대로 순회한다.
+ * - tbl: 행 단위로 추출(칸은 탭으로 구분)
+ * - p(표 밖): 문단으로 추출
  */
 function processHwpxNode(node: Element, output: string[], insideTable: boolean): void {
   for (const child of Array.from(node.children)) {
     const ln = child.localName;
 
     if (ln === 'tbl') {
-      // Process table structure
       extractHwpxTable(child, output);
     } else if (ln === 'p' && !insideTable) {
-      // Regular paragraph (not inside a table cell)
       const text = getHwpxParaText(child);
       if (text.trim()) output.push(text.trim());
     } else if (ln !== 'p' && ln !== 'tc') {
-      // Recurse into container elements (sec, body, sub-doc, frames, etc.)
       processHwpxNode(child, output, insideTable);
     }
   }
 }
 
-/** Extract text from a single hp:p element */
 function getHwpxParaText(para: Element): string {
   const all = para.getElementsByTagName('*');
   let text = '';
@@ -76,10 +81,6 @@ function getHwpxParaText(para: Element): string {
   return text;
 }
 
-/**
- * Extract table content: each row becomes one string with cells tab-separated.
- * Empty rows are skipped.
- */
 function extractHwpxTable(tbl: Element, output: string[]): void {
   for (const child of Array.from(tbl.children)) {
     if (child.localName !== 'tr') continue;
@@ -89,11 +90,11 @@ function extractHwpxTable(tbl: Element, output: string[]): void {
     for (const tcChild of Array.from(child.children)) {
       if (tcChild.localName !== 'tc') continue;
 
-      // Each cell may have multiple hp:p paragraphs — collect text from all of them
+      // 칸 안의 문단은 subList 등으로 한 단계 더 감싸여 있을 수 있어 하위 p를 모두 모은다
       const cellParagraphs: string[] = [];
-      for (const tcEl of Array.from(tcChild.children)) {
-        if (tcEl.localName !== 'p') continue;
-        const paraText = getHwpxParaText(tcEl);
+      const paras = Array.from(tcChild.getElementsByTagName('*')).filter(el => el.localName === 'p');
+      for (const p of paras) {
+        const paraText = getHwpxParaText(p);
         if (paraText.trim()) cellParagraphs.push(paraText.trim());
       }
 
@@ -106,254 +107,296 @@ function extractHwpxTable(tbl: Element, output: string[]): void {
   }
 }
 
-/**
- * Check if a line looks like an OLE stream/storage name (CamelCase ASCII, no spaces)
- * e.g. "HwpSummaryInformation", "JScriptVersion", "DefaultJScript"
+/* ───────────────────────── HWP 5.0 (바이너리) ─────────────────────────
+ * OLE 복합 문서 안의 BodyText/SectionN 스트림(대개 raw deflate 압축)에 문단 레코드가 들어 있다.
+ * PrvText는 목록 미리보기용으로 앞부분만 담겨 있어, 본문을 읽을 수 없을 때만 쓴다.
  */
-function isOleMetadata(line: string): boolean {
-  return /^[A-Z][a-zA-Z0-9]{4,}$/.test(line);
+
+const FREESECT = 0xfffffffa;
+
+interface OleEntry { name: string; type: number; left: number; right: number; child: number; start: number; size: number }
+
+function readOle(u8: Uint8Array) {
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  const u16 = (o: number) => dv.getUint16(o, true);
+  const u32 = (o: number) => dv.getUint32(o, true);
+
+  const SIG = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];
+  if (u8.length < 512 || SIG.some((b, i) => u8[i] !== b)) throw new Error('invalid');
+
+  const ss = 1 << u16(30);
+  const sectorOffset = (sid: number) => 512 + sid * ss;
+
+  // FAT 섹터 목록: 헤더의 DIFAT 109개 + 추가 DIFAT 섹터
+  const fatSectors: number[] = [];
+  for (let i = 0; i < 109; i++) {
+    const sid = u32(76 + i * 4);
+    if (sid >= FREESECT) break;
+    fatSectors.push(sid);
+  }
+  let difat = u32(68);
+  let difatCount = u32(72);
+  const difatSeen = new Set<number>();
+  while (difatCount-- > 0 && difat < FREESECT && !difatSeen.has(difat)) {
+    difatSeen.add(difat);
+    const off = sectorOffset(difat);
+    for (let j = 0; j < ss / 4 - 1; j++) {
+      const sid = u32(off + j * 4);
+      if (sid < FREESECT) fatSectors.push(sid);
+    }
+    difat = u32(off + ss - 4);
+  }
+
+  const fat: number[] = [];
+  for (const sid of fatSectors) {
+    const off = sectorOffset(sid);
+    if (off + ss > u8.length) break;
+    for (let j = 0; j < ss / 4; j++) fat.push(u32(off + j * 4));
+  }
+
+  const concat = (parts: Uint8Array[]) => {
+    const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
+    let pos = 0;
+    for (const p of parts) { out.set(p, pos); pos += p.length; }
+    return out;
+  };
+
+  const chain = (start: number) => {
+    const parts: Uint8Array[] = [];
+    const seen = new Set<number>();
+    for (let sid = start; sid < FREESECT && !seen.has(sid); sid = fat[sid] ?? FREESECT) {
+      seen.add(sid);
+      const off = sectorOffset(sid);
+      if (off + ss > u8.length) break;
+      parts.push(u8.subarray(off, off + ss));
+    }
+    return concat(parts);
+  };
+
+  const dir = chain(u32(48));
+  const ddv = new DataView(dir.buffer, dir.byteOffset, dir.byteLength);
+  const entries: (OleEntry | null)[] = [];
+  for (let b = 0; b + 128 <= dir.length; b += 128) {
+    const nameLen = ddv.getUint16(b + 64, true);
+    if (nameLen < 2) { entries.push(null); continue; }
+    let name = '';
+    for (let j = 0; j < (nameLen - 2) / 2; j++) name += String.fromCharCode(ddv.getUint16(b + j * 2, true));
+    entries.push({
+      name,
+      type: dir[b + 66],
+      left: ddv.getUint32(b + 68, true),
+      right: ddv.getUint32(b + 72, true),
+      child: ddv.getUint32(b + 76, true),
+      start: ddv.getUint32(b + 116, true),
+      size: ddv.getUint32(b + 120, true),
+    });
+  }
+
+  const root = entries[0];
+  if (!root) throw new Error('invalid');
+  const cutoff = u32(56);
+  const miniStream = chain(root.start);
+  const miniFatBytes = chain(u32(60));
+  const mdv = new DataView(miniFatBytes.buffer, miniFatBytes.byteOffset, miniFatBytes.byteLength);
+  const miniFat: number[] = [];
+  for (let j = 0; j + 4 <= miniFatBytes.length; j += 4) miniFat.push(mdv.getUint32(j, true));
+
+  const miniChain = (start: number) => {
+    const parts: Uint8Array[] = [];
+    const seen = new Set<number>();
+    for (let sid = start; sid < FREESECT && !seen.has(sid); sid = miniFat[sid] ?? FREESECT) {
+      seen.add(sid);
+      if ((sid + 1) * 64 > miniStream.length) break;
+      parts.push(miniStream.subarray(sid * 64, (sid + 1) * 64));
+    }
+    return concat(parts);
+  };
+
+  // 저장소 트리를 따라 "BodyText/Section0" 같은 경로로 스트림을 찾는다
+  const streams = new Map<string, OleEntry>();
+  const walk = (idx: number, prefix: string, depth: number) => {
+    if (idx >= FREESECT || depth > 64) return;
+    const e = entries[idx];
+    if (!e) return;
+    walk(e.left, prefix, depth + 1);
+    walk(e.right, prefix, depth + 1);
+    const path = prefix ? `${prefix}/${e.name}` : e.name;
+    if (e.type === 2) streams.set(path, e);
+    if (e.type === 1) walk(e.child, path, depth + 1);
+  };
+  walk(root.child, '', 0);
+
+  const read = (path: string): Uint8Array | null => {
+    const e = streams.get(path);
+    if (!e) return null;
+    const data = e.size < cutoff ? miniChain(e.start) : chain(e.start);
+    return data.subarray(0, e.size);
+  };
+
+  return { streams, read };
 }
 
 /**
- * Check if a line is binary garbage:
- * more than 40% of characters are outside normal Korean/ASCII/punctuation ranges
+ * HWP 섹션 스트림은 압축 데이터 뒤에 여분 바이트가 붙는 경우가 있다.
+ * 브라우저 DecompressionStream은 이를 오류로 처리해 마지막 데이터가 버려질 수 있어,
+ * 여분을 무시하는 fflate로 푼다.
  */
-function isGarbageLine(line: string): boolean {
-  if (line.length === 0) return true;
-  let badCount = 0;
-  for (const ch of line) {
-    const code = ch.charCodeAt(0);
-    const isKorean = (code >= 0xac00 && code <= 0xd7a3) || (code >= 0x1100 && code <= 0x11ff) || (code >= 0x3130 && code <= 0x318f);
-    const isAscii = code >= 0x20 && code <= 0x7e;
-    const isCJK = code >= 0x4e00 && code <= 0x9fff;
-    const isFullWidthPunct = (code >= 0xff00 && code <= 0xffef) || (code >= 0x2000 && code <= 0x206f) || (code >= 0x3000 && code <= 0x303f);
-    if (!isKorean && !isAscii && !isCJK && !isFullWidthPunct) {
-      badCount++;
+function inflateRaw(data: Uint8Array): Uint8Array {
+  return inflateSync(data);
+}
+
+const TAG_PARA_TEXT = 67;   // HWPTAG_BEGIN(16) + 51
+const TAG_CTRL_HEADER = 71; // + 55
+const TAG_LIST_HEADER = 72; // + 56
+const CTRL_TABLE = 0x74626c20; // 'tbl '
+
+/** 8 WCHAR 크기를 차지하는 인라인·확장 컨트롤 문자 */
+const WIDE_CONTROLS = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
+
+function decodeParaText(rec: Uint8Array): string {
+  const dv = new DataView(rec.buffer, rec.byteOffset, rec.byteLength);
+  let s = '';
+  for (let i = 0; i + 1 < rec.length;) {
+    const c = dv.getUint16(i, true);
+    if (c < 32) {
+      if (c === 9) s += '\t';
+      else if (c === 10) s += '\n';
+      else if (c === 24) s += '-';
+      else if (c === 30 || c === 31) s += ' ';
+      i += WIDE_CONTROLS.has(c) ? 16 : 2;
+    } else {
+      s += String.fromCharCode(c);
+      i += 2;
     }
   }
-  return badCount / line.length > 0.4;
+  return s;
 }
 
-/**
- * Process HWP PrvText raw lines:
- * - Handle table cell format: <cell1><cell2> → "cell1  cell2"
- * - Filter OLE metadata and binary garbage
- */
-function processPrvTextLines(rawText: string): string[] {
-  const results: string[] = [];
+interface Cell { row: number; col: number; texts: string[] }
 
-  // PrvText uses \r as paragraph separator
-  const lines = rawText.split(/\r|\n|\r\n/);
+/** 섹션 레코드를 순서대로 읽어 문단·표 행을 output에 쌓는다 */
+function extractSection(data: Uint8Array, output: string[]): void {
+  const dv = new DataView(data.buffer, data.byteOffset, data.byteLength);
+  let table: { level: number; cells: Cell[]; cur: Cell | null } | null = null;
 
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed) continue;
+  const flushTable = () => {
+    if (!table) return;
+    const rows = new Map<number, Cell[]>();
+    for (const c of table.cells) {
+      if (!rows.has(c.row)) rows.set(c.row, []);
+      rows.get(c.row)!.push(c);
+    }
+    for (const r of [...rows.keys()].sort((a, b) => a - b)) {
+      const line = rows.get(r)!.sort((a, b) => a.col - b.col).map(c => c.texts.join(' ').replace(/\s+/g, ' ').trim()).join('\t');
+      if (line.replace(/\t/g, '').trim()) output.push(line);
+    }
+    table = null;
+  };
 
-    // HWP table row format: <cell1><cell2>... or <><content><>
-    if (trimmed.includes('<') && trimmed.includes('>') && /^[<\s]/.test(trimmed)) {
-      // Extract cell contents, skip empty cells
-      const cells = trimmed.match(/<([^>]*)>/g)
-        ?.map(c => c.slice(1, -1).trim())
-        .filter(c => c.length > 0) ?? [];
+  let o = 0;
+  while (o + 4 <= data.length) {
+    const h = dv.getUint32(o, true);
+    o += 4;
+    const tag = h & 0x3ff;
+    const level = (h >>> 10) & 0x3ff;
+    let size = (h >>> 20) & 0xfff;
+    if (size === 0xfff) {
+      if (o + 4 > data.length) break;
+      size = dv.getUint32(o, true);
+      o += 4;
+    }
+    if (o + size > data.length) break;
+    const rec = data.subarray(o, o + size);
+    o += size;
 
-      if (cells.length > 0) {
-        results.push(cells.join('  '));
+    // 표보다 얕거나 같은 레벨의 레코드가 나오면 표가 끝난 것
+    if (table && level <= table.level) flushTable();
+
+    if (tag === TAG_CTRL_HEADER && size >= 4 && !table) {
+      if (new DataView(rec.buffer, rec.byteOffset, 4).getUint32(0, true) === CTRL_TABLE) {
+        table = { level, cells: [], cur: null };
       }
       continue;
     }
 
-    // Filter OLE metadata names and garbage
-    if (isOleMetadata(trimmed)) continue;
-    if (isGarbageLine(trimmed)) continue;
+    // 표의 칸: 문단 리스트 헤더(문단 수 2 + 미상 2 + 속성 4) 뒤에 열·행 주소가 온다
+    if (table && tag === TAG_LIST_HEADER && level === table.level + 1 && size >= 12) {
+      const ldv = new DataView(rec.buffer, rec.byteOffset, rec.byteLength);
+      const cell = { col: ldv.getUint16(8, true), row: ldv.getUint16(10, true), texts: [] };
+      table.cells.push(cell);
+      table.cur = cell;
+      continue;
+    }
 
+    if (tag === TAG_PARA_TEXT) {
+      const text = decodeParaText(rec);
+      if (table?.cur) {
+        if (text.trim()) table.cur.texts.push(text.trim());
+      } else {
+        for (const line of text.split('\n')) if (line.trim()) output.push(line.trim());
+      }
+    }
+  }
+  flushTable();
+}
+
+/** PrvText(미리보기)의 표 표기 "<칸1><칸2>"를 정리한다 */
+function processPrvTextLines(rawText: string): string[] {
+  const results: string[] = [];
+  for (const line of rawText.split(/\r\n|\r|\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    if (/^</.test(trimmed) && trimmed.includes('>')) {
+      const cells = trimmed.match(/<([^>]*)>/g)?.map(c => c.slice(1, -1).trim()).filter(Boolean) ?? [];
+      if (cells.length) results.push(cells.join('\t'));
+      continue;
+    }
     results.push(trimmed);
   }
-
   return results;
 }
 
-/**
- * Legacy HWP Parser
- * Reads OLE Compound Document Format and extracts the PrvText stream (UTF-16LE plain text preview).
- */
-export async function parseLegacyHwp(file: File): Promise<string[]> {
-  const arrayBuffer = await file.arrayBuffer();
-  const uint8 = new Uint8Array(arrayBuffer);
+export async function parseHwpBuffer(buffer: ArrayBuffer): Promise<HwpParseResult> {
+  const u8 = new Uint8Array(buffer);
+  const ole = readOle(u8);
 
-  // Verify OLE signature: D0 CF 11 E0 A1 B1 1A E1
-  const OLE_SIG = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];
-  for (let i = 0; i < 8; i++) {
-    if (uint8[i] !== OLE_SIG[i]) {
-      throw new Error('유효한 HWP 파일이 아닙니다.');
-    }
+  const header = ole.read('FileHeader');
+  if (!header || header.length < 40) throw new Error('invalid');
+  const props = new DataView(header.buffer, header.byteOffset, header.byteLength).getUint32(36, true);
+  const compressed = (props & 1) !== 0;
+  const encrypted = (props & 2) !== 0;
+  const distribution = (props & 4) !== 0;
+
+  const preview = () => {
+    const prv = ole.read('PrvText');
+    return prv ? processPrvTextLines(new TextDecoder('utf-16le').decode(prv)) : [];
+  };
+
+  if (encrypted || distribution) {
+    return { paragraphs: preview(), partial: true, reason: encrypted ? 'encrypted' : 'distribution' };
   }
 
-  function readU16(offset: number): number {
-    return uint8[offset] | (uint8[offset + 1] << 8);
-  }
-  function readU32(offset: number): number {
-    return (uint8[offset] | (uint8[offset + 1] << 8) | (uint8[offset + 2] << 16) | (uint8[offset + 3] << 24)) >>> 0;
-  }
-
-  const sectorSize = 1 << readU16(30); // typically 512
-  const firstDirSector = readU32(44);
-  const miniStreamCutoff = readU32(52); // typically 4096
-  const firstMiniFatSector = readU32(56);
-
-  // Build FAT from DIFAT array in header (first 109 entries)
-  const fat: number[] = [];
-  for (let i = 0; i < 109; i++) {
-    const sid = readU32(76 + i * 4);
-    if (sid >= 0xfffffffa) break;
-    const offset = 512 + sid * sectorSize;
-    for (let j = 0; j < sectorSize / 4; j++) {
-      fat.push(readU32(offset + j * 4));
-    }
+  const sections = [...ole.streams.keys()]
+    .filter(p => /^BodyText\/Section\d+$/.test(p))
+    .sort((a, b) => Number(a.slice(16)) - Number(b.slice(16)));
+  if (sections.length === 0) {
+    return { paragraphs: preview(), partial: true, reason: 'no-body' };
   }
 
-  // Follow FAT chain and concatenate sectors
-  function readChain(startSid: number): Uint8Array {
-    const chunks: Uint8Array[] = [];
-    let sid = startSid;
-    const seen = new Set<number>();
-    while (sid < 0xfffffffa) {
-      if (seen.has(sid)) break;
-      seen.add(sid);
-      const off = 512 + sid * sectorSize;
-      if (off + sectorSize > uint8.length) break;
-      chunks.push(uint8.slice(off, off + sectorSize));
-      sid = fat[sid] ?? 0xfffffffe;
-    }
-    const out = new Uint8Array(chunks.reduce((s, c) => s + c.length, 0));
-    let pos = 0;
-    for (const c of chunks) { out.set(c, pos); pos += c.length; }
-    return out;
+  const output: string[] = [];
+  for (const path of sections) {
+    let data = ole.read(path)!;
+    if (compressed) data = inflateRaw(data);
+    extractSection(data, output);
   }
 
-  // Read directory entries from directory sector chain
-  const dirData = readChain(firstDirSector);
-
-  interface DirEntry { name: string; type: number; startSid: number; size: number; }
-
-  function readEntry(i: number): DirEntry {
-    const b = i * 128;
-    const nameLen = dirData[b + 64] | (dirData[b + 65] << 8);
-    let name = '';
-    if (nameLen >= 2) {
-      for (let j = 0; j < Math.min((nameLen - 2) / 2, 31); j++) {
-        const code = dirData[b + j * 2] | (dirData[b + j * 2 + 1] << 8);
-        if (code === 0) break;
-        name += String.fromCharCode(code);
-      }
-    }
-    const type = dirData[b + 66];
-    const startSid = (dirData[b + 116] | (dirData[b + 117] << 8) | (dirData[b + 118] << 16) | (dirData[b + 119] << 24)) >>> 0;
-    const size = (dirData[b + 120] | (dirData[b + 121] << 8) | (dirData[b + 122] << 16) | (dirData[b + 123] << 24)) >>> 0;
-    return { name, type, startSid, size };
+  if (output.length === 0) {
+    return { paragraphs: preview(), partial: true, reason: 'no-body' };
   }
-
-  const entryCount = Math.floor(dirData.length / 128);
-  const entries: DirEntry[] = Array.from({ length: entryCount }, (_, i) => readEntry(i));
-
-  // Find PrvText stream (type=2 means stream object)
-  const prvEntry = entries.find(e => e.type === 2 && e.name === 'PrvText');
-
-  if (!prvEntry || prvEntry.startSid >= 0xfffffffa) {
-    return extractKoreanFallback(uint8);
-  }
-
-  // Extract PrvText data (may be in mini stream if size < miniStreamCutoff)
-  let prvData: Uint8Array;
-
-  if (prvEntry.size < miniStreamCutoff) {
-    // Mini stream: data is stored in 64-byte mini sectors within root's data chain
-    const rootEntry = entries[0];
-    const miniStreamData = readChain(rootEntry.startSid);
-    const miniSectorSize = 64;
-
-    // Build mini FAT
-    const miniFat: number[] = [];
-    let mfSid = firstMiniFatSector;
-    const mfSeen = new Set<number>();
-    while (mfSid < 0xfffffffa) {
-      if (mfSeen.has(mfSid)) break;
-      mfSeen.add(mfSid);
-      const off = 512 + mfSid * sectorSize;
-      for (let j = 0; j < sectorSize / 4; j++) {
-        miniFat.push(readU32(off + j * 4));
-      }
-      mfSid = fat[mfSid] ?? 0xfffffffe;
-    }
-
-    // Follow mini FAT chain
-    const chunks: Uint8Array[] = [];
-    let msid = prvEntry.startSid;
-    const msSeen = new Set<number>();
-    while (msid < 0xfffffffa) {
-      if (msSeen.has(msid)) break;
-      msSeen.add(msid);
-      const mOff = msid * miniSectorSize;
-      if (mOff + miniSectorSize > miniStreamData.length) break;
-      chunks.push(miniStreamData.slice(mOff, mOff + miniSectorSize));
-      msid = miniFat[msid] ?? 0xfffffffe;
-    }
-    prvData = new Uint8Array(chunks.reduce((s, c) => s + c.length, 0));
-    let pos = 0;
-    for (const c of chunks) { prvData.set(c, pos); pos += c.length; }
-  } else {
-    prvData = readChain(prvEntry.startSid);
-  }
-
-  // Decode as UTF-16LE, limit to actual size
-  const actualSize = Math.min(prvEntry.size, prvData.length);
-  const decoder = new TextDecoder('utf-16le');
-  const rawText = decoder.decode(prvData.slice(0, actualSize));
-
-  const paragraphs = processPrvTextLines(rawText);
-
-  return paragraphs.length > 0 ? paragraphs : extractKoreanFallback(uint8);
+  return { paragraphs: output, partial: false };
 }
 
-/**
- * Fallback: scan binary for Korean/ASCII text in UTF-16LE encoding.
- * Skips the OLE header area. Only includes lines with Korean content.
- */
-function extractKoreanFallback(uint8: Uint8Array): string[] {
-  // Skip the first 10% of the file (OLE header + directory entries)
-  const startOffset = Math.max(512, Math.floor(uint8.length * 0.1));
-  startOffset % 2 === 0 ? startOffset : startOffset + 1; // align to 2 bytes
-
-  const results: string[] = [];
-  let current = '';
-
-  for (let i = startOffset; i + 1 < uint8.length; i += 2) {
-    const code = uint8[i] | (uint8[i + 1] << 8);
-    const isKorean = (code >= 0xac00 && code <= 0xd7a3) || (code >= 0x1100 && code <= 0x11ff) || (code >= 0x3130 && code <= 0x318f);
-    const isAscii = code >= 0x20 && code <= 0x7e;
-    const isNewline = code === 0x000d || code === 0x000a;
-
-    if (isKorean || isAscii) {
-      if (isNewline) {
-        if (current.trim().length > 0) {
-          results.push(current.trim());
-          current = '';
-        }
-      } else {
-        current += String.fromCharCode(code);
-      }
-    } else {
-      if (current.trim().length > 3) {
-        results.push(current.trim());
-      }
-      current = '';
-    }
-  }
-  if (current.trim().length > 3) results.push(current.trim());
-
-  // Only keep lines that contain Korean syllables
-  const filtered = results.filter(line =>
-    /[\uac00-\ud7a3]/.test(line) && !isGarbageLine(line)
-  );
-
-  return filtered.length > 0 ? filtered : ['텍스트를 추출할 수 없습니다. HWPX 형식으로 저장하면 더 정확하게 변환됩니다.'];
+/** @deprecated parseHwpFile 사용 */
+export async function parseLegacyHwp(file: File): Promise<string[]> {
+  return (await parseHwpBuffer(await file.arrayBuffer())).paragraphs;
 }

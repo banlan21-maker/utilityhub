@@ -687,19 +687,24 @@
   },
   "HwpConverter": {
     "title": "HWP ↔ PDF Converter",
-    "description": "Convert Hancom Office files (.hwp, .hwpx) to PDF for universal viewing.",
+    "description": "Convert the text and tables of Hangul files (.hwp, .hwpx) to PDF or Word, right in your browser without Hancom Office.",
     "uploadLabel": "Select Hangul file to convert",
     "dropzone": "Drag & drop files here or click to select.",
     "converting": "Converting document...",
     "download_pdf": "Download PDF",
     "download_docx": "Download Word(.docx)",
-    "supported": "Supported: .hwpx (Recommended), .hwp",
-    "notice": "* HWPX (Standard) format provides more accurate conversion.",
+    "supported": "Supported: .hwp, .hwpx (max 10MB)",
+    "notice": "* Only text and tables are converted. Fonts, formatting, images and page layout will differ from the original.",
     "error": "An error occurred while reading the file.",
     "error_supported": "Unsupported file format.",
     "reset": "Convert Another",
     "done": "Conversion complete!",
-    "size_error": "File too large. Maximum size is 10MB."
+    "size_error": "File too large. Maximum size is 10MB.",
+    "privacy": "Your file is never uploaded; it is processed entirely in this browser.",
+    "partial_encrypted": "⚠️ This document is password-protected, so only the stored preview (the beginning of the document) was converted. Remove the password in Hangul and try again.",
+    "partial_distribution": "⚠️ This is a distribution-locked document, so only the preview (the beginning) was converted. Try the original file.",
+    "partial_no-body": "⚠️ The body could not be found, so only the preview (the beginning) was converted. Try saving it as .hwpx in Hangul.",
+    "stats": "Converted {count} paragraphs."
   },
   "LifestyleBoard": {
     "subtitle": "Lifestyle and health tools for better daily living.",
