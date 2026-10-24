@@ -310,6 +310,29 @@
 .edge_slit { stroke: var(--ct-slit); stroke-width: 3; stroke-linecap: round; }
 .edge_hinge { stroke: var(--ct-hinge); stroke-width: 3; stroke-dasharray: 6 4; stroke-linecap: round; }
 
+/* 3D 치수선 — 글자에 배경색 테두리를 둘러 형상 위에서도 읽히게 한다 */
+.dim3_dim, .dim3_cut, .dim3_slit, .dim3_angle { pointer-events: none; }
+.dim3_dim line, .dim3_cut line, .dim3_slit line { stroke-width: 1.4; }
+.dim3_dim text, .dim3_cut text, .dim3_slit text, .dim3_angle text {
+  font-size: 11.5px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: var(--background);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+.dim3_dim line { stroke: var(--text-secondary); }
+.dim3_dim circle { fill: var(--text-secondary); }
+.dim3_dim text { fill: var(--text-primary); }
+.dim3_cut line { stroke: var(--ct-cut); }
+.dim3_cut circle, .dim3_cut text { fill: var(--ct-cut); }
+.dim3_slit line { stroke: var(--ct-slit); }
+.dim3_slit circle, .dim3_slit text { fill: var(--ct-slit); }
+.dim3_angle text { fill: var(--ct-hinge); }
+
+.legend_toggle { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; color: var(--text-primary); font-weight: 600; }
+.legend_toggle input { width: 18px; height: 18px; accent-color: var(--primary); }
+
 .view3d_controls { display: flex; align-items: center; gap: 0.5rem; max-width: 520px; width: 100%; align-self: center; }
 
 .icon_btn {

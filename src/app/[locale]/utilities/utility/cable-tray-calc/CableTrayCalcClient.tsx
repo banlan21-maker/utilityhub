@@ -52,26 +52,28 @@ function RouteIcon({ kind }: { kind: 'up' | 'down' | 'offset' }) {
 }
 
 /** H·L(D·L)을 어디서 재는지 보여주는 그림 */
-function MeasureDiagram({ direction, isKo }: { direction: BendDirection; isKo: boolean }) {
+function MeasureDiagram({ direction, down, isKo }: { direction: BendDirection; down: boolean; isKo: boolean }) {
   const riseLabel = direction === 'vertical' ? (isKo ? 'H 높이차' : 'H rise') : (isKo ? 'D 옆 이동' : 'D offset');
   const runLabel = isKo ? 'L 진행 거리' : 'L run';
+  // 내리막은 위에서 아래로 내려가는 모양으로 그린다
+  const y1 = down ? 50 : 130, y2 = down ? 130 : 50;
   return (
-    <svg viewBox="0 0 360 150" className={s.measure_svg} role="img"
+    <svg viewBox="0 0 360 170" className={s.measure_svg} role="img"
       aria-label={isKo ? '측정 위치 그림' : 'Where to measure'}>
-      <path d="M20 120 H120 L240 40 H340" className={s.measure_line} />
-      <line x1="120" y1="132" x2="240" y2="132" className={s.measure_dim} />
-      <text x="180" y="148" textAnchor="middle">{runLabel}</text>
-      <line x1="252" y1="40" x2="252" y2="120" className={s.measure_dim} />
-      <text x="258" y="85">{riseLabel}</text>
-      <circle cx="120" cy="120" r="6" fill="var(--primary)" />
-      <circle cx="240" cy="40" r="6" fill="var(--primary)" />
-      <text x="120" y="108" textAnchor="middle">①</text>
-      <text x="240" y="28" textAnchor="middle">②</text>
-      <text x="20" y="20" style={{ fontSize: 12, fontWeight: 500 }}>
+      <text x="20" y="16" style={{ fontSize: 12, fontWeight: 500 }}>
         {direction === 'vertical'
           ? (isKo ? '옆에서 본 모습 · 트레이 바닥 기준으로 잼' : 'Side view · measure at tray bottom')
           : (isKo ? '위에서 본 모습 · 트레이 중심선 기준으로 잼' : 'Top view · measure at tray centerline')}
       </text>
+      <path d={`M20 ${y1} H120 L240 ${y2} H340`} className={s.measure_line} />
+      <line x1="120" y1="148" x2="240" y2="148" className={s.measure_dim} />
+      <text x="180" y="166" textAnchor="middle">{runLabel}</text>
+      <line x1="252" y1="50" x2="252" y2="130" className={s.measure_dim} />
+      <text x="258" y="95">{riseLabel}</text>
+      <circle cx="120" cy={y1} r="6" fill="var(--primary)" />
+      <circle cx="240" cy={y2} r="6" fill="var(--primary)" />
+      <text x="106" y={y1 - 12} textAnchor="middle">①</text>
+      <text x="226" y={y2 - 12} textAnchor="middle">②</text>
     </svg>
   );
 }
@@ -210,7 +212,7 @@ export default function CableTrayCalcClient() {
         <section className={s.step_card}>
           <div className={s.step_label}>STEP 2</div>
           <h2 className={s.step_title}>{isKo ? '치수 입력' : 'Dimensions'}</h2>
-          <MeasureDiagram direction={direction} isKo={isKo} />
+          <MeasureDiagram direction={direction} down={routeKey === 'down'} isKo={isKo} />
 
           <div className={s.mode_toggle}>
             <button type="button" className={`${s.mode_btn} ${inputMode === 'preset' ? s.mode_active : ''}`}
@@ -285,7 +287,7 @@ export default function CableTrayCalcClient() {
             <div className={`${s.method_card} ${seg.fieldBendOk && !seg.isVerticalRiser ? '' : s.method_dim}`}>
               <h3>{isKo ? '① 현장 가공 (자르고 접기)' : 'A. Field fabrication (cut & bend)'}</h3>
               {seg.isVerticalRiser ? (
-                <span>{isKo ? '90° 수직 전환은 현장 가공 대상이 아닙니다.' : 'A 90° vertical change is not field-bent.'}</span>
+                <span>{isKo ? '90° 수직 전환은 현장 가공 대상이 아닙니다. 아래쪽(①)과 위쪽(②)에 90° 수직 엘보를 하나씩 씁니다.' : 'A 90° vertical change is not field-bent. Use one 90° vertical elbow at the bottom (1) and one at the top (2).'}</span>
               ) : (
                 <>
                   <span>{isKo ? `꺾임 두 곳을 가공하고 각도 조절형 연결판으로 고정합니다. 아래 STEP 4 치수를 사용하세요.` : 'Cut both bends and join them with adjustable splice plates. Use the STEP 4 dimensions below.'}</span>
@@ -299,7 +301,7 @@ export default function CableTrayCalcClient() {
               <h3>{isKo ? '② 기성 엘보 사용' : 'B. Factory elbows'}</h3>
               <span>
                 {isKo ? '가장 가까운 규격: ' : 'Nearest size: '}
-                <strong>{elbow.elbowDeg}° {direction === 'vertical' ? (isKo ? '수직 엘보' : 'vertical elbow') : (isKo ? '수평 엘보' : 'horizontal elbow')} × {seg.isVerticalRiser ? 1 : 2}</strong>
+                <strong>{elbow.elbowDeg}° {direction === 'vertical' ? (isKo ? '수직 엘보' : 'vertical elbow') : (isKo ? '수평 엘보' : 'horizontal elbow')} × 2</strong>
               </span>
               {elbow.elbowDeg < 90 && Math.abs(elbow.elbowDeg - seg.angleDeg) > 0.5 && (
                 <span>
@@ -355,7 +357,11 @@ export default function CableTrayCalcClient() {
             <div className={s.cut_card}>
               <div className={s.cut_num}>{bend.depthMm}</div>
               <div className={s.cut_unit}>mm</div>
-              <div className={s.cut_label}>{isKo ? '절단 깊이' : 'Cut depth'}</div>
+              <div className={s.cut_label}>
+                {direction === 'vertical'
+                  ? (isKo ? '절단 깊이 (레일 높이)' : 'Cut depth (rail height)')
+                  : (isKo ? 'V 길이 (트레이 폭)' : 'V length (tray width)')}
+              </div>
             </div>
           </div>
 
@@ -433,7 +439,7 @@ export default function CableTrayCalcClient() {
           useCases: [
             { icon: '✂️', title: '오르막·내리막 구간 가공', desc: '천장 랙에서 장비 쪽으로 0.25m 내려가는 30° 구간처럼 높이가 바뀌는 곳에서 꺾임 두 곳의 V-컷과 일자 절개 위치, 레일 높이 100mm 기준 한쪽 26.8mm 같은 마킹 치수를 바로 구합니다.' },
             { icon: '↔️', title: '기둥·덕트 피하는 오프셋', desc: '같은 높이에서 기둥이나 덕트를 피해 옆으로 비켜야 할 때, 옆 이동 거리와 진행 거리로 각도를 구하고 바닥판 V-컷 폭과 잘라낼 안쪽 레일 길이를 계산합니다.' },
-            { icon: '🧊', title: '3D로 접히는 모습 확인', desc: '처음 가공하는 초보자도 어느 쪽을 자르고 어디를 접는지 헷갈리지 않도록, 평평한 상태에서 실제 각도까지 접히는 3D 형상을 손가락으로 돌려 가며 확인할 수 있습니다.' },
+            { icon: '🧊', title: '3D로 접히는 모습 확인', desc: '처음 가공하는 초보자도 어느 쪽을 자르고 어디를 접는지 헷갈리지 않도록, 평평한 상태에서 실제 각도까지 접히는 3D 형상을 손가락으로 돌려 가며 확인할 수 있습니다. V-컷 폭, 레일 높이, 트레이 폭, 현재 꺾임 각도가 각 부위에 함께 표시됩니다.' },
             { icon: '🔩', title: '지지점 위치와 엘보 대안', desc: '꺾임부 양쪽 600mm 이내와 최대 지지 간격을 반영해 사선 구간 지지점 위치를 계산하고, 현장 가공 대신 기성 엘보를 쓸 경우 가장 가까운 규격과 맞춰야 할 진행 거리도 함께 보여줍니다.' },
           ],
           steps: [
@@ -455,7 +461,7 @@ export default function CableTrayCalcClient() {
           useCases: [
             { icon: '✂️', title: 'Rises and Drops', desc: 'For a 30° drop of 0.25 m from a ceiling rack, get where each bend needs a V-cut or a slit and the marks to make, such as 26.8 mm each side of center on a 100 mm rail.' },
             { icon: '↔️', title: 'Offsets Around Columns', desc: 'When the tray must shift sideways around a column or duct at the same level, get the angle from offset and run, the V-cut width in the bottom and the length of inner rail to remove.' },
-            { icon: '🧊', title: 'See the Fold in 3D', desc: 'Rotate a 3D model that folds from flat to the real angle, so new installers can see exactly which part is cut away and which part bends before touching the grinder.' },
+            { icon: '🧊', title: 'See the Fold in 3D', desc: 'Rotate a 3D model that folds from flat to the real angle, so new installers can see exactly which part is cut away and which part bends before touching the grinder. V-cut width, rail height, tray width and the current bend angle are labelled on the model.' },
             { icon: '🔩', title: 'Supports and Elbow Alternative', desc: 'Get support positions on the slope that respect a maximum span and the 600 mm rule at bend joints, plus the nearest factory elbow size and the run needed if you buy fittings instead.' },
           ],
           steps: [
