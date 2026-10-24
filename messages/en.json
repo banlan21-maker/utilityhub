@@ -134,7 +134,7 @@
     },
     "piping-calc": {
       "title": "Piping Calculator",
-      "desc": "Instant KS pipe spec lookup, slope drop calculation, and hydro test water volume. Mobile-first tool built for field workers."
+      "desc": "KS pipe tables, drain slope checks by size, hydro-test water and flow velocity sizing."
     },
     "elbow-offset": {
       "title": "Pipe Elbow Offset Calculator",
