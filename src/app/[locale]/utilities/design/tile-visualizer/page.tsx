@@ -1,5 +1,8 @@
-import type { Metadata } from "next";
-import TileVisualizerClient from "./TileVisualizerClient";
+import type { Metadata } from 'next';
+import TileVisualizerClient from './TileVisualizerClient';
+
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/design/tile-visualizer';
 
 export async function generateMetadata({
   params,
@@ -7,86 +10,86 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const isKo = locale === "ko";
+  const isKo = locale === 'ko';
   const title = isKo
-    ? "욕실 타일 시뮬레이터 | Utility Hub"
-    : "Bathroom Tile Visualizer | Utility Hub";
+    ? '욕실 타일 시뮬레이터 — 내 사진에 실제 크기·원근으로 타일 깔아 보기 | Utility Hub'
+    : 'Bathroom Tile Visualizer — Try Tiles on Your Photo at True Scale | Utility Hub';
   const description = isKo
-    ? "빈 방 사진에 가상으로 타일을 시공해보고, 가구(변기, 세면대)와 자연스럽게 합성되는 3D 원근감 타일 시뮬레이션을 제공합니다. 클라이언트 사이드 처리로 빠르고 안전합니다."
-    : "Virtually apply tiles to an empty room photo and experience a realistic 3D perspective simulation that blends naturally with furniture. Fast and secure client-side processing.";
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/design/tile-visualizer`;
-
+    ? '내 욕실 사진이나 샘플 욕실의 바닥·벽에 타일을 실제 크기와 원근으로 깔아 봅니다. 조명·그림자 유지, 줄눈 두께·색, 일자·엇갈림 배치, 필요한 타일 장수와 박스 수까지. 사진은 브라우저 안에서만 처리됩니다.'
+    : 'Lay tiles on your own bathroom photo or a sample room at true scale and perspective, keeping the lighting, with grout, offset layouts and tile counts. Processed in your browser.';
+  const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,
     description,
     alternates: {
       canonical,
       languages: {
-        ko: `https://www.theutilhub.com/ko/utilities/design/tile-visualizer`,
-        en: `https://www.theutilhub.com/en/utilities/design/tile-visualizer`,
-        'x-default': `https://www.theutilhub.com/ko/utilities/design/tile-visualizer`,
+        ko: `${BASE}/ko${PATH}`,
+        en: `${BASE}/en${PATH}`,
+        'x-default': `${BASE}/ko${PATH}`,
       },
     },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Utility Hub",
-      locale: isKo ? "ko_KR" : "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 
-const softwareSchema = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "욕실 타일 시뮬레이터",
-  "alternateName": "Bathroom Tile Visualizer",
-  "operatingSystem": "Web Browser",
-  "applicationCategory": "UtilitiesApplication",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "KRW"
+const SCHEMA_TEXT = {
+  ko: {
+    name: '욕실 타일 시뮬레이터',
+    description: '내 욕실 사진이나 샘플 욕실의 바닥·벽에 타일을 실제 크기와 원근으로 합성하고, 줄눈·배치를 바꿔 비교하며 필요한 타일 장수를 계산하는 무료 도구입니다.',
+    faqs: [
+      { q: '내 욕실 사진으로도 할 수 있나요?', a: '네. 사진을 올리고 바닥과 벽마다 네 모서리 점을 맞춘 뒤 실제 치수를 넣으면 그 원근대로 타일이 깔립니다. 앞에 있는 변기·세면대는 붓으로 칠해 원래 사진으로 남기고, 사진은 서버로 보내지 않습니다.' },
+      { q: '사진은 어떻게 찍어야 잘 맞나요?', a: '휴대폰 기본(1배) 렌즈로 정면 벽을 보고 수평을 맞춰 찍는 것이 좋습니다. 광각(0.5배)은 가장자리 직선이 휘어 면이 어긋납니다.' },
+      { q: '타일 크기는 정확하게 반영되나요?', a: '면의 네 모서리와 실제 가로·세로로 원근 변환을 계산하므로 치수를 바르게 넣으면 타일과 줄눈이 실제 비율로 그려집니다.' },
+      { q: '줄눈 색은 어떤 것이 많이 쓰이나요?', a: '밝은 타일에 화이트 줄눈은 이음매가 덜 보여 넓어 보이고, 그레이·차콜은 오염이 덜 보입니다. 바닥은 타일보다 한두 톤 어두운 줄눈을 많이 씁니다.' },
+      { q: '필요한 타일 장수는 어떻게 세나요?', a: '면 치수, 타일 크기, 줄눈, 배치로 실제로 깔리는 장수(잘라 쓰는 장 포함)를 세고 여유 5%와 1.44㎡ 박스 기준 박스 수를 냅니다.' },
+    ],
   },
-  "url": "https://www.theutilhub.com/ko/utilities/design/tile-visualizer",
-  "description": "빈 방 사진에 가상으로 타일을 시공해보고, 가구(변기, 세면대)와 자연스럽게 합성되는 3D 원근감 타일 시뮬레이션을 제공합니다. 클라이언트 사이드 처리로 빠르고 안전합니다."
-};
+  en: {
+    name: 'Bathroom Tile Visualizer',
+    description: 'Free tool to lay tiles on your own bathroom photo or a sample room at true scale and perspective, compare grout and layouts, and count tiles.',
+    faqs: [
+      { q: 'Can I use my own bathroom photo?', a: 'Yes. Align the four corners of each surface, enter real dimensions and paint over objects in front. Photos never leave your browser.' },
+      { q: 'How should I take the photo?', a: 'Use the 1× lens, face the back wall and keep the phone level; ultra-wide lenses bend lines near the edges.' },
+      { q: 'Is the tile size accurate?', a: 'With correct corners and dimensions, tiles and grout are drawn at true proportions.' },
+      { q: 'Which grout colour is common?', a: 'White hides joints on light tiles; grey or charcoal hides stains. Floors often use a darker grout.' },
+      { q: 'How are tiles counted?', a: 'Pieces laid on the surface including cut pieces, plus 5% spare, in 1.44 m² boxes.' },
+    ],
+  },
+} as const;
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "내가 가진 욕실 사진으로도 시뮬레이션 할 수 있나요?",
-      "acceptedAnswer": { "@type": "Answer", "text": "현재 버전은 최상의 3D 원근감 품질을 위해 사전 최적화된 욕실 사진과 전용 가구 마스크(투명 PNG)를 기본으로 제공하고 있습니다." }
-    },
-    {
-      "@type": "Question",
-      "name": "줄눈(메지) 색상과 두께를 변경할 수 있나요?",
-      "acceptedAnswer": { "@type": "Answer", "text": "네, 가능합니다. 구역 설정 패널에서 줄눈 두께를 픽셀 단위로 조정하고, 컬러 피커를 통해 원하는 줄눈 색상을 실시간으로 적용해 볼 수 있습니다." }
-    },
-    {
-      "@type": "Question",
-      "name": "생성된 타일 합성 이미지의 저작권은 어떻게 되나요?",
-      "acceptedAnswer": { "@type": "Answer", "text": "생성된 합성 이미지는 자유롭게 다운로드하여 상업적/비상업적 목적으로 활용하실 수 있습니다. 단, 업로드하는 타일 이미지 원본의 저작권은 유의하셔야 합니다." }
-    },
-    {
-      "@type": "Question",
-      "name": "이 툴의 결과를 공식 자료로 사용해도 되나요?",
-      "acceptedAnswer": { "@type": "Answer", "text": "이 툴의 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 직접 확인하시기 바랍니다." }
-    }
-  ]
-};
+export default async function TileVisualizerPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const text = locale === 'ko' ? SCHEMA_TEXT.ko : SCHEMA_TEXT.en;
 
-export default function TileVisualizerPage() {
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: text.name,
+    operatingSystem: 'Web Browser',
+    applicationCategory: 'DesignApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    url: `${BASE}/${locale}${PATH}`,
+    inLanguage: locale,
+    description: text.description,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: text.faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
