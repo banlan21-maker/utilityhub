@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import SolarMasterClient from './SolarMasterClient';
 
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/productivity/solar-master';
+
 export async function generateMetadata({
   params,
 }: {
@@ -9,90 +12,86 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? 'Solar Master — 태양광·태양열 발전량 ROI 계산기 | Utility Hub'
-    : 'Solar Master — Solar PV & Thermal ROI Calculator | Utility Hub';
+    ? '태양광 발전량·수익 계산기 — 지역별 발전시간, 전기요금 절감, 회수 기간, 태양열 온수 | Utility Hub'
+    : 'Solar PV & Thermal Savings Calculator — Output, Bill Savings, Payback | Utility Hub';
   const description = isKo
-    ? '태양광·태양열 발전량, 절감액, 손익분기점을 지역별 일조 데이터와 한전 누진세 구조로 정밀 계산합니다.'
-    : 'Calculate solar PV & thermal output, savings, and ROI payback using regional irradiance data and progressive electricity rates.';
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/productivity/solar-master`;
-
+    ? '지역별 일평균 발전시간(서울 3.2h, 전국 3.6h)과 한전 주택용 전기요금 전체(누진·부가세·전력기금·상계거래)로 태양광 발전량·절감액·회수 기간을 계산합니다. 태양열 온수는 급탕량 기준으로 가스·등유 절감액을 구합니다.'
+    : 'Estimate solar PV output, bill savings and payback with Korean regional yields and the full KEPCO residential tariff, plus solar hot-water fuel savings sized to demand.';
+  const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,
     description,
     alternates: {
       canonical,
       languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/productivity/solar-master',
-        en: 'https://www.theutilhub.com/en/utilities/productivity/solar-master',
-        'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/solar-master',
+        ko: `${BASE}/ko${PATH}`,
+        en: `${BASE}/en${PATH}`,
+        'x-default': `${BASE}/ko${PATH}`,
       },
     },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: 'Utility Hub',
-      locale: isKo ? 'ko_KR' : 'en_US',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
+    openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 
-const softwareSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Solar Master — 태양광·태양열 ROI 계산기',
-  alternateName: 'Solar Master — Solar PV & Thermal ROI Calculator',
-  operatingSystem: 'Web Browser',
-  applicationCategory: 'UtilitiesApplication',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-  url: 'https://www.theutilhub.com/ko/utilities/productivity/solar-master',
-  description: '태양광·태양열 발전량, 절감액, 손익분기점을 지역별 일조 데이터와 한전 누진세 구조로 정밀 계산합니다.',
-};
+const SCHEMA_TEXT = {
+  ko: {
+    name: '태양광·태양열 발전량·수익 계산기',
+    description: '지역별 발전시간과 한전 주택용 전기요금 전체로 태양광 발전량·절감액·회수 기간을, 급탕량 기준으로 태양열 온수 절감액을 계산하는 무료 도구입니다.',
+    faqs: [
+      { q: '여름보다 봄에 발전량이 더 많은 이유는 무엇인가요?', a: '여름은 장마로 흐린 날이 많고 패널 온도가 올라 출력이 1℃당 약 0.4% 줄어, 맑고 선선한 4~5월에 발전량이 가장 많은 경우가 많습니다.' },
+      { q: '전기요금 절감액은 어떻게 계산하나요?', a: '태양광 전후 월 사용량으로 한전 주택용 저압 요금을 각각 계산해 차이를 봅니다. 누진 구간, 기본요금, 기후환경·연료비조정요금, 부가세, 전력산업기반기금이 모두 들어갑니다.' },
+      { q: '보조금은 얼마나 받을 수 있나요?', a: '주택지원사업과 지자체 사업은 해마다·지역마다 다르므로, 모집 공고나 계약서에서 확인한 금액을 넣도록 했습니다.' },
+      { q: '태양열 집열판은 클수록 좋은가요?', a: '아닙니다. 하루 쓰는 온수 열량보다 많이 모은 열은 버려집니다. 하루 200L를 15℃에서 45℃로 데우는 데는 약 25MJ가 필요합니다.' },
+    ],
+  },
+  en: {
+    name: 'Solar PV & Thermal Savings Calculator',
+    description: 'Free tool for solar PV output, bill savings and payback with Korean regional yields and the full residential tariff, plus solar hot-water savings.',
+    faqs: [
+      { q: 'Why is spring better than summer?', a: 'Monsoon clouds and hot panels (about −0.4% per °C) reduce summer output, so April and May often produce the most.' },
+      { q: 'How are bill savings calculated?', a: 'The full residential bill is calculated with and without solar each month, including tiers, charges, VAT and the power fund.' },
+      { q: 'What about subsidies?', a: 'They vary by year and municipality, so enter only a confirmed amount.' },
+      { q: 'Is a bigger collector better?', a: 'No — heat beyond daily demand is wasted; 200 L from 15 to 45 °C needs about 25 MJ a day.' },
+    ],
+  },
+} as const;
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: '지역별 일조시간은 어떤 데이터 기준인가요?',
-      acceptedAnswer: { '@type': 'Answer', text: '기상청 공공데이터 기준 도시별 연평균 최대 일조시간(피크선레이시간)을 사용합니다.' },
-    },
-    {
-      '@type': 'Question',
-      name: '여름에 발전이 더 많지 않나요?',
-      acceptedAnswer: { '@type': 'Answer', text: '일조량은 여름이 많지만 패널이 뜨거워지면 효율이 떨어집니다. 온도 손실(-15%)과 월별 보정계수를 동시 반영하여 봄(4~5월)이 가장 효율이 높게 나옵니다.' },
-    },
-    {
-      '@type': 'Question',
-      name: '정부 보조금 30%는 실제로 받을 수 있나요?',
-      acceptedAnswer: { '@type': 'Answer', text: '주택용 태양광 보조금은 지자체·연도별로 다릅니다. 30%는 참고용 추정치이며, 정확한 금액은 한국에너지공단 또는 해당 지자체에 확인하세요.' },
-    },
-    {
-      '@type': 'Question',
-      name: '이 결과를 공식 자료로 사용해도 되나요?',
-      acceptedAnswer: { '@type': 'Answer', text: '본 계산 결과는 이론적 추정치로 참고용입니다. 실제 발전량은 기상·음영·시공 품질에 따라 달라집니다. 투자 결정 전 반드시 전문 시공사와 상담하세요.' },
-    },
-  ],
-};
+export default async function SolarMasterPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const text = locale === 'ko' ? SCHEMA_TEXT.ko : SCHEMA_TEXT.en;
 
-export default function SolarMasterPage() {
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: text.name,
+    operatingSystem: 'Web Browser',
+    applicationCategory: 'UtilitiesApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    url: `${BASE}/${locale}${PATH}`,
+    inLanguage: locale,
+    description: text.description,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: text.faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <SolarMasterClient />
     </>
   );
