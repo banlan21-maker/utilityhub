@@ -137,8 +137,8 @@
       "desc": "KS pipe tables, drain slope checks by size, hydro-test water and flow velocity sizing."
     },
     "elbow-offset": {
-      "title": "Pipe Elbow Offset Calculator",
-      "desc": "Instantly calculate simple/rolling offset and pipe cut length using ASME B16.9 specs. Supports 90°/45° long & short radius elbows."
+      "title": "Pipe Offset & Cut Length Calculator",
+      "desc": "Pipe cut lengths for offsets and centre-to-centre runs with KS butt-weld, threaded and ASME elbow allowances."
     },
     "construction-dictionary": {
       "title": "Construction Site Glossary",

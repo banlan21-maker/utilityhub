@@ -1,556 +1,420 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
-import { CornerDownRight } from 'lucide-react';
+import { useId, useState } from 'react';
+import { useLocale } from 'next-intl';
+import { CornerDownRight, Copy } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
-import s from './elbow-offset.module.css';
+import {
+  SIZES, fittingsFor, allowance, offsetCut, rollingOffset, centerToCut, FACTOR_TABLE, allowanceTable,
+  type Standard, type Fitting, type Allowance,
+} from '@/lib/elbowOffset';
+import s from './elbow.module.css';
 
-// ── ASME B16.9 데이터 (LR Take-out 직접 조회) ───────────────────
-type Size = '15A' | '20A' | '25A' | '32A' | '40A' | '50A' | '65A' | '80A' | '100A' | '125A' | '150A' | '200A';
-const SIZES: Size[] = ['15A','20A','25A','32A','40A','50A','65A','80A','100A','125A','150A','200A'];
+type Mode = 'offset' | 'rolling' | 'cut';
+type End = 'none' | '90L' | '90S' | '45L';
+const PAGE_URL = 'https://www.theutilhub.com/{locale}/utilities/utility/elbow-offset';
 
-// 중심~끝단 치수(mm). LR90 = A(1.5D), LR45 = B, SR90 = A(1.0D, NPS 1" 이상만 규격 존재)
-interface SizeSpec { nps: number; od: number; LR90: number; LR45: number; SR90: number | null; }
-const SIZE_DATA: Record<Size, SizeSpec> = {
-  '15A':  { nps: 15,  od: 21.7,  LR90: 38,  LR45: 16,  SR90: null },
-  '20A':  { nps: 20,  od: 27.2,  LR90: 38,  LR45: 19,  SR90: null },
-  '25A':  { nps: 25,  od: 34.0,  LR90: 38,  LR45: 22,  SR90: 25  },
-  '32A':  { nps: 32,  od: 42.7,  LR90: 48,  LR45: 25,  SR90: 32  },
-  '40A':  { nps: 40,  od: 48.6,  LR90: 57,  LR45: 29,  SR90: 38  },
-  '50A':  { nps: 50,  od: 60.5,  LR90: 76,  LR45: 35,  SR90: 51  },
-  '65A':  { nps: 65,  od: 76.3,  LR90: 95,  LR45: 44,  SR90: 64  },
-  '80A':  { nps: 80,  od: 89.1,  LR90: 114, LR45: 51,  SR90: 76  },
-  '100A': { nps: 100, od: 114.3, LR90: 152, LR45: 64,  SR90: 102 },
-  '125A': { nps: 125, od: 139.8, LR90: 190, LR45: 79,  SR90: 127 },
-  '150A': { nps: 150, od: 165.2, LR90: 229, LR45: 95,  SR90: 152 },
-  '200A': { nps: 200, od: 216.3, LR90: 305, LR45: 127, SR90: 203 },
+const dec = (raw: string) => {
+  const [int, ...d] = raw.replace(/[^0-9.]/g, '').split('.');
+  return d.length ? `${int}.${d.join('').slice(0, 2)}` : int;
 };
-
-// ASME B16.9에 45° 단반경 엘보는 없으므로 제외
-type ElbowType = 'LR90' | 'SR90' | 'LR45';
-const ELBOW_TYPES: ElbowType[] = ['LR90', 'SR90', 'LR45'];
-
-const isElbowAvailable = (size: Size, elbow: ElbowType) => elbow !== 'SR90' || SIZE_DATA[size].SR90 !== null;
-
-function getTakeout(size: Size, elbow: ElbowType): number {
-  const d = SIZE_DATA[size];
-  if (elbow === 'LR90') return d.LR90;
-  if (elbow === 'LR45') return d.LR45;
-  return d.SR90 ?? d.LR90;
-}
-
-type Mode = 'simple' | 'rolling' | 'cut';
-
-const SQRT2 = Math.SQRT2; // 1.41421356...
+const num = (v: string) => Number(v) || 0;
 
 export default function ElbowOffsetClient() {
-  const t = useTranslations('ElbowOffset');
   const locale = useLocale();
   const isKo = locale === 'ko';
+  const L = (ko: string, en: string) => (isKo ? ko : en);
+  const f1 = (n: number, d = 1) => n.toLocaleString(isKo ? 'ko-KR' : 'en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
 
-  const [size, setSize] = useState<Size>('50A');
-  const [elbow, setElbow] = useState<ElbowType>('LR90');
-  const [mode, setMode] = useState<Mode>('simple');
+  const [std, setStd] = useState<Standard>('ks');
+  const [size, setSize] = useState('50A');
+  const [mode, setMode] = useState<Mode>('offset');
+  const [fitting, setFitting] = useState<Fitting>('45L');
+  const [cutAngleText, setCutAngleText] = useState('30');
+  const [offsetText, setOffsetText] = useState('300');
+  const [hText, setHText] = useState('200');
+  const [vText, setVText] = useState('150');
+  const [ccText, setCcText] = useState('1000');
+  const [endA, setEndA] = useState<End>('90L');
+  const [endB, setEndB] = useState<End>('90L');
+  const [gap, setGap] = useState(0);
+  const [copied, setCopied] = useState('');
 
-  // 입력값 (mode 별로 유지)
-  const [offset, setOffset] = useState('');           // mode: simple
-  const [horiz, setHoriz] = useState('');             // mode: rolling
-  const [vert, setVert] = useState('');               // mode: rolling
-  const [distance, setDistance] = useState('');       // mode: cut
-  const [connection, setConnection] = useState<'both' | 'one'>('both');
+  const STD_TEXT: Record<Standard, [string, string, string, string]> = {
+    ks: ['KS 용접 엘보', 'KS B 1522 맞대기 용접', 'KS butt-weld', 'KS B 1522'],
+    thread: ['KS 나사 엘보', 'KS B 1533 가단주철', 'KS threaded', 'KS B 1533 malleable'],
+    asme: ['ASME 용접 엘보', 'B16.9 플랜트용', 'ASME butt-weld', 'B16.9'],
+  };
+  const FIT_TEXT: Record<Fitting, string> = {
+    '90L': L('90° 장반경', '90° long radius'), '90S': L('90° 단반경', '90° short radius'),
+    '45L': L('45° 장반경', '45° long radius'), cut: L('엘보 잘라 쓰기 (각도 지정)', 'Cut-down elbow (any angle)'),
+  };
+  const endName = (e: End) => (e === 'none' ? L('없음 (관 끝)', 'None (pipe end)') : FIT_TEXT[e]);
 
-  const [copied, setCopied] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
+  // 규격·호칭이 바뀌면 쓸 수 없는 엘보를 정리한다
+  const fits = fittingsFor(std, size);
+  const pickStd = (st: Standard) => {
+    setStd(st);
+    if (!SIZES[st].includes(size)) setSize(SIZES[st].includes('50A') ? '50A' : SIZES[st][0]);
+    if (st === 'thread') { setFitting('90L'); setEndA(e => (e === 'none' ? e : '90L')); setEndB(e => (e === 'none' ? e : '90L')); }
+  };
+  const fit: Fitting = fits.includes(fitting) ? fitting : fits[0] ?? '90L';
+  const cutAngle = num(cutAngleText);
+  const al = allowance(std, size, fit, cutAngle);
+  const endAl = (e: End) => (e === 'none' ? null : allowance(std, size, fittingsFor(std, size).includes(e) ? e : '90L'));
+  const endOptions: End[] = ['none', ...(fittingsFor(std, size).filter(f => f !== 'cut') as End[])];
 
+  const roll = mode === 'rolling' ? rollingOffset(num(hText), num(vText)) : null;
+  const offsetValue = mode === 'offset' ? num(offsetText) : roll?.trueOffset ?? 0;
+  const res = mode !== 'cut' && al ? offsetCut(offsetValue, al, std, gap) : null;
+  const cc = mode === 'cut' ? centerToCut(num(ccText), [endAl(endA), endAl(endB)], std, gap) : null;
+  const cutValue = res?.cut ?? cc?.cut ?? null;
+  const tooShort = cutValue !== null && cutValue <= 0;
 
-  // 모드 B(rolling) 선택 시 90°엘보 → 45°LR 자동 변경 + 토스트
-  useEffect(() => {
-    if (mode !== 'rolling') return;
-    if (elbow === 'LR90' || elbow === 'SR90') {
-      setElbow('LR45');
-      setToast(t('warn_rolling_auto'));
-      const tm = setTimeout(() => setToast(null), 2800);
-      return () => clearTimeout(tm);
-    }
-  }, [mode, elbow, t]);
-
-  const takeout = useMemo(() => getTakeout(size, elbow), [size, elbow]);
-
-  // ── 계산 결과 ────────────────────────────────────────────
-  const calc = useMemo(() => {
-    const TO = takeout;
-
-    if (mode === 'simple') {
-      const O = parseFloat(offset);
-      if (!O || O <= 0) return null;
-
-      const is45 = elbow === 'LR45';
-      const run = is45 ? O * SQRT2 : O;
-      const cut = run - TO * 2;
-      const minRequired = TO * 2;
-
-      return {
-        mode,
-        valid: cut > 0,
-        cut: Math.round(cut * 10) / 10,
-        TO,
-        run: Math.round(run * 10) / 10,
-        diagonal: null as number | null,
-        angle: null as number | null,
-        minRequired: Math.round(minRequired * 10) / 10,
-      };
-    }
-
-    if (mode === 'rolling') {
-      const X = parseFloat(horiz);
-      const Y = parseFloat(vert);
-      if (!X || !Y || X <= 0 || Y <= 0) return null;
-
-      const diagonal = Math.sqrt(X * X + Y * Y);
-      const travel = diagonal * SQRT2;
-      const cut = travel - TO * 2;
-      const angle = (Math.atan2(Y, X) * 180) / Math.PI;
-      const minRequired = (TO * 2) / SQRT2;
-
-      return {
-        mode,
-        valid: cut > 0,
-        cut: Math.round(cut * 10) / 10,
-        TO,
-        run: Math.round(travel * 10) / 10,
-        diagonal: Math.round(diagonal * 10) / 10,
-        angle: Math.round(angle * 10) / 10,
-        minRequired: Math.round(minRequired * 10) / 10,
-      };
-    }
-
-    // cut
-    const D = parseFloat(distance);
-    if (!D || D <= 0) return null;
-    const cut = connection === 'both' ? D - TO * 2 : D - TO;
-    const minRequired = connection === 'both' ? TO * 2 : TO;
-    return {
-      mode,
-      valid: cut > 0,
-      cut: Math.round(cut * 10) / 10,
-      TO,
-      run: null as number | null,
-      diagonal: null as number | null,
-      angle: null as number | null,
-      minRequired: Math.round(minRequired * 10) / 10,
-    };
-  }, [mode, elbow, takeout, offset, horiz, vert, distance, connection]);
-
-  const margin5 = calc?.cut ? Math.round(calc.cut * 1.05 * 10) / 10 : 0;
-  const margin10 = calc?.cut ? Math.round(calc.cut * 1.10 * 10) / 10 : 0;
-
-  // ── 결과 복사 ───────────────────────────────────────────
-  const handleCopy = () => {
-    if (!calc || !calc.valid) return;
-    const summary = `${size} · ${t(`elbow_${elbow}` as 'elbow_LR90')} · ${t(`mode_${mode}` as 'mode_simple')}`;
-    const lines: string[] = [t('title'), summary, '---'];
-    lines.push(`${t('result_cut_length')}: ${calc.cut} mm`);
-    lines.push(`${t('result_takeout')}: ${calc.TO} mm`);
-    if (calc.run != null) lines.push(`${mode === 'rolling' ? t('result_travel') : t('result_run')}: ${calc.run} mm`);
-    if (calc.diagonal != null) lines.push(`${t('result_diagonal')}: ${calc.diagonal} mm`);
-    if (calc.angle != null) lines.push(`${t('result_angle')}: ${calc.angle}°`);
-    lines.push(`${t('result_margin_5')}: ${margin5} mm`);
-    lines.push(`${t('result_margin_10')}: ${margin10} mm`);
-    try {
-      navigator.clipboard.writeText(lines.join('\n'));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setToast(t('copy_failed'));
-      setTimeout(() => setToast(null), 2000);
-    }
+  const copy = async () => {
+    if (cutValue === null || tooShort) return;
+    const head = `${STD_TEXT[std][isKo ? 0 : 2]} ${size}`;
+    const body = res
+      ? L(`${FIT_TEXT[fit]}${fit === 'cut' ? ` ${cutAngle}°` : ''}, 옵셋 ${f1(offsetValue)}mm\n빗변(심-심) ${f1(res.travel)} / 전진 ${f1(res.run)} / 엘보값 ${f1(res.allowance)} × 2${res.gapTotal ? ` / 갭 ${f1(res.gapTotal)}` : ''}\n절단 길이 ${f1(cutValue)}mm`,
+        `${FIT_TEXT[fit]}, offset ${f1(offsetValue)} mm\nTravel ${f1(res.travel)} / run ${f1(res.run)} / allowance ${f1(res.allowance)} × 2\nCut ${f1(cutValue)} mm`)
+      : L(`심-심 ${f1(cc!.cc)}mm − 엘보값 ${f1(cc!.allow)}${cc!.gapTotal ? ` − 갭 ${f1(cc!.gapTotal)}` : ''}\n절단 길이 ${f1(cutValue)}mm`,
+        `C-C ${f1(cc!.cc)} − ${f1(cc!.allow)}\nCut ${f1(cutValue)} mm`);
+    try { await navigator.clipboard.writeText(`${head}\n${body}\n${PAGE_URL.replace('{locale}', locale)}`); setCopied(L('✓ 복사했습니다', '✓ Copied')); }
+    catch { setCopied(L('복사하지 못했습니다', 'Could not copy')); }
+    setTimeout(() => setCopied(''), 2000);
   };
 
-  const handleInput = (setter: (v: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = e.target.value;
-    // 숫자 + 소수점만 허용
-    if (v === '' || /^[0-9]*\.?[0-9]*$/.test(v)) setter(v);
+  const field = (id: string, label: string, sub: string, value: string, set: (v: string) => void, unit = 'mm') => (
+    <div className={s.field}>
+      <label className={s.field_label} htmlFor={id}>{label}{sub && <small>{sub}</small>}</label>
+      <div className={s.input_wrap}>
+        <input id={id} className={s.input} inputMode="decimal" value={value} onChange={e => set(dec(e.target.value))} />
+        <span className={s.unit}>{unit}</span>
+      </div>
+    </div>
+  );
+  const chip = <T extends string | number>(cur: T, val: T, set: (v: T) => void, label: string, sub?: string) => (
+    <button key={String(val)} type="button" aria-pressed={cur === val} className={`${s.chip} ${cur === val ? s.chip_on : ''}`} onClick={() => set(val)}>
+      {label}{sub && <small>{sub}</small>}
+    </button>
+  );
+
+  // ── 그림: 옵셋(실제 비율)
+  const markers = (
+    <defs>
+      <marker id={`a${uid}`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+        <path d="M0,0.8 L7,4 L0,7.2 Z" className={s.sv_arrow} />
+      </marker>
+    </defs>
+  );
+  const arrow = `url(#a${uid})`;
+
+  const offsetSvg = () => {
+    if (!res || !al) return null;
+    const th = (res.angle * Math.PI) / 180;
+    // 오른쪽 90px은 옵셋 치수 글자 자리
+    const W = 210, H = 140, lead = 40;
+    const k = Math.min(H / offsetValue, res.run > 0 ? W / res.run : Infinity);
+    const runPx = res.run * k, offPx = offsetValue * k;
+    const x1 = 10 + lead + (W - runPx) / 2, y1 = 34;
+    const x2 = x1 + runPx, y2 = y1 + offPx;
+    const ux = Math.cos(th), uy = Math.sin(th);
+    const aPx = Math.max(res.allowance * k, 5);
+    const ax1 = x1 + ux * aPx, ay1 = y1 + uy * aPx, ax2 = x2 - ux * aPx, ay2 = y2 - uy * aPx;
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    return (
+      <svg viewBox="0 0 400 230" role="img" aria-label={L('옵셋 배관 그림', 'Offset sketch')}>
+        {markers}
+        <polyline points={`${x1 - lead},${y1} ${x1},${y1} ${x2},${y2} ${x2 + lead},${y2}`} className={s.sv_pipe} />
+        <line x1={x1} y1={y1} x2={ax1} y2={ay1} className={s.sv_allow} />
+        <line x1={ax2} y1={ay2} x2={x2} y2={y2} className={s.sv_allow} />
+        <line x1={ax1} y1={ay1} x2={ax2} y2={ay2} className={s.sv_cut} />
+        <circle cx={x1} cy={y1} r={4} className={s.sv_dot} />
+        <circle cx={x2} cy={y2} r={4} className={s.sv_dot} />
+        {/* 옵셋 */}
+        <line x1={x2 + lead + 4} y1={y1} x2={x2 + lead + 22} y2={y1} className={s.sv_ext} />
+        <line x1={x2 + lead + 18} y1={y1} x2={x2 + lead + 18} y2={y2} className={s.sv_dim} markerStart={arrow} markerEnd={arrow} />
+        <text x={x2 + lead + 22} y={(y1 + y2) / 2 + 4} className={s.sv_text}>{L('옵셋', 'Offset')} {f1(offsetValue, 0)}</text>
+        {/* 전진 */}
+        {res.run > 0.5 && <>
+          <line x1={x1} y1={y2 + 10} x2={x1} y2={y2 + 30} className={s.sv_ext} />
+          <line x1={x1} y1={y2 + 26} x2={x2} y2={y2 + 26} className={s.sv_dim} markerStart={arrow} markerEnd={arrow} />
+          <text x={(x1 + x2) / 2} y={y2 + 42} textAnchor="middle" className={s.sv_text}>{L('전진', 'Run')} {f1(res.run, 0)}</text>
+        </>}
+        {/* 빗변·절단 */}
+        <text x={mx + 10} y={my - 8} className={s.sv_text_cut}>✂ {f1(res.cut)}</text>
+        <text x={mx + 10} y={my + 8} className={s.sv_muted}>{L('빗변(심-심)', 'Travel')} {f1(res.travel, 0)}</text>
+        <text x={x1 - lead} y={y1 - 12} className={s.sv_muted}>{L('엘보 중심', 'Elbow centre')}</text>
+      </svg>
+    );
   };
 
+  const rollSvg = () => {
+    if (!roll) return null;
+    const Hm = num(hText), Vm = num(vText);
+    const k = Math.min(150 / Math.max(Hm, 1), 110 / Math.max(Vm, 1));
+    const x0 = 60, y0 = 140, xh = x0 + Hm * k, yv = y0 - Vm * k;
+    return (
+      <svg viewBox="0 0 400 170" role="img" aria-label={L('단면에서 본 옵셋', 'End view of the roll')}>
+        {markers}
+        <polyline points={`${x0},${y0} ${xh},${y0} ${xh},${yv}`} className={s.sv_ext} fill="none" />
+        <line x1={x0} y1={y0} x2={xh} y2={yv} className={s.sv_cut} />
+        <circle cx={x0} cy={y0} r={4} className={s.sv_dot} /><circle cx={xh} cy={yv} r={4} className={s.sv_dot} />
+        <text x={(x0 + xh) / 2} y={y0 + 18} textAnchor="middle" className={s.sv_text}>{L('가로', 'Horizontal')} {f1(Hm, 0)}</text>
+        <text x={xh + 8} y={(y0 + yv) / 2 + 4} className={s.sv_text}>{L('세로', 'Vertical')} {f1(Vm, 0)}</text>
+        <text x={(x0 + xh) / 2 - 10} y={(y0 + yv) / 2 - 8} textAnchor="end" className={s.sv_text_cut}>{L('실제 옵셋', 'True offset')} {f1(roll.trueOffset, 0)}</text>
+        <text x={x0 + 26} y={y0 - 6} className={s.sv_muted}>{f1(roll.rollAngle)}°</text>
+        <text x={240} y={30} className={s.sv_muted}>{L('배관 진행 방향에서 본 단면', 'Looking along the pipe')}</text>
+      </svg>
+    );
+  };
+
+  const ccSvg = () => {
+    if (!cc) return null;
+    const a = endAl(endA), b = endAl(endB);
+    const x1 = 40, x2 = 360, y = 90;
+    const k = (x2 - x1) / cc.cc;
+    const aPx = a ? Math.max(a.value * k, 6) : 0, bPx = b ? Math.max(b.value * k, 6) : 0;
+    return (
+      <svg viewBox="0 0 400 150" role="img" aria-label={L('심-심 치수 그림', 'Centre-to-centre sketch')}>
+        {markers}
+        <line x1={x1} y1={y} x2={x2} y2={y} className={s.sv_pipe} />
+        {a && <line x1={x1} y1={y} x2={x1 + aPx} y2={y} className={s.sv_allow} />}
+        {b && <line x1={x2 - bPx} y1={y} x2={x2} y2={y} className={s.sv_allow} />}
+        <line x1={x1 + aPx} y1={y} x2={x2 - bPx} y2={y} className={s.sv_cut} />
+        {a && <circle cx={x1} cy={y} r={4} className={s.sv_dot} />}
+        {b && <circle cx={x2} cy={y} r={4} className={s.sv_dot} />}
+        <line x1={x1} y1={40} x2={x2} y2={40} className={s.sv_dim} markerStart={arrow} markerEnd={arrow} />
+        <text x={200} y={34} textAnchor="middle" className={s.sv_text}>{L('심-심', 'C-C')} {f1(cc.cc, 0)}</text>
+        <text x={200} y={120} textAnchor="middle" className={s.sv_text_cut}>✂ {f1(cc.cut)}</text>
+        <text x={x1} y={138} className={s.sv_muted}>{endName(endA)}</text>
+        <text x={x2} y={138} textAnchor="end" className={s.sv_muted}>{endName(endB)}</text>
+      </svg>
+    );
+  };
+
+  const allowanceRow = (label: string, a: Allowance | null) => a && (
+    <div className={s.row}>
+      <span>{label}
+        <small>{std === 'thread' && a.centerToEnd ? L(`중심~끝 ${a.centerToEnd} − 나사 물림 ${a.engagement}`, `centre-to-end ${a.centerToEnd} − engagement ${a.engagement}`)
+          : a.radius ? L(`굽힘 반경 ${a.radius} × tan(${a.angle}°/2)`, `radius ${a.radius} × tan(${a.angle}°/2)`) : L('표준 치수표 값', 'standard table value')}</small></span>
+      <strong>{f1(a.value)} mm</strong>
+    </div>
+  );
+
+  const table = allowanceTable(std);
+  const titleStr = L('배관 옵셋·절단 길이 계산기', 'Pipe Offset & Cut Length Calculator');
+  const descStr = L('엘보값(뺄길이)을 자동으로 빼서 옵셋·45도·롤링 옵셋과 심-심 치수의 파이프 절단 길이를 계산합니다. KS 용접·나사 엘보와 ASME 엘보를 지원합니다.', 'Cut lengths for offsets, 45° and rolling offsets and centre-to-centre runs, with elbow allowances for KS butt-weld, KS threaded and ASME fittings.');
 
   return (
     <div className={s.container}>
       <NavigationActions />
 
       <header className={s.header}>
-        <div style={{
-          display: 'inline-flex', padding: '1rem', background: 'white',
-          borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1rem',
-        }}>
-          <CornerDownRight size={36} color="#8b5cf6" />
-        </div>
-        <h1 className={s.title}>{t('title')}</h1>
-        <p className={s.subtitle}>{t('subtitle')}</p>
+        <div className={s.icon_wrap}><CornerDownRight size={40} /></div>
+        <h1 className={s.title}>{titleStr}</h1>
+        <p className={s.subtitle}>{descStr}</p>
       </header>
 
-      {/* STEP 1: 호칭경 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('step1_title')}</div>
-        <div className={s.size_grid}>
-          {SIZES.map((sz) => (
-            <button
-              key={sz}
-              className={`${s.size_btn} ${size === sz ? s.size_btn_active : ''}`}
-              onClick={() => {
-                setSize(sz);
-                if (!isElbowAvailable(sz, elbow)) setElbow('LR90');
-              }}
-              aria-label={sz}
-            >
-              {sz}
-            </button>
-          ))}
-        </div>
+      <section className={s.card}>
+        <h2 className={s.card_title}>{L('1. 엘보 규격과 호칭', '1. Fitting standard and size')}</h2>
+        <div className={s.chips}>{(['ks', 'thread', 'asme'] as Standard[]).map(st => chip(std, st, pickStd, STD_TEXT[st][isKo ? 0 : 2], STD_TEXT[st][isKo ? 1 : 3]))}</div>
+        <div className={s.size_grid}>{SIZES[std].map(z => chip(size, z, setSize, z))}</div>
+        <p className={s.hint}>{std === 'thread'
+          ? L('나사 엘보는 중심~끝 치수에서 파이프가 나사로 물려 들어가는 길이를 뺀 값을 엘보값으로 씁니다(90° 엘보 기준).', 'Threaded allowance = centre-to-end minus thread engagement (90° elbows).')
+          : std === 'asme' ? L('ASME B16.9은 외경이 KS와 다른 미국 규격 배관(플랜트·ASTM 관)용입니다. 국내 일반 현장은 KS 용접 엘보를 고르세요.', 'ASME B16.9 is for ASME pipe; Korean building work normally uses KS fittings.')
+            : L('국내에서 쓰는 KS B 1522(JIS B 2312) 맞대기 용접 엘보 치수입니다. 45°는 ASME와 크게 달라 50A에서 엘보 1개당 3.4mm 차이가 납니다.', 'KS B 1522 (JIS B 2312) butt-weld fittings used in Korea. 45° values differ from ASME by 3.4 mm per elbow at 50A.')}</p>
       </section>
 
-      {/* STEP 2: 엘보 종류 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('step2_title')}</div>
-        <div className={s.elbow_grid}>
-          {ELBOW_TYPES.map((et) => (
-            <button
-              key={et}
-              className={`${s.elbow_card} ${elbow === et ? s.elbow_card_active : ''}`}
-              onClick={() => setElbow(et)}
-              disabled={!isElbowAvailable(size, et)}
-              style={isElbowAvailable(size, et) ? undefined : { opacity: 0.4, cursor: 'not-allowed' }}
-              aria-label={t(`elbow_${et}` as 'elbow_LR90')}
-            >
-              <span className={s.elbow_name}>{t(`elbow_${et}` as 'elbow_LR90')}</span>
-              <span className={s.elbow_desc}>{t(`elbow_${et}_desc` as 'elbow_LR90_desc')}</span>
-            </button>
-          ))}
-        </div>
-        {!isElbowAvailable(size, 'SR90') && (
-          <p className={s.elbow_desc} style={{ marginTop: '0.5rem' }}>
-            {isKo ? '단반경(SR) 엘보는 ASME B16.9 규격상 25A(1") 이상만 있습니다.' : 'Short-radius (SR) elbows exist only from NPS 1" (25A) in ASME B16.9.'}
-          </p>
-        )}
-      </section>
+      <div className={s.tabs} role="tablist">
+        {([
+          ['offset', L('옵셋', 'Offset'), L('한 방향으로 비켜 가기', 'one direction')],
+          ['rolling', L('가로+세로 옵셋', 'Rolling offset'), L('대각선으로 비켜 가기', 'two directions')],
+          ['cut', L('심-심 → 절단 길이', 'C-C → cut'), L('두 이음쇠 사이', 'between fittings')],
+        ] as [Mode, string, string][]).map(([k, t, sub]) => (
+          <button key={k} type="button" role="tab" aria-selected={mode === k} className={`${s.tab} ${mode === k ? s.tab_on : ''}`} onClick={() => setMode(k)}>
+            {t}<small>{sub}</small>
+          </button>
+        ))}
+      </div>
 
-      {/* STEP 3: 모드 선택 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('step3_title')}</div>
-        <div className={s.mode_grid}>
-          {(['simple', 'rolling', 'cut'] as Mode[]).map((m) => (
-            <button
-              key={m}
-              className={`${s.mode_btn} ${mode === m ? s.mode_btn_active : ''}`}
-              onClick={() => setMode(m)}
-              aria-label={t(`mode_${m}` as 'mode_simple')}
-            >
-              <span className={s.mode_label}>{t(`mode_${m}` as 'mode_simple')}</span>
-              <span className={s.mode_subtext}>{t(`mode_${m}_desc` as 'mode_simple_desc')}</span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* STEP 4: 수치 입력 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('step4_title')}</div>
-
-        {mode === 'simple' && (
-          <div className={s.input_group}>
-            <label className={s.input_label}>{t('input_offset')}</label>
-            <span className={s.input_hint}>{t('input_offset_hint')}</span>
-            <div className={s.input_wrap}>
-              <input
-                type="text"
-                inputMode="decimal"
-                className={s.input}
-                value={offset}
-                onChange={handleInput(setOffset)}
-                placeholder="300"
-                aria-label={t('input_offset')}
-              />
-              <span className={s.input_suffix}>mm</span>
-            </div>
-          </div>
-        )}
-
-        {mode === 'rolling' && (
+      <section className={s.card}>
+        <h2 className={s.card_title}>{L('2. 치수 입력', '2. Dimensions')}</h2>
+        {mode !== 'cut' ? (
           <>
-            <p className={s.input_hint} style={{ marginBottom: '0.85rem' }}>{t('input_rolling_hint')}</p>
-            <div className={s.input_group}>
-              <label className={s.input_label}>{t('input_horizontal')}</label>
-              <div className={s.input_wrap}>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className={s.input}
-                  value={horiz}
-                  onChange={handleInput(setHoriz)}
-                  placeholder="200"
-                  aria-label={t('input_horizontal')}
-                />
-                <span className={s.input_suffix}>mm</span>
-              </div>
+            <div>
+              <span className={s.label}>{L('엘보 종류 (양쪽 같은 엘보)', 'Elbow (same at both ends)')}</span>
+              <div className={s.chips}>{fits.map(fv => chip(fit, fv, setFitting, FIT_TEXT[fv]))}</div>
             </div>
-            <div className={s.input_group}>
-              <label className={s.input_label}>{t('input_vertical')}</label>
-              <div className={s.input_wrap}>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className={s.input}
-                  value={vert}
-                  onChange={handleInput(setVert)}
-                  placeholder="150"
-                  aria-label={t('input_vertical')}
-                />
-                <span className={s.input_suffix}>mm</span>
+            {fit === 'cut' && (
+              <div>
+                <div className={s.chips}>{['11.25', '22.5', '30', '60'].map(a => chip(cutAngleText, a, setCutAngleText, `${a}°`))}</div>
+                <div style={{ maxWidth: 220, marginTop: '0.5rem' }}>{field('eo-ang', L('엘보 각도', 'Elbow angle'), L('90° 장반경 엘보를 잘라 만든 각도', 'cut from a 90° long-radius elbow'), cutAngleText, setCutAngleText, '°')}</div>
               </div>
+            )}
+            {mode === 'offset'
+              ? field('eo-off', L('옵셋 (비켜 갈 거리)', 'Offset'), L('두 배관 중심선 사이 거리', 'centreline to centreline'), offsetText, setOffsetText)
+              : (
+                <div className={s.grid2}>
+                  {field('eo-h', L('가로 옵셋', 'Horizontal offset'), L('옆으로 비켜 갈 거리', 'sideways'), hText, setHText)}
+                  {field('eo-v', L('세로 옵셋', 'Vertical offset'), L('위·아래로 비켜 갈 거리', 'up or down'), vText, setVText)}
+                </div>
+              )}
+          </>
+        ) : (
+          <>
+            {field('eo-cc', L('심-심 치수', 'Centre-to-centre'), L('양쪽 이음쇠 중심 사이 거리 (도면 치수)', 'between fitting centres'), ccText, setCcText)}
+            <div className={s.grid2}>
+              {([['A', endA, setEndA], ['B', endB, setEndB]] as [string, End, (e: End) => void][]).map(([n, val, set]) => (
+                <div key={n} className={s.field}>
+                  <span className={s.field_label}>{L(`${n}쪽 끝`, `End ${n}`)}</span>
+                  <select className={s.select} value={endOptions.includes(val) ? val : '90L'} onChange={e => set(e.target.value as End)} aria-label={L(`${n}쪽 끝`, `End ${n}`)}>
+                    {endOptions.map(o => <option key={o} value={o}>{endName(o)}</option>)}
+                  </select>
+                </div>
+              ))}
             </div>
           </>
         )}
+        {std !== 'thread' && (
+          <div>
+            <span className={s.label}>{L('용접 갭 (이음 1곳당)', 'Weld root gap (per joint)')}</span>
+            <div className={s.chips}>{[0, 1.5, 2, 3].map(g => chip(gap, g, setGap, `${g}mm`))}</div>
+          </div>
+        )}
+      </section>
 
-        {mode === 'cut' && (
+      <section className={s.card} aria-live="polite">
+        <h2 className={s.card_title}>{L('3. 결과', '3. Result')}</h2>
+        {cutValue === null ? <p className={s.hint}>{L('치수를 넣으면 결과가 나옵니다.', 'Enter dimensions to see the result.')}</p> : (
           <>
-            <div className={s.input_group}>
-              <label className={s.input_label}>{t('input_distance')}</label>
-              <span className={s.input_hint}>{t('input_distance_hint')}</span>
-              <div className={s.input_wrap}>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className={s.input}
-                  value={distance}
-                  onChange={handleInput(setDistance)}
-                  placeholder="500"
-                  aria-label={t('input_distance')}
-                />
-                <span className={s.input_suffix}>mm</span>
-              </div>
+            <div className={s.hero}>
+              <div className={s.hero_label}>{L('파이프 절단 길이', 'Pipe cut length')}</div>
+              <div className={s.hero_num}>{tooShort ? '—' : f1(cutValue)}<span className={s.hero_unit}>mm</span></div>
+              <div className={s.hero_sub}>{STD_TEXT[std][isKo ? 0 : 2]} {size}{mode !== 'cut' ? ` · ${FIT_TEXT[fit]}${fit === 'cut' ? ` ${cutAngle}°` : ''}` : ''}</div>
             </div>
-            <div className={s.input_group}>
-              <label className={s.input_label}>{t('connection_label')}</label>
-              <div className={s.radio_row}>
-                <label className={`${s.radio_label} ${connection === 'both' ? s.radio_label_active : ''}`}>
-                  <input
-                    type="radio"
-                    checked={connection === 'both'}
-                    onChange={() => setConnection('both')}
-                    aria-label={t('connection_both')}
-                  />
-                  {t('connection_both')}
-                </label>
-                <label className={`${s.radio_label} ${connection === 'one' ? s.radio_label_active : ''}`}>
-                  <input
-                    type="radio"
-                    checked={connection === 'one'}
-                    onChange={() => setConnection('one')}
-                    aria-label={t('connection_one')}
-                  />
-                  {t('connection_one')}
-                </label>
-              </div>
+            {tooShort && (
+              <div className={s.warn}>{res
+                ? L(`옵셋이 너무 작아 엘보끼리 맞붙습니다. 이 엘보로는 옵셋이 최소 ${f1(res.minOffset)}mm 이상이어야 합니다. 각도가 작은 엘보(45° 등)를 쓰거나 엘보를 직접 맞대세요.`, `Offset too small: at least ${f1(res.minOffset)} mm is needed with this elbow.`)
+                : L('심-심 치수가 엘보값 합보다 작습니다. 이음쇠끼리 직접 맞대야 하는 거리입니다.', 'The C-C distance is shorter than the fitting allowances.')}</div>
+            )}
+            <div className={s.rows}>
+              {res && <>
+                {roll && <div className={s.row}><span>{L('실제 옵셋', 'True offset')}<small>√({L('가로', 'H')}² + {L('세로', 'V')}²), {L('기울일 각도', 'roll')} {f1(roll.rollAngle)}°</small></span><strong>{f1(roll.trueOffset)} mm</strong></div>}
+                <div className={s.row}><span>{L('빗변 (엘보 중심~중심)', 'Travel (centre to centre)')}<small>{L(`옵셋 × ${res.factor.toFixed(3)}`, `offset × ${res.factor.toFixed(3)}`)}</small></span><strong>{f1(res.travel)} mm</strong></div>
+                <div className={s.row}><span>{L('전진 거리', 'Run (advance)')}<small>{L('배관 진행 방향으로 나아가는 거리', 'along the main run')}</small></span><strong>{f1(res.run)} mm</strong></div>
+                {allowanceRow(L('엘보값 (1개)', 'Elbow allowance (each)'), al)}
+                <div className={s.row}><span>{L('빼는 길이 합계', 'Total deducted')}<small>{L(`엘보값 × 2${res.gapTotal ? ` + 갭 ${gap}mm × 2` : ''}`, `allowance × 2${res.gapTotal ? ` + gap × 2` : ''}`)}</small></span><strong>{f1(2 * res.allowance + res.gapTotal)} mm</strong></div>
+              </>}
+              {cc && <>
+                {allowanceRow(L('A쪽 엘보값', 'End A allowance'), endAl(endA))}
+                {allowanceRow(L('B쪽 엘보값', 'End B allowance'), endAl(endB))}
+                {cc.gapTotal > 0 && <div className={s.row}><span>{L('용접 갭', 'Weld gaps')}<small>{L(`${gap}mm × ${cc.joints}곳`, `${gap} mm × ${cc.joints}`)}</small></span><strong>{f1(cc.gapTotal)} mm</strong></div>}
+              </>}
+              <div className={`${s.row} ${s.row_em}`}><span>{L('절단 길이', 'Cut length')}</span><strong>{f1(cutValue)} mm</strong></div>
             </div>
+            {!tooShort && (
+              <div className={s.viz}>
+                {mode === 'cut' ? ccSvg() : <>{mode === 'rolling' && rollSvg()}{offsetSvg()}</>}
+                <div className={s.legend}>
+                  <span><i style={{ background: 'var(--eo-cut)' }} />{L('자를 파이프', 'Pipe to cut')}</span>
+                  <span><i style={{ background: 'var(--eo-allow)' }} />{L('엘보값 (이음쇠가 차지하는 길이)', 'Fitting allowance')}</span>
+                  <span><i style={{ background: 'var(--eo-pipe)' }} />{L('앞뒤 배관', 'Adjoining pipe')}</span>
+                </div>
+              </div>
+            )}
+            {!tooShort && <button type="button" className={s.btn} onClick={copy}><Copy size={16} />{copied || L('결과 복사', 'Copy')}</button>}
+            <p className={s.hint}>{L('엘보값은 표준 치수표 값이라 제조사마다 1~2mm 차이가 날 수 있습니다. 첫 이음은 실물 엘보를 재서 확인하세요.', 'Fittings vary by 1–2 mm between makers; measure the first one.')}</p>
           </>
         )}
       </section>
 
-      {/* STEP 5: 결과 */}
-      {calc && (
-        <section>
-          <div className={s.section_title} style={{ paddingLeft: '0.25rem' }}>{t('step5_title')}</div>
-          {!calc.valid ? (
-            <div className={s.warn_box}>
-              <div className={s.warn_title}>{t('warn_too_short')}</div>
-              <div className={s.warn_detail}>{t('warn_min_required', { n: calc.minRequired })}</div>
-            </div>
-          ) : (
-            <div className={s.result_card}>
-              <div className={s.result_header}>
-                <span className={s.result_summary_text}>
-                  {size} · {t(`elbow_${elbow}` as 'elbow_LR90')} · {t(`mode_${mode}` as 'mode_simple')}
-                </span>
-                <button
-                  onClick={handleCopy}
-                  className={`${s.copy_btn} ${copied ? s.copy_btn_done : ''}`}
-                  aria-label={t('copy_button')}
-                >
-                  {copied ? t('copy_done') : t('copy_button')}
-                </button>
-              </div>
+      <section className={s.card}>
+        <h2 className={s.card_title}>{L(`엘보값 표 — ${STD_TEXT[std][0]}`, `Allowance table — ${STD_TEXT[std][2]}`)}</h2>
+        <div className={s.table_wrap}>
+          <table className={s.table}>
+            <thead>
+              {std === 'thread'
+                ? <tr><th>{L('호칭', 'Size')}</th><th>{L('중심~끝', 'Centre-end')}</th><th>{L('나사 물림', 'Engagement')}</th><th>{L('엘보값(빼는 값)', 'Allowance')}</th></tr>
+                : <tr><th>{L('호칭', 'Size')}</th><th>{L('90° 장반경', '90° LR')}</th><th>{L('90° 단반경', '90° SR')}</th><th>{L('45° 장반경', '45° LR')}</th></tr>}
+            </thead>
+            <tbody>
+              {table.map(r => (
+                <tr key={r.size} className={r.size === size ? s.row_on : ''}>
+                  <td>{r.size}</td>
+                  {std === 'thread'
+                    ? <><td>{r.thread?.centerToEnd}</td><td>{r.thread?.engagement}</td><td>{r.thread?.value}</td></>
+                    : <><td>{r.l90 ?? '-'}</td><td>{r.s90 ?? '-'}</td><td>{r.l45 ?? '-'}</td></>}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <span className={s.label}>{L('각도별 옵셋 배수 (암산용)', 'Offset multipliers')}</span>
+        <div className={s.table_wrap}>
+          <table className={s.table}>
+            <thead><tr><th>{L('엘보 각도', 'Angle')}</th><th>{L('빗변 = 옵셋 ×', 'Travel = offset ×')}</th><th>{L('전진 = 옵셋 ×', 'Run = offset ×')}</th></tr></thead>
+            <tbody>{FACTOR_TABLE.map(r => <tr key={r.angle}><td>{r.angle}°</td><td>{r.travel.toFixed(3)}</td><td>{r.run.toFixed(3)}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </section>
 
-              <div className={s.result_cut_label}>{t('result_cut_length')}</div>
-              <div className={s.result_cut_value}>
-                {calc.cut}<span className={s.result_cut_unit}>mm</span>
-              </div>
+      <p className={s.disclaimer}>{L('치수는 KS B 1522·KS B 1533(JIS B 2312·B 2301)과 ASME B16.9 치수표를 옮긴 값입니다. 현장 참고용이며 중요한 배관은 실측으로 확인하세요.', 'Dimensions are transcribed from KS (JIS) and ASME tables; verify on site.')}</p>
 
-              <div className={s.result_grid}>
-                <div className={s.result_item}>
-                  <div className={s.result_item_label}>{t('result_takeout')}</div>
-                  <div className={s.result_item_value}>{calc.TO} mm</div>
-                </div>
-                {calc.run != null && (
-                  <div className={s.result_item}>
-                    <div className={s.result_item_label}>
-                      {mode === 'rolling' ? t('result_travel') : t('result_run')}
-                    </div>
-                    <div className={s.result_item_value}>{calc.run} mm</div>
-                  </div>
-                )}
-                {calc.diagonal != null && (
-                  <div className={s.result_item}>
-                    <div className={s.result_item_label}>{t('result_diagonal')}</div>
-                    <div className={s.result_item_value}>{calc.diagonal} mm</div>
-                  </div>
-                )}
-                {calc.angle != null && (
-                  <div className={s.result_item}>
-                    <div className={s.result_item_label}>{t('result_angle')}</div>
-                    <div className={s.result_item_value}>{calc.angle}°</div>
-                  </div>
-                )}
-              </div>
-
-              <div className={s.margin_box}>
-                <div className={s.margin_title}>{t('result_margin_title')}</div>
-                <div className={s.margin_row}>
-                  <span>{t('result_margin_5')}</span>
-                  <strong>{margin5} mm</strong>
-                </div>
-                <div className={s.margin_row}>
-                  <span>{t('result_margin_10')}</span>
-                  <strong>{margin10} mm</strong>
-                </div>
-              </div>
-
-              <p className={s.insulation_note}>{t('result_insulation_note')}</p>
-            </div>
-          )}
-        </section>
-      )}
-
-      {/* STEP 6: SVG 도식도 */}
-      {calc && calc.valid && (
-        <section className={s.panel}>
-          <div className={s.section_title}>{t('step6_title')}</div>
-          <div className={s.diagram_wrap}>
-            <PipeDiagram mode={mode} cut={calc.cut} TO={calc.TO} angle={calc.angle ?? 0} />
-          </div>
-        </section>
-      )}
-
-      {/* 면책 */}
-      <div className={s.disclaimer}>{t('disclaimer')}</div>
-
-      {/* 토스트 */}
-      {toast && <div className={s.toast}>{toast}</div>}
-
-      {/* 표준 하단 섹션 */}
-      <ShareBar title={t('title')} description={t('subtitle')} />
+      <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/elbow-offset" />
-      <div className={s.ad_placeholder}>{t('ad_text')}</div>
+      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{
-          title: '배관 엘보 오프셋 계산기란?',
-          description:
-            '배관 엘보 오프셋 계산기는 현장 배관 작업자가 장애물을 피하거나 배관 경로를 변경할 때 필요한 엘보 테이크아웃과 직관 절단길이를 즉시 계산해주는 실무 도구입니다. 단순 오프셋, 가로·세로 동시 이동이 필요한 롤링 오프셋, 두 연결점 사이의 직관 절단길이 등 3가지 계산 모드를 제공합니다. 호칭경(15A~200A)과 엘보 종류(90° 장·단반경, 45° 장반경)를 선택하면 ASME B16.9 규격 테이블의 테이크아웃 값이 자동 적용되어 현장에서 바로 파이프를 절단할 수 있는 수치가 출력됩니다. SVG 배관 도식도로 배관 형태를 시각적으로 확인할 수 있으며, 5%/10% 여유분 권장 주문 길이도 함께 제공해 시공 오차를 사전에 보완할 수 있습니다.',
+          title: '배관 옵셋·절단 길이 계산: 엘보값(뺄길이) 자동',
+          description: '배관을 꺾어 장애물을 비켜 갈 때 엘보 사이에 들어갈 파이프는 옵셋 거리 그대로 자르면 안 됩니다. 엘보 자체가 길이를 차지하기 때문에, 엘보 중심에서 끝 단면까지의 엘보값(뺄길이, 영문 도면의 Take-off)을 양쪽에서 빼야 합니다. 이 계산기는 국내에서 쓰는 KS B 1522(JIS B 2312) 맞대기 용접 엘보, KS B 1533(JIS B 2301) 나사식 가단주철 엘보, 플랜트용 ASME B16.9 엘보의 엘보값을 호칭별로 넣어 두고, 옵셋 거리만 입력하면 빗변(심-심 길이), 전진 거리, 절단 길이를 계산합니다. 예를 들어 50A 용접 엘보로 300mm 옵셋을 하면 90°는 300 − 76.2 × 2 = 147.6mm, 45°는 빗변 424.3mm에서 31.6mm씩 빼 361.1mm를 자릅니다. 나사 엘보는 중심~끝 치수에서 나사 물림 길이를 뺀 값을 빼므로 25A는 엘보 하나에 23mm입니다. 가로와 세로로 동시에 비켜 가는 롤링 옵셋, 장반경 엘보를 22.5°·30°처럼 잘라 쓰는 경우, 용접 갭, 도면의 심-심 치수에서 양 끝 이음쇠를 빼는 계산도 할 수 있고, 실제 비율 그림과 엘보값 표, 각도별 옵셋 배수표를 함께 보여 줍니다.',
           useCases: [
-            { icon: '🔧', title: '장애물 우회 배관 계산', desc: '구조물이나 다른 배관을 피해 우회해야 할 때 오프셋 거리를 입력하면 엘보 2개 사이의 직관 절단길이가 즉시 계산됩니다. 현장에서 줄자 하나로 바로 파이프를 절단할 수 있습니다.' },
-            { icon: '🔄', title: '롤링 오프셋 3D 계산', desc: '가로와 세로 방향을 동시에 이동해야 하는 롤링 오프셋은 현장에서 계산하기 가장 어려운 케이스입니다. 가로·세로 이동거리를 입력하면 대각선 Travel 거리와 절단길이가 자동 계산됩니다.' },
-            { icon: '✂️', title: '정확한 직관 절단길이', desc: '두 연결점 사이의 거리에서 엘보 테이크아웃을 빼야 정확한 직관 길이가 나옵니다. 목표 거리와 엘보 연결 방식을 입력하면 오차 없는 절단 수치를 즉시 확인할 수 있습니다.' },
-            { icon: '📱', title: '현장 즉시 활용', desc: '스마트폰으로 호칭경과 엘보 종류만 선택하면 테이크아웃이 자동 적용됩니다. 장갑 낀 손으로도 조작 가능한 큰 버튼 UI로 현장에서 바로 꺼내 쓸 수 있습니다.' },
+            { icon: '🔧', title: '보·배관 피해 옵셋', desc: '앞을 막는 보나 다른 배관을 300mm 비켜 갈 때 호칭과 엘보만 고르면, 엘보 사이 파이프를 몇 mm로 잘라야 하는지와 앞으로 얼마나 나아가는지(전진 거리)를 바로 확인합니다.' },
+            { icon: '🔩', title: '나사 배관 절단', desc: '15A~50A 급수·소화 나사 배관은 엘보 중심~끝 치수에서 나사 물림을 뺀 값을 빼야 합니다. 25A는 38 − 15 = 23mm로, 용접 엘보 값(38.1mm)을 쓰면 옵셋 하나에 30mm가 짧아집니다.' },
+            { icon: '📐', title: '도면 심-심 치수를 실치수로', desc: '도면에 적힌 이음쇠 중심 간 치수에서 양 끝 엘보값과 용접 갭을 빼 실제로 자를 길이를 구합니다. 한쪽이 관 끝이면 그쪽은 빼지 않습니다.' },
+            { icon: '🧭', title: '가로+세로 롤링 옵셋', desc: '옆으로 200mm, 위로 150mm를 동시에 비켜 가면 실제 옵셋은 250mm이고, 45° 엘보면 빗변 353.6mm에서 엘보값을 빼 자릅니다. 배관을 기울일 각도도 함께 알려 줍니다.' },
           ],
           steps: [
-            { step: '호칭경 선택', desc: '사용할 배관의 호칭경(15A~200A)을 선택합니다. 버튼을 누르면 해당 호칭경의 NPS 값이 자동으로 적용됩니다.' },
-            { step: '엘보 종류 선택', desc: '90° 장반경(LR)은 가장 일반적으로 사용되며, 단반경(SR)은 좁은 공간에 적합합니다. 45° 엘보는 완만한 방향 전환에 사용됩니다.' },
-            { step: '계산 모드 선택', desc: '단순 오프셋은 한 방향 이동, 롤링 오프셋은 가로+세로 동시 이동, 직관 절단길이는 두 점 사이의 파이프 길이 계산에 사용합니다. 모드 전환 시 입력값은 유지됩니다.' },
-            { step: '수치 입력 → 결과 확인', desc: '거리를 mm 단위로 입력하면 직관 절단길이가 즉시 표시됩니다. SVG 도식도로 배관 형태를 확인하고, 결과 복사 버튼으로 동료와 공유하세요.' },
+            { step: '엘보 규격·호칭 고르기', desc: 'KS 용접 엘보(국내 일반), KS 나사 엘보(가단주철), ASME 용접 엘보(플랜트) 중에서 고르고 15A~300A 호칭을 누릅니다. 아래 표에서 그 규격의 엘보값을 한눈에 볼 수 있습니다.' },
+            { step: '계산 종류 고르기', desc: '한 방향으로 비켜 가면 "옵셋", 가로와 세로로 동시에 비켜 가면 "가로+세로 옵셋", 도면 치수에서 자를 길이를 구하려면 "심-심 → 절단 길이"를 고릅니다.' },
+            { step: '엘보와 치수 넣기', desc: '90°·45° 엘보나 잘라 쓰는 각도를 고르고 옵셋 거리(또는 심-심 치수)를 mm로 넣습니다. 맞대기 용접이면 이음마다 두는 용접 갭도 고릅니다.' },
+            { step: '절단 길이 확인', desc: '절단 길이와 빗변, 전진 거리, 빼는 길이 합계를 확인하고, 실제 비율 그림에서 자를 부분(파란색)과 엘보값(노란색)을 봅니다. 결과 복사로 작업 메모를 남깁니다.' },
           ],
           faqs: [
-            { q: '테이크아웃(Take-out)이란 무엇인가요?', a: '테이크아웃은 엘보의 중심점에서 파이프 접합면(끝단)까지의 거리입니다. 배관을 설치할 때 두 엘보 사이의 직관 길이를 구하려면 목표 거리에서 양쪽 테이크아웃을 빼야 합니다. 본 계산기는 누적 오차를 방지하기 위해 약식 공식(NPS×1.5) 대신 ASME B16.9 표준 규격 데이터를 직접 적용했습니다. 약식 계산과 최대 1~4mm 차이가 날 수 있습니다.' },
-            { q: '장반경(LR)과 단반경(SR) 엘보는 어떻게 다른가요?', a: '장반경(LR) 엘보는 굽힘반경이 공칭 파이프 직경의 1.5배로, 유체 흐름이 완만하고 압력 손실이 적어 대부분의 현장에서 표준으로 사용됩니다. 단반경(SR) 엘보는 굽힘반경이 공칭 직경과 같아 크기가 작아 좁은 공간에 적합하지만, 흐름 저항이 상대적으로 큽니다. 본 계산기는 SR 테이크아웃도 ASME B16.9 규격값(호칭경 × 1.0, 예: 50A 51mm)을 그대로 씁니다. 45° 엘보는 규격상 장반경만 있고, 단반경 엘보는 25A(1") 이상만 있습니다.' },
-            { q: '롤링 오프셋은 언제 사용하나요?', a: '배관이 수평면과 수직면을 동시에 이동해야 할 때 사용합니다. 예를 들어 배관이 오른쪽으로 200mm, 위쪽으로 150mm 동시에 이동해야 한다면 롤링 오프셋 모드에서 가로 200, 세로 150을 입력하면 됩니다. 대각선 이동거리와 배관 기울기 각도, 직관 절단길이가 자동으로 계산됩니다. 이 모드는 구조상 45° 엘보로만 동작합니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 현장 참고용으로만 제공됩니다. 엘보 제조사마다 실제 테이크아웃 치수에 약간의 공차가 있을 수 있으며, 나사식 엘보는 나사 물림 길이를 추가로 고려해야 합니다. 중요한 시공 전에는 반드시 실제 엘보 제품의 치수를 실측하여 확인하시기 바랍니다.' },
+            { q: '엘보값(뺄길이)이 정확히 무엇인가요?', a: '엘보 양쪽 배관 중심선이 만나는 점(엘보 중심)에서 엘보 끝 단면까지의 거리입니다. 도면의 치수와 옵셋은 모두 중심선 기준이라, 실제로 자를 파이프 길이는 그 거리에서 양쪽 엘보값을 빼야 나옵니다. 영문 도면에서는 Take-off 또는 Center-to-end라고 부릅니다.' },
+            { q: '45° 옵셋에서 1.414는 어디서 나오나요?', a: '45° 엘보 두 개로 비켜 가면 옵셋, 전진 거리, 빗변이 직각이등변삼각형을 이루므로 빗변은 옵셋의 √2배, 약 1.414배입니다. 30°는 2배, 60°는 1.155배, 22.5°는 2.613배이며, 빗변에서 양쪽 엘보값을 빼야 절단 길이가 됩니다.' },
+            { q: 'KS 엘보와 ASME 엘보 값이 다른가요?', a: '90° 장반경은 50A가 76.2mm와 76mm로 거의 같지만 45°는 KS가 31.6mm, ASME가 35mm로 차이가 큽니다. 25A 45°는 15.8mm와 22mm라 옵셋 하나에 12mm 넘게 달라지므로, 쓰는 이음쇠 규격을 꼭 맞춰 고르세요.' },
+            { q: '나사 엘보는 왜 값이 다른가요?', a: '나사 이음은 파이프가 이음쇠 안으로 나사 물림 길이만큼 들어가므로, 중심~끝 치수에서 물림 길이를 뺀 값만 빼면 됩니다. KS B 1533 90° 엘보는 15A 27 − 11 = 16mm, 25A 38 − 15 = 23mm, 50A 57 − 20 = 37mm입니다.' },
           ],
         }}
         en={{
-          title: 'What is the Pipe Elbow Offset Calculator?',
-          description:
-            'The Pipe Elbow Offset Calculator instantly computes elbow take-out and pipe cut length for the three most common piping field scenarios: simple offset (one-direction obstacle bypass), rolling offset (horizontal + vertical movement, 3D), and exact cut length between two connection points. Choose your nominal pipe size (15A–200A) and elbow type (90° long or short radius, 45° long radius), and the calculator auto-applies the ASME B16.9 standard take-out value to output the exact cut length you need on site. The tool includes an SVG pipe diagram for visual confirmation and 5% / 10% margin order-length suggestions to absorb installation tolerances.',
+          title: 'Pipe offset and cut length with automatic fitting allowances',
+          description: 'When a pipe is offset around an obstacle, the piece between the elbows is not cut to the offset distance, because each elbow takes up length. The fitting allowance (take-off, or centre-to-end) must be deducted at both ends. This calculator includes allowances for KS B 1522 (JIS B 2312) butt-weld elbows used in Korea, KS B 1533 (JIS B 2301) threaded malleable elbows and ASME B16.9 elbows, and turns an offset into travel, run and cut length. A 300 mm offset with 50A butt-weld elbows needs 147.6 mm of pipe with 90° elbows (300 − 2 × 76.2) and 361.1 mm with 45° elbows (424.3 − 2 × 31.6). Threaded elbows deduct centre-to-end minus thread engagement, 23 mm for 25A. It also handles rolling offsets, elbows cut to any angle, weld root gaps and centre-to-centre runs, with a scale drawing, allowance tables and offset multipliers.',
           useCases: [
-            { icon: '🔧', title: 'Obstacle Bypass', desc: 'When routing around structures or other pipes, enter the offset distance and the cut length between the two elbows is instantly shown. Walk to the cutter with just a tape measure.' },
-            { icon: '🔄', title: '3D Rolling Offset', desc: 'Rolling offsets (horizontal + vertical at the same time) are the hardest to estimate by hand. Enter horizontal and vertical travel — diagonal Travel distance, tilt angle, and cut length appear automatically.' },
-            { icon: '✂️', title: 'Exact Cut Length', desc: 'For two connection points, you must subtract elbow take-out from the centerline distance. Enter the target distance and connection type — exact cut value displays instantly.' },
-            { icon: '📱', title: 'On-site Mobile-first', desc: 'Just tap the pipe size and elbow type on your phone — take-out is auto-loaded. Large 48px buttons work with gloved hands, so the calculator is usable in any field condition.' },
+            { icon: '🔧', title: 'Offset Around Obstacles', desc: 'Pick the size and elbow to get the cut length and how far the run advances.' },
+            { icon: '🔩', title: 'Threaded Pipe', desc: 'Threaded fittings deduct centre-to-end minus engagement — 23 mm for 25A, not 38 mm.' },
+            { icon: '📐', title: 'Drawing Dimensions', desc: 'Turn centre-to-centre dimensions into cut lengths by deducting both fittings and weld gaps.' },
+            { icon: '🧭', title: 'Rolling Offsets', desc: '200 mm across and 150 mm up is a 250 mm true offset; the tool also gives the roll angle.' },
           ],
           steps: [
-            { step: 'Pick a Pipe Size', desc: 'Tap your nominal pipe size (15A–200A). The corresponding NPS and ASME B16.9 take-out values are loaded automatically.' },
-            { step: 'Pick an Elbow Type', desc: '90° Long Radius (LR) is the default for most installations, Short Radius (SR) fits tight spaces. 45° elbows are for gentler direction changes.' },
-            { step: 'Pick a Calculation Mode', desc: 'Simple offset = single-direction bypass. Rolling offset = horizontal + vertical at once. Cut length = exact pipe-cut between two connection points. Inputs are preserved when switching modes.' },
-            { step: 'Enter Numbers, Get Result', desc: 'Type distances in millimeters and the cut length appears instantly. Check the SVG diagram to confirm the layout, then tap Copy to share with a coworker.' },
+            { step: 'Pick Standard and Size', desc: 'KS butt-weld, KS threaded or ASME, 15A to 300A.' },
+            { step: 'Pick a Calculation', desc: 'Offset, rolling offset or centre-to-centre to cut length.' },
+            { step: 'Enter Elbow and Distance', desc: 'Choose 90°, 45° or a cut-down angle and enter the offset or C-C dimension, plus weld gap.' },
+            { step: 'Read the Cut Length', desc: 'Check cut length, travel, run and deductions on the scale drawing, then copy.' },
           ],
           faqs: [
-            { q: 'What is take-out?', a: 'Take-out is the distance from the centerline of an elbow to its weld face (end). To find the cut length between two elbows, you subtract take-out from the centerline distance. This calculator uses ASME B16.9 standard data directly instead of the rough NPS×1.5 formula, which can differ by 1–4 mm and accumulate when multiple elbows are involved.' },
-            { q: "What's the difference between LR and SR elbows?", a: 'A Long Radius (LR) elbow has a bend radius 1.5× the nominal pipe diameter, giving smoother flow and lower pressure loss — the standard for most installations. A Short Radius (SR) elbow has a bend radius equal to the nominal diameter, fitting tight spaces but adding flow resistance. SR take-outs also use the ASME B16.9 values (1.0 × nominal size, e.g. 51 mm for 2"). 45° elbows are long-radius only, and short-radius elbows start at NPS 1".' },
-            { q: 'When do I use rolling offset?', a: 'Use it whenever a pipe must move both horizontally and vertically at the same time. For example, 200 mm right and 150 mm up simultaneously — enter 200 horizontal, 150 vertical, and the calculator returns the diagonal travel, pipe tilt angle, and exact cut length. This mode uses 45° elbows by design.' },
-            { q: 'Can I use these results as official data?', a: 'These results are for on-site reference only. Real elbow manufacturers have small tolerance variations in take-out, and threaded elbows must also account for thread engagement. Always verify against the actual elbow datasheet and field measurement before final installation.' },
+            { q: 'What is the fitting allowance?', a: 'The distance from the elbow centre, where the two centrelines meet, to the end face. Subtract it at both ends of the pipe.' },
+            { q: 'Where does 1.414 come from?', a: 'With two 45° elbows the offset, run and travel form a right isosceles triangle, so travel is √2 × offset. 30° is 2.0, 60° 1.155, 22.5° 2.613.' },
+            { q: 'Do KS and ASME elbows differ?', a: '90° long radius is nearly the same, but 45° differs: 50A is 31.6 mm in KS and 35 mm in ASME.' },
+            { q: 'Why are threaded allowances smaller?', a: 'The pipe screws into the fitting by the engagement length, so only centre-to-end minus engagement is deducted.' },
           ],
         }}
       />
     </div>
-  );
-}
-
-// ── SVG Pipe Diagram ────────────────────────────────────────────
-function PipeDiagram({ mode, cut, TO, angle }: { mode: Mode; cut: number; TO: number; angle: number }) {
-  const VB_W = 400;
-  const VB_H = 200;
-  const stroke = '#8b5cf6';
-  const muted = '#94a3b8';
-
-  if (mode === 'simple') {
-    return (
-      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className={s.diagram_svg}>
-        <line x1="20" y1="60" x2="160" y2="60" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-        <path d="M 160 60 Q 200 60 200 100" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" />
-        <line x1="200" y1="100" x2="200" y2="140" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-        <path d="M 200 140 Q 200 180 240 180" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" />
-        <line x1="240" y1="180" x2="380" y2="180" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-        {/* labels */}
-        <text x="225" y="125" fill={stroke} fontSize="14" fontWeight="800">✂ {cut} mm</text>
-        <text x="80" y="50" fill={muted} fontSize="11">TO: {TO} mm</text>
-        <text x="290" y="170" fill={muted} fontSize="11">TO: {TO} mm</text>
-      </svg>
-    );
-  }
-
-  if (mode === 'rolling') {
-    return (
-      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className={s.diagram_svg}>
-        <line x1="20" y1="40" x2="120" y2="40" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-        <path d="M 120 40 Q 150 40 150 70" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" />
-        <line x1="150" y1="70" x2="280" y2="150" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-        <path d="M 280 150 Q 280 180 310 180" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" />
-        <line x1="310" y1="180" x2="380" y2="180" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-        <text x="195" y="100" fill={stroke} fontSize="14" fontWeight="800">✂ {cut} mm</text>
-        <text x="160" y="125" fill={muted} fontSize="11">∠ {angle}°</text>
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className={s.diagram_svg}>
-      <circle cx="40" cy="100" r="14" fill="white" stroke={stroke} strokeWidth="5" />
-      <line x1="54" y1="100" x2="346" y2="100" stroke={stroke} strokeWidth="6" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-      <circle cx="360" cy="100" r="14" fill="white" stroke={stroke} strokeWidth="5" />
-      <text x="160" y="80" fill={stroke} fontSize="16" fontWeight="800">✂ {cut} mm</text>
-      <text x="30" y="135" fill={muted} fontSize="11">TO: {TO} mm</text>
-      <text x="330" y="135" fill={muted} fontSize="11">TO: {TO} mm</text>
-    </svg>
   );
 }
