@@ -26,9 +26,25 @@ export const REGIONS: { id: string; ko: string; en: string; hours: number }[] = 
   { id: 'avg', ko: '전국 평균', en: 'National average', hours: 3.6 },
 ];
 
-/** 월별 계수(평균 1): 봄이 가장 높고 장마철·겨울이 낮은 국내 경향(근사) */
-export const MONTH_COEFF = [0.80, 0.90, 1.10, 1.20, 1.20, 1.00, 0.90, 1.00, 1.10, 1.10, 0.90, 0.80];
+/**
+ * 월별 계수(일수 가중 평균 1): 같은 논문의 16개 지역 평균 월별 발전시간(3.0, 3.8, 4.0, 4.4, 4.2, 3.7, 3.3, 3.5, 3.5, 3.8, 3.1, 3.0h)을 정규화.
+ * 한국동서발전 실측(당진·울산·동해, 2022~2026)과 비교해 지역별 월표·임의 계수보다 월 패턴 오차가 가장 작았다.
+ */
+export const MONTH_COEFF = [0.832, 1.054, 1.109, 1.22, 1.165, 1.026, 0.915, 0.971, 0.971, 1.054, 0.86, 0.832];
 export const DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+/**
+ * 실측 보정: 실제 발전소는 먼지·부분 고장·노후·출력 제한 등으로 모의값보다 덜 나온다.
+ * 한국동서발전 당진(3기)·울산 실측 연 1,190·1,206 kWh/kWp ÷ 모의값(3.7h × 365) = 0.881·0.893 → 0.89
+ */
+export const FIELD_FACTOR = 0.89;
+
+/** 검증 기록 (화면 표시용): 실측 = 결측·정지일 제외 일평균 × 일수 */
+export const VALIDATION = [
+  { site: '당진 (3기, 2.7MW)', siteEn: 'Dangjin (3 plants, 2.7 MW)', ref: '서산 3.7h', refEn: 'Seosan 3.7 h', measured: 1190, model: 1351 },
+  { site: '울산 (0.5MW)', siteEn: 'Ulsan (0.5 MW)', ref: '포항·부산 3.7h', refEn: 'Pohang/Busan 3.7 h', measured: 1206, model: 1351 },
+  { site: '동해 (2MW)', siteEn: 'Donghae (2 MW)', ref: '강릉 3.6h', refEn: 'Gangneung 3.6 h', measured: 919, model: 1314 },
+];
 
 /** 정남향 30° 대비 보정(경험치) */
 export const TILT_FACTOR: Record<string, number> = { '0': 0.88, '15': 0.96, '30': 1.0, '45': 0.97, '60': 0.89, '90': 0.68 };
@@ -84,6 +100,8 @@ export interface PvInput {
   usage: number;
   summerUsage: number;
   netMetering: boolean;
+  /** 실측 보정(×FIELD_FACTOR) 적용 */
+  fieldCorrection: boolean;
   netCost: number;
   years: number;
 }
@@ -100,7 +118,8 @@ export interface PvResult {
 }
 
 function pvYear(inp: PvInput, degrade: number): PvMonth[] {
-  const factor = (TILT_FACTOR[inp.tilt] ?? 1) * (AZIMUTH_FACTOR[inp.azimuth] ?? 1) * (1 - Math.max(0, Math.min(100, inp.shadePct)) / 100) * degrade;
+  const factor = (TILT_FACTOR[inp.tilt] ?? 1) * (AZIMUTH_FACTOR[inp.azimuth] ?? 1) * (1 - Math.max(0, Math.min(100, inp.shadePct)) / 100) * degrade
+    * (inp.fieldCorrection ? FIELD_FACTOR : 1);
   let carry = 0;
   return MONTH_COEFF.map((c, i) => {
     const month = i + 1;

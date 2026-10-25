@@ -7,7 +7,7 @@ import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
-import { REGIONS, TILT_FACTOR, AZIMUTH_FACTOR, pvCalc, thermalCalc } from '@/lib/solar';
+import { REGIONS, TILT_FACTOR, AZIMUTH_FACTOR, FIELD_FACTOR, VALIDATION, pvCalc, thermalCalc } from '@/lib/solar';
 import { ELECTRICITY, CITY_GAS, KEROSENE, CO2 } from '@/constants/energyPrices';
 import s from './solar.module.css';
 
@@ -47,6 +47,7 @@ export default function SolarMasterClient() {
   const [usage, setUsage] = useState('350');
   const [summerUsage, setSummerUsage] = useState('450');
   const [netMetering, setNetMetering] = useState(true);
+  const [fieldCorrection, setFieldCorrection] = useState(true);
   const [pvCost, setPvCost] = useState('5500000');
   const [pvSubsidy, setPvSubsidy] = useState('');
 
@@ -73,7 +74,7 @@ export default function SolarMasterClient() {
 
   const pv = tab === 'pv' ? pvCalc({
     kWp, hours, tilt, azimuth, shadePct: shade, degradePct: num(degrade),
-    usage: num(usage), summerUsage: num(summerUsage), netMetering,
+    usage: num(usage), summerUsage: num(summerUsage), netMetering, fieldCorrection,
     netCost: Math.max(0, num(pvCost) - num(pvSubsidy)), years: 20,
   }) : null;
 
@@ -166,7 +167,7 @@ export default function SolarMasterClient() {
 
   const priceBox = (
     <div className={s.price_box}>
-      <b>{L('단가 기준', 'Price basis')}</b> — {L('전기', 'Electricity')} {ELECTRICITY.asOf} ({L('한전 주택용 저압, 기본·전력량·기후환경·연료비조정·부가세·전력기금 포함', 'KEPCO residential incl. all charges')}) · {L('도시가스', 'City gas')} {CITY_GAS.asOf} {CITY_GAS.region} {CITY_GAS.perMJ}{L('원/MJ(부가세 별도)', ' KRW/MJ excl. VAT')} · {L('등유', 'Kerosene')} {KEROSENE.asOf} {L('전국 평균', 'national avg')} {f(KEROSENE.perLiter)}{L('원/L', ' KRW/L')}.
+      <b>{L('단가 기준', 'Price basis')}</b> — {L('전기', 'Electricity')} {ELECTRICITY.asOf} ({L('한전 주택용 저압, 기본·전력량·기후환경·연료비조정·부가세·전력기금 포함', 'KEPCO residential incl. all charges')}) · {L('도시가스', 'City gas')} {CITY_GAS.asOf} {L(CITY_GAS.region, 'Seoul')} {CITY_GAS.perMJ}{L('원/MJ(부가세 별도)', ' KRW/MJ excl. VAT')} · {L('등유', 'Kerosene')} {KEROSENE.asOf} {L('전국 평균', 'national avg')} {f(KEROSENE.perLiter)}{L('원/L', ' KRW/L')}.
       {L(' 단가는 수시로 바뀌니 고지서 단가로 바꿔 넣으세요.', ' Prices change; enter your own from a recent bill.')}
     </div>
   );
@@ -217,6 +218,10 @@ export default function SolarMasterClient() {
               </div>
               {field('pv-deg', L('연간 출력 감소(노화)', 'Degradation'), L('보통 0.5%/년', 'typically 0.5 %/yr'), degrade, setDegrade, L('%/년', '%/yr'))}
             </div>
+            <label className={s.toggle}>
+              <input type="checkbox" checked={fieldCorrection} onChange={e => setFieldCorrection(e.target.checked)} />
+              <span>{L(`실측 보정 적용 (×${FIELD_FACTOR})`, `Apply field correction (×${FIELD_FACTOR})`)}<small>{L('실제 발전소 실측은 모의값보다 약 11% 적었습니다(먼지·부분 고장·노후 등). 끄면 이상적인 운영 기준입니다.', 'Measured plants produced about 11% less than the simulation; turn off for ideal operation.')}</small></span>
+            </label>
             <p className={s.hint}>{L('지역 발전시간은 정남향 30° 기준 모의 결과로 온도·인버터 손실이 이미 들어 있습니다. 경사·방향 보정은 경험치입니다.', 'Regional hours already include temperature and inverter losses (south, 30°). Tilt and orientation factors are rules of thumb.')}</p>
           </section>
 
@@ -312,7 +317,7 @@ export default function SolarMasterClient() {
               {chip(fuel, 'electric', v => { setFuel(v); setBoilerEff('98'); }, L('전기 온수기', 'Electric heater'))}
             </div>
             <div className={s.grid2}>
-              {fuel === 'gas' && field('th-gas', L('도시가스 단가', 'Gas price'), L(`${CITY_GAS.region} ${CITY_GAS.asOf}, 부가세 별도`, 'excl. VAT'), gasPrice, setGasPrice, L('원/MJ', 'KRW/MJ'))}
+              {fuel === 'gas' && field('th-gas', L('도시가스 단가', 'Gas price'), L(`${CITY_GAS.region} ${CITY_GAS.asOf}, 부가세 별도`, `Seoul ${CITY_GAS.asOf}, excl. VAT`), gasPrice, setGasPrice, L('원/MJ', 'KRW/MJ'))}
               {fuel === 'kerosene' && field('th-ker', L('등유 단가', 'Kerosene price'), L(`전국 평균 ${KEROSENE.asOf}`, 'national average'), kerosenePrice, setKerosenePrice, L('원/L', 'KRW/L'), 'int')}
               {fuel === 'electric' && field('th-el', L('전기 단가', 'Electricity price'), L('누진 2단계, 부가세·기금 포함', 'tier 2 incl. taxes'), elecPrice, setElecPrice, L('원/kWh', 'KRW/kWh'))}
               {field('th-beff', L('보일러·온수기 효율', 'Heater efficiency'), L('콘덴싱 가스 약 87~92%', 'condensing gas ≈ 87–92%'), boilerEff, setBoilerEff, '%')}
@@ -370,6 +375,22 @@ export default function SolarMasterClient() {
         </>
       )}
 
+      {tab === 'pv' && (
+        <section className={s.card}>
+          <h2 className={s.card_title}>{L('검증: 실제 발전소 실측과 비교', 'Validation against measured plants')}</h2>
+          <p className={s.hint}>{L('한국동서발전이 공개한 발전기별 시간대 실측 발전량(공공데이터포털, 2022.4~2026.6, 결측·정지일 제외)을 연간 kWh/kWp로 바꿔 이 계산기의 모의값과 비교했습니다.', 'Hourly measured output published by Korea East-West Power (2022-04 to 2026-06, outage days excluded) compared with this calculator.')}</p>
+          <div className={s.table_wrap}>
+            <table className={s.table}>
+              <thead><tr><th>{L('발전소', 'Plant')}</th><th>{L('비교 지역', 'Reference')}</th><th>{L('실측', 'Measured')}</th><th>{L('모의', 'Simulated')}</th><th>{L('보정 후', 'Corrected')}</th></tr></thead>
+              <tbody>{VALIDATION.map(v => (
+                <tr key={v.site}><td>{isKo ? v.site : v.siteEn}</td><td>{isKo ? v.ref : v.refEn}</td><td>{f(v.measured)}</td><td>{f(v.model)} <small className={s.neg}>({f(((v.model - v.measured) / v.measured) * 100)}%)</small></td><td>{f(v.model * FIELD_FACTOR)} <small>({f(((v.model * FIELD_FACTOR - v.measured) / v.measured) * 100)}%)</small></td></tr>
+              ))}</tbody>
+            </table>
+          </div>
+          <p className={s.hint}>{L('단위 kWh/kWp·년. 당진·울산은 보정 후 실측과 1% 안팎으로 맞습니다. 동해는 다른 두 곳보다 약 24% 낮아 그늘·방향 같은 현장 조건 영향으로 보고 보정 계산에서 뺐습니다. 월별 패턴은 논문의 전국 평균 월표가 세 곳 모두에서 실측과 가장 가까웠습니다(연간을 맞춘 뒤 월 오차 10~15%). 유럽연합 PVGIS(ERA5)는 같은 곳을 실측보다 약 20% 높게 계산했습니다.', 'kWh/kWp per year. Dangjin and Ulsan match within 1% after correction; Donghae is an outlier (site conditions) and was excluded. PVGIS (ERA5) overestimated these sites by about 20%.')}</p>
+        </section>
+      )}
+
       <p className={s.disclaimer}>{L('발전량은 표준기상자료 기반 모의값이고, 요금·연료 단가는 기준일 값입니다. 실제 수익은 날씨·그늘·시공 상태·요금 변동에 따라 달라지니 설치 전 시공사의 현장 검토를 받으세요.', 'Outputs are simulated from standard weather data and prices are as of the stated dates; actual results vary.')}</p>
 
       <ShareBar title={titleStr} description={descStr} />
@@ -379,7 +400,7 @@ export default function SolarMasterClient() {
       <SeoSection
         ko={{
           title: '태양광 발전량·수익 계산과 태양열 온수 절감액',
-          description: '주택 태양광의 연간 발전량은 설치 용량(kWp) × 지역 일평균 발전시간 × 365일로 어림합니다. 국가참조표준기상데이터로 16개 지역을 모의한 연구에서 정남향 30° 설치 시 전국 평균은 하루 3.6시간(연 약 1,312kWh/kWp)이었고, 서울은 3.2시간(약 1,165kWh/kWp), 목포는 3.9시간이었습니다. 이 값에는 온도·인버터 손실이 이미 들어 있으므로 손실을 또 빼면 발전량이 지나치게 낮게 나옵니다. 이 계산기는 지역 발전시간에 월별 계수, 경사각·방향·그늘 보정, 해마다 누적되는 패널 노화를 반영하고, 절감액은 한전 주택용 저압 요금 전체 — 기본요금, 누진 전력량요금(기타계절 200·400kWh, 여름 300·450kWh 구간), 기후환경요금, 연료비조정요금, 부가세, 전력산업기반기금 — 로 계산합니다. 남는 전력을 다음 달로 넘기는 상계거래도 반영합니다. 예를 들어 서울에서 3.2kWp를 달고 월 350kWh(여름 450kWh)를 쓰는 집은 연 약 3,740kWh를 만들어 전기요금을 연 77만 원가량 줄입니다. 태양열 탭은 하루 온수 사용량과 온도로 필요한 열량을 구해, 집열판이 모은 열 중 실제로 쓰는 만큼만 절감액에 넣고 기존 보일러 효율로 연료 절감을 계산합니다. 단가는 기준일과 함께 표시되며 고지서 단가로 바꿔 넣을 수 있습니다.',
+          description: '주택 태양광의 연간 발전량은 설치 용량(kWp) × 지역 일평균 발전시간 × 365일로 어림합니다. 국가참조표준기상데이터로 16개 지역을 모의한 연구에서 정남향 30° 설치 시 전국 평균은 하루 3.6시간(연 약 1,312kWh/kWp)이었고, 서울은 3.2시간(약 1,165kWh/kWp), 목포는 3.9시간이었습니다. 이 값에는 온도·인버터 손실이 이미 들어 있으므로 손실을 또 빼면 발전량이 지나치게 낮게 나옵니다. 이 계산기는 지역 발전시간에 월별 계수, 경사각·방향·그늘 보정, 해마다 누적되는 패널 노화를 반영하고, 절감액은 한전 주택용 저압 요금 전체 — 기본요금, 누진 전력량요금(기타계절 200·400kWh, 여름 300·450kWh 구간), 기후환경요금, 연료비조정요금, 부가세, 전력산업기반기금 — 로 계산합니다. 남는 전력을 다음 달로 넘기는 상계거래도 반영합니다. 한국동서발전이 공개한 실제 발전소 4년치 실측과 비교해 보니 실제 발전량은 모의값보다 약 11% 적어, 기본값으로 이 차이(×0.89)를 보정합니다. 예를 들어 서울에서 3.2kWp를 달고 월 350kWh(여름 450kWh)를 쓰는 집은 보정 후 연 약 3,330kWh를 만들어 전기요금을 연 70만 원가량 줄입니다. 태양열 탭은 하루 온수 사용량과 온도로 필요한 열량을 구해, 집열판이 모은 열 중 실제로 쓰는 만큼만 절감액에 넣고 기존 보일러 효율로 연료 절감을 계산합니다. 단가는 기준일과 함께 표시되며 고지서 단가로 바꿔 넣을 수 있습니다.',
           useCases: [
             { icon: '🏠', title: '주택 태양광 설치 검토', desc: '지역, 패널 출력과 장수, 경사·방향을 넣으면 연간 발전량과 월별 전기요금 전후를 비교하고, 설치비와 확정 보조금으로 회수 기간과 20년 누적 수익을 확인합니다.' },
             { icon: '📋', title: '시공사 견적 검증', desc: '업체가 제시한 연 발전량이 지역 평균(kWh/kWp)과 맞는지 비교합니다. 서울에서 kWp당 연 1,300kWh를 넘게 약속한다면 근거를 물어볼 만합니다.' },
@@ -396,6 +417,7 @@ export default function SolarMasterClient() {
             { q: '여름보다 봄에 발전량이 더 많은 이유는 무엇인가요?', a: '여름은 해가 길지만 장마로 흐린 날이 많고 패널 온도가 올라가 효율이 떨어집니다. 결정질 실리콘 패널은 온도가 1℃ 오를 때 출력이 약 0.4% 줄어, 맑고 선선한 4~5월에 월 발전량이 가장 많은 경우가 많습니다.' },
             { q: '전기요금 절감액은 어떻게 계산하나요?', a: '태양광이 없을 때와 있을 때의 월 사용량으로 한전 주택용 저압 요금을 각각 계산해 그 차이를 절감액으로 봅니다. 누진 구간이 바뀌는 효과와 기본요금, 기후환경·연료비조정요금, 부가세 10%, 전력산업기반기금 2.7%까지 들어가므로, 발전량 × 단가로 단순 계산한 값과 다릅니다.' },
             { q: '보조금은 얼마나 받을 수 있나요?', a: '한국에너지공단 주택지원사업과 지자체 사업은 해마다 지원 단가와 예산이 바뀌고 지역마다 다릅니다. 그래서 이 계산기는 보조금을 자동으로 빼지 않고, 모집 공고나 시공사 계약서에서 확인한 금액을 넣도록 했습니다.' },
+            { q: '계산 결과는 얼마나 정확한가요?', a: '한국동서발전이 공개한 당진·울산 발전소의 2022~2026년 시간대별 실측 발전량과 비교했을 때, 실측 보정을 켠 연간 발전량은 실측과 1% 안팎으로 맞았고 월별로는 10~15% 차이가 났습니다. 그늘이나 방향이 나쁜 현장은 이보다 크게 낮을 수 있어, 동해 발전소처럼 실측이 24% 낮은 사례도 있었습니다.' },
             { q: '태양열 집열판은 클수록 좋은가요?', a: '아닙니다. 모은 열이 하루 쓰는 온수 열량보다 많으면 남는 열은 쓰지 못합니다. 하루 200L를 15℃에서 45℃로 데우는 데는 약 25MJ가 필요하므로, 이보다 훨씬 많이 모으는 집열판은 여름에 버리는 열만 늘고 회수 기간은 길어집니다.' },
           ],
         }}
@@ -418,6 +440,7 @@ export default function SolarMasterClient() {
             { q: 'Why is spring better than summer?', a: 'Summer brings monsoon clouds and hot panels lose about 0.4% per °C, so clear, mild April and May often produce the most.' },
             { q: 'How are bill savings calculated?', a: 'The full residential bill is calculated with and without solar each month, including tiers, charges, VAT and the power fund.' },
             { q: 'What about subsidies?', a: 'They vary by year and municipality, so enter only a confirmed amount.' },
+            { q: 'How accurate is it?', a: 'Against 2022–2026 hourly measurements from Korea East-West Power plants in Dangjin and Ulsan, the corrected annual yield matched within about 1% and monthly values within 10–15%; poorly sited plants can be much lower.' },
             { q: 'Is a bigger collector better?', a: 'No — heat beyond daily demand is wasted; 200 L from 15 to 45 °C needs about 25 MJ a day.' },
           ],
         }}
