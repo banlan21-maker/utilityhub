@@ -1,0 +1,7 @@
+Tile textures in this folder are from ambientCG (https://ambientcg.com), licensed CC0 1.0 Universal.
+marble-white.webp  = Marble005
+marble-black.webp  = Marble016
+travertine.webp    = Travertine009
+concrete.webp      = Concrete034
+terrazzo.webp      = Terrazzo013
+wood.webp          = Wood049

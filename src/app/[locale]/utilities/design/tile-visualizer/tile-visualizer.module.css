@@ -58,8 +58,8 @@
 .ov_other { fill: rgba(255, 255, 255, 0.06); stroke: rgba(255, 255, 255, 0.75); stroke-width: 1.5; stroke-dasharray: 5 4; }
 .ov_active { fill: rgba(139, 92, 246, 0.18); stroke: #a78bfa; stroke-width: 2.5; }
 .ov_bad { fill: rgba(239, 68, 68, 0.2); stroke: #ef4444; stroke-width: 2.5; }
-.handle { fill: #fff; stroke: #7c3aed; stroke-width: 3; cursor: grab; }
-.handle:active { cursor: grabbing; }
+.handle { fill: #fff; stroke: #7c3aed; stroke-width: 3; pointer-events: none; }
+.handle_hit:active { cursor: grabbing; }
 .handle_num { fill: #5b21b6; font-weight: 800; pointer-events: none; user-select: none; }
 
 .stage_bar { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
@@ -122,3 +122,16 @@
 
 .disclaimer { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; text-align: center; word-break: keep-all; margin: 0; }
 .ad_slot { width: 100%; min-height: 90px; border: 1px dashed var(--border); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.85rem; }
+
+/* 캔버스 위 겹침 요소 */
+.canvas_box { position: relative; }
+.handle_hit { fill: transparent; cursor: grab; }
+.split_layer { position: absolute; inset: 0; cursor: ew-resize; touch-action: none; }
+.split_line { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 6px rgba(0, 0, 0, 0.45); pointer-events: none; }
+.split_knob { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 38px; height: 38px; border-radius: 50%; background: #fff; color: #5b21b6; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35); }
+.split_tag { position: absolute; top: 10px; padding: 0.2rem 0.55rem; border-radius: 999px; background: rgba(0, 0, 0, 0.55); color: #fff; font-size: 0.75rem; font-weight: 700; pointer-events: none; }
+.split_l { left: 10px; }
+.split_r { right: 10px; }
+.loupe { position: absolute; top: 10px; left: 10px; width: 120px; height: 120px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4); pointer-events: none; z-index: 2; }
+.loupe_r { left: auto; right: 10px; }
+.ghost_on { border-color: var(--primary); color: var(--primary); background: var(--tv-accent-bg); }
