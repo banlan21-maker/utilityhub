@@ -1,0 +1,43 @@
+name: 등유 가격 갱신
+
+on:
+  schedule:
+    # 매주 월요일 10:00 (한국시간) = 01:00 UTC
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/update-kerosene.yml
+      - scripts/update-kerosene.mjs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-kerosene
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 오피넷 실내등유 가격 받기
+        env:
+          OPINET_API_KEY: ${{ secrets.OPINET_API_KEY }}
+        run: node scripts/update-kerosene.mjs
+      - name: 바뀌었으면 커밋
+        run: |
+          if git diff --quiet; then
+            echo "변경 없음"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/constants/energyPrices.ts
+          git commit -m "chore(prices): update kerosene price from Opinet"
+          git push
