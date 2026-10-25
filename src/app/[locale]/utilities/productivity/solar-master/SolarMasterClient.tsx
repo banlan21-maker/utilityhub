@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import { useLocale } from 'next-intl';
-import { Sun, Copy, FileText, Printer } from 'lucide-react';
+import { Sun, Copy, FileText, Printer, AlertTriangle } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
-import { REGIONS, TILT_FACTOR, AZIMUTH_FACTOR, FIELD_FACTOR, VALIDATION, pvCalc, thermalCalc } from '@/lib/solar';
-import { ELECTRICITY, CITY_GAS, KEROSENE, CO2 } from '@/constants/energyPrices';
+import { REGIONS, TILT_FACTOR, AZIMUTH_FACTOR, FIELD_FACTOR, VALIDATION, SPOT_LAST_YEAR, pvCalc, thermalCalc, bizCalc, recWeight, type PvSite } from '@/lib/solar';
+import { ELECTRICITY, CITY_GAS, KEROSENE, CO2, SMP, SOLAR_MARKET } from '@/constants/energyPrices';
 import s from './solar.module.css';
 
-type Tab = 'pv' | 'thermal';
+type Tab = 'pv' | 'thermal' | 'biz';
 type Fuel = 'gas' | 'kerosene' | 'electric';
 
 const dec = (raw: string) => {
@@ -67,6 +67,31 @@ export default function SolarMasterClient() {
   const [thCost, setThCost] = useState('4000000');
   const [thSubsidy, setThSubsidy] = useState('');
 
+  // 발전사업
+  const [bzRegion, setBzRegion] = useState('avg');
+  const [bzKW, setBzKW] = useState('99.9');
+  const [bzSite, setBzSite] = useState<PvSite>('land');
+  const [bzTilt, setBzTilt] = useState('30');
+  const [bzAzimuth, setBzAzimuth] = useState('south');
+  const [bzShade, setBzShade] = useState(0);
+  const [bzDegrade, setBzDegrade] = useState('0.5');
+  const [bzField, setBzField] = useState(true);
+  const [sale, setSale] = useState<'contract' | 'spot'>('contract');
+  const [contractPrice, setContractPrice] = useState(String(SOLAR_MARKET.contractAvg));
+  const [premium, setPremium] = useState('');
+  const [smp, setSmp] = useState(String(SMP.avg12));
+  const [recPrice, setRecPrice] = useState(String(SOLAR_MARKET.recPerREC));
+  const [startYear, setStartYear] = useState(String(Number(SMP.asOf.slice(0, 4)) + 1));
+  const [afterPrice, setAfterPrice] = useState(String(SMP.avg12));
+  const [capexPerKW, setCapexPerKW] = useState('1200000');
+  const [omPerKW, setOmPerKW] = useState('20000');
+  const [omEscal, setOmEscal] = useState('2');
+  const [rent, setRent] = useState('');
+  const [inverter, setInverter] = useState('');
+  const [loanPct, setLoanPct] = useState('70');
+  const [rate, setRate] = useState('5');
+  const [loanYears, setLoanYears] = useState('15');
+
   const regionName = (id: string) => { const r = REGIONS.find(x => x.id === id)!; return isKo ? r.ko : r.en; };
   const hours = REGIONS.find(r => r.id === region)!.hours;
   const thHours = REGIONS.find(r => r.id === thRegion)!.hours;
@@ -87,6 +112,19 @@ export default function SolarMasterClient() {
     hotC: num(hotC), coldC: num(coldC), costPerUsefulMJ: fuelPerMJ / heaterEff, co2PerUsefulMJ: fuelCO2 / heaterEff,
     netCost: Math.max(0, num(thCost) - num(thSubsidy)), years: 20,
   }) : null;
+
+  const kW = num(bzKW);
+  const weight = recWeight(bzSite, kW);
+  const capex = num(capexPerKW) * kW;
+  const biz = tab === 'biz' ? bizCalc({
+    kW, hours: REGIONS.find(r => r.id === bzRegion)!.hours, tilt: bzTilt, azimuth: bzAzimuth, shadePct: bzShade,
+    degradePct: num(bzDegrade), fieldCorrection: bzField, sale,
+    contractPrice: num(contractPrice), premium: num(premium), smp: num(smp), recPrice: num(recPrice), weight,
+    startYear: num(startYear) || Number(SMP.asOf.slice(0, 4)) + 1, afterPrice: num(afterPrice),
+    capex, om: num(omPerKW) * kW, omEscalPct: num(omEscal), rent: num(rent), inverter: num(inverter), inverterYear: 12,
+    loanPct: num(loanPct), ratePct: num(rate), loanYears: num(loanYears), years: 20,
+  }) : null;
+  const pct = (x: number | null) => (x === null ? '—' : `${f(x * 100, 1)}%`);
 
   const flash = (t: string) => { setMsg(t); setTimeout(() => setMsg(''), 2500); };
   const copy = async (text: string) => {
@@ -172,11 +210,11 @@ export default function SolarMasterClient() {
     </div>
   );
 
-  const titleStr = L('태양광·태양열 발전량·수익 계산기', 'Solar PV & Thermal Savings Calculator');
-  const descStr = L('지역별 발전시간과 한전 전기요금 전체(누진·부가세·기금)로 태양광 발전량·절감액·회수 기간을, 급탕량 기준으로 태양열 온수 절감액을 계산합니다.', 'Estimate solar PV output, bill savings and payback with Korean regional yields and the full KEPCO tariff, plus solar hot-water savings sized to your demand.');
+  const titleStr = L('태양광·태양열 발전량·수익 계산기', 'Solar PV, Thermal & Power Plant Revenue Calculator');
+  const descStr = L('지역별 발전시간과 한전 전기요금 전체(누진·부가세·기금)로 주택 태양광 절감액과 회수 기간을, 계약시장 단가 또는 SMP·REC로 발전사업 수익·IRR을, 급탕량 기준으로 태양열 온수 절감액을 계산합니다.', 'Estimate home solar bill savings with the full KEPCO tariff, power-plant revenue and IRR from contract or SMP + REC prices, and solar hot-water savings.');
 
   return (
-    <div className={`${s.container} ${tab === 'thermal' ? s.thermal : ''}`}>
+    <div className={`${s.container} ${tab === 'thermal' ? s.thermal : tab === 'biz' ? s.biz : ''}`}>
       <NavigationActions />
 
       <header className={s.header}>
@@ -191,6 +229,9 @@ export default function SolarMasterClient() {
         </button>
         <button type="button" role="tab" aria-selected={tab === 'thermal'} className={`${s.tab} ${tab === 'thermal' ? s.tab_th : ''}`} onClick={() => setTab('thermal')}>
           🔥 {L('태양열 온수', 'Solar hot water')}<small>{L('가스·등유 절감', 'gas or oil savings')}</small>
+        </button>
+        <button type="button" role="tab" aria-selected={tab === 'biz'} className={`${s.tab} ${tab === 'biz' ? s.tab_biz : ''}`} onClick={() => setTab('biz')}>
+          🏭 {L('발전사업', 'Power plant')}<small>{L('전력 판매 수익', 'selling power')}</small>
         </button>
       </div>
 
@@ -288,7 +329,7 @@ export default function SolarMasterClient() {
             )}
           </section>
         </>
-      ) : (
+      ) : tab === 'thermal' ? (
         <>
           <section className={s.card}>
             <h2 className={s.card_title}>{L('1. 집열판과 온수 사용', '1. Collector and hot water')}</h2>
@@ -373,9 +414,147 @@ export default function SolarMasterClient() {
             )}
           </section>
         </>
+      ) : (
+        <>
+          <section className={s.card}>
+            <h2 className={s.card_title}>{L('1. 발전소', '1. Plant')}</h2>
+            <div className={s.grid3}>
+              {regionSelect('bz-region', bzRegion, setBzRegion)}
+              {field('bz-kw', L('설비 용량', 'Capacity'), L('인버터 기준 kW', 'AC kW'), bzKW, setBzKW, 'kW')}
+              {field('bz-deg', L('연간 출력 감소(노화)', 'Degradation'), L('보통 0.5%/년', 'typically 0.5 %/yr'), bzDegrade, setBzDegrade, L('%/년', '%/yr'))}
+            </div>
+            <div>
+              <span className={s.label}>{L('설치 장소', 'Site type')}<small className={s.label_sub}>{L(`REC 가중치 ${weight || '—'} (현물 판매에만 적용)`, `REC weight ${weight || '—'} (spot sales only)`)}</small></span>
+              <div className={s.chips}>
+                {chip(bzSite, 'land', setBzSite, L('일반부지', 'Land'), L('100kW 미만 1.2 · 3MW까지 1.0', '1.2 <100 kW, 1.0 to 3 MW'))}
+                {chip(bzSite, 'building', setBzSite, L('건축물 지붕', 'Rooftop'), L('3MW까지 1.5', '1.5 to 3 MW'))}
+                {chip(bzSite, 'floating', setBzSite, L('수상(저수지 등)', 'Floating'), L('1.6 · 1.4 · 1.2', '1.6 / 1.4 / 1.2'))}
+                {chip(bzSite, 'forest', setBzSite, L('임야', 'Forest land'), '0.5')}
+              </div>
+            </div>
+            <div>
+              <span className={s.label}>{L('경사각', 'Tilt')}</span>
+              <div className={s.chips}>{Object.keys(TILT_FACTOR).map(k => chip(bzTilt, k, setBzTilt, `${k}°`, `×${TILT_FACTOR[k]}`))}</div>
+            </div>
+            <div className={s.grid2}>
+              <div>
+                <span className={s.label}>{L('방향', 'Orientation')}</span>
+                <div className={s.chips}>{Object.keys(AZIMUTH_FACTOR).map(k => chip(bzAzimuth, k, setBzAzimuth, ({ south: L('남향', 'S'), southeast: L('남동', 'SE'), southwest: L('남서', 'SW'), east: L('동향', 'E'), west: L('서향', 'W') } as Record<string, string>)[k]))}</div>
+              </div>
+              <div>
+                <span className={s.label}>{L('그늘 손실', 'Shading')}</span>
+                <div className={s.chips}>{[0, 3, 5, 10].map(p => chip(bzShade, p, setBzShade, `${p}%`))}</div>
+              </div>
+            </div>
+            <label className={s.toggle}>
+              <input type="checkbox" checked={bzField} onChange={e => setBzField(e.target.checked)} />
+              <span>{L(`실측 보정 적용 (×${FIELD_FACTOR})`, `Apply field correction (×${FIELD_FACTOR})`)}<small>{L('한국동서발전 당진·울산 사업용 발전소 4년 실측에 맞춘 값입니다. 금융·투자 검토에는 켜 두는 것을 권합니다.', 'Matched to four years of measured output from utility plants; keep on for financing.')}</small></span>
+            </label>
+            <p className={s.hint}>{L('REC 가중치는 용량 구간별로 나눠 매긴 뒤 평균합니다(운영지침 별표 2). 100kW 미만 구간은 99.999kW까지라서 정확히 100kW면 1.199, 99.9kW면 1.2입니다. 500m 안에 같은 사업자의 발전소가 있으면 용량을 합산해 매깁니다.', 'REC weights are applied band by band and averaged (exactly 100 kW gives 1.199; 99.9 kW gives 1.2). Plants of the same owner within 500 m are combined.')}</p>
+          </section>
+
+          <section className={s.card}>
+            <h2 className={s.card_title}>{L('2. 판매 방식과 단가', '2. Sales and prices')}</h2>
+            <div className={s.warn}>
+              <AlertTriangle size={18} aria-hidden />
+              <p>{L(
+                '재생에너지법 개정(2026.8.20 국회 통과)으로 2027년부터 신규 발전소는 REC를 받지 않고 정부 계약시장(경쟁입찰, 20년 고정가격)에서 팝니다. REC 신규 발급은 2026.12.31까지이고, 기존 발전소의 REC 현물시장은 2029년 말까지 운영될 예정입니다. 계약시장 상한가·우대가격 등 세부 기준은 하위법령에서 정해집니다.',
+                'Under the 2026 amendment of Korea’s Renewable Energy Act, new plants from 2027 sell through a government contract market (competitive bids, 20-year fixed price) instead of earning RECs. New REC issuance ends on 31 Dec 2026 and the spot market for existing plants is expected to run until the end of 2029.',
+              )}</p>
+            </div>
+            <div className={s.chips}>
+              {chip(sale, 'contract', setSale, L('계약시장 · 20년 고정가격', 'Contract market · 20-yr fixed'), L('2027년 이후 신규 발전소', 'new plants from 2027'))}
+              {chip(sale, 'spot', setSale, L('현물 판매 · SMP + REC', 'Spot · SMP + REC'), L('2026년까지 REC 받은 기존 발전소', 'existing REC plants'))}
+            </div>
+            {sale === 'contract' ? (
+              <div className={s.grid2}>
+                {field('bz-cp', L('계약 단가', 'Contract price'), L(`2026년 1차 고정가격 평균 낙찰가 ${SOLAR_MARKET.contractAvg}원`, `2026 round-1 average ${SOLAR_MARKET.contractAvg}`), contractPrice, setContractPrice, L('원/kWh', 'KRW/kWh'))}
+                {field('bz-pr', L('우대가격', 'Preference premium'), L('수상·지붕·주민참여 등 (확정 시 입력)', 'floating, rooftop, community'), premium, setPremium, L('원/kWh', 'KRW/kWh'))}
+              </div>
+            ) : (
+              <>
+                <div className={s.grid3}>
+                  {field('bz-smp', 'SMP', L(`최근 12개월 평균 · ${SMP.asOf} ${SMP.latest}원`, `12-month avg · ${SMP.asOf}: ${SMP.latest}`), smp, setSmp, L('원/kWh', 'KRW/kWh'))}
+                  {field('bz-rec', L('REC 가격', 'REC price'), L(`현물 육지 평균 ${SOLAR_MARKET.asOf}`, `spot avg ${SOLAR_MARKET.asOf}`), recPrice, setRecPrice, L('원/REC', 'KRW/REC'), 'money')}
+                  {field('bz-start', L('1년차 연도', 'First year'), L(`${SPOT_LAST_YEAR}년까지 현물 판매`, `spot until ${SPOT_LAST_YEAR}`), startYear, setStartYear, L('년', ''), 'int')}
+                </div>
+                <div className={s.grid2}>
+                  {field('bz-after', L(`${SPOT_LAST_YEAR + 1}년 이후 단가`, `Price from ${SPOT_LAST_YEAR + 1}`), L('전환시장 가격 미정 → 기본값은 SMP만', 'conversion price TBD; default SMP only'), afterPrice, setAfterPrice, L('원/kWh', 'KRW/kWh'))}
+                  <div className={s.price_calc}>
+                    {L('현물 단가', 'Spot price')} = SMP {f(num(smp), 1)} + REC {f(num(recPrice) / 1000, 2)} × {L('가중치', 'weight')} {weight} = <b>{f(num(smp) + (num(recPrice) / 1000) * weight, 1)}{L('원/kWh', ' KRW/kWh')}</b>
+                  </div>
+                </div>
+              </>
+            )}
+            <div className={s.price_box}>
+              <b>{L('단가 기준', 'Price basis')}</b> — SMP {SMP.asOf} {L('전력거래소 육지 월평균(매월 자동 갱신)', 'KPX inland monthly average')} · REC {SOLAR_MARKET.asOf} {f(SOLAR_MARKET.recPerREC)}{L('원 (', ' (')}{L(SOLAR_MARKET.recSource, 'spot market inland average')}) · {L(`고정가격 ${SOLAR_MARKET.contractSource}, 상한 ${SOLAR_MARKET.contractCeiling}원/kWh`, `fixed price: 2026 round-1 tender, ceiling ${SOLAR_MARKET.contractCeiling} KRW/kWh`)}.
+            </div>
+          </section>
+
+          <section className={s.card}>
+            <h2 className={s.card_title}>{L('3. 사업비와 대출', '3. Costs and loan')}</h2>
+            <div className={s.grid3}>
+              {field('bz-capex', L('설치비 (kW당)', 'Capex per kW'), L(`총 ${manwon(capex)}원 · 땅값 제외`, `total ${won(capex)}, excl. land`), capexPerKW, setCapexPerKW, L('원/kW', 'KRW/kW'), 'money')}
+              {field('bz-om', L('운영비 (kW당·년)', 'O&M per kW·yr'), L(`연 ${manwon(num(omPerKW) * kW)}원 · 안전관리·보험·모니터링`, `${won(num(omPerKW) * kW)}/yr`), omPerKW, setOmPerKW, L('원', 'KRW'), 'money')}
+              {field('bz-omx', L('운영비 상승률', 'O&M escalation'), '', omEscal, setOmEscal, L('%/년', '%/yr'))}
+              {field('bz-rent', L('부지 임대료', 'Land lease'), L('내 땅이면 비움', 'blank if owned'), rent, setRent, L('원/년', 'KRW/yr'), 'money')}
+              {field('bz-inv', L('인버터 교체비', 'Inverter replacement'), L('12년차에 한 번 (견적 금액)', 'once in year 12'), inverter, setInverter, L('원', 'KRW'), 'money')}
+              {field('bz-loan', L('대출 비율', 'Loan share'), L(`대출 ${manwon(capex * Math.min(100, num(loanPct)) / 100)}원`, `${won(capex * Math.min(100, num(loanPct)) / 100)}`), loanPct, setLoanPct, '%')}
+              {field('bz-rate', L('대출 금리', 'Interest rate'), L('연 이율', 'annual'), rate, setRate, '%')}
+              {field('bz-term', L('상환 기간', 'Loan term'), L('원리금 균등 상환', 'level payments'), loanYears, setLoanYears, L('년', 'yr'), 'int')}
+            </div>
+            <p className={s.hint}>{L('설치비 기본값 kW당 120만 원은 100kW급 일반부지 사업비 1.1억~1.4억 원(토지 보유, 2026년 업체 자료)의 중간값입니다. 계통연계비·인허가비를 포함하고 땅값은 빼서 넣으세요. 운영비 기본값(100kW 연 200만 원)은 예시이니 안전관리 대행·보험 견적으로 바꿔 넣으세요. 법인세·종합소득세는 빼고 계산합니다.', 'Default capex ₩1.2M/kW is the midpoint of 2026 quotes for 100 kW on owned land; replace defaults with your quotes. Income tax is not included.')}</p>
+          </section>
+
+          <section className={s.card} aria-live="polite">
+            <h2 className={s.card_title}>{L('4. 결과 (20년)', '4. Result (20 years)')}</h2>
+            {!biz ? <p className={s.hint}>{L('설비 용량을 넣으세요.', 'Enter the capacity.')}</p> : (
+              <>
+                <div className={s.hero_grid}>
+                  <div className={s.hero}>
+                    <div className={s.hero_label}>{L('1년차 전력 판매 수입', 'Year-1 revenue')}</div>
+                    <div className={s.hero_num}>{won(biz.rows[0].revenue)}</div>
+                    <div className={s.hero_sub}>{L(`월 평균 ${won(biz.rows[0].revenue / 12)} · 운영비·대출 상환 후 ${won(biz.rows[0].cash)}`, `${won(biz.rows[0].revenue / 12)}/month · after costs and debt ${won(biz.rows[0].cash)}`)}</div>
+                  </div>
+                  <div className={s.hero}>
+                    <div className={s.hero_label}>{L('자기자본 회수 기간', 'Equity payback')}</div>
+                    <div className={s.hero_num}>{biz.paybackYears === null ? L('20년 넘음', '> 20 yr') : <>{f(biz.paybackYears, 1)}<span className={s.hero_unit}>{L('년', 'yr')}</span></>}</div>
+                    <div className={s.hero_sub}>{L(`자기자본 ${won(biz.equity)} · 20년 누적 ${won(biz.net)}`, `equity ${won(biz.equity)} · 20-yr net ${won(biz.net)}`)}</div>
+                  </div>
+                </div>
+                <div className={s.stats}>
+                  <div className={s.stat}><div className={s.stat_num}>{f(biz.gen1)} kWh</div><div className={s.stat_label}>{L(`1년차 발전량 · ${f(biz.specificYield)} kWh/kW`, `year-1 output · ${f(biz.specificYield)} kWh/kW`)}</div></div>
+                  <div className={s.stat}><div className={s.stat_num}>{pct(biz.projectIrr)}</div><div className={s.stat_label}>{L('사업 IRR (대출 전)', 'Project IRR')}</div></div>
+                  <div className={s.stat}><div className={s.stat_num}>{pct(biz.equityIrr)}</div><div className={s.stat_label}>{L('자기자본 IRR', 'Equity IRR')}</div></div>
+                  <div className={s.stat}><div className={`${s.stat_num} ${biz.minDscr !== null && biz.minDscr < 1.2 ? s.neg : ''}`}>{biz.minDscr === null ? '—' : f(biz.minDscr, 2)}</div><div className={s.stat_label}>{L('최소 DSCR (상환 여력)', 'Min DSCR')}</div></div>
+                </div>
+                {biz.minDscr !== null && biz.minDscr < 1.2 && <p className={s.hint}>⚠️ {L(`상환 기간 중 영업이익이 원리금의 ${f(biz.minDscr, 2)}배밖에 안 되는 해가 있습니다. 금융기관은 보통 1.2~1.3배 이상을 요구하니 대출 비율을 낮추거나 기간을 늘려 보세요.`, `Debt service coverage falls to ${f(biz.minDscr, 2)}; lenders usually want 1.2–1.3 or more.`)}</p>}
+                <div className={s.chart}>{barChart(biz.rows.map(y => y.cumulative), biz.rows.map(y => `${y.year}`), L('연도별 자기자본 누적 현금 (운영비·원리금 차감)', 'Cumulative equity cash flow'), s.ch_bar, true)}</div>
+                <div className={s.table_wrap}>
+                  <table className={s.table}>
+                    <thead><tr><th>{L('연차', 'Year')}</th><th>{L('발전 kWh', 'kWh')}</th><th>{L('단가', 'Price')}</th><th>{L('판매 수입', 'Revenue')}</th><th>{L('운영비', 'O&M')}</th><th>{L('이자', 'Interest')}</th><th>{L('원금', 'Principal')}</th><th>{L('순현금', 'Net cash')}</th><th>{L('누적', 'Cumulative')}</th></tr></thead>
+                    <tbody>{biz.rows.map(y => (
+                      <tr key={y.year}><td>{y.year} <small>({y.calYear})</small></td><td>{f(y.gen)}</td><td>{f(y.price, 1)}</td><td>{f(y.revenue)}</td><td>{f(y.cost)}</td><td>{f(y.interest)}</td><td>{f(y.principal)}</td><td className={y.cash >= 0 ? s.pos : s.neg}>{f(y.cash)}</td><td className={y.cumulative >= 0 ? s.pos : s.neg}>{f(y.cumulative)}</td></tr>
+                    ))}</tbody>
+                    <tfoot><tr><td>{L('합계', 'Total')}</td><td>{f(biz.rows.reduce((a, y) => a + y.gen, 0))}</td><td></td><td>{f(biz.totalRevenue)}</td><td>{f(biz.totalCost)}</td><td>{f(biz.totalInterest)}</td><td>{f(biz.rows.reduce((a, y) => a + y.principal, 0))}</td><td>{f(biz.net + biz.equity)}</td><td>{f(biz.net)}</td></tr></tfoot>
+                  </table>
+                </div>
+                <p className={s.hint}>{L('계약시장 단가는 20년 동안 그대로이고, 현물 단가는 입력한 SMP·REC가 2029년까지 유지된다고 가정했습니다(실제 SMP·REC는 매달 변합니다). 세금, 감가상각, 20년 뒤 설비 잔존가치와 철거비는 넣지 않았습니다.', 'Contract prices stay fixed for 20 years; spot prices are held at the entered SMP and REC until 2029 (real prices move monthly). Taxes, depreciation, residual value and decommissioning are not included.')}</p>
+                <div className={`${s.actions} ${s.no_print}`}>
+                  <button type="button" className={s.btn} onClick={() => copy(L(
+                    `[태양광 발전사업 수익] ${regionName(bzRegion)} ${f(kW, 1)}kW (${sale === 'contract' ? `계약시장 ${f(num(contractPrice) + num(premium), 1)}원/kWh` : `현물 SMP+REC×${weight}`})\n1년차 발전 ${f(biz.gen1)}kWh · 판매 ${won(biz.rows[0].revenue)}\n설치비 ${won(capex)} (대출 ${loanPct}% ${rate}% ${loanYears}년)\n사업 IRR ${pct(biz.projectIrr)} · 자기자본 IRR ${pct(biz.equityIrr)} · 회수 ${biz.paybackYears === null ? '20년 초과' : `${f(biz.paybackYears, 1)}년`}`,
+                    `[Solar plant] ${f(kW, 1)} kW, year-1 revenue ${won(biz.rows[0].revenue)}, project IRR ${pct(biz.projectIrr)}, equity IRR ${pct(biz.equityIrr)}`,
+                  ))}><Copy size={16} />{L('결과 복사', 'Copy')}</button>
+                  <button type="button" className={s.ghost} onClick={() => window.print()}><Printer size={16} />{L('인쇄·PDF', 'Print / PDF')}</button>
+                  {msg && <span className={s.msg}>{msg}</span>}
+                </div>
+              </>
+            )}
+          </section>
+        </>
       )}
 
-      {tab === 'pv' && (
+      {tab !== 'thermal' && (
         <section className={s.card}>
           <h2 className={s.card_title}>{L('검증: 실제 발전소 실측과 비교', 'Validation against measured plants')}</h2>
           <p className={s.hint}>{L('한국동서발전이 공개한 발전기별 시간대 실측 발전량(공공데이터포털, 2022.4~2026.6, 결측·정지일 제외)을 연간 kWh/kWp로 바꿔 이 계산기의 모의값과 비교했습니다.', 'Hourly measured output published by Korea East-West Power (2022-04 to 2026-06, outage days excluded) compared with this calculator.')}</p>
@@ -400,15 +579,15 @@ export default function SolarMasterClient() {
       <SeoSection
         ko={{
           title: '태양광 발전량·수익 계산과 태양열 온수 절감액',
-          description: '주택 태양광의 연간 발전량은 설치 용량(kWp) × 지역 일평균 발전시간 × 365일로 어림합니다. 국가참조표준기상데이터로 16개 지역을 모의한 연구에서 정남향 30° 설치 시 전국 평균은 하루 3.6시간(연 약 1,312kWh/kWp)이었고, 서울은 3.2시간(약 1,165kWh/kWp), 목포는 3.9시간이었습니다. 이 값에는 온도·인버터 손실이 이미 들어 있으므로 손실을 또 빼면 발전량이 지나치게 낮게 나옵니다. 이 계산기는 지역 발전시간에 월별 계수, 경사각·방향·그늘 보정, 해마다 누적되는 패널 노화를 반영하고, 절감액은 한전 주택용 저압 요금 전체 — 기본요금, 누진 전력량요금(기타계절 200·400kWh, 여름 300·450kWh 구간), 기후환경요금, 연료비조정요금, 부가세, 전력산업기반기금 — 로 계산합니다. 남는 전력을 다음 달로 넘기는 상계거래도 반영합니다. 한국동서발전이 공개한 실제 발전소 4년치 실측과 비교해 보니 실제 발전량은 모의값보다 약 11% 적어, 기본값으로 이 차이(×0.89)를 보정합니다. 예를 들어 서울에서 3.2kWp를 달고 월 350kWh(여름 450kWh)를 쓰는 집은 보정 후 연 약 3,330kWh를 만들어 전기요금을 연 70만 원가량 줄입니다. 태양열 탭은 하루 온수 사용량과 온도로 필요한 열량을 구해, 집열판이 모은 열 중 실제로 쓰는 만큼만 절감액에 넣고 기존 보일러 효율로 연료 절감을 계산합니다. 단가는 기준일과 함께 표시되며 고지서 단가로 바꿔 넣을 수 있습니다.',
+          description: '주택 태양광의 연간 발전량은 설치 용량(kWp) × 지역 일평균 발전시간 × 365일로 어림합니다. 국가참조표준기상데이터로 16개 지역을 모의한 연구에서 정남향 30° 설치 시 전국 평균은 하루 3.6시간(연 약 1,312kWh/kWp)이었고, 서울은 3.2시간(약 1,165kWh/kWp), 목포는 3.9시간이었습니다. 이 값에는 온도·인버터 손실이 이미 들어 있으므로 손실을 또 빼면 발전량이 지나치게 낮게 나옵니다. 이 계산기는 지역 발전시간에 월별 계수, 경사각·방향·그늘 보정, 해마다 누적되는 패널 노화를 반영하고, 절감액은 한전 주택용 저압 요금 전체 — 기본요금, 누진 전력량요금(기타계절 200·400kWh, 여름 300·450kWh 구간), 기후환경요금, 연료비조정요금, 부가세, 전력산업기반기금 — 로 계산합니다. 남는 전력을 다음 달로 넘기는 상계거래도 반영합니다. 발전사업 탭은 전력을 팔아 버는 사업용 발전소를 다룹니다. 재생에너지법 개정으로 2027년부터 신규 발전소는 REC 대신 정부 계약시장의 20년 고정가격으로 팔기 때문에 계약 단가(2026년 1차 고정가격 평균 낙찰가 146.92원/kWh)를 기본값으로 넣었고, 2026년까지 REC를 받은 기존 발전소는 SMP + REC × 가중치(운영지침 별표 2의 구간별 가중평균)로 2029년까지, 그 뒤는 따로 넣은 단가로 계산합니다. 설치비·운영비·대출 조건을 넣으면 20년 현금흐름, 사업 IRR, 자기자본 IRR, 회수 기간, 최소 DSCR을 보여 줍니다. 한국동서발전이 공개한 실제 발전소 4년치 실측과 비교해 보니 실제 발전량은 모의값보다 약 11% 적어, 기본값으로 이 차이(×0.89)를 보정합니다. 예를 들어 서울에서 3.2kWp를 달고 월 350kWh(여름 450kWh)를 쓰는 집은 보정 후 연 약 3,330kWh를 만들어 전기요금을 연 70만 원가량 줄입니다. 태양열 탭은 하루 온수 사용량과 온도로 필요한 열량을 구해, 집열판이 모은 열 중 실제로 쓰는 만큼만 절감액에 넣고 기존 보일러 효율로 연료 절감을 계산합니다. 단가는 기준일과 함께 표시되며 고지서 단가로 바꿔 넣을 수 있습니다.',
           useCases: [
             { icon: '🏠', title: '주택 태양광 설치 검토', desc: '지역, 패널 출력과 장수, 경사·방향을 넣으면 연간 발전량과 월별 전기요금 전후를 비교하고, 설치비와 확정 보조금으로 회수 기간과 20년 누적 수익을 확인합니다.' },
             { icon: '📋', title: '시공사 견적 검증', desc: '업체가 제시한 연 발전량이 지역 평균(kWh/kWp)과 맞는지 비교합니다. 서울에서 kWp당 연 1,300kWh를 넘게 약속한다면 근거를 물어볼 만합니다.' },
-            { icon: '❄️', title: '여름 누진 구간 확인', desc: '7·8월 사용량을 따로 넣어 에어컨으로 누진 3단계에 들어가는 달에 태양광이 얼마나 요금을 낮추는지 월별 표로 봅니다.' },
+            { icon: '🏭', title: '태양광 발전사업 수익성 검토', desc: '100kW급 발전소의 설치비, 운영비, 대출 비율과 금리를 넣어 계약시장 20년 고정가격 기준 판매 수입, 자기자본 회수 기간, IRR과 상환 여력(DSCR)을 금융 상담 전에 미리 확인합니다.' },
             { icon: '🔥', title: '태양열 온수기 크기 정하기', desc: '가족 수에 맞춘 하루 온수량으로 필요한 열량을 구해, 집열판이 너무 커서 버려지는 열이 많지 않은지와 가스·등유 절감액을 함께 확인합니다.' },
           ],
           steps: [
-            { step: '태양광·태양열 선택', desc: '전기요금을 줄이려면 태양광 발전, 온수 연료비를 줄이려면 태양열 온수 탭을 고릅니다. 두 탭의 입력은 따로 유지됩니다.' },
+            { step: '탭 선택', desc: '집 전기요금을 줄이려면 태양광 발전, 전력을 팔 사업용 발전소는 발전사업, 온수 연료비를 줄이려면 태양열 온수 탭을 고릅니다. 세 탭의 입력은 따로 유지됩니다.' },
             { step: '설치 조건 입력', desc: '지역을 고르고 패널 1장 출력과 장수, 경사각·방향·그늘을 정합니다. 태양열은 집열판 면적과 종류, 하루 온수량과 온도를 넣습니다.' },
             { step: '사용량·단가·비용', desc: '월 전기 사용량(여름 따로), 설치비, 확정된 보조금을 넣습니다. 기본 단가는 기준일 값이니 고지서 단가가 다르면 바꿔 넣습니다.' },
             { step: '결과 확인·내보내기', desc: '연간 절감액, 회수 기간, 월별 표와 누적 수익 그래프를 확인하고 결과 복사, 견적서 보내기, 인쇄로 저장합니다.' },
@@ -418,20 +597,22 @@ export default function SolarMasterClient() {
             { q: '전기요금 절감액은 어떻게 계산하나요?', a: '태양광이 없을 때와 있을 때의 월 사용량으로 한전 주택용 저압 요금을 각각 계산해 그 차이를 절감액으로 봅니다. 누진 구간이 바뀌는 효과와 기본요금, 기후환경·연료비조정요금, 부가세 10%, 전력산업기반기금 2.7%까지 들어가므로, 발전량 × 단가로 단순 계산한 값과 다릅니다.' },
             { q: '보조금은 얼마나 받을 수 있나요?', a: '한국에너지공단 주택지원사업과 지자체 사업은 해마다 지원 단가와 예산이 바뀌고 지역마다 다릅니다. 그래서 이 계산기는 보조금을 자동으로 빼지 않고, 모집 공고나 시공사 계약서에서 확인한 금액을 넣도록 했습니다.' },
             { q: '계산 결과는 얼마나 정확한가요?', a: '한국동서발전이 공개한 당진·울산 발전소의 2022~2026년 시간대별 실측 발전량과 비교했을 때, 실측 보정을 켠 연간 발전량은 실측과 1% 안팎으로 맞았고 월별로는 10~15% 차이가 났습니다. 그늘이나 방향이 나쁜 현장은 이보다 크게 낮을 수 있어, 동해 발전소처럼 실측이 24% 낮은 사례도 있었습니다.' },
+            { q: '2027년부터 새로 짓는 태양광 발전소도 REC를 받을 수 있나요?', a: '2026년 8월 국회를 통과한 재생에너지법 개정안은 REC 신규 발급을 2026년 12월 31일까지로 정했습니다. 이후 신규 발전소는 정부가 여는 계약시장 경쟁입찰에서 낙찰받아 20년 고정가격으로 팔거나 기업과 직접 전력구매계약(PPA)을 맺습니다. 기존 발전소의 REC 현물시장은 2029년 말까지 운영될 예정이며, 계약시장 상한가와 우대가격은 하위법령에서 정해집니다.' },
+            { q: 'REC 가중치는 어떻게 매기나요?', a: '일반부지는 100kW 미만 1.2, 3,000kW까지 1.0, 그 초과 0.8을 용량 구간별로 나눠 적용한 뒤 평균합니다. 1,000kW라면 (99.999×1.2 + 900.001×1.0) ÷ 1,000 = 1.019입니다. 건축물은 3,000kW까지 1.5, 수상은 1.6·1.4·1.2, 임야는 0.5이고, 500m 안 같은 사업자의 발전소는 용량을 합칩니다.' },
             { q: '태양열 집열판은 클수록 좋은가요?', a: '아닙니다. 모은 열이 하루 쓰는 온수 열량보다 많으면 남는 열은 쓰지 못합니다. 하루 200L를 15℃에서 45℃로 데우는 데는 약 25MJ가 필요하므로, 이보다 훨씬 많이 모으는 집열판은 여름에 버리는 열만 늘고 회수 기간은 길어집니다.' },
           ],
         }}
         en={{
-          title: 'Solar PV output, savings and solar hot water',
-          description: 'Annual PV output is roughly capacity (kWp) × regional daily yield hours × 365. A simulation of 16 Korean regions with national reference weather data found an average of 3.6 h/day at 30° south (about 1,312 kWh/kWp), with Seoul at 3.2 h (1,165 kWh/kWp). These figures already include temperature and inverter losses. This calculator applies monthly factors, tilt, orientation, shading and year-by-year degradation, and computes savings with the full KEPCO residential tariff — basic charge, tiered energy charge with summer thresholds, climate and fuel adjustment charges, VAT and the power fund — including net metering of surplus. The solar thermal tab sizes heat demand from daily hot water and temperatures, counts only the heat actually used and converts it to fuel savings through boiler efficiency. Prices are shown with their effective dates and can be edited.',
+          title: 'Solar PV output, savings, power plant revenue and solar hot water',
+          description: 'Annual PV output is roughly capacity (kWp) × regional daily yield hours × 365. A simulation of 16 Korean regions with national reference weather data found an average of 3.6 h/day at 30° south (about 1,312 kWh/kWp), with Seoul at 3.2 h (1,165 kWh/kWp). These figures already include temperature and inverter losses. This calculator applies monthly factors, tilt, orientation, shading and year-by-year degradation, and computes savings with the full KEPCO residential tariff — basic charge, tiered energy charge with summer thresholds, climate and fuel adjustment charges, VAT and the power fund — including net metering of surplus. The power plant tab models plants that sell electricity: under the 2026 amendment of the Renewable Energy Act, new plants from 2027 sell at a 20-year fixed price won in a government contract market instead of earning RECs, so the default price is the 2026 round-1 fixed-price tender average of 146.92 KRW/kWh, while existing REC plants are modelled with SMP plus REC times the band-weighted multiplier until 2029. Capex, O&M and loan terms give a 20-year cash flow, project and equity IRR, payback and minimum DSCR. The solar thermal tab sizes heat demand from daily hot water and temperatures, counts only the heat actually used and converts it to fuel savings through boiler efficiency. Prices are shown with their effective dates and can be edited.',
           useCases: [
             { icon: '🏠', title: 'Home PV Decision', desc: 'Compare monthly bills before and after, and see payback and 20-year return.' },
             { icon: '📋', title: 'Check a Quote', desc: 'Compare a promised yield with regional kWh/kWp.' },
-            { icon: '❄️', title: 'Summer Tiers', desc: 'Enter July–August use separately to see savings in high-tier months.' },
+            { icon: '🏭', title: 'Power Plant Returns', desc: 'Check revenue, equity payback, IRR and debt coverage for a 100 kW plant before talking to a lender.' },
             { icon: '🔥', title: 'Size a Solar Water Heater', desc: 'Avoid oversized collectors that waste heat.' },
           ],
           steps: [
-            { step: 'Pick PV or Thermal', desc: 'Each tab keeps its own inputs.' },
+            { step: 'Pick a Tab', desc: 'Home PV, power plant or solar hot water; each keeps its own inputs.' },
             { step: 'Describe the System', desc: 'Region, panels, tilt, orientation and shading, or collector area and hot water.' },
             { step: 'Usage, Prices, Cost', desc: 'Enter usage, cost and confirmed subsidy; edit prices if your bill differs.' },
             { step: 'Read and Export', desc: 'See savings, payback, tables and charts; copy, send to invoice or print.' },
@@ -441,6 +622,8 @@ export default function SolarMasterClient() {
             { q: 'How are bill savings calculated?', a: 'The full residential bill is calculated with and without solar each month, including tiers, charges, VAT and the power fund.' },
             { q: 'What about subsidies?', a: 'They vary by year and municipality, so enter only a confirmed amount.' },
             { q: 'How accurate is it?', a: 'Against 2022–2026 hourly measurements from Korea East-West Power plants in Dangjin and Ulsan, the corrected annual yield matched within about 1% and monthly values within 10–15%; poorly sited plants can be much lower.' },
+            { q: 'Do new plants from 2027 get RECs?', a: 'No. New REC issuance ends on 31 December 2026; new plants sell through the government contract market at a 20-year fixed price or via corporate PPAs, and the REC spot market for existing plants is expected to close at the end of 2029.' },
+            { q: 'How is the REC weight set?', a: 'For land-mounted PV, 1.2 below 100 kW, 1.0 up to 3 MW and 0.8 above are applied band by band and averaged, so 1,000 kW gets 1.019.' },
             { q: 'Is a bigger collector better?', a: 'No — heat beyond daily demand is wasted; 200 L from 15 to 45 °C needs about 25 MJ a day.' },
           ],
         }}

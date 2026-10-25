@@ -156,6 +156,134 @@ export function pvCalc(inp: PvInput): PvResult | null {
   };
 }
 
+// ───── 발전사업 (전력 판매) ─────
+
+/**
+ * 태양광 REC 가중치 — 「신·재생에너지 공급의무화제도 관리 및 운영지침」 별표 2.
+ * 용량 구간별 가중치를 나눠 적용한 가중평균이고, 소수점 넷째 자리에서 버린다(비고 4).
+ * '100kW 미만' 구간은 산정식대로 99.999kW까지라서 정확히 100kW면 1.199가 된다.
+ */
+export type PvSite = 'land' | 'building' | 'floating' | 'forest';
+const REC_BANDS: Record<PvSite, [number, number][]> = {
+  land: [[99.999, 1.2], [3000, 1.0], [Infinity, 0.8]],
+  building: [[3000, 1.5], [Infinity, 1.0]],
+  floating: [[99.999, 1.6], [3000, 1.4], [Infinity, 1.2]],
+  forest: [[Infinity, 0.5]],
+};
+export function recWeight(site: PvSite, kW: number): number {
+  if (!(kW > 0)) return 0;
+  let prev = 0, sum = 0;
+  for (const [upto, w] of REC_BANDS[site]) {
+    const span = Math.min(kW, upto) - prev;
+    if (span <= 0) break;
+    sum += span * w;
+    prev = upto;
+  }
+  return Math.floor((sum / kW) * 1000 + 1e-9) / 1000;
+}
+
+/** REC 현물시장 마지막 해(재생에너지법 개정 2026.8, 하위법령 확정 전) */
+export const SPOT_LAST_YEAR = 2029;
+
+export interface BizInput {
+  kW: number;
+  hours: number;
+  tilt: string;
+  azimuth: string;
+  shadePct: number;
+  degradePct: number;
+  fieldCorrection: boolean;
+  /** contract: 20년 고정가격(계약시장) / spot: SMP + REC×가중치 */
+  sale: 'contract' | 'spot';
+  /** 원/kWh */
+  contractPrice: number;
+  premium: number;
+  smp: number;
+  /** 원/REC(=원/MWh) */
+  recPrice: number;
+  weight: number;
+  /** 현물 판매 첫해(1년차 연도), SPOT_LAST_YEAR 이후에는 afterPrice */
+  startYear: number;
+  afterPrice: number;
+  capex: number;
+  /** 1년차 운영비(원/년), 해마다 omEscalPct 만큼 오른다 */
+  om: number;
+  omEscalPct: number;
+  rent: number;
+  /** 인버터 교체비(원), inverterYear 에 한 번 */
+  inverter: number;
+  inverterYear: number;
+  loanPct: number;
+  ratePct: number;
+  loanYears: number;
+  years: number;
+}
+
+export interface BizYear {
+  year: number; calYear: number; gen: number; price: number; revenue: number; cost: number;
+  interest: number; principal: number; ebitda: number; cash: number; cumulative: number; dscr: number | null;
+}
+
+/** 현금흐름의 내부수익률(연), 부호가 바뀌지 않으면 null */
+export function irr(flows: number[]): number | null {
+  const npv = (r: number) => flows.reduce((s, c, t) => s + c / Math.pow(1 + r, t), 0);
+  let lo = -0.99, hi = 1;
+  if (npv(lo) * npv(hi) > 0) return null;
+  for (let i = 0; i < 200; i++) {
+    const mid = (lo + hi) / 2;
+    if (npv(lo) * npv(mid) <= 0) hi = mid; else lo = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+export function bizCalc(inp: BizInput) {
+  if (!(inp.kW > 0 && inp.hours > 0 && inp.capex >= 0)) return null;
+  const factor = (TILT_FACTOR[inp.tilt] ?? 1) * (AZIMUTH_FACTOR[inp.azimuth] ?? 1) * (1 - Math.max(0, Math.min(100, inp.shadePct)) / 100)
+    * (inp.fieldCorrection ? FIELD_FACTOR : 1);
+  const gen1 = MONTH_COEFF.reduce((s, c, i) => s + inp.kW * inp.hours * c * DAYS[i], 0) * factor;
+
+  const spotPrice = inp.smp + (inp.recPrice / 1000) * inp.weight;
+  const loan = inp.capex * Math.max(0, Math.min(100, inp.loanPct)) / 100;
+  const equity = inp.capex - loan;
+  const r = inp.ratePct / 100, n = Math.max(0, Math.round(inp.loanYears));
+  // 원리금 균등 상환
+  const payment = loan > 0 && n > 0 ? (r > 0 ? (loan * r) / (1 - Math.pow(1 + r, -n)) : loan / n) : 0;
+
+  const rows: BizYear[] = [];
+  let balance = loan, cumulative = -equity;
+  let payback: number | null = equity <= 0 ? 0 : null;
+  for (let y = 1; y <= inp.years; y++) {
+    const calYear = inp.startYear + y - 1;
+    const gen = gen1 * Math.pow(1 - inp.degradePct / 100, y - 1);
+    const price = inp.sale === 'contract' ? inp.contractPrice + inp.premium : calYear <= SPOT_LAST_YEAR ? spotPrice : inp.afterPrice;
+    const revenue = gen * price;
+    const cost = inp.om * Math.pow(1 + inp.omEscalPct / 100, y - 1) + inp.rent + (y === inp.inverterYear ? inp.inverter : 0);
+    const ebitda = revenue - cost;
+    let interest = 0, principal = 0;
+    if (y <= n && balance > 0) {
+      interest = balance * r;
+      principal = Math.min(balance, payment - interest);
+      balance -= principal;
+    }
+    const debt = interest + principal;
+    const cash = ebitda - debt;
+    const prev = cumulative;
+    cumulative += cash;
+    if (payback === null && cumulative >= 0 && cash > 0) payback = y - 1 + -prev / cash;
+    rows.push({ year: y, calYear, gen, price, revenue, cost, interest, principal, ebitda, cash, cumulative, dscr: debt > 0 ? ebitda / debt : null });
+  }
+  const dscrs = rows.map(x => x.dscr).filter((x): x is number => x !== null);
+  const sum = (k: keyof BizYear) => rows.reduce((s, x) => s + (x[k] as number), 0);
+  return {
+    gen1, specificYield: gen1 / inp.kW, spotPrice, loan, equity, payment, rows, paybackYears: payback,
+    projectIrr: irr([-inp.capex, ...rows.map(x => x.ebitda)]),
+    equityIrr: equity > 0 ? irr([-equity, ...rows.map(x => x.cash)]) : null,
+    minDscr: dscrs.length ? Math.min(...dscrs) : null,
+    totalRevenue: sum('revenue'), totalCost: sum('cost'), totalInterest: sum('interest'),
+    net: cumulative,
+  };
+}
+
 // ───── 태양열 ─────
 
 export const PR = 0.85;

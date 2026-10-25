@@ -502,8 +502,8 @@
       "desc": "A shared notepad alive for 72 hours from the last edit. Nobody writes = BOOM!"
     },
     "solar-master": {
-      "title": "Solar PV & Thermal Savings Calculator",
-      "desc": "Solar PV output, bill savings and payback with regional yields and the full KEPCO tariff, plus solar hot-water savings."
+      "title": "Solar PV, Power Plant & Thermal Calculator",
+      "desc": "Home solar bill savings and payback, power plant revenue and IRR (contract price or SMP + REC), and solar hot-water savings."
     },
     "bulk-renamer": {
       "title": "Smart Bulk Renamer",

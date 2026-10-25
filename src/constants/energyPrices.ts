@@ -45,6 +45,27 @@ export const KEROSENE = {
   mjPerLiter: 36.5,
 } as const;
 
+/** 계통한계가격(SMP) 원/kWh — 전력거래소 육지 월평균 (scripts/update-utility-prices.mjs 가 매월 갱신) */
+export const SMP = {
+  asOf: '2026-09',
+  source: '전력거래소 육지 SMP 월평균',
+  latest: 119.02,
+  /** 최근 12개월 단순 평균 */
+  avg12: 113.7,
+} as const;
+
+/** 태양광 판매 단가 — 사업용 계산 기본값 */
+export const SOLAR_MARKET = {
+  asOf: '2026-09',
+  /** REC 현물시장 육지 월평균 원/REC (1REC = 1MWh) */
+  recPerREC: 71460,
+  recSource: '신재생원스톱 REC 현물시장 거래속보 육지 월평균(해줌 집계)',
+  /** 2026년 제1차 태양광 고정가격계약 경쟁입찰 평균 낙찰가 원/kWh (SMP+1REC), 상한 147.686 */
+  contractAvg: 146.92,
+  contractCeiling: 147.686,
+  contractSource: '2026년 제1차 태양광 고정가격계약 경쟁입찰 결과(기후에너지환경부·한국에너지공단)',
+} as const;
+
 export const CO2 = {
   /** kg/kWh — 온실가스 배출권거래제 지침의 전력 간접배출계수 */
   gridPerKWh: 0.4567,

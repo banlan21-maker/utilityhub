@@ -1,5 +1,5 @@
-name: 전기·도시가스 단가 갱신
-# 서울도시가스 주택용 단가(매월), 한전 주택용 저압 요금표(분기 첫 달) → src/constants/energyPrices.ts
+name: 전기·도시가스·SMP 단가 갱신
+# 서울도시가스 주택용 단가(매월), 한전 주택용 저압 요금표(분기 첫 달), 전력거래소 SMP 월평균(매월) → src/constants/energyPrices.ts
 # 값이 바뀐 때만 커밋하고, Vercel이 자동 배포한다.
 
 on:
@@ -42,5 +42,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/constants/energyPrices.ts
-          git commit -m "chore(prices): update electricity / city gas prices"
+          git commit -m "chore(prices): update electricity / city gas / SMP prices"
           git push

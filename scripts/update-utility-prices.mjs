@@ -1,4 +1,4 @@
-// 서울 도시가스(주택용)·한전 주택용 저압 요금을 공식 요금표 페이지에서 읽어 src/constants/energyPrices.ts 를 고친다.
+// 서울 도시가스(주택용)·한전 주택용 저압 요금·전력거래소 SMP 월평균을 공식 페이지에서 읽어 src/constants/energyPrices.ts 를 고친다.
 // GitHub Actions(매월 2일)에서 실행. 전기는 분기 첫 달(1·4·7·10월)이나 FORCE_ELECTRICITY=1 일 때만 확인한다.
 // 페이지 구조가 바뀌어 값을 못 읽으면 파일을 고치지 않고 실패로 끝내 알림이 가게 한다.
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -79,6 +79,34 @@ if ([1, 4, 7, 10].includes(month) || process.env.FORCE_ELECTRICITY === '1') {
   });
 } else {
   note(`전기요금은 분기 첫 달(1·4·7·10월)에 확인합니다. 이번 달(${month}월)은 건너뜀`);
+}
+
+// ───── SMP (전력거래소 육지 월평균) ─────
+{
+  const year = new Date().getUTCFullYear();
+  const months = [];
+  for (const y of [year - 1, year]) {
+    const res = await fetch(`https://www.kpx.or.kr/smpMonthly.es?mid=a30303000000&device=mbl&smp_year=${y}`, { headers: UA });
+    if (!res.ok) fail(`전력거래소 SMP 월평균 HTTP ${res.status}`);
+    const t = toText(await res.text());
+    const part = t.slice(t.indexOf('구분 육지 SMP'));
+    // "9월 119.02 118.97 119.02" (육지·제주·통합), 아직 안 나온 달은 숫자가 없다
+    for (const m of part.matchAll(/(\d{1,2})월 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)(?= |$)/g)) {
+      const month = Number(m[1]), v = Number(m[2]);
+      if (month >= 1 && month <= 12 && v > 0) months.push({ ym: `${y}-${String(month).padStart(2, '0')}`, v });
+    }
+  }
+  const uniq = [...new Map(months.map(x => [x.ym, x])).values()].sort((a, b) => a.ym.localeCompare(b.ym));
+  const last12 = uniq.slice(-12);
+  if (last12.length < 12) fail(`SMP 월평균을 12개월치 읽지 못했습니다(${last12.length}개, 페이지 구조 변경 가능).`);
+  const latest = last12[last12.length - 1];
+  if (!(latest.v > 30 && latest.v < 400)) fail(`SMP 값이 비정상입니다: ${latest.v}`);
+  const avg12 = Math.round((last12.reduce((s, x) => s + x.v, 0) / 12) * 10) / 10;
+  replaceBlock('SMP', b => {
+    if (b.includes(`asOf: '${latest.ym}'`)) { note(`SMP 변동 없음: ${latest.ym} ${latest.v}원/kWh`); return b; }
+    note(`SMP 갱신: ${latest.ym} ${latest.v}원/kWh, 12개월 평균 ${avg12}원`);
+    return b.replace(/asOf: '[^']*'/, `asOf: '${latest.ym}'`).replace(/latest: [\d.]+/, `latest: ${latest.v}`).replace(/avg12: [\d.]+/, `avg12: ${avg12}`);
+  });
 }
 
 if (src !== original) {
