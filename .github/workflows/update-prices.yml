@@ -1,0 +1,46 @@
+name: 전기·도시가스 단가 갱신
+# 서울도시가스 주택용 단가(매월), 한전 주택용 저압 요금표(분기 첫 달) → src/constants/energyPrices.ts
+# 값이 바뀐 때만 커밋하고, Vercel이 자동 배포한다.
+
+on:
+  schedule:
+    # 매월 2일 10:00 (한국시간) = 01:00 UTC
+    - cron: '0 1 2 * *'
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/update-prices.yml
+      - scripts/update-utility-prices.mjs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-prices
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: 공식 요금표에서 단가 읽기
+        env:
+          # 수동 실행·스크립트 수정 시에는 전기요금도 바로 확인
+          FORCE_ELECTRICITY: ${{ github.event_name != 'schedule' && '1' || '' }}
+        run: node scripts/update-utility-prices.mjs
+      - name: 바뀌었으면 커밋
+        run: |
+          if git diff --quiet; then
+            echo "변경 없음"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/constants/energyPrices.ts
+          git commit -m "chore(prices): update electricity / city gas prices"
+          git push
