@@ -1,5 +1,5 @@
 name: 등유 가격 갱신
-# 오피넷 실내등유 전국 평균 → src/constants/energyPrices.ts (키: 저장소 Secret OPINET_API_KEY)
+# 오피넷 실내등유 전국 평균 → src/constants/energyPrices.ts (키: 저장소 Secret OPINET_API_KEY, 매주 월요일)
 
 on:
   schedule:
