@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
       - name: 오피넷 실내등유 가격 받기
         env:
           OPINET_API_KEY: ${{ secrets.OPINET_API_KEY }}
