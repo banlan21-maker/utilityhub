@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import InvoiceMakerClient from './InvoiceMakerClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -60,11 +61,18 @@ const faqSchema = {
   ]
 };
 
-export default function InvoiceMakerPage() {
+export default async function InvoiceMakerPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/finance/invoice-maker" />
+      )}
       <InvoiceMakerClient />
     </>
   );

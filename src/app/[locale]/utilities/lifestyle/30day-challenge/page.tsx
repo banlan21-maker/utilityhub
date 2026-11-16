@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ThirtyDayChallengeClient from './ThirtyDayChallengeClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -51,11 +52,18 @@ const faqSchema = {
   ],
 };
 
-export default function ThirtyDayChallengePage() {
+export default async function ThirtyDayChallengePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/lifestyle/30day-challenge" />
+      )}
       <ThirtyDayChallengeClient />
     </>
   );

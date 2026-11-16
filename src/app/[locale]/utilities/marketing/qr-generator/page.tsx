@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import QrGeneratorClient from './QrGeneratorClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -64,11 +65,18 @@ const faqSchema = {
   ],
 };
 
-export default function QrGeneratorPage() {
+export default async function QrGeneratorPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/marketing/qr-generator" />
+      )}
       <QrGeneratorClient />
     </>
   );

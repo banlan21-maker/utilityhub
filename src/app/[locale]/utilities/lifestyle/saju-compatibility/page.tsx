@@ -55,12 +55,20 @@ const faqSchema = {
 };
 
 import SajuCompatibilityClient from './SajuCompatibilityClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
-export default function SajuCompatibilityPage() {
+export default async function SajuCompatibilityPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/lifestyle/saju-compatibility" />
+      )}
       <SajuCompatibilityClient />
     </>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ExchangeRateClient from './ExchangeRateClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -82,11 +83,18 @@ const faqSchema = {
   ],
 };
 
-export default function ExchangeRatePage() {
+export default async function ExchangeRatePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/finance/exchange-rate" />
+      )}
       <ExchangeRateClient />
     </>
   );

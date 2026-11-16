@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import SmartPercentClient from './SmartPercentClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -60,11 +61,18 @@ const faqSchema = {
   ]
 };
 
-export default function SmartPercentPage() {
+export default async function SmartPercentPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/finance/smart-percent" />
+      )}
       <SmartPercentClient />
     </>
   );

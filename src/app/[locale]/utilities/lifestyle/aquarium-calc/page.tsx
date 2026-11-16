@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import AquariumCalcClient from './AquariumCalcClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -52,11 +53,18 @@ const faqSchema = {
   ],
 };
 
-export default function AquariumCalcPage() {
+export default async function AquariumCalcPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/lifestyle/aquarium-calc" />
+      )}
       <AquariumCalcClient />
     </>
   );

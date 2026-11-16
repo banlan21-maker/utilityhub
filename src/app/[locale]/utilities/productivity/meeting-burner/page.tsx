@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import MeetingBurnerClient from './MeetingBurnerClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -59,11 +60,18 @@ const faqSchema = {
   ],
 };
 
-export default function MeetingBurnerPage() {
+export default async function MeetingBurnerPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/productivity/meeting-burner" />
+      )}
       <MeetingBurnerClient />
     </>
   );

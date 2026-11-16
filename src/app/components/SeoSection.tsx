@@ -19,9 +19,14 @@ export interface SeoContent {
 export interface SeoSectionProps {
   ko: SeoContent;
   en: SeoContent;
+  /**
+   * 영문 페이지에 화면의 영어 FAQ와 같은 FAQPage JSON-LD를 넣는다.
+   * page.tsx가 이미 영어 FAQPage를 내보내는 도구는 false (중복 방지).
+   */
+  faqSchema?: boolean;
 }
 
-export default function SeoSection({ ko, en }: SeoSectionProps) {
+export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps) {
   const locale = useLocale();
   const c = locale === 'ko' ? ko : en;
   const isKo = locale === 'ko';
@@ -46,6 +51,13 @@ export default function SeoSection({ ko, en }: SeoSectionProps) {
     marginBottom: '1rem',
   };
 
+  const faqLd = !isKo && faqSchema && c.faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'en',
+    mainEntity: c.faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  } : null;
+
   return (
     <section style={{
       marginTop: '4rem',
@@ -55,6 +67,7 @@ export default function SeoSection({ ko, en }: SeoSectionProps) {
       paddingLeft: '1rem',
       paddingRight: '1rem',
     }}>
+      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
       <hr style={{ border: 'none', borderTop: '1px solid var(--border)', marginBottom: '2rem' }} />
 
       {/* 1. What is it */}

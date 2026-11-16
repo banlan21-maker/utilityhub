@@ -334,6 +334,7 @@ export default function HwpConverterClient() {
       <RelatedTools toolId="utilities/document/hwp-pdf-converter" />
 
       <SeoSection
+        faqSchema={false}
         ko={{
           title: 'HWP·HWPX를 PDF·Word로 바꾸는 변환기란?',
           description: '한글 프로그램(한컴오피스)으로 만든 .hwp, .hwpx 파일의 글자와 표를 PDF나 Word(.docx)로 바꾸는 무료 도구입니다. 맥, 아이폰, 안드로이드, 회사 PC처럼 한글 프로그램이 없는 곳에서 받은 공문서·안내문·서식의 내용을 확인하거나, 편집하기 쉬운 Word로 옮길 때 씁니다. HWP는 압축된 본문을 직접 풀어 문서 끝까지 읽고, HWPX는 문서 안의 XML에서 문단을 읽으며, 표는 칸을 나눠 PDF와 Word에 표로 옮깁니다. PDF는 쪽 경계에서 문단이 잘리지 않도록 나눠 만듭니다. 파일은 서버로 올라가지 않고 이 브라우저 안에서만 처리되므로 이력서·계약서처럼 개인정보가 담긴 문서도 밖으로 나가지 않습니다. 다만 글꼴, 글자 크기, 줄 간격, 이미지, 도형, 쪽 배치 같은 서식은 옮겨지지 않으므로, 원본 모양 그대로 제출해야 하는 서류는 한글 프로그램이나 한컴독스에서 PDF로 저장하는 것이 좋습니다.',

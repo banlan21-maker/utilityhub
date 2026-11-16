@@ -468,6 +468,7 @@ export default function AgeCalcClient() {
       <RelatedTools toolId="utilities/lifestyle/age-calc" />
 
       <SeoSection
+        faqSchema={false}
         ko={{
           title: '만나이·전역일·배란일 계산기 — 계산 공식·법적 기준·FAQ',
           description: `한국형 날짜 계산기는 한국 생활에서 자주 필요한 세 가지 날짜 계산 — 만나이, 전역일, 배란일 — 을 하나의 도구에서 제공합니다.

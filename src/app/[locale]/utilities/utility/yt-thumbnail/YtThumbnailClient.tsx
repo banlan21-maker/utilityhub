@@ -252,6 +252,7 @@ export default function YtThumbnailClient() {
       <RelatedTools toolId="utilities/utility/yt-thumbnail" />
 
       <SeoSection
+        faqSchema={false}
         ko={{
           title: '유튜브 썸네일 추출기란? — 활용법 & FAQ',
           description: `유튜브 썸네일 추출기는 유튜브 영상 URL을 입력하기만 하면 해당 영상의 썸네일 이미지를 MQ(320×180), HQ(480×360), SD(640×480), MaxRes(1280×720) 4가지 화질로 즉시 추출해주는 무료 온라인 도구입니다. 별도의 프로그램 설치 없이 브라우저에서 바로 사용할 수 있습니다.

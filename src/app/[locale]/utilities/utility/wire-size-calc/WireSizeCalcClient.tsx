@@ -382,6 +382,7 @@ export default function WireSizeCalcClient() {
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/wire-size-calc" />
       <SeoSection
+        faqSchema={false}
         ko={{
           title: '전선 굵기 계산기는 어떻게 굵기를 정하나요?',
           description: '전선 굵기는 세 가지 조건을 모두 만족해야 합니다. 첫째, 부하전류보다 큰 차단기를 고르고 그 차단기 정격보다 전선의 허용전류가 커야 합니다(KEC 212.4.1, IB ≤ In ≤ IZ). 허용전류는 KEC가 준용하는 KS C IEC 60364-5-52 부속서 B 표에서 전선 절연(PVC 70°C, XLPE 90°C)과 공사방법(A1 단열벽 속 전선관, B1 전선관 속 전선, B2 전선관 속 케이블, C 직접 고정, E 트레이)에 따라 찾고, 주위온도와 같은 경로의 회로 수로 보정합니다. 둘째, 인입구에서 기기까지 전압강하가 KEC 232.3.9 한도(저압 수전 조명 3%·기타 5%, 고압 이상 수전 조명 6%·기타 8%)를 넘지 않아야 합니다. 셋째, 저압 옥내배선은 2.5㎟ 이상이어야 합니다. 이 계산기는 세 조건 중 가장 큰 굵기를 권장값으로 보여주고, 어떤 조건이 결정했는지 막대로 비교합니다. 예를 들어 단상 220V 25A 에어컨 회로를 HFIX 전선관(B1)으로 15m 배선할 때, 관에 이 회로만 있고 주위 30°C면 2.5㎟로 충분하지만, 같은 관에 3회로가 들어가고 주위가 35°C면 차단기 30A를 견디는 허용전류 기준으로 6㎟가 필요합니다.',

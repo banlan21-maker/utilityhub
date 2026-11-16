@@ -432,6 +432,7 @@ export default function CableTrayCalcClient() {
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/cable-tray-calc" />
       <SeoSection
+        faqSchema={false}
         ko={{
           title: '케이블 트레이 경사·오프셋 가공 계산기란 무엇인가요?',
           description: '전기공사 현장에서 케이블 트레이를 경사 구간(오르막·내리막)이나 옆으로 비키는 오프셋 구간에 맞게 직접 자르고 접을 때 필요한 치수를 계산하는 도구입니다. 높이차 H와 진행 거리 L(또는 30°·45°·60° 각도와 H)을 넣으면 꺾임 각도와 사선 길이를 구하고, 구간을 이루는 꺾임 두 곳 각각에 대해 V-컷인지 일자 절개인지, 중심선에서 한쪽으로 몇 mm를 표시해야 하는지, 두 꺾임 사이 마킹 간격 A가 얼마인지 알려줍니다. 상하 꺾임은 바닥판이 접히는 축이므로 레일이 안쪽으로 접히는 쪽(오르막 시작·내리막 끝)은 V-컷, 바깥으로 벌어지는 쪽은 일자 절개가 됩니다. 좌우 꺾임은 바닥판에 V-컷을 넣고 안쪽 레일을 잘라내며 바깥 레일은 접습니다. 3D 형상으로 평평한 트레이가 실제 각도로 접히는 과정을 돌려 볼 수 있고, 실제 비율 마킹 상세도와 NEMA VE 2 기준 지지점 위치도 함께 제공합니다.',

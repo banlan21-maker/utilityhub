@@ -55,12 +55,20 @@ const faqSchema = {
 };
 
 import SlaUptimeCalcClient from './SlaUptimeCalcClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
-export default function SlaUptimeCalcPage() {
+export default async function SlaUptimeCalcPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {locale === 'ko' ? (
+        <>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/performance/sla-uptime-calc" />
+      )}
       <SlaUptimeCalcClient />
     </>
   );

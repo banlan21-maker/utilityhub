@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import PdfOcrClient from './PdfOcrClient';
+import ToolJsonLd from '@/app/components/ToolJsonLd';
 
 export async function generateMetadata({
   params,
@@ -103,17 +104,24 @@ const faqSchema = {
   ],
 };
 
-export default function PdfOcrPage() {
+export default async function PdfOcrPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      {locale === 'ko' ? (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        </>
+      ) : (
+        <ToolJsonLd href="/utilities/document/pdf-ocr" />
+      )}
       <PdfOcrClient />
     </>
   );
