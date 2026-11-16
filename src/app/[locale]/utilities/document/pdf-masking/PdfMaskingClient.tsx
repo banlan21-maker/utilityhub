@@ -593,6 +593,13 @@ export default function PdfMaskingClient() {
       )}
 
       {/* Standard Bottom Sections */}
+      <div style={{ width: '100%', maxWidth: '896px', margin: '0 auto', paddingLeft: '1rem', paddingRight: '1rem' }}>
+        <ShareBar
+          title={isKorean ? 'PDF 개인정보 마스킹 도구' : 'PDF Privacy Masking Tool'}
+          description={isKorean ? '주민번호, 전화번호 등 개인정보를 AI가 자동으로 탐지하여 마스킹합니다' : 'AI automatically detects and masks personal information like SSN and phone numbers'}
+        />
+        <RelatedTools toolId="utilities/document/pdf-masking" />
+      </div>
 
       {/* SEO Section */}
       <SeoSection

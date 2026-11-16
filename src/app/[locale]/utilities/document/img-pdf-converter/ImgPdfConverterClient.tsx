@@ -733,6 +733,13 @@ export default function ImgPdfConverterClient() {
       )}
 
       {/* Standard Bottom Sections */}
+      <div style={{ width: '100%', maxWidth: '896px', margin: '0 auto', paddingLeft: '1rem', paddingRight: '1rem' }}>
+        <ShareBar
+          title={isKorean ? '이미지 ↔ PDF 변환기' : 'Image ↔ PDF Converter'}
+          description={isKorean ? '이미지를 PDF로, PDF를 이미지로 변환하는 무료 도구' : 'Free tool to convert images to PDF and PDF to images'}
+        />
+        <RelatedTools toolId="utilities/document/img-pdf-converter" />
+      </div>
 
       {/* SEO Section */}
       <SeoSection
