@@ -133,8 +133,8 @@
       "desc": "Weight per metre, paint area and cost for 12 metal shapes with KS sizes including fillets; diagram marks t1 (web) and t2 (flange)."
     },
     "piping-calc": {
-      "title": "Piping Calculator",
-      "desc": "KS pipe tables, drain slope checks by size, hydro-test water and flow velocity sizing."
+      "title": "Pipe Size, Slope & Flow Calculator",
+      "desc": "Steel, copper K/L/M and PVC pipe charts, IPC drain slope, hydro-test gallons and GPM pipe sizing with friction loss."
     },
     "elbow-offset": {
       "title": "Pipe Offset & Cut Length Calculator",

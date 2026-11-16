@@ -12,11 +12,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? '배관 종합 계산기 — SPP·SPPS·스테인리스 규격표, 배수 구배, 수압 물량, 유속 | Utility Hub'
-    : 'Piping Calculator — KS Pipe Tables, Drain Slope, Hydro Test & Velocity | Utility Hub';
+    ? '배관 종합 계산기 — SPP·SPPS·스테인리스·동관·PVC 규격표, 배수 구배, 수압 물량, 유속·마찰 손실 | Utility Hub'
+    : 'Pipe Size Chart & Calculator — Steel, Copper K/L/M, PVC, Drain Slope, GPM Sizing | Utility Hub';
   const description = isKo
     ? 'SPP·SPPS Sch40/80·스테인리스 Sch10S·Su관·ASME 외경·두께·내경·kg/m를 호칭별로 조회하고, 관경별 최소 구배 판정, 관경이 섞인 수압 테스트 물량, 유량별 유속과 관경을 계산합니다.'
-    : 'KS SPP, SPPS, stainless and ASME pipe dimensions and weights, drain slope checks by size, hydro-test water for mixed runs, and flow velocity sizing.';
+    : 'OD, wall, ID and weight for ASME B36.10 steel, ASTM B88 copper Type K/L/M and PVC Sch40/80; drain slope to IPC 704.1; hydro-test gallons; GPM pipe sizing with velocity and Hazen-Williams friction. US or metric units.';
   const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,
@@ -46,8 +46,8 @@ const SCHEMA_TEXT = {
     ],
   },
   en: {
-    name: 'Piping Calculator',
-    description: 'Free field tool for KS pipe dimensions, drain slope, hydro-test water volume and flow velocity.',
+    name: 'Pipe Size, Slope & Flow Calculator',
+    description: 'Free pipe chart and calculator for steel, copper and PVC pipe dimensions, IPC drain slope, hydro-test water volume and GPM pipe sizing with friction loss.',
     faqs: [
       { q: 'What is the difference between SPP and SPPS?', a: 'SPP has one wall per size; SPPS is pressure pipe in schedules. 50A is 3.8 mm SPP, 3.9 mm Sch40, 5.5 mm Sch80.' },
       { q: 'Why do KS and ASME diameters differ?', a: 'KS 15A is 21.7 mm OD while ASME 1/2" is 21.3 mm, so fittings should not be mixed.' },
@@ -91,7 +91,8 @@ export default async function PipingCalcPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {/* 영문 FAQPage는 화면의 영어 FAQ와 같도록 SeoSection이 내보낸다 */}
+      {locale === 'ko' && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       <PipingCalcClient />
     </>
   );

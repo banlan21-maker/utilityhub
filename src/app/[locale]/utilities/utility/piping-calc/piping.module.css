@@ -37,6 +37,7 @@
 .title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin: 0 0 0.6rem; word-break: keep-all; }
 .subtitle { color: var(--text-secondary); font-size: 1.02rem; line-height: 1.6; word-break: keep-all; margin: 0; }
 
+.units { display: flex; justify-content: center; gap: 0.4rem; flex-wrap: wrap; }
 .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }
 @media (max-width: 560px) { .tabs { grid-template-columns: 1fr 1fr; } }
 .tab { min-height: 52px; padding: 0.45rem; border: 1.5px solid var(--border); border-radius: 0.85rem; background: var(--surface); color: var(--text-secondary); font-weight: 800; font-size: 0.92rem; cursor: pointer; line-height: 1.25; }
