@@ -53,6 +53,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/marketing/quiz-builder', icon: '🧩', ko: '심리테스트 / 퀴즈 빌더', en: 'Quiz Builder', category: 'marketing' },
 
   // Lifestyle
+  { id: 'utilities/lifestyle/color-coordinator', icon: '🧥', ko: 'OOTD 컬러 코디네이터', en: 'Outfit Color Coordinator', category: 'lifestyle' },
   { id: 'utilities/lifestyle/30day-challenge', icon: '📅', ko: '30일 챌린지 트래커', en: '30 Day Challenge Tracker', category: 'lifestyle' },
   { id: 'utilities/lifestyle/gym-plate-calc', icon: '🏋️', ko: '1RM & 바벨 원판 계산기', en: '1RM & Barbell Plate Calculator', category: 'lifestyle' },
   { id: 'utilities/lifestyle/bmi-calc', icon: '💧', ko: 'BMI & 건강 계산기', en: 'BMI & Health Calculator', category: 'lifestyle' },
@@ -242,6 +243,12 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/design/color-palette',
     'utilities/marketing/qr-generator',
     'utilities/utility/image-resizer',
+  ],
+  'utilities/lifestyle/color-coordinator': [
+    'utilities/design/color-palette',
+    'utilities/design/photo-batch-master',
+    'utilities/lifestyle/teto-egen-test',
+    'utilities/design/bubble-popart',
   ],
   'utilities/design/font-preview': [
     'utilities/design/color-palette',

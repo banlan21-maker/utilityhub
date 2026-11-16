@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import ColorCoordinatorClient from './ColorCoordinatorClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import { SEO_KO } from './content';
+
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/lifestyle/color-coordinator';
 
 export async function generateMetadata({
   params,
@@ -9,21 +13,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isKo = locale === 'ko';
-  const title = isKo ? 'OOTD 컬러 코디네이터 | Utility Hub' : 'OOTD Color Coordinator | Utility Hub';
+  const title = isKo
+    ? 'OOTD 코디 색 조합 추천 — 퍼스널 컬러 마네킹 시뮬레이터 | Utility Hub'
+    : 'Outfit Color Combinations – OOTD Color Coordinator | Utility Hub';
   const description = isKo
-    ? '마네킹 위에서 상의·하의·아우터 색상을 실시간 조합하고 3가지 알고리즘 룩을 제안하는 무료 패션 코디 플래너'
-    : 'Combine outfit colors on a mannequin in real-time and get 3 algorithm-powered look suggestions for free.';
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/lifestyle/color-coordinator`;
+    ? '모자·아우터·상의·하의·신발 색을 마네킹에 입혀 보고 3색 원칙·보색·명도 대비로 조합을 점검합니다. 봄웜·여름쿨·가을웜·겨울쿨 퍼스널 컬러 팔레트, 데일리·포인트·소프트 룩 자동 추천, PNG 저장까지 무료.'
+    : 'See what colors go together: dress a mannequin in five pieces, check the outfit against the three-color rule, contrast and warm/cool harmony, and browse Spring, Summer, Autumn and Winter personal color palettes. Free, no sign-up.';
+  const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,
     description,
     alternates: {
       canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
-        en: 'https://www.theutilhub.com/en/utilities/lifestyle/color-coordinator',
-        'x-default': 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
-      },
+      languages: { ko: `${BASE}/ko${PATH}`, en: `${BASE}/en${PATH}`, 'x-default': `${BASE}/ko${PATH}` },
     },
     openGraph: { title, description, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
     twitter: { card: 'summary_large_image', title, description },
@@ -36,21 +38,21 @@ const softwareSchema = {
   name: 'OOTD 컬러 코디네이터',
   alternateName: 'OOTD Color Coordinator',
   operatingSystem: 'Web Browser',
-  applicationCategory: 'UtilitiesApplication',
+  applicationCategory: 'LifestyleApplication',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-  url: 'https://www.theutilhub.com/ko/utilities/lifestyle/color-coordinator',
-  description: '마네킹 위에서 상의·하의·아우터 색상을 실시간 조합하고 3가지 알고리즘 룩을 제안하는 무료 패션 코디 플래너',
+  url: `${BASE}/ko${PATH}`,
+  description: '마네킹에 코디 색을 입혀 보고 퍼스널 컬러 4계절 팔레트와 3색 원칙·보색·명도 대비로 조합을 점검하는 무료 코디 도구',
 };
 
+// 화면의 한국어 FAQ와 같은 내용
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: '색상 팔레트는 어떻게 구성되나요?', acceptedAnswer: { '@type': 'Answer', text: '뉴트럴 4색, 웜뉴트럴 4색, 컬러 4색, 포인트 4색의 총 16색으로 구성되어 있으며, [+ Custom] 버튼으로 커스텀 색상도 추가할 수 있습니다.' } },
-    { '@type': 'Question', name: '룩 알고리즘은 어떤 원리인가요?', acceptedAnswer: { '@type': 'Answer', text: '데일리는 무채색 톤 배치, 포인트는 보색(Hue +180°) 적용, 소프트는 유사색(Analogous) 조합으로 각각 색채 이론을 자동 적용합니다.' } },
-    { '@type': 'Question', name: '모자와 아우터는 왜 기본 비활성인가요?', acceptedAnswer: { '@type': 'Answer', text: '모든 코디에서 필수 아이템이 아니기 때문입니다. [+ Add] 버튼으로 필요할 때 추가할 수 있습니다.' } },
-    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
-  ],
+  mainEntity: SEO_KO.faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
 };
 
 export default async function ColorCoordinatorPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -63,7 +65,7 @@ export default async function ColorCoordinatorPage({ params }: { params: Promise
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
         </>
       ) : (
-        <ToolJsonLd href="/utilities/lifestyle/color-coordinator" />
+        <ToolJsonLd href={PATH} />
       )}
       <ColorCoordinatorClient />
     </>
