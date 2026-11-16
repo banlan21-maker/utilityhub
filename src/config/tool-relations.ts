@@ -42,7 +42,6 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/design/color-palette', icon: '🎯', ko: '색상 팔레트 & 가독성 검사기', en: 'Color Palette Checker', category: 'design' },
   { id: 'utilities/design/logo-favicon', icon: '🎨', ko: 'AI 로고 & 파비콘 생성기', en: 'Logo & Favicon Generator', category: 'design' },
   { id: 'utilities/design/font-preview', icon: '🔤', ko: '다국어 폰트 비교기', en: 'Multilingual Font Comparer', category: 'design' },
-  { id: 'utilities/design/feedback', icon: '💬', ko: '사용자 피드백 수집기', en: 'User Feedback Collector', category: 'design' },
   { id: 'utilities/design/photo-batch-master', icon: '📸', ko: '일괄 사진 보정 & 프리셋 마스터', en: 'Photo Batch Master', category: 'design' },
   { id: 'utilities/design/bubble-popart', icon: '🎨', ko: '버블 팝아트 글씨 생성기', en: 'Bubble Pop Art Text Generator', category: 'design' },
 
@@ -233,7 +232,7 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   'utilities/design/color-palette': [
     'utilities/design/logo-favicon',
     'utilities/design/font-preview',
-    'utilities/design/feedback',
+    'utilities/design/bubble-popart',
   ],
   'utilities/design/logo-favicon': [
     'utilities/design/color-palette',
@@ -244,11 +243,6 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/design/color-palette',
     'utilities/design/logo-favicon',
     'utilities/lifestyle/nickname',
-  ],
-  'utilities/design/feedback': [
-    'utilities/design/color-palette',
-    'utilities/marketing/quiz-builder',
-    'utilities/utility/counter',
   ],
   'utilities/design/photo-batch-master': [
     'utilities/lifestyle/color-coordinator',
@@ -283,7 +277,7 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/security/url-safety',
   ],
   'utilities/marketing/quiz-builder': [
-    'utilities/design/feedback',
+    'utilities/marketing/hashtag-generator',
     'utilities/lifestyle/mbti-test',
     'utilities/lifestyle/fortune-prompt',
   ],
