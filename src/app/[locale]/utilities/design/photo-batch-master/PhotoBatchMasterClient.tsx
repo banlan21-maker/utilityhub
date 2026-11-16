@@ -825,7 +825,6 @@ export default function PhotoBatchMasterClient() {
         )}
       </section>
 
-      <div className={s.adPlaceholder}>AD</div>
 
       <ShareBar
         title={isKo ? 'Photo Batch Master — 사진 100장을 1분 안에!' : 'Edit 100 photos in 1 minute! Share this magic tool.'}

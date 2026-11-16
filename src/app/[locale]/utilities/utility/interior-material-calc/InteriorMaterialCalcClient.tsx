@@ -522,7 +522,6 @@ export default function InteriorMaterialCalcClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/interior-material-calc" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

@@ -407,7 +407,6 @@ export default function PipingCalcClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/piping-calc" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

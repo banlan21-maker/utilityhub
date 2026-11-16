@@ -246,8 +246,6 @@ export default function UrlSafetyClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/security/url-safety" />
 
-      {/* 광고 영역 */}
-      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

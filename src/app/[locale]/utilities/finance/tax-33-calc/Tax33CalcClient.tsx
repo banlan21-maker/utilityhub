@@ -313,7 +313,6 @@ export default function Tax33CalcClient() {
 
       <ShareBar title={t('title')} description={t('description')} />
       <RelatedTools toolId="utilities/finance/tax-33-calc" />
-      <div className={s.ad_slot}>AD</div>
       <SeoSection
         ko={{
           title: '프리랜서 3.3% 세금 계산기는 무엇을 계산하나요?',

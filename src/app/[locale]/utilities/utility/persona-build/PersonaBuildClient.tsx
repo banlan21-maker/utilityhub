@@ -384,7 +384,6 @@ export default function PersonaBuildClient() {
       {/* 표준 하단 섹션 */}
       <ShareBar title={t('title')} description={t('subtitle')} />
       <RelatedTools toolId="utilities/utility/persona-build" />
-      <div className={s.ad_placeholder}>{t('ad_text')}</div>
 
       <SeoSection
         ko={{

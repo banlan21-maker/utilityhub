@@ -95,9 +95,6 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
       </section>
 
       {/* ── AD SLOT 1 · 728×90 Leaderboard ── */}
-      <div className={styles.adSlot} role="complementary" aria-label="Advertisement">
-        <span className={styles.adSlotLabel}>AD</span>
-      </div>
 
       {/* ── CATEGORIES ── */}
       <section className={styles.categoriesSection} id="categories" aria-label="Tool categories">
@@ -135,9 +132,6 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
       {directory}
 
       {/* ── AD SLOT 2 · 300×250 Rectangle ── */}
-      <div className={`${styles.adSlot} ${styles.adSlotRect}`} role="complementary" aria-label="Advertisement">
-        <span className={styles.adSlotLabel}>AD</span>
-      </div>
 
       {/* ── FEATURES ── */}
       <section className={`${styles.featuresSection} ${styles.fullBleed}`} id="features" aria-label="Why Utility Hub">
@@ -171,9 +165,6 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
       </section>
 
       {/* ── AD SLOT 3 · 728×90 Footer Leaderboard ── */}
-      <div className={styles.adSlot} role="complementary" aria-label="Advertisement">
-        <span className={styles.adSlotLabel}>AD</span>
-      </div>
 
 
 

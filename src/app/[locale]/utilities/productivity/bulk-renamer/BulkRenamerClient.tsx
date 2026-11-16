@@ -758,7 +758,6 @@ export default function BulkRenamerClient() {
       {/* ── bottom sections ── */}
       <ShareBar title={t('title')} description={t('subtitle')} />
       <RelatedTools toolId="utilities/productivity/bulk-renamer" />
-      <div className={s.ad_placeholder}>{t('ad_text')}</div>
 
       <SeoSection
         ko={{

@@ -458,7 +458,6 @@ export default function BurnMessageClient() {
         <>
           <ShareBar title={t('title')} description={t('subtitle')} />
           <RelatedTools toolId="utilities/security/burn-message" />
-          <div className={s.ad_placeholder}>{t('ad_text')}</div>
 
           <SeoSection
             ko={{

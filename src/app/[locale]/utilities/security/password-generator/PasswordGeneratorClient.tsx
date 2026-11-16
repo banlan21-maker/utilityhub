@@ -320,8 +320,6 @@ export default function PasswordGeneratorClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/security/password-generator" />
 
-      {/* 광고 영역 */}
-      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

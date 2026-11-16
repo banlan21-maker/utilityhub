@@ -411,12 +411,6 @@ export default function AgeCalcClient() {
       )}
 
       {/* Ad */}
-      <div style={{
-        background: 'var(--surface)', border: '1px dashed var(--border)',
-        borderRadius: 'var(--radius-lg)', height: '90px',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '2rem',
-      }}>광고 영역 (728×90)</div>
 
       <ShareBar title="한국형 날짜 계산기 (만나이·전역일·배란일)" />
       <RelatedTools toolId="utilities/lifestyle/age-calc" />

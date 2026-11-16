@@ -344,7 +344,6 @@ export default function AcCapacityCalcClient() {
 
       <ShareBar title={T.title} description={T.subtitle} />
       <RelatedTools toolId="utilities/lifestyle/ac-capacity-calc" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

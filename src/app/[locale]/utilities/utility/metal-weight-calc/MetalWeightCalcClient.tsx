@@ -504,7 +504,6 @@ export default function MetalWeightCalcClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/metal-weight-calc" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

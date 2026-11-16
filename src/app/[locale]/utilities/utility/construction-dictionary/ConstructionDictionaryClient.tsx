@@ -258,7 +258,6 @@ export default function ConstructionDictionaryClient() {
 
       <ShareBar title={t('title')} description={t('subtitle')} />
       <RelatedTools toolId="utilities/utility/construction-dictionary" />
-      <div className={s.ad_placeholder}>{t('ad_text')}</div>
 
       <SeoSection
         ko={{

@@ -263,7 +263,6 @@ export default function VatCalcClient() {
 
       <ShareBar title={t('title')} description={t('description')} />
       <RelatedTools toolId="utilities/finance/vat-calc" />
-      <div className={s.ad_slot}>AD</div>
       <SeoSection
         ko={{
           title: '부가세 계산기로 무엇을 계산할 수 있나요?',

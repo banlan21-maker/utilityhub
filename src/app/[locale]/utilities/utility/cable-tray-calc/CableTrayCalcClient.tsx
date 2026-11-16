@@ -431,7 +431,6 @@ export default function CableTrayCalcClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/cable-tray-calc" />
-      <div className={s.ad_slot}>AD</div>
       <SeoSection
         ko={{
           title: '케이블 트레이 경사·오프셋 가공 계산기란 무엇인가요?',

@@ -242,13 +242,6 @@ export default function JsonFormatterClient() {
       </div>
 
       {/* Ad */}
-      <div style={{ maxWidth: '900px', margin: '1.5rem auto 0', display: 'flex', justifyContent: 'center' }}>
-        <div style={adStyle}>
-          <span style={{ fontSize: '1.5rem' }}>📢</span>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 500 }}>광고 영역</span>
-          <span style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>728 × 90</span>
-        </div>
-      </div>
 
       {/* 공유하기 */}
       <ShareBar title={t('title')} description={t('description')} />
@@ -256,21 +249,6 @@ export default function JsonFormatterClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/dev/json-formatter" />
 
-      {/* 광고 영역 */}
-      <div style={{
-        width: '100%',
-        minHeight: '90px',
-        background: 'rgba(226, 232, 240, 0.3)',
-        border: '1px dashed #cbd5e1',
-        borderRadius: '0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#94a3b8',
-        fontSize: '0.875rem',
-        margin: '2rem auto',
-        maxWidth: '900px'
-      }}>광고 영역</div>
 
       <SeoSection
         ko={{

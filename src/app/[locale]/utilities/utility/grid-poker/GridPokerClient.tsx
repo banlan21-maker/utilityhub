@@ -478,9 +478,6 @@ export default function GridPokerClient() {
             </button>
 
             {/* AD slot — inside result panel */}
-            <div style={{ width: '100%', height: '50px', background: 'rgba(241,245,249,0.5)', border: '1px dashed #cbd5e1', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: '0.75rem' }}>
-              AD
-            </div>
 
             {/* Countdown */}
             <div className={s.countdown}>
@@ -497,7 +494,6 @@ export default function GridPokerClient() {
         description={isKo ? '5×5 그리드에 카드를 배치해 포커 족보 점수를 최대화하세요!' : 'Place cards on a 5×5 grid and maximize your poker hand scores!'}
       />
       <RelatedTools toolId="utilities/utility/grid-poker" />
-      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
       <SeoSection ko={seoKo} en={seoEn} />
     </div>
   );

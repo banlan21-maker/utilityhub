@@ -426,8 +426,6 @@ export default function FontPreviewClient() {
         {/* 추천 도구 */}
         <RelatedTools toolId="utilities/design/font-preview" />
 
-        {/* 광고 영역 */}
-        <div className={s.ad_placeholder}>광고 영역</div>
       </div>
 
       <SeoSection

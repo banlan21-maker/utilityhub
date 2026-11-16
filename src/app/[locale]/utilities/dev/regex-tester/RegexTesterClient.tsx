@@ -405,8 +405,6 @@ export default function RegexTesterClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/dev/regex-tester" />
 
-      {/* 광고 영역 — 단일 통일 */}
-      <div className={rxs.rx_ad}>{t('ad_text')}</div>
 
       <SeoSection
         ko={{

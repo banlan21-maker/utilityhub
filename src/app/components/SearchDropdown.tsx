@@ -115,21 +115,21 @@ export default function SearchDropdown({ categoryFilter, placeholder }: SearchDr
           onFocus={() => query.trim() && setIsOpen(true)}
           placeholder={placeholder ?? (locale === 'ko' ? '툴 이름이나 기능으로 검색...' : 'Search tools by name or function...')}
           className={s.input}
-          aria-label="툴 검색"
+          aria-label={locale === 'ko' ? '툴 검색' : 'Search tools'}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           aria-autocomplete="list"
           autoComplete="off"
         />
         {query && (
-          <button onClick={clearQuery} className={s.clearBtn} aria-label="검색어 지우기">
+          <button onClick={clearQuery} className={s.clearBtn} aria-label={locale === 'ko' ? '검색어 지우기' : 'Clear search'}>
             <X size={16} />
           </button>
         )}
       </div>
 
       {isOpen && (
-        <div className={s.dropdown} role="listbox" aria-label="검색 결과">
+        <div className={s.dropdown} role="listbox" aria-label={locale === 'ko' ? '검색 결과' : 'Search results'}>
           {results.length > 0 ? (
             <>
               {results.map((tool, index) => {

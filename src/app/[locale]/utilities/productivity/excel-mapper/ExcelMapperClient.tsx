@@ -153,7 +153,6 @@ export default function ExcelMapperClient() {
       <RelatedTools toolId="utilities/productivity/excel-mapper" />
 
       {/* Ad Placeholder */}
-      <div className="w-full min-h-[90px] bg-slate-100/50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm my-8">AD</div>
 
       <SeoSection
         ko={{

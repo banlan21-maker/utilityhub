@@ -370,8 +370,6 @@ export default function PrivacyMaskingClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/security/privacy-masking" />
 
-      {/* 광고 영역 */}
-      <div className={s.ad_placeholder}>AD</div>
 
       <SeoSection
         ko={{

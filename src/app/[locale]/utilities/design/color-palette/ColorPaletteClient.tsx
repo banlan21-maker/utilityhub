@@ -439,8 +439,6 @@ export default function ColorPaletteClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/design/color-palette" />
 
-      {/* 광고 영역 */}
-      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

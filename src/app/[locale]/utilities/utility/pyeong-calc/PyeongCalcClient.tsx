@@ -351,7 +351,6 @@ export default function PyeongCalcClient() {
 
       <ShareBar title={t('title')} description={t('description')} />
       <RelatedTools toolId="utilities/utility/pyeong-calc" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

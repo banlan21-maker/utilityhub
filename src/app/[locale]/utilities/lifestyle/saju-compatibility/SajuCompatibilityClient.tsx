@@ -625,14 +625,6 @@ export default function SajuCompatibilityClient() {
       {/* ─── Bottom SEO Sections (7 sections, fixed order) ─── */}
       <ShareBar title={t('title')} description={t('description')} />
       <RelatedTools toolId="utilities/lifestyle/saju-compatibility" />
-      <div style={{
-        width: '100%', minHeight: '90px', background: 'rgba(226, 232, 240, 0.3)',
-        border: '1px dashed #cbd5e1', borderRadius: '0.5rem', display: 'flex',
-        alignItems: 'center', justifyContent: 'center', color: '#94a3b8',
-        fontSize: '0.875rem', margin: '2rem 0'
-      }}>
-        AD
-      </div>
 
       <SeoSection
         ko={{

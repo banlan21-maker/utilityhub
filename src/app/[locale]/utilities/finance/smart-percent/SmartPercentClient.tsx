@@ -360,9 +360,6 @@ export default function SmartPercentClient() {
       </div>
 
       {/* Ad Placeholder */}
-      <div className={s.sp_ad}>
-        {isKo ? '광고 영역 (728×90)' : 'Ad Space (728×90)'}
-      </div>
 
       {/* History */}
       <div className={s.sp_history}>
@@ -401,9 +398,6 @@ export default function SmartPercentClient() {
       />
       <RelatedTools toolId="utilities/finance/smart-percent" />
 
-      <div className={s.sp_ad} style={{ marginTop: '0.5rem' }}>
-        {isKo ? '광고 영역' : 'Ad Space'}
-      </div>
 
       <SeoSection
         ko={{

@@ -590,8 +590,6 @@ export default function LogoFaviconClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/design/logo-favicon" />
 
-      {/* 광고 영역 */}
-      <div className={s.ad_placeholder}>광고 영역</div>
 
       <SeoSection
         ko={{

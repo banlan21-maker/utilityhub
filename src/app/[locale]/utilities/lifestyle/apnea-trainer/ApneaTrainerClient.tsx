@@ -551,12 +551,6 @@ export default function ApneaTrainerClient() {
         <RelatedTools toolId="utilities/lifestyle/apnea-trainer" />
 
         {/* 0-2. Ad */}
-        <div style={{
-          width: '100%', minHeight: 90, background: 'rgba(248,250,252,0.06)',
-          border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '0.75rem',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#475569', fontSize: '0.8rem', margin: '1.5rem 0',
-        }}>AD</div>
 
         {/* SEO Section */}
         <SeoSection

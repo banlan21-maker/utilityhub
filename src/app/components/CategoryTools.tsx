@@ -51,11 +51,11 @@ export default function CategoryTools({ categorySlug }: CategoryToolsProps) {
             placeholder={isKo ? `${categoryName} 내 툴 검색...` : `Search in ${categoryName}...`}
           />
         </div>
-        <div className={s.viewToggle} role="group" aria-label="보기 방식 선택">
+        <div className={s.viewToggle} role="group" aria-label={isKo ? '보기 방식 선택' : 'View mode'}>
           <button
             onClick={() => handleViewModeChange('card')}
             className={`${s.toggleBtn} ${viewMode === 'card' ? s.toggleActive : ''}`}
-            aria-label="카드뷰"
+            aria-label={isKo ? '카드뷰' : 'Card view'}
             aria-pressed={viewMode === 'card'}
           >
             <LayoutGrid size={18} />
@@ -64,7 +64,7 @@ export default function CategoryTools({ categorySlug }: CategoryToolsProps) {
           <button
             onClick={() => handleViewModeChange('list')}
             className={`${s.toggleBtn} ${viewMode === 'list' ? s.toggleActive : ''}`}
-            aria-label="리스트뷰"
+            aria-label={isKo ? '리스트뷰' : 'List view'}
             aria-pressed={viewMode === 'list'}
           >
             <List size={18} />

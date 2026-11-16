@@ -543,22 +543,6 @@ export default function GpaCalcClient() {
       </div>
 
       {/* Ad */}
-      <div
-        style={{
-          background: 'var(--surface)',
-          border: '1px dashed var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          height: '90px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--text-muted)',
-          fontSize: '0.8rem',
-          marginBottom: '2rem',
-        }}
-      >
-        AD
-      </div>
 
       <ShareBar title={t('share_title')} />
       <RelatedTools toolId="utilities/lifestyle/gpa-calc" />

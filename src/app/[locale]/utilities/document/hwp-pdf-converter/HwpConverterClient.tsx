@@ -332,7 +332,6 @@ export default function HwpConverterClient() {
 
       <ShareBar title={t('title')} description={t('description')} />
       <RelatedTools toolId="utilities/document/hwp-pdf-converter" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

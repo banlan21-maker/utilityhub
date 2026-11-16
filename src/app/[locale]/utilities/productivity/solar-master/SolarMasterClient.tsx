@@ -574,7 +574,6 @@ export default function SolarMasterClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/productivity/solar-master" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

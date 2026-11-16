@@ -668,9 +668,6 @@ export default function ColorCoordinatorClient() {
       </div>
 
       {/* ── Ad placeholder ── */}
-      <div className={s.adPlaceholder} style={{ margin: '2rem 0' }}>
-        AD
-      </div>
 
       {/* ── SEO & share ── */}
       <ShareBar

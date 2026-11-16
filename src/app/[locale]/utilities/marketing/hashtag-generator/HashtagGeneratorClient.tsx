@@ -153,7 +153,6 @@ export default function HashtagGeneratorClient() {
 
       <ShareBar title={isKo ? '해시태그 생성기' : 'Hashtag Generator'} description="키워드 하나로 해시태그 즉시 생성" />
       <RelatedTools toolId="utilities/marketing/hashtag-generator" />
-      <div className={s.hashtag_ad_placeholder}>{isKo ? '광고 영역' : 'Ad Space'}</div>
       <SeoSection
         ko={{
           title: '해시태그 생성기란?',

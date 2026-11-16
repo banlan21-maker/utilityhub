@@ -500,7 +500,6 @@ export default function BubblePopartClient() {
       {/* 표준 하단 7개 섹션 */}
       <ShareBar title={t('title')} description={t('description')} />
       <RelatedTools toolId="utilities/design/bubble-popart" />
-      <div className={s.adPlaceholder}>AD</div>
       <SeoSection
         ko={{
           title: '버블 팝아트 글씨 생성기란 무엇인가요?',

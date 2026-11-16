@@ -381,7 +381,6 @@ export default function WireSizeCalcClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/wire-size-calc" />
-      <div className={s.ad_slot}>AD</div>
       <SeoSection
         ko={{
           title: '전선 굵기 계산기는 어떻게 굵기를 정하나요?',

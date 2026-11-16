@@ -515,7 +515,6 @@ export default function WordleClient() {
 
       <ShareBar title={T.title} description={T.subtitle} />
       <RelatedTools toolId="utilities/utility/wordle" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

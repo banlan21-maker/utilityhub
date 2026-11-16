@@ -367,7 +367,6 @@ export default function ElbowOffsetClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/elbow-offset" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

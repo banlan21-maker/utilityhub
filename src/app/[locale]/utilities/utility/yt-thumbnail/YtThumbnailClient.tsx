@@ -236,14 +236,6 @@ export default function YtThumbnailClient() {
       )}
 
       {/* Ad placeholder */}
-      <div style={{
-        background: 'var(--surface)', border: '1px dashed var(--border)',
-        borderRadius: 'var(--radius-lg)', padding: '1rem', textAlign: 'center',
-        color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '2rem',
-        height: '90px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        광고 영역 (728×90)
-      </div>
 
       <ShareBar title="유튜브 썸네일 추출기" description="YouTube URL로 모든 화질 썸네일을 즉시 추출" />
 

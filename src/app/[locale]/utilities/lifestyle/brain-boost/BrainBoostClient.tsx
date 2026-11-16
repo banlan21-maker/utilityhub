@@ -641,7 +641,6 @@ export default function BrainBoostClient() {
       {/* 표준 하단 섹션 */}
       <ShareBar title={t('title')} description={t('subtitle')} />
       <RelatedTools toolId="utilities/lifestyle/brain-boost" />
-      <div className={s.ad_placeholder}>{t('ad_text')}</div>
 
       <SeoSection
         ko={{

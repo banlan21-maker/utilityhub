@@ -697,7 +697,6 @@ export default function TileVisualizerClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/design/tile-visualizer" />
-      <div className={s.ad_slot}>AD</div>
 
       <SeoSection
         ko={{

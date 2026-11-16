@@ -587,7 +587,6 @@ export default function CoffeeYieldClient() {
       {/* ── bottom sections ── */}
       <ShareBar title={t('title')} description={t('subtitle')} />
       <RelatedTools toolId="utilities/lifestyle/coffee-yield-calc" />
-      <div className={s.ad_placeholder}>{t('ad_text')}</div>
 
       <SeoSection
         ko={{
