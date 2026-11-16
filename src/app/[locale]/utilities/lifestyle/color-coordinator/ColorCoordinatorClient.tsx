@@ -8,19 +8,19 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import {
-  PALETTE, SEASONS, SLOT_ORDER, analyze, computeLook, lightness, nearestName,
+  PALETTE, SEASONS, SLOT_ORDER, STYLES, analyze, computeLook, lightness, nearestName, styleName,
   type LookType, type SeasonKey, type SlotKey, type SlotsMap,
 } from '@/lib/outfitColor';
-import OutfitFigure, { FIG_H, FIG_W } from './OutfitFigure';
+import OutfitFigure, { FIG_H, FIG_W, type HairStyle } from './OutfitFigure';
 import { SEO_EN, SEO_KO } from './content';
 import s from './color-coordinator.module.css';
 
 const INITIAL_SLOTS: SlotsMap = {
-  hat:    { color: '#1E1F23', active: false, optional: true },
-  outer:  { color: '#B98A5A', active: false, optional: true },
-  top:    { color: '#1F3354', active: true,  optional: false },
-  bottom: { color: '#D9C4A3', active: true,  optional: false },
-  shoes:  { color: '#F5F5F2', active: true,  optional: false },
+  hat:    { color: '#1E1F23', active: false, optional: true,  style: 'bucket' },
+  outer:  { color: '#B98A5A', active: false, optional: true,  style: 'jacket' },
+  top:    { color: '#1F3354', active: true,  optional: false, style: 'tee' },
+  bottom: { color: '#D9C4A3', active: true,  optional: false, style: 'pants' },
+  shoes:  { color: '#F5F5F2', active: true,  optional: false, style: 'sneakers' },
 };
 
 const SLOT_LABEL: Record<SlotKey, { ko: string; en: string; icon: string }> = {
@@ -76,6 +76,7 @@ export default function ColorCoordinatorClient() {
   const [selected, setSelected] = useState<SlotKey>('top');
   const [season, setSeason] = useState<SeasonKey>('all');
   const [skin, setSkin] = useState(SKINS[1].hex);
+  const [hair, setHair] = useState<HairStyle>('short');
   const [look, setLook] = useState<{ key: LookType; variant: number } | null>(null);
   const [saving, setSaving] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -98,7 +99,10 @@ export default function ColorCoordinatorClient() {
     setLook(null);
   };
 
+  const isDress = slots.top.style === 'dress';
+  const itemName = (k: SlotKey) => `${label(k)} · ${styleName(k, slots[k].style, isKo)}`;
   const toggleSlot = (k: SlotKey, on: boolean) => {
+    if (k === 'bottom' && isDress) return;
     update({ ...slots, [k]: { ...slots[k], active: on } });
     if (on) setSelected(k);
     else if (selected === k) setSelected('top');
@@ -108,6 +112,12 @@ export default function ColorCoordinatorClient() {
     update({ ...slots, [selected]: { ...slots[selected], color: hex.toUpperCase() } });
     setLook(null);
   };
+  // 모양 바꾸기. 원피스는 하의를 끄고, 원피스에서 다른 상의로 바꾸면 하의를 다시 켠다
+  const pickStyle = (style: string) => {
+    const next: SlotsMap = { ...slots, [selected]: { ...slots[selected], style } };
+    if (selected === 'top') next.bottom = { ...slots.bottom, active: style !== 'dress' };
+    update(next);
+  };
   const applyLook = (key: LookType) => {
     const variant = look?.key === key ? look.variant + 1 : 0;
     setLook({ key, variant });
@@ -115,7 +125,7 @@ export default function ColorCoordinatorClient() {
   };
 
   const figLabel = (isKo ? '코디 미리보기: ' : 'Outfit preview: ')
-    + SLOT_ORDER.filter((k) => slots[k].active).map((k) => `${label(k)} ${colorName(slots[k].color)}`).join(', ');
+    + SLOT_ORDER.filter((k) => slots[k].active).map((k) => `${itemName(k)} ${colorName(slots[k].color)}`).join(', ');
 
   // ── 1080×1350(4:5) PNG 저장 ──
   const handleSave = async () => {
@@ -179,7 +189,7 @@ export default function ColorCoordinatorClient() {
         ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.stroke();
         ctx.fillStyle = '#1E1B2E';
         ctx.font = `700 28px ${FONT}`;
-        ctx.fillText(label(k), rx + 86, y + 24);
+        ctx.fillText(itemName(k), rx + 86, y + 24);
         ctx.fillStyle = '#6B6680';
         ctx.font = `500 22px ${FONT}`;
         ctx.fillText(`${colorName(hex)}  ${hex}`, rx + 86, y + 56);
@@ -251,6 +261,7 @@ export default function ColorCoordinatorClient() {
           <OutfitFigure
             slots={slots}
             skin={skin}
+            hair={hair}
             selected={selected}
             onSelect={selectSlot}
             onAddHat={() => toggleSlot('hat', true)}
@@ -271,6 +282,13 @@ export default function ColorCoordinatorClient() {
               />
             ))}
           </div>
+          <div className={s.hairRow} role="group" aria-label={isKo ? '머리 길이' : 'Hair'}>
+            {(['short', 'long'] as const).map((h) => (
+              <button key={h} type="button" className={`${s.hairBtn} ${hair === h ? s.hairBtnOn : ''}`} aria-pressed={hair === h} onClick={() => setHair(h)}>
+                {h === 'short' ? (isKo ? '짧은 머리' : 'Short hair') : (isKo ? '긴 머리' : 'Long hair')}
+              </button>
+            ))}
+          </div>
           <p className={s.figHint}>{isKo ? '옷을 누르면 그 아이템이 선택됩니다' : 'Tap a garment to select it'}</p>
         </div>
 
@@ -286,6 +304,7 @@ export default function ColorCoordinatorClient() {
             {SLOT_ORDER.map((k) => {
               const st = slots[k];
               const sel = selected === k && st.active;
+              const lockedByDress = k === 'bottom' && isDress;
               return (
                 <li key={k} className={`${s.slotRow} ${sel ? s.slotRowSel : ''} ${!st.active ? s.slotRowOff : ''}`}>
                   <button
@@ -293,10 +312,15 @@ export default function ColorCoordinatorClient() {
                     className={s.slotMain}
                     onClick={() => (st.active ? selectSlot(k) : toggleSlot(k, true))}
                     aria-pressed={sel}
+                    disabled={lockedByDress}
                   >
                     <span className={s.slotDot} style={{ background: st.active ? st.color : 'transparent' }} />
                     <span className={s.slotLabel}>{label(k)}</span>
-                    <span className={s.slotColor}>{st.active ? colorName(st.color) : (isKo ? '없음' : 'None')}</span>
+                    <span className={s.slotColor}>
+                      {lockedByDress
+                        ? (isKo ? '원피스 착용 중' : 'Wearing a dress')
+                        : st.active ? `${styleName(k, st.style, isKo)} · ${colorName(st.color)}` : (isKo ? '없음' : 'None')}
+                    </span>
                   </button>
                   {st.optional && (st.active ? (
                     <button type="button" className={s.slotRemove} aria-label={isKo ? `${label(k)} 빼기` : `Remove ${label(k)}`} onClick={() => toggleSlot(k, false)}>
@@ -316,12 +340,26 @@ export default function ColorCoordinatorClient() {
         {/* 팔레트 */}
         <section className={`${s.card} ${s.palette}`} aria-labelledby="cc-palette">
           <h2 id="cc-palette" className={s.cardTitle}>
-            {isKo ? `${label(selected)} 색 고르기` : `${label(selected)} color`}
+            {isKo ? `${label(selected)} 모양·색` : `${label(selected)} style & color`}
             <span className={s.curColor}>
               <span className={s.curDot} style={{ background: cur.color }} />
               {colorName(cur.color)} · {cur.color}
             </span>
           </h2>
+          <div className={s.styleRow} role="group" aria-label={isKo ? '모양' : 'Style'}>
+            {STYLES[selected].map((st) => (
+              <button
+                key={st.key}
+                type="button"
+                className={`${s.styleBtn} ${cur.style === st.key ? s.styleBtnOn : ''}`}
+                aria-pressed={cur.style === st.key}
+                onClick={() => pickStyle(st.key)}
+              >
+                {isKo ? st.ko : st.en}
+              </button>
+            ))}
+          </div>
+          <p className={s.swGroupName}>{isKo ? '퍼스널 컬러 팔레트' : 'Personal color palette'}</p>
           <div className={s.tabs} role="group" aria-label={isKo ? '퍼스널 컬러' : 'Personal color'}>
             {SEASON_TABS.map((k) => (
               <button

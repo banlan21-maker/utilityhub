@@ -4,7 +4,44 @@ export type SlotKey = 'hat' | 'outer' | 'top' | 'bottom' | 'shoes';
 export type LookType = 'daily' | 'point' | 'soft';
 export type SeasonKey = 'all' | 'spring' | 'summer' | 'autumn' | 'winter';
 
-export interface SlotState { color: string; active: boolean; optional: boolean }
+export interface SlotState { color: string; active: boolean; optional: boolean; style: string }
+
+/** 아이템 모양. 상의 'dress'(원피스)를 고르면 하의는 꺼진다 */
+export const STYLES: Record<SlotKey, { key: string; ko: string; en: string }[]> = {
+  hat: [
+    { key: 'bucket', ko: '버킷햇', en: 'Bucket hat' },
+    { key: 'cap', ko: '볼캡', en: 'Ball cap' },
+    { key: 'beanie', ko: '비니', en: 'Beanie' },
+  ],
+  outer: [
+    { key: 'jacket', ko: '재킷', en: 'Jacket' },
+    { key: 'coat', ko: '롱코트', en: 'Long coat' },
+    { key: 'cardigan', ko: '가디건', en: 'Cardigan' },
+  ],
+  top: [
+    { key: 'tee', ko: '반팔 티', en: 'T-shirt' },
+    { key: 'long', ko: '긴팔 티', en: 'Long sleeve' },
+    { key: 'shirt', ko: '셔츠', en: 'Shirt' },
+    { key: 'sleeveless', ko: '민소매', en: 'Sleeveless' },
+    { key: 'dress', ko: '원피스', en: 'Dress' },
+  ],
+  bottom: [
+    { key: 'pants', ko: '긴바지', en: 'Trousers' },
+    { key: 'wide', ko: '와이드 팬츠', en: 'Wide pants' },
+    { key: 'shorts', ko: '반바지', en: 'Shorts' },
+    { key: 'midi', ko: '미디 스커트', en: 'Midi skirt' },
+    { key: 'mini', ko: '미니 스커트', en: 'Mini skirt' },
+  ],
+  shoes: [
+    { key: 'sneakers', ko: '스니커즈', en: 'Sneakers' },
+    { key: 'loafers', ko: '로퍼', en: 'Loafers' },
+    { key: 'boots', ko: '앵클부츠', en: 'Ankle boots' },
+  ],
+};
+export const styleName = (k: SlotKey, style: string, ko: boolean) => {
+  const st = STYLES[k].find((x) => x.key === style) ?? STYLES[k][0];
+  return ko ? st.ko : st.en;
+};
 export type SlotsMap = Record<SlotKey, SlotState>;
 export interface NamedColor { hex: string; ko: string; en: string }
 
@@ -280,11 +317,11 @@ export function computeLook(look: LookType, base: SlotKey, slots: SlotsMap, vari
     set('top', (light ? darkTops : lightTops)[v % 4]);
     set('bottom', (light ? darkBottoms : lightBottoms)[v % 4]);
     set('outer', outers[v % 4]);
-    const bottomHex = base === 'bottom' ? baseHex : next.bottom.color;
+    const bottomHex = base === 'bottom' ? baseHex : slots.bottom.active ? next.bottom.color : next.top.color;
     set('shoes', lightness(bottomHex) > 70 ? [N.black, N.brown][v % 2] : [N.sneaker, N.black][v % 2]);
     set('hat', [N.black, N.beige, N.navy, N.charcoal][v % 4]);
     // 상·하의가 같은 색이 되지 않도록
-    if (base !== 'top' && base !== 'bottom' && next.top.color === next.bottom.color) set('bottom', N.denim);
+    if (base !== 'top' && base !== 'bottom' && slots.bottom.active && next.top.color === next.bottom.color) set('bottom', N.denim);
   } else if (look === 'point') {
     // 나머지는 기본색, 작은 아이템 하나에 포인트 색
     let accent: string;
@@ -390,7 +427,13 @@ export function analyze(slots: SlotsMap, season: SeasonKey = 'all'): Harmony {
   const upper = slots.top.color;
   const lower = slots.bottom.color;
   const dL = Math.abs(lightness(upper) - lightness(lower));
-  if (colorDistance(upper, lower) < 30) {
+  if (!slots.bottom.active) {
+    // 원피스: 상·하의 대비 대신 신발과의 밝기 차이를 본다
+    const dS = Math.abs(lightness(upper) - lightness(slots.shoes.color));
+    checks.push(dS < 12
+      ? { id: 'contrast', level: 'ok', ko: `원피스와 신발 밝기가 비슷함(ΔL ${dS.toFixed(0)}) — 길게 이어져 보이지만 단조로울 수 있어요. 아우터나 모자로 변화를 주세요.`, en: `Dress and shoes are similar in lightness (ΔL ${dS.toFixed(0)}) — it lengthens the line but can look flat. Add an outer layer or hat.` }
+      : { id: 'contrast', level: 'good', ko: `원피스와 신발 밝기 차이 ΔL ${dS.toFixed(0)} — 실루엣이 또렷하게 마무리됩니다.`, en: `Dress/shoes lightness gap ΔL ${dS.toFixed(0)} — the silhouette ends crisply.` });
+  } else if (colorDistance(upper, lower) < 30) {
     checks.push({ id: 'contrast', level: 'ok', ko: '상의와 하의가 같은 색 — 셋업(원톤)처럼 보입니다. 의도했다면 신발이나 아우터로 변화를 주세요.', en: 'Top and bottom are the same color — it reads as a set (one-tone). Add contrast with shoes or an outer layer.' });
   } else if (dL < 12) {
     checks.push({ id: 'contrast', level: 'ok', ko: `상·하의 밝기 차이가 작음(ΔL ${dL.toFixed(0)}) — 톤온톤으로 차분하지만 경계가 흐릿할 수 있어요.`, en: `Small lightness gap between top and bottom (ΔL ${dL.toFixed(0)}) — calm tone-on-tone, but the waistline may blur.` });
