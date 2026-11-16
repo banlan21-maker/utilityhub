@@ -38,9 +38,9 @@ export const CITY_GAS = {
 } as const;
 
 export const KEROSENE = {
-  asOf: '2026-11-09',
+  asOf: '2026-11-16',
   source: '오피넷 실내등유 전국 주유소 평균 판매가격(부가세 포함)',
-  perLiter: 1571,
+  perLiter: 1570,
   /** 발열량(약) MJ/L */
   mjPerLiter: 36.5,
 } as const;
