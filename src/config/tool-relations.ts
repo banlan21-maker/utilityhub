@@ -81,7 +81,7 @@ export const TOOLS: ToolMeta[] = [
 
   // Utility
   { id: 'utilities/utility/counter', icon: '📝', ko: '글자 수 & 바이트 계산기', en: 'Character Counter', category: 'utility' },
-  { id: 'utilities/utility/pyeong-calc', icon: '📐', ko: '평수 ↔ ㎡ 변환기', en: 'Pyeong ↔ ㎡ Converter', category: 'utility' },
+  { id: 'utilities/utility/pyeong-calc', icon: '📐', ko: '평수 ↔ ㎡ 변환기', en: 'Pyeong to m² Converter', category: 'utility' },
   { id: 'utilities/utility/unit-converter', icon: '🔢', ko: '단위 변환기', en: 'Unit Converter', category: 'utility' },
   { id: 'utilities/utility/image-processor', icon: '🖼️', ko: '이미지 압축기', en: 'Image Compressor', category: 'utility' },
   { id: 'utilities/utility/image-resizer', icon: '✂️', ko: '이미지 리사이저', en: 'Image Resizer', category: 'utility' },
@@ -89,7 +89,11 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/utility/yt-thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기', en: 'YouTube Thumbnail Downloader', category: 'utility' },
   { id: 'utilities/utility/lotto-generator', icon: '🎰', ko: '운명 로또 번호 생성기', en: 'Destiny Lotto Picker', category: 'utility' },
   { id: 'utilities/utility/decision-master', icon: '🎡', ko: 'Decision Master', en: 'Decision Master', category: 'utility' },
-  { id: 'utilities/utility/piping-calc', icon: '🔧', ko: '배관 종합 계산기', en: 'Piping Calculator', category: 'utility' },
+  { id: 'utilities/utility/piping-calc', icon: '🔧', ko: '배관 종합 계산기', en: 'Pipe Size, Slope & Flow Calculator', category: 'utility' },
+  { id: 'utilities/utility/wire-size-calc', icon: '⚡', ko: '전선 굵기 계산기', en: 'Wire Size Calculator (AWG & mm²)', category: 'utility' },
+  { id: 'utilities/utility/cable-tray-calc', icon: '🪜', ko: '케이블 트레이 가공 계산기', en: 'Cable Tray Bend & Offset Calculator', category: 'utility' },
+  { id: 'utilities/utility/metal-weight-calc', icon: '🏗️', ko: '금속 중량·면적 계산기', en: 'Metal Weight Calculator', category: 'utility' },
+  { id: 'utilities/utility/interior-material-calc', icon: '🧱', ko: '타일·도배 계산기', en: 'Tile & Wallpaper Calculator', category: 'utility' },
   { id: 'utilities/utility/elbow-offset', icon: '📐', ko: '배관 엘보 오프셋 계산기', en: 'Pipe Elbow Offset Calculator', category: 'utility' },
   { id: 'utilities/utility/construction-dictionary', icon: '📖', ko: '건설현장 용어 사전', en: 'Construction Site Glossary', category: 'utility' },
   { id: 'utilities/utility/persona-build', icon: '🎭', ko: '페르소나 카드', en: 'Persona Build', category: 'utility' },
@@ -449,8 +453,22 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   ],
   'utilities/utility/piping-calc': [
     'utilities/utility/elbow-offset',
+    'utilities/utility/wire-size-calc',
+    'utilities/utility/cable-tray-calc',
+    'utilities/utility/metal-weight-calc',
     'utilities/utility/unit-converter',
+  ],
+  'utilities/utility/wire-size-calc': [
+    'utilities/utility/cable-tray-calc',
     'utilities/dev/kec-grounding',
+    'utilities/utility/piping-calc',
+    'utilities/dev/resistor-calc',
+  ],
+  'utilities/utility/cable-tray-calc': [
+    'utilities/utility/wire-size-calc',
+    'utilities/utility/piping-calc',
+    'utilities/utility/metal-weight-calc',
+    'utilities/utility/elbow-offset',
   ],
   'utilities/utility/elbow-offset': [
     'utilities/utility/piping-calc',

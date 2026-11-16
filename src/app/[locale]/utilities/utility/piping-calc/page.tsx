@@ -12,11 +12,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? '배관 종합 계산기 — SPP·SPPS·스테인리스·동관·PVC 규격표, 배수 구배, 수압 물량, 유속·마찰 손실 | Utility Hub'
-    : 'Pipe Size Chart & Calculator — Steel, Copper K/L/M, PVC, Drain Slope, GPM Sizing | Utility Hub';
+    ? '배관 종합 계산기 — 강관·동관·PVC 규격표, 구배, 수압, 유속 | Utility Hub'
+    : 'Pipe Size Chart & Calculator: Steel, Copper, PVC | Utility Hub';
   const description = isKo
     ? 'SPP·SPPS Sch40/80·스테인리스 Sch10S·Su관·ASME 외경·두께·내경·kg/m를 호칭별로 조회하고, 관경별 최소 구배 판정, 관경이 섞인 수압 테스트 물량, 유량별 유속과 관경을 계산합니다.'
-    : 'OD, wall, ID and weight for ASME B36.10 steel, ASTM B88 copper Type K/L/M and PVC Sch40/80; drain slope to IPC 704.1; hydro-test gallons; GPM pipe sizing with velocity and Hazen-Williams friction. US or metric units.';
+    : 'Free pipe chart: OD, ID, wall and weight for steel, copper K/L/M and PVC. Plus IPC drain slope, hydro-test gallons and GPM pipe sizing with friction loss.';
   const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,

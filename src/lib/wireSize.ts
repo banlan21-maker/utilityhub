@@ -138,6 +138,126 @@ export function ampacity(insulation: Insulation, loaded: 2 | 3, method: Method, 
   return i < 0 ? 0 : TABLE[insulation][loaded][i][method];
 }
 
+// ───────────────────────── 미국 NEC (AWG) ─────────────────────────
+/**
+ * NEC 2023 Table 310.16 — 구리, 주위 30 °C, 전선관·케이블·직매 안 통전 도체 3본 이하.
+ * [AWG/kcmil, 60 °C, 75 °C, 90 °C, 단면적 circular mils]
+ */
+export const AWG_TABLE: [string, number, number, number, number][] = [
+  ['14', 15, 20, 25, 4110], ['12', 20, 25, 30, 6530], ['10', 30, 35, 40, 10380], ['8', 40, 50, 55, 16510],
+  ['6', 55, 65, 75, 26240], ['4', 70, 85, 95, 41740], ['3', 85, 100, 115, 52620], ['2', 95, 115, 130, 66360],
+  ['1', 110, 130, 145, 83690], ['1/0', 125, 150, 170, 105600], ['2/0', 145, 175, 195, 133100], ['3/0', 165, 200, 225, 167800],
+  ['4/0', 195, 230, 260, 211600], ['250', 215, 255, 290, 250000], ['300', 240, 285, 320, 300000], ['350', 260, 310, 350, 350000],
+  ['400', 280, 335, 380, 400000], ['500', 320, 380, 430, 500000], ['600', 350, 420, 475, 600000],
+];
+/** 표시용: kcmil 크기는 숫자만 있으므로 단위를 붙인다 */
+export const awgLabel = (s: string) => (/^\d{3}$/.test(s) ? `${s} kcmil` : `${s} AWG`);
+/** circular mils → mm² */
+export const cmilToMm2 = (cm: number) => cm * 0.000506707;
+
+/** NEC 240.6(A) 표준 차단기 정격 */
+export const NEC_BREAKERS = [15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, 225, 250, 300, 350, 400, 450, 500, 600] as const;
+/** NEC 240.4(D) 소선 과전류 보호 상한 (구리) */
+const SMALL_CONDUCTOR_MAX: Record<string, number> = { '14': 15, '12': 20, '10': 30 };
+
+/** NEC 310.15(B)(1) 주위온도 보정 (30 °C 기준) — [상한 °C, 60 °C 열, 75 °C 열, 90 °C 열] */
+const NEC_TEMP: [number, number, number, number][] = [
+  [10, 1.29, 1.2, 1.15], [15, 1.22, 1.15, 1.12], [20, 1.15, 1.11, 1.08], [25, 1.08, 1.05, 1.04], [30, 1, 1, 1],
+  [35, 0.91, 0.94, 0.96], [40, 0.82, 0.88, 0.91], [45, 0.71, 0.82, 0.87], [50, 0.58, 0.75, 0.82], [55, 0.41, 0.67, 0.76], [60, 0, 0.58, 0.71],
+];
+export const necTempFactor = (ambientC: number, col: 60 | 75 | 90) => {
+  const r = NEC_TEMP.find(([t]) => ambientC <= t) ?? NEC_TEMP[NEC_TEMP.length - 1];
+  return col === 60 ? r[1] : col === 75 ? r[2] : r[3];
+};
+/** NEC 310.15(C)(1) 통전 도체 4본 이상 저감 */
+export function necAdjFactor(ccc: number) {
+  if (ccc <= 3) return 1;
+  if (ccc <= 6) return 0.8;
+  if (ccc <= 9) return 0.7;
+  if (ccc <= 20) return 0.5;
+  if (ccc <= 30) return 0.45;
+  if (ccc <= 40) return 0.4;
+  return 0.35;
+}
+
+export type UsSystem = '120_1' | '208_1' | '240_1' | '277_1' | '208_3' | '480_3';
+export const US_SYSTEMS: Record<UsSystem, { V: number; phases: 1 | 3; ccc: number }> = {
+  '120_1': { V: 120, phases: 1, ccc: 2 },
+  '208_1': { V: 208, phases: 1, ccc: 2 },
+  '240_1': { V: 240, phases: 1, ccc: 2 },
+  '277_1': { V: 277, phases: 1, ccc: 2 },
+  '208_3': { V: 208, phases: 3, ccc: 3 },
+  '480_3': { V: 480, phases: 3, ccc: 3 },
+};
+/** 구리 저항률 K (Ω·cmil/ft, 75 °C) */
+export const K_COPPER = 12.9;
+
+export type UsConductor = 'thhn' | 'nm';
+export interface UsInput {
+  loadA: number;
+  lengthFt: number;
+  system: UsSystem;
+  conductor: UsConductor;
+  /** 단자 온도 등급 (110.14(C)) */
+  termC: 60 | 75;
+  ambientC: number;
+  /** 같은 관·케이블 안 통전 도체 수 */
+  ccc: number;
+  continuous: boolean;
+  dropLimitPct: number;
+}
+export interface UsResult {
+  designA: number;
+  breakerA: number | null;
+  tempFactor: number;
+  adjFactor: number;
+  sizeByAmpacity: string | null;
+  sizeByDrop: string | null;
+  recommended: string | null;
+  governing: 'ampacity' | 'drop' | 'min' | null;
+  /** 권장 굵기의 최종 허용전류(보정·단자 한도 반영) */
+  ampacityA: number | null;
+  dropV: number | null;
+  dropPct: number | null;
+}
+
+/** 굵기 하나의 최종 허용전류: 90 °C 열을 보정한 값과 단자(또는 NM-B 60 °C) 열 중 작은 값 */
+export function usAmpacity(row: (typeof AWG_TABLE)[number], i: Pick<UsInput, 'conductor' | 'termC' | 'ambientC' | 'ccc'>) {
+  const derated = row[3] * necTempFactor(i.ambientC, 90) * necAdjFactor(i.ccc);
+  const limitCol = i.conductor === 'nm' ? row[1] : i.termC === 60 ? row[1] : row[2]; // NM-B는 334.80에 따라 60 °C 열
+  return Math.min(derated, limitCol);
+}
+
+export function calcWireUS(i: UsInput): UsResult {
+  const sys = US_SYSTEMS[i.system];
+  const designA = i.loadA * (i.continuous ? 1.25 : 1);
+  const breakerA = NEC_BREAKERS.find(r => r >= designA) ?? null;
+  const tempFactor = necTempFactor(i.ambientC, 90);
+  const adjFactor = necAdjFactor(i.ccc);
+  const okAmp = (row: (typeof AWG_TABLE)[number]) => breakerA !== null
+    && usAmpacity(row, i) >= breakerA
+    && (SMALL_CONDUCTOR_MAX[row[0]] === undefined || breakerA <= SMALL_CONDUCTOR_MAX[row[0]]);
+  const sizeByAmpacity = AWG_TABLE.find(okAmp)?.[0] ?? null;
+  // 전압강하: 단상 2·K·I·L/CM, 삼상 √3·K·I·L/CM (L 편도 ft)
+  const mult = sys.phases === 1 ? 2 : Math.sqrt(3);
+  const dropOf = (cm: number) => (mult * K_COPPER * i.loadA * i.lengthFt) / cm;
+  const allowedV = sys.V * (i.dropLimitPct / 100);
+  const sizeByDrop = AWG_TABLE.find(r => dropOf(r[4]) <= allowedV)?.[0] ?? null;
+  let recommended: string | null = null, governing: UsResult['governing'] = null;
+  if (sizeByAmpacity && sizeByDrop) {
+    const ia = AWG_TABLE.findIndex(r => r[0] === sizeByAmpacity), id = AWG_TABLE.findIndex(r => r[0] === sizeByDrop);
+    const idx = Math.max(ia, id, 0);
+    recommended = AWG_TABLE[idx][0];
+    governing = idx === ia ? 'ampacity' : 'drop';
+  }
+  const row = recommended ? AWG_TABLE.find(r => r[0] === recommended)! : null;
+  const dropV = row ? dropOf(row[4]) : null;
+  return {
+    designA, breakerA, tempFactor, adjFactor, sizeByAmpacity, sizeByDrop, recommended, governing,
+    ampacityA: row ? usAmpacity(row, i) : null, dropV, dropPct: dropV !== null ? (dropV / sys.V) * 100 : null,
+  };
+}
+
 export function calcWire(i: WireInput): WireResult {
   const sys = SYSTEMS[i.system];
   const tempFactor = TEMP_FACTOR[i.insulation][i.ambientC] ?? 1;

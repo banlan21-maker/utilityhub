@@ -13,10 +13,10 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '전선 굵기 계산기 — KEC 허용전류·전압강하·차단기 (SQ 산정) | Utility Hub'
-    : 'Wire Size Calculator — Ampacity, Voltage Drop & Breaker (KEC/IEC) | Utility Hub';
+    : 'Wire Size Calculator: AWG & mm², Ampacity, Voltage Drop | Utility Hub';
   const description = isKo
     ? '부하전류와 배선 거리, HFIX·CV 전선과 공사방법(전선관·트레이 등)을 넣으면 KEC 허용전류 표, 온도·회로 수 보정, 차단기 정격, KEC 232.3.9 전압강하 한도를 모두 만족하는 전선 굵기(㎟)를 계산합니다.'
-    : 'Size low-voltage copper conductors with IEC 60364-5-52 ampacity tables, temperature and grouping corrections, breaker coordination (IB ≤ In ≤ IZ) and KEC voltage drop limits.';
+    : 'Free wire gauge calculator: enter amps, volts and run length to get the copper AWG size per NEC Table 310.16 with derating, breaker size and voltage drop — or mm² sizing to IEC/KEC.';
   const canonical = `${BASE}/${locale}${PATH}`;
 
   return {
@@ -54,8 +54,8 @@ const SCHEMA_TEXT = {
     ],
   },
   en: {
-    name: 'Wire Size Calculator (KEC ampacity & voltage drop)',
-    description: 'Free low-voltage conductor sizing with IEC 60364-5-52 ampacity tables, KEC 232.3.9 voltage drop limits and KEC 212.4 breaker coordination.',
+    name: 'Wire Size Calculator — AWG (NEC) & mm² (IEC)',
+    description: 'Free copper wire size calculator: AWG sizing to NEC Table 310.16 with temperature and conductor-count derating, breaker sizing and voltage drop, plus mm² sizing to IEC 60364-5-52 and KEC.',
     faqs: [
       { q: 'Isn\'t the voltage drop rule 2 % feeder plus 2 % branch?', a: 'That was the old Korean wiring code. KEC 232.3.9 limits the total drop to 3 % lighting / 5 % other on an LV supply and 6 % / 8 % on an HV supply, plus 0.005 % per metre beyond 100 m (max 0.5 %).' },
       { q: 'Why does the installation method change the size?', a: 'Heat dissipation differs. A 2.5 mm² XLPE conductor (three loaded) carries 23 A in insulated-wall conduit, 28 A in conduit and 30 A clipped direct, reduced further by 0.91 at 40 °C and 0.8 for two grouped circuits.' },
@@ -99,7 +99,8 @@ export default async function WireSizeCalcPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {/* 영문 FAQPage는 화면의 영어 FAQ와 같도록 SeoSection이 내보낸다 */}
+      {locale === 'ko' && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       <WireSizeCalcClient />
     </>
   );

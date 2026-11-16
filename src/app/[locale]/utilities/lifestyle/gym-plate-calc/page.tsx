@@ -11,7 +11,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo ? '1RM & 바벨 원판 계산기 | Utility Hub' : '1RM & Barbell Plate Calculator | Utility Hub';
   const description = isKo
-    ? 'Epley 공식으로 최대 중량(1RM)을 계산하고, IWF 표준 컬러로 바벨 원판 세팅을 시각화하는 무료 헬스 계산기'
+    ? '들어 올린 무게와 반복 횟수로 1RM(최대 중량)을 Epley 공식으로 계산하고, 목표 무게를 만드는 원판 조합을 한쪽 기준으로 보여 줍니다. 20kg·15kg 바벨 선택, IWF 표준 색상 원판 그림, 무료·가입 없음.'
     : 'Calculate your 1RM using the Epley formula and visualize barbell plate loading with IWF standard colors.';
   const canonical = `https://www.theutilhub.com/${locale}/utilities/lifestyle/gym-plate-calc`;
   return {
@@ -39,7 +39,7 @@ const softwareSchema = {
   applicationCategory: 'UtilitiesApplication',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
   url: 'https://www.theutilhub.com/ko/utilities/lifestyle/gym-plate-calc',
-  description: 'Epley 공식으로 최대 중량(1RM)을 계산하고, IWF 표준 컬러로 바벨 원판 세팅을 시각화하는 무료 헬스 계산기',
+  description: '들어 올린 무게와 횟수로 1RM(최대 중량)을 Epley 공식으로 계산하고, 목표 무게를 만들 원판 조합을 한쪽 기준으로 바로 보여 줍니다. 20kg 바벨·IWF 표준 색상, 퍼센트별 훈련 무게 표까지 무료로 제공합니다.',
 };
 
 const faqSchema = {

@@ -429,6 +429,26 @@ export default function CableTrayCalcClient() {
         </section>
       )}
 
+      {/* 현장 꺾기 가이드 (서버 HTML에 포함되는 고정 내용) */}
+      <section className={s.step_card} aria-labelledby="tray-bend-guide">
+        <h2 id="tray-bend-guide" className={s.step_title}>{isKo ? '케이블 트레이 현장 꺾기 순서 (V-컷 공식)' : 'How to bend cable tray in the field (V-cut formula)'}</h2>
+        <ol style={{ margin: 0, paddingLeft: '1.25rem', display: 'grid', gap: '0.6rem', lineHeight: 1.65, color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
+          {(isKo ? [
+            '각도 정하기 — 높이차 H와 수평거리 L로 꺾임 각 θ = atan(H ÷ L). 기성 엘보가 30·45·60·90°이므로 현장 가공은 45° 이하가 무리가 없습니다.',
+            'V-컷 폭 — 상하 꺾임은 측면 레일 높이 h, 좌우 꺾임은 트레이 폭 w를 기준으로 한쪽 폭 = 기준치수 × tan(θ/2), 전체 폭은 그 두 배입니다. 레일 100mm를 30°로 꺾으면 한쪽 26.8mm(전체 53.6mm), 45°면 한쪽 41.4mm(전체 82.8mm)입니다. 폭 300mm 트레이를 옆으로 30° 꺾으면 한쪽 80.4mm입니다.',
+            '깊이와 방향 — V-컷 깊이는 기준치수 전체(레일 높이 또는 트레이 폭)이고, 꺾임 안쪽 면만 잘라냅니다. 바깥으로 벌어지는 쪽은 일자로 절개한 뒤 벌어진 틈을 연결판으로 덮습니다.',
+            '마킹 간격 — 첫 꺾임과 둘째 꺾임 사이 바닥판 길이는 사선 길이 √(H² + L²)입니다. 좌우 오프셋은 V-컷으로 줄어드는 몫을 더해야 하며, 위 계산기가 자동으로 반영합니다.',
+            '고정과 지지 — 꺾은 부분은 조절형 연결판이나 볼트로 고정하고, NEMA VE 2에 따라 꺾임부·연결부 양쪽 600mm(2ft) 안에 지지대를 둡니다.',
+          ] : [
+            'Find the angle — with rise H and run L, the bend angle is θ = atan(H ÷ L). Factory elbows come in 30°, 45°, 60° and 90°, so field bends of 45° or less are the practical range.',
+            'Size the V-cut — for an up or down bend use the side-rail height h; for a horizontal bend use the tray width w. Half-width of the notch = reference × tan(θ/2), and the full notch is twice that. A 100 mm (4 in) rail bent 30° needs 26.8 mm each side (53.6 mm total); at 45° it is 41.4 mm each side (82.8 mm total). A 300 mm (12 in) wide tray offset 30° sideways needs 80.4 mm each side.',
+            'Cut depth and side — cut the V the full depth of the reference (rail height or tray width) on the inside of the bend only. On the side that opens up, make a straight slit and cover the gap with a splice plate.',
+            'Mark the distance — the bottom between the two bends equals the slope length √(H² + L²). For a horizontal offset, add back the length lost to the V-cuts; the calculator above does this automatically.',
+            'Fix and support — bolt the bend with adjustable splice plates and place supports within 600 mm (2 ft) of each bend and splice, as NEMA VE 2 recommends.',
+          ]).map((x, i) => <li key={i}>{x}</li>)}
+        </ol>
+      </section>
+
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/cable-tray-calc" />
       <SeoSection

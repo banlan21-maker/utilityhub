@@ -12,11 +12,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? '평수 계산기 — ㎡ 평 변환, 84㎡는 몇 평형?, 평당 가격 | Utility Hub'
-    : 'Pyeong Calculator — ㎡ to Pyeong, Korean Apartment Classes & Price per Pyeong | Utility Hub';
+    ? '평수 계산기 — 1평 = 3.3058㎡, ㎡↔평 변환·평형·평당가 | Utility Hub'
+    : 'Pyeong to m² Converter – 1 Pyeong = 3.3058 m² | Utility Hub';
   const description = isKo
-    ? '㎡와 평을 바로 변환하고, 전용면적이 몇 평형인지(84㎡ ≈ 34평형, 59㎡ ≈ 24평형) 아파트·주상복합·오피스텔 전용률로 계산합니다. 매매가로 평당 가격과 ㎡당 가격도 구합니다.'
-    : 'Convert ㎡ and pyeong, find the Korean apartment pyeong class from exclusive area (84㎡ ≈ 34-pyeong class), and work out the price per pyeong.';
+    ? '1평 = 3.3058㎡. ㎡와 평을 바로 변환하고, 전용면적이 몇 평형인지(84㎡ ≈ 34평형, 59㎡ ≈ 24평형) 아파트·주상복합·오피스텔 전용률로 계산합니다. 매매가로 평당 가격과 ㎡당 가격도 구합니다.'
+    : '1 pyeong = 3.3058 m² (35.58 ft²). Convert pyeong to square meters and square feet instantly — free, no sign-up. Includes Korean apartment size classes and price per pyeong.';
   const canonical = `${BASE}/${locale}${PATH}`;
   return {
     title,
@@ -46,8 +46,8 @@ const SCHEMA_TEXT = {
     ],
   },
   en: {
-    name: 'Pyeong Calculator (㎡ ↔ pyeong, classes, price per pyeong)',
-    description: 'Free tool to convert ㎡ and pyeong, map exclusive area to Korean pyeong classes and calculate price per pyeong.',
+    name: 'Pyeong to m² Converter',
+    description: 'Free converter: 1 pyeong = 3.3058 m² = 35.58 ft². Convert pyeong to square meters and square feet, map Korean apartment sizes to pyeong classes and calculate price per pyeong.',
     faqs: [
       { q: 'Why is 84㎡ a 34-pyeong class, not 25?', a: '84㎡ is 25.4 pyeong, but classes use supply area including shared stairs and corridors. An 84㎡ apartment usually has 110–115㎡ of supply area, about 34 pyeong.' },
       { q: 'Exactly how big is one pyeong?', a: '400/121 ㎡ ≈ 3.305785 ㎡. Divide ㎡ by 3.3058, or multiply by 0.3025, for pyeong.' },
@@ -91,7 +91,8 @@ export default async function PyeongCalcPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {/* 영문 FAQPage는 화면의 영어 FAQ와 같도록 SeoSection이 내보낸다 */}
+      {locale === 'ko' && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       <PyeongCalcClient />
     </>
   );

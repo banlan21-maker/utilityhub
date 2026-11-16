@@ -394,6 +394,27 @@ export default function CoreWebVitalsClient() {
         </ul>
       </section>
 
+
+      {/* 결과 해석 가이드 (서버 HTML에 포함되는 고정 내용) */}
+      <section className={s.tips_box} aria-labelledby="cwv-guide">
+        <h2 id="cwv-guide" className={s.tips_title}>📖 {isKo ? '결과 해석 가이드' : 'How to read your results'}</h2>
+        <ul className={s.tips_list}>
+          {(isKo ? [
+            '숫자는 어디서? PageSpeed Insights 위쪽의 "실제 사용자 경험(필드 데이터)" 값이나 서치콘솔 → 코어 웹 바이탈 보고서 값을 넣으세요. 구글 순위에 쓰이는 것은 실험실(Lighthouse) 점수가 아니라 실제 방문자 28일치의 75번째 백분위 값입니다.',
+            'LCP(가장 큰 콘텐츠 표시) — 2.5초 이하 Good, 4초 초과 Poor. 대부분 첫 화면의 큰 이미지·제목 글꼴이 원인입니다. 히어로 이미지에 fetchpriority="high"를 주고 WebP·AVIF로 줄이며, 서버 응답(TTFB)이 0.8초를 넘으면 캐시·CDN부터 손보세요.',
+            'INP(상호작용 반응) — 200ms 이하 Good, 500ms 초과 Poor. 클릭 뒤 오래 도는 자바스크립트가 원인입니다. 긴 작업을 나누고(scheduler.yield, setTimeout), 무거운 서드파티 스크립트(채팅, 광고, 태그)를 늦게 불러오세요.',
+            'CLS(레이아웃 흔들림) — 0.1 이하 Good, 0.25 초과 Poor. 크기를 정하지 않은 이미지·광고·임베드가 원인입니다. width·height 또는 aspect-ratio를 지정하고, 늦게 뜨는 배너는 미리 자리를 잡아 두세요.',
+            '무엇부터? Poor인 지표가 있으면 그것부터, 없으면 Needs Improvement 중 방문자가 많은 페이지 유형(상품·글 상세)부터 고칩니다. 세 지표가 모두 Good이어야 "통과"로 봅니다.',
+          ] : [
+            'Where do the numbers come from? Use the "Discover what your real users are experiencing" (field data) section at the top of PageSpeed Insights, or the Core Web Vitals report in Search Console. Google ranks on the 75th-percentile value of 28 days of real visits, not the Lighthouse lab score below it.',
+            'LCP (Largest Contentful Paint) — Good at 2.5 s or less, Poor above 4 s. Usually a large hero image or web font on the first screen. Add fetchpriority="high" to the hero image, serve WebP or AVIF, and if TTFB is above 0.8 s fix caching or add a CDN first.',
+            'INP (Interaction to Next Paint) — Good at 200 ms or less, Poor above 500 ms. Long JavaScript tasks after a click or tap are the cause. Break up long tasks (scheduler.yield or setTimeout) and defer heavy third-party scripts such as chat widgets, ads and tag managers.',
+            'CLS (Cumulative Layout Shift) — Good at 0.1 or less, Poor above 0.25. Images, ads and embeds without reserved space push content around. Set width and height or aspect-ratio, and reserve space for late banners and cookie notices.',
+            'What to fix first? Any Poor metric first; otherwise the Needs Improvement metric on your highest-traffic templates (product or article pages). A page only passes when all three metrics are Good.',
+          ]).map((x, i) => <li key={i}>{x}</li>)}
+        </ul>
+      </section>
+
       {/* Bottom 7 sections */}
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/performance/core-web-vitals" />

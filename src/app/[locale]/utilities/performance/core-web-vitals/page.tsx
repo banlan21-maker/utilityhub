@@ -10,11 +10,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? 'Core Web Vitals 판정기 | Utility Hub'
-    : 'Core Web Vitals Checker | Utility Hub';
+    ? 'Core Web Vitals 판정기 — LCP·INP·CLS 등급 즉시 판정, 무료 | Utility Hub'
+    : 'Core Web Vitals Checker – Rate LCP, INP & CLS Free, No Signup | Utility Hub';
   const description = isKo
-    ? 'LCP·INP·CLS 수치를 입력하면 Google 공식 기준으로 Good/Needs Work/Poor 등급을 즉시 판정. 2024년 최신 INP 기준 적용.'
-    : 'Enter your LCP, INP, and CLS scores to instantly get Google\'s Good / Needs Work / Poor ratings. Updated with the latest INP standard replacing FID.';
+    ? 'PageSpeed Insights나 서치콘솔의 LCP·INP·CLS 수치를 넣으면 구글 기준 Good·Needs Improvement·Poor 등급과 무엇부터 고칠지 바로 알려 줍니다. 2024년 INP 기준 적용, 무료·가입 없음.'
+    : 'Paste the LCP, INP and CLS numbers from PageSpeed Insights or Search Console and instantly see Google\'s Good / Needs Improvement / Poor rating, which metric to fix first and how. Free, no sign-up.';
   const canonical = `https://www.theutilhub.com/${locale}/utilities/performance/core-web-vitals`;
 
   return {
@@ -54,7 +54,7 @@ const softwareSchema = {
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
   url: 'https://www.theutilhub.com/ko/utilities/performance/core-web-vitals',
   description:
-    'LCP·INP·CLS 수치를 입력하면 Google 공식 기준으로 Good/Needs Work/Poor 등급을 즉시 판정. 2024년 최신 INP 기준 적용.',
+    'PageSpeed Insights나 서치콘솔의 LCP·INP·CLS 수치를 넣으면 구글 기준 Good·Needs Improvement·Poor 등급과 무엇부터 고칠지 바로 알려 줍니다. 2024년 INP 기준 적용, 무료·가입 없음.',
 };
 
 const faqSchema = {

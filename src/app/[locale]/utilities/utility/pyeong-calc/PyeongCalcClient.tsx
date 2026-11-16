@@ -106,6 +106,23 @@ export default function PyeongCalcClient() {
         <p className={s.subtitle}>{t('description')}</p>
       </header>
 
+      <section className={s.card} aria-labelledby="py-what">
+        <h2 id="py-what" className={s.card_title}>{isKo ? '1평은 몇 ㎡? — 평 환산표' : 'What is a pyeong? 1 pyeong = 3.3058 m²'}</h2>
+        <p className={s.hint}>{isKo
+          ? '평(坪)은 사방 6자(1자 = 10/33m)인 정사각형 넓이로, 1평 = 400/121㎡ ≈ 3.3058㎡(약 35.58ft²)입니다. 일본의 쓰보(坪)와 같은 크기로 다다미 2장 정도이며, ㎡에 0.3025를 곱하면 평이 됩니다.'
+          : 'A pyeong (평, 坪) is the traditional Korean unit of floor area: a square six ja (10/33 m) on each side, so 1 pyeong = 400/121 m² ≈ 3.3058 m² ≈ 35.58 ft² — the same as the Japanese tsubo, roughly two tatami mats. Multiply pyeong by 3.3058 for square meters, or square meters by 0.3025 for pyeong. Koreans still describe apartments and shops in pyeong, although contracts must use m².'}</p>
+        <div className={s.table_wrap}>
+          <table className={s.table}>
+            <thead><tr><th scope="col">{isKo ? '평' : 'Pyeong'}</th><th scope="col">㎡</th><th scope="col">ft²</th></tr></thead>
+            <tbody>
+              {[1, 10, 20, 24, 30, 33, 34].map(p => (
+                <tr key={p}><th scope="row" style={{ fontWeight: 600 }}>{p}{isKo ? '평' : ' pyeong'}</th><td>{fmt(toSqm(p), 2)} ㎡</td><td>{fmt(toSqm(p) * 10.7639104, 1)} ft²</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <div className={s.tabs} role="tablist" aria-label={isKo ? '계산 종류' : 'Calculator type'}>
         {([
           ['convert', isKo ? '㎡ ↔ 평 변환' : '㎡ ↔ pyeong', isKo ? '단위만 바꾸기' : 'Unit conversion'],
@@ -162,6 +179,10 @@ export default function PyeongCalcClient() {
                   <span className={s.result_unit}>{direction === 'sqm2pyeong' ? pyUnit : '㎡'}</span>
                 </div>
                 <CopyButton value={direction === 'sqm2pyeong' ? fmt(pyeong) : fmt(sqm)} isKo={isKo} />
+              </div>
+              <div className={s.row}>
+                <span>{isKo ? '제곱피트' : 'Square feet'}</span>
+                <span className={s.val}>{fmt(sqm * 10.7639104, 1)} ft²</span>
               </div>
               {direction === 'sqm2pyeong' && (
                 <div className={s.row}>
@@ -353,7 +374,6 @@ export default function PyeongCalcClient() {
       <RelatedTools toolId="utilities/utility/pyeong-calc" />
 
       <SeoSection
-        faqSchema={false}
         ko={{
           title: '평수 계산기: ㎡를 평으로, 전용면적을 평형으로',
           description: '1평은 400/121㎡, 약 3.3058㎡입니다. ㎡를 3.3058로 나누면 평, 평에 3.3058을 곱하면 ㎡가 됩니다. 그런데 아파트를 "34평형", "24평형"처럼 부를 때의 평형은 광고에 적힌 전용면적이 아니라 계단·복도 같은 주거공용면적까지 더한 공급면적 기준입니다. 그래서 전용 84㎡는 전용 기준으로는 25.4평이지만 공급면적이 약 112㎡라 34평형, 전용 59㎡는 17.8평이지만 약 24평형으로 부릅니다. 이 계산기는 단순 단위 변환과 함께 전용면적을 평형으로, 평형을 전용면적으로 바꿔 주며, 아파트(전용률 약 72~80%), 주상복합, 오피스텔(계약면적 기준 약 45~60%)처럼 건물 유형에 따라 달라지는 전용률을 반영합니다. 매매가나 분양가를 넣으면 평형 기준과 전용면적 기준 평당 가격, ㎡당 가격도 함께 계산합니다. 2007년부터 상거래에서는 평 대신 ㎡를 쓰도록 되어 있어 계약서와 등기부에는 ㎡로 적힌다는 점도 기억해 두세요.',
@@ -392,6 +412,8 @@ export default function PyeongCalcClient() {
             { step: 'Copy or Compare', desc: 'Copy the result or use the table to compare common apartment sizes at a glance.' },
           ],
           faqs: [
+            { q: 'What is pyeong in Korean?', a: 'Pyeong is written 평 in Korean (坪 in Chinese characters) and is the traditional unit for floor area, equal to 3.3058 square meters or about 35.58 square feet. Listings and everyday conversation still use it — "a 34-pyeong apartment" — even though official documents have used square meters since 2007.' },
+            { q: 'How many m² is 1 pyeong?', a: 'One pyeong is exactly 400/121 square meters, which is 3.305785 m², usually rounded to 3.3058 m² or 3.3 m². To convert, multiply pyeong by 3.3058 or multiply square meters by 0.3025; 30 pyeong is 99.17 m² (1,067 ft²).' },
             { q: 'Why is 84㎡ a 34-pyeong class, not 25?', a: '84 ÷ 3.3058 is 25.4 pyeong, but classes use supply area, which adds shared stairs, corridors and lifts. An 84㎡ apartment usually has 110–115㎡ of supply area, about 34 pyeong.' },
             { q: 'Exactly how big is one pyeong?', a: 'A square six ja on each side, with one ja being 10/33 m: 400/121 ㎡ ≈ 3.305785 ㎡. Multiplying ㎡ by 0.3025 also gives pyeong.' },
             { q: 'How do officetel classes differ?', a: 'Officetels are often sold by contract area including parking and facilities, with an exclusive ratio of about 45–60%, so the same class has much less usable space than an apartment.' },

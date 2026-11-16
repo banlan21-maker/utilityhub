@@ -8,8 +8,8 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? 'SLA 가동률 계산기 | Utility Hub'
-    : 'SLA Uptime Calculator | Utility Hub';
+    ? 'SLA 가동률 계산기 — 99.9%는 월 43분 50초 다운타임 | Utility Hub'
+    : 'SLA Uptime Calculator – 99.9% = 43m 50s Downtime/Month | Utility Hub';
   const description = isKo
     ? '쓰리 나인(99.9%)부터 파이브 나인(99.999%)까지, SLA 가동률을 연간·월간·주간·일간 허용 다운타임으로 즉시 변환. 클라우드 계약·인프라 설계 필수 도구.'
     : 'From three nines (99.9%) to five nines (99.999%) — instantly convert any SLA uptime percentage into allowed downtime per year, month, week, and day.';

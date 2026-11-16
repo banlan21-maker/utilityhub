@@ -11,6 +11,7 @@ import {
   calcWire, loadCurrentFromKw, voltageDropLimit, SYSTEMS, AMBIENT_TEMPS, MIN_INDOOR_SIZE,
   type Insulation, type Method, type SystemType, type Supply, type Usage,
 } from '@/lib/wireSize';
+import WireSizeUS from './WireSizeUS';
 import s from './wire-size-calc.module.css';
 
 type WireKind = 'hfix' | 'cv' | 'pvc';
@@ -68,6 +69,8 @@ export default function WireSizeCalcClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
+  // 영문 페이지는 미국 NEC(AWG)로 시작, 한국어는 KEC(㎟)
+  const [std, setStd] = useState<'kec' | 'nec'>(isKo ? 'kec' : 'nec');
   const [system, setSystem] = useState<SystemType>('1P2W');
   const [inputMode, setInputMode] = useState<'ampere' | 'kw'>('ampere');
   const [ampText, setAmpText] = useState('');
@@ -149,10 +152,10 @@ export default function WireSizeCalcClient() {
     setTimeout(() => setCopyMsg(''), 2500);
   };
 
-  const titleStr = isKo ? '전선 굵기 계산기 (KEC 허용전류·전압강하)' : 'Wire Size Calculator (KEC ampacity & voltage drop)';
+  const titleStr = isKo ? '전선 굵기 계산기 (KEC 허용전류·전압강하)' : 'Wire Size Calculator — AWG (NEC) & mm² (IEC)';
   const descStr = isKo
     ? '부하전류와 거리, 전선 종류와 공사방법을 넣으면 차단기 정격, 허용전류, 전압강하를 모두 만족하는 전선 굵기(㎟)를 계산합니다.'
-    : 'Enter load, length, wire type and installation method to get the conductor size that satisfies breaker rating, ampacity and voltage drop.';
+    : 'Find the copper wire size for a circuit from load, voltage and run length: NEC Table 310.16 ampacity with temperature and conductor-count derating, breaker sizing and voltage drop in AWG — or IEC/KEC sizing in mm².';
 
   const maxBar = result ? Math.max(result.sizeByAmpacity ?? 300, result.sizeByDrop ?? 300, result.sizeByMin) : 1;
   const barPct = (v: number | null) => `${Math.max(6, ((v ?? 300) / maxBar) * 100)}%`;
@@ -168,6 +171,16 @@ export default function WireSizeCalcClient() {
         <p className={s.subtitle}>{descStr}</p>
       </header>
 
+      <div className={s.std} role="group" aria-label={isKo ? '적용 기준' : 'Code'}>
+        <button type="button" aria-pressed={std === 'kec'} className={`${s.std_btn} ${std === 'kec' ? s.std_on : ''}`} onClick={() => setStd('kec')}>
+          {isKo ? '한국 KEC (㎟)' : 'IEC / Korea KEC (mm²)'}<small>{isKo ? 'HFIX·CV, IEC 60364-5-52' : 'HFIX, CV · IEC 60364-5-52'}</small>
+        </button>
+        <button type="button" aria-pressed={std === 'nec'} className={`${s.std_btn} ${std === 'nec' ? s.std_on : ''}`} onClick={() => setStd('nec')}>
+          {isKo ? '미국 NEC (AWG)' : 'US NEC (AWG)'}<small>{isKo ? 'THHN·NM-B, Table 310.16' : 'THHN, NM-B · Table 310.16'}</small>
+        </button>
+      </div>
+
+      {std === 'nec' ? <WireSizeUS isKo={isKo} locale={locale} /> : (<>
       {/* ── 부하 ── */}
       <section className={s.card}>
         <div className={s.step_label}>STEP 1</div>
@@ -378,11 +391,11 @@ export default function WireSizeCalcClient() {
           {copyMsg && <p className={`${s.copy_msg} ${copyMsg.startsWith('✓') ? '' : s.copy_fail}`} role="status">{copyMsg}</p>}
         </section>
       )}
+      </>)}
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/utility/wire-size-calc" />
       <SeoSection
-        faqSchema={false}
         ko={{
           title: '전선 굵기 계산기는 어떻게 굵기를 정하나요?',
           description: '전선 굵기는 세 가지 조건을 모두 만족해야 합니다. 첫째, 부하전류보다 큰 차단기를 고르고 그 차단기 정격보다 전선의 허용전류가 커야 합니다(KEC 212.4.1, IB ≤ In ≤ IZ). 허용전류는 KEC가 준용하는 KS C IEC 60364-5-52 부속서 B 표에서 전선 절연(PVC 70°C, XLPE 90°C)과 공사방법(A1 단열벽 속 전선관, B1 전선관 속 전선, B2 전선관 속 케이블, C 직접 고정, E 트레이)에 따라 찾고, 주위온도와 같은 경로의 회로 수로 보정합니다. 둘째, 인입구에서 기기까지 전압강하가 KEC 232.3.9 한도(저압 수전 조명 3%·기타 5%, 고압 이상 수전 조명 6%·기타 8%)를 넘지 않아야 합니다. 셋째, 저압 옥내배선은 2.5㎟ 이상이어야 합니다. 이 계산기는 세 조건 중 가장 큰 굵기를 권장값으로 보여주고, 어떤 조건이 결정했는지 막대로 비교합니다. 예를 들어 단상 220V 25A 에어컨 회로를 HFIX 전선관(B1)으로 15m 배선할 때, 관에 이 회로만 있고 주위 30°C면 2.5㎟로 충분하지만, 같은 관에 3회로가 들어가고 주위가 35°C면 차단기 30A를 견디는 허용전류 기준으로 6㎟가 필요합니다.',
@@ -406,11 +419,11 @@ export default function WireSizeCalcClient() {
           ],
         }}
         en={{
-          title: 'How does this wire size calculator choose a size?',
-          description: 'A conductor must pass three checks. First, pick a breaker at or above the load current, and the cable ampacity must be at least the breaker rating (KEC 212.4.1, IB ≤ In ≤ IZ). Ampacity comes from the IEC 60364-5-52 Annex B tables that the Korean Electrical Code adopts, by insulation (PVC 70 °C, XLPE 90 °C) and installation method (A1 conduit in insulated wall, B1 wires in conduit, B2 cable in conduit, C clipped direct, E perforated tray), then corrected for ambient temperature and the number of circuits sharing the route. Second, the voltage drop from the origin to the equipment must stay within KEC 232.3.9 (LV supply: lighting 3 %, other 5 %; HV supply: 6 % and 8 %). Third, indoor LV wiring must be at least 2.5 mm². The calculator recommends the largest size required by the three checks and shows which one governed. For example, a 25 A single-phase 220 V air-conditioner circuit in HFIX wire in conduit (B1), 15 m long, is fine at 2.5 mm² alone at 30 °C, but with three circuits in the conduit at 35 °C it needs 6 mm² to carry the ampacity required by a 30 A breaker.',
+          title: 'How this wire size calculator picks a wire gauge',
+          description: 'In US NEC mode, the calculator starts from the load current — multiplied by 125% for continuous loads that run three hours or more (NEC 210.19 and 210.20) — and picks the next standard breaker from NEC 240.6(A). It then finds the smallest copper conductor whose ampacity covers that breaker: the NEC Table 310.16 90 °C value for THHN/THWN-2 is corrected for ambient temperature (310.15(B)(1)) and for more than three current-carrying conductors in a raceway (310.15(C)(1)), and the result is capped at the 60 °C or 75 °C column of the terminals (110.14(C)), or at the 60 °C column for NM-B cable (334.80). The small-conductor rule (240.4(D)) still limits 14, 12 and 10 AWG to 15, 20 and 30 A breakers. Finally the voltage drop is checked with VD = 2·K·I·L/CM for single-phase or 1.732·K·I·L/CM for three-phase, K = 12.9, against the 3% branch-circuit recommendation. For example, a 20 A, 120 V circuit 100 feet long passes on ampacity with 12 AWG, but 12 AWG drops 6.6%, so 8 AWG is needed to stay under 3%. In IEC/KEC mode the same logic uses mm² conductors: A conductor must pass three checks. First, pick a breaker at or above the load current, and the cable ampacity must be at least the breaker rating (KEC 212.4.1, IB ≤ In ≤ IZ). Ampacity comes from the IEC 60364-5-52 Annex B tables that the Korean Electrical Code adopts, by insulation (PVC 70 °C, XLPE 90 °C) and installation method (A1 conduit in insulated wall, B1 wires in conduit, B2 cable in conduit, C clipped direct, E perforated tray), then corrected for ambient temperature and the number of circuits sharing the route. Second, the voltage drop from the origin to the equipment must stay within KEC 232.3.9 (LV supply: lighting 3 %, other 5 %; HV supply: 6 % and 8 %). Third, indoor LV wiring must be at least 2.5 mm². The calculator recommends the largest size required by the three checks and shows which one governed. For example, a 25 A single-phase 220 V air-conditioner circuit in HFIX wire in conduit (B1), 15 m long, is fine at 2.5 mm² alone at 30 °C, but with three circuits in the conduit at 35 °C it needs 6 mm² to carry the ampacity required by a 30 A breaker.',
           useCases: [
-            { icon: '❄️', title: 'Dedicated A/C Circuits', desc: 'With three circuits in one conduit in a 35 °C ceiling void, ampacity falls to 0.67 times, pushing a 25 A air-conditioner circuit from 2.5 mm² to 6 mm². See it instantly instead of guessing.' },
-            { icon: '🏭', title: 'Power Feeders on Tray', desc: 'Check a 100 A, 380 V three-phase feeder in CV cable on a perforated tray with four circuits in a 40 °C plant room, including temperature and grouping corrections.' },
+            { icon: '🔌', title: 'Long Branch Circuits', desc: 'A 20 A, 120 V receptacle circuit to a detached garage 100 ft away needs 8 AWG to keep voltage drop under 3%, even though 12 AWG carries the current. The calculator shows which check governs.' },
+            { icon: '❄️', title: 'Conduits With Many Circuits', desc: 'Nine current-carrying conductors in one conduit at 104 °F cut 12 AWG THHN to about 19 A, below a 20 A breaker, so 10 AWG is required — easy to miss without the adjustment table.' },
             { icon: '📏', title: 'Long Runs and Voltage Drop', desc: 'On runs over 100 m, voltage drop often decides the size. The calculator applies the KEC allowance of 0.005 % per metre beyond 100 m, up to 0.5 %.' },
             { icon: '🔍', title: 'Auditing Existing Circuits', desc: 'Use the IB ≤ In ≤ IZ chain to spot circuits where the installed breaker is larger than the cable ampacity, so the cable would overheat before the breaker trips.' },
           ],
@@ -421,6 +434,8 @@ export default function WireSizeCalcClient() {
             { step: 'Read the Result', desc: 'See the recommended size and what governed it, the load ≤ breaker ≤ ampacity chain, a bar comparison of each check and the actual voltage drop, then copy the result.' },
           ],
           faqs: [
+            { q: 'What size wire do I need for a 20, 30, 40 or 50 amp breaker?', a: 'With copper conductors and 75 °C terminations under NEC Table 310.16 and 240.4(D): 20 A needs 12 AWG, 30 A needs 10 AWG, 40 A needs 8 AWG, 50 A needs 8 AWG THHN with 75 °C terminals or 6 AWG with 60 °C terminals or NM-B cable, and 60 A needs 6 AWG (4 AWG for NM-B). Long runs, hot attics or more than three current-carrying conductors in a conduit can require a larger size, which is what this calculator checks.' },
+            { q: 'Why does a 12 AWG wire show 30 A in the table but only allow a 20 A breaker?', a: 'Table 310.16 lists 30 A for 12 AWG THHN in the 90 °C column, but NEC 240.4(D) limits 12 AWG copper to a 20 A overcurrent device, and most terminals are rated 75 °C (25 A). The 90 °C value is useful only as the starting point for derating.' },
             { q: 'Isn\'t the voltage drop rule 2 % feeder plus 2 % branch?', a: 'That was the old Korean wiring code before KEC. KEC 232.3.9 limits the total drop from the origin to the equipment to 3 % for lighting and 5 % for other loads on an LV supply, or 6 % and 8 % on an HV supply, plus 0.005 % per metre beyond 100 m (max 0.5 %).' },
             { q: 'Why does the installation method change the size?', a: 'Heat escapes differently. A 2.5 mm² XLPE conductor with three loaded conductors carries 23 A in conduit in an insulated wall (A1), 28 A in conduit (B1) and 30 A clipped direct (C). At 40 °C it drops by 0.91, and two circuits together reduce it by a further 0.8.' },
             { q: 'How are the breaker and cable matched?', a: 'KEC 212.4.1 requires IB ≤ In ≤ IZ. The calculator picks the standard breaker at or above the load (15, 20, 30, 40, 50 A…) and then the smallest cable whose corrected ampacity is at least that rating. Sizing the cable to the load but fitting a bigger breaker leaves the cable unprotected.' },

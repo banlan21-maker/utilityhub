@@ -263,3 +263,23 @@
   color: var(--text-muted);
   font-size: 0.85rem;
 }
+
+/* 기준 전환 (KEC/IEC ↔ NEC) */
+.std { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.std_btn { min-height: 56px; padding: 0.5rem; border: 1.5px solid var(--border); border-radius: 0.9rem; background: var(--surface); color: var(--text-secondary); font-weight: 800; font-size: 0.98rem; cursor: pointer; }
+.std_btn small { display: block; font-size: 0.74rem; font-weight: 500; color: var(--text-muted); }
+.std_on { border-color: var(--primary); color: var(--primary); background: var(--surface-hover); }
+
+/* 연속부하 체크 */
+.check { display: flex; gap: 0.55rem; align-items: flex-start; padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: 0.7rem; color: var(--text-primary); font-size: 0.9rem; font-weight: 700; cursor: pointer; line-height: 1.4; }
+.check input { width: 18px; height: 18px; margin-top: 0.1rem; accent-color: var(--primary); flex-shrink: 0; }
+.check small { display: block; font-weight: 500; font-size: 0.76rem; color: var(--text-muted); }
+
+/* 허용전류표 */
+.table_wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 0.8rem; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.table th, .table td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); text-align: right; color: var(--text-primary); white-space: nowrap; }
+.table th { background: var(--surface-hover); color: var(--text-secondary); font-weight: 700; }
+.table th small { display: block; font-weight: 500; font-size: 0.68rem; color: var(--text-muted); }
+.table th:first-child, .table td:first-child { text-align: left; }
+.row_on td { background: var(--surface-hover); font-weight: 800; }

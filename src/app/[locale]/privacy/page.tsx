@@ -19,7 +19,7 @@ export async function generateMetadata({
     metadataBase: new URL(BASE),
     alternates: {
       canonical,
-      languages: { ko: `${BASE}/ko/privacy`, en: `${BASE}/en/privacy` },
+      languages: { ko: `${BASE}/ko/privacy`, en: `${BASE}/en/privacy`, 'x-default': `${BASE}/ko/privacy` },
     },
     robots: { index: true, follow: true },
   };

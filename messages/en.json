@@ -3,12 +3,12 @@
     "title": "Utility Hub",
     "description": "Find all the tools you need for daily life in one place.",
     "slogan": "Every tool you need, instantly free",
-    "metaDescription": "60+ free browser-based utilities. No account, no installation, instant access. PDF conversion, QR codes, fintech calculators, developer tools and more.",
+    "metaDescription": "85+ free browser-based utilities. No account, no installation, instant access. PDF conversion, QR codes, fintech calculators, developer tools and more.",
     "heroBadgeText": "Developer Tools now available",
     "heroTitleLine1": "Every tool you need,",
     "heroTitleAccent": "instantly free.",
-    "heroSubtitle": "60+ browser-based utilities. No sign-up, no data collection, no waiting.",
-    "heroSubtitleL1": "60+ browser-based utilities.",
+    "heroSubtitle": "85+ browser-based utilities. No sign-up, no data collection, no waiting.",
+    "heroSubtitleL1": "85+ browser-based utilities.",
     "heroSubtitleL2": "No sign-up, no data collection, no waiting.",
     "searchPlaceholder": "Search tools...",
     "statTools": "Tools",
@@ -28,7 +28,7 @@
     "feature3Title": "No Login Required",
     "feature3Desc": "Every tool is completely free. No sign-up, no paywalls, no credit card needed. Ever.",
     "seoTitle": "Free Online Tools for Everyone",
-    "seoPara1": "Utility Hub is a collection of 60+ free online tools designed for daily productivity. From PDF conversion and QR code generation to fintech calculators and developer utilities, everything you need is just one click away.",
+    "seoPara1": "Utility Hub is a collection of 85+ free online tools designed for daily productivity. From PDF conversion and QR code generation to fintech calculators and developer utilities, everything you need is just one click away.",
     "seoPara2": "Unlike other tool websites, Utility Hub processes everything directly in your browser. This means your data stays private, tools load instantly, and nothing is ever sent to a server. Your documents, passwords, and calculations remain 100% on your device.",
     "seoPara3": "Whether you're a developer looking for a quick JSON formatter, a student calculating GPA, or a business owner managing fintech calculations, Utility Hub has a tool for you. No account required, no installation needed — start using any tool for free right now.",
     "footerTagline": "All your daily tools, free and private.",
@@ -121,8 +121,8 @@
       "desc": "Enter start/end heights and horizontal distance to instantly calculate slope length, angle, and hanger spacing. Elbow size auto-recommended."
     },
     "wire-size-calc": {
-      "title": "Wire Size Calculator",
-      "desc": "Instantly calculate the correct wire SQ using KEC standard formulas. Supports single-phase and three-phase systems with automatic K-constant selection."
+      "title": "Wire Size Calculator (AWG & mm²)",
+      "desc": "Copper wire gauge for a circuit: NEC Table 310.16 AWG with derating, breaker and voltage drop, or IEC/KEC mm² sizing."
     },
     "interior-material-calc": {
       "title": "Tile & Wallpaper Calculator",
@@ -310,8 +310,8 @@
     "notice": "* This is for reference only. Actual tax may differ based on year-end settlement. Consult a tax professional for precise figures."
   },
   "Area": {
-    "title": "📐 Pyeong Calculator (㎡ ↔ pyeong · classes · price)",
-    "description": "Convert ㎡ and pyeong, find the Korean apartment pyeong class and price per pyeong.",
+    "title": "📐 Pyeong to m² Converter",
+    "description": "1 pyeong = 3.3058 m² = 35.58 ft². Convert pyeong to square meters and square feet, find the Korean apartment pyeong class and price per pyeong.",
     "unit": {
       "pyeong": "py"
     },

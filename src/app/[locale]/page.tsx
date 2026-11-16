@@ -59,11 +59,37 @@ export default async function HomePage({
   const toolCounts = getToolCounts();
   const totalTools = getTotalToolCount();
 
+  // 사이트 이름·운영 주체를 구글에 알려 브랜드 검색("utility hub")에서 사이트 이름이 정확히 나오게 한다
+  const siteSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': 'https://www.theutilhub.com/#website',
+        name: 'Utility Hub',
+        alternateName: ['theutilhub', '유틸리티 허브'],
+        url: `https://www.theutilhub.com/${locale}`,
+        inLanguage: locale,
+        publisher: { '@id': 'https://www.theutilhub.com/#organization' },
+      },
+      {
+        '@type': 'Organization',
+        '@id': 'https://www.theutilhub.com/#organization',
+        name: 'Utility Hub',
+        url: 'https://www.theutilhub.com',
+        logo: 'https://www.theutilhub.com/apple-icon',
+      },
+    ],
+  };
+
   return (
-    <HomeContent
-      toolCounts={toolCounts}
-      totalTools={totalTools}
-      directory={<ToolDirectory locale={locale} />}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }} />
+      <HomeContent
+        toolCounts={toolCounts}
+        totalTools={totalTools}
+        directory={<ToolDirectory locale={locale} />}
+      />
+    </>
   );
 }
