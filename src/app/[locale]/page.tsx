@@ -3,6 +3,10 @@ import { getTranslations } from 'next-intl/server';
 import HomeContent from './HomeContent';
 import ToolDirectory from '@/app/components/ToolDirectory';
 import { getToolCounts, getTotalToolCount } from '@/lib/categoryUtils';
+import { AUTO_DATA_COUNT, changesThisMonth, getHomeVisitStats, lastUpdatedLabel, tickerItems } from '@/lib/homeStats';
+
+// 방문자·인기 도구·마지막 업데이트 숫자를 10분마다 새로 계산
+export const revalidate = 600;
 
 export async function generateMetadata({
   params,
@@ -11,6 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Index' });
+  const count = getTotalToolCount();
 
   const BASE = 'https://www.theutilhub.com';
   // 루트(/)는 /ko로 리디렉션되므로 canonical·hreflang은 항상 로케일 경로를 가리킨다.
@@ -18,7 +23,7 @@ export async function generateMetadata({
 
   return {
     title: `Utility Hub — ${t('slogan')}`,
-    description: t('metaDescription'),
+    description: t('metaDescription', { count }),
     metadataBase: new URL(BASE),
     alternates: {
       canonical,
@@ -30,7 +35,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title: 'Utility Hub',
-      description: t('metaDescription'),
+      description: t('metaDescription', { count }),
       url: canonical,
       siteName: 'Utility Hub',
       locale: locale === 'ko' ? 'ko_KR' : 'en_US',
@@ -39,7 +44,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: 'Utility Hub',
-      description: t('metaDescription'),
+      description: t('metaDescription', { count }),
     },
     keywords: [
       'utility hub', 'free online tools', 'browser tools', 'no login tools',
@@ -58,6 +63,17 @@ export default async function HomePage({
   // Automatically count tools by scanning file system
   const toolCounts = getToolCounts();
   const totalTools = getTotalToolCount();
+  const visits = await getHomeVisitStats();
+  const live = {
+    ticker: tickerItems(locale),
+    changes: changesThisMonth(),
+    lastUpdated: lastUpdatedLabel(locale),
+    autoData: AUTO_DATA_COUNT,
+    today: visits.today >= visits.settings.todayMin ? visits.today : null,
+    total: visits.total >= visits.settings.totalMin ? visits.total : null,
+    since: visits.settings.since,
+    popular: visits.popular,
+  };
 
   // 사이트 이름·운영 주체를 구글에 알려 브랜드 검색("utility hub")에서 사이트 이름이 정확히 나오게 한다
   const siteSchema = {
@@ -88,6 +104,7 @@ export default async function HomePage({
       <HomeContent
         toolCounts={toolCounts}
         totalTools={totalTools}
+        live={live}
         directory={<ToolDirectory locale={locale} />}
       />
     </>

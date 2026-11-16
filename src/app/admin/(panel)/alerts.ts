@@ -2,14 +2,14 @@
 import 'server-only';
 import { cache } from 'react';
 import { buildAlerts, type AdminAlert } from '@/lib/admin/maintenance';
-import { feedbackList, feedbackMigrated, latestAudit } from '@/lib/admin/data';
+import { feedbackList, feedbackMigrated, latestAudit, settingsTableOk } from '@/lib/admin/data';
 import { setupStatus } from '@/lib/admin/db';
 
 export const getAllAlerts = cache(async () => {
   const st = setupStatus();
-  const [fb, audit] = await Promise.all([feedbackList(), latestAudit()]);
+  const [fb, audit, settingsOk] = await Promise.all([feedbackList(), latestAudit(), settingsTableOk()]);
   const extra: AdminAlert[] = [];
-  const needSql = (!fb.ok && fb.error === 'need-sql') || (fb.ok && !feedbackMigrated(fb.data)) || (!audit.ok && audit.error === 'need-sql');
+  const needSql = (!fb.ok && fb.error === 'need-sql') || (fb.ok && !feedbackMigrated(fb.data)) || (!audit.ok && audit.error === 'need-sql') || settingsOk === false;
 
   if (!st.serviceKey) {
     extra.push({ id: 'setup-key', level: 'warn', title: 'Supabase 서버 키 미설정', detail: '방문 통계·피드백 관리·점검 기록이 꺼져 있습니다. 개요 화면의 설정 안내를 따라 주세요.', href: '/admin' });

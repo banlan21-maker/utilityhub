@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, Bell, LayoutDashboard, MessageSquare, Search, ShieldCheck } from 'lucide-react';
+import { BarChart3, Bell, Home, LayoutDashboard, MessageSquare, Search, ShieldCheck } from 'lucide-react';
 import s from '../admin.module.css';
 
 const LINKS = [
@@ -12,6 +12,7 @@ const LINKS = [
   { href: '/admin/search', label: '검색 성과', icon: Search },
   { href: '/admin/feedback', label: '피드백', icon: MessageSquare },
   { href: '/admin/audit', label: '사이트 점검', icon: ShieldCheck },
+  { href: '/admin/home', label: '홈 화면', icon: Home },
 ];
 
 export default function AdminNav({ urgent }: { urgent: number }) {

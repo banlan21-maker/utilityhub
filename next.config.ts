@@ -8,6 +8,8 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
   // 끝 슬래시 제거도 미들웨어에서 다른 규칙과 함께 한 번에 처리한다
   skipTrailingSlashRedirect: true,
+  // 첫 화면 "마지막 업데이트" 표시용 (배포 시각)
+  env: { BUILD_TIME: new Date().toISOString() },
 };
 
 export default withNextIntl(nextConfig);

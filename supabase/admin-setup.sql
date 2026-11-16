@@ -91,3 +91,11 @@ revoke all on function public.admin_daily(int) from public, anon, authenticated;
 revoke all on function public.admin_top(int, text, int) from public, anon, authenticated;
 grant execute on function public.admin_daily(int) to service_role;
 grant execute on function public.admin_top(int, text, int) to service_role;
+
+-- 5) 사이트 설정 (첫 화면 방문자 숫자 표시 기준 등) — 관리자 화면에서 바꾼다
+create table if not exists public.site_settings (
+  key text primary key,
+  value jsonb not null,
+  updated_at timestamptz not null default now()
+);
+alter table public.site_settings enable row level security;

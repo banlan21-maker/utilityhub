@@ -619,3 +619,80 @@
 .anim2 { opacity: 0; animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 200ms  forwards; }
 .anim3 { opacity: 0; animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 310ms  forwards; }
 .anim4 { opacity: 0; animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 420ms  forwards; }
+
+/* ── 전광판·인기 도구 ── */
+.tickerWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+  padding: 0 0.5rem;
+}
+
+.popularRow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1.4rem;
+}
+.popularTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.popularList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+}
+.popularChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.popularChip:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+.popularRank {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: #f97316;
+  color: #fff;
+}
+
+/* 모바일: 숫자 4~5칸을 2열로 */
+@media (max-width: 520px) {
+  .statsRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 0.6rem;
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .statDivider { display: none; }
+}

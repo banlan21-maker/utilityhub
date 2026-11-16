@@ -56,3 +56,11 @@ export async function latestAudit(): Promise<Res<AuditRecord | null>> {
 
 /** 피드백 테이블에 관리용 컬럼(hidden·reply)이 있는지 */
 export const feedbackMigrated = (rows: FeedbackRow[]) => rows.length === 0 || 'hidden' in rows[0];
+
+/** site_settings 테이블이 있는지 (SQL 5번 단계) */
+export async function settingsTableOk(): Promise<boolean | null> {
+  const db = adminDb();
+  if (!db) return null;
+  const { error } = await db.from('site_settings').select('key').limit(1);
+  return !error;
+}

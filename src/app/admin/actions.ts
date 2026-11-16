@@ -1,10 +1,11 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { adminEnabled, checkPassword, endSession, requireAdmin, startSession } from '@/lib/admin/auth';
 import { adminDb } from '@/lib/admin/db';
 import { auditUrl, sitemapUrls, type AuditResult } from '@/lib/admin/audit';
+import { HOME_TAG } from '@/lib/homeStats';
 
 // ── 로그인 ──
 export async function login(_prev: { error?: string } | undefined, form: FormData): Promise<{ error?: string }> {
@@ -88,5 +89,25 @@ export async function auditSave(results: AuditResult[]) {
   });
   if (error) return { error: error.message };
   revalidatePath('/admin');
+  return { ok: true };
+}
+
+// ── 첫 화면 숫자 표시 기준 ──
+export async function saveHomeSettings(form: FormData): Promise<{ ok?: boolean; error?: string }> {
+  await requireAdmin();
+  const db = adminDb();
+  if (!db) return { error: 'SUPABASE_SERVICE_ROLE_KEY 가 설정되지 않았습니다.' };
+  const num = (k: string) => Math.max(0, Math.round(Number(form.get(k))));
+  const todayMin = num('todayMin');
+  const totalMin = num('totalMin');
+  const since = String(form.get('since') ?? '');
+  if (!Number.isFinite(todayMin) || !Number.isFinite(totalMin) || !/^\d{4}-\d{2}-\d{2}$/.test(since)) return { error: '값을 확인해 주세요.' };
+  const { error } = await db.from('site_settings').upsert({ key: 'home', value: { todayMin, totalMin, since }, updated_at: new Date().toISOString() });
+  if (error) return { error: /site_settings/.test(error.message) ? 'site_settings 테이블이 없습니다. supabase/admin-setup.sql 을 다시 실행해 주세요.' : error.message };
+  // 첫 화면 숫자 캐시를 바로 비운다
+  updateTag(HOME_TAG);
+  revalidatePath('/ko');
+  revalidatePath('/en');
+  revalidatePath('/admin/home');
   return { ok: true };
 }

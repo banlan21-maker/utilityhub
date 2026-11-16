@@ -1,4 +1,4 @@
-import { readdirSync, statSync } from 'fs';
+import { existsSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
 const CATEGORIES = [
@@ -32,7 +32,8 @@ export function getToolCounts(): Record<string, number> {
       // Exclude page.tsx and other files
       const toolDirs = items.filter(item => {
         const itemPath = join(categoryPath, item);
-        return statSync(itemPath).isDirectory();
+        // 빈 폴더(작업 흔적)는 빼고 실제 페이지가 있는 도구만 센다
+        return statSync(itemPath).isDirectory() && existsSync(join(itemPath, 'page.tsx'));
       });
 
       counts[category] = toolDirs.length;

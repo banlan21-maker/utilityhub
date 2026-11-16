@@ -5,6 +5,18 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import styles from './page.module.css';
 import SearchDropdown from '@/app/components/SearchDropdown';
+import NewsTicker, { type TickerEntry } from '@/app/components/NewsTicker';
+
+export interface HomeLive {
+  ticker: TickerEntry[];
+  changes: number;
+  lastUpdated: string;
+  autoData: number;
+  today: number | null;
+  total: number | null;
+  since: string;
+  popular: { href: string; ko: string; en: string; emoji: string }[];
+}
 
 const CATEGORIES_BASE = [
   { id: 'performance',  icon: '🚀', color: '#ef4444', hot: false, popular: false },
@@ -22,6 +34,8 @@ const CATEGORIES_BASE = [
 interface HomeContentProps {
   toolCounts: Record<string, number>;
   totalTools: number;
+  /** 서버에서 계산한 실시간 정보 (전광판·숫자·인기 도구) */
+  live: HomeLive;
   /** 서버에서 렌더된 전체 도구 디렉터리 (카테고리 섹션 아래에 표시) */
   directory?: React.ReactNode;
 }
@@ -32,7 +46,7 @@ const FEATURES = [
   { icon: '🎁', titleKey: 'feature3Title', descKey: 'feature3Desc' },
 ] as const;
 
-export default function HomeContent({ toolCounts, totalTools, directory }: HomeContentProps) {
+export default function HomeContent({ toolCounts, totalTools, live, directory }: HomeContentProps) {
   const t = useTranslations('Index');
   const catT = useTranslations('Categories');
   const nav = useTranslations('Navigation');
@@ -52,10 +66,8 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
         <div className={`${styles.heroGlow} ${styles.heroGlowLeft}`} aria-hidden />
         <div className={`${styles.heroGlow} ${styles.heroGlowRight}`} aria-hidden />
 
-        <div className={`${styles.heroBadge} ${styles.anim0}`}>
-          <span>🆕</span>
-          <span>{t('heroBadgeText')}</span>
-          <span className={styles.heroBadgeArrow}>→</span>
+        <div className={`${styles.tickerWrap} ${styles.anim0}`}>
+          <NewsTicker items={live.ticker} label={t('tickerLabel')} />
         </div>
 
         <h1 className={`${styles.heroTitle} ${styles.anim1}`}>
@@ -64,7 +76,7 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
         </h1>
 
         <p className={`${styles.heroSubtitle} ${styles.anim2}`}>
-          <span>{t('heroSubtitleL1')}</span>
+          <span>{t('heroSubtitleL1', { count: totalTools })}</span>
           <span className={styles.subtitleBreak}>{t('heroSubtitleL2')}</span>
         </p>
 
@@ -78,10 +90,15 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
 
         <div className={`${styles.statsRow} ${styles.anim4}`} role="list">
           {[
-            { num: `${totalTools}+`, label: t('statTools') },
-            { num: '10',  label: t('statCategories') },
-            { num: '100%',label: t('statFree') },
-            { num: '0',   label: t('statLogin') },
+            { num: String(totalTools), label: t('statTools') },
+            { num: t('statUpdatesValue', { n: live.changes }), label: t('statUpdates') },
+            { num: live.lastUpdated, label: t('statLastUpdate') },
+            live.today !== null
+              ? { num: live.today.toLocaleString(locale === 'ko' ? 'ko-KR' : 'en-US'), label: t('statToday') }
+              : { num: t('statAutoDataValue', { n: live.autoData }), label: t('statAutoData') },
+            ...(live.total !== null
+              ? [{ num: live.total.toLocaleString(locale === 'ko' ? 'ko-KR' : 'en-US'), label: t('statTotal', { since: `${Number(live.since.slice(5, 7))}/${Number(live.since.slice(8, 10))}` }) }]
+              : []),
           ].map((s, i) => (
             <React.Fragment key={i}>
               {i > 0 && <div className={styles.statDivider} aria-hidden />}
@@ -92,6 +109,23 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
             </React.Fragment>
           ))}
         </div>
+
+        {live.popular.length > 0 && (
+          <div className={`${styles.popularRow} ${styles.anim4}`}>
+            <span className={styles.popularTitle}>🔥 {t('popularTitle')}</span>
+            <ol className={styles.popularList}>
+              {live.popular.map((p, i) => (
+                <li key={p.href}>
+                  <Link href={p.href} className={styles.popularChip}>
+                    <span className={styles.popularRank}>{i + 1}</span>
+                    <span aria-hidden="true">{p.emoji}</span>
+                    {locale === 'ko' ? p.ko : p.en}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
       </section>
 
       {/* ── AD SLOT 1 · 728×90 Leaderboard ── */}
@@ -158,7 +192,7 @@ export default function HomeContent({ toolCounts, totalTools, directory }: HomeC
       <section className={styles.seoSection} aria-label="About Utility Hub">
         <h2 className={styles.seoTitle}>{t('seoTitle')}</h2>
         <div className={styles.seoParagraphs}>
-          <p>{t('seoPara1')}</p>
+          <p>{t('seoPara1', { count: totalTools })}</p>
           <p>{t('seoPara2')}</p>
           <p>{t('seoPara3')}</p>
         </div>
