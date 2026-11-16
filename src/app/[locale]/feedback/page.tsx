@@ -12,6 +12,8 @@ interface FeedbackItem {
   message: string;
   category: string;
   created_at: string;
+  hidden?: boolean;
+  reply?: string | null;
 }
 
 type FilterType = 'all' | 'feature_request' | 'bug_report' | 'general';
@@ -66,11 +68,11 @@ export default function FeedbackBoardPage() {
     try {
       const { data, error } = await supabase
         .from('feedback')
-        .select('id, message, category, created_at')
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(100);
       if (error) console.error('[Feedback] fetch error:', error);
-      setItems(data ?? []);
+      setItems(((data ?? []) as FeedbackItem[]).filter((i) => !i.hidden));
     } catch (e) {
       console.error('[Feedback] unexpected error:', e);
     } finally {
@@ -281,6 +283,15 @@ export default function FeedbackBoardPage() {
                   }}>
                     {item.message}
                   </p>
+                  {item.reply && (
+                    <p style={{
+                      margin: '0.6rem 0 0', padding: '0.55rem 0.75rem', fontSize: '0.88rem', lineHeight: 1.6,
+                      color: 'var(--text-secondary)', background: 'var(--surface-hover)', borderLeft: '3px solid var(--primary)',
+                      borderRadius: '0 0.5rem 0.5rem 0', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                    }}>
+                      <b style={{ color: 'var(--primary)' }}>{locale === 'ko' ? '운영자 답변' : 'Reply from the team'}</b> · {item.reply}
+                    </p>
+                  )}
                 </div>
               </div>
             );

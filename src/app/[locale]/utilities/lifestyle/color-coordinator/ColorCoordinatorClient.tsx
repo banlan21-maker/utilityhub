@@ -13,6 +13,7 @@ import {
 } from '@/lib/outfitColor';
 import OutfitFigure, { FIG_H, FIG_W, type HairStyle } from './OutfitFigure';
 import { SEO_EN, SEO_KO } from './content';
+import { trackEvent } from '@/lib/track';
 import s from './color-coordinator.module.css';
 
 const INITIAL_SLOTS: SlotsMap = {
@@ -132,6 +133,7 @@ export default function ColorCoordinatorClient() {
     const svg = svgRef.current;
     if (!svg || saving) return;
     setSaving(true);
+    trackEvent('ootd:save');
     try {
       const clone = svg.cloneNode(true) as SVGSVGElement;
       clone.querySelectorAll('[data-ui]').forEach((n) => n.remove());

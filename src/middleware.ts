@@ -59,6 +59,13 @@ export default function middleware(request: NextRequest): NextResponse {
     return NextResponse.redirect(url, { status: 308 });
   }
 
+  // 관리자 공간은 검색엔진에 노출하지 않는다
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    const res = NextResponse.next();
+    res.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return res;
+  }
+
   if (isAsset || !(pathname === '/' || /^\/(ko|en)(\/|$)/.test(pathname))) return NextResponse.next();
 
   // 루트(/)는 브라우저 언어에 따라 /ko·/en으로 가므로 임시(307) 이동이 맞다 (next-intl 기본)

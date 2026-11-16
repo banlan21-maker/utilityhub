@@ -8,6 +8,7 @@ import Script from 'next/script';
 import type {Viewport} from 'next';
 import {Analytics} from '@vercel/analytics/next';
 import {SpeedInsights} from '@vercel/speed-insights/next';
+import PageViewTracker from '../components/PageViewTracker';
 import '../globals.css';
 
 export const metadata = {
@@ -64,6 +65,7 @@ export default async function LocaleLayout({
           </div>
         </NextIntlClientProvider>
         <Analytics />
+        <PageViewTracker />
         <SpeedInsights />
       </body>
     </html>

@@ -14,6 +14,7 @@ import {
   type Finish, type LightMap, type Origin, type Tex, type TexInfo, type Vec, type ZoneId, type ZoneRender,
 } from '@/lib/tileVisualizer';
 import { defaultPerBox, tileOrder } from '@/lib/interiorMaterial';
+import { trackEvent } from '@/lib/track';
 import s from './tile-visualizer.module.css';
 
 const SAMPLE_SRC = '/images/tile-visualizer/bathroom.jpg';
@@ -178,6 +179,7 @@ export default function TileVisualizerClient() {
 
   const onPhoto = async (file: File | undefined) => {
     if (!file) return;
+    trackEvent('tile:photo-upload');
     try {
       const url = URL.createObjectURL(file);
       const img = await loadImg(url);
@@ -197,6 +199,7 @@ export default function TileVisualizerClient() {
 
   const onTileUpload = async (file: File | undefined) => {
     if (!file) return;
+    trackEvent('tile:tile-upload');
     const url = URL.createObjectURL(file);
     try {
       const img = await loadImg(url);
@@ -343,6 +346,7 @@ export default function TileVisualizerClient() {
   const download = async () => {
     const base = baseRef.current[source];
     if (!base) return;
+    trackEvent('tile:save');
     setBusy(true);
     await new Promise(r => setTimeout(r, 30));
     try {

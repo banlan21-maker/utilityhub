@@ -167,7 +167,7 @@ export default function Footer() {
 
           <div className="flex flex-col md:flex-row items-center gap-4">
             <p className="text-xs font-bold text-slate-400 dark:text-slate-600">
-              © 2026 Utility Hub. All rights reserved.
+              © {new Date().getFullYear()} Utility Hub. All rights reserved.
             </p>
             <div className="hidden md:block h-3 w-px bg-slate-200 dark:bg-slate-800"></div>
             <div className="flex items-center gap-4">
