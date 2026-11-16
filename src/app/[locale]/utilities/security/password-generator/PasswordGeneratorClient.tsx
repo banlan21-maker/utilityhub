@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState, useCallback, useEffect } from 'react';
 import { Key } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
@@ -38,7 +38,7 @@ function calcEntropy(password: string, charsetSize: number): number {
   return password.length * Math.log2(charsetSize);
 }
 
-function entropyToTime(bits: number): { label: string; color: string; level: number } {
+function entropyToTime(bits: number, isKo: boolean): { label: string; color: string; level: number } {
   // Assume 1 trillion guesses/sec (10^12) — modern GPU cluster
   const guesses = Math.pow(2, bits);
   const seconds = guesses / 1e12;
@@ -54,15 +54,18 @@ function entropyToTime(bits: number): { label: string; color: string; level: num
   let label: string;
   let level: number; // 0-4 (weak → very strong)
 
-  if (seconds < 1) { label = '즉시 해킹 가능'; level = 0; }
-  else if (seconds < minute) { label = `약 ${Math.round(seconds)}초`; level = 0; }
-  else if (seconds < hour) { label = `약 ${Math.round(seconds / minute)}분`; level = 1; }
-  else if (seconds < day) { label = `약 ${Math.round(seconds / hour)}시간`; level = 1; }
-  else if (seconds < year) { label = `약 ${Math.round(seconds / day)}일`; level = 2; }
-  else if (seconds < century) { label = `약 ${Math.round(seconds / year)}년`; level = 2; }
-  else if (seconds < million_years) { label = `약 ${Math.round(seconds / century)}세기`; level = 3; }
-  else if (seconds < billion_years) { label = `약 ${(seconds / million_years).toFixed(1)}백만 년`; level = 3; }
-  else { label = `약 ${(seconds / billion_years).toFixed(1)}십억 년 이상`; level = 4; }
+  // 영문 페이지용 단위 표기 (복수형 처리)
+  const en = (n: number, one: string, many = `${one}s`) => `~${n} ${n === 1 ? one : many}`;
+
+  if (seconds < 1) { label = isKo ? '즉시 해킹 가능' : 'Instantly'; level = 0; }
+  else if (seconds < minute) { label = isKo ? `약 ${Math.round(seconds)}초` : en(Math.round(seconds), 'second'); level = 0; }
+  else if (seconds < hour) { label = isKo ? `약 ${Math.round(seconds / minute)}분` : en(Math.round(seconds / minute), 'minute'); level = 1; }
+  else if (seconds < day) { label = isKo ? `약 ${Math.round(seconds / hour)}시간` : en(Math.round(seconds / hour), 'hour'); level = 1; }
+  else if (seconds < year) { label = isKo ? `약 ${Math.round(seconds / day)}일` : en(Math.round(seconds / day), 'day'); level = 2; }
+  else if (seconds < century) { label = isKo ? `약 ${Math.round(seconds / year)}년` : en(Math.round(seconds / year), 'year'); level = 2; }
+  else if (seconds < million_years) { label = isKo ? `약 ${Math.round(seconds / century)}세기` : en(Math.round(seconds / century), 'century', 'centuries'); level = 3; }
+  else if (seconds < billion_years) { label = isKo ? `약 ${(seconds / million_years).toFixed(1)}백만 년` : `~${(seconds / million_years).toFixed(1)} million years`; level = 3; }
+  else { label = isKo ? `약 ${(seconds / billion_years).toFixed(1)}십억 년 이상` : `${(seconds / billion_years).toFixed(1)}+ billion years`; level = 4; }
 
   const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
   return { label, color: colors[level], level };
@@ -85,6 +88,7 @@ interface Options {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function PasswordGeneratorClient() {
   const t = useTranslations('PasswordGen');
+  const isKo = useLocale() === 'ko';
 
   const [opts, setOpts] = useState<Options>({
     length: 16,
@@ -108,7 +112,7 @@ export default function PasswordGeneratorClient() {
 
   const charset = buildCharset(opts);
   const entropy = password ? calcEntropy(password, charset.length) : 0;
-  const crackInfo = entropyToTime(entropy);
+  const crackInfo = entropyToTime(entropy, isKo);
 
   const handleCopy = (pw: string) => {
     navigator.clipboard.writeText(pw).catch(() => {});
@@ -270,7 +274,7 @@ export default function PasswordGeneratorClient() {
             </div>
             {strengthBar}
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.8rem' }}>
-              <span style={{ color: crackInfo.color, fontWeight: 600 }}>{STRENGTH_LABELS[crackInfo.level]}</span>
+              <span style={{ color: crackInfo.color, fontWeight: 600 }}>{(isKo ? STRENGTH_LABELS : STRENGTH_EN)[crackInfo.level]}</span>
               <span style={{ color: 'var(--text-secondary)' }}>{entropy.toFixed(0)} bits</span>
             </div>
           </div>

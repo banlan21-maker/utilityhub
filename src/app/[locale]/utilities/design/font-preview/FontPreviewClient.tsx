@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Type } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
@@ -21,6 +21,7 @@ interface FontInfo {
   lang: FontLang;
   category: FontCategory;
   tag: string;
+  tagEn?: string; // 영문 페이지용 태그 (한국어 폰트)
 }
 
 const LATIN_FONTS: FontInfo[] = [
@@ -37,16 +38,16 @@ const LATIN_FONTS: FontInfo[] = [
 ];
 
 const KOREAN_FONTS: FontInfo[] = [
-  { name: 'Noto Sans KR',   family: "'Noto Sans KR', sans-serif",   googleId: 'Noto+Sans+KR',   weights: '400;600;700', lang: 'korean', category: 'sans-serif', tag: '표준체' },
-  { name: 'Nanum Gothic',   family: "'Nanum Gothic', sans-serif",   googleId: 'Nanum+Gothic',   weights: '400;700',     lang: 'korean', category: 'sans-serif', tag: '고딕체' },
-  { name: 'Nanum Myeongjo', family: "'Nanum Myeongjo', serif",      googleId: 'Nanum+Myeongjo', weights: '400;700',     lang: 'korean', category: 'serif',      tag: '명조체' },
-  { name: 'Do Hyeon',       family: "'Do Hyeon', sans-serif",       googleId: 'Do+Hyeon',       weights: '400',         lang: 'korean', category: 'display',    tag: '둥근 고딕' },
-  { name: 'Black Han Sans', family: "'Black Han Sans', sans-serif", googleId: 'Black+Han+Sans', weights: '400',         lang: 'korean', category: 'display',    tag: '임팩트' },
-  { name: 'Gamja Flower',   family: "'Gamja Flower', cursive",      googleId: 'Gamja+Flower',   weights: '400',         lang: 'korean', category: 'display',    tag: '손글씨' },
-  { name: 'Gowun Dodum',    family: "'Gowun Dodum', sans-serif",    googleId: 'Gowun+Dodum',    weights: '400',         lang: 'korean', category: 'sans-serif', tag: '도움체' },
-  { name: 'Gowun Batang',   family: "'Gowun Batang', serif",        googleId: 'Gowun+Batang',   weights: '400',         lang: 'korean', category: 'serif',      tag: '바탕체' },
-  { name: 'Sunflower',      family: "'Sunflower', sans-serif",      googleId: 'Sunflower',      weights: '300;500;700', lang: 'korean', category: 'sans-serif', tag: '경쾌한' },
-  { name: 'Jua',            family: "'Jua', sans-serif",            googleId: 'Jua',            weights: '400',         lang: 'korean', category: 'display',    tag: '귀여운' },
+  { name: 'Noto Sans KR',   family: "'Noto Sans KR', sans-serif",   googleId: 'Noto+Sans+KR',   weights: '400;600;700', lang: 'korean', category: 'sans-serif', tag: '표준체', tagEn: 'Standard' },
+  { name: 'Nanum Gothic',   family: "'Nanum Gothic', sans-serif",   googleId: 'Nanum+Gothic',   weights: '400;700',     lang: 'korean', category: 'sans-serif', tag: '고딕체', tagEn: 'Gothic' },
+  { name: 'Nanum Myeongjo', family: "'Nanum Myeongjo', serif",      googleId: 'Nanum+Myeongjo', weights: '400;700',     lang: 'korean', category: 'serif',      tag: '명조체', tagEn: 'Myeongjo (Serif)' },
+  { name: 'Do Hyeon',       family: "'Do Hyeon', sans-serif",       googleId: 'Do+Hyeon',       weights: '400',         lang: 'korean', category: 'display',    tag: '둥근 고딕', tagEn: 'Rounded Gothic' },
+  { name: 'Black Han Sans', family: "'Black Han Sans', sans-serif", googleId: 'Black+Han+Sans', weights: '400',         lang: 'korean', category: 'display',    tag: '임팩트', tagEn: 'Impact' },
+  { name: 'Gamja Flower',   family: "'Gamja Flower', cursive",      googleId: 'Gamja+Flower',   weights: '400',         lang: 'korean', category: 'display',    tag: '손글씨', tagEn: 'Handwriting' },
+  { name: 'Gowun Dodum',    family: "'Gowun Dodum', sans-serif",    googleId: 'Gowun+Dodum',    weights: '400',         lang: 'korean', category: 'sans-serif', tag: '도움체', tagEn: 'Dodum' },
+  { name: 'Gowun Batang',   family: "'Gowun Batang', serif",        googleId: 'Gowun+Batang',   weights: '400',         lang: 'korean', category: 'serif',      tag: '바탕체', tagEn: 'Batang' },
+  { name: 'Sunflower',      family: "'Sunflower', sans-serif",      googleId: 'Sunflower',      weights: '300;500;700', lang: 'korean', category: 'sans-serif', tag: '경쾌한', tagEn: 'Lively' },
+  { name: 'Jua',            family: "'Jua', sans-serif",            googleId: 'Jua',            weights: '400',         lang: 'korean', category: 'display',    tag: '귀여운', tagEn: 'Cute' },
 ];
 
 // Curated harmony pairs (latin + korean)
@@ -85,6 +86,7 @@ function FontCard({ font, previewText, fontSize, copied, onCopy }: {
   onCopy: (font: FontInfo) => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const locale = useLocale();
   const [loaded, setLoaded] = useState(loadedFonts.has(font.googleId));
 
   useEffect(() => {
@@ -128,7 +130,7 @@ function FontCard({ font, previewText, fontSize, copied, onCopy }: {
               {font.category}
             </span>
             <span style={{ fontSize: '0.68rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '999px', background: 'var(--border)', color: 'var(--text-secondary)' }}>
-              {font.tag}
+              {locale === 'ko' || !font.tagEn ? font.tag : font.tagEn}
             </span>
           </div>
         </div>

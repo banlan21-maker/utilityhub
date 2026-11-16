@@ -385,7 +385,7 @@ export default function ApneaTrainerClient() {
                     className={s.ap_pb_input}
                     value={pbInput}
                     onChange={e => setPbInput(e.target.value)}
-                    placeholder="예: 2:30"
+                    placeholder={isKo ? '예: 2:30' : 'e.g. 2:30'}
                     aria-label={isKo ? 'PB 입력 (분:초)' : 'Enter PB (m:ss)'}
                   />
                 </div>

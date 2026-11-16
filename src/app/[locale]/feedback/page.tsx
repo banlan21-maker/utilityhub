@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRef, useState, useTransition, useEffect, useCallback } from 'react';
 import { submitFeedback } from '@/actions/feedback';
 import { supabase } from '@/lib/supabase';
@@ -58,11 +58,8 @@ export default function FeedbackBoardPage() {
   const [result, setResult] = useState<{ success?: boolean; error?: string } | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  // Detect locale from document lang attribute (set by layout)
-  const [locale, setLocale] = useState('ko');
-  useEffect(() => {
-    setLocale(document.documentElement.lang || 'ko');
-  }, []);
+  // 서버 렌더에서도 올바른 언어가 나오도록 next-intl 로케일 사용
+  const locale = useLocale();
 
   const fetchItems = useCallback(async () => {
     setLoading(true);

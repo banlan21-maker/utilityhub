@@ -59,11 +59,39 @@ const faqSchema = {
   ],
 };
 
-export default function WorldTimePage() {
+const softwareSchemaEn = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'World Time Zone Converter',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  url: 'https://www.theutilhub.com/en/utilities/productivity/world-time',
+  description: 'Compare current times of major cities worldwide on one screen and find the best international meeting time with the slider.',
+};
+
+const faqSchemaEn = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'Is DST (Daylight Saving Time) automatically applied?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. This timezone converter automatically applies the current DST status for each city, so times for the US, Europe, and other DST regions are always displayed accurately.' } },
+    { '@type': 'Question', name: "My city isn't in the list", acceptedAnswer: { '@type': 'Answer', text: 'If your city is missing, use the representative city for the same timezone (UTC offset). For example, Bangkok (UTC+7) can substitute for Jakarta (UTC+7).' } },
+    { '@type': 'Question', name: 'Can I convert a specific time rather than the current time?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Adjust the slider to your desired hour (0-23) and all city times are recalculated for that moment. For a 10:00 AM meeting tomorrow, set the slider to 10.' } },
+    { '@type': 'Question', name: 'Can I use this result as official data?', acceptedAnswer: { '@type': 'Answer', text: 'Results are for reference only. Please consult a professional or official source for accurate figures.' } },
+  ],
+};
+
+export default async function WorldTimePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const isKo = locale === 'ko';
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? softwareSchema : softwareSchemaEn) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? faqSchema : faqSchemaEn) }} />
       <WorldTimeClient />
     </>
   );

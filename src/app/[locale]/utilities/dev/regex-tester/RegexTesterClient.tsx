@@ -15,12 +15,13 @@ interface CheatItem {
   pattern: string;
   flags: string;
   sample: string;
+  sampleEn?: string; // 영문 페이지용 예시 문장 (없으면 sample 사용)
 }
 const CHEAT: CheatItem[] = [
   { key: 'email',    pattern: '[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}', flags: 'gi', sample: 'Contact user@example.com or admin@site.org for help.' },
-  { key: 'phone_kr', pattern: '0\\d{1,2}-\\d{3,4}-\\d{4}', flags: 'g', sample: '010-1234-5678 또는 02-987-6543으로 연락하세요.' },
+  { key: 'phone_kr', pattern: '0\\d{1,2}-\\d{3,4}-\\d{4}', flags: 'g', sample: '010-1234-5678 또는 02-987-6543으로 연락하세요.', sampleEn: 'Call 010-1234-5678 or 02-987-6543 for details.' },
   { key: 'url',      pattern: 'https?:\\/\\/[\\w\\-]+(\\.[\\w\\-]+)+[/#?]?[^\\s]*', flags: 'gi', sample: 'Visit https://example.com and http://sub.site.org/page?q=1' },
-  { key: 'ssn_kr',   pattern: '\\d{6}-[1-4]\\d{6}', flags: 'g', sample: '홍길동 900101-1234567 (마스킹 대상)' },
+  { key: 'ssn_kr',   pattern: '\\d{6}-[1-4]\\d{6}', flags: 'g', sample: '홍길동 900101-1234567 (마스킹 대상)', sampleEn: 'Hong Gil-dong 900101-1234567 (to be masked)' },
   { key: 'digits',   pattern: '\\d+', flags: 'g', sample: 'Order 12345 costs $678.90 with 3 items.' },
   { key: 'ipv4',     pattern: '\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b', flags: 'g', sample: 'Server at 192.168.1.1 and 10.0.0.255 are online.' },
   { key: 'hex',      pattern: '#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})\\b', flags: 'gi', sample: 'Colors: #ff0000 #0f0 #4f46e5 and rgba(0,0,0)' },
@@ -133,7 +134,7 @@ export default function RegexTesterClient() {
   const applyCheat = (item: CheatItem) => {
     setPattern(item.pattern);
     setFlags(item.flags.split(''));
-    setTestText(item.sample);
+    setTestText(isKo ? item.sample : (item.sampleEn ?? item.sample));
   };
 
   const toggleFlag = (f: string) => {

@@ -298,9 +298,9 @@ export default function ColorPaletteClient() {
 
             {/* WCAG guide note */}
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.6, padding: '0.75rem', background: 'var(--surface)', borderRadius: 'var(--radius-sm)' }}>
-              <strong style={{ color: 'var(--text-primary)' }}>WCAG 2.1 기준</strong><br />
-              AA 일반 텍스트: 4.5:1 이상 &nbsp;|&nbsp; AA 큰 텍스트(18px+): 3:1 이상<br />
-              AAA 일반 텍스트: 7:1 이상 &nbsp;|&nbsp; AAA 큰 텍스트: 4.5:1 이상
+              <strong style={{ color: 'var(--text-primary)' }}>{t('wcag_guide_title')}</strong><br />
+              {t('wcag_aa_normal')} &nbsp;|&nbsp; {t('wcag_aa_large')}<br />
+              {t('wcag_aaa_normal')} &nbsp;|&nbsp; {t('wcag_aaa_large')}
             </div>
           </div>
         </div>

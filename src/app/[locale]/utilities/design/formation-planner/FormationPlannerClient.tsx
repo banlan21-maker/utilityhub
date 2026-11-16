@@ -558,7 +558,7 @@ export default function FormationPlannerClient() {
               key={opt.value}
               className={`${s.bgBtn} ${background === opt.value ? s.bgBtnActive : ''}`}
               onClick={() => setBackground(opt.value)}
-              aria-label={opt.ko}
+              aria-label={isKo ? opt.ko : opt.en}
             >
               {isKo ? opt.ko : opt.en}
             </button>

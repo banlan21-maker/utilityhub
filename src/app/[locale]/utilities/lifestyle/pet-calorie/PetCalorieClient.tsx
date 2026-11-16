@@ -196,7 +196,7 @@ export default function PetCalorieClient() {
             </div>
           ) : (
             <div className="glass-panel flex items-center justify-center" style={{ padding: '2rem', flex: 1, opacity: 0.5 }}>
-              <p style={{ textAlign: 'center' }}>정보를 입력하고 계산하기 버튼을 눌러주세요.</p>
+              <p style={{ textAlign: 'center' }}>{t('emptyResult')}</p>
             </div>
           )}
         </div>

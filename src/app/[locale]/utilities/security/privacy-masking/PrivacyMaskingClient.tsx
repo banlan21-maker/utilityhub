@@ -27,6 +27,8 @@ const KOREAN_COMPOUND_SURNAMES = ['남궁','황보','사공','선우','독고','
 interface MaskRule {
   id: string;
   example: string;
+  /** English-page example (falls back to `example`). */
+  exampleEn?: string;
   /** Applied via custom function so we can run logic per rule (not just regex.replace). */
   apply: (text: string) => { result: string; matches: number };
   /** Default-enabled in the UI (false = user must explicitly turn on). */
@@ -157,7 +159,7 @@ const RULES: MaskRule[] = [
   { id: 'ssn_kr',   example: '901201-1234567 → 901201-1******',            apply: applySsnKr,        defaultOn: true  },
   { id: 'card',     example: '1234-5678-9012-3456 → ****-****-****-3456', apply: applyCard,         defaultOn: true  },
   { id: 'ip',       example: '192.168.1.1 → 192.168.***.***',              apply: applyIp,           defaultOn: true  },
-  { id: 'name_kr',  example: '홍길동 → 홍*동',                              apply: applyKoreanName,   defaultOn: false },
+  { id: 'name_kr',  example: '홍길동 → 홍*동', exampleEn: '3-syllable Hangul name → middle syllable masked', apply: applyKoreanName, defaultOn: false },
 ];
 
 function applyAllMasks(text: string, enabled: Set<string>): { result: string; count: number } {
@@ -188,13 +190,14 @@ function buildHighlighted(original: string, masked: string): React.ReactNode[] {
 
 // ── Component ──────────────────────────────────────────────────────────────
 const DEFAULT_INPUT = '안녕하세요. 담당자 홍길동, 박지은.\n이메일: hong@example.com / 전화: 010-1234-5678\n주민번호: 901201-1234567 / 카드: 1234-5678-9012-3456\nIPv4: 192.168.1.1 / IPv6: 2001:db8::1';
+const DEFAULT_INPUT_EN = 'Hello. Contacts: John Smith, Emily Park.\nEmail: john.smith@example.com / Mobile (KR): 010-1234-5678\nNational ID (KR RRN): 901201-1234567 / Card: 1234-5678-9012-3456\nIPv4: 192.168.1.1 / IPv6: 2001:db8::1';
 
 export default function PrivacyMaskingClient() {
   const t = useTranslations('Redact');
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  const [input, setInput] = useState(DEFAULT_INPUT);
+  const [input, setInput] = useState(isKo ? DEFAULT_INPUT : DEFAULT_INPUT_EN);
   const [enabled, setEnabled] = useState<Set<string>>(
     () => new Set(RULES.filter((r) => r.defaultOn).map((r) => r.id)),
   );
@@ -277,7 +280,7 @@ export default function PrivacyMaskingClient() {
                     <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                       {t(`rule_${rule.id}` as 'rule_email')}
                     </span>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'block', fontFamily: 'monospace', marginTop: '0.1rem' }}>{rule.example}</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'block', fontFamily: 'monospace', marginTop: '0.1rem' }}>{isKo ? rule.example : (rule.exampleEn ?? rule.example)}</span>
                   </div>
                 </label>
               ))}

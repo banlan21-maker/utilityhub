@@ -17,6 +17,14 @@ const LANGUAGE_OPTIONS = [
   { value: 'chi_sim+eng', label: '중국어(간체) + 영어' },
 ];
 
+const LANGUAGE_OPTIONS_EN = [
+  { value: 'kor+eng', label: 'Korean + English (default)' },
+  { value: 'eng', label: 'English only' },
+  { value: 'kor', label: 'Korean only' },
+  { value: 'jpn+eng', label: 'Japanese + English' },
+  { value: 'chi_sim+eng', label: 'Chinese (Simplified) + English' },
+];
+
 const QUALITY_OPTIONS = [
   { value: 1.5, label: '표준 (1.5× — 빠름, 작은 파일)' },
   { value: 2.0, label: '고품질 (2.0× — 권장)' },
@@ -307,6 +315,7 @@ export default function PdfOcrClient() {
   };
 
   const qualityOptions = isKo ? QUALITY_OPTIONS : QUALITY_OPTIONS_EN;
+  const languageOptions = isKo ? LANGUAGE_OPTIONS : LANGUAGE_OPTIONS_EN;
 
   return (
     <div className={s.container}>
@@ -421,7 +430,7 @@ export default function PdfOcrClient() {
               onChange={(e) => setLanguage(e.target.value)}
               aria-label={isKo ? 'OCR 언어 선택' : 'Select OCR language'}
             >
-              {LANGUAGE_OPTIONS.map((opt) => (
+              {languageOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>

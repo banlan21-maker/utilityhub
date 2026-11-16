@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 
@@ -20,7 +21,7 @@ function decodeQuiz(encoded: string): QuizDef | null {
   catch { return null; }
 }
 
-function generateResultImage(quiz: QuizDef, result: ResultType): string {
+function generateResultImage(quiz: QuizDef, result: ResultType, isKo: boolean): string {
   const canvas = document.createElement('canvas');
   canvas.width = 1200; canvas.height = 630;
   const ctx = canvas.getContext('2d');
@@ -46,7 +47,7 @@ function generateResultImage(quiz: QuizDef, result: ResultType): string {
   // Sub label
   ctx.font = '600 26px -apple-system, BlinkMacSystemFont, sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillText('나의 결과 유형', 600, 300);
+  ctx.fillText(isKo ? '나의 결과 유형' : 'My Result Type', 600, 300);
 
   // Result title
   ctx.font = 'bold 56px -apple-system, BlinkMacSystemFont, sans-serif';
@@ -68,6 +69,7 @@ function generateResultImage(quiz: QuizDef, result: ResultType): string {
 
 // ── Quiz Player ────────────────────────────────────────────────────────────
 function QuizPlayer({ quiz }: { quiz: QuizDef }) {
+  const isKo = useLocale() === 'ko';
   type Phase = 'intro' | 'playing' | 'result';
   const [phase, setPhase] = useState<Phase>('intro');
   const [currentQ, setCurrentQ] = useState(0);
@@ -97,7 +99,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
         setResult(winner);
         setScores(newScores);
         setPhase('result');
-        setTimeout(() => setResultImg(generateResultImage(quiz, winner)), 200);
+        setTimeout(() => setResultImg(generateResultImage(quiz, winner, isKo)), 200);
       } else {
         setFading(true);
         setScores(newScores);
@@ -108,7 +110,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
         }, 320);
       }
     }, 550);
-  }, [fading, selectedOpt, currentQ, quiz, scores]);
+  }, [fading, selectedOpt, currentQ, quiz, scores, isKo]);
 
   const handleRestart = () => {
     setPhase('intro'); setCurrentQ(0); setScores({});
@@ -139,7 +141,9 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
         </p>
       )}
       <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '2.5rem' }}>
-        총 {quiz.questions.length}개 질문 · {quiz.resultTypes.length}가지 결과
+        {isKo
+          ? `총 ${quiz.questions.length}개 질문 · ${quiz.resultTypes.length}가지 결과`
+          : `${quiz.questions.length} questions · ${quiz.resultTypes.length} possible results`}
       </p>
       <button
         onClick={() => setPhase('playing')}
@@ -147,7 +151,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
         onMouseOver={e => { e.currentTarget.style.background = 'var(--primary-hover)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
         onMouseOut={e => { e.currentTarget.style.background = 'var(--primary)'; e.currentTarget.style.transform = 'translateY(0)'; }}
       >
-        테스트 시작하기 →
+        {isKo ? '테스트 시작하기 →' : 'Start the Quiz →'}
       </button>
     </div>
   );
@@ -158,7 +162,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
       {/* Progress bar */}
       <div style={{ marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-          <span>질문 {currentQ + 1} / {quiz.questions.length}</span>
+          <span>{isKo ? '질문' : 'Question'} {currentQ + 1} / {quiz.questions.length}</span>
           <span>{Math.round(progressPct)}%</span>
         </div>
         <div style={{ height: '7px', background: 'var(--border)', borderRadius: '999px', overflow: 'hidden' }}>
@@ -209,7 +213,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
       {/* Result card */}
       <div className="glass-panel animate-fade-in" style={{ padding: '2.5rem', marginBottom: '1.5rem', textAlign: 'center', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), var(--surface))' }}>
         <div style={{ fontSize: '5rem', lineHeight: 1, marginBottom: '1rem' }}>{result.emoji}</div>
-        <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>나의 유형</p>
+        <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{isKo ? '나의 유형' : 'Your Type'}</p>
         <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1rem', lineHeight: 1.3 }}>
           {result.title}
         </h2>
@@ -239,27 +243,27 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
 
       {/* Share */}
       <div className="glass-panel" style={{ padding: '1.25rem', marginBottom: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-        <p style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)', margin: 0 }}>결과 공유하기</p>
+        <p style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)', margin: 0 }}>{isKo ? '결과 공유하기' : 'Share Your Result'}</p>
         <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
           <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${result.emoji} 나의 결과: ${result.title}\n${quiz.title}`)}&url=${encodeURIComponent(shareUrl)}`}
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${result.emoji} ${isKo ? '나의 결과' : 'My result'}: ${result.title}\n${quiz.title}`)}&url=${encodeURIComponent(shareUrl)}`}
             target="_blank" rel="noopener noreferrer"
             style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', background: '#000', color: 'white', borderRadius: 'var(--radius-md)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            𝕏 X 공유
+            {isKo ? '𝕏 X 공유' : '𝕏 Share on X'}
           </a>
           <button onClick={handleCopy}
             style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', border: `1px solid ${copied ? '#10b981' : 'var(--border)'}`, background: copied ? '#ecfdf5' : 'var(--surface)', color: copied ? '#065f46' : 'var(--text-primary)', borderRadius: 'var(--radius-md)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            {copied ? '✓ 복사됨' : '🔗 링크 복사'}
+            {copied ? (isKo ? '✓ 복사됨' : '✓ Copied') : (isKo ? '🔗 링크 복사' : '🔗 Copy Link')}
           </button>
           {resultImg && (
             <button onClick={handleDownloadImg}
               style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              🖼️ 이미지 저장
+              {isKo ? '🖼️ 이미지 저장' : '🖼️ Save Image'}
             </button>
           )}
           <button onClick={handleRestart}
             style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)', cursor: 'pointer' }}>
-            🔄 다시 하기
+            {isKo ? '🔄 다시 하기' : '🔄 Play Again'}
           </button>
         </div>
       </div>
@@ -267,14 +271,16 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
       {/* ── Viral CTA ── */}
       <div style={{ padding: '1.5rem', background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', borderRadius: 'var(--radius-lg)', color: 'white', textAlign: 'center' }}>
         <p style={{ fontWeight: 800, fontSize: '1.1rem', margin: '0 0 0.5rem' }}>
-          나만의 심리테스트를 만들고 싶다면? 🧩
+          {isKo ? '나만의 심리테스트를 만들고 싶다면? 🧩' : 'Want to make your own personality quiz? 🧩'}
         </p>
         <p style={{ fontSize: '0.85rem', opacity: 0.85, margin: '0 0 1.1rem', lineHeight: 1.6 }}>
-          유틸허브에서 누구나 무료로 퀴즈를 만들고 SNS에 공유할 수 있어요
+          {isKo
+            ? '유틸허브에서 누구나 무료로 퀴즈를 만들고 SNS에 공유할 수 있어요'
+            : 'Anyone can build a quiz for free on Utility Hub and share it on social media'}
         </p>
         <Link href="/utilities/marketing/quiz-builder"
           style={{ display: 'inline-block', padding: '0.65rem 1.75rem', background: 'white', color: '#6366f1', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
-          나도 만들기 →
+          {isKo ? '나도 만들기 →' : 'Make My Own →'}
         </Link>
       </div>
     </div>
@@ -285,20 +291,21 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
 
 // ── Suspense wrapper (required for useSearchParams) ─────────────────────────
 function PlayContent() {
+  const isKo = useLocale() === 'ko';
   const searchParams = useSearchParams();
   const encoded = searchParams.get('d');
 
   if (!encoded) return (
     <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
-      <p style={{ marginBottom: '1rem' }}>유효한 퀴즈 링크가 아닙니다.</p>
-      <Link href="/utilities/marketing/quiz-builder" style={{ color: 'var(--primary)', fontWeight: 600 }}>퀴즈 만들러 가기 →</Link>
+      <p style={{ marginBottom: '1rem' }}>{isKo ? '유효한 퀴즈 링크가 아닙니다.' : 'This is not a valid quiz link.'}</p>
+      <Link href="/utilities/marketing/quiz-builder" style={{ color: 'var(--primary)', fontWeight: 600 }}>{isKo ? '퀴즈 만들러 가기 →' : 'Create a Quiz →'}</Link>
     </div>
   );
 
   const quiz = decodeQuiz(encoded);
   if (!quiz) return (
     <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
-      <p>퀴즈 데이터를 불러올 수 없습니다.</p>
+      <p>{isKo ? '퀴즈 데이터를 불러올 수 없습니다.' : 'Unable to load the quiz data.'}</p>
     </div>
   );
 
@@ -306,10 +313,11 @@ function PlayContent() {
 }
 
 export default function QuizPlayPage() {
+  const isKo = useLocale() === 'ko';
   return (
     <div>
       <NavigationActions />
-      <Suspense fallback={<div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>로딩 중...</div>}>
+      <Suspense fallback={<div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>{isKo ? '로딩 중...' : 'Loading...'}</div>}>
         <PlayContent />
       </Suspense>
     </div>

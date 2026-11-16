@@ -210,7 +210,7 @@ export default function CoreWebVitalsClient() {
               min={0} max={LCP_MAX} step={0.1}
               value={lcpSlider}
               onChange={onLcpSlider}
-              aria-label="LCP 슬라이더"
+              aria-label={isKo ? 'LCP 슬라이더' : 'LCP slider'}
             />
             <input
               type="number"
@@ -218,7 +218,7 @@ export default function CoreWebVitalsClient() {
               step="any" min="0"
               value={lcpInput}
               onChange={onLcpInput}
-              aria-label="LCP 숫자 입력"
+              aria-label={isKo ? 'LCP 숫자 입력' : 'LCP number input'}
             />
             <span className={s.unit_label}>s</span>
           </div>
@@ -267,7 +267,7 @@ export default function CoreWebVitalsClient() {
               min={0} max={INP_MAX} step={10}
               value={inpSlider}
               onChange={onInpSlider}
-              aria-label="INP 슬라이더"
+              aria-label={isKo ? 'INP 슬라이더' : 'INP slider'}
             />
             <input
               type="number"
@@ -275,7 +275,7 @@ export default function CoreWebVitalsClient() {
               step="any" min="0"
               value={inpInput}
               onChange={onInpInput}
-              aria-label="INP 숫자 입력"
+              aria-label={isKo ? 'INP 숫자 입력' : 'INP number input'}
             />
             <span className={s.unit_label}>ms</span>
           </div>
@@ -323,7 +323,7 @@ export default function CoreWebVitalsClient() {
               min={0} max={CLS_MAX} step={0.01}
               value={clsSlider}
               onChange={onClsSlider}
-              aria-label="CLS 슬라이더"
+              aria-label={isKo ? 'CLS 슬라이더' : 'CLS slider'}
             />
             <input
               type="number"
@@ -331,7 +331,7 @@ export default function CoreWebVitalsClient() {
               step="any" min="0"
               value={clsInput}
               onChange={onClsInput}
-              aria-label="CLS 숫자 입력"
+              aria-label={isKo ? 'CLS 숫자 입력' : 'CLS number input'}
             />
             <span className={s.unit_label}></span>
           </div>

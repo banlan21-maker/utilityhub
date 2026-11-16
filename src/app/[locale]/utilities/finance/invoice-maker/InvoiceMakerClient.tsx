@@ -82,7 +82,7 @@ export default function InvoiceMakerClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
   const [isClient, setIsClient] = useState(false);
-  const [data, setData] = useState<InvoiceData>(defaultData('KR'));
+  const [data, setData] = useState<InvoiceData>(defaultData(isKo ? 'KR' : 'US'));
   const [history, setHistory] = useState<InvoiceData[]>([]);
   const [toast, setToast] = useState('');
   const [shareUrl, setShareUrl] = useState('');
@@ -139,7 +139,9 @@ export default function InvoiceMakerClient() {
 
   // ── Calculation ──
   const subtotal = data.items.reduce((s, it) => s + it.qty * it.unitPrice, 0);
-  const taxLabel = data.countryMode === 'KR' ? (data.taxRate === 3.3 ? '원천징수' : '부가세') : 'Sales Tax';
+  const taxLabel = data.countryMode === 'KR'
+    ? (data.taxRate === 3.3 ? (isKo ? '원천징수' : 'Withholding') : (isKo ? '부가세' : 'VAT'))
+    : 'Sales Tax';
   const taxAmount = subtotal * (data.taxRate / 100);
   const total = subtotal + taxAmount;
 
@@ -283,7 +285,7 @@ export default function InvoiceMakerClient() {
 
   const fmtDate = (d: string) => {
     if (!d) return '';
-    if (data.countryMode === 'KR') {
+    if (data.countryMode === 'KR' && isKo) {
       const [y, m, day] = d.split('-');
       return `${y}년 ${m}월 ${day}일`;
     }
@@ -312,7 +314,7 @@ export default function InvoiceMakerClient() {
         {(['KR','US'] as CountryMode[]).map(m => (
           <button key={m} onClick={() => setMode(m)}
             className={`${s.ivm_toggle_btn} ${data.countryMode === m ? s.ivm_toggle_active : ''}`}>
-            {m === 'KR' ? '🇰🇷 한국 (KRW)' : '🇺🇸 US (USD)'}
+            {m === 'KR' ? (isKo ? '🇰🇷 한국 (KRW)' : '🇰🇷 Korea (KRW)') : '🇺🇸 US (USD)'}
           </button>
         ))}
       </div>
@@ -344,9 +346,9 @@ export default function InvoiceMakerClient() {
             { k: 'email' as keyof Issuer, label: 'Email' },
             { k: 'phone' as keyof Issuer, label: isKo ? '연락처' : 'Phone' },
             { k: 'address' as keyof Issuer, label: isKo ? '주소' : 'Address' },
-            { k: 'bizNo' as keyof Issuer, label: data.countryMode === 'KR' ? '사업자번호' : 'EIN / Tax ID' },
-            { k: 'bank' as keyof Issuer, label: data.countryMode === 'KR' ? '은행명' : 'Bank' },
-            { k: 'account' as keyof Issuer, label: data.countryMode === 'KR' ? '계좌번호' : 'Account' },
+            { k: 'bizNo' as keyof Issuer, label: data.countryMode === 'KR' ? (isKo ? '사업자번호' : 'Business reg. no.') : 'EIN / Tax ID' },
+            { k: 'bank' as keyof Issuer, label: data.countryMode === 'KR' ? (isKo ? '은행명' : 'Bank') : 'Bank' },
+            { k: 'account' as keyof Issuer, label: data.countryMode === 'KR' ? (isKo ? '계좌번호' : 'Account no.') : 'Account' },
           ].map(({ k, label }) => (
             <div key={k} className={s.ivm_field}>
               <label className={s.ivm_label}>{label}</label>
@@ -395,7 +397,7 @@ export default function InvoiceMakerClient() {
           {/* Payment QR */}
           <div className={s.ivm_field} style={{ marginTop: '0.5rem' }}>
             <label className={s.ivm_label}>
-              {data.countryMode === 'KR' ? '카카오/토스 결제 링크' : 'PayPal/Venmo Pay Link'}
+              {data.countryMode === 'KR' ? (isKo ? '카카오/토스 결제 링크' : 'KakaoPay/Toss payment link') : 'PayPal/Venmo Pay Link'}
             </label>
             <input className={s.ivm_input} value={data.payLink}
               placeholder={data.countryMode === 'KR' ? 'https://toss.me/...' : 'https://paypal.me/...'}
@@ -448,15 +450,15 @@ export default function InvoiceMakerClient() {
           <div className={s.ivm_summary}>
             <div className={s.ivm_tax_row}>
               <span className={s.ivm_tax_label}>
-                {data.countryMode === 'KR' ? '세금 유형 & 세율' : 'Tax Rate'}
+                {data.countryMode === 'KR' ? (isKo ? '세금 유형 & 세율' : 'Tax type & rate') : 'Tax Rate'}
               </span>
               {data.countryMode === 'KR' && (
                 <select className={s.ivm_input} style={{ width:'auto', marginRight:'0.5rem' }}
                   value={data.taxRate}
                   onChange={e => setField('taxRate', Number(e.target.value))}>
-                  <option value={10}>부가세 10%</option>
-                  <option value={3.3}>원천징수 3.3%</option>
-                  <option value={0}>세금 없음 (0%)</option>
+                  <option value={10}>{isKo ? '부가세 10%' : 'VAT 10%'}</option>
+                  <option value={3.3}>{isKo ? '원천징수 3.3%' : 'Withholding 3.3%'}</option>
+                  <option value={0}>{isKo ? '세금 없음 (0%)' : 'No tax (0%)'}</option>
                 </select>
               )}
               {data.countryMode === 'US' && (
@@ -529,7 +531,7 @@ export default function InvoiceMakerClient() {
             {data.issuer.logoBase64 && <img src={data.issuer.logoBase64} className={s.ivm_preview_logo} alt="logo" />}
           </div>
           <div>
-            <p className={s.ivm_preview_title}>{data.countryMode === 'KR' ? '세금계산서 / 견적서' : 'INVOICE'}</p>
+            <p className={s.ivm_preview_title}>{data.countryMode === 'KR' ? (isKo ? '세금계산서 / 견적서' : 'TAX INVOICE / QUOTE') : 'INVOICE'}</p>
             <p className={s.ivm_preview_meta}># {data.invNo}</p>
             <p className={s.ivm_preview_meta}>{isKo ? '발행일' : 'Issue'}: {fmtDate(data.issueDate)}</p>
             {data.dueDate && <p className={s.ivm_preview_meta}>{isKo ? '납기일' : 'Due'}: {fmtDate(data.dueDate)}</p>}
@@ -544,7 +546,7 @@ export default function InvoiceMakerClient() {
               {data.issuer.email}{data.issuer.email && <br />}
               {data.issuer.phone}{data.issuer.phone && <br />}
               {data.issuer.address}{data.issuer.address && <br />}
-              {data.issuer.bizNo && (data.countryMode === 'KR' ? `사업자번호: ${data.issuer.bizNo}` : `EIN: ${data.issuer.bizNo}`)}
+              {data.issuer.bizNo && (data.countryMode === 'KR' ? (isKo ? `사업자번호: ${data.issuer.bizNo}` : `Business reg. no.: ${data.issuer.bizNo}`) : `EIN: ${data.issuer.bizNo}`)}
             </p>
           </div>
           <div>

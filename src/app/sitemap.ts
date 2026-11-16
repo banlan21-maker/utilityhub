@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 
 const BASE = 'https://www.theutilhub.com';
-const STATIC_PATHS = ['', '/privacy', '/terms', '/feedback', '/about', '/contact'];
+const STATIC_PATHS = ['', '/privacy', '/terms', '/about', '/contact'];
 
 const CATEGORY_SLUGS = [
   'performance', 'document', 'finance', 'productivity',
@@ -73,13 +73,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const tool of tools) {
     if (!tool.available) continue;
     const lastMod = getFileLastModified(`utilities/${tool.category}/${tool.slug}/page.tsx`, now);
-    for (const locale of LOCALES) {
+    for (const locale of tool.koOnly ? (['ko'] as const) : LOCALES) {
       entries.push({
         url: `${BASE}/${locale}${tool.href}`,
         lastModified: lastMod,
         changeFrequency: 'monthly',
         priority: 0.7,
-        alternates: alts(tool.href),
+        alternates: tool.koOnly ? { languages: { ko: `${BASE}/ko${tool.href}`, 'x-default': `${BASE}/ko${tool.href}` } } : alts(tool.href),
       });
     }
   }

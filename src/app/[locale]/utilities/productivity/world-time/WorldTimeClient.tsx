@@ -32,26 +32,49 @@ const faqSchema = {
   ]
 };
 
+const softwareSchemaEn = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "World Time Zone Converter",
+  "operatingSystem": "Web Browser",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "url": "https://www.theutilhub.com/en/utilities/productivity/world-time",
+  "description": "Compare current times of major cities worldwide on one screen and find the best international meeting time with the slider."
+};
+
+const faqSchemaEn = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is DST (Daylight Saving Time) automatically applied?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. This timezone converter automatically applies the current DST status for each city, so times for the US, Europe, and other DST regions are always displayed accurately." } },
+    { "@type": "Question", "name": "My city isn't in the list", "acceptedAnswer": { "@type": "Answer", "text": "If your city is missing, use the representative city for the same timezone (UTC offset). For example, Bangkok (UTC+7) can substitute for Jakarta (UTC+7)." } },
+    { "@type": "Question", "name": "Can I convert a specific time rather than the current time?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Adjust the slider to your desired hour (0-23) and all city times are recalculated for that moment. For a 10:00 AM meeting tomorrow, set the slider to 10." } },
+    { "@type": "Question", "name": "Can I use this result as official data?", "acceptedAnswer": { "@type": "Answer", "text": "Results are for reference only. Please consult a professional or official source for accurate figures." } }
+  ]
+};
+
 interface TzItem {
   id: string;
   label: string;
+  labelEn: string;
   tz: string;
   flag: string;
 }
 
 const ALL_TIMEZONES: TzItem[] = [
-  { id: 'KST',  label: '한국 (KST)',         tz: 'Asia/Seoul',             flag: '🇰🇷' },
-  { id: 'JST',  label: '일본 (JST)',          tz: 'Asia/Tokyo',             flag: '🇯🇵' },
-  { id: 'CST',  label: '중국 (CST)',          tz: 'Asia/Shanghai',          flag: '🇨🇳' },
-  { id: 'IST',  label: '인도 (IST)',          tz: 'Asia/Kolkata',           flag: '🇮🇳' },
-  { id: 'UAE',  label: '두바이 (UAE)',        tz: 'Asia/Dubai',             flag: '🇦🇪' },
-  { id: 'GMT',  label: '런던 (GMT/BST)',      tz: 'Europe/London',          flag: '🇬🇧' },
-  { id: 'CET',  label: '파리/베를린 (CET)',   tz: 'Europe/Paris',           flag: '🇪🇺' },
-  { id: 'EST',  label: '뉴욕 (EST/EDT)',      tz: 'America/New_York',       flag: '🇺🇸' },
-  { id: 'CST2', label: '시카고 (CST/CDT)',    tz: 'America/Chicago',        flag: '🇺🇸' },
-  { id: 'PST',  label: '로스앤젤레스 (PST)', tz: 'America/Los_Angeles',    flag: '🇺🇸' },
-  { id: 'SYD',  label: '시드니 (AEDT)',       tz: 'Australia/Sydney',       flag: '🇦🇺' },
-  { id: 'BRT',  label: '상파울루 (BRT)',      tz: 'America/Sao_Paulo',      flag: '🇧🇷' },
+  { id: 'KST',  label: '한국 (KST)',         labelEn: 'Seoul, Korea (KST)',          tz: 'Asia/Seoul',             flag: '🇰🇷' },
+  { id: 'JST',  label: '일본 (JST)',          labelEn: 'Tokyo, Japan (JST)',          tz: 'Asia/Tokyo',             flag: '🇯🇵' },
+  { id: 'CST',  label: '중국 (CST)',          labelEn: 'Shanghai, China (CST)',       tz: 'Asia/Shanghai',          flag: '🇨🇳' },
+  { id: 'IST',  label: '인도 (IST)',          labelEn: 'India (IST)',                 tz: 'Asia/Kolkata',           flag: '🇮🇳' },
+  { id: 'UAE',  label: '두바이 (UAE)',        labelEn: 'Dubai (UAE)',                 tz: 'Asia/Dubai',             flag: '🇦🇪' },
+  { id: 'GMT',  label: '런던 (GMT/BST)',      labelEn: 'London (GMT/BST)',            tz: 'Europe/London',          flag: '🇬🇧' },
+  { id: 'CET',  label: '파리/베를린 (CET)',   labelEn: 'Paris/Berlin (CET)',          tz: 'Europe/Paris',           flag: '🇪🇺' },
+  { id: 'EST',  label: '뉴욕 (EST/EDT)',      labelEn: 'New York (EST/EDT)',          tz: 'America/New_York',       flag: '🇺🇸' },
+  { id: 'CST2', label: '시카고 (CST/CDT)',    labelEn: 'Chicago (CST/CDT)',           tz: 'America/Chicago',        flag: '🇺🇸' },
+  { id: 'PST',  label: '로스앤젤레스 (PST)', labelEn: 'Los Angeles (PST)',           tz: 'America/Los_Angeles',    flag: '🇺🇸' },
+  { id: 'SYD',  label: '시드니 (AEDT)',       labelEn: 'Sydney (AEDT)',               tz: 'Australia/Sydney',       flag: '🇦🇺' },
+  { id: 'BRT',  label: '상파울루 (BRT)',      labelEn: 'São Paulo (BRT)',             tz: 'America/Sao_Paulo',      flag: '🇧🇷' },
 ];
 
 const DEFAULT_SELECTED = ['KST', 'EST', 'GMT', 'JST'];
@@ -64,8 +87,8 @@ function getTimeInZone(baseDate: Date, tz: string) {
   }).format(baseDate);
 }
 
-function getDateInZone(baseDate: Date, tz: string) {
-  return new Intl.DateTimeFormat('ko-KR', {
+function getDateInZone(baseDate: Date, tz: string, isKorean: boolean) {
+  return new Intl.DateTimeFormat(isKorean ? 'ko-KR' : 'en-US', {
     timeZone: tz,
     month: 'short', day: 'numeric', weekday: 'short',
   }).format(baseDate);
@@ -82,7 +105,11 @@ function isDaytime(hour: number) {
   return hour >= 7 && hour < 20;
 }
 
-function HourBadge({ hour }: { hour: number }) {
+function zoneLabel(z: TzItem, isKorean: boolean) {
+  return isKorean ? z.label : z.labelEn;
+}
+
+function HourBadge({ hour, isKorean }: { hour: number; isKorean: boolean }) {
   const day = isDaytime(hour);
   return (
     <span style={{
@@ -92,7 +119,7 @@ function HourBadge({ hour }: { hour: number }) {
       color: day ? '#b45309' : '#6366f1',
       fontWeight: 600,
     }}>
-      {day ? '☀️' : '🌙'} {day ? '낮' : '밤'}
+      {day ? '☀️' : '🌙'} {isKorean ? (day ? '낮' : '밤') : (day ? 'Day' : 'Night')}
     </span>
   );
 }
@@ -143,11 +170,11 @@ export default function WorldTimeClient() {
     <div className={s.container}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(isKorean ? softwareSchema : softwareSchemaEn) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(isKorean ? faqSchema : faqSchemaEn) }}
       />
       <NavigationActions />
 
@@ -179,7 +206,7 @@ export default function WorldTimeClient() {
             className={s.base_select}
           >
             {ALL_TIMEZONES.map(z => (
-              <option key={z.id} value={z.id}>{z.flag} {z.label}</option>
+              <option key={z.id} value={z.id}>{z.flag} {zoneLabel(z, isKorean)}</option>
             ))}
           </select>
           {sliderHour !== null && (
@@ -196,7 +223,7 @@ export default function WorldTimeClient() {
         <div>
           <div className={s.slider_header}>
             <span className={s.slider_label}>
-              {baseZone.flag} {baseZone.label} 기준
+              {isKorean ? <>{baseZone.flag} {baseZone.label} 기준</> : <>{baseZone.flag} Based on {baseZone.labelEn}</>}
             </span>
             <span className={s.slider_value}>
               {sliderHour !== null ? `${String(sliderHour).padStart(2,'0')}:00` : t('now')}
@@ -209,7 +236,7 @@ export default function WorldTimeClient() {
             className={s.slider}
           />
           <div className={s.slider_ticks}>
-            {['0시', '6시', '12시', '18시', '23시'].map(l => <span key={l}>{l}</span>)}
+            {(isKorean ? ['0시', '6시', '12시', '18시', '23시'] : ['0h', '6h', '12h', '18h', '23h']).map(l => <span key={l}>{l}</span>)}
           </div>
         </div>
       </div>
@@ -218,7 +245,7 @@ export default function WorldTimeClient() {
       <div className={s.timezone_grid}>
         {selectedZones.map(zone => {
           const time = getTimeInZone(displayDate, zone.tz);
-          const date = getDateInZone(displayDate, zone.tz);
+          const date = getDateInZone(displayDate, zone.tz, isKorean);
           const hour = getHourInZone(displayDate, zone.tz);
           const isBase = zone.id === baseId;
 
@@ -235,11 +262,11 @@ export default function WorldTimeClient() {
               <div className={s.timezone_header}>
                 <span className={s.timezone_flag}>{zone.flag}</span>
                 <div>
-                  <div className={s.timezone_label}>{zone.label}</div>
+                  <div className={s.timezone_label}>{zoneLabel(zone, isKorean)}</div>
                   <div className={s.timezone_date}>{date}</div>
                 </div>
                 <div style={{ marginLeft: 'auto' }}>
-                  <HourBadge hour={hour} />
+                  <HourBadge hour={hour} isKorean={isKorean} />
                 </div>
               </div>
               <div className={s.timezone_time}>
@@ -284,7 +311,7 @@ export default function WorldTimeClient() {
                 onClick={() => { toggleZone(z.id); setShowAdd(false); }}
                 className={s.city_button}
               >
-                {z.flag} {z.label}
+                {z.flag} {zoneLabel(z, isKorean)}
               </button>
             ))}
           </div>

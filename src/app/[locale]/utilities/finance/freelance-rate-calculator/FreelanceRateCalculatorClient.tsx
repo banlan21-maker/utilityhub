@@ -102,18 +102,18 @@ function useCountUp(target: number, duration = 600) {
 
 // ── Preset costs ──
 const PRESETS_KR = [
-  { name: '월세', amount: 500000 },
-  { name: 'S/W 구독', amount: 50000 },
-  { name: '통신비', amount: 80000 },
-  { name: '식비', amount: 400000 },
-  { name: '보험료', amount: 150000 },
+  { name: '월세', nameEn: 'Rent', amount: 500000 },
+  { name: 'S/W 구독', nameEn: 'Software', amount: 50000 },
+  { name: '통신비', nameEn: 'Phone/Internet', amount: 80000 },
+  { name: '식비', nameEn: 'Food', amount: 400000 },
+  { name: '보험료', nameEn: 'Insurance', amount: 150000 },
 ];
 const PRESETS_US = [
-  { name: 'Rent', amount: 1500 },
-  { name: 'Software', amount: 100 },
-  { name: 'Phone/Internet', amount: 100 },
-  { name: 'Food', amount: 600 },
-  { name: 'Insurance', amount: 300 },
+  { name: 'Rent', nameEn: 'Rent', amount: 1500 },
+  { name: 'Software', nameEn: 'Software', amount: 100 },
+  { name: 'Phone/Internet', nameEn: 'Phone/Internet', amount: 100 },
+  { name: 'Food', nameEn: 'Food', amount: 600 },
+  { name: 'Insurance', nameEn: 'Insurance', amount: 300 },
 ];
 
 // ── Main Component ──
@@ -121,8 +121,8 @@ export default function FreelanceRateCalculatorClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  const [country, setCountry] = useState<Country>('KR');
-  const [netIncome, setNetIncome] = useState(3000000);
+  const [country, setCountry] = useState<Country>(isKo ? 'KR' : 'US');
+  const [netIncome, setNetIncome] = useState(isKo ? 3000000 : 5000);
   const [monthlyHours, setMonthlyHours] = useState(160);
   const [efficiency, setEfficiency] = useState(80);
   const [costs, setCosts] = useState<CostItem[]>([]);
@@ -240,7 +240,7 @@ export default function FreelanceRateCalculatorClient() {
             className={`${s.frc_ctab} ${country === c ? s.frc_ctab_active : ''}`}
             onClick={() => setCountry(c)}
           >
-            {c === 'KR' ? '🇰🇷 대한민국 (KRW)' : '🇺🇸 United States (USD)'}
+            {c === 'KR' ? (isKo ? '🇰🇷 대한민국 (KRW)' : '🇰🇷 South Korea (KRW)') : '🇺🇸 United States (USD)'}
           </button>
         ))}
       </div>
@@ -276,8 +276,8 @@ export default function FreelanceRateCalculatorClient() {
         <p className={s.frc_card_title}>📋 {isKo ? '월 고정지출 관리' : 'Monthly Fixed Costs'}</p>
         <div className={s.frc_preset_row}>
           {presets.map(p => (
-            <button key={p.name} className={s.frc_preset_btn} onClick={() => addPreset(p)}>
-              + {p.name}
+            <button key={p.name} className={s.frc_preset_btn} onClick={() => addPreset({ name: isKo ? p.name : p.nameEn, amount: p.amount })}>
+              + {isKo ? p.name : p.nameEn}
             </button>
           ))}
         </div>
@@ -294,7 +294,7 @@ export default function FreelanceRateCalculatorClient() {
             type="text"
             inputMode="numeric"
             className={`${s.frc_cost_input} ${s.frc_cost_input_amount}`}
-            placeholder={country === 'KR' ? '금액 (₩)' : 'Amount ($)'}
+            placeholder={country === 'KR' ? (isKo ? '금액 (₩)' : 'Amount (₩)') : 'Amount ($)'}
             value={newCostAmt}
             onChange={e => setNewCostAmt(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addCost()}
@@ -442,7 +442,7 @@ export default function FreelanceRateCalculatorClient() {
         <hr className={s.frc_receipt_divider} />
         <div className={s.frc_receipt_row}>
           <span className={s.frc_receipt_key}>{isKo ? '국가' : 'Country'}</span>
-          <span className={s.frc_receipt_val}>{country === 'KR' ? '🇰🇷 대한민국' : '🇺🇸 United States'}</span>
+          <span className={s.frc_receipt_val}>{country === 'KR' ? (isKo ? '🇰🇷 대한민국' : '🇰🇷 South Korea') : '🇺🇸 United States'}</span>
         </div>
         <div className={s.frc_receipt_row}>
           <span className={s.frc_receipt_key}>{isKo ? '목표 순수익' : 'Net Income'}</span>

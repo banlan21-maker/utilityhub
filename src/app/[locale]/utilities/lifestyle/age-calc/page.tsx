@@ -52,11 +52,39 @@ const faqSchema = {
   ],
 };
 
-export default function AgeCalcPage() {
+const softwareSchemaEn = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Korean Date Calculator',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  url: 'https://www.theutilhub.com/en/utilities/lifestyle/age-calc',
+  description: 'Calculate Korean age types, military discharge date, and ovulation day all in one tool.',
+};
+
+const faqSchemaEn = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'Does the military calculator account for shortened or extended service?', acceptedAnswer: { '@type': 'Answer', text: 'The tool uses standard 2024 service durations. Special roles (commissioned officers, NCOs, research specialists, etc.) have different service lengths not covered here. Contact your unit for a precise discharge date.' } },
+    { '@type': 'Question', name: 'Which age system should I use for official documents?', acceptedAnswer: { '@type': 'Answer', text: 'Since June 2023, international (full) age is required in medical, administrative, and most legal documents. However, certain laws such as the Military Service Act and Youth Protection Act may still reference year age or counting age, so always verify the applicable law.' } },
+    { '@type': 'Question', name: 'Why might my ovulation date be different from this estimate?', acceptedAnswer: { '@type': 'Answer', text: 'Ovulation can shift due to stress, illness, hormonal fluctuations, or irregular cycles. This tool provides a statistical estimate based on average cycle length. For family planning or fertility concerns, consult a licensed OB/GYN.' } },
+    { '@type': 'Question', name: 'Can I use this result as official data?', acceptedAnswer: { '@type': 'Answer', text: 'Results are for reference only. Please consult a professional or official source for accurate figures.' } },
+  ],
+};
+
+export default async function AgeCalcPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const isKo = locale === 'ko';
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? softwareSchema : softwareSchemaEn) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? faqSchema : faqSchemaEn) }} />
       <AgeCalcClient />
     </>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Youtube } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -32,13 +33,13 @@ const QUALITIES = [
 ];
 
 /* ─── Sub-components ─── */
-function Input({ value, onChange, onEnter }: { value: string; onChange: (v: string) => void; onEnter: () => void }) {
+function Input({ value, onChange, onEnter, isKo }: { value: string; onChange: (v: string) => void; onEnter: () => void; isKo: boolean }) {
   return (
     <input
       value={value}
       onChange={e => onChange(e.target.value)}
       onKeyDown={e => e.key === 'Enter' && onEnter()}
-      placeholder="https://www.youtube.com/watch?v=... 또는 youtu.be/... 또는 11자리 ID"
+      placeholder={isKo ? "https://www.youtube.com/watch?v=... 또는 youtu.be/... 또는 11자리 ID" : "https://www.youtube.com/watch?v=... or youtu.be/... or 11-character ID"}
       style={{
         flex: 1, padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
         background: 'var(--surface)', border: '1px solid var(--border)',
@@ -49,10 +50,10 @@ function Input({ value, onChange, onEnter }: { value: string; onChange: (v: stri
 }
 
 function ThumbnailCard({
-  videoId, quality, label, size, badge, onDownload, onCopyUrl, downloading, copied,
+  videoId, quality, label, size, badge, onDownload, onCopyUrl, downloading, copied, isKo,
 }: {
   videoId: string; quality: string; label: string; size: string; badge: string;
-  onDownload: () => void; onCopyUrl: () => void; downloading: boolean; copied: boolean;
+  onDownload: () => void; onCopyUrl: () => void; downloading: boolean; copied: boolean; isKo: boolean;
 }) {
   const [imgError, setImgError] = useState(false);
   const imgUrl = `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
@@ -90,7 +91,7 @@ function ThumbnailCard({
             opacity: downloading ? 0.7 : 1,
           }}
         >
-          {downloading ? '다운로드 중...' : '⬇ 다운로드'}
+          {isKo ? (downloading ? '다운로드 중...' : '⬇ 다운로드') : (downloading ? 'Downloading...' : '⬇ Download')}
         </button>
         <button
           onClick={onCopyUrl}
@@ -100,7 +101,7 @@ function ThumbnailCard({
             cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
           }}
         >
-          {copied ? '✓ 복사됨' : '📋 URL 복사'}
+          {isKo ? (copied ? '✓ 복사됨' : '📋 URL 복사') : (copied ? '✓ Copied' : '📋 Copy URL')}
         </button>
       </div>
     </div>
@@ -109,6 +110,7 @@ function ThumbnailCard({
 
 /* ─── Main Client Component ─── */
 export default function YtThumbnailClient() {
+  const isKo = useLocale() === 'ko';
   const [input, setInput] = useState('');
   const [videoId, setVideoId] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -118,13 +120,13 @@ export default function YtThumbnailClient() {
   const handleExtract = useCallback(() => {
     const id = extractVideoId(input);
     if (!id) {
-      setError('유효한 YouTube URL 또는 11자리 영상 ID를 입력해주세요.');
+      setError(isKo ? '유효한 YouTube URL 또는 11자리 영상 ID를 입력해주세요.' : 'Please enter a valid YouTube URL or an 11-character video ID.');
       setVideoId(null);
       return;
     }
     setVideoId(id);
     setError('');
-  }, [input]);
+  }, [input, isKo]);
 
   const handleDownload = async (quality: string) => {
     if (!videoId) return;
@@ -139,7 +141,7 @@ export default function YtThumbnailClient() {
       a.click();
       URL.revokeObjectURL(a.href);
     } catch {
-      alert('다운로드에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      alert(isKo ? '다운로드에 실패했습니다. 잠시 후 다시 시도해주세요.' : 'Download failed. Please try again in a moment.');
     } finally {
       setDownloading('');
     }
@@ -172,18 +174,20 @@ export default function YtThumbnailClient() {
         }}>
           <Youtube size={40} color="#8b5cf6" />
         </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>유튜브 썸네일 추출기</h1>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{isKo ? '유튜브 썸네일 추출기' : 'YouTube Thumbnail Downloader'}</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          YouTube URL만 입력하면 MQ·HQ·SD·MaxRes 전 화질 썸네일을 즉시 추출·다운로드합니다.
+          {isKo
+            ? 'YouTube URL만 입력하면 MQ·HQ·SD·MaxRes 전 화질 썸네일을 즉시 추출·다운로드합니다.'
+            : 'Paste any YouTube URL to instantly extract and download its thumbnail in every quality: MQ, HQ, SD, and MaxRes.'}
         </p>
       </header>
 
       {/* Input Panel */}
       <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <label style={labelStyle}>YouTube URL 또는 영상 ID</label>
+        <label style={labelStyle}>{isKo ? 'YouTube URL 또는 영상 ID' : 'YouTube URL or video ID'}</label>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: '200px' }}>
-            <Input value={input} onChange={setInput} onEnter={handleExtract} />
+            <Input value={input} onChange={setInput} onEnter={handleExtract} isKo={isKo} />
           </div>
           <button
             onClick={handleExtract}
@@ -193,12 +197,14 @@ export default function YtThumbnailClient() {
               cursor: 'pointer', fontWeight: 700, fontSize: '0.95rem', whiteSpace: 'nowrap',
             }}
           >
-            썸네일 추출
+            {isKo ? '썸네일 추출' : 'Extract Thumbnail'}
           </button>
         </div>
         {error && <p style={{ color: '#f87171', marginTop: '0.5rem', fontSize: '0.85rem' }}>{error}</p>}
         <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-          지원: youtube.com/watch?v=… · youtu.be/… · shorts/… · 11자리 영상 ID
+          {isKo
+            ? '지원: youtube.com/watch?v=… · youtu.be/… · shorts/… · 11자리 영상 ID'
+            : 'Supported: youtube.com/watch?v=… · youtu.be/… · shorts/… · 11-character video ID'}
         </p>
       </div>
 
@@ -222,6 +228,7 @@ export default function YtThumbnailClient() {
               onCopyUrl={() => handleCopyUrl(q.key)}
               downloading={downloading === q.key}
               copied={copiedKey === q.key}
+              isKo={isKo}
             />
           ))}
         </div>
@@ -231,13 +238,16 @@ export default function YtThumbnailClient() {
       {!videoId && (
         <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📸</div>
-          <p>YouTube URL을 입력하면 썸네일이 여기에 표시됩니다</p>
+          <p>{isKo ? 'YouTube URL을 입력하면 썸네일이 여기에 표시됩니다' : 'Enter a YouTube URL and the thumbnails will appear here'}</p>
         </div>
       )}
 
       {/* Ad placeholder */}
 
-      <ShareBar title="유튜브 썸네일 추출기" description="YouTube URL로 모든 화질 썸네일을 즉시 추출" />
+      <ShareBar
+        title={isKo ? '유튜브 썸네일 추출기' : 'YouTube Thumbnail Downloader'}
+        description={isKo ? 'YouTube URL로 모든 화질 썸네일을 즉시 추출' : 'Extract YouTube thumbnails in every quality instantly from a URL'}
+      />
 
       <RelatedTools toolId="utilities/utility/yt-thumbnail" />
 

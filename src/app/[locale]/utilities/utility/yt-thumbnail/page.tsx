@@ -52,11 +52,39 @@ const faqSchema = {
   ],
 };
 
-export default function YtThumbnailPage() {
+const softwareSchemaEn = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'YouTube Thumbnail Downloader',
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  url: 'https://www.theutilhub.com/en/utilities/utility/yt-thumbnail',
+  description: 'Free online tool to instantly extract and download YouTube video thumbnails in MQ, HQ, SD, and Max Resolution quality levels.',
+};
+
+const faqSchemaEn = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'Is it legal to download YouTube thumbnails?', acceptedAnswer: { '@type': 'Answer', text: "Thumbnails are copyrighted by the creator who uploaded the video. Downloading for personal use, analysis, or reference is generally acceptable. However, commercial use or redistribution without the rights holder's permission may infringe copyright laws." } },
+    { '@type': 'Question', name: 'Why is the Max Resolution thumbnail missing?', acceptedAnswer: { '@type': 'Answer', text: 'Not every YouTube video has a Max Resolution (1280×720) thumbnail. Older videos or those uploaded at lower resolutions may only have SD or HQ as their highest quality.' } },
+    { '@type': 'Question', name: 'Can I extract thumbnails from YouTube Shorts or playlists?', acceptedAnswer: { '@type': 'Answer', text: 'YouTube Shorts use the same video ID format as regular videos, so thumbnails can be extracted normally. Playlist cover images, channel art, and community post images are not currently supported.' } },
+    { '@type': 'Question', name: 'Can I use this result as official data?', acceptedAnswer: { '@type': 'Answer', text: 'Results are for reference only. Please consult a professional or official source for accurate figures.' } },
+  ],
+};
+
+export default async function YtThumbnailPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const isKo = locale === 'ko';
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? softwareSchema : softwareSchemaEn) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? faqSchema : faqSchemaEn) }} />
       <YtThumbnailClient />
     </>
   );

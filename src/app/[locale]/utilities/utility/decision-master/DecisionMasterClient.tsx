@@ -20,7 +20,7 @@ const WHEEL_COLORS = [
 ];
 
 function WheelMode({ isKo }: { isKo: boolean }) {
-  const [items, setItems] = useState(['선택지 1', '선택지 2', '선택지 3', '선택지 4']);
+  const [items, setItems] = useState(isKo ? ['선택지 1', '선택지 2', '선택지 3', '선택지 4'] : ['Option 1', 'Option 2', 'Option 3', 'Option 4']);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState<string | null>(null);
@@ -318,8 +318,8 @@ const MAX_LADDER = 6;
 
 function LadderMode({ isKo }: { isKo: boolean }) {
   const [count, setCount] = useState(4);
-  const [names, setNames] = useState(['철수', '영희', '민준', '지아']);
-  const [prizes, setPrizes] = useState(['1등', '2등', '꽝', '3등']);
+  const [names, setNames] = useState(isKo ? ['철수', '영희', '민준', '지아'] : ['Alex', 'Ben', 'Chris', 'Dana']);
+  const [prizes, setPrizes] = useState(isKo ? ['1등', '2등', '꽝', '3등'] : ['1st', '2nd', 'Lose', '3rd']);
   const [runIdx, setRunIdx] = useState<number | null>(null);
   const [paths, setPaths] = useState<Array<Array<{ x: number; y: number }>>>([]);
   const [results, setResults] = useState<string[]>([]);
@@ -458,11 +458,11 @@ function LadderMode({ isKo }: { isKo: boolean }) {
     const c = Math.max(2, Math.min(MAX_LADDER, n));
     setCount(c);
     setNames(prev => {
-      const def = ['철수','영희','민준','지아','민호','수진'];
+      const def = isKo ? ['철수','영희','민준','지아','민호','수진'] : ['Alex','Ben','Chris','Dana','Eli','Fay'];
       return Array.from({ length: c }, (_, i) => prev[i] ?? def[i] ?? `P${i+1}`);
     });
     setPrizes(prev => {
-      const def = ['1등','2등','꽝','3등','꽝','4등'];
+      const def = isKo ? ['1등','2등','꽝','3등','꽝','4등'] : ['1st','2nd','Lose','3rd','Lose','4th'];
       return Array.from({ length: c }, (_, i) => prev[i] ?? def[i] ?? `${i+1}`);
     });
     setGenerated(false);

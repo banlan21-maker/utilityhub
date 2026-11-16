@@ -150,7 +150,7 @@
     },
     "metaTitle": "Everyday Utilities — Unit Converter, Image Resizer, GIF Maker & Engineering Calculators | Utility Hub",
     "metaDescription": "Free everyday utilities: unit converter, image resizer, GIF maker, YouTube thumbnail downloader, lottery number generator, plus field calculators for wire size, pipe offsets, cable tray fill and metal weight.",
-    "intro": "This collection ranges from small daily chores to on-site engineering work. Convert units, resize images to exact dimensions, and grab the full-resolution thumbnail of any YouTube video. Electricians and pipefitters can use the field calculators to size wires by ampacity, work out elbow offsets, check cable tray fill ratios and estimate the weight of steel plates and pipes."
+    "intro": "General utilities plus a growing set of calculators for construction and trades work. Convert length, weight, temperature and Korean pyeong to square metres, resize, edit and animate images into GIFs, and grab every resolution of a YouTube thumbnail. For the job site, the Wire Size Calculator picks conductor cross-sections from load current, distance and voltage drop, the Cable Tray Calculator checks fill against tray capacity, the Piping Calculator covers pipe schedules, drain slopes, hydrostatic test volumes and flow velocity, and the Pipe Offset Calculator gives cut lengths with elbow take-offs. The Metal Weight Calculator handles H-beams, channels, pipes and plates with paint area and cost, and the Tile & Wallpaper Calculator counts boxes, rolls and waste. Between tasks you can play the Daily Word Puzzle, Grid Poker or Persona Build, or let Decision Master choose for you."
   },
   "TextCounter": {
     "title": "Character & Byte Counter",
@@ -205,7 +205,7 @@
     },
     "metaTitle": "Free Document Tools — HWP to PDF, Image to PDF, PDF OCR & Redaction | Utility Hub",
     "metaDescription": "Free document tools that run in your browser: convert Korean HWP files to PDF, merge images into a PDF, make scanned PDFs searchable with OCR, and redact personal data in PDFs. Files never leave your device.",
-    "intro": "These tools cover the everyday document chores: opening a Korean HWP file without Hangul Office, turning phone photos into a single PDF, making a scanned contract searchable with Ctrl+F, and blacking out ID numbers before you send a file. Every conversion happens inside your browser, so sensitive documents are never uploaded to a server."
+    "intro": "Document tools for the small but annoying jobs that come up around PDFs. Convert Korean HWP word-processor files to PDF so recipients without Hancom Office can open them, and combine phone photos or scanned images into a single PDF in the order you choose. The PDF OCR Converter adds an invisible text layer to scanned contracts and receipts, so Ctrl+F search, copy and paste finally work, with Korean, English, Japanese and Chinese recognition. The PDF Masking Tool blacks out resident registration numbers, phone numbers and account numbers before you send a document by email. Files are processed inside your browser and are never uploaded to a server, which matters when the paperwork contains personal or company information. Typical uses include submitting forms to public offices, sharing quotes with clients and keeping searchable copies of paper records."
   },
   "MarketingBoard": {
     "subtitle": "AI-powered marketing content creation and automation tools.",
@@ -231,7 +231,7 @@
     },
     "metaTitle": "Marketing Tools — QR Code Generator, URL Shortener, Hashtags & Quiz Builder | Utility Hub",
     "metaDescription": "Free marketing tools for small teams: a QR code generator, URL shortener, hashtag generator, an OSMU formatter that adapts one post for every social network, and a shareable quiz builder.",
-    "intro": "Everyday promotion tasks live here: create a QR code for a flyer or business card, shorten long campaign links, and get hashtag suggestions that match your post. The OSMU formatter rewrites one blog post to fit the length limits of Instagram, X and Threads, and quizzes made with the quiz builder can be shared with a single link to boost follower engagement."
+    "intro": "Marketing tools for creators and small teams who publish on several channels. The OSMU Formatter takes one piece of writing and reshapes it for Instagram, X, blogs and newsletters — a hook in the first two sentences, line breaks that survive each app and suggested hashtags. The Hashtag Generator proposes a mix of broad and niche tags for a topic, the QR Code Generator creates codes for URLs, text, Wi-Fi and contact cards that you can print on flyers and packaging, and the URL Shortener turns long campaign links into short ones that fit in a post or SMS. The Quiz Builder makes a personality or knowledge quiz that visitors can take and share, a reliable way to grow engagement. All tools are free, need no sign-up and work in the browser, so drafts and customer data stay with you."
   },
   "FinanceBoard": {
     "subtitle": "Financial utilities for payments, exchange rates, and more.",
@@ -277,7 +277,7 @@
     },
     "metaTitle": "Finance Calculators — VAT, Salary, Interest, Exchange Rate & Invoices | Utility Hub",
     "metaDescription": "Free finance calculators: VAT and sales tax, take-home salary, simple and compound interest, live currency exchange rates, crypto profit, freelance hourly rates and a one-minute invoice maker. No login needed.",
-    "intro": "Whether you are splitting a price into net amount and VAT, working out a freelance hourly rate from an income goal, or comparing simple and compound interest on savings, the calculators here give you the number in seconds. The currency converter covers 20 currencies with a 30-day trend chart, and the invoice maker produces a clean PDF quote in about a minute. Results are estimates; confirm tax figures with a qualified professional."
+    "intro": "Money calculators for freelancers, small businesses and everyday decisions. Split a price into supply value and 10% VAT or work back from a total, and calculate the 3.3% withholding that Korean clients deduct from freelance fees. The Salary Take-Home Pay Calculator applies national pension, health and employment insurance and income tax to a gross salary, while the Interest Calculator compares simple and monthly compound growth for savings or loans. Percentage tools cover discounts, rates of change and reverse calculations. The Freelance Rate Calculator turns an income goal and fixed costs into an hourly rate, and the Invoice Maker produces a printable invoice or quote you can share as a link. For investors, the Currency Converter shows 20 currencies with a 30-day chart and the Crypto Profit Calculator includes fees. Results are estimates; check official rates before filing taxes."
   },
   "Tax33": {
     "title": "🧾 Korean Freelancer 3.3% Tax Calculator",
@@ -511,7 +511,7 @@
     },
     "metaTitle": "Productivity Tools — Pomodoro Timer, Bulk File Renamer & Excel Mapper | Utility Hub",
     "metaDescription": "Free productivity tools: a Pomodoro focus timer, a bulk file renamer with numbering and regex, an Excel column mapper, a world time zone converter and a live meeting cost meter. Runs in your browser.",
-    "intro": "These tools are built to cut down repetitive work. Rename hundreds of files at once using dates, sequence numbers or regular expressions, map columns between Excel sheets with different layouts, and keep a steady work rhythm with 25-minute Pomodoro sessions. Planning a call across time zones? Use the world time converter, and check the meeting cost meter when a meeting starts to run long."
+    "intro": "Productivity tools that save minutes every day and hours every month. The Smart Bulk Renamer renames hundreds of files at once with find-and-replace, numbering, dates and regular expressions, and the Excel Column Mapper reshapes spreadsheets into the column layout another system expects. The Pomodoro Timer runs 25-minute focus blocks with breaks, the World Time Converter lines up business hours across Seoul, London, New York and other cities to find a meeting slot, and the Meeting Cost Calculator shows in real time how much a meeting costs based on attendees' pay. Bomb Notepad keeps a scratch note that deletes itself after a timer. The Solar Calculator estimates rooftop solar output, bill savings and payback with measured plant data, and also models power-plant revenue and IRR. All tools run locally in your browser, so files and notes stay on your device."
   },
   "Pomodoro": {
     "title": "🍅 Pomodoro Timer",
@@ -580,7 +580,7 @@
     },
     "metaTitle": "Design Tools — Color Palette, Logo & Favicon Maker, Font Preview | Utility Hub",
     "metaDescription": "Free design tools: generate harmonious color palettes and check WCAG contrast, create text logos and favicons, preview Google Fonts, batch-resize photos and visualize bathroom tiles. No design software required.",
-    "intro": "These tools help you produce polished visuals without a design background. Build a full palette from a single brand color and check it against WCAG contrast rules, generate a text logo plus 16, 32 and 180 px favicons in one go, and preview Google Fonts with your own copy. You can also batch-edit product photos to the same size or preview tile combinations before a bathroom remodel."
+    "intro": "Design tools for people who need good-looking results without opening a full design suite. Generate harmonious colour palettes and check text contrast against WCAG 2.1 AA and AAA ratios, preview Google Fonts with your own sentence before choosing one, and build a text-based logo and favicon set in the sizes browsers and phones expect. The Photo Batch Editor resizes and filters many photos at once for a blog or online shop, and the Bubble Pop Art Text Generator exports playful lettering as a transparent PNG. The Formation Planner lays out players or performers on a field or stage and saves the plan as an image. The Bathroom Tile Visualizer lays photo-real tiles on your own bathroom photo at true scale and perspective, keeping the original lighting, with grout, layouts and tile counts. Everything works in the browser, so images are never uploaded."
   },
   "FontCompare": {
     "title": "🔤 Multilingual Font Comparer",
@@ -608,7 +608,12 @@
     "large_text": "Large Text (18px+)",
     "preview": "Live Preview",
     "trending_title": "Trending Palettes",
-    "trending_hint": "Click any palette to apply instantly"
+    "trending_hint": "Click any palette to apply instantly",
+    "wcag_guide_title": "WCAG 2.1 Guidelines",
+    "wcag_aa_normal": "AA normal text: 4.5:1 or higher",
+    "wcag_aa_large": "AA large text (18px+): 3:1 or higher",
+    "wcag_aaa_normal": "AAA normal text: 7:1 or higher",
+    "wcag_aaa_large": "AAA large text: 4.5:1 or higher"
   },
   "LogoGenerator": {
     "title": "🎨 AI Logo & Favicon Package Generator",
@@ -660,7 +665,7 @@
     },
     "metaTitle": "Web Performance Tools — TTFB, Core Web Vitals & SLA Calculator | Utility Hub",
     "metaDescription": "Free browser-based web performance tools: measure TTFB, check Core Web Vitals (LCP, CLS, INP), calculate SLA uptime and allowed downtime, and estimate your website carbon footprint. No sign-up required.",
-    "intro": "Slow pages lose visitors within seconds and drag down search rankings. This category collects tools for measuring server response time (TTFB), checking the Core Web Vitals scores Google uses as a ranking signal, and converting SLA targets such as 99.9% or 99.99% into the exact downtime they allow per month. Use them to audit a live site or to verify the uptime your hosting provider promises."
+    "intro": "These tools answer one question: is your website fast and reliable enough? The TTFB Checker measures how long a server takes to send the first byte, the earliest warning sign of a slow host, cold cache or overloaded database. The Core Web Vitals Checker scores LCP, INP and CLS against Google's thresholds of 2.5 seconds, 200 milliseconds and 0.1, so you can see which metric is costing you search visibility. The SLA Uptime Calculator turns a promised availability such as 99.9% into allowed downtime per day, month and year — about 43 minutes a month — and back again, which helps when you compare hosting plans or write a service agreement. The Carbon Footprint Calculator estimates the emissions of everyday travel, electricity and food so a team can set realistic reduction goals. Everything runs in your browser; no account or installation is needed."
   },
   "CarbonFootprint": {
     "title": "Website Carbon Footprint Calculator",
@@ -778,7 +783,7 @@
     },
     "metaTitle": "Lifestyle & Health Calculators — BMI, Age, Countdown, GPA & Personality Tests | Utility Hub",
     "metaDescription": "Free lifestyle and health tools: BMI calculator, exact age calculator, countdown timer, GPA calculator, air conditioner sizing, supplement cost-per-dose analysis, plus MBTI-style personality tests and fun quizzes.",
-    "intro": "This category gathers the calculations people look up in everyday life. Check your BMI from height and weight, count the days until an anniversary or exam, work out your exact age, and pick the right air conditioner capacity for a room. The supplement analyzer compares real cost per daily dose, and personality tests and quizzes give you something fun to share with friends."
+    "intro": "Everyday calculators and small games for health, home, hobbies and fun. Check BMI and a healthy weight range, count days to an exam or anniversary, convert international and Korean age, and work out a college GPA on 4.5 or 4.3 scales. Pet owners can estimate daily calories for dogs and cats, aquarium keepers can size tanks and stocking, and coffee lovers can dial in pour-over ratios and espresso extraction with SCA standards. The AC Size Calculator suggests air-conditioner capacity for a room, the Gym Plate Calculator loads a barbell to a target weight and the Supplement Cost Analyzer compares two products by price per day. For a break there are MBTI and Teto-Egen tests, a nickname generator, a daily fortune prompt, a 30-day challenge tracker, an apnea breathing trainer and a dual N-back memory game. Everything runs free in the browser."
   },
   "SecurityBoard": {
     "subtitle": "Security tools for privacy protection and safe internet usage.",
@@ -808,7 +813,7 @@
     },
     "metaTitle": "Security & Privacy Tools — Password Generator, Data Masking & URL Checker | Utility Hub",
     "metaDescription": "Free security and privacy tools: a strong password generator, automatic masking of personal data in text, a URL safety checker for suspicious links, self-destructing secret notes and a robots.txt generator that blocks AI crawlers.",
-    "intro": "These tools help you protect personal data. Generate a unique 16-plus character password for every account, mask phone numbers, emails and ID numbers hidden in customer lists or logs, and check a suspicious link before you open it. Site owners can also generate robots.txt rules that block AI training crawlers such as GPTBot in a few clicks."
+    "intro": "Privacy and security tools that work entirely in your browser, so the sensitive text you paste never leaves your device. Privacy Masking hides names, phone numbers, email addresses, ID and card numbers in a block of text before you share a screenshot or send a document. The Password Generator creates long random passwords with the character sets a site requires and estimates how long they would resist an offline attack. The URL Safety Checker inspects a link for phishing patterns such as look-alike domains, IP addresses, misleading subdomains and risky shortener redirects. Burn Message creates a one-time note that is destroyed after it is read, and Peek-Proof Editor blurs everything except the line you are typing to stop shoulder surfing in cafés and offices. Block AI Crawlers writes robots.txt rules, meta tags and headers to keep AI training bots away from your site."
   },
   "Redact": {
     "title": "🔏 Personal Info Redactor",
@@ -896,7 +901,8 @@
     "foodKcal": "Food Calories (kcal/kg)",
     "kcalPerDay": "kcal/day",
     "gramPerDay": "g/day",
-    "notice": "* Results are for reference. Actual amounts may vary by health and food type."
+    "notice": "* Results are for reference. Actual amounts may vary by health and food type.",
+    "emptyResult": "Enter your pet's details and press the Calculate button."
   },
   "BmiWater": {
     "title": "💧 BMI & Daily Water Intake",
@@ -944,7 +950,7 @@
     },
     "metaTitle": "Developer Tools — JSON Formatter, Regex Tester & Password Strength Checker | Utility Hub",
     "metaDescription": "Free browser-based developer tools: format, validate and minify JSON, test regular expressions in real time, check password strength, decode resistor color bands and size grounding conductors.",
-    "intro": "These are the tools developers keep open while coding and debugging. Pretty-print minified JSON from an API response and pinpoint syntax errors, and watch exactly which strings a regular expression matches as you type. For hardware work, decode resistor color bands into resistance values and size grounding conductors under the Korean Electrical Code (KEC)."
+    "intro": "These are the tools developers keep open while coding and debugging. Pretty-print minified JSON from an API response, validate it and pinpoint the exact line of a syntax error, and watch which strings a regular expression matches as you type, with capture groups and flags highlighted. The Password Strength Checker estimates entropy and crack time for a password without sending it anywhere, useful when you design sign-up rules. For hardware and electrical work, the Resistor Calculator decodes 4-, 5- and 6-band colour codes into resistance and tolerance, and the KEC Grounding Calculator sizes protective and grounding conductors under the Korean Electrical Code. Each tool runs instantly in the browser with no installation, so you can use it on any machine, including a locked-down work laptop. Bookmark the ones you use most and they stay one click away."
   },
   "JsonFormatter": {
     "title": "🗂️ JSON Formatter & Viewer",

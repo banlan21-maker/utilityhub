@@ -18,6 +18,8 @@ export async function generateMetadata({
   return {
     title,
     description,
+    // 사용자 의견 목록이라 내용이 짧고 자주 바뀐다: 색인하지 않고 링크만 따라가게
+    robots: { index: false, follow: true },
     alternates: {
       canonical,
       languages: {

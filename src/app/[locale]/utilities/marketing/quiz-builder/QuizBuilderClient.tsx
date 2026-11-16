@@ -36,7 +36,24 @@ export interface QuizDef {
 function uid() { return Math.random().toString(36).slice(2, 9); }
 export function encodeQuiz(q: QuizDef) { return btoa(encodeURIComponent(JSON.stringify(q))); }
 
-function makeDefault(): QuizDef {
+function makeDefault(isKo: boolean): QuizDef {
+  if (!isKo) {
+    return {
+      title: "What's your developer type?",
+      description: 'Discover your coding style in 5 questions',
+      coverEmoji: '🧑‍💻',
+      resultTypes: [
+        { id: 'A', emoji: '🎨', title: 'Frontend Artisan', description: 'Obsessed with flawless UI and every single pixel.' },
+        { id: 'B', emoji: '⚙️', title: 'Backend Master', description: 'Passionate about solid logic and system design.' },
+      ],
+      questions: [
+        { id: uid(), text: 'Which project stage would you most enjoy on a weekend?', options: [
+          { id: uid(), text: 'Designing the UI in Figma', typeId: 'A' },
+          { id: uid(), text: 'Modeling the database tables', typeId: 'B' },
+        ]},
+      ],
+    };
+  }
   return {
     title: '당신의 개발 유형은?',
     description: '5가지 질문으로 알아보는 나의 개발 스타일',
@@ -60,7 +77,7 @@ export default function QuizBuilderClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  const [quiz, setQuiz] = useState<QuizDef>(makeDefault);
+  const [quiz, setQuiz] = useState<QuizDef>(() => makeDefault(isKo));
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -76,7 +93,7 @@ export default function QuizBuilderClient() {
   const addRT = () => {
     if (quiz.resultTypes.length >= 4) return;
     const id = String.fromCharCode(65 + quiz.resultTypes.length);
-    setQuiz(p => ({ ...p, resultTypes: [...p.resultTypes, { id, emoji: '✨', title: '새 유형 ' + id, description: '' }] }));
+    setQuiz(p => ({ ...p, resultTypes: [...p.resultTypes, { id, emoji: '✨', title: (isKo ? '새 유형 ' : 'New Type ') + id, description: '' }] }));
   };
 
   const removeRT = (id: string) => {

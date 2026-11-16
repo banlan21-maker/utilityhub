@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import SeoSection from '@/app/components/SeoSection';
@@ -11,32 +11,32 @@ import { Lunar, Solar } from 'lunar-javascript';
 
 // 천간 (天干)
 const HEAVENLY_STEMS = [
-  { char: '甲', name: '갑' },
-  { char: '乙', name: '을' },
-  { char: '丙', name: '병' },
-  { char: '丁', name: '정' },
-  { char: '戊', name: '무' },
-  { char: '己', name: '기' },
-  { char: '庚', name: '경' },
-  { char: '辛', name: '신' },
-  { char: '壬', name: '임' },
-  { char: '癸', name: '계' },
+  { char: '甲', name: '갑', en: 'Jia' },
+  { char: '乙', name: '을', en: 'Yi' },
+  { char: '丙', name: '병', en: 'Bing' },
+  { char: '丁', name: '정', en: 'Ding' },
+  { char: '戊', name: '무', en: 'Wu' },
+  { char: '己', name: '기', en: 'Ji' },
+  { char: '庚', name: '경', en: 'Geng' },
+  { char: '辛', name: '신', en: 'Xin' },
+  { char: '壬', name: '임', en: 'Ren' },
+  { char: '癸', name: '계', en: 'Gui' },
 ];
 
 // 지지 (地支)
 const EARTHLY_BRANCHES = [
-  { char: '子', name: '자' },
-  { char: '丑', name: '축' },
-  { char: '寅', name: '인' },
-  { char: '卯', name: '묘' },
-  { char: '辰', name: '진' },
-  { char: '巳', name: '사' },
-  { char: '午', name: '오' },
-  { char: '未', name: '미' },
-  { char: '申', name: '신' },
-  { char: '酉', name: '유' },
-  { char: '戌', name: '술' },
-  { char: '亥', name: '해' },
+  { char: '子', name: '자', en: 'Zi' },
+  { char: '丑', name: '축', en: 'Chou' },
+  { char: '寅', name: '인', en: 'Yin' },
+  { char: '卯', name: '묘', en: 'Mao' },
+  { char: '辰', name: '진', en: 'Chen' },
+  { char: '巳', name: '사', en: 'Si' },
+  { char: '午', name: '오', en: 'Wu' },
+  { char: '未', name: '미', en: 'Wei' },
+  { char: '申', name: '신', en: 'Shen' },
+  { char: '酉', name: '유', en: 'You' },
+  { char: '戌', name: '술', en: 'Xu' },
+  { char: '亥', name: '해', en: 'Hai' },
 ];
 
 interface SajuData {
@@ -51,6 +51,7 @@ type AnalysisType = 'general' | 'wealth' | 'love' | 'business';
 
 export default function FortunePromptClient() {
   const t = useTranslations('AiSajuPrompt');
+  const isKo = useLocale() === 'ko';
 
   // 입력 상태
   const [gender, setGender] = useState<'male' | 'female'>('male');
@@ -108,6 +109,7 @@ export default function FortunePromptClient() {
         const chars = ganZhi.split('');
         const stem = HEAVENLY_STEMS.find(s => s.char === chars[0]);
         const branch = EARTHLY_BRANCHES.find(b => b.char === chars[1]);
+        if (!isKo) return `${chars[0]}${chars[1]} (${stem?.en}-${branch?.en})`;
         return `${chars[0]}${chars[1]}(${stem?.name}${branch?.name})`;
       };
 
@@ -115,19 +117,44 @@ export default function FortunePromptClient() {
         yearPillar: formatGanZhi(yearGanZhi),
         monthPillar: formatGanZhi(monthGanZhi),
         dayPillar: formatGanZhi(dayGanZhi),
-        hourPillar: hour === 'unknown' ? '모름' : formatGanZhi(hourGanZhi),
+        hourPillar: hour === 'unknown' ? (isKo ? '모름' : 'Unknown') : formatGanZhi(hourGanZhi),
       };
 
       setSajuData(saju);
       generatePrompt(saju);
     } catch (error) {
       console.error('사주 계산 오류:', error);
-      alert('입력한 날짜가 올바르지 않습니다. 다시 확인해주세요.');
+      alert(isKo ? '입력한 날짜가 올바르지 않습니다. 다시 확인해주세요.' : 'The date you entered is not valid. Please check it and try again.');
     }
   };
 
   // AI 프롬프트 생성 함수
   const generatePrompt = (saju: SajuData) => {
+    if (!isKo) {
+      const analysisTypeTextEn = {
+        general: 'Overall fortune',
+        wealth: 'Wealth & career',
+        love: 'Love & marriage',
+        business: 'Business & marketing strategy',
+      }[analysisType];
+      const hourTextEn = hour === 'unknown'
+        ? 'My Hour Pillar is unknown.'
+        : `My Hour Pillar is ${saju.hourPillar}.`;
+      setGeneratedPrompt(`You are a top Saju (Four Pillars of Destiny / BaZi) expert with 30 years of experience, as well as a thoughtful counselor.
+
+My Four Pillars are as follows:
+- Year Pillar (年柱): ${saju.yearPillar}
+- Month Pillar (月柱): ${saju.monthPillar}
+- Day Pillar (日柱): ${saju.dayPillar}
+- Hour Pillar (時柱): ${saju.hourPillar}
+
+I am ${gender === 'male' ? 'male' : 'female'}. ${hourTextEn}
+
+Based on this data, analyze the flow of my fortune for 2026 and give me detailed, warm advice on the topic I chose: [${analysisTypeTextEn}].
+
+Please avoid difficult jargon and explain with modern analogies and concrete, actionable steps for improving my luck. Keep the advice encouraging yet realistic.`);
+      return;
+    }
     const genderText = gender === 'male' ? '남성' : '여성';
     const analysisTypeText = {
       general: '전체 운세',
@@ -280,7 +307,7 @@ export default function FortunePromptClient() {
                   style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
                 >
                   {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                    <option key={m} value={m}>{m}월</option>
+                    <option key={m} value={m}>{isKo ? `${m}월` : m}</option>
                   ))}
                 </select>
               </div>
@@ -295,7 +322,7 @@ export default function FortunePromptClient() {
                   style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
                 >
                   {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
-                    <option key={d} value={d}>{d}일</option>
+                    <option key={d} value={d}>{isKo ? `${d}일` : d}</option>
                   ))}
                 </select>
               </div>
@@ -314,18 +341,18 @@ export default function FortunePromptClient() {
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)' }}
             >
               <option value="unknown">{t('unknownTime')}</option>
-              <option value={0}>23:00-01:00 (子時/자시)</option>
-              <option value={1}>01:00-03:00 (丑時/축시)</option>
-              <option value={2}>03:00-05:00 (寅時/인시)</option>
-              <option value={3}>05:00-07:00 (卯時/묘시)</option>
-              <option value={4}>07:00-09:00 (辰時/진시)</option>
-              <option value={5}>09:00-11:00 (巳時/사시)</option>
-              <option value={6}>11:00-13:00 (午時/오시)</option>
-              <option value={7}>13:00-15:00 (未時/미시)</option>
-              <option value={8}>15:00-17:00 (申時/신시)</option>
-              <option value={9}>17:00-19:00 (酉時/유시)</option>
-              <option value={10}>19:00-21:00 (戌時/술시)</option>
-              <option value={11}>21:00-23:00 (亥時/해시)</option>
+              <option value={0}>{isKo ? '23:00-01:00 (子時/자시)' : '23:00–01:00 (Rat hour, 子時)'}</option>
+              <option value={1}>{isKo ? '01:00-03:00 (丑時/축시)' : '01:00–03:00 (Ox hour, 丑時)'}</option>
+              <option value={2}>{isKo ? '03:00-05:00 (寅時/인시)' : '03:00–05:00 (Tiger hour, 寅時)'}</option>
+              <option value={3}>{isKo ? '05:00-07:00 (卯時/묘시)' : '05:00–07:00 (Rabbit hour, 卯時)'}</option>
+              <option value={4}>{isKo ? '07:00-09:00 (辰時/진시)' : '07:00–09:00 (Dragon hour, 辰時)'}</option>
+              <option value={5}>{isKo ? '09:00-11:00 (巳時/사시)' : '09:00–11:00 (Snake hour, 巳時)'}</option>
+              <option value={6}>{isKo ? '11:00-13:00 (午時/오시)' : '11:00–13:00 (Horse hour, 午時)'}</option>
+              <option value={7}>{isKo ? '13:00-15:00 (未時/미시)' : '13:00–15:00 (Goat hour, 未時)'}</option>
+              <option value={8}>{isKo ? '15:00-17:00 (申時/신시)' : '15:00–17:00 (Monkey hour, 申時)'}</option>
+              <option value={9}>{isKo ? '17:00-19:00 (酉時/유시)' : '17:00–19:00 (Rooster hour, 酉時)'}</option>
+              <option value={10}>{isKo ? '19:00-21:00 (戌時/술시)' : '19:00–21:00 (Dog hour, 戌時)'}</option>
+              <option value={11}>{isKo ? '21:00-23:00 (亥時/해시)' : '21:00–23:00 (Pig hour, 亥時)'}</option>
             </select>
           </div>
 

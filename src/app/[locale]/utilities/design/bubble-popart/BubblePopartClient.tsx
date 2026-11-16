@@ -10,12 +10,12 @@ import ShareBar from '@/app/components/ShareBar';
 import s from './bubble-popart.module.css';
 
 const BG_PRESETS = [
-  { name: '노랑', hex: '#FFD93D' },
-  { name: '하늘', hex: '#74B9FF' },
-  { name: '연두', hex: '#A8E6CF' },
-  { name: '핑크', hex: '#FFB3C6' },
-  { name: '흰색', hex: '#FFFFFF' },
-  { name: '검정', hex: '#1a1a1a' },
+  { name: '노랑', en: 'Yellow', hex: '#FFD93D' },
+  { name: '하늘', en: 'Sky Blue', hex: '#74B9FF' },
+  { name: '연두', en: 'Mint Green', hex: '#A8E6CF' },
+  { name: '핑크', en: 'Pink', hex: '#FFB3C6' },
+  { name: '흰색', en: 'White', hex: '#FFFFFF' },
+  { name: '검정', en: 'Black', hex: '#1a1a1a' },
 ];
 
 const MULTI_COLORS = [
@@ -40,7 +40,7 @@ export default function BubblePopartClient() {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
-  const [text, setText] = useState('예쁜글씨POP');
+  const [text, setText] = useState(isKo ? '예쁜글씨POP' : 'Hello POP');
   const [bgColor, setBgColor] = useState('#FFD93D');
   const [fontSize, setFontSize] = useState(110);
   const [sizePreset, setSizePreset] = useState(0);
@@ -349,7 +349,7 @@ export default function BubblePopartClient() {
                   className={`${s.colorDot} ${bgColor === c.hex ? s.colorDotActive : ''}`}
                   style={{ background: c.hex }}
                   onClick={() => setBgColor(c.hex)}
-                  aria-label={`배경 ${c.name}`}
+                  aria-label={isKo ? `배경 ${c.name}` : `${c.en} background`}
                 />
               ))}
               <div className={s.colorPickerWrap}>

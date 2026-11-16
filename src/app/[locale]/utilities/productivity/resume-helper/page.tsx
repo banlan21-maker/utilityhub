@@ -16,11 +16,12 @@ export async function generateMetadata({
   return {
     title,
     description,
+    // 한국어 전용 도구: 영문 페이지는 색인하지 않는다 (사이트맵에서도 제외)
+    robots: isKo ? undefined : { index: false, follow: true },
     alternates: {
       canonical,
       languages: {
         ko: 'https://www.theutilhub.com/ko/utilities/productivity/resume-helper',
-        en: 'https://www.theutilhub.com/en/utilities/productivity/resume-helper',
         'x-default': 'https://www.theutilhub.com/ko/utilities/productivity/resume-helper',
       },
     },

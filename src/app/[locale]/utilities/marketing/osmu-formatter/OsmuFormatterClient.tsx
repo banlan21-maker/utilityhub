@@ -268,17 +268,17 @@ export default function OsmuFormatterClient() {
             {activeTab === 'instagram' && (
               <>
                 <div className={s.osmu_result_card}>
-                  <div className={s.osmu_card_label}>💡 Hook (첫 두 문장)</div>
+                  <div className={s.osmu_card_label}>{isKo ? '💡 Hook (첫 두 문장)' : '💡 Hook (first two sentences)'}</div>
                   <div className={s.osmu_card_content}>{result.instagramHook || '...'}</div>
                   <button onClick={() => copy(result.instagramHook)} className={s.osmu_copy_button}><Copy size={16}/></button>
                 </div>
                 <div className={s.osmu_result_card} style={{ flex: 1 }}>
-                  <div className={s.osmu_card_label}>📝 인스타 전용 본문 (줄바꿈 최적화)</div>
+                  <div className={s.osmu_card_label}>{isKo ? '📝 인스타 전용 본문 (줄바꿈 최적화)' : '📝 Instagram Caption (line breaks optimized)'}</div>
                   <div className={s.osmu_card_content}>{result.instagram || '...'}</div>
                   <button onClick={() => copy(result.instagram)} className={s.osmu_copy_button}><Copy size={16}/></button>
                 </div>
                 <div className={s.osmu_result_card}>
-                  <div className={s.osmu_card_label}>#️⃣ 추천 해시태그</div>
+                  <div className={s.osmu_card_label}>{isKo ? '#️⃣ 추천 해시태그' : '#️⃣ Suggested Hashtags'}</div>
                   <div className={s.osmu_card_content} style={{ color: 'var(--primary)', fontWeight: 600 }}>{result.instagramHashtags || '#...'}</div>
                   <button onClick={() => copy(result.instagramHashtags)} className={s.osmu_copy_button}><Copy size={16}/></button>
                 </div>
@@ -315,7 +315,7 @@ export default function OsmuFormatterClient() {
                 </div>
 
                 <div className={s.osmu_result_card} style={{ flex: 1 }}>
-                  <div className={s.osmu_card_label}>📊 키워드 밀도 분석 (반복 단어)</div>
+                  <div className={s.osmu_card_label}>{isKo ? '📊 키워드 밀도 분석 (반복 단어)' : '📊 Keyword Density (repeated words)'}</div>
                   <div style={{ marginTop: '1rem' }}>
                     {result.blogStats.keywordDensity.slice(0, 5).map((item, i) => (
                       <div key={i} className={s.osmu_density_item}>
@@ -338,7 +338,7 @@ export default function OsmuFormatterClient() {
 
             {activeTab === 'shorts' && (
               <div className={s.osmu_result_card} style={{ flex: 1 }}>
-                <div className={s.osmu_card_label}>🎬 숏폼 스크립트 (15초 단위 가이드)</div>
+                <div className={s.osmu_card_label}>{isKo ? '🎬 숏폼 스크립트 (15초 단위 가이드)' : '🎬 Short-form Script (15-second segments)'}</div>
                 <div className={s.osmu_card_content} style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>
                   {result.shortsScript || '...'}
                 </div>
