@@ -14,7 +14,7 @@ const QUESTIONS = [
   { id: 4, tetoOption: 'A', egenOption: 'B' },
   { id: 5, tetoOption: 'A', egenOption: 'B' },
   { id: 6, tetoOption: 'A', egenOption: 'B' },
-  { id: 7, tetoOption: 'B', egenOption: 'A' }, // 반대 (상대방 성향에 끌림)
+  { id: 7, tetoOption: 'A', egenOption: 'B' }, // 반대 성향에 끌린다는 설계: 배려형(에겐) 상대에 끌리면 테토, 리더형(테토) 상대에 끌리면 에겐
   { id: 8, tetoOption: 'A', egenOption: 'B' },
   { id: 9, tetoOption: 'A', egenOption: 'B' },
   { id: 10, tetoOption: 'A', egenOption: 'B' },

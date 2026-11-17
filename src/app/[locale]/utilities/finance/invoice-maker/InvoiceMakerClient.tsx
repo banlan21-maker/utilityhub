@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { QRCodeSVG } from 'qrcode.react';
 import NavigationActions from '@/app/components/NavigationActions';
 import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import s from './ivm.module.css';
 import { SEO_KO, SEO_EN } from './content';
@@ -53,6 +54,26 @@ function saveSeqFromNo(invNo: string) {
   if (!m) return;
   try { localStorage.setItem(LS_LAST_INV, JSON.stringify({ dk: m[1], seq: parseInt(m[2], 10) })); }
   catch { /* ignore */ }
+}
+
+/**
+ * 소계·세금·합계 계산.
+ * - 한국 부가세 10%: 원 미만 절사 후 더함
+ * - 한국 원천징수 3.3%: 소득세 3%(10원 미만 절사) + 지방소득세 = 소득세의 10%(10원 미만 절사), 지급액에서 뺌
+ * - 미국 판매세: 센트 단위 반올림 후 더함
+ */
+function calcTotals(d: Pick<InvoiceData, 'items' | 'taxRate' | 'countryMode'>) {
+  const subtotal = d.items.reduce((sum, it) => sum + it.qty * it.unitPrice, 0);
+  if (d.countryMode === 'KR' && d.taxRate === 3.3) {
+    const incomeTax = Math.floor((subtotal * 0.03) / 10) * 10;
+    const localTax = Math.floor((incomeTax * 0.1) / 10) * 10;
+    const withholding = incomeTax + localTax;
+    return { subtotal, taxAmount: withholding, total: subtotal - withholding, withholding: true };
+  }
+  const taxAmount = d.countryMode === 'KR'
+    ? Math.floor(subtotal * (d.taxRate / 100))
+    : Math.round(subtotal * d.taxRate) / 100;
+  return { subtotal, taxAmount, total: subtotal + taxAmount, withholding: false };
 }
 
 const fmt = (n: number, mode: CountryMode) =>
@@ -140,12 +161,13 @@ export default function InvoiceMakerClient() {
     }));
 
   // ── Calculation ──
-  const subtotal = data.items.reduce((s, it) => s + it.qty * it.unitPrice, 0);
+  const { subtotal, taxAmount, total, withholding } = calcTotals(data);
   const taxLabel = data.countryMode === 'KR'
-    ? (data.taxRate === 3.3 ? (isKo ? '원천징수' : 'Withholding') : (isKo ? '부가세' : 'VAT'))
+    ? (withholding ? (isKo ? '원천징수' : 'Withholding') : (isKo ? '부가세' : 'VAT'))
     : 'Sales Tax';
-  const taxAmount = subtotal * (data.taxRate / 100);
-  const total = subtotal + taxAmount;
+  // 원천징수는 빼는 금액이라 '−'를 붙이고, 합계는 '실지급액'
+  const taxShown = withholding && taxAmount > 0 ? -taxAmount : taxAmount;
+  const totalLabel = withholding ? (isKo ? '실지급액' : 'Net payment') : (isKo ? '합계' : 'Total');
 
   // ── Logo upload ──
   const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,8 +249,8 @@ export default function InvoiceMakerClient() {
         ...data.items.map(it => [it.desc, it.qty, it.unitPrice, it.qty * it.unitPrice]),
         [],
         [isKo ? '소계' : 'Subtotal', '', '', subtotal],
-        [`${taxLabel} (${data.taxRate}%)`, '', '', taxAmount],
-        [isKo ? '합계' : 'Total', '', '', total],
+        [`${taxLabel} (${data.taxRate}%)`, '', '', taxShown],
+        [totalLabel, '', '', total],
       ];
       const ws = XLSX.utils.aoa_to_sheet(rows);
       const wb = XLSX.utils.book_new();
@@ -237,7 +259,7 @@ export default function InvoiceMakerClient() {
       showToast(isKo ? 'Excel 저장 완료' : 'Excel saved');
     } catch (e) {
       console.error(e);
-      showToast('Excel export failed');
+      showToast(isKo ? 'Excel 저장에 실패했습니다' : 'Excel export failed');
     }
   };
 
@@ -251,7 +273,8 @@ export default function InvoiceMakerClient() {
       const SECRET = 'theutilhub-inv-2026';
       const encrypted = CryptoJS.AES.encrypt(compressed, SECRET).toString();
       const encoded = encodeURIComponent(encrypted);
-      const url = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+      // # 뒤의 내용은 서버로 전송되지 않는다
+      const url = `${window.location.origin}${window.location.pathname}#d=${encoded}`;
       await navigator.clipboard.writeText(url).catch(() => {});
       setShareUrl(url);
       showToast(isKo ? '공유 링크 복사됨 (계좌 제외)' : 'Share link copied (account excluded)');
@@ -266,7 +289,8 @@ export default function InvoiceMakerClient() {
     if (!isClient) return;
     try {
       const params = new URLSearchParams(window.location.search);
-      const enc = params.get('d');
+      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+      const enc = hash.get('d') ?? params.get('d');
       if (!enc) return;
       import('crypto-js').then(mod => {
         import('lz-string').then(lzMod => {
@@ -471,8 +495,8 @@ export default function InvoiceMakerClient() {
               {data.countryMode === 'US' && <span style={{ fontSize:'0.85rem' }}>%</span>}
             </div>
             <div className={s.ivm_sum_row}><span>{isKo ? '소계' : 'Subtotal'}</span><span>{fmt(subtotal, data.countryMode)}</span></div>
-            <div className={s.ivm_sum_row}><span>{taxLabel} ({data.taxRate}%)</span><span>{fmt(taxAmount, data.countryMode)}</span></div>
-            <div className={s.ivm_sum_total}><span>{isKo ? '합계' : 'Total'}</span><span>{fmt(total, data.countryMode)}</span></div>
+            <div className={s.ivm_sum_row}><span>{taxLabel} ({data.taxRate}%)</span><span>{fmt(taxShown, data.countryMode)}</span></div>
+            <div className={s.ivm_sum_total}><span>{totalLabel}</span><span>{fmt(total, data.countryMode)}</span></div>
           </div>
 
           {/* Notes */}
@@ -493,7 +517,7 @@ export default function InvoiceMakerClient() {
                 <div key={i} className={s.ivm_history_item} onClick={() => loadHistory(h)}>
                   <span className={s.ivm_history_num}>{h.invNo}</span>
                   <span>{h.clientName || (isKo ? '(수신인 없음)' : '(no client)')}</span>
-                  <span className={s.ivm_history_meta}>{fmt(h.items.reduce((s,it)=>s+it.qty*it.unitPrice,0) * (1 + h.taxRate/100), h.countryMode)}</span>
+                  <span className={s.ivm_history_meta}>{fmt(calcTotals(h).total, h.countryMode)}</span>
                 </div>
               ))}
             </div>
@@ -510,7 +534,7 @@ export default function InvoiceMakerClient() {
           📊 {isKo ? 'Excel 저장' : 'Save Excel'}
         </button>
         <button className={`${s.ivm_btn} ${s.ivm_btn_orange}`} onClick={genShareLink}>
-          🔗 {isKo ? '암호화 공유링크' : 'Encrypted Share'}
+          🔗 {isKo ? '공유 링크' : 'Share link'}
         </button>
         <button className={`${s.ivm_btn} ${s.ivm_btn_slate}`}
           onClick={() => {
@@ -533,7 +557,7 @@ export default function InvoiceMakerClient() {
             {data.issuer.logoBase64 && <img src={data.issuer.logoBase64} className={s.ivm_preview_logo} alt="logo" />}
           </div>
           <div>
-            <p className={s.ivm_preview_title}>{data.countryMode === 'KR' ? (isKo ? '세금계산서 / 견적서' : 'TAX INVOICE / QUOTE') : 'INVOICE'}</p>
+            <p className={s.ivm_preview_title}>{data.countryMode === 'KR' ? (isKo ? '견적서 / 청구서' : 'QUOTE / INVOICE') : 'INVOICE'}</p>
             <p className={s.ivm_preview_meta}># {data.invNo}</p>
             <p className={s.ivm_preview_meta}>{isKo ? '발행일' : 'Issue'}: {fmtDate(data.issueDate)}</p>
             {data.dueDate && <p className={s.ivm_preview_meta}>{isKo ? '납기일' : 'Due'}: {fmtDate(data.dueDate)}</p>}
@@ -585,8 +609,8 @@ export default function InvoiceMakerClient() {
         <div className={s.ivm_preview_totals}>
           <div className={s.ivm_preview_totals_inner}>
             <div className={s.ivm_preview_tot_row}><span>{isKo ? '소계' : 'Subtotal'}</span><span>{fmt(subtotal, data.countryMode)}</span></div>
-            <div className={s.ivm_preview_tot_row}><span>{taxLabel} ({data.taxRate}%)</span><span>{fmt(taxAmount, data.countryMode)}</span></div>
-            <div className={s.ivm_preview_tot_final}><span>{isKo ? '합계' : 'TOTAL'}</span><span>{fmt(total, data.countryMode)}</span></div>
+            <div className={s.ivm_preview_tot_row}><span>{taxLabel} ({data.taxRate}%)</span><span>{fmt(taxShown, data.countryMode)}</span></div>
+            <div className={s.ivm_preview_tot_final}><span>{withholding ? totalLabel : (isKo ? '합계' : 'TOTAL')}</span><span>{fmt(total, data.countryMode)}</span></div>
           </div>
         </div>
 
@@ -612,6 +636,10 @@ export default function InvoiceMakerClient() {
       {toast && <div className={s.ivm_toast}>{toast}</div>}
 
       {/* 추천 도구 */}
+      <ShareBar
+        title={isKo ? '인보이스 & 견적서 메이커' : 'Invoice & Quote Maker'}
+        description={isKo ? '견적서·청구서를 브라우저에서 만들어 PDF·Excel로 저장' : 'Create quotes and invoices in your browser and save them as PDF or Excel'}
+      />
       <RelatedTools toolId="utilities/finance/invoice-maker" />
 
       {/* SEO Section */}

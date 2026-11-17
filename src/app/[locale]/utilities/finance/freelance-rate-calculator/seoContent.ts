@@ -9,7 +9,7 @@ export const FREELANCE_RATE_SEO: { ko: SeoContent; en: SeoContent } = {
   ko: {
     title: '프리랜서 적정 단가 계산기란?',
     description:
-      "프리랜서 적정 단가 계산기는 '한 달에 얼마를 손에 쥐고 싶은가'에서 출발해 시간당 얼마를 받아야 하는지 거꾸로 계산하는 도구입니다. 목표 월 순수익(세후 실수령 목표액)에 월 고정지출을 더하고, 그 금액에 대한 세금 추정치와 10% 버퍼를 얹은 뒤, 월 총 근무 시간에 실 작업 효율을 곱한 유효 근무시간으로 나눕니다. 예를 들어 대한민국(KRW) 탭에서 목표 순수익 300만 원, 고정지출로 월세 50만 원·S/W 구독 5만 원·통신비 8만 원(합계 63만 원)을 넣고 월 160시간, 효율 80%로 두면 세금 추정 약 74만 원(종합소득세·지방소득세 약 48만 원 + 건강보험료 약 26만 원)과 버퍼 약 44만 원이 더해져 필요 월 총수입은 약 481만 원이 됩니다. 이를 유효 근무시간 128시간으로 나눈 시간당 적정 단가는 약 37,562원입니다. 같은 조건에서 효율만 60%로 낮추면 단가는 약 5만 원까지 올라갑니다. 한국 세금은 연 환산 금액에 종합소득세 누진세율(6~45%)을 적용하고 지방소득세 10%와 지역가입자 건강보험료율 7.09%를 더해 추정하며, 미국(USD) 탭은 자영업세와 연방소득세를 반영합니다. 수입이 들쭉날쭉하다면 성수기와 비수기 목표를 각각 넣어 보고 두 단가의 차이를 견적 범위로 삼을 수도 있습니다. 입력값은 브라우저에 저장되어 다음에 다시 열어도 이어서 조정할 수 있고, 결과는 '단가 인증서' 이미지로 내려받아 기록해 둘 수 있습니다. 견적서를 쓰거나 단가를 협상하기 전에 '이 금액 아래로 받으면 손해'인 최소선을 확인하는 용도로 쓰기 좋습니다.",
+      "프리랜서 적정 단가 계산기는 '한 달에 얼마를 손에 쥐고 싶은가'에서 출발해 시간당 얼마를 받아야 하는지 거꾸로 계산하는 도구입니다. 목표 월 순수익(세후 실수령 목표액)에 월 고정지출을 더하고, 그 금액에 대한 세금 추정치와 10% 버퍼를 얹은 뒤, 월 총 근무 시간에 실 작업 효율을 곱한 유효 근무시간으로 나눕니다. 예를 들어 대한민국(KRW) 탭에서 목표 순수익 300만 원, 고정지출로 월세 50만 원·S/W 구독 5만 원·통신비 8만 원(합계 63만 원)을 넣고 월 160시간, 효율 80%로 두면 세금 추정 약 74만 원(종합소득세·지방소득세 약 48만 원 + 건강보험료 약 26만 원)과 버퍼 약 44만 원이 더해져 필요 월 총수입은 약 481만 원이 됩니다. 이를 유효 근무시간 128시간으로 나눈 시간당 적정 단가는 약 37,562원입니다. 같은 조건에서 효율만 60%로 낮추면 단가는 약 5만 원까지 올라갑니다. 한국 세금은 연 환산 금액에 종합소득세 누진세율(6~45%)을 적용하고 지방소득세 10%와 지역가입자 건강보험료율 7.09%를 더해 추정하며, 미국(USD) 탭은 자영업세와 연방소득세를 반영합니다. 수입이 들쭉날쭉하다면 성수기와 비수기 목표를 각각 넣어 보고 두 단가의 차이를 견적 범위로 삼을 수도 있습니다. 입력값은 브라우저에 저장되어 다음에 다시 열어도 이어서 조정할 수 있고, 결과는 '단가 계산 결과' 이미지로 내려받아 기록해 둘 수 있습니다. 견적서를 쓰거나 단가를 협상하기 전에 '이 금액 아래로 받으면 손해'인 최소선을 확인하는 용도로 쓰기 좋습니다.",
     useCases: [
       {
         icon: '💼',
@@ -29,7 +29,7 @@ export const FREELANCE_RATE_SEO: { ko: SeoContent; en: SeoContent } = {
       {
         icon: '🌏',
         title: '한국·미국 기준 비교',
-        desc: '해외 클라이언트와 일하거나 미국 활동을 고민할 때 국가 탭을 바꾸고 그 나라 통화로 금액을 다시 넣으면, 세금 구조 차이에 따라 필요한 시간당 단가가 어떻게 달라지는지 볼 수 있습니다.',
+        desc: '해외 클라이언트와 일하거나 미국 활동을 고민할 때 국가 탭을 바꿔 그 나라 통화로 금액을 넣으면(탭마다 금액을 따로 기억합니다), 세금 구조 차이에 따라 필요한 시간당 단가가 어떻게 달라지는지 볼 수 있습니다.',
       },
     ],
     steps: [
@@ -47,7 +47,7 @@ export const FREELANCE_RATE_SEO: { ko: SeoContent; en: SeoContent } = {
       },
       {
         step: '결과 확인하고 이미지로 저장하기',
-        desc: "'시간당 적정 단가' 아래에 월 목표 순수익·월 고정지출·세금(추정)·버퍼 10%·필요 월 총수입·유효 근무시간이 나뉘어 표시됩니다. '단가 인증서 이미지로 저장' 버튼을 누르면 이 내역을 PNG 이미지로 내려받을 수 있습니다.",
+        desc: "'시간당 적정 단가' 아래에 월 목표 순수익·월 고정지출·세금(추정)·버퍼 10%·필요 월 총수입·유효 근무시간이 나뉘어 표시됩니다. '단가 계산 결과 이미지로 저장' 버튼을 누르면 이 내역을 PNG 이미지로 내려받을 수 있습니다.",
       },
     ],
     faqs: [
@@ -100,13 +100,13 @@ export const FREELANCE_RATE_SEO: { ko: SeoContent; en: SeoContent } = {
       {
         icon: '🌏',
         title: 'Comparing the US and Korea',
-        desc: 'If you work across borders, switch between the United States (USD) and South Korea (KRW) tabs and re-enter amounts in each currency to see how two different tax systems change the rate you need.',
+        desc: 'If you work across borders, switch between the United States (USD) and South Korea (KRW) tabs — each tab keeps its own amounts in its own currency — to see how two different tax systems change the rate you need.',
       },
     ],
     steps: [
       {
         step: 'Pick a country and set your income goal',
-        desc: "Choose the 🇺🇸 United States (USD) or 🇰🇷 South Korea (KRW) tab, then drag the 'After-tax take-home target' slider to what you want to keep each month. Amounts are not converted when you switch tabs, so re-enter them in the new currency.",
+        desc: "Choose the 🇺🇸 United States (USD) or 🇰🇷 South Korea (KRW) tab, then drag the 'After-tax take-home target' slider to what you want to keep each month. Each tab remembers its own amounts, so switching does not carry won figures into dollars or vice versa; enter amounts in the tab's currency.",
       },
       {
         step: 'Add your monthly fixed costs',
@@ -118,7 +118,7 @@ export const FREELANCE_RATE_SEO: { ko: SeoContent; en: SeoContent } = {
       },
       {
         step: 'Read the result and save it',
-        desc: "The 'Recommended Hourly Rate' card splits the total into net income goal, fixed costs, estimated taxes, the 10% buffer, monthly gross needed and billable hours. Click 'Save Rate Certificate as Image' to download that breakdown as a PNG file.",
+        desc: "The 'Recommended Hourly Rate' card splits the total into net income goal, fixed costs, estimated taxes, the 10% buffer, monthly gross needed and billable hours. Click 'Save Rate Summary as Image' to download that breakdown as a PNG file.",
       },
     ],
     faqs: [

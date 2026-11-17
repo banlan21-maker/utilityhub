@@ -13,6 +13,11 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-18', type: 'fix', href: '/utilities/utility/decision-master', ko: '결정 도우미 — 돌림판·화살표 당첨 칸, 사다리 결과 오류 수정', en: 'Decision Master — wheel, arrow and ladder results fixed' },
+  { date: '2026-11-18', type: 'fix', href: '/utilities/finance/invoice-maker', ko: '견적서 — 원천징수 3.3%를 빼서 실지급액 표시', en: 'Invoice Maker — 3.3% withholding now deducted' },
+  { date: '2026-11-18', type: 'fix', href: '/utilities/productivity/meeting-burner', ko: '회의비용 계산기 — 다른 탭을 봐도 시간이 정확히 흐름', en: 'Meeting Cost Timer — accurate in background tabs' },
+  { date: '2026-11-18', type: 'fix', href: '/utilities/finance/freelance-rate-calculator', ko: '프리랜서 단가 — 국가 탭마다 금액 따로 기억', en: 'Freelance Rate — each country tab keeps its own amounts' },
+  { date: '2026-11-18', type: 'fix', href: '/utilities/design/formation-planner', ko: '포메이션 플래너 — 되돌리기·사파리 녹화 개선', en: 'Formation Planner — undo and Safari recording fixed' },
   { date: '2026-11-17', type: 'fix', href: '/utilities/productivity/excel-mapper', ko: '스마트 엑셀 매퍼 — 영어 화면 문구 추가', en: 'Smart Excel Mapper — full English interface' },
   { date: '2026-11-17', type: 'fix', href: '/utilities/productivity/world-time', ko: '세계 시간 — 화면 오류 수정', en: 'World Time — display glitch fixed' },
   { date: '2026-11-16', type: 'update', href: '/utilities/lifestyle/color-coordinator', ko: 'OOTD 컬러 코디네이터 — 옷 모양 18종·원피스·긴 머리', en: 'Outfit Color Coordinator — 18 garment shapes and dresses' },

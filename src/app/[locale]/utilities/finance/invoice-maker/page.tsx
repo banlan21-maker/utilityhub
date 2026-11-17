@@ -13,7 +13,7 @@ export async function generateMetadata({
   const title = isKo ? '인보이스 & 견적서 메이커 | Utility Hub' : 'Invoice & Quote Maker | Utility Hub';
   const description = isKo
     ? '브라우저에서 바로 인보이스·견적서를 작성하고 PDF·Excel로 출력하는 무료 도구. 가입 불필요.'
-    : 'Free browser-based invoice & quote maker — create, export PDF/Excel, and share with encrypted links. No sign-up.';
+    : 'Free browser-based invoice & quote maker — create, export PDF/Excel, and share by link. No sign-up.';
   const canonical = `https://www.theutilhub.com/${locale}/utilities/finance/invoice-maker`;
 
   return {
@@ -48,7 +48,7 @@ const softwareSchema = {
   "applicationCategory": "UtilitiesApplication",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
   "url": "https://www.theutilhub.com/ko/utilities/finance/invoice-maker",
-  "description": "프리랜서와 소규모 사업자를 위한 무료 인보이스·견적서 작성 도구로 PDF 출력과 암호화 공유 링크를 지원합니다."
+  "description": "프리랜서와 소규모 사업자를 위한 무료 인보이스·견적서 작성 도구로 PDF 출력과 공유 링크를 지원합니다."
 };
 
 // 화면의 한국어 FAQ(SeoSection)와 같은 내용 — 영문 FAQPage는 SeoSection이 내보낸다

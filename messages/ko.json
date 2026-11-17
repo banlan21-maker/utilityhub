@@ -1265,7 +1265,7 @@
     "title": "🧬 테토/에겐 호르몬 성향 테스트",
     "description": "10개의 질문으로 나의 연애 호르몬 유형을 알아보세요! 강인한 테토형? 섬세한 에겐형?",
     "genderSelectTitle": "먼저 성별을 선택해주세요",
-    "genderSelectDesc": "더 정확한 결과를 위해 성별을 선택해주세요",
+    "genderSelectDesc": "결과에 표시할 유형 이름(테토남·에겐녀 등)을 정하기 위해 성별을 선택해주세요",
     "male": "남자",
     "female": "여자",
     "question": "질문",

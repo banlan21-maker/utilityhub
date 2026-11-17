@@ -42,8 +42,9 @@ function WheelMode({ isKo }: { isKo: boolean }) {
     setRotation(newRot);
     setTimeout(() => {
       const sliceDeg = 360 / validItems.length;
-      // pointer at top = 270 degrees (or -90)
-      const normalized = ((360 - (newRot % 360)) + 270) % 360;
+      // 칸은 위(0°)부터 시계 방향으로 그려진다. 판이 newRot°만큼 시계 방향으로 돌면
+      // 위쪽 화살표 밑에 오는 지점은 판 기준 (−newRot)° → 그 칸이 당첨
+      const normalized = (360 - (newRot % 360)) % 360;
       const idx = Math.floor(normalized / sliceDeg) % validItems.length;
       setWinner(validItems[idx]);
       setSpinning(false);
@@ -248,7 +249,7 @@ function LotMode({ isKo }: { isKo: boolean }) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
-    setWinSet(new Set(pool.slice(0, winners)));
+    setWinSet(new Set(pool.slice(0, Math.min(winners, total - 1))));
     setRevealed(Array(total).fill(false));
     setDone(false);
   };
@@ -271,7 +272,7 @@ function LotMode({ isKo }: { isKo: boolean }) {
         <div>
           <label className={s.dm_label}>{isKo ? '전체 인원' : 'Total'}</label>
           <div className={s.lot_counter}>
-            <button className={s.lot_cnt_btn} onClick={() => setTotal(t => Math.max(2, t - 1))}>−</button>
+            <button className={s.lot_cnt_btn} onClick={() => { const nt = Math.max(2, total - 1); setTotal(nt); setWinners(w => Math.min(w, nt - 1)); }}>−</button>
             <span className={s.lot_cnt_val}>{total}</span>
             <button className={s.lot_cnt_btn} onClick={() => setTotal(t => Math.min(12, t + 1))}>+</button>
           </div>
@@ -326,6 +327,8 @@ function LadderMode({ isKo }: { isKo: boolean }) {
   const [runIdx, setRunIdx] = useState<number | null>(null);
   const [paths, setPaths] = useState<Array<Array<{ x: number; y: number }>>>([]);
   const [results, setResults] = useState<string[]>([]);
+  /** landing[i] = 참가자 i가 도착한 결과 칸 번호 */
+  const [landing, setLanding] = useState<number[]>([]);
   const [runAll, setRunAll] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [bridges, setBridges] = useState<Array<{ row: number; col: number }>>([]);
@@ -342,7 +345,8 @@ function LadderMode({ isKo }: { isKo: boolean }) {
 
   const generate = useCallback(() => {
     const br: Array<{ row: number; col: number }> = [];
-    for (let row = 0; row < ROWS; row++) {
+    // 세로줄 양 끝 높이(0, ROWS-1)에는 가로줄을 두지 않는다 — 그림과 추적 결과가 어긋나지 않게
+    for (let row = 1; row < ROWS - 1; row++) {
       const used = new Set<number>();
       for (let col = 0; col < COLS - 1; col++) {
         if (!used.has(col) && !used.has(col + 1) && Math.random() < 0.45) {
@@ -355,6 +359,7 @@ function LadderMode({ isKo }: { isKo: boolean }) {
     setBridges(br);
     setPaths([]);
     setResults([]);
+    setLanding([]);
     setRunIdx(null);
     setRunAll(false);
     setGenerated(true);
@@ -402,13 +407,13 @@ function LadderMode({ isKo }: { isKo: boolean }) {
     });
   }, [bridges, paths, runIdx, runAll, W, H, COLS, ROWS, colX, rowY]);
 
-  const tracePath = (startCol: number): Array<{ x: number; y: number }> => {
+  const tracePath = (startCol: number): { path: Array<{ x: number; y: number }>; col: number } => {
     const path: Array<{ x: number; y: number }> = [];
     let col = startCol;
     path.push({ x: colX(col), y: rowGap * 0.5 });
     path.push({ x: colX(col), y: rowY(0) });
 
-    for (let row = 0; row < ROWS - 1; row++) {
+    for (let row = 0; row < ROWS; row++) {
       // Check bridge right
       const right = bridges.find(b => b.row === row && b.col === col);
       const left  = bridges.find(b => b.row === row && b.col === col - 1);
@@ -419,40 +424,41 @@ function LadderMode({ isKo }: { isKo: boolean }) {
         path.push({ x: colX(col - 1), y: rowY(row) });
         col = col - 1;
       }
-      path.push({ x: colX(col), y: rowY(row + 1) });
+      if (row < ROWS - 1) path.push({ x: colX(col), y: rowY(row + 1) });
     }
     path.push({ x: colX(col), y: H - rowGap * 0.5 });
-    return path;
+    return { path, col };
   };
 
   const runOne = (i: number) => {
     if (!generated) return;
     setRunIdx(i);
-    const path = tracePath(i);
+    const { path, col: finalCol } = tracePath(i);
     const newPaths = [...paths];
     newPaths[i] = path;
     setPaths(newPaths);
-    // result: final col
-    const finalPt = path[path.length - 2];
-    const finalCol = Math.round(finalPt.x / colGap) - 1;
     const newResults = [...results];
     newResults[i] = prizes[finalCol] ?? `${finalCol + 1}`;
     setResults(newResults);
+    const newLanding = [...landing];
+    newLanding[i] = finalCol;
+    setLanding(newLanding);
   };
 
   const runAllFn = () => {
     if (!generated) return;
     const allPaths: Array<Array<{ x: number; y: number }>> = [];
     const allResults: string[] = [];
+    const allLanding: number[] = [];
     for (let i = 0; i < COLS; i++) {
-      const path = tracePath(i);
+      const { path, col: finalCol } = tracePath(i);
       allPaths.push(path);
-      const finalPt = path[path.length - 2];
-      const finalCol = Math.round(finalPt.x / colGap) - 1;
       allResults.push(prizes[finalCol] ?? `${finalCol + 1}`);
+      allLanding.push(finalCol);
     }
     setPaths(allPaths);
     setResults(allResults);
+    setLanding(allLanding);
     setRunIdx(null);
     setRunAll(true);
   };
@@ -471,6 +477,7 @@ function LadderMode({ isKo }: { isKo: boolean }) {
     setGenerated(false);
     setPaths([]);
     setResults([]);
+    setLanding([]);
     setBridges([]);
   };
 
@@ -518,11 +525,15 @@ function LadderMode({ isKo }: { isKo: boolean }) {
                 onChange={e => { const a = [...prizes]; a[i] = e.target.value; setPrizes(a); }}
                 placeholder={isKo ? `결과 ${i+1}` : `Prize ${i+1}`}
               />
-              {results[i] && (
-                <span style={{ fontSize: '0.72rem', color: '#8b5cf6', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                  ← {names[i] ? names[i].slice(0,4) : `P${i+1}`}
-                </span>
-              )}
+              {(() => {
+                const who = landing.indexOf(i);
+                if (who < 0 || !results[who]) return null;
+                return (
+                  <span style={{ fontSize: '0.72rem', color: '#8b5cf6', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    ← {names[who] ? names[who].slice(0, 4) : `P${who + 1}`}
+                  </span>
+                );
+              })()}
             </div>
           ))}
         </div>
@@ -624,9 +635,8 @@ function ArrowMode({ isKo }: { isKo: boolean }) {
         // Determine sector: arrow points up (0 deg) → sector at top
         const norm = ((targetRef.current % 360) + 360) % 360;
         const sectorDeg = 360 / sectors.length;
-        // Arrow tip is at angle=0 pointing up, visual angle 0 = right in SVG
-        // We drew arrow pointing up so at angle=0 it points up = 270 in standard
-        const sectorIdx = Math.floor(((norm + sectorDeg / 2) % 360) / sectorDeg) % sectors.length;
+        // 화살표는 0°에서 위를 가리키고, 칸도 위(0°)부터 시계 방향 → 가리키는 칸 = floor(각도 ÷ 칸 크기)
+        const sectorIdx = Math.floor(norm / sectorDeg) % sectors.length;
         const label = useCustom && customLabels[sectorIdx]
           ? customLabels[sectorIdx]
           : sectors[sectorIdx];

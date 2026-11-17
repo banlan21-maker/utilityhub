@@ -2279,7 +2279,7 @@
     "title": "🧬 Teto/Egen Hormone Personality Test",
     "description": "Discover your dating hormone type with 10 quick questions! Are you a bold Teto or a sensitive Egen?",
     "genderSelectTitle": "First, select your gender",
-    "genderSelectDesc": "Choose your gender for more accurate results",
+    "genderSelectDesc": "Choose your gender so the result can use the matching type name (e.g. Teto man, Egen woman)",
     "male": "Male",
     "female": "Female",
     "question": "Question",

@@ -71,7 +71,7 @@ export const FORMATION_PLANNER_SEO: { ko: SeoContent; en: SeoContent } = {
       },
       {
         q: '저장한 영상이 재생되지 않아요.',
-        a: '녹화 파일은 WebM 형식(.webm)으로 저장됩니다. 크롬, 엣지, 파이어폭스 같은 브라우저나 VLC 플레이어에서는 바로 열리지만, 기기나 앱에 따라 WebM을 지원하지 않을 수 있으니 그럴 때는 MP4로 변환한 뒤 공유하세요. 브라우저가 녹화 기능 자체를 지원하지 않으면 \'이 브라우저는 녹화를 지원하지 않습니다\'라는 안내가 뜹니다.',
+        a: '녹화 파일은 크롬·엣지·파이어폭스에서는 WebM 형식(.webm), 사파리에서는 MP4 형식(.mp4)으로 저장됩니다. WebM은 크롬, 엣지, 파이어폭스 같은 브라우저나 VLC 플레이어에서는 바로 열리지만, 기기나 앱에 따라 WebM을 지원하지 않을 수 있으니 그럴 때는 MP4로 변환한 뒤 공유하세요. 브라우저가 녹화 기능 자체를 지원하지 않으면 \'이 브라우저는 녹화를 지원하지 않습니다\'라는 안내가 뜹니다.',
       },
       {
         q: '작업한 보드는 따로 저장되나요?',
@@ -150,7 +150,7 @@ export const FORMATION_PLANNER_SEO: { ko: SeoContent; en: SeoContent } = {
       },
       {
         q: 'My recorded video won\'t play. What can I do?',
-        a: 'Recordings are saved as WebM (.webm) files. Chrome, Edge, Firefox and players such as VLC open them directly, but some devices and apps do not support WebM, so convert the file to MP4 before sharing in that case. If your browser cannot record at all, the tool shows a "Recording is not supported in this browser" message instead.',
+        a: 'Recordings are saved as WebM (.webm) in Chrome, Edge and Firefox, and as MP4 (.mp4) in Safari. Chrome, Edge, Firefox and players such as VLC open WebM files directly, but some devices and apps do not support WebM, so convert the file to MP4 before sharing in that case. If your browser cannot record at all, the tool shows a "Recording is not supported in this browser" message instead.',
       },
       {
         q: 'Is my board saved anywhere?',

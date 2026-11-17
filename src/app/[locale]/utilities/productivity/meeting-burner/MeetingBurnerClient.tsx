@@ -51,16 +51,21 @@ export default function MeetingBurnerClient() {
   const [showReceipt, setShowReceipt] = useState(false);
 
   // Cost per second calculation (annual salary to per-second cost)
-  const costPerSecond = (avgSalary * participants) / (365 * 8 * 3600);
+  // 빈칸·음수 입력은 0으로 본다
+  const costPerSecond = (Math.max(0, avgSalary || 0) * Math.max(0, participants || 0)) / (365 * 8 * 3600);
 
+  // 실제 흐른 시간으로 더한다 — 다른 탭(화상회의 창)을 보는 동안 브라우저가 타이머를 늦춰도 시간이 덜 세지지 않게
+  const lastTickRef = useRef<number | null>(null);
   useEffect(() => {
-    if (!isRunning) return;
-
+    if (!isRunning) { lastTickRef.current = null; return; }
+    lastTickRef.current = performance.now();
     const interval = setInterval(() => {
-      setElapsed((prev) => prev + 100);
-      setTotalCost((prev) => prev + (costPerSecond * 0.1));
+      const now = performance.now();
+      const dt = now - (lastTickRef.current ?? now);
+      lastTickRef.current = now;
+      setElapsed((prev) => prev + dt);
+      setTotalCost((prev) => prev + costPerSecond * (dt / 1000));
     }, 100);
-
     return () => clearInterval(interval);
   }, [isRunning, costPerSecond]);
 

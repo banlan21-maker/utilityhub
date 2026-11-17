@@ -320,7 +320,9 @@ export default function FormationPlannerClient() {
   // ── Keyboard shortcuts ──────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); doUndo(); }
+      const typing = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement
+        || (e.target instanceof HTMLElement && e.target.isContentEditable);
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !typing) { e.preventDefault(); doUndo(); }
       if (e.key === 'Escape') setSelectedId(null);
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId && !(e.target instanceof HTMLInputElement)) {
         doDelete(selectedId);
@@ -361,7 +363,8 @@ export default function FormationPlannerClient() {
   const doUndo = useCallback(() => {
     setHistory(h => {
       if (h.length === 0) return h;
-      setPieces(h[h.length - 1]);
+      const names = new Map(piecesRef.current.map(p => [p.id, p.name]));
+      setPieces(h[h.length - 1].map(p => ({ ...p, name: names.get(p.id) ?? p.name })));
       setSelectedId(null);
       return h.slice(0, -1);
     });
@@ -475,6 +478,14 @@ export default function FormationPlannerClient() {
     recCanvas.width = canvas.width + LEGEND_W;
     recCanvas.height = canvas.height;
 
+    const mimeType = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4']
+      .find(t => MediaRecorder.isTypeSupported(t));
+    if (!mimeType) {
+      alert(isKo ? '이 브라우저는 영상 녹화 형식을 지원하지 않습니다. 크롬이나 엣지에서 시도해 주세요.' : 'This browser cannot record video. Please try Chrome or Edge.');
+      return;
+    }
+    const ext = mimeType.startsWith('video/mp4') ? 'mp4' : 'webm';
+
     animRunningRef.current = true;
     const drawFrame = () => {
       if (!animRunningRef.current) return;
@@ -488,9 +499,15 @@ export default function FormationPlannerClient() {
     };
     drawFrame();
 
-    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp8') ? 'video/webm;codecs=vp8' : 'video/webm';
-    const stream = recCanvas.captureStream(30);
-    const mr = new MediaRecorder(stream, { mimeType });
+    let mr: MediaRecorder;
+    try {
+      const stream = recCanvas.captureStream(30);
+      mr = new MediaRecorder(stream, { mimeType });
+    } catch {
+      animRunningRef.current = false;
+      alert(isKo ? '녹화를 시작하지 못했습니다. 크롬이나 엣지에서 시도해 주세요.' : 'Could not start recording. Please try Chrome or Edge.');
+      return;
+    }
     chunksRef.current = [];
     mr.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
     mr.onstop = () => {
@@ -498,8 +515,8 @@ export default function FormationPlannerClient() {
       const blob = new Blob(chunksRef.current, { type: mimeType });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = `formation-${Date.now()}.webm`; a.click();
-      URL.revokeObjectURL(url);
+      a.href = url; a.download = `formation-${Date.now()}.${ext}`; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
     };
     mr.start(100);
     mediaRecorderRef.current = mr;

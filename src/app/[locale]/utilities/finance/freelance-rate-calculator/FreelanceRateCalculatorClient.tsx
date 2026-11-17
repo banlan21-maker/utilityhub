@@ -134,6 +134,20 @@ export default function FreelanceRateCalculatorClient() {
   const currency = country === 'KR' ? 'KRW' : 'USD';
   const presets = country === 'KR' ? PRESETS_KR : PRESETS_US;
 
+  // 국가 탭마다 목표 수입·고정지출을 따로 기억한다 (원화 금액이 달러로 그대로 넘어가지 않게)
+  const perCountryRef = useRef<Record<Country, { netIncome: number; costs: CostItem[] }>>({
+    KR: { netIncome: 3000000, costs: [] },
+    US: { netIncome: 5000, costs: [] },
+  });
+  const switchCountry = (next: Country) => {
+    if (next === country) return;
+    perCountryRef.current[country] = { netIncome, costs };
+    const saved = perCountryRef.current[next];
+    setCountry(next);
+    setNetIncome(saved.netIncome);
+    setCosts(saved.costs);
+  };
+
   // ── Load from localStorage ──
   useEffect(() => {
     setIsClient(true);
@@ -198,7 +212,7 @@ export default function FreelanceRateCalculatorClient() {
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(receiptRef.current, { scale: 2, useCORS: true, backgroundColor: '#fff' });
       const link = document.createElement('a');
-      link.download = `theutilhub-rate-certificate-${Date.now()}.png`;
+      link.download = `theutilhub-rate-summary-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (e) {
@@ -238,7 +252,7 @@ export default function FreelanceRateCalculatorClient() {
           <button
             key={c}
             className={`${s.frc_ctab} ${country === c ? s.frc_ctab_active : ''}`}
-            onClick={() => setCountry(c)}
+            onClick={() => switchCountry(c)}
           >
             {c === 'KR' ? (isKo ? '🇰🇷 대한민국 (KRW)' : '🇰🇷 South Korea (KRW)') : '🇺🇸 United States (USD)'}
           </button>
@@ -430,14 +444,14 @@ export default function FreelanceRateCalculatorClient() {
 
       {/* ── Export Button ── */}
       <button className={s.frc_export_btn} onClick={handleExport}>
-        📄 {isKo ? '단가 인증서 이미지로 저장' : 'Save Rate Certificate as Image'}
+        📄 {isKo ? '단가 계산 결과 이미지로 저장' : 'Save Rate Summary as Image'}
       </button>
 
       {/* ── Receipt (off-screen capture target) ── */}
       <div ref={receiptRef} className={s.frc_receipt}>
         <p className={s.frc_receipt_logo}>⚡ theutilhub</p>
         <p className={s.frc_receipt_cert}>
-          {isKo ? '프리랜서 단가 공식 인증서' : 'Official Rate Certificate'}
+          {isKo ? '프리랜서 적정 단가 계산 결과' : 'Freelance Rate Summary'}
         </p>
         <hr className={s.frc_receipt_divider} />
         <div className={s.frc_receipt_row}>
@@ -473,8 +487,8 @@ export default function FreelanceRateCalculatorClient() {
         <p className={s.frc_receipt_footer}>
           {dateStr} · theutilhub.com<br />
           {isKo
-            ? '본 인증서는 참고용이며 실제 세금과 상이할 수 있습니다.'
-            : 'This certificate is for reference only. Actual taxes may vary.'}
+            ? '이 계산 결과는 참고용이며 실제 세금과 다를 수 있습니다.'
+            : 'This summary is for reference only. Actual taxes may vary.'}
         </p>
       </div>
 
