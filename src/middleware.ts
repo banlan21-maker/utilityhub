@@ -6,7 +6,7 @@ const intlMiddleware = createMiddleware(routing);
 
 const HOST = 'www.theutilhub.com';
 const CATS = 'performance|document|finance|productivity|design|marketing|lifestyle|security|utility|dev';
-const STATIC_PAGES = 'about|contact|feedback|privacy|terms';
+const STATIC_PAGES = 'about|contact|feedback|privacy|terms|support';
 
 /**
  * 옛 주소·로케일 없는 주소를 정식 경로로 바꾼다. 바꿀 필요가 없으면 null.

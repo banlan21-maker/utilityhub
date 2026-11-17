@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import MeetingBurnerClient from './MeetingBurnerClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import { MEETING_BURNER_SEO } from './seoContent';
 
 export async function generateMetadata({
   params,
@@ -49,15 +50,16 @@ const softwareSchema = {
   description: '회의 참석자와 연봉을 입력하면 초 단위로 증발하는 인건비를 실시간으로 시각화합니다.',
 };
 
+// 화면의 한국어 FAQ(SeoSection ko.faqs)와 동일한 데이터로 생성
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: '연봉 데이터는 서버에 저장되나요?', acceptedAnswer: { '@type': 'Answer', text: '아니요, 모든 계산은 브라우저에서만 이루어지며 어떠한 데이터도 서버로 전송되지 않습니다. 안심하고 사용하세요.' } },
-    { '@type': 'Question', name: '시급 계산 기준이 무엇인가요?', acceptedAnswer: { '@type': 'Answer', text: '연봉을 기준으로 연간 근무일 365일, 하루 8시간 근무를 가정하여 초당 비용을 계산합니다. (연봉 ÷ 365 ÷ 8 ÷ 3600)' } },
-    { '@type': 'Question', name: '목표 시간을 초과하면 어떻게 되나요?', acceptedAnswer: { '@type': 'Answer', text: '타이머 화면이 붉게 변하며 시각적 경고(Visual Shake)가 표시됩니다. 회의를 마무리할 시점임을 알려드립니다.' } },
-    { '@type': 'Question', name: '이 툴의 결과를 공식 자료로 사용해도 되나요?', acceptedAnswer: { '@type': 'Answer', text: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' } },
-  ],
+  inLanguage: 'ko',
+  mainEntity: MEETING_BURNER_SEO.ko.faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
 };
 
 export default async function MeetingBurnerPage({ params }: { params: Promise<{ locale: string }> }) {

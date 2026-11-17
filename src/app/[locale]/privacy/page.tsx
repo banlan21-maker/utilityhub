@@ -206,6 +206,31 @@ export default async function PrivacyPage() {
               {t('s5Li2Link')}
             </a>
           </li>
+          <li className={styles.listItem}>
+            <strong>Formspree</strong>: {t('s5Li3')}{' '}
+            <a
+              href="https://formspree.io/legal/privacy-policy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
+              {t('s5Li3Link')}
+            </a>
+          </li>
+          <li className={styles.listItem}>
+            <strong>Vercel Analytics</strong>: {t('s5Li4')}{' '}
+            <a
+              href="https://vercel.com/legal/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
+              {t('s5Li4Link')}
+            </a>
+          </li>
+          <li className={styles.listItem}>
+            <strong>Ko-fi · 투네이션</strong>: {t('s5Li5')}
+          </li>
         </ul>
       </section>
 

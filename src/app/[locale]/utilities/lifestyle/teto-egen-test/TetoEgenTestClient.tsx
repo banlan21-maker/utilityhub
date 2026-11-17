@@ -76,39 +76,7 @@ export default function TetoEgenTestClient() {
       {/* 추천 도구 */}
       <RelatedTools toolId="utilities/lifestyle/teto-egen-test" />
 
-
-      {/* SEO Content */}
-      <section className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ec4899', marginBottom: '1rem' }}>
-          {t('seoTitle')}
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '1rem' }}>
-          {t('seoPara1')}
-        </p>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '1rem' }}>
-          {t('seoPara2')}
-        </p>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-          {t('seoPara3')}
-        </p>
-      </section>
-
-      {/* FAQ */}
-      <section className="glass-panel" style={{ padding: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ec4899', marginBottom: '1.5rem' }}>
-          {t('faqTitle')}
-        </h2>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} style={{ marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-              {t(`faq${i}Q`)}
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              {t(`faq${i}A`)}
-            </p>
-          </div>
-        ))}
-      </section>
+      {/* 소개·활용 사례·사용 방법·FAQ는 page.tsx의 SeoSection에서 렌더한다 (seoContent.ts) */}
     </div>
   );
 }

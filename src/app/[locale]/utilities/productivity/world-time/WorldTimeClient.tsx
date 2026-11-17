@@ -211,13 +211,14 @@ export default function WorldTimeClient() {
                 <span className={s.timezone_flag}>{zone.flag}</span>
                 <div>
                   <div className={s.timezone_label}>{zoneLabel(zone, isKorean)}</div>
-                  <div className={s.timezone_date}>{date}</div>
+                  <div className={s.timezone_date} suppressHydrationWarning>{date}</div>
                 </div>
                 <div style={{ marginLeft: 'auto' }}>
                   <HourBadge hour={hour} isKorean={isKorean} />
                 </div>
               </div>
-              <div className={s.timezone_time}>
+              {/* 서버 렌더 시각과 브라우저 시각이 몇 초 다를 수 있다 (1초마다 다시 그림) */}
+              <div className={s.timezone_time} suppressHydrationWarning>
                 {time}
               </div>
 

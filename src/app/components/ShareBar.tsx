@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { MessageCircle, Instagram, Send, Link2 } from 'lucide-react';
+import SupportNote from './SupportNote';
 
 const LABELS = {
   ko: { heading: '이 도구를 친구에게 공유하기', kakao: '카카오톡', insta: '인스타그램', tele: '텔레그램', copy: 'URL 복사', copied: '링크가 복사되었습니다!' },
@@ -125,6 +126,7 @@ export default function ShareBar({ title, description }: ShareBarProps) {
           <Link2 size={16} /> {copied ? L.copied : L.copy}
         </button>
       </div>
+      <SupportNote />
     </section>
   );
 }

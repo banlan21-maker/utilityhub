@@ -5,7 +5,9 @@ import { useLocale } from 'next-intl';
 import { QRCodeSVG } from 'qrcode.react';
 import NavigationActions from '@/app/components/NavigationActions';
 import RelatedTools from '@/app/components/RelatedTools';
+import SeoSection from '@/app/components/SeoSection';
 import s from './ivm.module.css';
+import { SEO_KO, SEO_EN } from './content';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type CountryMode = 'KR' | 'US';
@@ -607,47 +609,14 @@ export default function InvoiceMakerClient() {
         </div>
       </div>
 
+      {toast && <div className={s.ivm_toast}>{toast}</div>}
+
+      {/* 추천 도구 */}
+      <RelatedTools toolId="utilities/finance/invoice-maker" />
+
       {/* SEO Section */}
+      <SeoSection ko={SEO_KO} en={SEO_EN} />
       <section className={s.ivm_seo}>
-        <h2>{isKo ? '📌 인보이스 & 견적서 메이커란?' : '📌 What is the Invoice & Quote Maker?'}</h2>
-        <p>
-          {isKo
-            ? '프리랜서, 소규모 사업자, 개인 사업자라면 클라이언트에게 견적서·인보이스·세금계산서를 발행하는 일이 빈번합니다. 하지만 기존 솔루션들은 구독료가 필요하거나 회원가입이 필수였습니다. 본 도구는 브라우저 내에서 완전 무료로 작동하며, 입력한 데이터는 사용자의 브라우저 로컬 스토리지에만 저장됩니다. 서버로 전송되거나 제3자와 공유되지 않아 보안상 안전합니다. 한국(KRW, 부가세/원천징수)과 미국(USD, Sales Tax) 모드를 지원하며, PDF·Excel 동시 출력과 암호화 공유 링크 기능을 제공합니다.'
-            : 'Freelancers and small business owners frequently need to issue quotes, invoices, and receipts. Traditional solutions require subscriptions or account creation. This tool runs entirely in your browser for free — all data stays in your local storage, never sent to any server. It supports both Korea (KRW, VAT/withholding) and US (USD, Sales Tax) modes, with PDF & Excel export and encrypted share links.'}
-        </p>
-
-        <h2>{isKo ? '🔢 자동 인보이스 번호 채번 방식' : '🔢 Smart Auto Invoice Numbering'}</h2>
-        <p>
-          {isKo
-            ? '인보이스 번호는 INV-YYYYMMDD-001 형식으로 자동 생성됩니다. 같은 날 여러 장을 발행하면 001, 002, 003... 순서로 자동 증가합니다. 수동으로 번호를 편집할 수 있으며, 편집된 번호를 기준으로 다음 발행 번호가 이어집니다. 재생성 버튼을 누르면 오늘 날짜 기준의 최신 번호로 갱신됩니다.'
-            : 'Invoice numbers are auto-generated in INV-YYYYMMDD-001 format. Issuing multiple on the same day increments the sequence automatically (001, 002, 003...). You can manually edit the number and the next invoice will continue from your edited value. The Regen button refreshes to today\'s latest sequence.'}
-        </p>
-
-        <h2>{isKo ? '❓ 자주 묻는 질문 (FAQ)' : '❓ Frequently Asked Questions'}</h2>
-        <dl>
-          <dt>{isKo ? 'Q. 상업적으로 사용해도 되나요?' : 'Q. Can I use this commercially?'}</dt>
-          <dd>{isKo ? 'A. 개인 및 기업 모두 완전 무료로 사용 가능합니다. 별도 구독이나 결제가 필요 없습니다.' : 'A. Yes, completely free for both personal and commercial use. No subscription or payment required.'}</dd>
-
-          <dt>{isKo ? 'Q. 입력한 데이터가 사라지면 어떻게 하나요?' : 'Q. What if my data disappears?'}</dt>
-          <dd>{isKo ? 'A. 데이터는 서버가 아닌 브라우저 로컬 스토리지에 저장됩니다. 브라우저 캐시를 초기화하거나 시크릿 모드를 사용하면 데이터가 사라질 수 있습니다. 중요한 인보이스는 반드시 PDF/Excel로 저장해 두세요.' : 'A. Data is stored in browser localStorage, not on a server. Clearing browser cache or using incognito mode will erase it. Always save important invoices as PDF or Excel.'}</dd>
-
-          <dt>{isKo ? 'Q. QR 코드가 인식되지 않아요.' : 'Q. The QR code is not scanning.'}</dt>
-          <dd>{isKo ? 'A. 결제 링크가 올바른 형식인지 확인하세요. 카카오페이는 https://qr.kakaopay.com/... 또는 https://toss.me/... 형식, PayPal은 https://paypal.me/... 형식이어야 합니다.' : 'A. Verify the payment link format. PayPal links should be https://paypal.me/..., Venmo links https://venmo.com/..., etc. Incorrect URLs will generate a QR that points to the wrong address.'}</dd>
-
-          <dt>{isKo ? 'Q. PDF에서 한글이 깨져 보여요.' : 'Q. Korean text is garbled in the PDF.'}</dt>
-          <dd>{isKo ? 'A. 본 도구는 html2canvas 방식으로 PDF를 생성하므로 브라우저에서 보이는 화면을 그대로 이미지화합니다. 브라우저를 최신 버전으로 업데이트하고, 운영체제에 한글 폰트(Pretendard, 나눔고딕)가 설치되어 있는지 확인하세요.' : 'A. The PDF is generated as a screenshot image via html2canvas, so it renders exactly what your browser shows. Make sure your browser is up to date and system fonts are properly installed.'}</dd>
-
-          <dt>{isKo ? 'Q. 로고가 PDF에 안 나와요.' : 'Q. My logo doesn\'t appear in the PDF.'}</dt>
-          <dd>{isKo ? 'A. 이미지 파일 용량을 1MB 이하로 최적화한 후 다시 업로드해 보세요. 큰 이미지는 Base64 변환 과정에서 처리 지연이 발생할 수 있습니다.' : 'A. Optimize your image to under 1MB and re-upload. Large images can cause processing delays during Base64 conversion and may not render correctly in the export.'}</dd>
-        </dl>
-
-        <h2>{isKo ? '🔐 암호화 공유 링크 보안 안내' : '🔐 Encrypted Share Link Security'}</h2>
-        <p>
-          {isKo
-            ? '공유 링크 생성 시 입력된 데이터는 lz-string으로 압축 후 AES-256 알고리즘으로 암호화되어 URL에 포함됩니다. 계좌번호·은행 정보 등 민감한 금융 정보는 URL에서 자동 제외됩니다. 링크를 받는 상대방은 인보이스 내용을 바로 확인하고 자신의 브라우저에서 편집·출력할 수 있습니다.'
-            : 'When you generate a share link, all data is compressed with lz-string and encrypted with AES-256 before being included in the URL. Sensitive financial information like bank account numbers is automatically excluded from the shared link. The recipient can view the invoice in their browser, edit it, and export their own copy.'}
-        </p>
-
         <h2>{isKo ? '⚠️ 면책 조항' : '⚠️ Disclaimer'}</h2>
         <p>
           {isKo
@@ -655,11 +624,6 @@ export default function InvoiceMakerClient() {
             : 'This tool is for informational purposes only and does not constitute tax, accounting, or legal advice. Tax calculations (VAT, withholding tax, sales tax) should be verified independently. Always consult a qualified tax professional or CPA for accurate tax reporting. This service does not guarantee the legal validity of any generated documents.'}
         </p>
       </section>
-
-      {toast && <div className={s.ivm_toast}>{toast}</div>}
-
-      {/* 추천 도구 */}
-      <RelatedTools toolId="utilities/finance/invoice-maker" />
     </div>
   );
 }

@@ -3,8 +3,8 @@
 import React from "react";
 import { Link } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
+import { hasSupportLinks } from "@/config/monetization";
 import {
-  Github,
   Mail,
   ExternalLink,
   ShieldCheck,
@@ -47,6 +47,8 @@ const LEGAL_LINKS = [
   { labelKo: "문의하기", labelEn: "Contact Us", href: "/contact" },
   { labelKo: "개인정보처리방침", labelEn: "Privacy Policy", href: "/privacy" },
   { labelKo: "이용약관", labelEn: "Terms of Service", href: "/terms" },
+  // 후원 링크가 설정된 경우에만 표시
+  ...(hasSupportLinks() ? [{ labelKo: "후원하기", labelEn: "Support Us", href: "/support" }] : []),
   { labelKo: "사이트맵", labelEn: "Sitemap", href: "/sitemap.xml", external: true },
 ];
 
@@ -76,8 +78,8 @@ export default function Footer() {
 
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium max-w-[280px]">
               {isKo
-                ? "사용자의 소중한 데이터는 서버에 저장되지 않습니다. 모든 작업은 브라우저에서 안전하게 실행됩니다."
-                : "Your data stays private. All processing happens locally in your browser, never on our servers."}
+                ? "도구 작업은 브라우저에서 실행됩니다. 도구에 입력한 내용과 파일은 서버로 전송되지 않습니다."
+                : "Tools run in your browser. What you type or upload into a tool is never sent to our servers."}
             </p>
 
             <div className="flex items-center gap-3">
@@ -171,12 +173,9 @@ export default function Footer() {
             </p>
             <div className="hidden md:block h-3 w-px bg-slate-200 dark:bg-slate-800"></div>
             <div className="flex items-center gap-4">
-              <a href="#" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-                <Github className="w-4 h-4" />
-              </a>
-              <a href="mailto:banlan21@gmail.com" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+              <Link href="/contact" aria-label={isKo ? '문의하기' : 'Contact'} className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <Mail className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
           </div>
 

@@ -3,9 +3,11 @@ import { tools } from '@/lib/tools-registry';
 import { execSync } from 'child_process';
 import path from 'path';
 import fs from 'fs';
+import { hasSupportLinks } from '@/config/monetization';
 
 const BASE = 'https://www.theutilhub.com';
-const STATIC_PATHS = ['', '/privacy', '/terms', '/about', '/contact'];
+// 후원 페이지는 링크가 설정된 뒤에만 사이트맵에 넣는다
+const STATIC_PATHS = ['', '/privacy', '/terms', '/about', '/contact', ...(hasSupportLinks() ? ['/support'] : [])];
 
 const CATEGORY_SLUGS = [
   'performance', 'document', 'finance', 'productivity',

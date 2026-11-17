@@ -13,6 +13,8 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-17', type: 'fix', href: '/utilities/productivity/excel-mapper', ko: '스마트 엑셀 매퍼 — 영어 화면 문구 추가', en: 'Smart Excel Mapper — full English interface' },
+  { date: '2026-11-17', type: 'fix', href: '/utilities/productivity/world-time', ko: '세계 시간 — 화면 오류 수정', en: 'World Time — display glitch fixed' },
   { date: '2026-11-16', type: 'update', href: '/utilities/lifestyle/color-coordinator', ko: 'OOTD 컬러 코디네이터 — 옷 모양 18종·원피스·긴 머리', en: 'Outfit Color Coordinator — 18 garment shapes and dresses' },
   { date: '2026-11-16', type: 'update', href: '/utilities/lifestyle/color-coordinator', ko: 'OOTD 컬러 코디네이터 — 실사 마네킹·퍼스널 컬러·조합 점검', en: 'Outfit Color Coordinator — realistic mannequin and personal color' },
   { date: '2026-11-16', type: 'update', href: '/utilities/utility/wire-size-calc', ko: '전선 굵기 계산기 — 미국 NEC(AWG) 기준 추가', en: 'Wire Size Calculator — US NEC (AWG) mode' },

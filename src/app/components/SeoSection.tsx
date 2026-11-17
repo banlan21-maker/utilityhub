@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useLocale } from 'next-intl';
+import AdSlot from './AdSlot';
 
 export interface FaqItem {
   q: string;
@@ -75,6 +76,9 @@ export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps
         <h2 style={h2Style}>{c.title}</h2>
         <p style={pStyle}>{c.description}</p>
       </div>
+
+      {/* 광고 자리 1: 설명글과 활용 사례 사이 (설정이 꺼져 있으면 비어 있음) */}
+      <AdSlot slot="inContent" />
 
       {/* 2. Use cases */}
       <div>
@@ -256,6 +260,9 @@ export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps
           ))}
         </div>
       </div>
+
+      {/* 광고 자리 2: 페이지 하단 */}
+      <AdSlot slot="bottom" />
     </section>
   );
 }

@@ -67,12 +67,6 @@ export default function ContactForm({ labels: l }: { labels: Labels }) {
       <section className={s.introCard}>
         <h2 className={s.introTitle}>{l.introTitle}</h2>
         <p className={s.introBody}>{l.introBody}</p>
-        <p className={s.emailHint}>
-          {l.emailLabel}:{' '}
-          <a href="mailto:banlan21@gmail.com" className={s.emailLink}>
-            banlan21@gmail.com
-          </a>
-        </p>
       </section>
 
       {/* Form */}

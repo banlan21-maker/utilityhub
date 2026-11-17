@@ -509,37 +509,7 @@ export default function FreelanceRateCalculatorClient() {
             : 'Rent, software subscriptions, phone bills, food, and insurance are unavoidable monthly expenses — even in months with no income. For freelancers, these are business operating costs that must be factored into your rates. Ignoring fixed costs means your rate effectively forces you to subsidize your clients.'}
         </p>
 
-        <h2>{isKo ? '❓ 자주 묻는 질문 (FAQ)' : '❓ Frequently Asked Questions'}</h2>
-        <dl className={s.frc_seo_faq}>
-          {isKo ? (
-            <>
-              <dt>Q. 효율(Efficiency)은 왜 100%가 아닌가요?</dt>
-              <dd>A. 프리랜서의 하루 8시간 중 실제 청구 가능한 작업 시간은 미팅, 이메일, 이동, 영업 등을 제외하면 60~80% 수준입니다. 효율을 100%로 설정하면 단가가 낮아져 실제 수익이 줄어들 수 있습니다.</dd>
-              <dt>Q. 버퍼 10%는 왜 필요한가요?</dt>
-              <dd>A. 세금 예측 오차, 미수금(미지급 프로젝트), 예상치 못한 지출, 비수기 등에 대비한 안전 마진입니다. 장기적으로 단가를 안정적으로 유지하는 핵심 요소입니다.</dd>
-              <dt>Q. 이 계산기의 세금 계산이 정확한가요?</dt>
-              <dd>A. 공개된 2024년 세율 기준으로 추정합니다. 실제 세금은 공제 항목, 사업 형태, 지역 등에 따라 다를 수 있으니 세무사 상담을 권장합니다.</dd>
-              <dt>Q. 입력한 데이터는 어디에 저장되나요?</dt>
-              <dd>A. 모든 데이터는 브라우저의 로컬 스토리지에만 저장됩니다. 서버로 전송되거나 제3자와 공유되지 않습니다.</dd>
-              <dt>Q. 일용직·플랫폼 프리랜서도 사용할 수 있나요?</dt>
-              <dd>A. 네, 월 근무시간과 효율을 조절하면 플랫폼 수수료(20~30%)를 추가 고정비로 입력하여 활용하실 수 있습니다.</dd>
-            </>
-          ) : (
-            <>
-              <dt>Q. Why isn't efficiency 100%?</dt>
-              <dd>A. Out of an 8-hour workday, actual billable hours are typically 60–80% after accounting for meetings, emails, admin, and business development. Setting efficiency to 100% underprices your work.</dd>
-              <dt>Q. Why a 10% buffer?</dt>
-              <dd>A. It covers tax estimate variances, late-paying clients, unexpected expenses, and slow months. It's the key to maintaining a stable freelance income long-term.</dd>
-              <dt>Q. How accurate is the tax estimate?</dt>
-              <dd>A. Based on published 2024 tax brackets as an estimate. Your actual taxes depend on deductions, filing status, and state taxes. Consult a CPA for precise figures.</dd>
-              <dt>Q. Where is my data stored?</dt>
-              <dd>A. All data is stored only in your browser's localStorage. Nothing is sent to any server or shared with third parties.</dd>
-              <dt>Q. Can platform freelancers (Upwork, Fiverr) use this?</dt>
-              <dd>A. Yes. Add platform fees (typically 20%) as a fixed monthly cost, or factor them into your efficiency percentage.</dd>
-            </>
-          )}
-        </dl>
-
+        {/* FAQ·활용 사례·사용 방법은 page.tsx의 SeoSection에서 렌더한다 (seoContent.ts) */}
         <h2>{isKo ? '⚠️ 면책조항' : '⚠️ Disclaimer'}</h2>
         <p>
           {isKo

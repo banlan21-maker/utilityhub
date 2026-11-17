@@ -456,20 +456,6 @@
   opacity: 0.85;
 }
 .frc_seo ul { padding-left: 1.2rem; }
-.frc_seo_faq dt {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #d1fae5;
-  margin-top: 0.8rem;
-}
-.frc_seo_faq dd {
-  font-size: 0.83rem;
-  color: #a7f3d0;
-  margin-left: 0;
-  margin-top: 0.2rem;
-  opacity: 0.85;
-  line-height: 1.6;
-}
 
 /* ── Responsive ── */
 @media (max-width: 600px) {

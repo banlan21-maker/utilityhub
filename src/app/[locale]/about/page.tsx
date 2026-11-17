@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { getTotalToolCount } from '@/lib/categoryUtils';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 import s from './about.module.css';
@@ -57,7 +58,7 @@ export default async function AboutPage({
 
   const principles = [
     { icon: t('p1_icon'), title: t('p1_title'), body: t('p1_body') },
-    { icon: t('p2_icon'), title: t('p2_title'), body: t('p2_body') },
+    { icon: t('p2_icon'), title: t('p2_title'), body: t('p2_body', { count: getTotalToolCount() }) },
     { icon: t('p3_icon'), title: t('p3_title'), body: t('p3_body') },
   ];
 
@@ -77,7 +78,7 @@ export default async function AboutPage({
         <h2 className={s.cardTitle}>
           <span className={s.accent}>—</span> {t('origin_title')}
         </h2>
-        <p className={s.cardBody}>{t('origin_body')}</p>
+        <p className={s.cardBody}>{t('origin_body', { count: getTotalToolCount() })}</p>
       </article>
 
       {/* Philosophy Cards */}
@@ -99,7 +100,7 @@ export default async function AboutPage({
         <h2 id="future-heading" className={s.cardTitle}>
           <span className={s.accent}>—</span> {t('future_title')}
         </h2>
-        <p className={s.cardBody}>{t('future_body')}</p>
+        <p className={s.cardBody}>{t('future_body', { count: getTotalToolCount() })}</p>
       </section>
 
       {/* CTA */}

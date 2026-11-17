@@ -8,6 +8,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './formation-planner.module.css';
+import { FORMATION_PLANNER_SEO } from './seoContent';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -762,52 +763,7 @@ export default function FormationPlannerClient() {
       />
       <RelatedTools toolId="utilities/design/formation-planner" />
 
-      <SeoSection
-        ko={{
-          title: 'Formation Playmaker Pro — 스마트 범례 & 전술 보드',
-          description: '단순한 위치 표시를 넘어, 각 멤버의 이름과 팀명을 범례(Legend)로 정리하고 움직임을 60초 영상으로 기록할 수 있는 하이엔드 전술 시뮬레이터입니다.',
-          useCases: [
-            { icon: '⚽', title: '스포츠 전술 설계', desc: '축구, 농구, 배구 등 다양한 종목의 포메이션과 전술 동선을 시각화하세요.' },
-            { icon: '🎭', title: '무대 & 공연 연출', desc: '공연자 위치와 동선을 무대 배경에서 직관적으로 배치하세요.' },
-            { icon: '📋', title: '스마트 범례 관리', desc: '말을 추가하면 이름 입력창이 자동 생성되어 별도 설명 없이도 전술이 이해됩니다.' },
-            { icon: '🎥', title: '60초 전술 영상', desc: '동선을 녹화하여 팀원들에게 영상으로 공유하세요. 범례도 영상에 포함됩니다.' },
-          ],
-          steps: [
-            { step: '배경 선택', desc: '축구, 농구, 배구, 테니스, 무대, 모눈종이 중 원하는 배경을 선택하세요.' },
-            { step: '멤버 추가', desc: '색상과 번호/문자를 설정하고 [추가] 버튼을 클릭하면 말이 생성되고 범례에 자동 등록됩니다.' },
-            { step: '범례 편집', desc: '우측(PC) 또는 하단 드로어(모바일)에서 각 말의 이름을 입력하세요.' },
-            { step: '녹화 & 저장', desc: '[녹화] 버튼으로 동선을 60초 영상으로 저장하거나 이미지로 내보내세요.' },
-          ],
-          faqs: [
-            { q: '범례에 몇 명까지 넣을 수 있나요?', a: '화면 구성상 15~20명 내외가 가장 보기 좋게 저장됩니다.' },
-            { q: '녹화된 영상에도 범례가 나오나요?', a: '네, 보드와 범례가 통합된 상태로 녹화되어 저장됩니다.' },
-            { q: '왜 녹화 시간이 60초로 제한되나요?', a: '본 툴은 별도 서버 없이 브라우저에서 직접 영상을 인코딩합니다. 기기 성능 저하 없이 안정적인 녹화 품질을 보장하기 위해 최대 60초로 설계되었습니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
-          ],
-        }}
-        en={{
-          title: 'Formation Playmaker Pro — Smart Legend & Tactics Board',
-          description: 'A high-end tactics simulator that organizes each member\'s name as a Smart Legend and records movement as a 60-second video.',
-          useCases: [
-            { icon: '⚽', title: 'Sports Tactics', desc: 'Visualize formations and movement paths for soccer, basketball, volleyball and more.' },
-            { icon: '🎭', title: 'Stage & Performance', desc: 'Arrange performers on a stage background with intuitive drag & drop.' },
-            { icon: '📋', title: 'Smart Legend', desc: 'Name inputs auto-generate as you add pieces — no separate explanation needed.' },
-            { icon: '🎥', title: '60s Tactic Video', desc: 'Record movement and share as video. Legend is included in the recording.' },
-          ],
-          steps: [
-            { step: 'Choose background', desc: 'Select from soccer, basketball, volleyball, tennis, stage, or grid.' },
-            { step: 'Add pieces', desc: 'Set color and number/letter, then click Add. Pieces auto-register in the legend.' },
-            { step: 'Edit legend', desc: 'Enter names in the right panel (PC) or bottom drawer (mobile).' },
-            { step: 'Record & export', desc: 'Record 60s video or export as image with legend included.' },
-          ],
-          faqs: [
-            { q: 'How many pieces can I add?', a: '15–20 pieces display best when saving as image or video.' },
-            { q: 'Does the legend appear in the recording?', a: 'Yes — the board and legend are combined into a single recording.' },
-            { q: 'Why is recording limited to 60 seconds?', a: 'The tool encodes video directly in your browser without a server. 60s ensures stable quality on all devices.' },
-            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
-          ],
-        }}
-      />
+      <SeoSection ko={FORMATION_PLANNER_SEO.ko} en={FORMATION_PLANNER_SEO.en} />
     </div>
   );
 }

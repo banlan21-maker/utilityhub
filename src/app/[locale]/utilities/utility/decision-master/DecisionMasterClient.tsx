@@ -7,6 +7,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './decision.module.css';
+import { SEO_KO, SEO_EN } from './content';
 
 /* ── Types ── */
 type Mode = 'ladder' | 'wheel' | 'dice' | 'lot' | 'arrow';
@@ -252,6 +253,8 @@ function LotMode({ isKo }: { isKo: boolean }) {
     setDone(false);
   };
 
+  // 인원·당첨 수가 바뀌면 카드를 다시 섞는다 (기존 동작 유지, 린트 오류만 억제)
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
   useEffect(() => { reset(); }, [total, winners]);
 
   const flip = (i: number) => {
@@ -791,121 +794,12 @@ export default function DecisionMasterClient() {
       <RelatedTools toolId="utilities/utility/decision-master" />
 
       {/* SEO */}
-      <section className={s.seo_section}>
-        {isKo ? (
-          <>
-            <h2 className={s.seo_h2}>Decision Master란 무엇인가요?</h2>
-            <p className={s.seo_p}>
-              Decision Master는 일상의 크고 작은 결정을 재미있고 공정하게 해결하기 위한 5-in-1 랜덤 결정 도구 모음입니다.
-              오늘 점심 메뉴부터 팀 역할 배정, 게임 순서 정하기까지 모든 상황에서 활용할 수 있습니다.
-              사다리 타기(Ladder), 돌림판(Wheel), 주사위(Dice), 제비뽑기(Draw), 화살표 돌리기(Arrow) 다섯 가지 모드를
-              하나의 페이지에서 바로 사용할 수 있으며, 별도 설치나 회원가입 없이 무료로 이용 가능합니다.
-            </p>
-
-            <h2 className={s.seo_h2}>각 모드 소개</h2>
-            <p className={s.seo_p}>
-              <strong>🪜 사다리 타기</strong> — 참가자 2~6명의 이름과 결과를 입력하고 사다리를 생성한 뒤, 개별 또는 전체 경로를 공개할 수 있습니다.
-              무작위로 생성된 가로대(bridge)가 공정한 결과를 보장합니다.<br />
-              <strong>🎡 돌림판</strong> — 선택지를 최대 8개까지 입력하고 룰렛처럼 돌려서 결과를 뽑습니다.
-              항목별로 색상이 자동 배정되며 원하는 만큼 항목을 추가·삭제할 수 있습니다.<br />
-              <strong>🎲 주사위</strong> — 1~5개의 주사위를 동시에 굴릴 수 있습니다. 보드게임, RPG, 내기 등 다양한 상황에 활용하세요.<br />
-              <strong>🎴 제비뽑기</strong> — 전체 인원과 당첨 인원을 설정하면 카드가 무작위로 배치됩니다. 카드를 클릭해 하나씩 뒤집어 당첨 여부를 확인하세요.<br />
-              <strong>🏹 화살표 돌리기</strong> — 8개 구역으로 나뉜 원판 위에서 화살표가 빠르게 회전한 뒤 멈추는 곳이 결과입니다. 직접 입력 모드로 구역 이름을 변경할 수 있습니다.
-            </p>
-
-            <h2 className={s.seo_h2}>이럴 때 사용하세요</h2>
-            <p className={s.seo_p}>
-              점심 메뉴·카페 선택, 팀 프로젝트 역할 분담, 게임 플레이 순서, 벌칙 미션 뽑기, 여행지·숙소 결정, 스터디 발표 순서 등
-              결정이 필요한 모든 상황에서 누구나 납득할 수 있는 공정한 결과를 얻을 수 있습니다.
-              모바일에서도 완벽하게 동작하므로 모임 현장에서 즉석으로 사용하기 좋습니다.
-            </p>
-
-            <h2 className={s.seo_h2}>자주 묻는 질문 (FAQ)</h2>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>결과가 진짜 무작위인가요?</span></div>
-              <p className={s.seo_faq_a}>
-                네. 돌림판·화살표·주사위는 JavaScript의 <code>Math.random()</code> 기반 암호학적으로 안전한 의사난수를 사용하며,
-                사다리 가로대와 제비뽑기 당첨 위치도 매 생성 시 무작위로 결정됩니다.
-                동일한 결과가 반복되지 않도록 설계되어 있어 공정한 추첨 도구로 활용하기에 적합합니다.
-              </p>
-            </div>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>로그인이나 설치가 필요한가요?</span></div>
-              <p className={s.seo_faq_a}>
-                아니요. 회원가입·로그인·앱 설치 모두 필요 없습니다. 브라우저에서 바로 사용할 수 있으며,
-                입력한 이름이나 선택지 데이터는 서버로 전송되지 않고 기기 내에서만 처리됩니다.
-                개인정보 걱정 없이 편하게 사용하세요.
-              </p>
-            </div>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>사다리 타기 결과를 미리 알 수 있나요?</span></div>
-              <p className={s.seo_faq_a}>
-                아니요. 사다리 가로대는 "사다리 생성" 버튼을 누를 때마다 완전히 새롭게 무작위 생성됩니다.
-                개별 경로는 GO 버튼으로 한 명씩 공개하거나, "전체 공개" 버튼으로 한 번에 모든 결과를 확인할 수 있습니다.
-              </p>
-            </div>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>모바일에서도 잘 되나요?</span></div>
-              <p className={s.seo_faq_a}>
-                네. 모든 모드는 모바일 화면에 최적화되어 있습니다. 사다리 타기 캔버스는 화면 너비에 맞게 자동 조절되며,
-                돌림판과 화살표는 터치 입력도 원활하게 동작합니다. iOS Safari 및 Android Chrome 모두 지원합니다.
-              </p>
-            </div>
-
-            <div className={s.disclaimer}>
-              ⚠️ 이 도구의 모든 결과는 순수 오락·편의 목적의 랜덤 생성값으로, 법적 효력이 없습니다.
-              중요한 결정은 반드시 당사자 간 합의를 통해 이루어져야 합니다.
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className={s.seo_h2}>What is Decision Master?</h2>
-            <p className={s.seo_p}>
-              Decision Master is a free, browser-based 5-in-1 random decision toolkit designed to make everyday choices fun and fair.
-              Whether you need to pick a lunch spot, assign team roles, or settle a bet, the five built-in modes — Ladder, Wheel, Dice, Draw, and Arrow — cover every scenario without any installation or sign-up required.
-            </p>
-
-            <h2 className={s.seo_h2}>Mode Overview</h2>
-            <p className={s.seo_p}>
-              <strong>🪜 Ladder</strong> — Enter 2–6 player names and prizes, generate a random ladder, then reveal paths one by one or all at once.<br />
-              <strong>🎡 Wheel</strong> — Add up to 8 options and spin a colorful roulette wheel to land on a result.<br />
-              <strong>🎲 Dice</strong> — Roll 1–5 dice simultaneously; great for board games, RPGs, and quick tiebreakers.<br />
-              <strong>🎴 Draw</strong> — Set total participants and winners; click mystery cards to flip them and reveal who wins.<br />
-              <strong>🏹 Arrow</strong> — An 8-sector dial with a spinning arrow; customize sector labels for personalized results.
-            </p>
-
-            <h2 className={s.seo_h2}>Frequently Asked Questions</h2>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>Are the results truly random?</span></div>
-              <p className={s.seo_faq_a}>
-                Yes. All modes use JavaScript's cryptographically-seeded <code>Math.random()</code> for unbiased results. Ladder bridges, wheel spin angles, and draw positions are all regenerated fresh each time, ensuring no predictable patterns.
-              </p>
-            </div>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>Is any data sent to a server?</span></div>
-              <p className={s.seo_faq_a}>
-                No. Everything runs entirely in your browser. Names, labels, and results never leave your device. There are no accounts, no tracking, and no data storage.
-              </p>
-            </div>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>Does it work on mobile?</span></div>
-              <p className={s.seo_faq_a}>
-                Yes. All five modes are fully responsive and touch-friendly. The ladder canvas scales to fit the screen, and the wheel and arrow modes respond smoothly to touch input on iOS Safari and Android Chrome.
-              </p>
-            </div>
-            <div className={s.seo_faq_item}>
-              <div className={s.seo_faq_q}><span>Q.</span><span>Can I use this for official draws or giveaways?</span></div>
-              <p className={s.seo_faq_a}>
-                This tool is designed for fun and convenience. While the randomness is genuine, it has not been audited for official lottery or legal proceedings. For legally binding draws, consult a certified random draw service.
-              </p>
-            </div>
-
-            <div className={s.disclaimer}>
-              ⚠️ All results generated by this tool are for entertainment and convenience only and carry no legal weight. Important decisions should always be made through mutual agreement between all parties involved.
-            </div>
-          </>
-        )}
-      </section>
+      <SeoSection ko={SEO_KO} en={SEO_EN} />
+      <div className={s.disclaimer}>
+        {isKo
+          ? "⚠️ 이 도구의 모든 결과는 순수 오락·편의 목적의 랜덤 생성값으로, 법적 효력이 없습니다. 중요한 결정은 반드시 당사자 간 합의를 통해 이루어져야 합니다."
+          : "⚠️ All results generated by this tool are for entertainment and convenience only and carry no legal weight. Important decisions should always be made through mutual agreement between all parties involved."}
+      </div>
     </div>
   );
 }
