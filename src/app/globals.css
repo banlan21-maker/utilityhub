@@ -43,6 +43,22 @@
   --page-padding: 1rem;
   --section-gap: 2rem;
   --container-max-width: 1100px;
+
+  /* 도구 본문 폭 3단계 — 좁은 입력형 / 보통 / 넓은 작업형 */
+  --tool-width-narrow: 720px;
+  --tool-width: 960px;
+  --tool-width-wide: 1200px;
+
+  /* 도구 공통 강조색 + 옛 변수 이름 호환 (도구 CSS가 쓰던 --color-* 를 사이트 변수로 연결) */
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #7c3aed;
+  --color-primary-light: #ede9fe;
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-bg-card: var(--surface);
+  --color-bg-page: var(--background);
 }
 
 @media (min-width: 768px) {
@@ -53,6 +69,8 @@
 }
 
 [data-theme='dark'] {
+  /* 기본 입력칸·선택 상자·스크롤바도 어둡게 */
+  color-scheme: dark;
   --primary: #818cf8;      /* Indigo 400 */
   --primary-hover: #6366f1;
   --secondary: #34d399;    /* Emerald 400 */
@@ -69,6 +87,10 @@
   
   --glass-bg: rgba(30, 41, 59, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
+
+  --color-primary: #a78bfa;
+  --color-primary-hover: #8b5cf6;
+  --color-primary-light: rgba(167, 139, 250, 0.16);
 }
 
 /* Base Resets */

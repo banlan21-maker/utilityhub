@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { FileSearch, AlertTriangle, X, AlertCircle, Download, RefreshCw } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -321,14 +322,7 @@ export default function PdfOcrClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      {/* Header */}
-      <header className={s.header}>
-        <div className={s.icon_wrap}>
-          <FileSearch size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.title}>{t('title')}</h1>
-        <p className={s.subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<FileSearch />} title={t('title')} subtitle={t('description')} />
 
       {/* Mobile warning */}
       {showMobileWarning && (

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './frc.module.css';
 
@@ -233,18 +234,18 @@ export default function FreelanceRateCalculatorClient() {
       <NavigationActions />
 
       {/* ── Header ── */}
-      <header className={s.frc_header}>
-        <div className={s.frc_badge}>⚡ Global Freelance Rate Calculator</div>
-        <h1 className={s.frc_title}>
+      <ToolHeader
+        icon="⚡"
+        title={<>
           {isKo ? '프리랜서 적정 단가 계산기' : 'Freelance Rate Calculator'}
           <br /><span>{isKo ? '국제 표준 산정 시스템' : 'Global Standard System'}</span>
-        </h1>
-        <p className={s.frc_subtitle}>
-          {isKo
-            ? '세금·고정지출·효율을 반영한 나만의 시간당 단가를 계산하세요'
-            : 'Calculate your true hourly rate with taxes, fixed costs & efficiency'}
-        </p>
-      </header>
+        </>}
+        subtitle={isKo
+          ? '세금·고정지출·효율을 반영한 나만의 시간당 단가를 계산하세요'
+          : 'Calculate your true hourly rate with taxes, fixed costs & efficiency'}
+      >
+        <div className={s.frc_badge}>⚡ Global Freelance Rate Calculator</div>
+      </ToolHeader>
 
       {/* ── Country Tabs ── */}
       <div className={s.frc_country_tabs}>

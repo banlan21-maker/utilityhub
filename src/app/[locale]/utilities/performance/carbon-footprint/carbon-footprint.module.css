@@ -12,7 +12,7 @@
 
 /* ── Container ── */
 .container {
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -23,37 +23,12 @@
   animation: cfFadeIn 0.6s ease-out;
 }
 
-/* ── Header ── */
-.header {
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-.header_icon {
-  display: inline-flex;
-  padding: 1rem;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-bottom: 1.5rem;
-}
-.title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: var(--color-text-primary, #1e293b);
-  margin: 0 0 0.75rem;
-}
-.subtitle {
-  color: var(--color-text-secondary, #64748b);
-  font-size: 1.05rem;
-  margin: 0;
-}
-
 /* ── Panel ── */
 .panel {
   padding: 2rem;
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
   max-width: 600px;
   margin: 0 auto;
@@ -79,16 +54,16 @@
 .label {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #475569;
+  color: var(--text-secondary);
 }
 .input,
 .select {
   padding: 0.55rem 0.75rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 0.6rem;
   font-size: 0.9rem;
-  color: #1e293b;
-  background: #fff;
+  color: var(--text-primary);
+  background: var(--surface);
   outline: none;
   width: 100%;
   box-sizing: border-box;
@@ -153,8 +128,8 @@
   margin-bottom: 1rem;
 }
 .metric_card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 0.85rem 0.75rem;
   text-align: center;
@@ -172,7 +147,7 @@
 }
 .metric_card_label {
   font-size: 0.72rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-top: 0.2rem;
 }
 
@@ -224,10 +199,10 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.85rem;
-  color: #374151;
+  color: var(--text-primary);
   padding: 0.2rem 0;
 }
-.sim_label { color: #6b7280; }
+.sim_label { color: var(--text-secondary); }
 .sim_value { font-weight: 700; }
 .sim_saving {
   color: #059669;

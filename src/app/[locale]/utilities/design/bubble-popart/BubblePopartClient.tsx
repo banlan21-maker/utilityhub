@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -292,20 +293,7 @@ export default function BubblePopartClient() {
   return (
     <div className={s.container}>
       <NavigationActions />
-      <header className={s.header}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem',
-        }}>
-          <Sparkles size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.title}>{t('title')}</h1>
-        <p className={s.subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Sparkles />} title={t('title')} subtitle={t('description')} />
 
       <div className={s.splitLayout}>
         {/* 우측 캔버스 — 모바일에서는 order: -1 로 위로 옴 */}

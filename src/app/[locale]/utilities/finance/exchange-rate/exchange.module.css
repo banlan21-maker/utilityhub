@@ -1,5 +1,5 @@
 .ex_container {
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -9,28 +9,11 @@
   animation: fadeIn 0.6s ease-out;
 }
 
-.ex_header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.ex_title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-}
-
-.ex_subtitle {
-  color: #64748b;
-  font-size: 1.1rem;
-}
-
 .ex_panel {
   padding: 2.5rem;
-  background: white;
+  background: var(--surface);
   border-radius: 2rem;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
   max-width: 600px;
   margin: 0 auto;
@@ -45,7 +28,7 @@
   display: block;
   font-size: 0.75rem;
   font-weight: 800;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -61,7 +44,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 1.25rem;
   pointer-events: none;
 }
@@ -71,10 +54,10 @@
   padding: 1.1rem 1.5rem 1.1rem 3rem;
   font-size: 1.75rem;
   font-weight: 800;
-  border: 2px solid #f1f5f9;
+  border: 2px solid var(--border);
   border-radius: 1.25rem;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--surface-hover);
+  color: var(--text-primary);
   transition: all 0.2s;
   outline: none;
   box-sizing: border-box;
@@ -82,7 +65,7 @@
 
 .ex_amount_input:focus {
   border-color: #8b5cf6;
-  background: white;
+  background: var(--surface);
   box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.1);
 }
 
@@ -98,8 +81,8 @@
   width: 100%;
   padding: 0.875rem 1rem;
   border-radius: 1rem;
-  border: 1.5px solid #e2e8f0;
-  background: #f8fafc;
+  border: 1.5px solid var(--border);
+  background: var(--surface-hover);
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
@@ -115,14 +98,14 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1.5px solid #e2e8f0;
-  background: white;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
-  color: #64748b;
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
@@ -150,7 +133,7 @@
 .ex_result_main {
   font-size: 2.75rem;
   font-weight: 900;
-  color: #1e293b;
+  color: var(--text-primary);
   line-height: 1.1;
   margin: 0.5rem 0;
   letter-spacing: -2px;
@@ -158,10 +141,10 @@
 }
 
 .ex_chart_box {
-  background: #f8fafc;
+  background: var(--surface-hover);
   border-radius: 1.25rem;
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .ex_ref_grid {
@@ -173,7 +156,7 @@
 
 .ex_ref_item {
   padding: 0.75rem;
-  background: #f1f5f9;
+  background: var(--surface-hover);
   border-radius: 0.75rem;
   font-size: 0.8rem;
 }
@@ -181,13 +164,13 @@
 .ex_ad_placeholder {
   width: 100%;
   min-height: 90px;
-  background: rgba(241, 245, 249, 0.5);
-  border: 1px dashed #cbd5e1;
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 2rem 0;
 }
@@ -201,14 +184,6 @@
   .ex_container {
     padding: 0 0.75rem;
     gap: 1.25rem;
-  }
-
-  .ex_title {
-    font-size: 1.75rem;
-  }
-
-  .ex_subtitle {
-    font-size: 1rem;
   }
 
   .ex_panel {
@@ -247,10 +222,6 @@
 }
 
 @media (max-width: 400px) {
-  .ex_title {
-    font-size: 1.5rem;
-  }
-
   .ex_selector_row {
     grid-template-columns: 1fr;
   }

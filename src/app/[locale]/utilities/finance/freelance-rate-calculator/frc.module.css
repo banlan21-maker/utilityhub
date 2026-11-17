@@ -9,11 +9,10 @@
 }
 
 /* ── Header ── */
-.frc_header {
-  text-align: center;
-  padding: 2.5rem 1rem 2rem;
-  position: relative;
-}
+/* 공통 ToolHeader는 테마 글자색을 쓰므로, 진한 초록 배경 위에서 읽히도록 글자색만 밝게 */
+.frc_wrap > header h1 { color: #fff; }
+.frc_wrap > header p { color: #a7f3d0; }
+
 .frc_badge {
   display: inline-flex;
   align-items: center;
@@ -28,20 +27,6 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 1.2rem;
-}
-.frc_title {
-  font-size: clamp(1.6rem, 5vw, 2.4rem);
-  font-weight: 800;
-  color: #fff;
-  margin: 0 0 0.6rem;
-  line-height: 1.2;
-}
-.frc_title span { color: #D4AF37; }
-.frc_subtitle {
-  font-size: 0.95rem;
-  color: #a7f3d0;
-  margin: 0;
-  opacity: 0.85;
 }
 
 /* ── Country Tabs ── */

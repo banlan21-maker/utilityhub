@@ -1,5 +1,5 @@
 .rx_wrap {
-  max-width: 1024px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   padding: 0 1rem;
@@ -68,7 +68,7 @@
   margin: 1.5rem auto 0;
   min-height: 90px;
   background: rgba(226, 232, 240, 0.3);
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed var(--border);
   border-radius: 0.5rem;
   display: flex;
   align-items: center;

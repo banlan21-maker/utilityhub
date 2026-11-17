@@ -10,7 +10,7 @@
   --wd-toast-bg: #0f172a;
   --wd-toast-text: #ffffff;
 
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -28,21 +28,6 @@
   --wd-toast-bg: #f1f5f9;
   --wd-toast-text: #0f172a;
 }
-
-.header { text-align: center; }
-
-.icon_wrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: var(--surface);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 1.25rem;
-  color: var(--primary);
-}
-
-.title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin: 0 0 0.6rem; word-break: keep-all; }
-.subtitle { color: var(--text-secondary); font-size: 1.02rem; line-height: 1.6; word-break: keep-all; margin: 0; }
 
 .game {
   background: var(--surface);
@@ -180,8 +165,6 @@
 /* 휴대폰: 판과 자판이 한 화면에 들어오도록 여백·타일을 줄인다 */
 @media (max-width: 480px) {
   .container { padding-inline: 0; gap: 1rem; }
-  .icon_wrap { display: none; }
-  .subtitle { font-size: 0.92rem; }
   .game { padding: 0.9rem 0.3rem 0.8rem; gap: 0.7rem; }
   .tiles_ko { width: min(70vw, 342px); }
   .tiles_en { width: min(62vw, 310px); }

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { Grid3x3 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -364,11 +365,7 @@ export default function WordleClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.icon_wrap}><Grid3x3 size={40} /></div>
-        <h1 className={s.title}>{T.title}</h1>
-        <p className={s.subtitle}>{T.subtitle}</p>
-      </header>
+      <ToolHeader compact icon={<Grid3x3 />} title={T.title} subtitle={T.subtitle} />
 
       <div className={s.game} ref={gameRef}>
         <div className={s.tabs} role="tablist" aria-label={isKo ? '언어' : 'Language'}>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocale } from 'next-intl';
 import { Layers, Monitor, Smartphone } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -152,11 +153,7 @@ export default function CoreWebVitalsClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.icon_wrap}><Layers size={40} color="#8b5cf6" /></div>
-        <h1 className={s.title}>{titleStr}</h1>
-        <p className={s.subtitle}>{descStr}</p>
-      </header>
+      <ToolHeader icon={<Layers />} title={titleStr} subtitle={descStr} />
 
       {/* 기기 탭 */}
       <div className={s.device_tabs} role="tablist" aria-label={isKo ? '측정 기기' : 'Device'}>

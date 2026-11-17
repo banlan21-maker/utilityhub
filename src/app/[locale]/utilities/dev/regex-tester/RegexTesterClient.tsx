@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -59,7 +60,7 @@ function HighlightedText({
   if (!regex || !text) {
     return (
       <span style={{ color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>
-        {text || <span style={{ color: '#475569' }}>{emptyHint}</span>}
+        {text || <span style={{ color: 'var(--text-secondary)' }}>{emptyHint}</span>}
       </span>
     );
   }
@@ -87,7 +88,7 @@ function HighlightedText({
         p.match ? (
           <mark
             key={i}
-            style={{ background: '#fbbf24', color: '#0f172a', borderRadius: '2px', padding: '0 1px' }}
+            style={{ background: '#fbbf24', color: 'var(--text-primary)', borderRadius: '2px', padding: '0 1px' }}
           >
             {p.text}
           </mark>
@@ -144,24 +145,7 @@ export default function RegexTesterClient() {
   return (
     <div className={rxs.rx_wrap}>
       <NavigationActions />
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div
-          style={{
-            display: 'inline-flex',
-            padding: '1rem',
-            background: 'white',
-            borderRadius: '1.5rem',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <Search size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {t('title')}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Search />} title={t('title')} subtitle={t('description')} />
 
       <div className={`${rxs.rx_grid} ${showCheat ? rxs.rx_grid_with_cheat : ''}`}>
         {/* Main column */}
@@ -318,7 +302,7 @@ export default function RegexTesterClient() {
                       padding: '0.15rem 0.5rem',
                       borderRadius: 'var(--radius-sm)',
                       background: 'rgba(148,163,184,0.15)',
-                      color: '#94a3b8',
+                      color: 'var(--text-muted)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
                     }}

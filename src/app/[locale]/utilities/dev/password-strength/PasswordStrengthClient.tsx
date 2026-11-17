@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useState, useCallback, useMemo } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -142,27 +143,12 @@ export default function PasswordStrengthClient() {
   return (
     <div>
       <NavigationActions />
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <ShieldCheck size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
-      </header>
-
-      {/* Privacy badge */}
-      <div style={{ maxWidth: '640px', margin: '0 auto 1.25rem', display: 'flex', justifyContent: 'center' }}>
+      <ToolHeader icon={<ShieldCheck />} title={t('title')} subtitle={t('description')}>
+        {/* Privacy badge */}
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.45rem 1rem', borderRadius: 'var(--radius-full)', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', fontSize: '0.78rem', color: '#10b981', fontWeight: 600 }}>
           🔒 {t('badge')}
         </div>
-      </div>
+      </ToolHeader>
 
       <div style={{ maxWidth: '640px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
@@ -319,7 +305,7 @@ export default function PasswordStrengthClient() {
                 { ok: /[^a-zA-Z0-9]/.test(analyzeTarget), label: t('check.symbol') },
               ].map(({ ok, label }) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem' }}>
-                  <span style={{ color: ok ? '#10b981' : '#94a3b8', fontSize: '1rem' }}>{ok ? '✓' : '○'}</span>
+                  <span style={{ color: ok ? '#10b981' : 'var(--text-muted)', fontSize: '1rem' }}>{ok ? '✓' : '○'}</span>
                   <span style={{ color: ok ? 'var(--text-primary)' : 'var(--text-muted)' }}>{label}</span>
                 </div>
               ))}

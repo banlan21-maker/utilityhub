@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import JSZip from 'jszip';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -532,17 +533,13 @@ export default function PhotoBatchMasterClient() {
       <NavigationActions />
 
       {/* ── Header ── */}
-      <header className={s.header}>
-        <div className={s.iconWrap}>
-          <Camera size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.title}>Photo Batch Master</h1>
-        <p className={s.subtitle}>
-          {isKo
-            ? '일괄 사진 보정 · 워터마크 삽입 — 100장도 1분 안에'
-            : 'Batch color grading · watermark stamping — 100 photos in 1 minute'}
-        </p>
-      </header>
+      <ToolHeader
+        icon={<Camera />}
+        title="Photo Batch Master"
+        subtitle={isKo
+          ? '일괄 사진 보정 · 워터마크 삽입 — 100장도 1분 안에'
+          : 'Batch color grading · watermark stamping — 100 photos in 1 minute'}
+      />
 
       {/* ═══════════════ PREVIEW (center, large) ═══════════════ */}
       <section className={s.section}>

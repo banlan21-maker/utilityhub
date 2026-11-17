@@ -7,7 +7,7 @@
   --cc-good: #15803d;
   --cc-ok: #b45309;
   --cc-warn: #c2410c;
-  max-width: 960px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   padding: 1rem;
 }
@@ -19,43 +19,6 @@
   --cc-good: #4ade80;
   --cc-ok: #fbbf24;
   --cc-warn: #fb923c;
-}
-
-/* ── 머리말 ── */
-.header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.iconWrap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  font-size: 1.9rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1.1rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 0.85rem;
-}
-
-.title {
-  font-size: 1.75rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 0.45rem;
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  margin: 0;
-  line-height: 1.6;
 }
 
 /* ── 배치: 데스크톱은 왼쪽 마네킹 고정, 오른쪽에 카드 ── */
@@ -436,7 +399,6 @@
 /* ── 모바일: 마네킹과 아이템 목록을 나란히, 나머지는 아래 ── */
 @media (max-width: 720px) {
   .container { padding: 0.75rem; }
-  .title { font-size: 1.45rem; }
   .mainGrid {
     grid-template-columns: minmax(0, 44%) minmax(0, 1fr);
     grid-template-areas:

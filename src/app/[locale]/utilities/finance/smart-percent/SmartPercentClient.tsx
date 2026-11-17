@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { Copy, Check, Trash2, Clock } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -300,18 +301,13 @@ export default function SmartPercentClient() {
     <div className={s.sp_wrap}>
       <NavigationActions />
 
-      {/* Header */}
-      <header className={s.sp_header}>
-        <span className={s.sp_header_icon}>💹</span>
-        <h1 className={s.sp_title}>
-          {isKo ? '스마트 퍼센트 계산기' : 'Smart Percentage Calculator'}
-        </h1>
-        <p className={s.sp_subtitle}>
-          {isKo
-            ? '기본·증감률·할인율·마진율 — 입력하는 즉시 실시간 계산'
-            : 'Basic · Change · Discount · Margin — real-time as you type'}
-        </p>
-      </header>
+      <ToolHeader
+        icon="💹"
+        title={isKo ? '스마트 퍼센트 계산기' : 'Smart Percentage Calculator'}
+        subtitle={isKo
+          ? '기본·증감률·할인율·마진율 — 입력하는 즉시 실시간 계산'
+          : 'Basic · Change · Discount · Margin — real-time as you type'}
+      />
 
       {/* Tabs */}
       <nav className={s.sp_tabs}>

@@ -4,21 +4,6 @@
   width: 100%;
 }
 
-.utility_list_header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.utility_list_title {
-  font-size: 3.5rem;
-  font-weight: 950;
-  background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 1rem;
-  letter-spacing: -2px;
-}
-
 .utility_list_subtitle {
   font-size: 1.25rem;
   color: #64748b;

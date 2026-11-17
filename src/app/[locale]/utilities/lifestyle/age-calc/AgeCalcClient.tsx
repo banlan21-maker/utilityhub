@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -264,20 +265,11 @@ export default function AgeCalcClient() {
     <div>
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Calendar size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{isKo ? '한국형 날짜 계산기' : 'Korean Date Calculator'}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{isKo ? '만나이 · 전역일 · 배란일 — 한국 생활에 필요한 날짜 계산을 한 곳에서' : 'International age · Military discharge · Ovulation — the date calculations you need for life in Korea, all in one place'}</p>
-      </header>
+      <ToolHeader
+        icon={<Calendar />}
+        title={isKo ? '한국형 날짜 계산기' : 'Korean Date Calculator'}
+        subtitle={isKo ? '만나이 · 전역일 · 배란일 — 한국 생활에 필요한 날짜 계산을 한 곳에서' : 'International age · Military discharge · Ovulation — the date calculations you need for life in Korea, all in one place'}
+      />
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>

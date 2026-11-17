@@ -12,6 +12,7 @@ import {
   Share2
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -96,20 +97,7 @@ export default function HashtagGeneratorClient() {
   return (
     <div className={s.hashtag_container}>
       <NavigationActions />
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Hash size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{isKo ? '해시태그 생성기' : 'Hashtag Generator'}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{isKo ? '키워드 하나로 인기 해시태그 즉시 생성' : 'Generate 30 popular hashtags instantly'}</p>
-      </header>
+      <ToolHeader icon={<Hash />} title={isKo ? '해시태그 생성기' : 'Hashtag Generator'} subtitle={isKo ? '키워드 하나로 인기 해시태그 즉시 생성' : 'Generate 30 popular hashtags instantly'} />
 
       <section className={s.hashtag_panel}>
         <div>

@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Calculator } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
@@ -278,29 +279,16 @@ export default function UnitConverterClient() {
   });
 
   return (
-    <div style={{ maxWidth: '896px', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
+    <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Calculator size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {locale === 'ko' ? '단위 변환기' : 'Unit Converter'}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {locale === 'ko'
-            ? '길이, 무게, 온도, 데이터 등 모든 단위를 즉시 환산'
-            : 'Instantly convert length, weight, temperature, data and more'}
-        </p>
-      </header>
+      <ToolHeader
+        icon={<Calculator />}
+        title={locale === 'ko' ? '단위 변환기' : 'Unit Converter'}
+        subtitle={locale === 'ko'
+          ? '길이, 무게, 온도, 데이터 등 모든 단위를 즉시 환산'
+          : 'Instantly convert length, weight, temperature, data and more'}
+      />
 
       {/* ── Tab bar (5×2 grid on desktop, 4+remaining on mobile) ── */}
       <div style={{

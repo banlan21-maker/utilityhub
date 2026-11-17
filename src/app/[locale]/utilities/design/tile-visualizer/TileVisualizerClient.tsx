@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Layers, Upload, Download, RotateCw, Image as ImageIcon, Move, Brush, Eraser, Trash2, Undo2, SplitSquareHorizontal } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -503,11 +504,7 @@ export default function TileVisualizerClient() {
   return (
     <div className={s.container}>
       <NavigationActions />
-      <header className={s.header}>
-        <div className={s.icon_wrap}><Layers size={40} /></div>
-        <h1 className={s.title}>{titleStr}</h1>
-        <p className={s.subtitle}>{descStr}</p>
-      </header>
+      <ToolHeader icon={<Layers />} title={titleStr} subtitle={descStr} />
 
       <div className={s.source}>
         <button type="button" aria-pressed={source === 'sample'} className={`${s.src_btn} ${source === 'sample' ? s.src_on : ''}`} onClick={() => { setSource('sample'); setTool('tile'); setSplit(null); }}>

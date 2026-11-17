@@ -4,7 +4,7 @@
 }
 
 .container {
-  max-width: 1100px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -12,26 +12,6 @@
   gap: 1.75rem;
   animation: fadeIn 0.6s ease-out;
   padding: 0 1rem;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: var(--color-text-primary, #1e293b);
-  margin-bottom: 0.75rem;
-}
-
-.subtitle {
-  color: var(--color-text-secondary, #64748b);
-  font-size: 1.1rem;
-  max-width: 720px;
-  margin: 0 auto;
-  line-height: 1.6;
 }
 
 /* PC: 좌(설정) / 우(캔버스) */
@@ -44,7 +24,7 @@
 
 .settingsPanel {
   background: var(--color-bg-card, #ffffff);
-  border: 1px solid var(--color-border, #f1f5f9);
+  border: 1px solid var(--color-border, var(--border));
   border-radius: 1.5rem;
   box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
   padding: 1.5rem;
@@ -102,13 +82,13 @@
   width: 100%;
   padding: 0.7rem 0.9rem;
   border-radius: 0.85rem;
-  border: 1px solid var(--color-border, #e2e8f0);
+  border: 1px solid var(--color-border, var(--border));
   font-size: 0.95rem;
   font-weight: 600;
   outline: none;
   transition: border-color 0.2s;
-  background: #fff;
-  color: #1e293b;
+  background: var(--surface);
+  color: var(--text-primary);
 }
 .input:focus {
   border-color: var(--color-primary, #8b5cf6);
@@ -133,7 +113,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border);
   cursor: pointer;
   transition: transform 0.15s, border-color 0.15s;
   padding: 0;
@@ -153,10 +133,10 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed var(--border);
   cursor: pointer;
   padding: 0;
-  background: white;
+  background: var(--surface);
   overflow: hidden;
 }
 
@@ -170,12 +150,12 @@
   flex: 1;
   padding: 0.55rem 0.7rem;
   border-radius: 0.7rem;
-  border: 1px solid #e2e8f0;
-  background: white;
+  border: 1px solid var(--border);
+  background: var(--surface);
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 .toggleBtnActive {
@@ -219,12 +199,12 @@
 .sizeBtn {
   padding: 0.6rem 0.5rem;
   border-radius: 0.7rem;
-  border: 1px solid #e2e8f0;
-  background: white;
+  border: 1px solid var(--border);
+  background: var(--surface);
   font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-secondary);
   transition: all 0.2s;
   display: flex;
   flex-direction: column;
@@ -239,7 +219,7 @@
 }
 .sizeBtnSub {
   font-size: 0.65rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
@@ -298,13 +278,13 @@
 .adPlaceholder {
   width: 100%;
   min-height: 90px;
-  background: rgba(241, 245, 249, 0.5);
-  border: 1px dashed #cbd5e1;
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.85rem;
   margin: 2rem 0;
 }
@@ -324,8 +304,6 @@
     order: -1;
     min-height: 320px;
   }
-  .title { font-size: 1.85rem; }
-  .subtitle { font-size: 1rem; }
 }
 
 /* 다크모드 — 설정 패널 가독성 */

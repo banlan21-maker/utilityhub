@@ -1,28 +1,11 @@
 .fin_container {
-  max-width: 896px; /* max-w-4xl per Rulebook V4.4 */
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--section-gap);
   animation: fadeIn 0.6s ease-out;
-}
-
-.fin_header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.fin_title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-}
-
-.fin_subtitle {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
 }
 
 .fin_tabs {
@@ -39,9 +22,9 @@
   font-weight: 700;
   font-size: 0.9rem;
   transition: all 0.2s;
-  background: white;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
 }
 
 .fin_tab_btn_active {
@@ -53,9 +36,9 @@
 
 .fin_panel {
   padding: 2.5rem;
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem; /* rounded-2xl */
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
   max-width: 540px;
   margin: 0 auto;
@@ -66,7 +49,7 @@
   display: block;
   font-size: 0.75rem;
   font-weight: 800;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -82,17 +65,17 @@
   padding: 1rem 1.25rem;
   font-size: 1.25rem;
   font-weight: 700;
-  border: 2px solid #f1f5f9;
+  border: 2px solid var(--border);
   border-radius: 1rem;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--surface-hover);
+  color: var(--text-primary);
   transition: all 0.2s;
   outline: none;
 }
 
 .fin_input:focus {
   border-color: #8b5cf6;
-  background: white;
+  background: var(--surface);
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
 }
 
@@ -102,7 +85,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .fin_result_card {
@@ -124,7 +107,7 @@
 
 .fin_result_label {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -144,11 +127,11 @@
 .fin_preset_btn {
   padding: 0.4rem 0.75rem;
   border-radius: 0.6rem;
-  border: 1px solid #e2e8f0;
-  background: white;
+  border: 1px solid var(--border);
+  background: var(--surface);
   font-size: 0.8rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -174,13 +157,13 @@
 .fin_ad_placeholder {
   width: 100%;
   min-height: 90px;
-  background: rgba(241, 245, 249, 0.5);
-  border: 1px dashed #cbd5e1;
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 2rem 0;
 }

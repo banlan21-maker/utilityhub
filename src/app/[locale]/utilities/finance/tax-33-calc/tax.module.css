@@ -17,7 +17,7 @@
   --tx-info-bg: #eff6ff;
   --tx-info-text: #1e40af;
 
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -43,21 +43,6 @@
 @media (prefers-reduced-motion: reduce) {
   .tax_container { animation: none; }
 }
-
-.tax_header { text-align: center; }
-
-.icon_wrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: var(--surface);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 1.5rem;
-  color: var(--primary);
-}
-
-.tax_title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem; word-break: keep-all; }
-.tax_subtitle { color: var(--text-secondary); font-size: 1.05rem; word-break: keep-all; line-height: 1.6; }
 
 .notice {
   border-radius: 0.85rem;

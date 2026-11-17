@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -552,7 +553,7 @@ function LadderMode({ isKo }: { isKo: boolean }) {
         {/* Bottom labels */}
         <div style={{ display: 'flex', width: W, margin: '0 auto' }}>
           {prizes.map((p, i) => (
-            <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '0.72rem', fontWeight: 800, color: '#475569', padding: '0.25rem 0' }}>
+            <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-secondary)', padding: '0.25rem 0' }}>
               {p || `${i+1}`}
             </div>
           ))}
@@ -762,17 +763,13 @@ export default function DecisionMasterClient() {
       <NavigationActions />
 
       {/* Header */}
-      <header className={s.dm_header}>
-        <span className={s.dm_header_icon}>🎡</span>
-        <h1 className={s.dm_title}>
-          {isKo ? 'Decision Master' : 'Decision Master'}
-        </h1>
-        <p className={s.dm_subtitle}>
-          {isKo
-            ? '5가지 랜덤 결정 도구 — 사다리 · 돌림판 · 주사위 · 제비뽑기 · 화살표'
-            : '5-in-1 Random Decision Hub — Ladder · Wheel · Dice · Draw · Arrow'}
-        </p>
-      </header>
+      <ToolHeader
+        icon="🎡"
+        title={isKo ? 'Decision Master' : 'Decision Master'}
+        subtitle={isKo
+          ? '5가지 랜덤 결정 도구 — 사다리 · 돌림판 · 주사위 · 제비뽑기 · 화살표'
+          : '5-in-1 Random Decision Hub — Ladder · Wheel · Dice · Draw · Arrow'}
+      />
 
       {/* Tabs */}
       <nav className={s.dm_tabs}>

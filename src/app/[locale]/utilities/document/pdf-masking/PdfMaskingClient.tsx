@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -231,30 +232,16 @@ export default function PdfMaskingClient() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-[var(--tool-width-wide)] mx-auto">
       <NavigationActions />
 
-      {/* Header */}
-      <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <ShieldCheck size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {isKorean ? 'PDF 개인정보 마스킹' : 'PDF Privacy Masking'}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {isKorean
-            ? '100% 로컬 처리 | AI 개인정보 탐지 | 서버 전송 없음'
-            : '100% Local Processing | AI Privacy Detection | No Server Upload'}
-        </p>
-
+      <ToolHeader
+        icon={<ShieldCheck />}
+        title={isKorean ? 'PDF 개인정보 마스킹' : 'PDF Privacy Masking'}
+        subtitle={isKorean
+          ? '100% 로컬 처리 | AI 개인정보 탐지 | 서버 전송 없음'
+          : '100% Local Processing | AI Privacy Detection | No Server Upload'}
+      >
         {/* Security Badge */}
         <div style={{
           display: 'inline-flex',
@@ -274,12 +261,12 @@ export default function PdfMaskingClient() {
           {isKorean ? '로컬 보안 구역 작동 중 (오프라인 안전)' : 'Local Security Zone Active (Offline Safe)'}
         </div>
 
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', flexBasis: '100%' }}>
           {isKorean
             ? '귀하의 문서는 브라우저를 절대 떠나지 않습니다. 개발자도 볼 수 없습니다.'
             : 'Your documents never leave your browser. Even developers cannot see them.'}
         </p>
-      </header>
+      </ToolHeader>
 
       {/* Upload Zone */}
       {!pdfFile && (

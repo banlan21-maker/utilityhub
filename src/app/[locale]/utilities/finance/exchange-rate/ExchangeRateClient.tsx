@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowLeftRight, Activity, Clock } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -224,13 +225,7 @@ export default function ExchangeRateClient() {
   return (
     <div className={s.ex_container}>
       <NavigationActions />
-      <header className={s.ex_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-          <ArrowLeftRight size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.ex_title}>{t('title')}</h1>
-        <p className={s.ex_subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<ArrowLeftRight />} title={t('title')} subtitle={t('description')} />
 
       <section className={s.ex_panel}>
         {/* Amount Input */}
@@ -282,12 +277,12 @@ export default function ExchangeRateClient() {
         {/* Result */}
         <div className={s.ex_result_display}>
           {loading ? (
-            <div style={{ color: '#94a3b8', fontSize: '1.25rem', fontWeight: 700 }}>{t('loading')}</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: '1.25rem', fontWeight: 700 }}>{t('loading')}</div>
           ) : error ? (
             <div style={{ color: '#ef4444' }}>{error}</div>
           ) : converted !== null ? (
             <>
-              <div style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: 800 }}>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 800 }}>
                 {fromCur.flag} {from} {numericAmount.toLocaleString()} =
               </div>
               <div className={s.ex_result_main}>
@@ -296,7 +291,7 @@ export default function ExchangeRateClient() {
               <div style={{ fontSize: '1.1rem', color: '#8b5cf6', fontWeight: 900 }}>
                 {toCur.flag} {to}
               </div>
-              <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'center', gap: '1rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>
+              <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'center', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>
                 <span>1 {from} = {formatRate(rate!, to)} {to}</span>
                 <span><Clock size={12} style={{ display: 'inline', marginRight: '3px' }} />{lastUpdated}</span>
               </div>
@@ -308,11 +303,11 @@ export default function ExchangeRateClient() {
         {historyRates.length > 1 && (
           <div className={s.ex_chart_box}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <Activity size={16} color="#8b5cf6" />
                 {t('chart_title')}
               </div>
-              <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
                 {isKo ? '30일 최저' : 'Min'} {formatRate(Math.min(...historyRates), to)} ·{' '}
                 {isKo ? '최고' : 'Max'} {formatRate(Math.max(...historyRates), to)}
               </div>
@@ -322,7 +317,7 @@ export default function ExchangeRateClient() {
             ) : (
               <Sparkline data={historyRates} color="#8b5cf6" />
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#94a3b8', marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
               <span>{history[0].date}</span>
               <span>{history[history.length - 1].date}</span>
             </div>
@@ -334,8 +329,8 @@ export default function ExchangeRateClient() {
           <div className={s.ex_ref_grid}>
             {[10, 100, 1000].map(v => (
               <div key={v} className={s.ex_ref_item}>
-                <div style={{ color: '#64748b', fontSize: '0.7rem' }}>{v} {from}</div>
-                <div style={{ fontWeight: 800, color: '#1e293b' }}>{toCur.symbol} {formatConverted(v * rate)}</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '0.7rem' }}>{v} {from}</div>
+                <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{toCur.symbol} {formatConverted(v * rate)}</div>
               </div>
             ))}
           </div>

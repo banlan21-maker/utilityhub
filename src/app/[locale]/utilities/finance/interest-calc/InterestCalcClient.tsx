@@ -29,6 +29,7 @@ import {
 
 const RATE_PRESETS = [1, 2, 3, 5];
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -114,20 +115,7 @@ export default function InterestCalcClient() {
   return (
     <div className={s.int_container}>
       <NavigationActions />
-      <header className={s.int_header}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <TrendingUp size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.int_title}>{t('title')}</h1>
-        <p className={s.int_subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<TrendingUp />} title={t('title')} subtitle={t('description')} />
 
       <section className={s.int_panel}>
         {/* Type Toggle */}
@@ -156,7 +144,7 @@ export default function InterestCalcClient() {
               onChange={e => setPrincipal(e.target.value.replace(/[^0-9.]/g, ''))}
               placeholder="0"
             />
-            <span style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>{isKo ? '원' : ''}</span>
+            <span style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)' }}>{isKo ? '원' : ''}</span>
           </div>
         </div>
 
@@ -180,7 +168,7 @@ export default function InterestCalcClient() {
               onChange={e => setRate(e.target.value.replace(/[^0-9.]/g, ''))}
               placeholder="0.00"
             />
-            <span style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>%</span>
+            <span style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)' }}>%</span>
           </div>
         </div>
 
@@ -238,10 +226,10 @@ export default function InterestCalcClient() {
                 <div className={s.int_result_item_value} style={{ color: '#10b981' }}>+{fmt(interest)}</div>
               </div>
             </div>
-            <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
               <div className={s.int_result_total_label}>{t('result.total')}</div>
               <div className={s.int_result_total_value}>{fmt(total)}{isKo ? '원' : ''}</div>
-              <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.5rem', fontWeight: 600 }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.5rem', fontWeight: 600 }}>
                 {t('result.effectiveRate', { rate: (interest / p * 100).toFixed(2) })}
               </div>
             </div>

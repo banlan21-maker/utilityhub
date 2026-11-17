@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { Calendar, Download, Palette, RefreshCw, Sparkles, X } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -223,20 +224,11 @@ export default function ThirtyDayChallengeClient() {
       <NavigationActions />
 
       {/* Header */}
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex', padding: '1rem', background: 'white',
-          borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem',
-        }}>
-          <Calendar size={40} color={theme.primary} />
-        </div>
-        <h1 className={s.page_title} style={{ color: theme.primary }}>
-          {isKorean ? '나만의 30일 챌린지 트래커' : '30 Day Challenge Tracker'}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {isKorean ? '새로운 습관을 만드는 30일의 여정을 시작하세요' : 'Track your 30-day journey to build new habits'}
-        </p>
-      </header>
+      <ToolHeader
+        icon={<Calendar />}
+        title={isKorean ? '나만의 30일 챌린지 트래커' : '30 Day Challenge Tracker'}
+        subtitle={isKorean ? '새로운 습관을 만드는 30일의 여정을 시작하세요' : 'Track your 30-day journey to build new habits'}
+      />
 
       {/* Main Panel */}
       <div className={s.tool_panel}>
@@ -363,8 +355,8 @@ export default function ThirtyDayChallengeClient() {
             <button
               className={s.modal_check_btn}
               style={{
-                background: memoDay.checked ? theme.gradient : '#f1f5f9',
-                color: memoDay.checked ? '#fff' : '#475569',
+                background: memoDay.checked ? theme.gradient : 'var(--surface-hover)',
+                color: memoDay.checked ? '#fff' : 'var(--text-secondary)',
               }}
               onClick={() => {
                 setDays(prev => {

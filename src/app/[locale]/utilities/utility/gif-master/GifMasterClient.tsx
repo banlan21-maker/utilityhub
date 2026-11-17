@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { Clapperboard, Upload, Download, RefreshCw, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
@@ -83,7 +84,7 @@ export default function GifMasterClient() {
           <p style={{ fontSize: '1rem', color: '#dc2626', fontWeight: 700, marginBottom: '0.5rem' }}>
             {isKo ? '라이브러리 로드에 실패했습니다.' : 'Failed to load required libraries.'}
           </p>
-          <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
             {isKo ? '인터넷 연결을 확인하고 새로고침해주세요.' : 'Check your internet connection and refresh the page.'}
           </p>
         </div>
@@ -96,17 +97,13 @@ export default function GifMasterClient() {
       <NavigationActions />
 
       {/* Header */}
-      <header className={s.header}>
-        <div className={s.header_icon}>
-          <Clapperboard size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.title}>{isKo ? 'GIF 마스터' : 'GIF Master'}</h1>
-        <p className={s.subtitle}>
-          {isKo
-            ? 'GIF 압축·생성 통합 툴 — 이미지·텍스트·동영상을 GIF로'
-            : 'All-in-one GIF tool — compress, create from images, text, or video'}
-        </p>
-      </header>
+      <ToolHeader
+        icon={<Clapperboard />}
+        title={isKo ? 'GIF 마스터' : 'GIF Master'}
+        subtitle={isKo
+          ? 'GIF 압축·생성 통합 툴 — 이미지·텍스트·동영상을 GIF로'
+          : 'All-in-one GIF tool — compress, create from images, text, or video'}
+      />
 
       {/* Main Tabs */}
       <div className={s.main_tabs} role="tablist">
@@ -816,7 +813,7 @@ function TextTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
             <div className={s.color_row}>
               <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)}
                 className={s.color_input} aria-label="text color" />
-              <span style={{ fontSize: '0.82rem', color: '#64748b' }}>{textColor}</span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{textColor}</span>
             </div>
           </div>
           <div className={s.field}>
@@ -824,7 +821,7 @@ function TextTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
             <div className={s.color_row}>
               <input type="color" value={bgColor} onChange={e => setBgColor(e.target.value)}
                 className={s.color_input} aria-label="background color" />
-              <span style={{ fontSize: '0.82rem', color: '#64748b' }}>{bgColor}</span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{bgColor}</span>
             </div>
           </div>
         </div>

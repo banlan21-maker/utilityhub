@@ -23,25 +23,14 @@
   100% { opacity: 0; }
 }
 
-/* ── Hero Header ── */
-.ap_hero {
-  background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
-  padding: 2.5rem 1.5rem 2rem;
-  text-align: center;
-  border-bottom: 1px solid rgba(6, 182, 212, 0.15);
-}
+/* ── Header badge (공통 ToolHeader 안에 들어감 — 사이트 배경 위라 진한 청록) ── */
 .ap_badge {
   display: inline-flex; align-items: center; gap: 0.4rem;
   background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3);
   border-radius: 2rem; padding: 0.3rem 0.9rem;
-  font-size: 0.75rem; font-weight: 700; color: #67e8f9;
-  letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.9rem;
+  font-size: 0.75rem; font-weight: 700; color: #0891b2;
+  letter-spacing: 0.07em; text-transform: uppercase;
 }
-.ap_title {
-  font-size: clamp(1.7rem, 5vw, 2.5rem);
-  font-weight: 900; color: #f1f5f9; margin: 0 0 0.5rem;
-}
-.ap_subtitle { font-size: 0.92rem; color: #64748b; margin: 0; }
 
 /* ── Container ── */
 .ap_container {
@@ -76,7 +65,7 @@
   transition: border-color 0.15s;
 }
 .ap_pb_input:focus { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,0.15); }
-.ap_pb_hint { font-size: 0.75rem; color: #64748b; margin-top: 0.4rem; text-align: center; }
+.ap_pb_hint { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.4rem; text-align: center; }
 .ap_pb_warn {
   margin-top: 0.5rem; padding: 0.5rem 0.8rem;
   background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
@@ -91,7 +80,7 @@
 .ap_mode_btn {
   padding: 0.75rem; border-radius: 0.75rem;
   border: 1.5px solid rgba(6,182,212,0.2);
-  background: transparent; color: #64748b;
+  background: transparent; color: var(--text-secondary);
   font-size: 0.88rem; font-weight: 700; cursor: pointer;
   transition: all 0.18s;
 }
@@ -112,7 +101,7 @@
 }
 .ap_table td {
   padding: 0.5rem 0.75rem; text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.04); color: #94a3b8;
+  border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);
 }
 .ap_table tr:last-child td { border-bottom: none; }
 .ap_table_cur td { background: rgba(6,182,212,0.08) !important; color: #67e8f9 !important; font-weight: 700; }
@@ -141,7 +130,7 @@
   letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
 }
 .ap_round_info {
-  font-size: 0.88rem; color: #64748b; text-align: center; margin-bottom: 1.25rem;
+  font-size: 0.88rem; color: var(--text-secondary); text-align: center; margin-bottom: 1.25rem;
 }
 .ap_round_info strong { color: #06b6d4; }
 
@@ -186,36 +175,36 @@
   background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
   border-radius: 0.6rem; font-size: 0.8rem;
 }
-.ap_hist_date { color: #64748b; }
+.ap_hist_date { color: var(--text-secondary); }
 .ap_hist_mode { color: #06b6d4; font-weight: 600; font-size: 0.72rem; }
 .ap_hist_rounds { color: #34d399; font-weight: 700; }
 
 /* ── SEO Wrapper (light bg for readability) ── */
 .ap_seo_wrap {
-  background: #f8fafc;
+  background: var(--surface-hover);
   border-radius: 1.25rem;
   padding: 1.75rem;
   margin-top: 2rem;
-  color: #1e293b;
+  color: var(--text-primary);
 }
-.ap_seo_wrap h2 { font-size: 1rem; font-weight: 700; color: #1e293b; margin: 1.1rem 0 0.4rem; }
+.ap_seo_wrap h2 { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 1.1rem 0 0.4rem; }
 .ap_seo_wrap h2:first-child { margin-top: 0; }
-.ap_seo_wrap p { font-size: 0.85rem; color: #475569; line-height: 1.75; margin: 0 0 0.5rem; }
+.ap_seo_wrap p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; margin: 0 0 0.5rem; }
 .ap_seo_wrap ul { padding-left: 1.2rem; margin: 0; }
-.ap_seo_wrap li { font-size: 0.85rem; color: #475569; line-height: 1.65; margin-bottom: 0.25rem; }
+.ap_seo_wrap li { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.25rem; }
 .ap_disclaimer {
   margin-top: 1rem; padding: 0.85rem 1rem;
   background: #fff7ed; border: 1px solid #fed7aa;
   border-radius: 0.65rem; font-size: 0.8rem; color: #9a3412; line-height: 1.6;
 }
 .ap_faq { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
-.ap_faq_item { border: 1px solid #e2e8f0; border-radius: 0.75rem; overflow: hidden; }
+.ap_faq_item { border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
 .ap_faq_q {
   width: 100%; padding: 0.85rem 1rem; text-align: left;
-  background: #fff; border: none; font-size: 0.88rem; font-weight: 700;
-  color: #1e293b; cursor: pointer; display: flex; justify-content: space-between;
+  background: var(--surface); border: none; font-size: 0.88rem; font-weight: 700;
+  color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between;
 }
-.ap_faq_a { padding: 0.75rem 1rem; font-size: 0.83rem; color: #475569; line-height: 1.65; background: #f8fafc; }
+.ap_faq_a { padding: 0.75rem 1rem; font-size: 0.83rem; color: var(--text-secondary); line-height: 1.65; background: var(--surface-hover); }
 
 /* ── Responsive ── */
 @media (max-width: 480px) {

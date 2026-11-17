@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { Ruler, Copy } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -161,11 +162,7 @@ export default function CableTrayCalcClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.icon_wrap}><Ruler size={40} /></div>
-        <h1 className={s.title}>{titleStr}</h1>
-        <p className={s.subtitle}>{descStr}</p>
-      </header>
+      <ToolHeader icon={<Ruler />} title={titleStr} subtitle={descStr} />
 
       {/* ── STEP 1 구간 종류 ── */}
       <section className={s.step_card}>

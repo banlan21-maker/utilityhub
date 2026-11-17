@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Activity } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -93,18 +94,7 @@ export default function SlaUptimeCalcClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      {/* Header */}
-      <header className={s.fin_header}>
-        <div style={{
-          display: 'inline-flex', padding: '1rem', background: 'white',
-          borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Activity size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.fin_title}>{t('title')}</h1>
-        <p className={s.fin_subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Activity />} title={t('title')} subtitle={t('description')} />
 
       {/* Input Panel */}
       <section className={s.fin_panel}>

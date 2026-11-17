@@ -18,6 +18,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -157,20 +158,7 @@ export default function QuizBuilderClient() {
     <div className={s.quiz_container}>
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Puzzle size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{isKo ? 'MBTI 스타일 퀴즈 빌더' : 'Quiz & Personality Test Builder'}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{isKo ? '질문과 결과를 입력하면 공유 가능한 심리테스트가 단 1분 만에 완성됩니다.' : 'Build a viral personality test in seconds. No login required.'}</p>
-      </header>
+      <ToolHeader icon={<Puzzle />} title={isKo ? 'MBTI 스타일 퀴즈 빌더' : 'Quiz & Personality Test Builder'} subtitle={isKo ? '질문과 결과를 입력하면 공유 가능한 심리테스트가 단 1분 만에 완성됩니다.' : 'Build a viral personality test in seconds. No login required.'} />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
@@ -179,7 +167,7 @@ export default function QuizBuilderClient() {
           <h2 className={s.quiz_section_title}><span className={s.quiz_step_badge}>1</span> {isKo ? '기본 설정' : 'Basic Config'}</h2>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
             <div style={{ textAlign: 'center' }}>
-              <label style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '0.5rem' }}>{isKo ? '커버' : 'Cover'}</label>
+              <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}>{isKo ? '커버' : 'Cover'}</label>
               <input value={quiz.coverEmoji} onChange={e => setBasic({ coverEmoji: e.target.value })} className={s.quiz_input} style={{ width: '4rem', fontSize: '2rem', height: '4rem', textAlign: 'center', padding: '0' }} maxLength={2} />
             </div>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -228,7 +216,7 @@ export default function QuizBuilderClient() {
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                   <span style={{ fontWeight: 800, color: '#8b5cf6' }}>Q{i+1}</span>
                   <input value={q.text} onChange={e => setQText(q.id, e.target.value)} className={s.quiz_input} placeholder={isKo ? "질문을 입력하세요" : "Enter question text"} />
-                  {quiz.questions.length > 1 && <button onClick={() => removeQ(q.id)} style={{ color: '#94a3b8' }}><Trash2 size={18} /></button>}
+                  {quiz.questions.length > 1 && <button onClick={() => removeQ(q.id)} style={{ color: 'var(--text-muted)' }}><Trash2 size={18} /></button>}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingLeft: '2.5rem' }}>
                   {q.options.map((opt, oi) => (
@@ -246,7 +234,7 @@ export default function QuizBuilderClient() {
         </section>
 
         {/* STEP 4: Generate */}
-        <section className={s.quiz_panel} style={{ textAlign: 'center', background: '#f5f3ff', border: '1px solid #ddd6fe' }}>
+        <section className={s.quiz_panel} style={{ textAlign: 'center', background: 'var(--color-primary-light)', border: '1px solid var(--border)' }}>
           <h2 className={s.quiz_section_title} style={{ justifyContent: 'center' }}><span className={s.quiz_step_badge}>4</span> {isKo ? '테스트 완성' : 'Finish & Link'}</h2>
 
           {errors.length > 0 && <div style={{ color: '#ef4444', marginBottom: '1rem', fontWeight: 600 }}>{errors[0]}</div>}
@@ -257,8 +245,8 @@ export default function QuizBuilderClient() {
           </button>
 
           {generatedUrl && (
-            <div className="animate-fade-in" style={{ maxWidth: '600px', margin: '0 auto', background: 'white', padding: '1.5rem', borderRadius: '1rem', border: '1px solid #e2e8f0' }}>
-              <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '1rem' }}>{isKo ? '아래 주소를 복사해 친구들에게 공유하세요!' : 'Copy and share this link with your friends!'}</p>
+            <div className="animate-fade-in" style={{ maxWidth: '600px', margin: '0 auto', background: 'var(--surface)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>{isKo ? '아래 주소를 복사해 친구들에게 공유하세요!' : 'Copy and share this link with your friends!'}</p>
               <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
                 <input readOnly value={generatedUrl} className={s.quiz_input} style={{ fontSize: '0.8rem' }} />
                 <button

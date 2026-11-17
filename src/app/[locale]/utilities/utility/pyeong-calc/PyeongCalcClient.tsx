@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useState } from 'react';
 import { Ruler } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -100,11 +101,7 @@ export default function PyeongCalcClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.icon_wrap}><Ruler size={40} /></div>
-        <h1 className={s.title}>{t('title')}</h1>
-        <p className={s.subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Ruler />} title={t('title')} subtitle={t('description')} />
 
       <section className={s.card} aria-labelledby="py-what">
         <h2 id="py-what" className={s.card_title}>{isKo ? '1평은 몇 ㎡? — 평 환산표' : 'What is a pyeong? 1 pyeong = 3.3058 m²'}</h2>

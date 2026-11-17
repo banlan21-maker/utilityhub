@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Receipt, Copy, CheckCircle2 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -74,11 +75,7 @@ export default function Tax33CalcClient() {
   return (
     <div className={s.tax_container}>
       <NavigationActions />
-      <header className={s.tax_header}>
-        <div className={s.icon_wrap}><Receipt size={40} /></div>
-        <h1 className={s.tax_title}>{t('title')}</h1>
-        <p className={s.tax_subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Receipt />} title={t('title')} subtitle={t('description')} />
 
       <div role="note" className={s.notice}>{t('country_notice')}</div>
 

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { RefreshCcw, ArrowUpRight, ArrowDownRight, Search, Bitcoin, AlertCircle } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -160,13 +161,7 @@ export default function CoinProfitClient() {
   return (
     <div className={s.coin_container}>
       <NavigationActions />
-      <header className={s.coin_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-          <Bitcoin size={40} color="#f7931a" />
-        </div>
-        <h1 className={s.coin_title}>{t('title')}</h1>
-        <p className={s.coin_subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Bitcoin />} title={t('title')} subtitle={t('description')} />
 
       <section className={s.coin_card}>
         {/* Fiat Selector */}
@@ -205,7 +200,7 @@ export default function CoinProfitClient() {
         <div className={s.coin_selector_group} ref={searchRef} style={{ position: 'relative' }}>
           <label className={s.coin_label}>{t('coin_label')}</label>
           <div style={{ position: 'relative' }}>
-            <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+            <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
             <input
               className={s.coin_input}
               style={{ paddingLeft: '2.75rem' }}
@@ -219,11 +214,11 @@ export default function CoinProfitClient() {
           {showDropdown && (
             <div className={s.coin_dropdown}>
               {fetchingCoins ? (
-                <div style={{ padding: '1rem', color: '#64748b', textAlign: 'center', fontSize: '0.85rem' }}>
+                <div style={{ padding: '1rem', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.85rem' }}>
                   {t('loading_coins')}
                 </div>
               ) : filtered.length === 0 ? (
-                <div style={{ padding: '1rem', color: '#64748b', textAlign: 'center', fontSize: '0.85rem' }}>
+                <div style={{ padding: '1rem', color: 'var(--text-secondary)', textAlign: 'center', fontSize: '0.85rem' }}>
                   {t('no_results')}
                 </div>
               ) : filtered.map(c => (
@@ -231,7 +226,7 @@ export default function CoinProfitClient() {
                   <img src={c.image} width={24} height={24} alt={c.name} style={{ borderRadius: '50%' }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>{c.name}</div>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{c.symbol.toUpperCase()}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{c.symbol.toUpperCase()}</div>
                   </div>
                   <div style={{ fontSize: '0.75rem', color: c.price_change_percentage_24h >= 0 ? '#ef4444' : '#3b82f6', fontWeight: 800 }}>
                     {c.price_change_percentage_24h >= 0 ? '+' : ''}{c.price_change_percentage_24h.toFixed(2)}%
@@ -247,7 +242,7 @@ export default function CoinProfitClient() {
           <div style={{ background: '#1e293b', padding: '1.25rem', borderRadius: '1rem', border: '1px solid #334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <img src={selectedCoin.image} width={40} height={40} alt={selectedCoin.name} style={{ borderRadius: '50%' }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 800 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 800 }}>
                 {selectedCoin.name} {t('current_price')}
               </div>
               <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#f8fafc' }}>
@@ -264,7 +259,7 @@ export default function CoinProfitClient() {
               >
                 <RefreshCcw size={20} className={fetchingPrice ? s.coin_spin : ''} />
               </button>
-              {lastPriceTime && <div style={{ fontSize: '0.6rem', color: '#475569', marginTop: '0.2rem' }}>{lastPriceTime}</div>}
+              {lastPriceTime && <div style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>{lastPriceTime}</div>}
             </div>
           </div>
         )}

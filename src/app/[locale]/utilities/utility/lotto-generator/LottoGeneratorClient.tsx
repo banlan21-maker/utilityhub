@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -128,20 +129,18 @@ export default function LottoGeneratorClient() {
     <div className={s.wrap}>
       <NavigationActions />
 
+      {/* Header */}
+      <ToolHeader
+        icon="🎰"
+        title="Global Destiny Lotto Picker"
+        subtitle={isKo
+          ? '이름 · 생년월일 · 구매일로 당신만의 운명 번호를 뽑습니다'
+          : 'Your name, birthday & purchase date reveal your destiny numbers'}
+      />
+
       {/* ── Galaxy Gold Hero ── */}
       <div className={s.hero}>
         <div className={s.hero_inner}>
-
-          {/* Header */}
-          <header className={s.header}>
-            <span className={s.header_icon}>🎰</span>
-            <h1 className={s.title}>Global Destiny Lotto Picker</h1>
-            <p className={s.subtitle}>
-              {isKo
-                ? '이름 · 생년월일 · 구매일로 당신만의 운명 번호를 뽑습니다'
-                : 'Your name, birthday & purchase date reveal your destiny numbers'}
-            </p>
-          </header>
 
           {/* Game Selector */}
           <div className={s.game_tabs}>

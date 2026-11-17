@@ -6,7 +6,7 @@
 }
 
 .container {
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -15,28 +15,11 @@
   animation: fadeIn 0.6s ease-out;
 }
 
-.fin_header {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.fin_title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-}
-
-.fin_subtitle {
-  color: var(--color-text-secondary, #64748b);
-  font-size: 1.1rem;
-}
-
 .fin_panel {
   padding: 2rem;
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
   width: 100%;
   display: flex;
@@ -55,7 +38,7 @@
 
 .nextCardLabel {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -65,8 +48,8 @@
   width: 64px;
   height: 90px;
   border-radius: 10px;
-  background: white;
-  border: 2px solid #e2e8f0;
+  background: var(--surface);
+  border: 2px solid var(--border);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -87,11 +70,11 @@
 }
 
 .cardRed  { color: #ef4444; }
-.cardBlack { color: #1e293b; }
+.cardBlack { color: var(--text-primary); }
 
 .cardCount {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 /* ── 5×5 Grid ── */
@@ -118,8 +101,8 @@
 }
 
 .cellEmpty {
-  border: 2px dashed #cbd5e1;
-  background: #f8fafc;
+  border: 2px dashed var(--border);
+  background: var(--surface-hover);
 }
 
 .cellEmpty:hover {
@@ -129,8 +112,8 @@
 }
 
 .cellFilled {
-  background: white;
-  border: 1.5px solid #e2e8f0;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
 }
 
@@ -168,17 +151,17 @@
 .streakMain {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .streakSub {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .totalScoreLabel {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
@@ -191,7 +174,7 @@
 
 .totalScoreMax {
   font-size: 1rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 /* ── Hands table ── */
@@ -206,8 +189,8 @@
   padding: 0.5rem 0.75rem;
   text-align: left;
   font-weight: 700;
-  color: #475569;
-  border-bottom: 2px solid #f1f5f9;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -216,7 +199,7 @@
 .handsTable td {
   padding: 0.4rem 0.75rem;
   border-bottom: 1px solid #f8fafc;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .handsTable tr:last-child td {
@@ -231,7 +214,7 @@
 
 .handScoreZero {
   font-weight: 400;
-  color: #94a3b8;
+  color: var(--text-muted);
   text-align: right;
 }
 
@@ -267,14 +250,14 @@
 
 .countdownLabel {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 0.25rem;
 }
 
 .countdownTimer {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.05em;
 }
@@ -294,12 +277,12 @@
 .statValue {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .statLabel {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-top: 0.1rem;
 }
 
@@ -320,9 +303,6 @@
 }
 
 @media (max-width: 480px) {
-  .fin_title {
-    font-size: 1.75rem;
-  }
   .totalScore {
     font-size: 2.5rem;
   }

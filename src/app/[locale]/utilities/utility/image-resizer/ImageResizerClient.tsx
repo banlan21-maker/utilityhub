@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useLocale } from 'next-intl';
 import { Crop } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -200,20 +201,7 @@ export default function ImageResizerClient() {
     <div>
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Crop size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{T.title}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{T.subtitle}</p>
-      </header>
+      <ToolHeader icon={<Crop />} title={T.title} subtitle={T.subtitle} />
 
       {!src ? (
         /* ── Drop zone ── */

@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Fish, Copy, Check } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -207,23 +208,10 @@ export default function AquariumCalcClient() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-[var(--tool-width-wide)] mx-auto">
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Fish size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('subtitle')}</p>
-      </header>
+      <ToolHeader icon={<Fish />} title={t('title')} subtitle={t('subtitle')} />
 
       <div className="grid gap-8 lg:grid-cols-2 animate-slide-up">
         {/* Left Column - Input Section */}

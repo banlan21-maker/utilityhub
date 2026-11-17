@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { Zap, Copy } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -165,11 +166,7 @@ export default function WireSizeCalcClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.icon_wrap}><Zap size={40} /></div>
-        <h1 className={s.title}>{titleStr}</h1>
-        <p className={s.subtitle}>{descStr}</p>
-      </header>
+      <ToolHeader icon={<Zap />} title={titleStr} subtitle={descStr} />
 
       <div className={s.std} role="group" aria-label={isKo ? '적용 기준' : 'Code'}>
         <button type="button" aria-pressed={std === 'kec'} className={`${s.std_btn} ${std === 'kec' ? s.std_on : ''}`} onClick={() => setStd('kec')}>

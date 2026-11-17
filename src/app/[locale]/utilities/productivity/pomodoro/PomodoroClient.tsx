@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Timer } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -224,18 +225,7 @@ export default function PomodoroClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex', padding: '1rem', background: 'white',
-          borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem',
-        }}>
-          <Timer size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {t('title')}
-        </h1>
-        <p style={{ color: '#64748b', fontSize: '1.1rem' }}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Timer />} title={t('title')} subtitle={t('description')} />
 
       <div className={s.tool_panel}>
         {/* Mode tabs */}
@@ -259,7 +249,7 @@ export default function PomodoroClient() {
             <span style={{ fontSize: '3.5rem', fontWeight: 800, color, lineHeight: 1, letterSpacing: '-2px' }}>
               {formatTime(secondsLeft)}
             </span>
-            <span style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
               {modeLabels[mode]}
             </span>
           </CircleTimer>

@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useLocale } from 'next-intl';
 import { Plus, X, Download, RotateCcw, Check, AlertTriangle, Info } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -247,15 +248,13 @@ export default function ColorCoordinatorClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.iconWrap} aria-hidden="true">🧥</div>
-        <h1 className={s.title}>{isKo ? 'OOTD 컬러 코디네이터' : 'OOTD Color Coordinator'}</h1>
-        <p className={s.subtitle}>
-          {isKo
-            ? '마네킹에 색을 입혀 보고, 퍼스널 컬러와 조합 원칙으로 바로 점검하세요'
-            : 'Dress a mannequin in color and check the outfit against personal color and styling rules'}
-        </p>
-      </header>
+      <ToolHeader
+        icon="🧥"
+        title={isKo ? 'OOTD 컬러 코디네이터' : 'OOTD Color Coordinator'}
+        subtitle={isKo
+          ? '마네킹에 색을 입혀 보고, 퍼스널 컬러와 조합 원칙으로 바로 점검하세요'
+          : 'Dress a mannequin in color and check the outfit against personal color and styling rules'}
+      />
 
       <div className={s.mainGrid}>
         {/* 마네킹 */}

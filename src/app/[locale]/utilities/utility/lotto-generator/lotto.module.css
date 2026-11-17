@@ -1,10 +1,5 @@
 /* ── Lotto Generator — Galaxy Gold Theme ── */
 
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
 @keyframes pulse-gold {
   0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.15); }
   50%       { box-shadow: 0 0 40px rgba(212,175,55,0.35); }
@@ -16,7 +11,7 @@
 }
 
 .wrap {
-  max-width: 720px;
+  max-width: var(--tool-width-narrow);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -46,38 +41,6 @@
   position: relative;
   z-index: 1;
   padding: 3rem 2.5rem 2.5rem;
-}
-
-/* ── Header ── */
-.header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-.header_icon {
-  font-size: 3rem;
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.title {
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
-  font-weight: 950;
-  background: linear-gradient(135deg, #D4AF37 0%, #f5d76e 45%, #D4AF37 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 3s linear infinite;
-  letter-spacing: -0.5px;
-  margin: 0 0 0.5rem;
-}
-
-.subtitle {
-  font-size: 0.9rem;
-  color: rgba(255,255,255,0.45);
-  font-weight: 500;
-  margin: 0;
 }
 
 /* ── Game Selector ── */
@@ -356,7 +319,7 @@
   width: 100%;
   min-height: 250px;
   background: rgba(241,245,249,0.5);
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;

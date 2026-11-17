@@ -2,8 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { Image } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
@@ -250,28 +251,11 @@ export default function LogoFaviconClient() {
   };
 
   return (
-    <div style={{ maxWidth: '896px', margin: '0 auto', width: '100%' }}>
+    <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', width: '100%' }}>
       <NavigationActions />
 
       {/* Tool Start Card - V4 Standard */}
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Image size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {t('title')}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {t('description')}
-        </p>
-      </header>
+      <ToolHeader icon={<ImageIcon />} title={t('title')} subtitle={t('description')} />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '2rem', alignItems: 'start' }}>
 
@@ -533,7 +517,7 @@ export default function LogoFaviconClient() {
                   position: 'absolute', top: '3px',
                   left: config.useGradient ? 'calc(100% - 1.3rem)' : '3px',
                   width: '1rem', height: '1rem',
-                  borderRadius: '50%', background: 'white',
+                  borderRadius: '50%', background: 'var(--surface)',
                   transition: 'left 0.2s',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
                 }} />

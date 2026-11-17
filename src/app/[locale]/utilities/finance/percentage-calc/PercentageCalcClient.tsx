@@ -15,6 +15,7 @@ import {
   ArrowUpFromLine
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -106,20 +107,7 @@ export default function PercentageCalcClient() {
     <div className={s.fin_container}>
       <NavigationActions />
 
-      <header className={s.fin_header}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Percent size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.fin_title}>{t('title')}</h1>
-        <p className={s.fin_subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Percent />} title={t('title')} subtitle={t('description')} />
 
       {/* Mode Switcher */}
       <div className={s.fin_tabs}>

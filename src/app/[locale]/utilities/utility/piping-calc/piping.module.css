@@ -11,7 +11,7 @@
   --pp-pipe: #0ea5e9;
   --pp-water: #7dd3fc;
 
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -31,11 +31,6 @@
   --pp-pipe: #38bdf8;
   --pp-water: #0c4a6e;
 }
-
-.header { text-align: center; }
-.icon_wrap { display: inline-flex; padding: 1rem; background: var(--surface); border-radius: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 1.25rem; color: var(--primary); }
-.title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin: 0 0 0.6rem; word-break: keep-all; }
-.subtitle { color: var(--text-secondary); font-size: 1.02rem; line-height: 1.6; word-break: keep-all; margin: 0; }
 
 .units { display: flex; justify-content: center; gap: 0.4rem; flex-wrap: wrap; }
 .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }

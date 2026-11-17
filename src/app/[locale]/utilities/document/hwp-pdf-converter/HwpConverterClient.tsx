@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, useRef, useEffect } from 'react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -266,11 +267,7 @@ export default function HwpConverterClient() {
 
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.icon_wrap}><FileType size={40} /></div>
-        <h1 className={s.title}>{t('title')}</h1>
-        <p className={s.subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<FileType />} title={t('title')} subtitle={t('description')} />
 
       <div className={s.panel}>
         <div

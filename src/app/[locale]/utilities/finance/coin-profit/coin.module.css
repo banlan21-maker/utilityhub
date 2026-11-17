@@ -1,5 +1,5 @@
 .coin_container {
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -7,23 +7,6 @@
   gap: 1.5rem;
   padding: 0 1rem;
   animation: fadeIn 0.6s ease-out;
-}
-
-.coin_header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.coin_title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-}
-
-.coin_subtitle {
-  color: #64748b;
-  font-size: 1.1rem;
 }
 
 .coin_card {
@@ -42,7 +25,7 @@
   display: block;
   font-size: 0.75rem;
   font-weight: 800;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -101,7 +84,7 @@
 
 .coin_result_label {
   font-size: 0.7rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 800;
   text-transform: uppercase;
   margin-bottom: 0.4rem;
@@ -135,13 +118,13 @@
 .coin_ad_placeholder {
   width: 100%;
   min-height: 90px;
-  background: rgba(241, 245, 249, 0.5);
-  border: 1px dashed #cbd5e1;
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 2rem 0;
 }
@@ -183,7 +166,7 @@
 .coin_pulse {
   display: inline-block;
   animation: pulse 1.2s ease-in-out infinite;
-  color: #64748b;
+  color: var(--text-secondary);
   letter-spacing: 0.15em;
 }
 
@@ -207,14 +190,6 @@
     gap: 1.25rem;
   }
 
-  .coin_title {
-    font-size: 1.75rem;
-  }
-
-  .coin_subtitle {
-    font-size: 1rem;
-  }
-
   .coin_card {
     padding: 1.5rem 1.25rem;
     border-radius: 1.5rem;
@@ -235,10 +210,6 @@
 }
 
 @media (max-width: 400px) {
-  .coin_title {
-    font-size: 1.5rem;
-  }
-
   .coin_result_grid {
     grid-template-columns: 1fr;
   }

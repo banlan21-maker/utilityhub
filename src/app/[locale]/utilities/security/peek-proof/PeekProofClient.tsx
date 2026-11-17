@@ -10,6 +10,7 @@ import React, {
 import { useTranslations } from 'next-intl';
 import { EyeOff, Copy, RotateCcw, Eye } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -207,13 +208,7 @@ export default function PeekProofClient() {
       <NavigationActions />
 
       {/* ── Header ── */}
-      <header className={s.header}>
-        <div className={s.icon_wrap}>
-          <EyeOff size={40} color="#10b981" />
-        </div>
-        <h1 className={s.title}>{t('title')}</h1>
-        <p className={s.subtitle}>{t('subtitle')}</p>
-      </header>
+      <ToolHeader icon={<EyeOff />} title={t('title')} subtitle={t('subtitle')} />
 
       {/* ── 2-column ── */}
       <div className={s.layout}>

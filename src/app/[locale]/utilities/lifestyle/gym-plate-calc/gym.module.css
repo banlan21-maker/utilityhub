@@ -1,5 +1,5 @@
 .container {
-  max-width: 1024px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   padding: 0 1rem 3rem;
@@ -45,7 +45,7 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 2rem;
-  background: #f8fafc;
+  background: var(--surface-hover);
   border-radius: 1.5rem;
 }
 
@@ -57,9 +57,9 @@
 
 .tool_panel {
   padding: 2rem;
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
 }
 
@@ -227,7 +227,7 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 2rem 1rem;
-  background: #f8fafc;
+  background: var(--surface-hover);
   border-radius: 1rem;
   margin-bottom: 1.5rem;
   overflow-x: auto;
@@ -278,7 +278,7 @@
 }
 
 .plate_list {
-  background: #f8fafc;
+  background: var(--surface-hover);
   padding: 1.25rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
@@ -315,7 +315,7 @@
 
 .ad_placeholder {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed var(--border);
   border-radius: var(--radius-lg);
   padding: 3rem 2rem;
   text-align: center;

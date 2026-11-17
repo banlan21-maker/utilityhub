@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { Pipette, Copy, Plus } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -222,11 +223,7 @@ export default function PipingCalcClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div className={s.icon_wrap}><Pipette size={40} /></div>
-        <h1 className={s.title}>{titleStr}</h1>
-        <p className={s.subtitle}>{descStr}</p>
-      </header>
+      <ToolHeader icon={<Pipette />} title={titleStr} subtitle={descStr} />
 
       <div className={s.units} role="group" aria-label={L('단위', 'Units')}>
         {chip(units, 'metric', switchUnits, L('미터법', 'Metric'), 'mm · kg · L · m/s')}

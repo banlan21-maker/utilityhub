@@ -1,0 +1,74 @@
+/* 도구 공통 머리말 — 사이트 테마 변수만 사용 (라이트·다크 자동) */
+
+.header {
+  text-align: center;
+  margin: 0.5rem auto 2rem;
+  max-width: 720px;
+  padding: 0 0.5rem;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+/* lucide 아이콘은 size 지정과 상관없이 같은 크기·색으로 */
+.icon svg {
+  width: 30px;
+  height: 30px;
+  color: var(--color-primary);
+  stroke: currentColor;
+}
+
+.emoji {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.title {
+  font-size: clamp(1.6rem, 4.2vw, 2.15rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 0.6rem;
+  word-break: keep-all;
+}
+
+.subtitle {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0 auto;
+  max-width: 640px;
+  word-break: keep-all;
+}
+
+.extra {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .header { margin-bottom: 1.5rem; }
+  .icon { width: 56px; height: 56px; border-radius: 1rem; }
+  .icon svg { width: 26px; height: 26px; }
+  .subtitle { font-size: 0.93rem; }
+}
+
+@media (max-width: 480px) {
+  .compact .icon { display: none; }
+  .compact { margin-bottom: 1rem; }
+}

@@ -6,6 +6,7 @@ import { useLocale } from 'next-intl';
 import { Bomb, Clock, Download, Users, RefreshCw, AlertTriangle, Copy, Lock, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -365,15 +366,13 @@ function BombPadContent() {
       <NavigationActions />
 
       {/* Header */}
-      <div className={s.header}>
-        <div className={s.iconWrapper}><Bomb size={48} color="#f97316" /></div>
-        <h1 className={s.title}>{isKo ? '💣 72시간 시한폭탄 패드' : '💣 72H Bomb Pad'}</h1>
-        <p className={s.subtitle}>
-          {isKo
-            ? '마지막 수정으로부터 72시간 동안만 살아있는 공유 메모장 — 아무도 안 쓰면 폭발'
-            : 'A shared notepad alive 72h from the last edit — nobody writes = BOOM'}
-        </p>
-
+      <ToolHeader
+        icon={<Bomb />}
+        title={isKo ? '💣 72시간 시한폭탄 패드' : '💣 72H Bomb Pad'}
+        subtitle={isKo
+          ? '마지막 수정으로부터 72시간 동안만 살아있는 공유 메모장 — 아무도 안 쓰면 폭발'
+          : 'A shared notepad alive 72h from the last edit — nobody writes = BOOM'}
+      >
         {/* 암호화 배지 */}
         <div className={s.encBadge}>
           <ShieldCheck size={14} />
@@ -381,7 +380,7 @@ function BombPadContent() {
             ? '종단간 암호화(AES-256) — 운영자도 내용을 볼 수 없습니다'
             : 'End-to-End Encrypted (AES-256) — even the site owner cannot read this'}
         </div>
-      </div>
+      </ToolHeader>
 
       {/* Share URL Bar */}
       <div className={s.shareUrlBar}>
@@ -600,15 +599,13 @@ function BombPadFallback() {
   return (
     <div className={s.container}>
       <NavigationActions />
-      <div className={s.header}>
-        <div className={s.iconWrapper}><Bomb size={48} color="#f97316" /></div>
-        <h1 className={s.title}>{isKo ? '💣 72시간 시한폭탄 패드' : '💣 72H Bomb Pad'}</h1>
-        <p className={s.subtitle}>
-          {isKo
-            ? '마지막 수정으로부터 72시간 동안만 살아있는 공유 메모장 — 아무도 안 쓰면 폭발'
-            : 'A shared notepad alive 72h from the last edit — nobody writes = BOOM'}
-        </p>
-      </div>
+      <ToolHeader
+        icon={<Bomb />}
+        title={isKo ? '💣 72시간 시한폭탄 패드' : '💣 72H Bomb Pad'}
+        subtitle={isKo
+          ? '마지막 수정으로부터 72시간 동안만 살아있는 공유 메모장 — 아무도 안 쓰면 폭발'
+          : 'A shared notepad alive 72h from the last edit — nobody writes = BOOM'}
+      />
       <BombPadBottom isKo={isKo} />
     </div>
   );

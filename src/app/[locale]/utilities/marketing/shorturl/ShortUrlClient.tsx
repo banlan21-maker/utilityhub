@@ -14,6 +14,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -122,26 +123,7 @@ export default function ShortUrlClient() {
     <div className={s.url_container}>
       <NavigationActions />
 
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Link2 size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {isKo ? 'URL 단축기' : 'URL Shortener'}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {isKo
-            ? '긴 주소를 짧고 강력하게 변환하세요. 클릭 한 번으로 모든 SNS 공유 가능'
-            : 'Make long links short and powerful. Perfect for social media sharing.'}
-        </p>
-      </header>
+      <ToolHeader icon={<Link2 />} title={isKo ? 'URL 단축기' : 'URL Shortener'} subtitle={isKo ? '긴 주소를 짧고 강력하게 변환하세요. 클릭 한 번으로 모든 SNS 공유 가능' : 'Make long links short and powerful. Perfect for social media sharing.'} />
 
       {/* Input Section */}
       <section className={s.url_panel}>
@@ -171,7 +153,7 @@ export default function ShortUrlClient() {
                 <Sparkles size={12} style={{ marginRight: '4px', display: 'inline' }} />
                 {isKo ? '단축 완료!' : 'SHORTENED!'}
               </div>
-              <a href={result} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e293b', textDecoration: 'underline', textDecorationColor: '#8b5cf6' }}>
+              <a href={result} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', textDecoration: 'underline', textDecorationColor: '#8b5cf6' }}>
                 {result}
               </a>
             </div>
@@ -197,7 +179,7 @@ export default function ShortUrlClient() {
             </h2>
             <button
               onClick={() => { if(confirm(isKo ? '모든 기록을 삭제하시겠습니까?' : 'Clear history?')) { setHistory([]); saveHistory([]); } }}
-              style={{ fontSize: '0.81rem', color: '#94a3b8', background: 'none', border: 'none', padding: 0 }}
+              style={{ fontSize: '0.81rem', color: 'var(--text-muted)', background: 'none', border: 'none', padding: 0 }}
             >
               {isKo ? '전체 삭제' : 'Clear All'}
             </button>
@@ -211,9 +193,9 @@ export default function ShortUrlClient() {
                     <a href={item.short} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 800, color: '#8b5cf6', fontSize: '1rem' }}>
                       {item.short}
                     </a>
-                    <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{formatDate(item.createdAt)}</span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{formatDate(item.createdAt)}</span>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                     <ChevronRight size={12} />
                     {truncate(item.original)}
                   </div>

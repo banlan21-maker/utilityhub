@@ -4,7 +4,7 @@
 }
 
 .container {
-  max-width: 1024px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -13,33 +13,6 @@
   animation: fadeIn 0.6s ease-out;
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-/* ── Header ── */
-.header {
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-.icon_wrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
-}
-.title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-}
-.subtitle {
-  color: #64748b;
-  font-size: 1.1rem;
-  max-width: 640px;
-  margin: 0 auto;
-  line-height: 1.6;
 }
 
 /* ── 2-column layout ── */
@@ -52,8 +25,8 @@
 
 /* ── Settings panel (left) ── */
 .settings {
-  background: white;
-  border: 1px solid #f1f5f9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 1.5rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
   padding: 1.5rem;
@@ -64,7 +37,7 @@
 .settings_title {
   font-size: 1rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -79,7 +52,7 @@
   align-items: baseline;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary);
 }
 .field_value {
   font-size: 0.85rem;
@@ -88,7 +61,7 @@
 }
 .field_hint {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 /* slider */
@@ -126,8 +99,8 @@
 
 /* zone guide */
 .zone_box {
-  background: #f8fafc;
-  border: 1px solid #f1f5f9;
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 1rem;
   display: flex;
@@ -137,7 +110,7 @@
 .zone_box_title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #334155;
+  color: var(--text-primary);
   margin: 0 0 0.2rem;
 }
 .zone_row {
@@ -145,7 +118,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 .zone_dot {
@@ -211,13 +184,13 @@
 .clip_label {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary);
   line-height: 1.4;
 }
 .clip_help {
   margin-top: 0.5rem;
   font-size: 0.74rem;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.45;
 }
 
@@ -249,8 +222,8 @@
 }
 .btn_primary:hover { background: #059669; }
 .btn_ghost {
-  background: #f1f5f9;
-  color: #475569;
+  background: var(--surface-hover);
+  color: var(--text-secondary);
 }
 .btn_ghost:hover { background: #e2e8f0; }
 .btn_countdown {
@@ -264,8 +237,8 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  background: white;
-  border: 1px solid #f1f5f9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 1.5rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
   overflow: hidden;
@@ -275,13 +248,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.85rem 1.25rem;
-  border-bottom: 1px solid #f1f5f9;
-  background: #f8fafc;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-hover);
 }
 .line_indicator {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 .panic_btn {
@@ -290,15 +263,15 @@
   gap: 0.4rem;
   padding: 0.5rem 0.9rem;
   border-radius: 9999px;
-  border: 1px solid #e2e8f0;
-  background: white;
-  color: #475569;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
 }
-.panic_btn:hover { background: #f1f5f9; }
+.panic_btn:hover { background: var(--surface-hover); }
 .panic_btn:active { transform: scale(0.95); }
 .panic_btn:focus-visible { box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); }
 .panic_btn_active {
@@ -365,7 +338,7 @@
   filter: none;
 }
 .vline_masked {
-  color: #94a3b8;
+  color: var(--text-muted);
   opacity: 0.4;
 }
 
@@ -394,7 +367,7 @@
   justify-content: center;
   padding: 2rem;
   text-align: center;
-  color: #475569;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   pointer-events: none;
   line-height: 1.6;
@@ -402,8 +375,8 @@
 
 /* ── Tips ── */
 .tips {
-  background: white;
-  border: 1px solid #f1f5f9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 1.5rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
   padding: 1.5rem 1.75rem;
@@ -411,7 +384,7 @@
 .tips_title {
   font-size: 1rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 1rem;
 }
 .tips_list {
@@ -427,7 +400,7 @@
   align-items: flex-start;
   gap: 0.6rem;
   font-size: 0.88rem;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 .tips_list li::before {
@@ -450,7 +423,7 @@
   animation: fadeIn 0.2s ease-out;
 }
 .modal {
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem;
   padding: 2rem;
   max-width: 420px;
@@ -460,12 +433,12 @@
 .modal_title {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 0.75rem;
 }
 .modal_body {
   font-size: 0.92rem;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin: 0 0 1.5rem;
 }
@@ -495,13 +468,13 @@
 .ad_placeholder {
   width: 100%;
   min-height: 90px;
-  background: rgba(241, 245, 249, 0.5);
-  border: 1px dashed #cbd5e1;
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 2rem 0;
 }
@@ -513,5 +486,4 @@
   }
   .editor_panel { order: 1; }
   .settings { order: 2; }
-  .title { font-size: 1.75rem; }
 }

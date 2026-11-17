@@ -1,50 +1,15 @@
 /* Photo Batch Master – CSS Module */
 
 .container {
-  max-width: 1024px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   padding: 1rem 1rem 4rem;
 }
 
-/* ── Header ── */
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.iconWrap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 72px;
-  height: 72px;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.15);
-  margin-bottom: 1rem;
-}
-
-.title {
-  font-size: 2rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.5px;
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  color: #64748b;
-  margin: 0;
-}
-
 /* ── Sections ── */
 .section {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 1.5rem;
   padding: 1.75rem;
   margin-bottom: 1.5rem;
@@ -54,7 +19,7 @@
 .sectionTitle {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
@@ -86,8 +51,8 @@
   width: 100%;
   max-width: 700px;
   min-height: 300px;
-  background: #f8fafc;
-  border: 2.5px dashed #e2e8f0;
+  background: var(--surface-hover);
+  border: 2.5px dashed var(--border);
   border-radius: 1.25rem;
   display: flex;
   align-items: center;
@@ -124,13 +89,13 @@
 .samplePlaceholder p {
   font-size: 1rem;
   font-weight: 700;
-  color: #475569;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .samplePlaceholder span {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .previewMeta {
@@ -195,8 +160,8 @@
 
 .sampleDropzone {
   aspect-ratio: 4/3;
-  background: #f8fafc;
-  border: 2px dashed #e2e8f0;
+  background: var(--surface-hover);
+  border: 2px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -229,7 +194,7 @@
   justify-content: space-between;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .sliderVal {
@@ -276,11 +241,11 @@
 .presetNameInput {
   flex: 1;
   padding: 0.5rem 0.75rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 0.6rem;
   font-size: 0.85rem;
-  color: #1e293b;
-  background: #f8fafc;
+  color: var(--text-primary);
+  background: var(--surface-hover);
   outline: none;
   transition: border-color 0.2s;
 }
@@ -311,10 +276,10 @@
 .resetBtn {
   padding: 0.4rem 0.8rem;
   background: transparent;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 0.5rem;
   font-size: 0.78rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
 }
@@ -325,13 +290,13 @@
 .savedPresets {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--border);
 }
 
 .savedPresetsTitle {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin: 0 0 0.6rem;
@@ -346,7 +311,7 @@
 .presetChip {
   display: inline-flex;
   align-items: center;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 9999px;
   overflow: hidden;
   transition: border-color 0.2s;
@@ -363,7 +328,7 @@
   border: none;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   cursor: pointer;
 }
 
@@ -385,7 +350,7 @@
 
 /* ── Batch dropzone ── */
 .batchDropzone {
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed var(--border);
   border-radius: 1rem;
   padding: 2.5rem 1rem;
   display: flex;
@@ -395,7 +360,7 @@
   cursor: pointer;
   text-align: center;
   transition: border-color 0.2s, background 0.2s;
-  background: #f8fafc;
+  background: var(--surface-hover);
 }
 
 .batchDropzone:hover,
@@ -407,13 +372,13 @@
 .batchDropText {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .batchDropSub {
   font-size: 0.78rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 /* ── Batch actions ── */
@@ -495,13 +460,13 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0.75rem;
-  background: #f8fafc;
-  border: 1px solid #f1f5f9;
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   transition: border-color 0.2s;
 }
 
-.itemRow:hover { border-color: #e2e8f0; }
+.itemRow:hover { border-color: var(--border); }
 
 .itemThumb {
   width: 44px;
@@ -522,7 +487,7 @@
 .itemName {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -530,7 +495,7 @@
 
 .itemSize {
   font-size: 0.72rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .itemStatus {
@@ -562,7 +527,7 @@
 
 .statusPending {
   font-size: 0.78rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .itemRemove {
@@ -596,13 +561,13 @@
 .adPlaceholder {
   width: 100%;
   min-height: 90px;
-  background: #f1f5f9;
-  border: 2px dashed #e2e8f0;
+  background: var(--surface-hover);
+  border: 2px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -623,7 +588,7 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.25rem;
-  border-bottom: 2px solid #f1f5f9;
+  border-bottom: 2px solid var(--border);
   padding-bottom: 0;
 }
 
@@ -638,7 +603,7 @@
   margin-bottom: -2px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   transition: color 0.18s, border-color 0.18s;
 }
@@ -662,7 +627,7 @@
   gap: 0.6rem;
   font-size: 0.88rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   cursor: pointer;
   user-select: none;
 }
@@ -680,8 +645,8 @@
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background: #f8fafc;
-  border: 1.5px solid #f1f5f9;
+  background: var(--surface-hover);
+  border: 1.5px solid var(--border);
   border-radius: 0.75rem;
   transition: opacity 0.2s;
 }
@@ -701,7 +666,7 @@
 .wmFieldLabel {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -710,11 +675,11 @@
 .wmTextInput {
   width: 100%;
   padding: 0.55rem 0.75rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 0.6rem;
   font-size: 0.9rem;
-  color: #1e293b;
-  background: white;
+  color: var(--text-primary);
+  background: var(--surface);
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.2s;
@@ -731,11 +696,11 @@
 
 .fontChip {
   padding: 0.35rem 0.75rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 9999px;
-  background: white;
+  background: var(--surface);
   font-size: 0.82rem;
-  color: #475569;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
@@ -757,7 +722,7 @@
 .colorPicker {
   width: 36px;
   height: 36px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border);
   border-radius: 0.5rem;
   padding: 2px;
   background: none;
@@ -801,12 +766,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 0.5rem;
-  background: white;
+  background: var(--surface);
   font-size: 1rem;
   cursor: pointer;
-  color: #94a3b8;
+  color: var(--text-muted);
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 

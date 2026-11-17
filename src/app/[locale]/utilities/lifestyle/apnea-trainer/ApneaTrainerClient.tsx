@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { Wind } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -356,20 +357,22 @@ export default function ApneaTrainerClient() {
   ];
 
   return (
-    <div className={s.ap_wrap}>
+    <>
       {flash && <div className={s.ap_flash} aria-hidden="true" />}
       <NavigationActions />
 
-      {/* Hero */}
-      <div className={s.ap_hero}>
+      {/* 공통 머리말은 사이트 배경 위에 두고, 어두운 훈련 화면은 그 아래부터 */}
+      <ToolHeader
+        icon={<Wind />}
+        title={isKo ? 'Apnea Pro 드라이 트레이닝' : 'Apnea Pro Dry Training'}
+        subtitle={isKo
+          ? 'CO2·O2 테이블 자동 생성 | 음성 가이드 | 비프음 | 시각 플래시'
+          : 'Auto CO2 & O2 tables · Voice guide · Beep · Visual flash'}
+      >
         <div className={s.ap_badge}>🫁 Apnea Pro</div>
-        <h1 className={s.ap_title}>{isKo ? 'Apnea Pro 드라이 트레이닝' : 'Apnea Pro Dry Training'}</h1>
-        <p className={s.ap_subtitle}>
-          {isKo
-            ? 'CO2·O2 테이블 자동 생성 | 음성 가이드 | 비프음 | 시각 플래시'
-            : 'Auto CO2 & O2 tables · Voice guide · Beep · Visual flash'}
-        </p>
-      </div>
+      </ToolHeader>
+
+    <div className={s.ap_wrap}>
 
       <div className={s.ap_container}>
 
@@ -412,7 +415,7 @@ export default function ApneaTrainerClient() {
                     🫁 {isKo ? 'O₂ 적응 테이블' : 'O₂ Adaptation'}
                   </button>
                 </div>
-                <p style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.5rem', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.5 }}>
                   {mode === 'co2'
                     ? (isKo ? '숨 참기 = PB × 50% 고정 / 휴식은 2:00부터 매 라운드 15초씩 감소' : 'Hold = PB×50% fixed / Rest decreases 15s each round from 2:00')
                     : (isKo ? '휴식 = 2:00 고정 / 숨 참기는 1:00부터 PB × 85%까지 점진적 증가' : 'Rest = 2:00 fixed / Hold increases from 1:00 up to PB×85%')}
@@ -466,7 +469,7 @@ export default function ApneaTrainerClient() {
                       <span className={s.ap_hist_date}>{h.date}</span>
                       <span className={s.ap_hist_mode}>{h.mode.toUpperCase()}</span>
                       <span className={s.ap_hist_rounds}>{h.completedRounds}/{h.totalRounds} {isKo ? '라운드' : 'rds'}</span>
-                      <span style={{ fontSize: '0.75rem', color: '#64748b' }}>PB {fmtTime(h.pb)}</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>PB {fmtTime(h.pb)}</span>
                     </div>
                   ))}
                 </div>
@@ -617,5 +620,6 @@ export default function ApneaTrainerClient() {
 
       </div>
     </div>
+    </>
   );
 }

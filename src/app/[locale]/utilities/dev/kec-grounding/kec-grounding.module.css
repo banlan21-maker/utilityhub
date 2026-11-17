@@ -1,38 +1,9 @@
 /* KEC Grounding — responsive fixes */
 
 .page_container {
-  max-width: 1024px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   padding: 2rem 1rem;
-}
-
-/* ── Header ── */
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.icon_wrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
-}
-
-.title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-  word-break: keep-all;
-}
-
-.subtitle {
-  color: var(--text-secondary, #64748b);
-  font-size: 1.1rem;
-  word-break: keep-all;
 }
 
 /* ── Panel ── */
@@ -47,7 +18,7 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--border, #e2e8f0);
+  border-bottom: 2px solid var(--border, var(--border));
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -91,7 +62,7 @@
   flex: 1;
   min-width: 0;
   padding: 0.75rem;
-  border: 1px solid var(--border, #e2e8f0);
+  border: 1px solid var(--border, var(--border));
   border-radius: 0.5rem;
   background: var(--bg-secondary, #f8fafc);
   color: var(--text-primary, #1e293b);
@@ -128,14 +99,6 @@
     padding: 1.25rem 1rem;
   }
 
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .subtitle {
-    font-size: 0.95rem;
-  }
-
   .tab_btn {
     padding: 0.6rem 0.75rem;
     font-size: 0.82rem;
@@ -155,9 +118,5 @@
   .tab_btn {
     font-size: 0.75rem;
     padding: 0.55rem 0.6rem;
-  }
-
-  .title {
-    font-size: 1.3rem;
   }
 }

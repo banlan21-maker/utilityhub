@@ -4,6 +4,7 @@ import { useLocale } from 'next-intl';
 import { useState, useEffect, useRef } from 'react';
 import { Flame, Users, DollarSign, Clock, Receipt, Download } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -164,19 +165,13 @@ export default function MeetingBurnerClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <div className={s.header}>
-        <div className={s.iconWrapper}>
-          <Flame size={48} color="#22c55e" />
-        </div>
-        <h1 className={s.title}>
-          {isKorean ? '⏱️ Meeting Burner' : '⏱️ Meeting Burner'}
-        </h1>
-        <p className={s.subtitle}>
-          {isKorean
-            ? '당신의 시간은 돈이다. 그리고 그 돈은 지금 타오르고 있다.'
-            : 'Your time is money. And that money is burning right now.'}
-        </p>
-      </div>
+      <ToolHeader
+        icon={<Flame />}
+        title={isKorean ? '⏱️ Meeting Burner' : '⏱️ Meeting Burner'}
+        subtitle={isKorean
+          ? '당신의 시간은 돈이다. 그리고 그 돈은 지금 타오르고 있다.'
+          : 'Your time is money. And that money is burning right now.'}
+      />
 
       {/* Setup Section */}
       {!isRunning && !showReceipt && (

@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Heart, Camera, Link2, HeartHandshake } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -416,18 +417,7 @@ export default function SajuCompatibilityClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      {/* Header */}
-      <header className={s.fin_header}>
-        <div style={{
-          display: 'inline-flex', padding: '1rem', background: 'white',
-          borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Heart size={40} color="#fb7185" />
-        </div>
-        <h1 className={s.fin_title}>{t('title')}</h1>
-        <p className={s.fin_subtitle}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Heart />} title={t('title')} subtitle={t('description')} />
 
       {/* ─── Form Step ─── */}
       {step === 'form' && (
@@ -587,8 +577,8 @@ export default function SajuCompatibilityClient() {
             <div className={s.sajuTable}>
               <div className={s.sajuRow}>
                 <span className={s.sajuRowLabel} />
-                <span className={s.sajuRowValue} style={{ fontWeight: 700, color: '#94a3b8', fontSize: '0.8rem' }}>{result.personA.name}</span>
-                <span className={s.sajuRowValue} style={{ fontWeight: 700, color: '#94a3b8', fontSize: '0.8rem' }}>{result.personB.name}</span>
+                <span className={s.sajuRowValue} style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{result.personA.name}</span>
+                <span className={s.sajuRowValue} style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{result.personB.name}</span>
               </div>
               <div className={s.sajuRow}>
                 <span className={s.sajuRowLabel}>{isKo ? '일간' : 'Stem'}</span>

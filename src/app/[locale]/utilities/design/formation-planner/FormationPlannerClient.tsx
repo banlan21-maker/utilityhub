@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { Download, Undo2, Plus, Trash2, ChevronUp, ChevronDown, Info, Square, Circle } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -552,13 +553,11 @@ export default function FormationPlannerClient() {
       <NavigationActions />
 
       {/* Header */}
-      <div className={s.header}>
-        <div className={s.iconWrap}><Circle size={44} color="#8b5cf6" /></div>
-        <h1 className={s.title}>{isKo ? '🕴️ Formation Playmaker Pro' : '🕴️ Formation Playmaker Pro'}</h1>
-        <p className={s.subtitle}>
-          {isKo ? '스마트 범례로 완성하는 하이엔드 전술 시뮬레이터 — 60초 녹화 지원' : 'High-end tactics simulator with Smart Legend — 60s recording'}
-        </p>
-      </div>
+      <ToolHeader
+        icon={<Circle />}
+        title={isKo ? '🕴️ Formation Playmaker Pro' : '🕴️ Formation Playmaker Pro'}
+        subtitle={isKo ? '스마트 범례로 완성하는 하이엔드 전술 시뮬레이터 — 60초 녹화 지원' : 'High-end tactics simulator with Smart Legend — 60s recording'}
+      />
 
       {/* Title + Background selector */}
       <div className={s.topControls}>

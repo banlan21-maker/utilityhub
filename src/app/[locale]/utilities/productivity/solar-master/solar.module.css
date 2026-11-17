@@ -12,7 +12,7 @@
   --sl-bar: #38bdf8;
   --sl-bar2: #fdba74;
 
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -38,11 +38,6 @@
 :global([data-theme='dark']) .thermal { --sl-accent-bg: rgba(251, 146, 60, 0.12); }
 .biz { --sl-accent-bg: rgba(5, 150, 105, 0.08); }
 :global([data-theme='dark']) .biz { --sl-accent-bg: rgba(52, 211, 153, 0.12); }
-
-.header { text-align: center; }
-.icon_wrap { display: inline-flex; padding: 1rem; background: var(--surface); border-radius: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 1.25rem; color: var(--sl-th); }
-.title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin: 0 0 0.6rem; word-break: keep-all; }
-.subtitle { color: var(--text-secondary); font-size: 1.02rem; line-height: 1.6; word-break: keep-all; margin: 0; }
 
 .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
 .tab { min-height: 54px; padding: 0.45rem; border: 1.5px solid var(--border); border-radius: 0.9rem; background: var(--surface); color: var(--text-secondary); font-weight: 800; font-size: 1rem; cursor: pointer; }

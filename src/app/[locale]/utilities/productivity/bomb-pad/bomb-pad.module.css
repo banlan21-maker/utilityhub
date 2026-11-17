@@ -1,43 +1,12 @@
 .container {
-  max-width: 800px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   padding: 1rem;
-}
-
-/* ── Header ─────────────────────────────── */
-.header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-.iconWrapper {
-  display: inline-block;
-  padding: 1rem;
-  background: rgba(249, 115, 22, 0.12);
-  border-radius: 1.25rem;
-  margin-bottom: 1rem;
-  animation: bombPulse 2s ease-in-out infinite;
 }
 
 @keyframes bombPulse {
   0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
   50% { transform: scale(1.06); box-shadow: 0 0 0 12px rgba(249, 115, 22, 0.08); }
-}
-
-.title {
-  font-size: 2.25rem;
-  font-weight: 900;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.subtitle {
-  font-size: 1rem;
-  color: #9ca3af;
-  margin-top: 0.25rem;
 }
 
 /* ── Encryption Badge ────────────────────── */
@@ -77,7 +46,7 @@
 }
 
 .keyErrorCard p {
-  color: #9ca3af;
+  color: var(--text-muted);
   margin: 0;
   white-space: pre-line;
   line-height: 1.7;
@@ -90,7 +59,7 @@
   align-items: center;
   gap: 1rem;
   padding: 5rem 1rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 1rem;
 }
 
@@ -124,7 +93,7 @@
 .shareUrlText {
   flex: 1;
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -190,7 +159,7 @@
   gap: 0.4rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--text-muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
@@ -246,7 +215,7 @@
   margin-top: 0.75rem;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 /* ── Presence Bar ────────────────────────── */
@@ -268,7 +237,7 @@
   gap: 0.35rem;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -359,7 +328,7 @@
 
 .editorHint {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -427,7 +396,7 @@
 }
 
 .textarea::placeholder {
-  color: #4b5563;
+  color: var(--text-secondary);
   line-height: 1.8;
 }
 
@@ -447,7 +416,7 @@
 .reactionTitle {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #9ca3af;
+  color: var(--text-muted);
   letter-spacing: 0.05em;
   margin-bottom: 0.75rem;
 }
@@ -523,7 +492,7 @@
 }
 
 .expiredCard p {
-  color: #9ca3af;
+  color: var(--text-muted);
   margin: 0;
 }
 
@@ -588,9 +557,6 @@
 
 /* ── Responsive ─────────────────────────── */
 @media (max-width: 640px) {
-  .title {
-    font-size: 1.75rem;
-  }
 
   .timerDisplay {
     font-size: 3rem;

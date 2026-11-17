@@ -1,5 +1,5 @@
 .hashtag_container {
-  max-width: 896px; /* max-w-4xl per Rulebook V4.4 */
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   padding: 0 1rem;
@@ -23,7 +23,7 @@
 .hashtag_title {
   font-size: 2rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 0.75rem;
 }
 
@@ -34,9 +34,9 @@
 
 .hashtag_panel {
   padding: 1.5rem;
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem; /* rounded-2xl */
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
   display: flex;
   flex-direction: column;
@@ -53,7 +53,7 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -85,10 +85,10 @@
 .hashtag_input {
   flex: 1;
   padding: 0.875rem 1.25rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 1rem;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--surface-hover);
+  color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.2s;
   outline: none;
@@ -96,7 +96,7 @@
 
 .hashtag_input:focus {
   border-color: #8b5cf6;
-  background: white;
+  background: var(--surface);
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
 }
 
@@ -112,9 +112,9 @@
   font-weight: 700;
   font-size: 0.9rem;
   transition: all 0.2s;
-  border: 1.5px solid #e2e8f0;
-  background: white;
-  color: #64748b;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -208,22 +208,22 @@
 .hashtag_empty {
   padding: 4rem 2rem;
   text-align: center;
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem;
   border: 1px dashed #ced4da;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .hashtag_ad_placeholder {
   width: 100%;
   min-height: 90px;
-  background: rgba(241, 245, 249, 0.5);
-  border: 1px dashed #cbd5e1;
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 2rem 0;
 }

@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -253,30 +254,16 @@ export default function ImgPdfConverterClient() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-[var(--tool-width-wide)] mx-auto">
       <NavigationActions />
 
-      {/* Header */}
-      <header style={{ textAlign: 'center', marginBottom: 'var(--section-gap)' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <FileImage size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
-          {isKorean ? '이미지 ↔ PDF 변환기' : 'Image ↔ PDF Converter'}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {isKorean
-            ? '100% 로컬 처리 | 서버 전송 없음 | 무제한 무료'
-            : '100% Local Processing | No Server Upload | Unlimited Free'}
-        </p>
-
+      <ToolHeader
+        icon={<FileImage />}
+        title={isKorean ? '이미지 ↔ PDF 변환기' : 'Image ↔ PDF Converter'}
+        subtitle={isKorean
+          ? '100% 로컬 처리 | 서버 전송 없음 | 무제한 무료'
+          : '100% Local Processing | No Server Upload | Unlimited Free'}
+      >
         {/* Security Badge */}
         <div style={{
           display: 'inline-flex',
@@ -294,7 +281,7 @@ export default function ImgPdfConverterClient() {
           <Shield size={18} />
           {isKorean ? '100% 오프라인 처리 (파일이 서버로 전송되지 않습니다)' : '100% Offline Processing (Files never leave your device)'}
         </div>
-      </header>
+      </ToolHeader>
 
       {/* Mode Toggle */}
       <div className="glass-panel animate-slide-up" style={{ padding: '2rem', marginBottom: '2rem' }}>

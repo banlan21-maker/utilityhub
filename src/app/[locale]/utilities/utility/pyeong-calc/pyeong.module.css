@@ -10,7 +10,7 @@
   --py-note-bg: #fef3c7;
   --py-note-text: #92400e;
 
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -29,21 +29,6 @@
 @media (prefers-reduced-motion: reduce) {
   .container { animation: none; }
 }
-
-.header { text-align: center; }
-
-.icon_wrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: var(--surface);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 1.5rem;
-  color: var(--primary);
-}
-
-.title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem; word-break: keep-all; }
-.subtitle { color: var(--text-secondary); font-size: 1.05rem; word-break: keep-all; line-height: 1.6; }
 
 .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
 @media (max-width: 520px) { .tabs { grid-template-columns: 1fr; } }

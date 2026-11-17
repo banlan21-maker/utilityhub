@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useState, useCallback, useMemo } from 'react';
 import { Braces } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -98,7 +99,7 @@ function TreeNode({ data, depth = 0 }: { data: unknown; depth?: number }) {
 
 const toggleStyle: React.CSSProperties = {
   background: 'none', border: 'none', cursor: 'pointer',
-  color: '#94a3b8', fontSize: '0.7rem', padding: '0 3px', marginRight: '2px',
+  color: 'var(--text-muted)', fontSize: '0.7rem', padding: '0 3px', marginRight: '2px',
 };
 
 /* ─── Action Button ─── */
@@ -147,20 +148,7 @@ export default function JsonFormatterClient() {
   return (
     <div>
       <NavigationActions />
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Braces size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{t('title')}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('description')}</p>
-      </header>
+      <ToolHeader icon={<Braces />} title={t('title')} subtitle={t('description')} />
 
       <div style={{ maxWidth: '900px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
 
@@ -210,7 +198,7 @@ export default function JsonFormatterClient() {
             lineHeight: 1.6, color: '#e2e8f0',
           }}>
             {!hasInput && (
-              <span style={{ color: '#475569' }}>{t('output.empty')}</span>
+              <span style={{ color: 'var(--text-secondary)' }}>{t('output.empty')}</span>
             )}
             {hasInput && !isValid && (
               <div style={{ color: '#f87171' }}>
@@ -315,7 +303,7 @@ const labelStyle: React.CSSProperties = {
 };
 const adStyle: React.CSSProperties = {
   width: '728px', maxWidth: '100%', height: '90px',
-  background: '#f1f5f9', border: '1px dashed #cbd5e1',
+  background: 'var(--surface-hover)', border: '1px dashed var(--border)',
   borderRadius: 'var(--radius-md)', display: 'flex',
   alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
 };

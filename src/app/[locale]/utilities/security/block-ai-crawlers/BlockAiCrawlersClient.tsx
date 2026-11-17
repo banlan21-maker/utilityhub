@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { ShieldOff, Copy, Check, Download, ChevronDown, ChevronRight } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -204,16 +205,7 @@ export default function BlockAiCrawlersClient() {
     <div className={s.container}>
       <NavigationActions />
 
-      <header className={s.header}>
-        <div style={{
-          display: 'inline-flex', padding: '1rem', background: 'white',
-          borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1rem',
-        }}>
-          <ShieldOff size={38} color="#8b5cf6" />
-        </div>
-        <h1 className={s.title}>{t('title')}</h1>
-        <p className={s.subtitle}>{t('subtitle')}</p>
-      </header>
+      <ToolHeader icon={<ShieldOff />} title={t('title')} subtitle={t('subtitle')} />
 
       {/* STEP 1: 봇 선택 */}
       <section className={s.panel}>

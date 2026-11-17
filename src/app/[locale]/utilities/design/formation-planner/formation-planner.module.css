@@ -1,38 +1,7 @@
 .container {
-  max-width: 1152px;
+  max-width: var(--tool-width-wide);
   margin: 0 auto;
   padding: 1rem 1rem 3rem;
-}
-
-/* ── Header ──────────────────────────────── */
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.iconWrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1rem;
-}
-
-.title {
-  font-size: 2rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  color: #64748b;
-  font-weight: 500;
 }
 
 /* ── Top Controls ────────────────────────── */
@@ -46,12 +15,12 @@
 .titleInput {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 0.75rem;
   font-size: 1rem;
   font-weight: 600;
-  background: white;
-  color: #1e293b;
+  background: var(--surface);
+  color: var(--text-primary);
   transition: border-color 0.2s;
   box-sizing: border-box;
 }
@@ -70,12 +39,12 @@
 
 .bgBtn {
   padding: 0.4rem 0.85rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 9999px;
-  background: white;
+  background: var(--surface);
   font-size: 0.8rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.18s;
   white-space: nowrap;
@@ -160,8 +129,8 @@
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-  background: white;
-  border: 1.5px solid #e2e8f0;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
   border-radius: 0.875rem;
   padding: 0.65rem 0.9rem;
 }
@@ -169,13 +138,13 @@
 .textInput {
   width: 72px;
   padding: 0.4rem 0.6rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 700;
   text-align: center;
-  color: #1e293b;
-  background: #f8fafc;
+  color: var(--text-primary);
+  background: var(--surface-hover);
   transition: border-color 0.2s;
 }
 
@@ -243,12 +212,12 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.45rem 0.9rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 9999px;
-  background: white;
+  background: var(--surface);
   font-size: 0.8rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.18s;
   white-space: nowrap;
@@ -280,7 +249,7 @@
   padding: 0.45rem 1rem;
   border: 1.5px solid #ef4444;
   border-radius: 9999px;
-  background: white;
+  background: var(--surface);
   color: #ef4444;
   font-size: 0.8rem;
   font-weight: 700;
@@ -329,9 +298,9 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 1.5px solid #e2e8f0;
-  background: white;
-  color: #94a3b8;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -358,7 +327,7 @@
 
 /* ── Legend Panel (PC) ───────────────────── */
 .legendPanel {
-  background: white;
+  background: var(--surface);
   border: 1.5px solid #ede9fe;
   border-radius: 1rem;
   overflow: hidden;
@@ -390,7 +359,7 @@
 .legendEmpty {
   padding: 2rem 1rem;
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.83rem;
   line-height: 1.6;
 }
@@ -432,10 +401,10 @@
 .legendInput {
   flex: 1;
   border: none;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
   padding: 0.2rem 0.3rem;
   font-size: 0.825rem;
-  color: #1e293b;
+  color: var(--text-primary);
   background: transparent;
   min-width: 0;
   transition: border-color 0.15s;
@@ -501,7 +470,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
+  background: var(--surface);
   border-radius: 1.25rem 1.25rem 0 0;
   box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
   z-index: 100;
@@ -533,14 +502,14 @@
   font-weight: 700;
   font-size: 0.9rem;
   color: #8b5cf6;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
 .drawerClose {
   background: none;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 0.25rem;
 }
@@ -566,10 +535,6 @@
 
   .recordGroup {
     margin-left: 0;
-  }
-
-  .title {
-    font-size: 1.5rem;
   }
 }
 

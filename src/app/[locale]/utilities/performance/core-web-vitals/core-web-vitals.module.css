@@ -13,7 +13,7 @@
   --cwv-poor-bg: #fee2e2;
   --cwv-poor-fg: #991b1b;
   --cwv-accent: #8b5cf6;
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -31,32 +31,6 @@
   --cwv-poor-bg: rgba(239, 68, 68, 0.16);
   --cwv-poor-fg: #fca5a5;
   --cwv-accent: #a78bfa;
-}
-
-/* ── 머리말 ── */
-.header { text-align: center; margin-bottom: 0.5rem; }
-
-.icon_wrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 1.5rem;
-}
-
-.title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 0.75rem;
-}
-
-.subtitle {
-  color: var(--text-secondary);
-  font-size: 1.05rem;
-  line-height: 1.6;
 }
 
 /* ── 기기 탭 ── */
@@ -394,7 +368,6 @@
 @media (max-width: 640px) {
   .container { padding: 1rem 1rem 3rem; }
   .panel { padding: 0.75rem 1.1rem; }
-  .title { font-size: 1.6rem; }
   .metric_top { flex-direction: column; gap: 0.5rem; }
   .result_grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
   .result_card_overall { grid-column: span 2; }

@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { Youtube } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -159,28 +160,17 @@ export default function YtThumbnailClient() {
   };
 
   return (
-    <div style={{ maxWidth: '896px', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
+    <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
       <NavigationActions />
 
       {/* Header */}
-      <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{
-          display: 'inline-flex',
-          padding: '1rem',
-          background: 'white',
-          borderRadius: '1.5rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem'
-        }}>
-          <Youtube size={40} color="#8b5cf6" />
-        </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>{isKo ? '유튜브 썸네일 추출기' : 'YouTube Thumbnail Downloader'}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {isKo
-            ? 'YouTube URL만 입력하면 MQ·HQ·SD·MaxRes 전 화질 썸네일을 즉시 추출·다운로드합니다.'
-            : 'Paste any YouTube URL to instantly extract and download its thumbnail in every quality: MQ, HQ, SD, and MaxRes.'}
-        </p>
-      </header>
+      <ToolHeader
+        icon={<Youtube />}
+        title={isKo ? '유튜브 썸네일 추출기' : 'YouTube Thumbnail Downloader'}
+        subtitle={isKo
+          ? 'YouTube URL만 입력하면 MQ·HQ·SD·MaxRes 전 화질 썸네일을 즉시 추출·다운로드합니다.'
+          : 'Paste any YouTube URL to instantly extract and download its thumbnail in every quality: MQ, HQ, SD, and MaxRes.'}
+      />
 
       {/* Input Panel */}
       <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>

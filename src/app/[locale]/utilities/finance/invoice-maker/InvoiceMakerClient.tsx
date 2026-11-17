@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import { QRCodeSVG } from 'qrcode.react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
@@ -207,7 +208,7 @@ export default function InvoiceMakerClient() {
       const html2canvas = (await import('html2canvas')).default;
       const { jsPDF } = await import('jspdf');
       const canvas = await html2canvas(previewRef.current, {
-        scale: 2, useCORS: true, backgroundColor: '#fff',
+        scale: 2, useCORS: true, backgroundColor: 'var(--surface)',
         windowWidth: 794, width: 794,
       });
       const imgData = canvas.toDataURL('image/png');
@@ -327,13 +328,13 @@ export default function InvoiceMakerClient() {
       <NavigationActions />
 
       {/* Header */}
-      <header className={s.ivm_header}>
+      <ToolHeader
+        icon="🧾"
+        title={isKo ? '1분 인보이스 & 견적서 메이커' : '1-Minute Invoice & Quote Maker'}
+        subtitle={isKo ? '브라우저에서 바로 — 가입 없이, 무료로, 즉시 PDF 출력' : 'Browser-based · No sign-up · Free · Instant PDF'}
+      >
         <div className={s.ivm_badge}>🧾 Invoice / Quote Maker</div>
-        <h1 className={s.ivm_title}>{isKo ? '1분 인보이스 & 견적서 메이커' : '1-Minute Invoice & Quote Maker'}</h1>
-        <p className={s.ivm_subtitle}>
-          {isKo ? '브라우저에서 바로 — 가입 없이, 무료로, 즉시 PDF 출력' : 'Browser-based · No sign-up · Free · Instant PDF'}
-        </p>
-      </header>
+      </ToolHeader>
 
       {/* Country Toggle */}
       <div className={s.ivm_toggle_row}>
@@ -545,7 +546,7 @@ export default function InvoiceMakerClient() {
         </button>
       </div>
       {shareUrl && (
-        <p style={{ textAlign:'center', fontSize:'0.75rem', color:'#64748b', maxWidth:900, margin:'0 auto 1rem', wordBreak:'break-all' }}>
+        <p style={{ textAlign:'center', fontSize:'0.75rem', color:'var(--text-secondary)', maxWidth:900, margin:'0 auto 1rem', wordBreak:'break-all' }}>
           {shareUrl}
         </p>
       )}

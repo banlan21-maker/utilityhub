@@ -14,7 +14,7 @@
   --hc-err-bg: #fef2f2;
   --hc-err-text: #b91c1c;
 
-  max-width: 896px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -37,21 +37,6 @@
 @media (prefers-reduced-motion: reduce) {
   .container { animation: none; }
 }
-
-.header { text-align: center; }
-
-.icon_wrap {
-  display: inline-flex;
-  padding: 1rem;
-  background: var(--surface);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 1.5rem;
-  color: var(--primary);
-}
-
-.title { font-size: clamp(1.6rem, 5vw, 2.25rem); font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem; word-break: keep-all; }
-.subtitle { color: var(--text-secondary); font-size: 1.05rem; word-break: keep-all; line-height: 1.6; }
 
 .panel {
   max-width: 640px;
@@ -150,14 +135,14 @@
 /* ── PDF 렌더용 (화면 밖). 출력 문서는 테마와 무관하게 흰 종이·검은 글씨 ── */
 .offscreen { position: absolute; left: -20000px; top: 0; pointer-events: none; }
 
-.doc_page { box-sizing: border-box; background: #fff; overflow: hidden; }
+.doc_page { box-sizing: border-box; background: var(--surface); overflow: hidden; }
 
 .doc_page_body {
   color: #111;
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   font-size: 15px;
   line-height: 1.65;
-  background: #fff;
+  background: var(--surface);
 }
 
 .doc_p { margin: 0 0 0.9em; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }

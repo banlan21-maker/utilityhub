@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { Wallet, Plus, Minus, Copy, Check } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
@@ -191,21 +192,19 @@ export default function SalaryCalcClient() {
   return (
     <div className={s.sal_container}>
       <NavigationActions />
-      <header className={s.sal_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-          <Wallet size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.sal_title}>{isKo ? '2026 연봉·급여 실수령액 계산기' : '2026 Salary & Take-Home Pay Calculator'}</h1>
-        <p className={s.sal_subtitle}>{isKo ? '연봉·월급은 4대보험과 소득세까지, 시급은 주휴수당·잔업·특근까지 계산합니다' : 'Korean salary after social insurance and income tax, plus hourly pay with overtime.'}</p>
-      </header>
+      <ToolHeader
+        icon={<Wallet />}
+        title={isKo ? '2026 연봉·급여 실수령액 계산기' : '2026 Salary & Take-Home Pay Calculator'}
+        subtitle={isKo ? '연봉·월급은 4대보험과 소득세까지, 시급은 주휴수당·잔업·특근까지 계산합니다' : 'Korean salary after social insurance and income tax, plus hourly pay with overtime.'}
+      />
 
       {/* Country Tabs */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
         {(['KR', 'US'] as Country[]).map(c => (
           <button key={c} onClick={() => switchCountry(c)} style={{
-            padding: '0.75rem 2rem', borderRadius: '2rem', border: '1px solid #e2e8f0',
-            background: country === c ? '#8b5cf6' : 'white',
-            color: country === c ? 'white' : '#64748b',
+            padding: '0.75rem 2rem', borderRadius: '2rem', border: '1px solid var(--border)',
+            background: country === c ? '#8b5cf6' : 'var(--surface)',
+            color: country === c ? 'white' : 'var(--text-secondary)',
             fontWeight: 800, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s',
           }}>
             {c === 'KR' ? '🇰🇷 KOREA' : '🇺🇸 USA'}
@@ -251,11 +250,11 @@ export default function SalaryCalcClient() {
                 }}
                 placeholder="0"
               />
-              <span style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 900, color: '#94a3b8', fontSize: '1.25rem' }}>
+              <span style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 900, color: 'var(--text-muted)', fontSize: '1.25rem' }}>
                 {isKRW ? '₩' : '$'}
               </span>
             </div>
-            <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>
+            <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
               {isKRW
                 ? `2026 최저시급 ₩${CURRENT_DATA.KR.minWage.toLocaleString()}`
                 : `Federal min. wage $${CURRENT_DATA.US.minWage.toFixed(2)}`}
@@ -263,7 +262,7 @@ export default function SalaryCalcClient() {
           </div>
 
           {/* ── 주당 근무형태 ── */}
-          <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
             <div className={s.sal_section_title}>
               {isKo ? '주당 근무형태' : 'Weekly Work Schedule'}
             </div>
@@ -276,13 +275,13 @@ export default function SalaryCalcClient() {
               </div>
               <div className={s.sal_block_inputs}>
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '시간/일' : 'hrs/day'}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '시간/일' : 'hrs/day'}</div>
                   <MiniStepper value={regular.hoursPerDay} min={0} max={24} unit="h"
                     onChange={v => setRegular(b => ({ ...b, hoursPerDay: v }))} />
                 </div>
                 <span style={{ color: '#cbd5e1', fontWeight: 700, marginTop: 16 }}>×</span>
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
                   <MiniStepper value={regular.daysPerWeek} min={0} max={7} unit={isKo ? '일' : 'd'}
                     onChange={v => setRegular(b => ({ ...b, daysPerWeek: v }))} />
                 </div>
@@ -299,25 +298,25 @@ export default function SalaryCalcClient() {
               <div className={s.sal_block_label}>
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
                 {isKo ? '잔업 (연장근로)' : 'Overtime'}
-                <span style={{ fontSize: '0.65rem', color: '#94a3b8', marginLeft: 'auto', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginLeft: 'auto', fontWeight: 600 }}>
                   {isKo ? '일반근무 후 연장' : 'after regular hrs'}
                 </span>
               </div>
               <div className={s.sal_block_inputs}>
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '시간/일' : 'hrs/day'}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '시간/일' : 'hrs/day'}</div>
                   <MiniStepper value={overtime.hoursPerDay} min={0} max={12} unit="h"
                     onChange={v => setOvertime(b => ({ ...b, hoursPerDay: v }))} />
                 </div>
                 <span style={{ color: '#cbd5e1', fontWeight: 700, marginTop: 16 }}>×</span>
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
                   <MiniStepper value={overtime.daysPerWeek} min={0} max={7} unit={isKo ? '일' : 'd'}
                     onChange={v => setOvertime(b => ({ ...b, daysPerWeek: v }))} />
                 </div>
               </div>
               <div style={{ marginTop: '0.75rem' }}>
-                <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.35rem' }}>{isKo ? '시급 배율' : 'Pay Rate'}</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.35rem' }}>{isKo ? '시급 배율' : 'Pay Rate'}</div>
                 <MultiplierPicker value={overtime.multiplier} onChange={v => setOvertime(b => ({ ...b, multiplier: v }))} />
               </div>
               {overtime.hoursPerDay * overtime.daysPerWeek > 0 && (
@@ -332,25 +331,25 @@ export default function SalaryCalcClient() {
               <div className={s.sal_block_label}>
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
                 {isKo ? '특근 (휴일근로)' : 'Holiday / Special Work'}
-                <span style={{ fontSize: '0.65rem', color: '#94a3b8', marginLeft: 'auto', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginLeft: 'auto', fontWeight: 600 }}>
                   {isKo ? '휴일·별도 근무' : 'weekend/holiday'}
                 </span>
               </div>
               <div className={s.sal_block_inputs}>
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '시간/일' : 'hrs/day'}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '시간/일' : 'hrs/day'}</div>
                   <MiniStepper value={special.hoursPerDay} min={0} max={24} unit="h"
                     onChange={v => setSpecial(b => ({ ...b, hoursPerDay: v }))} />
                 </div>
                 <span style={{ color: '#cbd5e1', fontWeight: 700, marginTop: 16 }}>×</span>
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
                   <MiniStepper value={special.daysPerWeek} min={0} max={7} unit={isKo ? '일' : 'd'}
                     onChange={v => setSpecial(b => ({ ...b, daysPerWeek: v }))} />
                 </div>
               </div>
               <div style={{ marginTop: '0.75rem' }}>
-                <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.35rem' }}>{isKo ? '시급 배율' : 'Pay Rate'}</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.35rem' }}>{isKo ? '시급 배율' : 'Pay Rate'}</div>
                 <MultiplierPicker value={special.multiplier} onChange={v => setSpecial(b => ({ ...b, multiplier: v }))} />
               </div>
               {special.hoursPerDay * special.daysPerWeek > 0 && (
@@ -362,16 +361,16 @@ export default function SalaryCalcClient() {
           </div>
 
           {/* ── 추가 옵션 ── */}
-          <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
             <div className={s.sal_section_title}>{isKo ? '추가 옵션' : 'Options'}</div>
 
             {isKRW ? (
               <>
                 {/* 주휴수당 토글 */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', padding: '1rem', background: 'var(--surface-hover)', borderRadius: '1rem' }}>
                   <div>
                     <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>{isKo ? '주휴수당 포함' : 'Include Weekly Holiday Pay'}</div>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
                       {isKo ? `일반근무 주 15시간 이상 대상 | 현재: ${kr.totalH > 0 ? (regular.hoursPerDay * regular.daysPerWeek >= 15 ? '✅ 해당' : '❌ 미해당') : '-'}` : '15+ regular hrs/wk required'}
                     </div>
                   </div>
@@ -380,7 +379,7 @@ export default function SalaryCalcClient() {
                     background: holidayOn ? '#8b5cf6' : '#cbd5e1',
                     position: 'relative', border: 'none', cursor: 'pointer', flexShrink: 0,
                   }}>
-                    <div style={{ width: '18px', height: '18px', background: '#fff', borderRadius: '50%', position: 'absolute', top: '3px', left: holidayOn ? '23px' : '3px', transition: 'left 0.2s' }} />
+                    <div style={{ width: '18px', height: '18px', background: 'var(--surface)', borderRadius: '50%', position: 'absolute', top: '3px', left: holidayOn ? '23px' : '3px', transition: 'left 0.2s' }} />
                   </button>
                 </div>
 
@@ -390,8 +389,8 @@ export default function SalaryCalcClient() {
                     <button key={k} onClick={() => setKrDeduction(k)} style={{
                       flex: 1, minWidth: 80, padding: '0.6rem 0.5rem', borderRadius: '0.75rem',
                       border: `1.5px solid ${krDeduction === k ? '#8b5cf6' : '#e2e8f0'}`,
-                      background: krDeduction === k ? '#f5f3ff' : 'white',
-                      color: krDeduction === k ? '#8b5cf6' : '#64748b',
+                      background: krDeduction === k ? 'var(--color-primary-light)' : 'var(--surface)',
+                      color: krDeduction === k ? '#8b5cf6' : 'var(--text-secondary)',
                       fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer',
                     }}>
                       {k === 'none' ? (isKo ? '공제 전' : 'Gross') : k === 'withholdingTax' ? '3.3%' : (isKo ? `4대보험 ${insurancePct}%` : `${insurancePct}% Insurance`)}
@@ -405,8 +404,8 @@ export default function SalaryCalcClient() {
                   <button key={u} onClick={() => setUsDeduction(u)} style={{
                     flex: 1, minWidth: 90, padding: '0.6rem 0.5rem', borderRadius: '0.75rem',
                     border: `1.5px solid ${usDeduction === u ? '#8b5cf6' : '#e2e8f0'}`,
-                    background: usDeduction === u ? '#f5f3ff' : 'white',
-                    color: usDeduction === u ? '#8b5cf6' : '#64748b',
+                    background: usDeduction === u ? 'var(--color-primary-light)' : 'var(--surface)',
+                    color: usDeduction === u ? '#8b5cf6' : 'var(--text-secondary)',
                     fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer',
                   }}>
                     {u === 'none' ? 'Gross' : u === 'fica' ? 'FICA 7.65%' : 'FICA+Federal ~22%'}
@@ -429,7 +428,7 @@ export default function SalaryCalcClient() {
 
           <div className={s.sal_receipt_body}>
             {/* 주급 명세 */}
-            <div style={{ padding: '0.75rem 2rem 0', fontSize: '0.65rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ padding: '0.75rem 2rem 0', fontSize: '0.65rem', fontWeight: 900, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               {isKo ? '주급 상세' : 'Weekly Detail'}
             </div>
 
@@ -466,19 +465,19 @@ export default function SalaryCalcClient() {
               />
             )}
 
-            <div style={{ borderTop: '1.5px dashed #e2e8f0', margin: '0.5rem 2rem' }} />
+            <div style={{ borderTop: '1.5px dashed var(--border)', margin: '0.5rem 2rem' }} />
 
             <ReceiptRow
               label={isKo ? '주 총급여' : 'Weekly Gross'}
               value={fmt(res.weeklyGross)}
             />
 
-            <div style={{ padding: '0.5rem 2rem', background: '#f8fafc', fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>
+            <div style={{ padding: '0.5rem 2rem', background: 'var(--surface-hover)', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
               × {WEEKS_PER_MONTH.toFixed(3)} {isKo ? '주/월' : 'wks/mo'}
             </div>
 
             {/* 월급 명세 */}
-            <div style={{ padding: '0.5rem 2rem 0', fontSize: '0.65rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ padding: '0.5rem 2rem 0', fontSize: '0.65rem', fontWeight: 900, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               {isKo ? '월급 명세' : 'Monthly Detail'}
             </div>
 
@@ -498,7 +497,7 @@ export default function SalaryCalcClient() {
             </div>
           </div>
 
-          <div style={{ padding: '1rem 2rem', background: '#f8fafc', borderTop: '1px solid #f1f5f9', fontSize: '0.68rem', color: '#94a3b8', lineHeight: 1.6 }}>
+          <div style={{ padding: '1rem 2rem', background: 'var(--surface-hover)', borderTop: '1px solid var(--border)', fontSize: '0.68rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
             {isKRW
               ? (isKo
                 ? '* 4대보험 모드는 보험료만 공제하며 근로소득세·지방소득세는 포함하지 않습니다. 세금까지 반영한 실수령액은 상단 "연봉·월급 실수령액" 탭에서 확인하세요.'

@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { Gamepad2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
@@ -353,15 +354,11 @@ export default function GridPokerClient() {
       <NavigationActions />
 
       {/* Header */}
-      <header className={s.fin_header}>
-        <div style={{ display: 'inline-flex', padding: '1rem', background: 'white', borderRadius: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-          <Gamepad2 size={40} color="#8b5cf6" />
-        </div>
-        <h1 className={s.fin_title}>{isKo ? '데일리 그리드 포커' : 'Daily Grid Poker'}</h1>
-        <p className={s.fin_subtitle}>
-          {isKo ? '5×5 그리드에 카드를 배치해 포커 족보 점수를 최대화하세요!' : 'Place cards on a 5×5 grid and maximize your poker hand scores!'}
-        </p>
-      </header>
+      <ToolHeader
+        icon={<Gamepad2 />}
+        title={isKo ? '데일리 그리드 포커' : 'Daily Grid Poker'}
+        subtitle={isKo ? '5×5 그리드에 카드를 배치해 포커 족보 점수를 최대화하세요!' : 'Place cards on a 5×5 grid and maximize your poker hand scores!'}
+      />
 
       {/* Game Panel */}
       <section className={s.fin_panel}>

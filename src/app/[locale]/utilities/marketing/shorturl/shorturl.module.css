@@ -1,5 +1,5 @@
 .url_container {
-  max-width: 896px; /* max-w-4xl per Rulebook V4.4 */
+  max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -16,7 +16,7 @@
 .url_title {
   font-size: 2.25rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 0.75rem;
 }
 
@@ -27,9 +27,9 @@
 
 .url_panel {
   padding: 2rem;
-  background: white;
+  background: var(--surface);
   border-radius: 1.5rem; /* rounded-2xl */
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -71,10 +71,10 @@
 .url_input {
   flex: 1;
   padding: 0.875rem 1.25rem;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 1rem;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--surface-hover);
+  color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.2s;
   outline: none;
@@ -82,7 +82,7 @@
 
 .url_input:focus {
   border-color: #8b5cf6;
-  background: white;
+  background: var(--surface);
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
 }
 
@@ -125,8 +125,8 @@
 
 .url_history_item {
   padding: 1.25rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: flex-start;
@@ -140,16 +140,16 @@
 
 .url_history_item:hover {
   border-color: #8b5cf6;
-  background: white;
+  background: var(--surface);
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .url_icon_button {
   padding: 0.5rem;
   border-radius: 0.75rem;
-  color: #64748b;
-  background: white;
-  border: 1.5px solid #e2e8f0;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
   transition: all 0.2s;
 }
 
@@ -162,13 +162,13 @@
 .url_ad_placeholder {
   width: 100%;
   min-height: 90px;
-  background: rgba(241, 245, 249, 0.5);
-  border: 1px dashed #cbd5e1;
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
   border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 2rem 0;
 }

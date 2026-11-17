@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface ResultType { id: string; emoji: string; title: string; description: string; }
@@ -131,15 +132,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
   // ── Intro ──────────────────────────────────────────────────────────────
   if (phase === 'intro') return (
     <div style={{ maxWidth: '520px', margin: '0 auto', textAlign: 'center', padding: '2rem 0' }}>
-      <div style={{ fontSize: '5.5rem', lineHeight: 1, marginBottom: '1.5rem' }}>{quiz.coverEmoji}</div>
-      <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.75rem', lineHeight: 1.3 }}>
-        {quiz.title}
-      </h1>
-      {quiz.description && (
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-          {quiz.description}
-        </p>
-      )}
+      <ToolHeader icon={quiz.coverEmoji || undefined} title={quiz.title} subtitle={quiz.description} />
       <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '2.5rem' }}>
         {isKo
           ? `총 ${quiz.questions.length}개 질문 · ${quiz.resultTypes.length}가지 결과`
@@ -279,7 +272,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
             : 'Anyone can build a quiz for free on Utility Hub and share it on social media'}
         </p>
         <Link href="/utilities/marketing/quiz-builder"
-          style={{ display: 'inline-block', padding: '0.65rem 1.75rem', background: 'white', color: '#6366f1', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
+          style={{ display: 'inline-block', padding: '0.65rem 1.75rem', background: 'var(--surface)', color: '#6366f1', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
           {isKo ? '나도 만들기 →' : 'Make My Own →'}
         </Link>
       </div>
