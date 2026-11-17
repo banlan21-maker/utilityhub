@@ -9,6 +9,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
 import s from './color-palette.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── WCAG Algorithm ─────────────────────────────────────────────────────────
 function hexToRgb(hex: string): [number, number, number] | null {
@@ -90,17 +91,16 @@ const PALETTES: Palette[] = [
 interface LevelResult {
   pass: boolean;
   label: string;
-  color: string;
-  bg: string;
+  tone: 'green' | 'blue' | 'red';
 }
 
 function getLevel(ratio: number, large: boolean): LevelResult {
   const aaaThreshold = large ? 4.5 : 7;
   const aaThreshold  = large ? 3.0 : 4.5;
 
-  if (ratio >= aaaThreshold) return { pass: true,  label: 'AAA', color: '#065f46', bg: '#d1fae5' };
-  if (ratio >= aaThreshold)  return { pass: true,  label: 'AA',  color: '#1e40af', bg: '#dbeafe' };
-  return                             { pass: false, label: 'Fail', color: '#991b1b', bg: '#fee2e2' };
+  if (ratio >= aaaThreshold) return { pass: true,  label: 'AAA', tone: 'green' };
+  if (ratio >= aaThreshold)  return { pass: true,  label: 'AA',  tone: 'blue' };
+  return                             { pass: false, label: 'Fail', tone: 'red' };
 }
 
 // ── Preview text sizes ─────────────────────────────────────────────────────
@@ -138,19 +138,6 @@ export default function ColorPaletteClient() {
     : ratio >= 3   ? '#f59e0b'
     : '#ef4444';
 
-  const inputStyle: React.CSSProperties = {
-    padding: '0.5rem 0.75rem',
-    fontSize: '0.875rem',
-    borderRadius: 'var(--radius-sm)',
-    border: '1px solid var(--border)',
-    outline: 'none',
-    background: 'var(--surface)',
-    color: 'var(--text-primary)',
-    fontFamily: 'monospace',
-    flex: 1,
-    minWidth: 0,
-  };
-
   return (
     <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', width: '100%' }}>
       <NavigationActions />
@@ -158,51 +145,51 @@ export default function ColorPaletteClient() {
       {/* Tool Start Card - V4 Standard */}
       <ToolHeader icon={<Palette />} title={t('title')} subtitle={t('description')} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', alignItems: 'start' }}>
+      <div className={s.layout}>
 
         {/* ── Left: Pickers + Score ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className={s.column}>
 
           {/* Color pickers */}
-          <div className="glass-panel" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{t('pick_colors')}</h2>
+          <div className={`${ui.card} ${s.panel}`}>
+            <h2 className={`${ui.cardTitle} ${s.title}`}>{t('pick_colors')}</h2>
 
             {/* BG */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>{t('bg_label')}</label>
-              <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('bg_label')}</label>
+              <div className={s.pickRow}>
                 <input
                   type="color"
                   value={bgColor}
                   onChange={e => setBgColor(e.target.value)}
-                  style={{ width: '3rem', height: '3rem', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', padding: '2px', flexShrink: 0 }}
+                  className={s.colorInput}
                 />
                 <input
                   type="text"
                   value={bgColor}
                   maxLength={7}
                   onChange={e => setBgColor(e.target.value)}
-                  style={inputStyle}
+                  className={`${ui.input} ${s.hexInput}`}
                 />
               </div>
             </div>
 
             {/* Text */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>{t('text_label')}</label>
-              <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('text_label')}</label>
+              <div className={s.pickRow}>
                 <input
                   type="color"
                   value={txtColor}
                   onChange={e => setTxtColor(e.target.value)}
-                  style={{ width: '3rem', height: '3rem', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', padding: '2px', flexShrink: 0 }}
+                  className={s.colorInput}
                 />
                 <input
                   type="text"
                   value={txtColor}
                   maxLength={7}
                   onChange={e => setTxtColor(e.target.value)}
-                  style={inputStyle}
+                  className={`${ui.input} ${s.hexInput}`}
                 />
               </div>
             </div>
@@ -210,25 +197,15 @@ export default function ColorPaletteClient() {
             {/* Swap button */}
             <button
               onClick={() => { const tmp = bgColor; setBgColor(txtColor); setTxtColor(tmp); }}
-              style={{
-                padding: '0.55rem', fontSize: '0.85rem', fontWeight: 500,
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--border)',
-                background: 'var(--surface)',
-                color: 'var(--text-secondary)',
-                cursor: 'pointer', transition: 'all 0.2s',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
-              }}
-              onMouseOver={e => { e.currentTarget.style.background = 'var(--surface-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-              onMouseOut={e => { e.currentTarget.style.background = 'var(--surface)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+              className={`${ui.button} ${ui.secondary} ${ui.block}`}
             >
               ⇅ {t('swap')}
             </button>
           </div>
 
           {/* Score card */}
-          <div className="glass-panel" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{t('wcag_score')}</h2>
+          <div className={`${ui.card} ${s.panel}`}>
+            <h2 className={`${ui.cardTitle} ${s.title}`}>{t('wcag_score')}</h2>
 
             {/* Big ratio number */}
             <div style={{ textAlign: 'center' }}>
@@ -259,18 +236,15 @@ export default function ColorPaletteClient() {
             </div>
 
             {/* Pass/Fail badges */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className={s.levelGrid}>
               {[
                 { key: 'normal_text', level: normalLevel, desc: t('normal_text') },
                 { key: 'large_text',  level: largeLevel,  desc: t('large_text') },
               ].map(({ key, level, desc }) => (
-                <div key={key} className="glass-panel" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', textAlign: 'center' }}>{desc}</span>
+                <div key={key} className={`${ui.card} ${s.levelBox}`}>
+                  <span className={ui.hint} style={{ textAlign: 'center' }}>{desc}</span>
                   {level ? (
-                    <span style={{
-                      fontSize: '1rem', fontWeight: 700, padding: '0.25rem 0.75rem',
-                      borderRadius: '999px', background: level.bg, color: level.color,
-                    }}>
+                    <span className={`${ui.badge} ${ui[level.tone]}`}>
                       {level.pass ? '✓ ' : '✗ '}{level.label}
                     </span>
                   ) : (
@@ -281,20 +255,22 @@ export default function ColorPaletteClient() {
             </div>
 
             {/* WCAG guide note */}
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.6, padding: '0.75rem', background: 'var(--surface)', borderRadius: 'var(--radius-sm)' }}>
-              <strong style={{ color: 'var(--text-primary)' }}>{t('wcag_guide_title')}</strong><br />
-              {t('wcag_aa_normal')} &nbsp;|&nbsp; {t('wcag_aa_large')}<br />
-              {t('wcag_aaa_normal')} &nbsp;|&nbsp; {t('wcag_aaa_large')}
+            <div className={`${ui.notice} ${ui.gray}`}>
+              <div>
+                <strong style={{ color: 'var(--text-primary)' }}>{t('wcag_guide_title')}</strong><br />
+                {t('wcag_aa_normal')} &nbsp;|&nbsp; {t('wcag_aa_large')}<br />
+                {t('wcag_aaa_normal')} &nbsp;|&nbsp; {t('wcag_aaa_large')}
+              </div>
             </div>
           </div>
         </div>
 
         {/* ── Right: Preview ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className={s.column}>
 
           {/* Live preview */}
-          <div className="glass-panel" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{t('preview')}</h2>
+          <div className={`${ui.card} ${s.panel}`}>
+            <h2 className={`${ui.cardTitle} ${s.title}`}>{t('preview')}</h2>
 
             <div style={{
               background: bgColor, color: txtColor,
@@ -337,11 +313,7 @@ export default function ColorPaletteClient() {
                   <div key={pt.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
                     <span style={{ color: 'var(--text-secondary)' }}>{pt.label}</span>
                     {lv ? (
-                      <span style={{
-                        padding: '0.15rem 0.6rem', borderRadius: '999px',
-                        fontWeight: 700, fontSize: '0.75rem',
-                        background: lv.bg, color: lv.color,
-                      }}>
+                      <span className={`${ui.badge} ${ui[lv.tone]}`}>
                         {lv.pass ? '✓ ' : '✗ '}{lv.label}
                       </span>
                     ) : <span>—</span>}
@@ -352,13 +324,13 @@ export default function ColorPaletteClient() {
           </div>
 
           {/* Trending Palettes */}
-          <div className="glass-panel" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className={`${ui.card} ${s.panel}`}>
             <div>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 0.25rem' }}>{t('trending_title')}</h2>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>{t('trending_hint')}</p>
+              <h2 className={`${ui.cardTitle} ${s.title}`}>{t('trending_title')}</h2>
+              <p className={`${ui.hint} ${s.subtitle}`}>{t('trending_hint')}</p>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div className={s.paletteList}>
               {PALETTES.map(p => {
                 const r = contrastRatio(p.bg, p.text);
                 const lv = r !== null ? getLevel(r, false) : null;
@@ -367,17 +339,7 @@ export default function ColorPaletteClient() {
                   <button
                     key={p.name}
                     onClick={() => applyPalette(p)}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: '0.85rem',
-                      padding: '0.75rem 1rem',
-                      borderRadius: 'var(--radius-md)',
-                      border: `2px solid ${active ? 'var(--primary)' : 'var(--border)'}`,
-                      background: active ? 'var(--primary-light, rgba(99,102,241,0.08))' : 'var(--surface)',
-                      cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
-                      width: '100%',
-                    }}
-                    onMouseOver={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.background = 'var(--surface-hover)'; } }}
-                    onMouseOut={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; } }}
+                    className={`${ui.chip} ${active ? ui.chipActive : ''} ${s.paletteBtn}`}
                   >
                     {/* Color swatch */}
                     <div style={{ display: 'flex', flexShrink: 0 }}>
@@ -389,11 +351,11 @@ export default function ColorPaletteClient() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-primary)' }}>{p.name}</span>
-                        <span style={{ fontSize: '0.7rem', padding: '0.1rem 0.45rem', borderRadius: '999px', background: 'var(--border)', color: 'var(--text-secondary)' }}>
+                        <span className={`${ui.badge} ${ui.gray}`}>
                           {p.tag}
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.15rem', fontFamily: 'monospace' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--text-secondary)', marginTop: '0.15rem', fontFamily: 'monospace' }}>
                         {p.bg} · {p.text}
                       </div>
                     </div>
@@ -404,7 +366,7 @@ export default function ColorPaletteClient() {
                         {r !== null ? r.toFixed(1) : '—'}:1
                       </span>
                       {lv && (
-                        <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: '999px', background: lv.bg, color: lv.color }}>
+                        <span className={`${ui.badge} ${ui[lv.tone]}`}>
                           {lv.label}
                         </span>
                       )}

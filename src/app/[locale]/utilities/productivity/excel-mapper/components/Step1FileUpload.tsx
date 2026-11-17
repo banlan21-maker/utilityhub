@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import type { ParsedExcelData } from '../ExcelMapperClient';
+import { ui } from '@/app/components/ui';
+import s from '../excel-mapper.module.css';
 
 interface Step1FileUploadProps {
   onComplete: (data: ParsedExcelData) => void;
@@ -122,15 +124,7 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          style={{
-            border: `2px dashed ${isDragging ? '#f97316' : 'var(--border)'}`,
-            borderRadius: 'var(--radius-lg)',
-            padding: '4rem 2rem',
-            textAlign: 'center',
-            cursor: 'pointer',
-            background: isDragging ? 'rgba(249, 115, 22, 0.05)' : 'var(--surface)',
-            transition: 'all 0.3s ease',
-          }}
+          className={`${s.dropzone} ${isDragging ? s.dropzoneActive : ''}`}
         >
           <input
             ref={fileInputRef}
@@ -149,7 +143,7 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
         </div>
       ) : (
         <div>
-          <div style={{ marginBottom: '2rem', padding: '1rem', background: 'var(--surface)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+          <div className={`${ui.card} ${s.fileInfo}`}>
             <div style={{ marginBottom: '0.5rem' }}>
               <strong style={{ color: 'var(--text-primary)' }}>{t('fileName')}:</strong> {fileName}
             </div>
@@ -161,9 +155,9 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+          <div className={s.grid2}>
+            <div className={ui.field}>
+              <label className={ui.label}>
                 {t('headerRowLabel')}
               </label>
               <input
@@ -172,23 +166,15 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
                 max={allRows.length}
                 value={headerRowIndex}
                 onChange={(e) => setHeaderRowIndex(parseInt(e.target.value) || 1)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'var(--surface)',
-                  color: 'var(--text-primary)',
-                  fontSize: '1rem',
-                }}
+                className={ui.input}
               />
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+              <p className={ui.hint}>
                 {t('headerRowHint')}
               </p>
             </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div className={ui.field}>
+              <label className={ui.label}>
                 {t('dataStartRowLabel')}
               </label>
               <input
@@ -197,17 +183,9 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
                 max={allRows.length}
                 value={dataStartRowIndex}
                 onChange={(e) => setDataStartRowIndex(parseInt(e.target.value) || 2)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'var(--surface)',
-                  color: 'var(--text-primary)',
-                  fontSize: '1rem',
-                }}
+                className={ui.input}
               />
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+              <p className={ui.hint}>
                 {t('dataStartRowHint')}
               </p>
             </div>
@@ -215,7 +193,7 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
 
           {/* Preview */}
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+            <h3 className={ui.cardTitle}>
               {t('preview')}
             </h3>
             <div style={{ overflowX: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
@@ -227,7 +205,7 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
                       style={{
                         background:
                           rowIndex === headerRowIndex - 1
-                            ? 'rgba(249, 115, 22, 0.1)'
+                            ? 'var(--color-primary-light)'
                             : rowIndex >= dataStartRowIndex - 1
                             ? 'var(--surface)'
                             : 'var(--surface-hover)',
@@ -251,7 +229,7 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
                           style={{
                             padding: '0.5rem',
                             borderBottom: '1px solid var(--border)',
-                            color: rowIndex === headerRowIndex - 1 ? '#f97316' : 'var(--text-primary)',
+                            color: rowIndex === headerRowIndex - 1 ? 'var(--color-primary)' : 'var(--text-primary)',
                             fontWeight: rowIndex === headerRowIndex - 1 ? 600 : 400,
                           }}
                         >
@@ -264,13 +242,13 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
               </table>
             </div>
             {allRows.length > 10 && (
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+              <p className={`${ui.hint} ${s.tableNote}`}>
                 {t('showingFirst10')}
               </p>
             )}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+          <div className={`${s.actions} ${s.actionsEnd}`}>
             <button
               onClick={() => {
                 setAllRows(null);
@@ -279,29 +257,13 @@ export default function Step1FileUpload({ onComplete }: Step1FileUploadProps) {
                 setHeaderRowIndex(1);
                 setDataStartRowIndex(2);
               }}
-              style={{
-                padding: '0.75rem 1.5rem',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--surface)',
-                color: 'var(--text-primary)',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
+              className={`${ui.button} ${ui.secondary}`}
             >
               {t('reset')}
             </button>
             <button
               onClick={handleContinue}
-              style={{
-                padding: '0.75rem 2rem',
-                border: 'none',
-                borderRadius: 'var(--radius-md)',
-                background: '#f97316',
-                color: 'white',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
+              className={`${ui.button} ${ui.primary}`}
             >
               {t('continue')}
             </button>

@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 
 export default function CounterClient() {
   const t = useTranslations('TextCounter');
@@ -45,7 +46,7 @@ export default function CounterClient() {
       <NavigationActions />
       <ToolHeader icon={<Plus />} title={t('title')} subtitle={t('description')} />
 
-      <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div className={ui.card} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
         {/* Input Area */}
         <textarea
@@ -53,21 +54,8 @@ export default function CounterClient() {
           onChange={(e) => setText(e.target.value)}
           placeholder={t('placeholder')}
           rows={8}
-          className="glass-panel"
-          style={{
-            width: '100%',
-            padding: '1.5rem',
-            fontSize: '1.125rem',
-            borderRadius: 'var(--radius-md)',
-            border: '2px solid var(--border)',
-            outline: 'none',
-            background: 'var(--surface)',
-            color: 'var(--text-primary)',
-            resize: 'vertical',
-            transition: 'border-color 0.3s'
-          }}
-          onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-          onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
+          className={ui.input}
+          style={{ fontSize: '1.1rem' }}
         />
 
         {/* Results Grid */}
@@ -77,38 +65,38 @@ export default function CounterClient() {
           gap: '1rem'
         }}>
 
-          <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', background: 'var(--surface)' }}>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+          <div className={ui.card} style={{ textAlign: 'center' }}>
+            <p className={ui.resultLabel}>
               {t('charsIncludeSpaces')}
             </p>
-            <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)' }}>
+            <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-primary)', fontVariantNumeric: 'tabular-nums' }}>
               {charsWithSpaces.toLocaleString()}
             </p>
           </div>
 
-          <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', background: 'var(--surface)' }}>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+          <div className={ui.card} style={{ textAlign: 'center' }}>
+            <p className={ui.resultLabel}>
               {t('charsExcludeSpaces')}
             </p>
-            <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+            <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
               {charsWithoutSpaces.toLocaleString()}
             </p>
           </div>
 
-          <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', background: 'var(--surface)' }}>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+          <div className={ui.card} style={{ textAlign: 'center' }}>
+            <p className={ui.resultLabel}>
               {t('byteUtf8')}
             </p>
-            <p style={{ fontSize: '2rem', fontWeight: 700, color: '#10b981' }}>
+            <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--tint-green-fg)', fontVariantNumeric: 'tabular-nums' }}>
               {byteUtf8.toLocaleString()}<span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>B</span>
             </p>
           </div>
 
-          <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', background: 'var(--surface)' }}>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+          <div className={ui.card} style={{ textAlign: 'center' }}>
+            <p className={ui.resultLabel}>
               {t('byteEucKr')}
             </p>
-            <p style={{ fontSize: '2rem', fontWeight: 700, color: '#10b981' }}>
+            <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--tint-green-fg)', fontVariantNumeric: 'tabular-nums' }}>
               {byteEucKr.toLocaleString()}<span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>B</span>
             </p>
           </div>

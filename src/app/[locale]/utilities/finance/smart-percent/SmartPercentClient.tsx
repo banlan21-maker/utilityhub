@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './smart-percent.module.css';
+import { ui } from '@/app/components/ui';
 
 /* ── Types ── */
 type Tab = 'basic' | 'change' | 'discount' | 'margin';
@@ -222,7 +223,7 @@ export default function SmartPercentClient() {
   const renderNL = () => {
     const inputA = (
       <input
-        className={s.sp_nl_input}
+        className={`${ui.input} ${s.sp_nl_input}`}
         value={aRaw}
         onChange={makeInputHandler(setARaw)}
         placeholder={ph('a')}
@@ -231,7 +232,7 @@ export default function SmartPercentClient() {
     );
     const inputB = (
       <input
-        className={s.sp_nl_input}
+        className={`${ui.input} ${s.sp_nl_input}`}
         value={bRaw}
         onChange={makeInputHandler(setBRaw)}
         placeholder={ph('b')}
@@ -244,7 +245,7 @@ export default function SmartPercentClient() {
         {inputA}
         <span className={s.sp_nl_text}>{isKo ? '의' : '×'}</span>
         {inputB}
-        <span className={s.sp_nl_badge}>%</span>
+        <span className={ui.badge}>%</span>
         <span className={s.sp_nl_text}>{isKo ? '는 얼마인가요?' : '= ?'}</span>
       </div>
     );
@@ -264,7 +265,7 @@ export default function SmartPercentClient() {
         {inputA}
         {isKo && <span className={s.sp_nl_text}>원에서</span>}
         {inputB}
-        <span className={s.sp_nl_badge}>%</span>
+        <span className={ui.badge}>%</span>
         <span className={s.sp_nl_text}>{isKo ? '할인하면?' : 'off?'}</span>
       </div>
     );
@@ -310,11 +311,11 @@ export default function SmartPercentClient() {
       />
 
       {/* Tabs */}
-      <nav className={s.sp_tabs}>
+      <nav className={ui.segmented}>
         {TABS.map(t => (
           <button
             key={t.id}
-            className={`${s.sp_tab} ${tab === t.id ? s.sp_tab_active : ''}`}
+            className={`${ui.segment} ${tab === t.id ? ui.segmentActive : ''}`}
             onClick={() => handleTabChange(t.id)}
           >
             {isKo ? t.ko : t.en}
@@ -323,14 +324,14 @@ export default function SmartPercentClient() {
       </nav>
 
       {/* Main Card */}
-      <div className={s.sp_card}>
+      <div className={`${ui.card} ${s.sp_card}`}>
         {renderNL()}
 
         {result && (
-          <div className={s.sp_result}>
+          <div className={`${ui.result} ${s.sp_result}`}>
             <div className={s.sp_result_row}>
               <span className={s.sp_result_label}>{isKo ? '결과' : 'Result'}</span>
-              <button className={s.sp_copy_btn} onClick={handleCopy}>
+              <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={handleCopy}>
                 {copied ? <Check size={13} /> : <Copy size={13} />}
                 {copied ? (isKo ? '복사됨' : 'Copied') : (isKo ? '복사' : 'Copy')}
               </button>
@@ -358,14 +359,14 @@ export default function SmartPercentClient() {
       {/* Ad Placeholder */}
 
       {/* History */}
-      <div className={s.sp_history}>
+      <div className={ui.card}>
         <div className={s.sp_history_header}>
           <span className={s.sp_history_title}>
             <Clock size={14} />
             {isKo ? '최근 계산 기록' : 'Recent History'}
           </span>
           {history.length > 0 && (
-            <button className={s.sp_history_clear} onClick={clearHistory}>
+            <button className={`${ui.button} ${ui.ghost} ${ui.sm}`} onClick={clearHistory}>
               <Trash2 size={11} />
               {isKo ? '전체 삭제' : 'Clear all'}
             </button>

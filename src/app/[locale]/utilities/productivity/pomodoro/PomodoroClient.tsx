@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './pomodoro.module.css';
+import { ui } from '@/app/components/ui';
 
 type Mode = 'focus' | 'short' | 'long';
 
@@ -58,7 +59,7 @@ function CircleTimer({ progress, color, children }: {
   return (
     <div style={{ position: 'relative', width: '260px', height: '260px', margin: '0 auto' }}>
       <svg width="260" height="260" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="130" cy="130" r={R} fill="none" stroke="#e2e8f0" strokeWidth="10" />
+        <circle cx="130" cy="130" r={R} fill="none" strokeWidth="10" style={{ stroke: 'var(--border)' }} />
         <circle
           cx="130" cy="130" r={R} fill="none"
           stroke={color} strokeWidth="10"
@@ -227,16 +228,16 @@ export default function PomodoroClient() {
 
       <ToolHeader icon={<Timer />} title={t('title')} subtitle={t('description')} />
 
-      <div className={s.tool_panel}>
+      <div className={`${ui.card} ${s.tool_panel}`}>
         {/* Mode tabs */}
-        <div className={s.mode_tabs}>
+        <div className={`${ui.segmented} ${s.mode_tabs}`}>
           {(['focus', 'short', 'long'] as Mode[]).map(m => (
             <button
               key={m}
               onClick={() => switchMode(m)}
               aria-label={modeLabels[m]}
-              className={`${s.mode_button} ${mode === m ? s.mode_button_active : s.mode_button_inactive}`}
-              style={{ background: mode === m ? MODE_COLORS[m].primary : undefined }}
+              className={`${ui.segment} ${mode === m ? ui.segmentActive : ''}`}
+              style={{ color: mode === m ? MODE_COLORS[m].primary : undefined }}
             >
               {modeLabels[m]}
             </button>
@@ -259,7 +260,7 @@ export default function PomodoroClient() {
         <div className={s.controls}>
           <button
             onClick={() => setRunning(r => !r)}
-            className={s.control_button}
+            className={`${ui.button} ${ui.primary} ${ui.lg} ${s.control_button}`}
             style={{ background: color }}
             aria-label={running ? t('pause') : t('start')}
           >
@@ -267,7 +268,7 @@ export default function PomodoroClient() {
           </button>
           <button
             onClick={() => { setRunning(false); setSecondsLeft(totalSeconds); }}
-            className={s.reset_button}
+            className={`${ui.button} ${ui.secondary} ${ui.lg}`}
             aria-label="Reset"
           >
             ↺
@@ -280,13 +281,12 @@ export default function PomodoroClient() {
             <span>🍅</span>
             <span>{t('sessions_today', { count: sessions })}</span>
           </div>
-          <div className={s.settings_buttons}>
+          <div className={ui.chips}>
             <button
               onClick={() => setAutoStart(v => !v)}
               title={autoStart ? t('autostart_off') : t('autostart_on')}
               aria-label={autoStart ? t('autostart_off') : t('autostart_on')}
-              className={s.icon_button}
-              style={{ background: autoStart ? 'rgba(139,92,246,0.15)' : undefined }}
+              className={`${ui.chip} ${ui.pill} ${autoStart ? ui.chipActive : ''}`}
             >
               {autoStart ? '⏩' : '⏸'}
             </button>
@@ -294,7 +294,7 @@ export default function PomodoroClient() {
               onClick={() => setSoundOn(v => !v)}
               title={soundOn ? t('sound_off') : t('sound_on')}
               aria-label={soundOn ? t('sound_off') : t('sound_on')}
-              className={s.icon_button}
+              className={`${ui.chip} ${ui.pill}`}
             >
               {soundOn ? '🔔' : '🔕'}
             </button>
@@ -302,15 +302,14 @@ export default function PomodoroClient() {
               onClick={notifGranted ? undefined : requestNotif}
               title={t('notif_hint')}
               aria-label={t('notif_hint')}
-              className={s.icon_button}
-              style={{ background: notifGranted ? 'rgba(16,185,129,0.15)' : undefined }}
+              className={`${ui.chip} ${ui.pill} ${notifGranted ? ui.chipActive : ''}`}
             >
               {notifGranted ? '🔔✓' : '🖥️'}
             </button>
             <button
               onClick={() => { setEditVals({ ...times }); setEditMode(e => !e); }}
               aria-label={t('settings')}
-              className={`${s.settings_button} ${editMode ? s.settings_button_active : ''}`}
+              className={`${ui.chip} ${ui.pill} ${editMode ? ui.chipActive : ''}`}
             >
               {t('settings')}
             </button>
@@ -320,22 +319,22 @@ export default function PomodoroClient() {
         {/* Edit panel */}
         {editMode && (
           <div className={s.edit_panel}>
-            <p className={s.edit_title}>{t('custom_times')}</p>
+            <p className={ui.cardTitle}>{t('custom_times')}</p>
             {(['focus', 'short', 'long'] as Mode[]).map(m => (
               <div key={m} className={s.edit_row}>
-                <label className={s.edit_label}>{modeLabels[m]}</label>
+                <label className={`${ui.label} ${s.edit_label}`}>{modeLabels[m]}</label>
                 <input
                   type="number"
                   min={1} max={99}
                   value={editVals[m]}
                   onChange={e => setEditVals(prev => ({ ...prev, [m]: Number(e.target.value) }))}
-                  className={s.edit_input}
+                  className={`${ui.input} ${s.edit_input}`}
                   aria-label={`${modeLabels[m]} ${t('minutes')}`}
                 />
-                <span className={s.edit_unit}>{t('minutes')}</span>
+                <span className={ui.hint}>{t('minutes')}</span>
               </div>
             ))}
-            <button onClick={applyEdit} className={s.apply_button}>
+            <button onClick={applyEdit} className={`${ui.button} ${ui.primary} ${ui.block}`}>
               {t('apply')}
             </button>
           </div>

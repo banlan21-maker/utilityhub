@@ -15,6 +15,7 @@ import {
 import { KO_ANSWERS, KO_VALID } from '@/constants/wordle/ko';
 import { EN_ANSWERS } from '@/constants/wordle/en-answers';
 import s from './wordle.module.css';
+import { ui } from '@/app/components/ui';
 
 type Status = 'playing' | 'won' | 'lost';
 interface Game { day: number; guesses: string[]; status: Status }
@@ -368,10 +369,10 @@ export default function WordleClient() {
       <ToolHeader compact icon={<Grid3x3 />} title={T.title} subtitle={T.subtitle} />
 
       <div className={s.game} ref={gameRef}>
-        <div className={s.tabs} role="tablist" aria-label={isKo ? '언어' : 'Language'}>
+        <div className={`${ui.segmented} ${s.tabs}`} role="tablist" aria-label={isKo ? '언어' : 'Language'}>
           {(['ko', 'en'] as Lang[]).map(l => (
             <button key={l} type="button" role="tab" aria-selected={lang === l}
-              className={`${s.tab} ${lang === l ? s.tab_active : ''}`} onClick={() => switchLang(l)}>
+              className={`${ui.segment} ${lang === l ? ui.segmentActive : ''}`} onClick={() => switchLang(l)}>
               {(l === 'ko' ? T.tabKo : T.tabEn)[0]}<small>{(l === 'ko' ? T.tabKo : T.tabEn)[1]}</small>
             </button>
           ))}
@@ -418,7 +419,7 @@ export default function WordleClient() {
         )}
 
         {ready && game.status !== 'playing' ? (
-          <button type="button" className={s.result_btn} onClick={() => setShowResult(true)}>{T.showResult}</button>
+          <button type="button" className={`${ui.button} ${ui.primary}`} onClick={() => setShowResult(true)}>{T.showResult}</button>
         ) : (
           <div className={s.keyboard}>
             {(lang === 'ko' ? KO_ROWS : EN_ROWS).map((row, i) => (
@@ -434,8 +435,8 @@ export default function WordleClient() {
         <p className={s.kb_hint}>{lang === 'ko' ? T.kbHintKo : T.kbHintEn}</p>
       </div>
 
-      <section className={s.help} aria-labelledby="wd-help">
-        <h2 id="wd-help" className={s.help_title}>{T.helpTitle}</h2>
+      <section className={`${ui.card} ${s.help}`} aria-labelledby="wd-help">
+        <h2 id="wd-help" className={ui.cardTitle}>{T.helpTitle}</h2>
 
         <h3 className={s.help_sub}>{T.h1}</h3>
         <p>{T.h1p}</p>
@@ -479,7 +480,7 @@ export default function WordleClient() {
 
       {showResult && game.status !== 'playing' && (
         <div className={s.overlay} onClick={() => setShowResult(false)}>
-          <div className={s.modal} role="dialog" aria-modal="true" aria-labelledby="wd-result-title" onClick={e => e.stopPropagation()}>
+          <div className={`${ui.card} ${s.modal}`} role="dialog" aria-modal="true" aria-labelledby="wd-result-title" onClick={e => e.stopPropagation()}>
             <h2 id="wd-result-title">{game.status === 'won' ? T.won[game.guesses.length - 1] : T.lost}</h2>
             <div className={s.answer}>
               {T.answerIs}
@@ -503,8 +504,8 @@ export default function WordleClient() {
             </div>
             <div className={s.countdown}>{T.next}<strong>{countdown}</strong></div>
             <div className={s.modal_actions}>
-              <button type="button" className={s.btn_primary} onClick={share}>{T.share}</button>
-              <button type="button" className={s.btn_ghost} onClick={() => setShowResult(false)} autoFocus>{T.close}</button>
+              <button type="button" className={`${ui.button} ${ui.primary}`} onClick={share}>{T.share}</button>
+              <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={() => setShowResult(false)} autoFocus>{T.close}</button>
             </div>
           </div>
         </div>

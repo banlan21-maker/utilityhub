@@ -16,6 +16,7 @@ import {
 import TrayBend3D from './TrayBend3D';
 import { BendDetail, SegmentOverview } from './FlatPattern';
 import s from './cable-tray-calc.module.css';
+import { ui } from '@/app/components/ui';
 
 const TRAY_WIDTHS = [100, 150, 200, 300, 400, 450, 600];
 const TRAY_HEIGHTS = [60, 80, 100, 120, 150];
@@ -165,9 +166,9 @@ export default function CableTrayCalcClient() {
       <ToolHeader icon={<Ruler />} title={titleStr} subtitle={descStr} />
 
       {/* ── STEP 1 구간 종류 ── */}
-      <section className={s.step_card}>
-        <div className={s.step_label}>STEP 1</div>
-        <h2 className={s.step_title}>{isKo ? '어떤 구간인가요?' : 'What kind of segment?'}</h2>
+      <section className={`${ui.card} ${s.step_card}`}>
+        <div className={`${ui.badge} ${s.step_label}`}>STEP 1</div>
+        <h2 className={`${ui.cardTitle} ${s.step_title}`}>{isKo ? '어떤 구간인가요?' : 'What kind of segment?'}</h2>
         <div className={s.route_grid} role="radiogroup" aria-label={isKo ? '구간 종류' : 'Segment type'}>
           {(['up', 'down', 'offset'] as const).map(k => (
             <button key={k} type="button" role="radio" aria-checked={routeKey === k}
@@ -183,40 +184,40 @@ export default function CableTrayCalcClient() {
             </button>
           ))}
         </div>
-        <button type="button" className={s.example_btn} onClick={fillExample}>
+        <button type="button" className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.example_btn}`} onClick={fillExample}>
           {isKo ? '예시 채우기: 천장 랙에서 0.25m 내려가는 30° 구간' : 'Example: 30° drop of 0.25 m from a ceiling rack'}
         </button>
 
         <div className={s.spec_grid}>
-          <div>
-            <label className={s.field_label} htmlFor="ct-width">{isKo ? '트레이 폭 (mm)' : 'Tray width (mm)'}</label>
-            <select id="ct-width" className={s.select_field} value={trayWidth} onChange={e => setTrayWidth(Number(e.target.value))}>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="ct-width">{isKo ? '트레이 폭 (mm)' : 'Tray width (mm)'}</label>
+            <select id="ct-width" className={ui.input} value={trayWidth} onChange={e => setTrayWidth(Number(e.target.value))}>
               {TRAY_WIDTHS.map(w => <option key={w} value={w}>{w}mm</option>)}
             </select>
           </div>
-          <div>
-            <label className={s.field_label} htmlFor="ct-height">{isKo ? '측면 레일 높이 (mm)' : 'Side rail height (mm)'}</label>
-            <select id="ct-height" className={s.select_field} value={trayHeight} onChange={e => setTrayHeight(Number(e.target.value))}>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="ct-height">{isKo ? '측면 레일 높이 (mm)' : 'Side rail height (mm)'}</label>
+            <select id="ct-height" className={ui.input} value={trayHeight} onChange={e => setTrayHeight(Number(e.target.value))}>
               {TRAY_HEIGHTS.map(h => <option key={h} value={h}>{h}mm</option>)}
             </select>
-            <p className={s.field_hint}>{isKo ? '바닥에서 레일 윗면까지' : 'From bottom to top of rail'}</p>
+            <p className={ui.hint}>{isKo ? '바닥에서 레일 윗면까지' : 'From bottom to top of rail'}</p>
           </div>
         </div>
       </section>
 
       {/* ── STEP 2 치수 ── */}
       {route && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>STEP 2</div>
-          <h2 className={s.step_title}>{isKo ? '치수 입력' : 'Dimensions'}</h2>
+        <section className={`${ui.card} ${s.step_card}`}>
+          <div className={`${ui.badge} ${s.step_label}`}>STEP 2</div>
+          <h2 className={`${ui.cardTitle} ${s.step_title}`}>{isKo ? '치수 입력' : 'Dimensions'}</h2>
           <MeasureDiagram direction={direction} down={routeKey === 'down'} isKo={isKo} />
 
-          <div className={s.mode_toggle}>
-            <button type="button" className={`${s.mode_btn} ${inputMode === 'preset' ? s.mode_active : ''}`}
+          <div className={ui.segmented}>
+            <button type="button" className={`${ui.segment} ${inputMode === 'preset' ? ui.segmentActive : ''}`}
               aria-pressed={inputMode === 'preset'} onClick={() => setInputMode('preset')}>
               {isKo ? '각도로 정하기' : 'By angle'}
             </button>
-            <button type="button" className={`${s.mode_btn} ${inputMode === 'manual' ? s.mode_active : ''}`}
+            <button type="button" className={`${ui.segment} ${inputMode === 'manual' ? ui.segmentActive : ''}`}
               aria-pressed={inputMode === 'manual'} onClick={() => setInputMode('manual')}>
               {isKo ? '실측 H·L 입력' : 'Measured H & L'}
             </button>
@@ -225,7 +226,7 @@ export default function CableTrayCalcClient() {
           {inputMode === 'preset' && (
             <div className={s.preset_grid}>
               {PRESET_ANGLES.map(a => (
-                <button key={a} type="button" className={`${s.preset_btn} ${presetAngle === a ? s.preset_active : ''}`}
+                <button key={a} type="button" className={`${ui.chip} ${s.preset_btn} ${presetAngle === a ? ui.chipActive : ''}`}
                   aria-pressed={presetAngle === a} aria-label={isKo ? `${a}도 선택` : `Select ${a} degrees`}
                   onClick={() => setPresetAngle(a)}>
                   {a}°
@@ -235,40 +236,40 @@ export default function CableTrayCalcClient() {
           )}
 
           <div className={s.spec_grid}>
-            <div>
-              <label className={s.field_label} htmlFor="ct-rise">{riseLabel}</label>
-              <input id="ct-rise" className={s.field_input} type="number" inputMode="decimal" step="0.01" min="0"
+            <div className={ui.field}>
+              <label className={ui.label} htmlFor="ct-rise">{riseLabel}</label>
+              <input id="ct-rise" className={`${ui.input} ${ui.inputLg}`} type="number" inputMode="decimal" step="0.01" min="0"
                 placeholder={isKo ? '예: 0.25' : 'e.g. 0.25'} value={riseText} onChange={e => setRiseText(e.target.value)} />
             </div>
             {inputMode === 'manual' && (
-              <div>
-                <label className={s.field_label} htmlFor="ct-run">{runLabel}</label>
-                <input id="ct-run" className={s.field_input} type="number" inputMode="decimal" step="0.01" min="0"
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="ct-run">{runLabel}</label>
+                <input id="ct-run" className={`${ui.input} ${ui.inputLg}`} type="number" inputMode="decimal" step="0.01" min="0"
                   placeholder={isKo ? '예: 0.43' : 'e.g. 0.43'} value={runText} onChange={e => setRunText(e.target.value)} />
                 {direction === 'vertical' && (
-                  <p className={s.field_hint}>{isKo ? '수직으로 올라가면 0 입력' : 'Enter 0 for a vertical riser'}</p>
+                  <p className={ui.hint}>{isKo ? '수직으로 올라가면 0 입력' : 'Enter 0 for a vertical riser'}</p>
                 )}
               </div>
             )}
           </div>
           {inputMode === 'manual' && direction === 'horizontal' && runText.trim() !== '' && run <= 0 && (
-            <div className={s.warn_box}>{isKo ? '옆으로 비키는 구간은 진행 거리 L이 0보다 커야 합니다. 90° 방향 전환은 기성 90° 수평 엘보를 사용하세요.' : 'Run L must be greater than 0. For a 90° turn use a factory 90° horizontal elbow.'}</div>
+            <div className={`${ui.notice} ${ui.amber}`}>{isKo ? '옆으로 비키는 구간은 진행 거리 L이 0보다 커야 합니다. 90° 방향 전환은 기성 90° 수평 엘보를 사용하세요.' : 'Run L must be greater than 0. For a 90° turn use a factory 90° horizontal elbow.'}</div>
           )}
         </section>
       )}
 
       {/* ── STEP 3 결과 + 시공 방식 ── */}
       {seg && elbow && routeKey && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>STEP 3</div>
-          <h2 className={s.step_title}>{isKo ? '계산 결과와 시공 방식' : 'Results and method'}</h2>
+        <section className={`${ui.card} ${s.step_card}`}>
+          <div className={`${ui.badge} ${s.step_label}`}>STEP 3</div>
+          <h2 className={`${ui.cardTitle} ${s.step_title}`}>{isKo ? '계산 결과와 시공 방식' : 'Results and method'}</h2>
 
           <div className={s.result_big_grid}>
-            <div className={s.result_big}>
+            <div className={`${ui.result} ${s.result_big}`}>
               <span className={s.result_num}>{seg.angleDeg.toFixed(1)}</span><span className={s.result_unit}>°</span>
               <div className={s.result_label}>{isKo ? '꺾임 각도' : 'Bend angle'}</div>
             </div>
-            <div className={s.result_big}>
+            <div className={`${ui.result} ${s.result_big}`}>
               <span className={s.result_num}>{seg.slopeLengthM.toFixed(3)}</span><span className={s.result_unit}>m</span>
               <div className={s.result_label}>{isKo ? '사선 길이 (꺾임 ①→②)' : 'Slope length (bend 1→2)'}</div>
             </div>
@@ -307,7 +308,7 @@ export default function CableTrayCalcClient() {
                     : `To keep ${rise.toFixed(2)} m at ${elbow.elbowDeg}°, set run L to about ${elbow.runForRiseM.toFixed(2)} m.`}
                 </span>
               )}
-              <span className={s.field_hint}>{isKo ? '엘보는 곡률 반경이 있어 시작·끝 위치가 달라집니다. 제조사 카탈로그 치수를 확인하세요.' : 'Elbows have a radius, so start/end points shift. Check the manufacturer catalog.'}</span>
+              <span className={ui.hint}>{isKo ? '엘보는 곡률 반경이 있어 시작·끝 위치가 달라집니다. 제조사 카탈로그 치수를 확인하세요.' : 'Elbows have a radius, so start/end points shift. Check the manufacturer catalog.'}</span>
             </div>
           </div>
         </section>
@@ -315,9 +316,9 @@ export default function CableTrayCalcClient() {
 
       {/* ── STEP 4 꺾임별 가공 ── */}
       {seg && bend && !seg.isVerticalRiser && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>STEP 4</div>
-          <h2 className={s.step_title}>{isKo ? '꺾임별 가공 치수' : 'Cut dimensions per bend'}</h2>
+        <section className={`${ui.card} ${s.step_card}`}>
+          <div className={`${ui.badge} ${s.step_label}`}>STEP 4</div>
+          <h2 className={`${ui.cardTitle} ${s.step_title}`}>{isKo ? '꺾임별 가공 치수' : 'Cut dimensions per bend'}</h2>
           <p className={s.step_hint}>
             {direction === 'vertical'
               ? (isKo ? '상하 꺾임은 바닥판을 접고 양쪽 측면 레일만 가공합니다. 바닥판은 자르지 않습니다.' : 'For vertical bends the bottom folds; only the two side rails are cut. Never cut the bottom.')
@@ -331,10 +332,10 @@ export default function CableTrayCalcClient() {
               : (isKo ? `마킹 간격 A = 평평한 자재에서 두 V-컷 중심선 사이 거리 (${Math.round(seg.markingAmm)}mm). 중심선 사선 길이에 V-컷으로 줄어드는 몫을 더한 값입니다.` : `Marking A = distance between the two V-cut centerlines on the flat tray (${Math.round(seg.markingAmm)} mm), including the length lost to the V-cuts.`)}
           </p>
 
-          <div className={s.bend_tabs} role="tablist" aria-label={isKo ? '꺾임 선택' : 'Select bend'}>
+          <div className={ui.segmented} role="tablist" aria-label={isKo ? '꺾임 선택' : 'Select bend'}>
             {seg.bends.map((b, i) => (
               <button key={b.index} type="button" role="tab" aria-selected={activeBend === i}
-                className={`${s.chip} ${activeBend === i ? s.chip_active : ''}`} onClick={() => setActiveBend(i as 0 | 1)}>
+                className={`${ui.segment} ${activeBend === i ? ui.segmentActive : ''}`} onClick={() => setActiveBend(i as 0 | 1)}>
                 {isKo ? `꺾임 ${b.index}` : `Bend ${b.index}`} · {cutName(b.kind)}
               </button>
             ))}
@@ -366,13 +367,13 @@ export default function CableTrayCalcClient() {
             widthMm={trayWidth} heightMm={trayHeight} isKo={isKo} />
           <BendDetail bend={bend} direction={direction} isKo={isKo} />
 
-          <div className={s.info_box}>
+          <div className={`${ui.notice} ${ui.blue}`}>
             {isKo
               ? '볼트 구멍: 꺾은 뒤 각도 조절형 연결판을 절단면에 맞춰 대고, 연결판 구멍 위치를 표시해 천공합니다(연결판을 형판으로 사용). 구멍 크기는 기존 트레이 구멍과 같게 맞추고, 절단·천공 부위는 버를 제거한 뒤 아연 보수 도장을 합니다.'
               : 'Bolt holes: after bending, clamp the adjustable splice plate against the cut ends and drill through its holes (use the plate as a template). Match the existing hole size, deburr, and touch up galvanizing on cut edges.'}
           </div>
           {!seg.fieldBendOk && (
-            <div className={s.warn_box}>
+            <div className={`${ui.notice} ${ui.amber}`}>
               {isKo
                 ? `${seg.angleDeg.toFixed(1)}°는 현장 가공 권장 범위(${FIELD_BEND_MAX_DEG}° 이하)를 넘습니다. 기성 엘보를 쓰거나, 꺾임을 두 번으로 나눠(예: 30° + 30°) 가공하세요.`
                 : `${seg.angleDeg.toFixed(1)}° exceeds the recommended field-bend range (≤ ${FIELD_BEND_MAX_DEG}°). Use factory elbows or split the bend in two (e.g. 30° + 30°).`}
@@ -383,11 +384,11 @@ export default function CableTrayCalcClient() {
 
       {/* ── STEP 5 지지 ── */}
       {seg && (
-        <section className={s.step_card}>
-          <div className={s.step_label}>{seg.isVerticalRiser ? 'STEP 4' : 'STEP 5'}</div>
-          <h2 className={s.step_title}>{isKo ? '지지(행거) 위치' : 'Support (hanger) positions'}</h2>
+        <section className={`${ui.card} ${s.step_card}`}>
+          <div className={`${ui.badge} ${s.step_label}`}>{seg.isVerticalRiser ? 'STEP 4' : 'STEP 5'}</div>
+          <h2 className={`${ui.cardTitle} ${s.step_title}`}>{isKo ? '지지(행거) 위치' : 'Support (hanger) positions'}</h2>
           {seg.isVerticalRiser ? (
-            <div className={s.info_box}>
+            <div className={`${ui.notice} ${ui.blue}`}>
               {isKo
                 ? '수직 엘보는 위쪽 엘보는 양 끝을, 아래쪽 엘보는 엘보 윗부분과 아래 끝에서 600mm 이내를 지지합니다. 긴 수직 구간은 제조사 허용 간격에 따라 벽면 브래킷으로 고정하세요.'
                 : 'Support top vertical elbows at each end; support bottom elbows at the top of the elbow and within 600 mm of the lower end. Fix long risers to the wall per the manufacturer span.'}
@@ -395,11 +396,11 @@ export default function CableTrayCalcClient() {
           ) : (
             <>
               <div className={s.spec_grid}>
-                <div>
-                  <label className={s.field_label} htmlFor="ct-span">{isKo ? '최대 지지 간격 (m)' : 'Max support span (m)'}</label>
-                  <input id="ct-span" className={s.field_input} type="number" inputMode="decimal" step="0.1" min="0.3"
+                <div className={ui.field}>
+                  <label className={ui.label} htmlFor="ct-span">{isKo ? '최대 지지 간격 (m)' : 'Max support span (m)'}</label>
+                  <input id="ct-span" className={`${ui.input} ${ui.inputLg}`} type="number" inputMode="decimal" step="0.1" min="0.3"
                     value={maxSpanText} onChange={e => setMaxSpanText(e.target.value)} />
-                  <p className={s.field_hint}>{isKo ? '설계도서·제조사 허용 간격을 입력하세요. 기본 1.5m는 국내 실무 관례값입니다.' : 'Use the design or manufacturer span. 1.5 m is a common default.'}</p>
+                  <p className={ui.hint}>{isKo ? '설계도서·제조사 허용 간격을 입력하세요. 기본 1.5m는 국내 실무 관례값입니다.' : 'Use the design or manufacturer span. 1.5 m is a common default.'}</p>
                 </div>
               </div>
               <p className={s.step_hint}>{isKo ? '사선 구간 지지점 (꺾임 ①에서 잰 거리):' : 'Supports on the slope (measured from bend 1):'}</p>
@@ -419,7 +420,7 @@ export default function CableTrayCalcClient() {
               : 'Basis: NEMA VE 2 Cable Tray Installation Guidelines 4.3.3–4.3.4 (supports within 600 mm of adjustable splice plates), 4.4.1 (elbow supports), 4.5 (field cutting and drilling). Korean codes (KEC, KCS 31 65 10) give no numeric tray span, so project and manufacturer specs take priority.'}
           </p>
 
-          <button type="button" className={s.copy_btn} onClick={handleCopy}>
+          <button type="button" className={`${ui.button} ${ui.primary} ${s.copy_btn}`} onClick={handleCopy}>
             <Copy size={16} /> {isKo ? '전체 결과 복사' : 'Copy all results'}
           </button>
           {copyMsg && <p className={`${s.copy_msg} ${copyMsg.startsWith('✓') ? '' : s.copy_msg_fail}`} role="status">{copyMsg}</p>}
@@ -427,8 +428,8 @@ export default function CableTrayCalcClient() {
       )}
 
       {/* 현장 꺾기 가이드 (서버 HTML에 포함되는 고정 내용) */}
-      <section className={s.step_card} aria-labelledby="tray-bend-guide">
-        <h2 id="tray-bend-guide" className={s.step_title}>{isKo ? '케이블 트레이 현장 꺾기 순서 (V-컷 공식)' : 'How to bend cable tray in the field (V-cut formula)'}</h2>
+      <section className={`${ui.card} ${s.step_card}`} aria-labelledby="tray-bend-guide">
+        <h2 id="tray-bend-guide" className={`${ui.cardTitle} ${s.step_title}`}>{isKo ? '케이블 트레이 현장 꺾기 순서 (V-컷 공식)' : 'How to bend cable tray in the field (V-cut formula)'}</h2>
         <ol style={{ margin: 0, paddingLeft: '1.25rem', display: 'grid', gap: '0.6rem', lineHeight: 1.65, color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
           {(isKo ? [
             '각도 정하기 — 높이차 H와 수평거리 L로 꺾임 각 θ = atan(H ÷ L). 기성 엘보가 30·45·60·90°이므로 현장 가공은 45° 이하가 무리가 없습니다.',

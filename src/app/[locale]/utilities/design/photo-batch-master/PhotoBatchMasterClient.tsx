@@ -14,6 +14,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './photo-batch-master.module.css';
+import { ui } from '@/app/components/ui';
 
 // ─────────────────── Types ───────────────────
 interface Preset {
@@ -269,7 +270,7 @@ function PositionGrid({ value, onChange }: PositionGridProps) {
       {WM_POSITIONS.map((pos) => (
         <button
           key={pos}
-          className={`${s.posCell} ${value === pos ? s.posCellActive : ''}`}
+          className={`${ui.chip} ${value === pos ? ui.chipActive : ''} ${s.posCell}`}
           onClick={() => onChange(pos)}
           aria-label={pos}
           title={pos}
@@ -542,9 +543,9 @@ export default function PhotoBatchMasterClient() {
       />
 
       {/* ═══════════════ PREVIEW (center, large) ═══════════════ */}
-      <section className={s.section}>
-        <div className={s.sectionTitle}>
-          <span className={s.stepBadge}>Step 1</span>
+      <section className={`${ui.card} ${s.section}`}>
+        <div className={ui.cardTitle}>
+          <span className={`${ui.badge} ${ui.violet}`}>Step 1</span>
           {isKo ? '샘플 사진으로 실시간 미리보기' : 'Live Preview with Sample Photo'}
         </div>
         <div className={s.previewCenter}>
@@ -566,7 +567,7 @@ export default function PhotoBatchMasterClient() {
               <p className={s.previewLabel}>
                 ✨ {isKo ? '실시간 미리보기 (보정 + 워터마크 반영)' : 'Live preview (grading + watermark applied)'}
               </p>
-              <button className={s.changePhotoBtn} onClick={() => sampleInputRef.current?.click()}>
+              <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={() => sampleInputRef.current?.click()}>
                 <Upload size={12} />{isKo ? '사진 변경' : 'Change photo'}
               </button>
             </div>
@@ -578,9 +579,9 @@ export default function PhotoBatchMasterClient() {
       <div className={s.controlsGrid}>
 
         {/* ── Left: Sliders ── */}
-        <section className={s.section}>
-          <div className={s.sectionTitle}>
-            <span className={s.stepBadge}>Step 2</span>
+        <section className={`${ui.card} ${s.section}`}>
+          <div className={ui.cardTitle}>
+            <span className={`${ui.badge} ${ui.violet}`}>Step 2</span>
             {isKo ? '노출 · 색감 보정' : 'Exposure & Color Grading'}
           </div>
           <div className={s.slidersCard}>
@@ -589,15 +590,15 @@ export default function PhotoBatchMasterClient() {
                 value={preset[key] as number} onChange={(v) => updatePreset(key, v)} />
             ))}
             <div className={s.presetSaveRow}>
-              <input type="text" className={s.presetNameInput} value={presetName}
+              <input type="text" className={`${ui.input} ${s.presetNameInput}`} value={presetName}
                 placeholder={isKo ? '프리셋 이름' : 'Preset name'}
                 onChange={(e) => setPresetName(e.target.value)} />
-              <button className={s.saveBtn} onClick={handleSavePreset}
+              <button className={`${ui.button} ${ui.primary}`} onClick={handleSavePreset}
                 aria-label={isKo ? '프리셋 저장' : 'Save preset'}>
                 <Save size={16} />{isKo ? '저장' : 'Save'}
               </button>
             </div>
-            <button className={s.resetBtn}
+            <button className={`${ui.button} ${ui.ghost} ${ui.sm} ${s.resetBtn}`}
               onClick={() => { const r = { ...DEFAULT_PRESET, name: presetName }; setPreset(r); refreshPreview(r, textWM, imageWM, sampleFile); }}
               aria-label={isKo ? '슬라이더 초기화' : 'Reset sliders'}>
               {isKo ? '슬라이더 초기화' : 'Reset Sliders'}
@@ -605,7 +606,7 @@ export default function PhotoBatchMasterClient() {
           </div>
           {savedPresets.length > 0 && (
             <div className={s.savedPresets}>
-              <p className={s.savedPresetsTitle}>{isKo ? '저장된 프리셋' : 'Saved Presets'}</p>
+              <p className={`${ui.label} ${s.savedPresetsTitle}`}>{isKo ? '저장된 프리셋' : 'Saved Presets'}</p>
               <div className={s.presetChips}>
                 {savedPresets.map((p) => (
                   <div key={p.name} className={`${s.presetChip} ${preset.name === p.name ? s.presetChipActive : ''}`}>
@@ -621,18 +622,18 @@ export default function PhotoBatchMasterClient() {
         </section>
 
         {/* ── Right: Watermark ── */}
-        <section className={s.section}>
-          <div className={s.sectionTitle}>
-            <span className={s.stepBadge}>Step 3</span>
+        <section className={`${ui.card} ${s.section}`}>
+          <div className={ui.cardTitle}>
+            <span className={`${ui.badge} ${ui.violet}`}>Step 3</span>
             {isKo ? '워터마크 설정 (선택)' : 'Watermark Settings (optional)'}
           </div>
-          <div className={s.wmTabs}>
-            <button className={`${s.wmTab} ${wmTab === 'text' ? s.wmTabActive : ''}`}
+          <div className={`${ui.segmented} ${s.wmTabs}`}>
+            <button className={`${ui.segment} ${wmTab === 'text' ? ui.segmentActive : ''}`}
               onClick={() => setWmTab('text')}>
               <Type size={15} />
               {isKo ? '텍스트' : 'Text'}
             </button>
-            <button className={`${s.wmTab} ${wmTab === 'image' ? s.wmTabActive : ''}`}
+            <button className={`${ui.segment} ${wmTab === 'image' ? ui.segmentActive : ''}`}
               onClick={() => setWmTab('image')}>
               <ImageIcon size={15} />
               {isKo ? '이미지' : 'Image'}
@@ -648,17 +649,17 @@ export default function PhotoBatchMasterClient() {
               </label>
               <div className={`${s.wmFields} ${!textWM.enabled ? s.wmFieldsDisabled : ''}`}>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '워터마크 텍스트' : 'Text'}</label>
-                  <input type="text" className={s.wmTextInput} value={textWM.text}
+                  <label className={ui.label}>{isKo ? '워터마크 텍스트' : 'Text'}</label>
+                  <input type="text" className={ui.input} value={textWM.text}
                     placeholder="© My Brand"
                     onChange={(e) => updateTextWM({ text: e.target.value })} />
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '폰트' : 'Font'}</label>
-                  <div className={s.fontGrid}>
+                  <label className={ui.label}>{isKo ? '폰트' : 'Font'}</label>
+                  <div className={ui.chips}>
                     {FONTS.map((f) => (
                       <button key={f}
-                        className={`${s.fontChip} ${textWM.font === f ? s.fontChipActive : ''}`}
+                        className={`${ui.chip} ${ui.pill} ${textWM.font === f ? ui.chipActive : ''}`}
                         style={{ fontFamily: f }}
                         onClick={() => updateTextWM({ font: f })}
                         aria-label={f}>{f}</button>
@@ -666,31 +667,31 @@ export default function PhotoBatchMasterClient() {
                   </div>
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '크기 (이미지 너비의 %)' : 'Size (% of width)'}</label>
+                  <label className={ui.label}>{isKo ? '크기 (이미지 너비의 %)' : 'Size (% of width)'}</label>
                   <SliderRow label="" value={textWM.size} min={1} max={15}
                     onChange={(v) => updateTextWM({ size: v })} />
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '색상' : 'Color'}</label>
+                  <label className={ui.label}>{isKo ? '색상' : 'Color'}</label>
                   <div className={s.colorRow}>
                     <input type="color" className={s.colorPicker} value={textWM.color}
                       onChange={(e) => updateTextWM({ color: e.target.value })} />
                     <div className={s.colorPresets}>
                       {['#ffffff', '#000000', '#ffff00', '#ff0000', '#8b5cf6'].map((c) => (
                         <button key={c} className={`${s.colorDot} ${textWM.color === c ? s.colorDotActive : ''}`}
-                          style={{ background: c, border: c === '#ffffff' ? '1.5px solid #e2e8f0' : undefined }}
+                          style={{ background: c, border: c === '#ffffff' ? '1.5px solid var(--border)' : undefined }}
                           onClick={() => updateTextWM({ color: c })} aria-label={c} />
                       ))}
                     </div>
                   </div>
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '불투명도' : 'Opacity'} — {textWM.opacity}%</label>
+                  <label className={ui.label}>{isKo ? '불투명도' : 'Opacity'} — {textWM.opacity}%</label>
                   <SliderRow label="" value={textWM.opacity} min={10} max={100}
                     onChange={(v) => updateTextWM({ opacity: v })} />
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '위치' : 'Position'}</label>
+                  <label className={ui.label}>{isKo ? '위치' : 'Position'}</label>
                   <PositionGrid value={textWM.position} onChange={(v) => updateTextWM({ position: v })} />
                 </div>
               </div>
@@ -706,7 +707,7 @@ export default function PhotoBatchMasterClient() {
               </label>
               <div className={`${s.wmFields} ${!imageWM.enabled ? s.wmFieldsDisabled : ''}`}>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '워터마크 이미지' : 'Watermark image'}</label>
+                  <label className={ui.label}>{isKo ? '워터마크 이미지' : 'Watermark image'}</label>
                   <div className={s.wmImgUpload}>
                     {imageWM.dataUrl ? (
                       <div className={s.wmImgPreviewWrap}>
@@ -728,17 +729,17 @@ export default function PhotoBatchMasterClient() {
                   </div>
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '크기 (이미지 너비의 %)' : 'Size (% of width)'}</label>
+                  <label className={ui.label}>{isKo ? '크기 (이미지 너비의 %)' : 'Size (% of width)'}</label>
                   <SliderRow label="" value={imageWM.size} min={5} max={50}
                     onChange={(v) => updateImageWM({ size: v })} />
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '불투명도' : 'Opacity'} — {imageWM.opacity}%</label>
+                  <label className={ui.label}>{isKo ? '불투명도' : 'Opacity'} — {imageWM.opacity}%</label>
                   <SliderRow label="" value={imageWM.opacity} min={10} max={100}
                     onChange={(v) => updateImageWM({ opacity: v })} />
                 </div>
                 <div className={s.wmFieldRow}>
-                  <label className={s.wmFieldLabel}>{isKo ? '위치' : 'Position'}</label>
+                  <label className={ui.label}>{isKo ? '위치' : 'Position'}</label>
                   <PositionGrid value={imageWM.position} onChange={(v) => updateImageWM({ position: v })} />
                 </div>
               </div>
@@ -748,9 +749,9 @@ export default function PhotoBatchMasterClient() {
       </div>
 
       {/* ═══════════════ STEP 4: Bulk Upload ═══════════════ */}
-      <section className={s.section}>
-        <div className={s.sectionTitle}>
-          <span className={s.stepBadge}>Step 4</span>
+      <section className={`${ui.card} ${s.section}`}>
+        <div className={ui.cardTitle}>
+          <span className={`${ui.badge} ${ui.violet}`}>Step 4</span>
           {isKo ? '사진 일괄 업로드 & 처리' : 'Bulk Upload & Process'}
         </div>
 
@@ -776,18 +777,18 @@ export default function PhotoBatchMasterClient() {
 
         {items.length > 0 && (
           <div className={s.batchActions}>
-            <button className={s.applyBtn} onClick={handleApplyAll} disabled={isProcessing}
+            <button className={`${ui.button} ${ui.primary}`} onClick={handleApplyAll} disabled={isProcessing}
               aria-label={isKo ? '전체 적용' : 'Apply all'}>
               {isProcessing
                 ? <><Loader2 size={18} className={s.spin} />{isKo ? '처리 중...' : 'Processing...'}</>
                 : <><Camera size={18} />{isKo ? 'Apply All' : 'Apply All'}</>}
             </button>
-            <button className={s.zipBtn} onClick={handleDownloadZip} disabled={doneCount === 0}
+            <button className={`${ui.button} ${ui.green}`} onClick={handleDownloadZip} disabled={doneCount === 0}
               aria-label={isKo ? 'ZIP 다운로드' : 'Download ZIP'}>
               <Download size={18} />
               {isKo ? `Download All (ZIP) — ${doneCount}장` : `Download All (ZIP) — ${doneCount}`}
             </button>
-            <button className={s.clearBtn} onClick={handleClearAll}
+            <button className={`${ui.button} ${ui.danger}`} onClick={handleClearAll}
               aria-label={isKo ? '전체 삭제' : 'Clear all'}>
               <Trash2 size={16} />{isKo ? '전체 삭제' : 'Clear All'}
             </button>

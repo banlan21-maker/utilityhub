@@ -13,6 +13,7 @@ import {
   hydroVolume, truckPlan, velocity, smallestPipeFor, frictionKPaPer100m, dnOf, inchDims, type Family, type HydroLine, type PipeSpec,
 } from '@/lib/piping';
 import s from './piping.module.css';
+import { ui } from '@/app/components/ui';
 
 type Tab = 'spec' | 'slope' | 'hydro' | 'flow';
 type Units = 'metric' | 'us';
@@ -133,29 +134,29 @@ export default function PipingCalcClient() {
   };
 
   const field = (id: string, label: string, value: string, set: (v: string) => void, unit: string) => (
-    <div className={s.field}>
-      <label className={s.field_label} htmlFor={id}>{label}</label>
-      <div className={s.input_wrap}>
-        <input id={id} className={s.input} inputMode="decimal" value={value} onChange={e => set(dec(e.target.value))} />
-        <span className={s.unit}>{unit}</span>
+    <div className={ui.field}>
+      <label className={ui.label} htmlFor={id}>{label}</label>
+      <div className={ui.inputGroup}>
+        <input id={id} className={ui.input} inputMode="decimal" value={value} onChange={e => set(dec(e.target.value))} />
+        <span className={ui.unit}>{unit}</span>
       </div>
     </div>
   );
   const chip = <T extends string | number>(cur: T, val: T, set: (v: T) => void, label: string, sub?: string, disabled = false) => (
     <button key={String(val)} type="button" aria-pressed={cur === val} disabled={disabled}
-      className={`${s.chip} ${cur === val ? s.chip_on : ''}`} onClick={() => set(val)}>
+      className={`${ui.chip} ${s.chip} ${cur === val ? ui.chipActive : ''}`} onClick={() => set(val)}>
       {label}{sub && <small>{sub}</small>}
     </button>
   );
   const familyChips = (cur: Family, onPick: (f: Family) => void) => (
-    <div className={s.chips}>
+    <div className={ui.chips}>
       {ORDER.map(f => chip(cur, f, onPick, familyName(f), isKo ? FAMILY_TEXT[f][1] : FAMILY_TEXT[f][3]))}
     </div>
   );
   const schChips = (f: Family, cur: string, set: (x: string) => void, forSize?: string) => FAMILIES[f].schedules[0] === '-' ? null : (
-    <div>
-      <span className={s.label}>{f === 'copper' ? L('타입 (두께)', 'Type (wall)') : L('스케줄', 'Schedule')}</span>
-      <div className={s.chips}>{FAMILIES[f].schedules.map(x => chip(cur, x, set, schName(x), undefined, forSize ? !hasSize(f, forSize, x) : false))}</div>
+    <div className={ui.field}>
+      <span className={ui.label}>{f === 'copper' ? L('타입 (두께)', 'Type (wall)') : L('스케줄', 'Schedule')}</span>
+      <div className={ui.chips}>{FAMILIES[f].schedules.map(x => chip(cur, x, set, schName(x), undefined, forSize ? !hasSize(f, forSize, x) : false))}</div>
     </div>
   );
 
@@ -225,19 +226,19 @@ export default function PipingCalcClient() {
 
       <ToolHeader icon={<Pipette />} title={titleStr} subtitle={descStr} />
 
-      <div className={s.units} role="group" aria-label={L('단위', 'Units')}>
+      <div className={`${ui.chips} ${s.units}`} role="group" aria-label={L('단위', 'Units')}>
         {chip(units, 'metric', switchUnits, L('미터법', 'Metric'), 'mm · kg · L · m/s')}
         {chip(units, 'us', switchUnits, L('미국 단위', 'US units'), 'in · lb · gal · ft/s')}
       </div>
 
-      <div className={s.tabs} role="tablist">
+      <div className={`${ui.segmented} ${s.tabs}`} role="tablist">
         {([
           ['spec', L('규격 조회', 'Pipe specs'), L('외경·두께·중량', 'OD, wall, weight')],
           ['slope', L('배수 구배', 'Drain slope'), L('단차·최소 구배', 'drop, minimum')],
           ['hydro', L('수압 물량', 'Hydro test'), L('물 L·톤·물차', 'water volume')],
           ['flow', L('유량·유속', 'Flow & sizing'), L('관경·마찰 손실', 'velocity, friction')],
         ] as [Tab, string, string][]).map(([k, t, sub]) => (
-          <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${s.tab} ${tab === k ? s.tab_on : ''}`} onClick={() => setTab(k)}>
+          <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${ui.segment} ${tab === k ? ui.segmentActive : ''}`} onClick={() => setTab(k)}>
             {t}<small>{sub}</small>
           </button>
         ))}
@@ -245,11 +246,11 @@ export default function PipingCalcClient() {
 
       {tab === 'spec' && (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('관 종류와 호칭', 'Pipe type and size')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('관 종류와 호칭', 'Pipe type and size')}</h2>
             {familyChips(family, f => pickFamily(f, size, setFamily, setSch, setSize))}
-            <div>
-              <span className={s.label}>{family === 'copper' ? L('호칭 (외경 = 호칭 + 1/8")', 'Nominal size (OD = nominal + 1/8")') : L('호칭', isKo ? 'Nominal size' : (family === 'asme' || family === 'pvc' ? 'Nominal pipe size (NPS)' : 'Nominal size (A = DN)'))}</span>
+            <div className={ui.field}>
+              <span className={ui.label}>{family === 'copper' ? L('호칭 (외경 = 호칭 + 1/8")', 'Nominal size (OD = nominal + 1/8")') : L('호칭', isKo ? 'Nominal size' : (family === 'asme' || family === 'pvc' ? 'Nominal pipe size (NPS)' : 'Nominal size (A = DN)'))}</span>
               <div className={s.size_grid}>
                 {FAMILIES[family].sizes.map(z => chip(size, z, setSize, sizeName(family, z), sizeSub(family, z), !hasSize(family, z, sch)))}
               </div>
@@ -257,12 +258,12 @@ export default function PipingCalcClient() {
             {schChips(family, sch, setSch, size)}
           </section>
 
-          <section className={s.card} aria-live="polite">
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
             {!spec ? <p className={s.hint}>{L('이 호칭에는 해당 스케줄이 없습니다.', 'This size is not made in this schedule.')}</p> : (
               <>
-                <div className={s.hero}>
-                  <div className={s.hero_label}>{familyName(family)} {sizeName(family, size)} {schName(sch)}</div>
-                  <div className={s.hero_num}>{dID(spec)}<span className={s.hero_unit}>{lenU}</span></div>
+                <div className={`${ui.result} ${s.hero}`}>
+                  <div className={ui.resultLabel}>{familyName(family)} {sizeName(family, size)} {schName(sch)}</div>
+                  <div className={ui.resultValue}>{dID(spec)}<span className={s.hero_unit}>{lenU}</span></div>
                   <div className={s.hero_sub}>{L('내경', 'Inside diameter')} = {L('외경', 'OD')} {dOD(spec)} − 2 × {L('두께', 'wall')} {dT(spec)}</div>
                 </div>
                 <div className={s.stats}>
@@ -273,7 +274,7 @@ export default function PipingCalcClient() {
                   <div className={s.stat}><div className={s.stat_num}>{us ? fx(spec.flowArea / (UNIT.mmPerIn ** 2), 3) : fx(spec.flowArea, 0)}</div><div className={s.stat_label}>{L('유로 단면적', 'Bore area')} {us ? 'in²' : '㎟'}</div></div>
                   <div className={s.stat}><div className={s.stat_num}>{us ? fx(spec.id, 1) : (family === 'su' ? '-' : FAMILIES[family].inch?.[size] ?? INCH[size] ?? '-')}</div><div className={s.stat_label}>{us ? L('내경 mm', 'ID mm') : L('인치', 'Inch')}</div></div>
                 </div>
-                <button type="button" className={s.btn} onClick={() => copy(`${familyName(family)} ${sizeName(family, size)} ${schName(sch)}\n${L('외경', 'OD')} ${dOD(spec)} / ${L('두께', 'wall')} ${dT(spec)} / ${L('내경', 'ID')} ${dID(spec)} ${lenU}\n${wt(spec.kgPerM)} ${wtU}, ${L('물', 'water')} ${wat(spec.litersPerM)} ${watU}`)}>
+                <button type="button" className={`${ui.button} ${ui.secondary} ${s.btn}`} onClick={() => copy(`${familyName(family)} ${sizeName(family, size)} ${schName(sch)}\n${L('외경', 'OD')} ${dOD(spec)} / ${L('두께', 'wall')} ${dT(spec)} / ${L('내경', 'ID')} ${dID(spec)} ${lenU}\n${wt(spec.kgPerM)} ${wtU}, ${L('물', 'water')} ${wat(spec.litersPerM)} ${watU}`)}>
                   <Copy size={16} />{copied || L('결과 복사', 'Copy')}
                 </button>
                 <p className={s.hint}>{L(
@@ -284,8 +285,8 @@ export default function PipingCalcClient() {
             )}
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L(`규격표 — ${familyName(family)} ${schName(sch)}`, `Table — ${familyName(family)} ${schName(sch)}`)}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L(`규격표 — ${familyName(family)} ${schName(sch)}`, `Table — ${familyName(family)} ${schName(sch)}`)}</h2>
             <div className={s.table_wrap}>
               <table className={s.table}>
                 <thead><tr><th>{L('호칭', 'Size')}</th><th>{L('외경', 'OD')} {lenU}</th><th>{L('두께', 'Wall')} {lenU}</th><th>{L('내경', 'ID')} {lenU}</th><th>{wtU}</th><th>{watU}</th></tr></thead>
@@ -304,9 +305,9 @@ export default function PipingCalcClient() {
 
       {tab === 'slope' && (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('기준과 배수관 관경', 'Code and drain size')}</h2>
-            <div className={s.chips}>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('기준과 배수관 관경', 'Code and drain size')}</h2>
+            <div className={ui.chips}>
               {chip(code, 'kr', switchCode, L('한국 기준', 'Korea'), L('기계설비 기술기준', 'mechanical code manual'))}
               {chip(code, 'ipc', switchCode, L('미국 IPC', 'US — IPC'), 'Table 704.1')}
             </div>
@@ -314,7 +315,7 @@ export default function PipingCalcClient() {
             <p className={s.hint}>{code === 'kr'
               ? L('칸 아래 숫자는 오·배수 수평관 최소 구배입니다(기계설비 기술기준 매뉴얼: 65A 이하 1/50, 80~150A 1/100, 200A 이상 1/200).', 'Minimum slope for horizontal waste pipes in the Korean mechanical code manual: ≤65A 1/50, 80–150A 1/100, ≥200A 1/200.')
               : L('미국 국제배관코드(IPC) Table 704.1: 2-1/2" 이하 1/4 inch/ft(2%), 3~6" 1/8 inch/ft(1%), 8" 이상 1/16 inch/ft(0.5%). 주(州)·시 개정판이 다를 수 있습니다.', 'International Plumbing Code Table 704.1: 2-1/2" and smaller 1/4 inch per foot (2%), 3" to 6" 1/8 inch per foot (1%), 8" and larger 1/16 inch per foot (0.5%). Check your state or local amendments; UPC jurisdictions may differ.')}</p>
-            <div className={s.chips}>
+            <div className={ui.chips}>
               {chip(slopeMode, 'toDrop', setSlopeMode, L('구배 → 단차', 'Slope → drop'))}
               {chip(slopeMode, 'toSlope', setSlopeMode, L('단차 → 구배', 'Drop → slope'))}
             </div>
@@ -324,24 +325,24 @@ export default function PipingCalcClient() {
                 ? field('sl-den', us ? L('구배', 'Slope') : L('구배 1/N 의 N', 'Slope 1/N'), denomText, setDenomText, us ? 'in/ft' : `1/${denomText || 'N'}`)
                 : field('sl-drop', L('높이 차(단차)', 'Height drop'), dropText, setDropText, us ? 'in' : 'mm')}
             </div>
-            {slopeMode === 'toDrop' && <div className={s.chips}>{us
+            {slopeMode === 'toDrop' && <div className={ui.chips}>{us
               ? [['0.25', '1/4"/ft'], ['0.125', '1/8"/ft'], ['0.0625', '1/16"/ft']].map(([v, lbl]) => chip(denomText, v, setDenomText, lbl))
               : [50, 100, 150, 200].map(n => chip(denomText, String(n), setDenomText, `1/${n}`))}</div>}
           </section>
 
-          <section className={s.card} aria-live="polite">
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
             {!slopeReady ? <p className={s.hint}>{L('길이와 구배(또는 단차)를 넣으세요.', 'Enter length and slope or drop.')}</p> : (
               <>
-                <div className={s.hero}>
-                  <div className={s.hero_label}>{slopeMode === 'toDrop' ? L('끝점이 시작점보다 낮아야 할 높이', 'Drop over the run') : L('구배', 'Slope')}</div>
-                  <div className={s.hero_num}>{slopeMode === 'toDrop'
+                <div className={`${ui.result} ${s.hero}`}>
+                  <div className={ui.resultLabel}>{slopeMode === 'toDrop' ? L('끝점이 시작점보다 낮아야 할 높이', 'Drop over the run') : L('구배', 'Slope')}</div>
+                  <div className={ui.resultValue}>{slopeMode === 'toDrop'
                     ? <>{us ? fx(drop / UNIT.mmPerIn, 2) : fx(drop, 1)}<span className={s.hero_unit}>{us ? 'in' : 'mm'}</span></>
                     : us ? <>{fx(inPerFt(den), 3)}<span className={s.hero_unit}>in/ft</span></> : <>1/{fx(den, 0)}</>}</div>
                   <div className={s.hero_sub}>{us
                     ? `1/${fx(den, 0)} · ${fx(100 / den, 2)}% · ${fx(1000 / den, 1)} mm/m`
                     : L(`1m당 ${fx(1000 / den, 1)}mm · ${fx(100 / den, 2)}%`, `${fx(1000 / den, 1)} mm per m · ${fx(100 / den, 2)}% · ${fx(inPerFt(den), 3)} in/ft`)}</div>
                 </div>
-                <div className={`${s.judge} ${slopeOk ? s.judge_ok : s.judge_bad}`}>
+                <div className={`${ui.notice} ${slopeOk ? ui.green : ui.red} ${s.judge}`}>
                   {slopeOk
                     ? L(`✓ ${drainSize} 최소 구배 ${code === 'kr' ? `1/${minDen}` : `${inPerFt(minDen)}"/ft`} 이상입니다.`, `✓ Meets the ${drainSize} minimum of ${code === 'kr' ? `1/${minDen}` : `${inPerFt(minDen)} in/ft`}.`)
                     : L(`✕ ${drainSize}는 최소 ${code === 'kr' ? `1/${minDen}` : `${inPerFt(minDen)}"/ft`}이 필요합니다. ${us ? `${fx(lenM * UNIT.ftPerM, 1)}ft` : `${fx(lenM, 1)}m`}라면 단차를 ${us ? `${fx(dropMm(lenM, minDen) / UNIT.mmPerIn, 2)}in` : `${fx(dropMm(lenM, minDen), 0)}mm`} 이상 주세요.`,
@@ -365,51 +366,51 @@ export default function PipingCalcClient() {
 
       {tab === 'hydro' && (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('시험할 배관 (관경별로 한 줄씩)', 'Pipes under test (one line per size)')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('시험할 배관 (관경별로 한 줄씩)', 'Pipes under test (one line per size)')}</h2>
             {lines.map((l, i) => (
               <div key={i} className={s.line}>
-                <div className={s.field}>
-                  <span className={s.field_label}>{L('관 종류', 'Type')}</span>
-                  <select className={s.select} value={l.family} onChange={e => updateLine(i, { family: e.target.value as Family })} aria-label={L('관 종류', 'Type')}>
+                <div className={ui.field}>
+                  <span className={ui.label}>{L('관 종류', 'Type')}</span>
+                  <select className={ui.input} value={l.family} onChange={e => updateLine(i, { family: e.target.value as Family })} aria-label={L('관 종류', 'Type')}>
                     {ORDER.map(f => <option key={f} value={f}>{familyName(f)}</option>)}
                   </select>
                 </div>
-                <div className={s.field}>
-                  <span className={s.field_label}>{L('호칭', 'Size')}</span>
-                  <select className={s.select} value={l.size} onChange={e => updateLine(i, { size: e.target.value })} aria-label={L('호칭', 'Size')}>
+                <div className={ui.field}>
+                  <span className={ui.label}>{L('호칭', 'Size')}</span>
+                  <select className={ui.input} value={l.size} onChange={e => updateLine(i, { size: e.target.value })} aria-label={L('호칭', 'Size')}>
                     {FAMILIES[l.family].sizes.filter(z => hasSize(l.family, z, l.sch)).map(z => <option key={z} value={z}>{sizeName(l.family, z)}</option>)}
                   </select>
                 </div>
-                <div className={s.field}>
-                  <span className={s.field_label}>{L('스케줄', 'Sch')}</span>
-                  <select className={s.select} value={l.sch} onChange={e => updateLine(i, { sch: e.target.value })} disabled={FAMILIES[l.family].schedules[0] === '-'} aria-label={L('스케줄', 'Schedule')}>
+                <div className={ui.field}>
+                  <span className={ui.label}>{L('스케줄', 'Sch')}</span>
+                  <select className={ui.input} value={l.sch} onChange={e => updateLine(i, { sch: e.target.value })} disabled={FAMILIES[l.family].schedules[0] === '-'} aria-label={L('스케줄', 'Schedule')}>
                     {FAMILIES[l.family].schedules.map(x => <option key={x} value={x}>{x === '-' ? L('단일', 'n/a') : schName(x)}</option>)}
                   </select>
                 </div>
-                <div className={s.field}>
-                  <span className={s.field_label}>{L('길이', 'Length')}</span>
-                  <div className={s.input_wrap}>
-                    <input className={s.input} inputMode="decimal" value={l.lenText} onChange={e => updateLine(i, { lenText: dec(e.target.value) })} aria-label={L('길이', 'Length')} />
-                    <span className={s.unit}>{us ? 'ft' : 'm'}</span>
+                <div className={ui.field}>
+                  <span className={ui.label}>{L('길이', 'Length')}</span>
+                  <div className={ui.inputGroup}>
+                    <input className={ui.input} inputMode="decimal" value={l.lenText} onChange={e => updateLine(i, { lenText: dec(e.target.value) })} aria-label={L('길이', 'Length')} />
+                    <span className={ui.unit}>{us ? 'ft' : 'm'}</span>
                   </div>
                 </div>
                 <button type="button" className={s.del_btn} onClick={() => setLines(ls => ls.filter((_, j) => j !== i))} aria-label={L('줄 삭제', 'Remove line')} disabled={lines.length === 1}>✕</button>
               </div>
             ))}
-            <button type="button" className={s.ghost} onClick={() => setLines(ls => [...ls, isKo ? { family: 'spp', size: '25A', sch: '-', lengthM: 0, lenText: '' } : { family: 'copper', size: 'CU1', sch: 'L', lengthM: 0, lenText: '' }])}><Plus size={14} />{L('관경 추가', 'Add line')}</button>
-            <div>
-              <span className={s.label}>{L('여유분 (부속·공기빼기·보충)', 'Allowance (fittings, venting, top-up)')}</span>
-              <div className={s.chips}>{[0, 10, 15, 20].map(p => chip(margin, p, setMargin, `${p}%`))}</div>
+            <button type="button" className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.btn}`} onClick={() => setLines(ls => [...ls, isKo ? { family: 'spp', size: '25A', sch: '-', lengthM: 0, lenText: '' } : { family: 'copper', size: 'CU1', sch: 'L', lengthM: 0, lenText: '' }])}><Plus size={14} />{L('관경 추가', 'Add line')}</button>
+            <div className={ui.field}>
+              <span className={ui.label}>{L('여유분 (부속·공기빼기·보충)', 'Allowance (fittings, venting, top-up)')}</span>
+              <div className={ui.chips}>{[0, 10, 15, 20].map(p => chip(margin, p, setMargin, `${p}%`))}</div>
             </div>
           </section>
 
-          <section className={s.card} aria-live="polite">
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
             {hydro.netL <= 0 ? <p className={s.hint}>{L('길이를 넣으면 물량이 나옵니다.', 'Enter lengths to see the volume.')}</p> : (
               <>
-                <div className={s.hero}>
-                  <div className={s.hero_label}>{L(`필요 물량 (여유 ${margin}% 포함)`, `Water needed (+${margin}%)`)}</div>
-                  <div className={s.hero_num}>{us ? fx(hydro.totalL * UNIT.galPerL, 0) : fx(hydro.tons, 2)}<span className={s.hero_unit}>{us ? 'US gal' : L('톤', 't')}</span></div>
+                <div className={`${ui.result} ${s.hero}`}>
+                  <div className={ui.resultLabel}>{L(`필요 물량 (여유 ${margin}% 포함)`, `Water needed (+${margin}%)`)}</div>
+                  <div className={ui.resultValue}>{us ? fx(hydro.totalL * UNIT.galPerL, 0) : fx(hydro.tons, 2)}<span className={s.hero_unit}>{us ? 'US gal' : L('톤', 't')}</span></div>
                   <div className={s.hero_sub}>{us
                     ? `${fx(hydro.totalL, 0)} L · ${fx(hydro.totalL / 1000, 2)} m³ · ${fx(hydro.totalL * UNIT.galPerL / 7.48052, 1)} ft³`
                     : <>{fx(hydro.totalL, 0)} L · {fx(hydro.totalL / 1000, 2)} ㎥{isKo && <> · 물차 {trucks.map(t => `${t.size}톤${t.count > 1 ? ` × ${t.count}회` : ''}`).join(' + ')}</>}{!isKo && <> · {fx(hydro.totalL * UNIT.galPerL, 0)} US gal</>}</>}</div>
@@ -431,7 +432,7 @@ export default function PipingCalcClient() {
                     </tbody>
                   </table>
                 </div>
-                <button type="button" className={s.btn} onClick={() => copy(L(
+                <button type="button" className={`${ui.button} ${ui.secondary} ${s.btn}`} onClick={() => copy(L(
                   `[수압 테스트 물량]\n${hydro.rows.map(r => `${familyName(r.family)} ${sizeName(r.family, r.size)} ${schName(r.sch)} ${fx(r.lengthM, 1)}m: ${fx(r.liters, 0)}L`).join('\n')}\n합계 ${fx(hydro.netL, 0)}L + 여유 ${margin}% = ${fx(hydro.totalL, 0)}L (${fx(hydro.tons, 2)}톤)`,
                   `[Hydro test water]\n${hydro.rows.map(r => `${familyName(r.family)} ${sizeName(r.family, r.size)} ${schName(r.sch)}, ${us ? `${fx(r.lengthM * UNIT.ftPerM, 0)} ft` : `${fx(r.lengthM, 1)} m`}: ${us ? `${fx(r.liters * UNIT.galPerL, 0)} gal` : `${fx(r.liters, 0)} L`}`).join('\n')}\nTotal with ${margin}% allowance: ${fx(hydro.totalL * UNIT.galPerL, 0)} US gal (${fx(hydro.totalL, 0)} L)`,
                 ))}><Copy size={16} />{copied || L('결과 복사', 'Copy')}</button>
@@ -443,34 +444,34 @@ export default function PipingCalcClient() {
 
       {tab === 'flow' && (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('유량과 관 종류', 'Flow and pipe type')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('유량과 관 종류', 'Flow and pipe type')}</h2>
             <div className={s.grid2}>
               {field('fl-q', L('유량', 'Flow rate'), flowText, setFlowText, flowUnit === 'lpm' ? 'L/min' : flowUnit === 'm3h' ? '㎥/h' : 'GPM')}
-              <div className={s.field}>
-                <span className={s.field_label}>{L('단위', 'Unit')}</span>
-                <div className={s.chips}>{chip(flowUnit, 'gpm', setFlowUnit, 'GPM')}{chip(flowUnit, 'lpm', setFlowUnit, 'L/min')}{chip(flowUnit, 'm3h', setFlowUnit, '㎥/h')}</div>
+              <div className={ui.field}>
+                <span className={ui.label}>{L('단위', 'Unit')}</span>
+                <div className={ui.chips}>{chip(flowUnit, 'gpm', setFlowUnit, 'GPM')}{chip(flowUnit, 'lpm', setFlowUnit, 'L/min')}{chip(flowUnit, 'm3h', setFlowUnit, '㎥/h')}</div>
               </div>
             </div>
             {familyChips(flowFamily, f => { pickFamily(f, '', setFlowFamily, setFlowSch); setHwC(null); })}
             {schChips(flowFamily, flowSch, setFlowSch)}
-            <div>
-              <span className={s.label}>{L('허용 최대 유속', 'Maximum velocity')}</span>
-              <div className={s.chips}>{vmaxChoices.map(v => chip(Math.round(vmax * 1000), Math.round(v * 1000), () => setVmax(v), `${vel(v).replace(/\.00$/, '').replace(/\.0$/, '')} ${velU}`))}</div>
+            <div className={ui.field}>
+              <span className={ui.label}>{L('허용 최대 유속', 'Maximum velocity')}</span>
+              <div className={ui.chips}>{vmaxChoices.map(v => chip(Math.round(vmax * 1000), Math.round(v * 1000), () => setVmax(v), `${vel(v).replace(/\.00$/, '').replace(/\.0$/, '')} ${velU}`))}</div>
               <p className={s.hint}>{L('급수 배관은 보통 0.5~2 m/s 범위로 잡습니다(BS EN 805 권장). 소방 배관 등은 해당 화재안전기준의 유속 제한을 따르세요.', 'Domestic water is commonly kept at or below 5–8 ft/s (1.5–2.4 m/s) to limit noise and erosion — copper hot water lines are often held to about 5 ft/s. Fire protection follows its own codes.')}</p>
             </div>
-            <div>
-              <span className={s.label}>{L(`Hazen-Williams 계수 C = ${C}`, `Hazen-Williams C = ${C}`)}</span>
-              <div className={s.chips}>{[100, 120, 130, 140, 150].map(c => chip(C, c, v => setHwC(v), String(c), c === FAMILIES[flowFamily].hwC ? L('기본', 'default') : c === 100 ? L('오래된 강관', 'old steel') : undefined))}</div>
+            <div className={ui.field}>
+              <span className={ui.label}>{L(`Hazen-Williams 계수 C = ${C}`, `Hazen-Williams C = ${C}`)}</span>
+              <div className={ui.chips}>{[100, 120, 130, 140, 150].map(c => chip(C, c, v => setHwC(v), String(c), c === FAMILIES[flowFamily].hwC ? L('기본', 'default') : c === 100 ? L('오래된 강관', 'old steel') : undefined))}</div>
             </div>
           </section>
 
-          <section className={s.card} aria-live="polite">
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
             {lpm <= 0 ? <p className={s.hint}>{L('유량을 넣으세요.', 'Enter a flow rate.')}</p> : (
               <>
-                <div className={s.hero}>
-                  <div className={s.hero_label}>{L(`유속 ${vel(vmax)} ${velU} 이하가 되는 최소 관경`, `Smallest pipe at ≤ ${vel(vmax)} ${velU}`)}</div>
-                  <div className={s.hero_num}>{best ? sizeName(flowFamily, best.size) : L('없음', 'None')}</div>
+                <div className={`${ui.result} ${s.hero}`}>
+                  <div className={ui.resultLabel}>{L(`유속 ${vel(vmax)} ${velU} 이하가 되는 최소 관경`, `Smallest pipe at ≤ ${vel(vmax)} ${velU}`)}</div>
+                  <div className={ui.resultValue}>{best ? sizeName(flowFamily, best.size) : L('없음', 'None')}</div>
                   <div className={s.hero_sub}>{best
                     ? `${familyName(flowFamily)} ${schName(flowSch)} · ${L('내경', 'ID')} ${dID(best)} ${lenU} · ${vel(velocity(lpm, best))} ${velU} · ${L('마찰', 'friction')} ${fric(frictionKPaPer100m(lpm, best, C))} ${fricU}`
                     : L('표의 가장 큰 관으로도 부족합니다.', 'Even the largest size is too small.')}</div>

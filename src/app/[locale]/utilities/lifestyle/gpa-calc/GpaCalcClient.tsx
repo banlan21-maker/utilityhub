@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
 
 /* ─── Types ─── */
 type Scale = '4.5' | '4.3' | '100';
@@ -205,28 +206,21 @@ export default function GpaCalcClient() {
     } catch { /* ignore */ }
   }, [t, scale, overall, majorResult, liberalResult, otherResult]);
 
-  const inputStyle: React.CSSProperties = {
-    padding: '0.4rem 0.5rem',
-    borderRadius: 'var(--radius-sm)',
-    background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    color: 'var(--text-primary)',
-    fontSize: '0.82rem',
-    outline: 'none',
-  };
+  // 표 안 입력칸은 kit 기본(48px)보다 낮게: 인라인으로 높이·글자만 줄인다
+  const inputClass = ui.input;
+  const compact = { minHeight: 'var(--control-h-sm)', fontSize: '0.9rem' } as const;
 
   const resultCard = (label: string, value: string, sub?: string) => (
     <div
+      className={ui.card}
       style={{
-        background: 'var(--surface)',
-        borderRadius: 'var(--radius-md)',
         padding: '1rem',
         textAlign: 'center',
-        borderTop: '3px solid var(--primary)',
+        borderTop: '3px solid var(--color-primary)',
       }}
     >
       <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{label}</div>
-      <div style={{ fontWeight: 800, fontSize: '1.6rem', color: 'var(--primary)' }}>{value}</div>
+      <div style={{ fontWeight: 800, fontSize: '1.6rem', color: 'var(--color-primary)' }}>{value}</div>
       {sub && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>{sub}</div>}
     </div>
   );
@@ -239,52 +233,35 @@ export default function GpaCalcClient() {
       <ToolHeader icon={<GraduationCap />} title={t('title')} subtitle={t('subtitle')} />
 
       {/* Scale + Filter */}
-      <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div>
-            <label style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.4rem' }}>
+      <div className={ui.card} style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+          <div className={ui.field}>
+            <label className={ui.label}>
               {t('scale_label')}
             </label>
-            <div style={{ display: 'flex', gap: '0.4rem' }}>
+            <div className={ui.segmented}>
               {(['4.5', '4.3', '100'] as Scale[]).map((s) => (
                 <button
                   key={s}
                   onClick={() => setScale(s)}
                   aria-label={s}
-                  style={{
-                    padding: '0.4rem 1rem',
-                    borderRadius: 'var(--radius-md)',
-                    cursor: 'pointer',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    background: scale === s ? 'var(--primary)' : 'var(--surface)',
-                    color: scale === s ? '#fff' : 'var(--text-primary)',
-                    border: scale === s ? 'none' : '1px solid var(--border)',
-                  }}
+                  className={`${ui.segment} ${scale === s ? ui.segmentActive : ''}`}
                 >
                   {isKo ? `${s}점` : s}
                 </button>
               ))}
             </div>
           </div>
-          <div>
-            <label style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.4rem' }}>
+          <div className={ui.field}>
+            <label className={ui.label}>
               {t('filter_label')}
             </label>
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            <div className={ui.segmented}>
               {(['all', 'major', 'liberal', 'other'] as const).map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilterType(f)}
-                  style={{
-                    padding: '0.4rem 0.9rem',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--border)',
-                    cursor: 'pointer',
-                    fontSize: '0.82rem',
-                    background: filterType === f ? 'var(--primary)' : 'var(--surface)',
-                    color: filterType === f ? '#fff' : 'var(--text-primary)',
-                  }}
+                  className={`${ui.segment} ${filterType === f ? ui.segmentActive : ''}`}
                 >
                   {f === 'all' ? t('filter_all') : TYPE_LABELS[f as CourseType]}
                 </button>
@@ -321,21 +298,7 @@ export default function GpaCalcClient() {
           onClick={handleCopy}
           aria-label={t('copy_button')}
           disabled={overall.totalCredits === 0}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            padding: '0.55rem 1.2rem',
-            borderRadius: '2rem',
-            border: `1px solid ${copied ? '#10b981' : 'var(--border)'}`,
-            background: copied ? 'rgba(16,185,129,0.1)' : 'var(--surface)',
-            color: copied ? '#10b981' : 'var(--text-secondary)',
-            fontSize: '0.83rem',
-            fontWeight: 700,
-            cursor: overall.totalCredits === 0 ? 'not-allowed' : 'pointer',
-            opacity: overall.totalCredits === 0 ? 0.5 : 1,
-            transition: 'all 0.2s',
-          }}
+          className={`${ui.button} ${ui.secondary} ${ui.sm} ${copied ? ui.green : ''}`}
         >
           {copied ? <Check size={14} /> : <Copy size={14} />}
           {copied ? t('copy_done') : t('copy_button')}
@@ -343,7 +306,7 @@ export default function GpaCalcClient() {
       </div>
 
       {/* Course Table */}
-      <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '1.5rem', overflowX: 'auto' }}>
+      <div className={ui.card} style={{ marginBottom: '1.5rem', overflowX: 'auto' }}>
         <div
           style={{
             display: 'flex',
@@ -354,36 +317,19 @@ export default function GpaCalcClient() {
             gap: '0.5rem',
           }}
         >
-          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+          <h2 className={ui.cardTitle} style={{ margin: 0 }}>
             {t('table_title', { n: courses.length })}
           </h2>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button
               onClick={addRow}
-              style={{
-                padding: '0.4rem 1rem',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--primary)',
-                color: '#fff',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-              }}
+              className={`${ui.button} ${ui.primary} ${ui.sm}`}
             >
               {t('add_course')}
             </button>
             <button
               onClick={() => update([])}
-              style={{
-                padding: '0.4rem 0.9rem',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--surface)',
-                color: '#f87171',
-                border: '1px solid #f87171',
-                cursor: 'pointer',
-                fontSize: '0.82rem',
-              }}
+              className={`${ui.button} ${ui.danger} ${ui.sm}`}
             >
               {t('clear_all')}
             </button>
@@ -417,7 +363,8 @@ export default function GpaCalcClient() {
                     value={c.name}
                     onChange={(e) => changeField(c.id, 'name', e.target.value)}
                     placeholder={t('course_placeholder')}
-                    style={{ ...inputStyle, width: '120px' }}
+                    className={inputClass}
+                    style={{ ...compact, width: '120px' }}
                     aria-label={t('th_name')}
                   />
                 </td>
@@ -425,7 +372,8 @@ export default function GpaCalcClient() {
                   <select
                     value={c.credits}
                     onChange={(e) => changeField(c.id, 'credits', Number(e.target.value))}
-                    style={inputStyle}
+                    className={inputClass}
+                    style={compact}
                     aria-label={t('th_credits')}
                   >
                     {CREDITS_OPTIONS.map((n) => (
@@ -439,7 +387,8 @@ export default function GpaCalcClient() {
                   <select
                     value={c.grade}
                     onChange={(e) => changeField(c.id, 'grade', e.target.value as GradeKey)}
-                    style={inputStyle}
+                    className={inputClass}
+                    style={compact}
                     aria-label={t('th_grade')}
                   >
                     {GRADES[scale].map((g) => (
@@ -453,7 +402,8 @@ export default function GpaCalcClient() {
                   <select
                     value={c.type}
                     onChange={(e) => changeField(c.id, 'type', e.target.value as CourseType)}
-                    style={inputStyle}
+                    className={inputClass}
+                    style={compact}
                     aria-label={t('th_type')}
                   >
                     {Object.entries(TYPE_LABELS).map(([k, v]) => (
@@ -463,7 +413,7 @@ export default function GpaCalcClient() {
                     ))}
                   </select>
                 </td>
-                <td style={{ padding: '0.4rem', fontWeight: 700, color: 'var(--primary)' }}>
+                <td style={{ padding: '0.4rem', fontWeight: 700, color: 'var(--color-primary)' }}>
                   {toGpa45FromKey(c.grade, scale).toFixed(2)}
                 </td>
                 <td style={{ padding: '0.4rem' }}>
@@ -473,7 +423,7 @@ export default function GpaCalcClient() {
                       background: 'none',
                       border: 'none',
                       cursor: 'pointer',
-                      color: '#f87171',
+                      color: 'var(--tint-red-fg)',
                       fontSize: '1rem',
                     }}
                     aria-label="remove"
@@ -494,8 +444,8 @@ export default function GpaCalcClient() {
       </div>
 
       {/* Conversion reference table */}
-      <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+      <div className={ui.card} style={{ marginBottom: '2rem' }}>
+        <h3 className={ui.cardTitle}>
           {t('ref_title')}
         </h3>
         <div style={{ overflowX: 'auto' }}>
@@ -513,9 +463,9 @@ export default function GpaCalcClient() {
               {GRADES['4.5'].map((g, i) => (
                 <tr
                   key={g.key}
-                  style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'var(--surface)' }}
+                  style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'var(--surface-hover)' }}
                 >
-                  <td style={{ padding: '0.4rem', textAlign: 'center', fontWeight: 700, color: 'var(--primary)' }}>{g.label}</td>
+                  <td style={{ padding: '0.4rem', textAlign: 'center', fontWeight: 700, color: 'var(--color-primary)' }}>{g.label}</td>
                   <td style={{ padding: '0.4rem', textAlign: 'center' }}>{g.value.toFixed(1)}</td>
                   <td style={{ padding: '0.4rem', textAlign: 'center' }}>
                     {getGradeValue(g.key, '4.3').toFixed(2)}

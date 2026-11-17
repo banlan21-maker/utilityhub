@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './password-generator.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Charset helpers ──────────────────────────────────────────────────────────
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -126,173 +127,129 @@ export default function PasswordGeneratorClient() {
   };
 
   const strengthBar = (
-    <div style={{ display: 'flex', gap: '3px', marginTop: '0.5rem' }}>
+    <div className={s.meter}>
       {[0, 1, 2, 3, 4].map(i => (
         <div
           key={i}
-          style={{
-            flex: 1, height: '6px', borderRadius: '3px',
-            background: i <= crackInfo.level ? crackInfo.color : 'var(--border)',
-            transition: 'background 0.3s',
-          }}
+          className={s.meterSeg}
+          style={{ background: i <= crackInfo.level ? crackInfo.color : 'var(--border)' }}
         />
       ))}
     </div>
   );
 
-  const checkboxStyle: React.CSSProperties = {
-    width: '1rem', height: '1rem', accentColor: 'var(--primary)', cursor: 'pointer', flexShrink: 0,
-  };
-
-  const labelStyle: React.CSSProperties = {
-    display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer',
-    fontSize: '0.9rem', color: 'var(--text-primary)',
-  };
+  const charOption = (key: keyof Options, label: string, sample: string) => (
+    <label className={s.check}>
+      <input type="checkbox" checked={opts[key] as boolean} onChange={() => toggle(key)} />
+      {label} <span className={s.sample}>{sample}</span>
+    </label>
+  );
 
   return (
     <div>
       <NavigationActions />
       <ToolHeader icon={<Key />} title={t('title')} subtitle={t('description')}>
         {/* Privacy badge */}
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.25rem', background: '#dcfce7', border: '1px solid #86efac', borderRadius: '999px', fontSize: '0.85rem', fontWeight: 600, color: '#14532d' }}>
+        <div className={`${ui.badge} ${ui.green}`}>
           🔒 {t('privacy_badge')}
         </div>
       </ToolHeader>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', alignItems: 'start' }}>
+      <div className={s.layout}>
 
         {/* ── Left: Options ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
+        <div className={s.col}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               {t('options_title')}
             </h2>
 
             {/* Length slider */}
-            <div style={{ marginBottom: '1.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{t('length_label')}</span>
-                <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--primary)' }}>{opts.length}</span>
+            <div className={s.lengthBlock}>
+              <div className={s.lengthHead}>
+                <span className={ui.label}>{t('length_label')}</span>
+                <span className={s.lengthValue}>{opts.length}</span>
               </div>
               <input
                 type="range" min={8} max={64} value={opts.length}
                 onChange={e => setOpts(p => ({ ...p, length: +e.target.value }))}
-                style={{ width: '100%', accentColor: 'var(--primary)' }}
+                className={s.range}
               />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+              <div className={s.rangeEnds}>
                 <span>8</span><span>64</span>
               </div>
             </div>
 
             {/* Checkboxes */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
-              <label style={labelStyle}>
-                <input type="checkbox" style={checkboxStyle} checked={opts.upper} onChange={() => toggle('upper')} />
-                {t('use_upper')} <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>A–Z</span>
-              </label>
-              <label style={labelStyle}>
-                <input type="checkbox" style={checkboxStyle} checked={opts.lower} onChange={() => toggle('lower')} />
-                {t('use_lower')} <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>a–z</span>
-              </label>
-              <label style={labelStyle}>
-                <input type="checkbox" style={checkboxStyle} checked={opts.digits} onChange={() => toggle('digits')} />
-                {t('use_digits')} <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>0–9</span>
-              </label>
-              <label style={labelStyle}>
-                <input type="checkbox" style={checkboxStyle} checked={opts.symbols} onChange={() => toggle('symbols')} />
-                {t('use_symbols')} <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>!@#…</span>
-              </label>
-              <label style={labelStyle}>
-                <input type="checkbox" style={checkboxStyle} checked={opts.excludeAmbiguous} onChange={() => toggle('excludeAmbiguous')} />
-                {t('exclude_ambiguous')} <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>0O1Il</span>
-              </label>
+            <div className={s.checks}>
+              {charOption('upper', t('use_upper'), 'A–Z')}
+              {charOption('lower', t('use_lower'), 'a–z')}
+              {charOption('digits', t('use_digits'), '0–9')}
+              {charOption('symbols', t('use_symbols'), '!@#…')}
+              {charOption('excludeAmbiguous', t('exclude_ambiguous'), '0O1Il')}
             </div>
           </div>
 
           {/* Generate button */}
-          <button
-            onClick={generate}
-            style={{
-              width: '100%', padding: '0.9rem', fontSize: '1rem', fontWeight: 700,
-              backgroundColor: 'var(--primary)', color: 'white',
-              border: 'none', borderRadius: 'var(--radius-md)', cursor: 'pointer',
-              transition: 'background-color 0.2s',
-            }}
-            onMouseOver={e => { e.currentTarget.style.backgroundColor = 'var(--primary-hover)'; }}
-            onMouseOut={e => { e.currentTarget.style.backgroundColor = 'var(--primary)'; }}
-          >
+          <button onClick={generate} className={`${ui.button} ${ui.primary} ${ui.block} ${ui.lg}`}>
             🔄 {t('generate_btn')}
           </button>
         </div>
 
         {/* ── Right: Result ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div className={s.col}>
 
           {/* Password display */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>
+          <div className={ui.card}>
+            <label className={`${ui.label} ${s.blockLabel}`}>
               {t('result_label')}
             </label>
-            <div style={{ position: 'relative' }}>
-              <div style={{
-                fontFamily: 'monospace', fontSize: '1.15rem', fontWeight: 600,
-                letterSpacing: '0.05em', wordBreak: 'break-all', lineHeight: 1.6,
-                padding: '1rem 4rem 1rem 1rem',
-                background: 'var(--surface)', border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)',
-                minHeight: '3.5rem',
-              }}>
+            <div className={s.pwWrap}>
+              <div className={s.pwBox}>
                 {password}
               </div>
               <button
                 onClick={() => handleCopy(password)}
-                style={{
-                  position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)',
-                  padding: '0.35rem 0.7rem', fontSize: '0.78rem', fontWeight: 600,
-                  border: `1px solid ${copied === password ? '#10b981' : 'var(--border)'}`,
-                  background: copied === password ? '#ecfdf5' : 'var(--surface)',
-                  color: copied === password ? '#065f46' : 'var(--text-secondary)',
-                  borderRadius: 'var(--radius-sm)', cursor: 'pointer',
-                }}
+                className={`${s.copyBtn} ${copied === password ? s.copied : ''}`}
               >
                 {copied === password ? '✓' : '📋'}
               </button>
             </div>
             {strengthBar}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem', fontSize: '0.8rem' }}>
+            <div className={s.strengthRow}>
               <span style={{ color: crackInfo.color, fontWeight: 600 }}>{(isKo ? STRENGTH_LABELS : STRENGTH_EN)[crackInfo.level]}</span>
-              <span style={{ color: 'var(--text-secondary)' }}>{entropy.toFixed(0)} bits</span>
+              <span className={s.muted}>{entropy.toFixed(0)} bits</span>
             </div>
           </div>
 
           {/* Crack time card */}
-          <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <div className={`${ui.card} ${s.center}`}>
+            <div className={`${ui.label} ${s.blockLabel}`}>
               🔓 {t('crack_time_label')}
             </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: crackInfo.color, lineHeight: 1.3 }}>
+            <div className={s.crackValue} style={{ color: crackInfo.color }}>
               {crackInfo.label}
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+            <div className={`${ui.hint} ${s.crackNote}`}>
               {t('crack_assumption')}
             </div>
           </div>
 
           {/* History */}
           {history.length > 1 && (
-            <div className="glass-panel" style={{ padding: '1.25rem' }}>
-              <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+            <div className={ui.card}>
+              <h3 className={`${ui.label} ${s.blockLabel}`}>
                 {t('history_title')}
               </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <div className={s.history}>
                 {history.slice(1).map((pw, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ flex: 1, fontFamily: 'monospace', fontSize: '0.82rem', color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
+                  <div key={i} className={s.histRow}>
+                    <span className={s.histPw}>
                       {pw}
                     </span>
                     <button
                       onClick={() => handleCopy(pw)}
-                      style={{ flexShrink: 0, padding: '0.2rem 0.5rem', fontSize: '0.72rem', border: '1px solid var(--border)', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                      className={`${ui.button} ${ui.secondary} ${ui.sm}`}
                     >
                       {copied === pw ? '✓' : '📋'}
                     </button>

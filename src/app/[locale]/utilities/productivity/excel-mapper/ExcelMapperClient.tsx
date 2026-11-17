@@ -13,6 +13,7 @@ import Step1FileUpload from './components/Step1FileUpload';
 import Step2Mapping from './components/Step2Mapping';
 import Step3Preview from './components/Step3Preview';
 import s from './excel-mapper.module.css';
+import { ui } from '@/app/components/ui';
 
 
 type Step = 1 | 2 | 3;
@@ -74,10 +75,10 @@ export default function ExcelMapperClient() {
       {/* Tool Start Card */}
       <ToolHeader icon={<FileSpreadsheet />} title={t('title')} subtitle={t('description')} />
 
-      <div className={s.main_panel}>
+      <div className={`${ui.card} ${s.main_panel}`}>
         <StepIndicator currentStep={currentStep} />
 
-        <div style={{ marginTop: '2rem' }}>
+        <div className={s.stepBody}>
           {currentStep === 1 && (
             <Step1FileUpload onComplete={handleStep1Complete} />
           )}

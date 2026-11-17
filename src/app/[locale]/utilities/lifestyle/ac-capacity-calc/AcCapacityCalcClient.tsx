@@ -13,6 +13,7 @@ import {
   WALL_CLASSES, STAND_CLASSES, type SpaceMode, type SunSide, type Business,
 } from '@/lib/acCapacity';
 import s from './ac-capacity-calc.module.css';
+import { ui } from '@/app/components/ui';
 
 const decimalInput = (v: string) => {
   const [int, ...dec] = v.replace(/[^0-9.]/g, '').split('.');
@@ -157,97 +158,97 @@ export default function AcCapacityCalcClient() {
 
       <ToolHeader icon={<Snowflake />} title={T.title} subtitle={T.subtitle} />
 
-      <div className={s.tabs} role="tablist" aria-label={isKo ? '공간 종류' : 'Space type'}>
+      <div className={`${ui.segmented} ${s.tabs}`} role="tablist" aria-label={isKo ? '공간 종류' : 'Space type'}>
         {(['room', 'living', 'commercial'] as SpaceMode[]).map(m => (
           <button key={m} type="button" role="tab" aria-selected={mode === m}
-            className={`${s.tab} ${mode === m ? s.tab_active : ''}`}
+            className={`${ui.segment} ${mode === m ? ui.segmentActive : ''}`}
             onClick={() => { setMode(m); setAreaText(''); }}>
             {T.tabs[m][0]}<small>{T.tabs[m][1]}</small>
           </button>
         ))}
       </div>
 
-      <section className={s.card}>
+      <section className={`${ui.card} ${s.card}`}>
         <div className={s.grid2}>
-          <div>
-            <label className={s.field_label} htmlFor="ac-area">
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="ac-area">
               {mode === 'living' ? T.areaLiving : mode === 'room' ? T.areaRoom : T.areaCommercial}
             </label>
-            <div className={s.input_wrap}>
-              <input id="ac-area" className={s.input} inputMode="decimal" placeholder={mode === 'living' ? '34' : areaUnit === 'sqm' ? '33' : '10'}
+            <div className={ui.inputGroup}>
+              <input id="ac-area" className={`${ui.input} ${ui.inputLg}`} inputMode="decimal" placeholder={mode === 'living' ? '34' : areaUnit === 'sqm' ? '33' : '10'}
                 value={areaText} onChange={e => setAreaText(decimalInput(e.target.value))} />
-              <span className={s.suffix}>{unitSuffix}</span>
+              <span className={ui.unit}>{unitSuffix}</span>
             </div>
             {mode === 'living' ? (
               <>
-                <div className={s.chips} style={{ marginTop: '0.5rem' }}>
+                <div className={ui.chips} style={{ marginTop: '0.25rem' }}>
                   {LIVING_PRESETS.map(p => (
-                    <button key={p} type="button" className={`${s.chip} ${areaText === String(p) ? s.chip_active : ''}`} onClick={() => setAreaText(String(p))}>
+                    <button key={p} type="button" className={`${ui.chip} ${ui.pill} ${areaText === String(p) ? ui.chipActive : ''}`} onClick={() => setAreaText(String(p))}>
                       {isKo ? `${p}평형` : `${p} py`}
                     </button>
                   ))}
                 </div>
-                <p className={s.field_hint}>{areaNum > 0 ? T.livingHint(nf(livingSupply), nf(livingSupply / 2)) : T.livingHint('112', '56')}</p>
+                <p className={ui.hint}>{areaNum > 0 ? T.livingHint(nf(livingSupply), nf(livingSupply / 2)) : T.livingHint('112', '56')}</p>
               </>
             ) : (
               <>
-                <div className={s.chips} style={{ marginTop: '0.5rem' }}>
+                <div className={ui.chips} style={{ marginTop: '0.25rem' }}>
                   {(['sqm', 'pyeong'] as const).map(u => (
-                    <button key={u} type="button" className={`${s.chip} ${areaUnit === u ? s.chip_active : ''}`} onClick={() => setAreaUnit(u)}>
+                    <button key={u} type="button" className={`${ui.chip} ${ui.pill} ${areaUnit === u ? ui.chipActive : ''}`} onClick={() => setAreaUnit(u)}>
                       {u === 'sqm' ? '㎡' : (isKo ? '평' : 'pyeong')}
                     </button>
                   ))}
                 </div>
-                <p className={s.field_hint}>{mode === 'room' ? T.areaHintRoom : T.areaHintCommercial}</p>
+                <p className={ui.hint}>{mode === 'room' ? T.areaHintRoom : T.areaHintCommercial}</p>
               </>
             )}
           </div>
 
-          <div>
+          <div className={ui.field}>
             {mode === 'commercial' && (
-              <div style={{ marginBottom: '1rem' }}>
-                <label className={s.field_label} htmlFor="ac-business">{T.business}</label>
-                <select id="ac-business" className={s.select} value={business} onChange={e => setBusiness(e.target.value as Business)}>
+              <div className={ui.field} style={{ marginBottom: '0.6rem' }}>
+                <label className={ui.label} htmlFor="ac-business">{T.business}</label>
+                <select id="ac-business" className={ui.input} value={business} onChange={e => setBusiness(e.target.value as Business)}>
                   {BUSINESSES.map(b => (
                     <option key={b} value={b}>{T.businesses[b]}{BUSINESS_EXTRA[b] > 0 ? ` (${pct(BUSINESS_EXTRA[b])})` : ''}</option>
                   ))}
                 </select>
               </div>
             )}
-            <label className={s.field_label} htmlFor="ac-occ">{T.occupants}</label>
-            <div className={s.input_wrap}>
-              <input id="ac-occ" className={s.input} inputMode="numeric" value={occText}
+            <label className={ui.label} htmlFor="ac-occ">{T.occupants}</label>
+            <div className={ui.inputGroup}>
+              <input id="ac-occ" className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" value={occText}
                 onChange={e => setOccText(e.target.value.replace(/[^0-9]/g, '').slice(0, 3))} />
-              <span className={s.suffix}>{isKo ? '명' : 'ppl'}</span>
+              <span className={ui.unit}>{isKo ? '명' : 'ppl'}</span>
             </div>
-            <p className={s.field_hint}>{T.occupantsHint}</p>
+            <p className={ui.hint}>{T.occupantsHint}</p>
           </div>
         </div>
 
-        <div>
-          <span className={s.field_label}>{T.sun}</span>
-          <div className={s.chips}>
+        <div className={ui.field}>
+          <span className={ui.label}>{T.sun}</span>
+          <div className={`${ui.chips} ${ui.grow}`}>
             {SUNS.map(d => (
-              <button key={d} type="button" className={`${s.chip} ${sun === d ? s.chip_active : ''}`} onClick={() => setSun(d)} aria-pressed={sun === d}>
+              <button key={d} type="button" className={`${ui.chip} ${sun === d ? ui.chipActive : ''}`} onClick={() => setSun(d)} aria-pressed={sun === d}>
                 {T.suns[d]}{SUN_EXTRA[d] > 0 ? ` ${pct(SUN_EXTRA[d])}` : ''}
               </button>
             ))}
           </div>
         </div>
 
-        <div>
-          <span className={s.field_label}>{T.ceiling}</span>
-          <div className={s.chips}>
+        <div className={ui.field}>
+          <span className={ui.label}>{T.ceiling}</span>
+          <div className={`${ui.chips} ${ui.grow}`}>
             {CEILINGS.map(h => (
-              <button key={h} type="button" className={`${s.chip} ${ceilingM === h ? s.chip_active : ''}`} onClick={() => setCeilingM(h)} aria-pressed={ceilingM === h}>
+              <button key={h} type="button" className={`${ui.chip} ${ceilingM === h ? ui.chipActive : ''}`} onClick={() => setCeilingM(h)} aria-pressed={ceilingM === h}>
                 {h.toFixed(1)}m{h > 2.4 ? ` ${pct(h / 2.4 - 1)}` : ''}
               </button>
             ))}
           </div>
         </div>
 
-        <div>
-          <span className={s.field_label}>{T.conditions}</span>
+        <div className={ui.field}>
+          <span className={ui.label}>{T.conditions}</span>
           <div className={s.toggles}>
             {toggle(bigWindow, setBigWindow, T.bigWindow, '+10%')}
             {toggle(topFloor, setTopFloor, T.topFloor, '+10%')}
@@ -257,20 +258,20 @@ export default function AcCapacityCalcClient() {
         </div>
       </section>
 
-      <section className={s.card} aria-live="polite">
-        <h2 className={s.card_title}>{T.resultTitle}</h2>
+      <section className={`${ui.card} ${s.card}`} aria-live="polite">
+        <h2 className={ui.cardTitle}>{T.resultTitle}</h2>
         {!r ? (
           <p className={s.hint}>{T.empty}</p>
         ) : (
           <>
-            <div className={s.hero}>
-              <div className={s.hero_label}>{T.recommend}</div>
+            <div className={`${ui.result} ${s.hero}`}>
+              <div className={ui.resultLabel}>{T.recommend}</div>
               {r.productClass !== null ? (
-                <div className={s.hero_num}>
+                <div className={ui.resultValue}>
                   {r.productClass}<span className={s.hero_unit}>{isKo ? '평형' : '-pyeong class'}</span>
                 </div>
               ) : (
-                <div className={s.hero_num} style={{ fontSize: '1.6rem' }}>{T.split(split!.count, split!.cls)}</div>
+                <div className={ui.resultValue} style={{ fontSize: '1.6rem' }}>{T.split(split!.count, split!.cls)}</div>
               )}
               <div className={s.hero_sub}>{T.units[r.unit]}{unitHint ? ` · ${unitHint}` : ''}</div>
             </div>
@@ -290,8 +291,8 @@ export default function AcCapacityCalcClient() {
               </div>
             </div>
 
-            <div>
-              <span className={s.field_label}>{T.breakdown}</span>
+            <div className={ui.field}>
+              <span className={ui.label}>{T.breakdown}</span>
               <div className={s.breakdown}>
                 {rows.map(row => (
                   <div key={row.key} className={s.bk_row}>
@@ -305,17 +306,17 @@ export default function AcCapacityCalcClient() {
               </div>
             </div>
 
-            {extraSum > 0.8 && <div className={s.note}>{T.capped}</div>}
+            {extraSum > 0.8 && <div className={`${ui.notice} ${ui.amber}`}>{T.capped}</div>}
 
-            <button type="button" className={s.copy_btn} onClick={copy}>
+            <button type="button" className={`${ui.button} ${ui.secondary} ${s.copy_btn}`} onClick={copy}>
               {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? T.copied : T.copy}
             </button>
           </>
         )}
       </section>
 
-      <section className={s.card}>
-        <h2 className={s.card_title}>{T.tableTitle}</h2>
+      <section className={`${ui.card} ${s.card}`}>
+        <h2 className={ui.cardTitle}>{T.tableTitle}</h2>
         <div className={s.table_wrap}>
           <table className={s.table}>
             <thead>

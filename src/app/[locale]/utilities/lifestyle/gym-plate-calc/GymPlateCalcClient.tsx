@@ -11,6 +11,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import html2canvas from 'html2canvas';
 import s from './gym.module.css';
+import { ui } from '@/app/components/ui';
 
 // IWF 표준 컬러
 const PLATE_COLORS: Record<number, string> = {
@@ -144,7 +145,8 @@ export default function GymPlateCalcClient() {
     try {
       const canvas = await html2canvas(resultRef.current, {
         scale: 2,
-        backgroundColor: 'var(--surface-hover)',
+        // html2canvas는 CSS 변수를 못 읽으므로 현재 테마의 실제 색을 넘긴다
+        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--surface-hover').trim() || '#f8fafc',
         logging: false,
         useCORS: true,
       });
@@ -175,23 +177,23 @@ export default function GymPlateCalcClient() {
       <div ref={resultRef} className={s.result_area}>
         {/* Capture header (캡처 시 보이는 브랜드) */}
         <div className={s.capture_header}>
-          <Dumbbell size={20} color="#8b5cf6" />
+          <Dumbbell size={20} />
           <span>{t('title')}</span>
         </div>
 
         {/* 1RM Calculator */}
-        <div className={s.tool_panel}>
-          <h2 className={s.section_title}>{t('section_1rm')}</h2>
+        <div className={`${ui.card} ${s.tool_panel}`}>
+          <h2 className={ui.cardTitle}>{t('section_1rm')}</h2>
 
           <div className={s.input_row}>
-            <div className={s.input_group}>
-              <label className={s.label}>{t('weight_label')}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('weight_label')}</label>
               <input
                 type="number"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 placeholder="100"
-                className={s.input}
+                className={`${ui.input} ${ui.inputLg}`}
                 inputMode="decimal"
                 min="0"
                 max="999"
@@ -199,14 +201,14 @@ export default function GymPlateCalcClient() {
               />
             </div>
 
-            <div className={s.input_group}>
-              <label className={s.label}>{t('reps_label')}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('reps_label')}</label>
               <input
                 type="number"
                 value={reps}
                 onChange={(e) => setReps(e.target.value)}
                 placeholder="8"
-                className={s.input}
+                className={`${ui.input} ${ui.inputLg}`}
                 inputMode="numeric"
                 min="1"
                 max="15"
@@ -216,36 +218,36 @@ export default function GymPlateCalcClient() {
           </div>
 
           {showRepsTip && (
-            <div className={s.tip_box}>{repsTipText}</div>
+            <div className={ui.notice}>{repsTipText}</div>
           )}
 
-          <button onClick={calculate1RM} className={s.calc_button}>
+          <button onClick={calculate1RM} className={`${ui.button} ${ui.primary} ${ui.block}`}>
             {t('calc_1rm_btn')}
           </button>
 
-          {oneRMError && <div className={s.error_box}>{oneRMError}</div>}
+          {oneRMError && <div className={`${ui.notice} ${ui.red}`}>{oneRMError}</div>}
 
           {oneRM !== null && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className={s.result_card}
+              className={`${ui.result} ${s.result_card}`}
             >
-              <p className={s.result_label}>{t('result_1rm')}</p>
-              <p className={s.result_value}>{oneRM} kg</p>
+              <p className={ui.resultLabel}>{t('result_1rm')}</p>
+              <p className={ui.resultValue}>{oneRM} kg</p>
             </motion.div>
           )}
         </div>
 
         {/* Plate Loader */}
-        <div className={s.tool_panel}>
-          <h2 className={s.section_title}>{t('section_plate')}</h2>
+        <div className={`${ui.card} ${s.tool_panel}`}>
+          <h2 className={ui.cardTitle}>{t('section_plate')}</h2>
 
-          <div className={s.barbell_selector}>
-            <label className={s.label}>{t('barbell_label')}</label>
-            <div className={s.radio_group}>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('barbell_label')}</label>
+            <div className={`${ui.chips} ${s.radio_group}`}>
               {[20, 15].map((w) => (
-                <label key={w} className={`${s.radio_label} ${barbellWeight === w ? s.radio_label_active : ''}`}>
+                <label key={w} className={`${ui.chip} ${barbellWeight === w ? ui.chipActive : ''}`}>
                   <input
                     type="radio"
                     checked={barbellWeight === w}
@@ -257,14 +259,14 @@ export default function GymPlateCalcClient() {
             </div>
           </div>
 
-          <div className={s.input_group}>
-            <label className={s.label}>{t('target_label')}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('target_label')}</label>
             <input
               type="number"
               value={targetWeight}
               onChange={(e) => setTargetWeight(e.target.value)}
               placeholder="140"
-              className={s.input}
+              className={`${ui.input} ${ui.inputLg}`}
               inputMode="decimal"
               min="0"
               max="999"
@@ -272,17 +274,16 @@ export default function GymPlateCalcClient() {
             />
           </div>
 
-          <button onClick={calculatePlates} className={s.calc_button}>
+          <button onClick={calculatePlates} className={`${ui.button} ${ui.primary} ${ui.block}`}>
             {t('calc_plate_btn')}
           </button>
 
-          {plateError && <div className={s.error_box}>{plateError}</div>}
+          {plateError && <div className={`${ui.notice} ${ui.red}`}>{plateError}</div>}
 
           {plates !== null && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={s.plate_result}
             >
               {plates.length === 0 ? (
                 <p className={s.info_text}>{t('info_empty_bar')}</p>
@@ -294,7 +295,7 @@ export default function GymPlateCalcClient() {
 
               {/* 실제/목표 무게 차이 안내 */}
               {hasDiff && (
-                <div className={s.diff_box}>
+                <div className={`${ui.notice} ${ui.amber} ${s.diff_box}`}>
                   {t('warning_diff_under', {
                     actual: actualWeight,
                     diff: diff > 0 ? `-${diff}` : `+${Math.abs(diff)}`,
@@ -398,10 +399,9 @@ export default function GymPlateCalcClient() {
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.25rem' }}>
         <button
           onClick={exportToImage}
-          className={s.save_button}
+          className={`${ui.button} ${ui.primary} ${s.save_button}`}
           disabled={!hasResult}
           aria-label={t('save_button')}
-          style={{ opacity: hasResult ? 1 : 0.5, cursor: hasResult ? 'pointer' : 'not-allowed' }}
         >
           <Download size={18} />
           {t('save_button')}

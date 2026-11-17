@@ -10,6 +10,7 @@ import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './saju-compatibility.module.css';
+import { ui } from '@/app/components/ui';
 
 /* ─── Types ───────────────────────────────────────────────── */
 
@@ -335,7 +336,7 @@ export default function SajuCompatibilityClient() {
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(el, {
         scale: 2,
-        backgroundColor: '#fff5f7',
+        backgroundColor: 'var(--tint-pink-bg)',
         useCORS: true,
       });
 
@@ -421,10 +422,10 @@ export default function SajuCompatibilityClient() {
 
       {/* ─── Form Step ─── */}
       {step === 'form' && (
-        <section className={s.fin_panel}>
+        <section className={`${ui.card} ${s.fin_panel}`}>
           {/* Inviter banner */}
           {isParticipantMode && inviterData && (
-            <div className={s.inviterBanner}>
+            <div className={`${ui.notice} ${ui.red} ${s.inviterBanner}`}>
               <p>
                 {isKo
                   ? `${inviterData.initial}님이 당신과의 궁합을 확인하고 싶어해요 💕`
@@ -434,52 +435,52 @@ export default function SajuCompatibilityClient() {
           )}
 
           {/* Name */}
-          <div className={s.formGroup}>
-            <label className={s.formLabel} htmlFor="saju-name">{isKo ? '별명 / 이니셜' : 'Nickname / Initial'}</label>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="saju-name">{isKo ? '별명 / 이니셜' : 'Nickname / Initial'}</label>
             <input
               id="saju-name"
-              className={s.textInput}
+              className={ui.input}
               type="text"
               maxLength={20}
               placeholder={isKo ? '예: 김○○, 별명, 이니셜' : 'e.g. Kim, nickname'}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <p className={s.formHelper}>{isKo ? '이름 전체를 입력하지 않아도 됩니다.' : 'You don\'t need to enter your full name.'}</p>
+            <p className={ui.hint}>{isKo ? '이름 전체를 입력하지 않아도 됩니다.' : 'You don\'t need to enter your full name.'}</p>
           </div>
 
           {/* Gender */}
-          <div className={s.formGroup}>
-            <label className={s.formLabel}>{isKo ? '성별' : 'Gender'}</label>
-            <div className={s.genderGroup}>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '성별' : 'Gender'}</label>
+            <div className={`${ui.chips} ${s.genderGroup}`}>
               <div className={s.genderOption}>
                 <input type="radio" id="gender-m" name="gender" value="M" checked={gender === 'M'} onChange={() => setGender('M')} />
-                <label className={s.genderLabel} htmlFor="gender-m">🙋‍♂️ {isKo ? '남성' : 'Male'}</label>
+                <label className={`${ui.chip} ${s.genderLabel} ${gender === 'M' ? ui.chipActive : ''}`} htmlFor="gender-m">🙋‍♂️ {isKo ? '남성' : 'Male'}</label>
               </div>
               <div className={s.genderOption}>
                 <input type="radio" id="gender-f" name="gender" value="F" checked={gender === 'F'} onChange={() => setGender('F')} />
-                <label className={s.genderLabel} htmlFor="gender-f">🙋‍♀️ {isKo ? '여성' : 'Female'}</label>
+                <label className={`${ui.chip} ${s.genderLabel} ${gender === 'F' ? ui.chipActive : ''}`} htmlFor="gender-f">🙋‍♀️ {isKo ? '여성' : 'Female'}</label>
               </div>
             </div>
           </div>
 
           {/* Birth date */}
-          <div className={s.formGroup}>
-            <label className={s.formLabel}>{isKo ? '생년월일 (양력)' : 'Date of Birth (Solar)'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '생년월일 (양력)' : 'Date of Birth (Solar)'}</label>
             <div className={s.dateRow}>
-              <select className={s.selectInput} value={year} onChange={(e) => setYear(e.target.value)} aria-label={isKo ? '출생 연도' : 'Birth year'}>
+              <select className={ui.input} value={year} onChange={(e) => setYear(e.target.value)} aria-label={isKo ? '출생 연도' : 'Birth year'}>
                 <option value="">{isKo ? '연도' : 'Year'}</option>
                 {Array.from({ length: 100 }, (_, i) => currentYear - i).map(y => (
                   <option key={y} value={y}>{y}</option>
                 ))}
               </select>
-              <select className={s.selectInput} value={month} onChange={(e) => setMonth(e.target.value)} aria-label={isKo ? '출생 월' : 'Birth month'}>
+              <select className={ui.input} value={month} onChange={(e) => setMonth(e.target.value)} aria-label={isKo ? '출생 월' : 'Birth month'}>
                 <option value="">{isKo ? '월' : 'Month'}</option>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                   <option key={m} value={m}>{m}{isKo ? '월' : ''}</option>
                 ))}
               </select>
-              <select className={s.selectInput} value={day} onChange={(e) => setDay(e.target.value)} aria-label={isKo ? '출생 일' : 'Birth day'}>
+              <select className={ui.input} value={day} onChange={(e) => setDay(e.target.value)} aria-label={isKo ? '출생 일' : 'Birth day'}>
                 <option value="">{isKo ? '일' : 'Day'}</option>
                 {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
                   <option key={d} value={d}>{d}{isKo ? '일' : ''}</option>
@@ -489,10 +490,10 @@ export default function SajuCompatibilityClient() {
           </div>
 
           {/* Birth time */}
-          <div className={s.formGroup}>
-            <label className={s.formLabel}>{isKo ? '태어난 시간' : 'Birth Time'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '태어난 시간' : 'Birth Time'}</label>
             <select
-              className={s.selectInput}
+              className={ui.input}
               value={hour}
               onChange={(e) => setHour(e.target.value)}
               disabled={unknownHour}
@@ -519,7 +520,7 @@ export default function SajuCompatibilityClient() {
 
           {/* Submit */}
           <button
-            className={s.submitBtn}
+            className={`${ui.button} ${ui.primary} ${ui.block} ${ui.lg}`}
             onClick={handleSubmit}
             disabled={!formValid}
             aria-label={isParticipantMode ? (isKo ? '궁합 보기' : 'Check compatibility') : (isKo ? '링크 생성하기' : 'Generate link')}
@@ -533,7 +534,7 @@ export default function SajuCompatibilityClient() {
 
       {/* ─── Share Step (Inviter) ─── */}
       {step === 'share' && (
-        <section className={s.fin_panel}>
+        <section className={`${ui.card} ${s.fin_panel}`}>
           <div className={s.shareSection}>
             <h3>{isKo ? '링크가 생성되었어요!' : 'Your link is ready!'}</h3>
             <p>{isKo ? '상대방에게 이 링크를 보내면 함께 궁합을 확인할 수 있어요.' : 'Send this link to your partner to check compatibility together.'}</p>
@@ -545,7 +546,7 @@ export default function SajuCompatibilityClient() {
             )}
           </div>
 
-          <button className={s.submitBtn} onClick={handleRestart} aria-label={isKo ? '처음부터 다시 하기' : 'Start over'} style={{ marginTop: '1rem' }}>
+          <button className={`${ui.button} ${ui.secondary} ${ui.block}`} onClick={handleRestart} aria-label={isKo ? '처음부터 다시 하기' : 'Start over'}>
             {isKo ? '처음부터 다시 하기' : 'Start Over'}
           </button>
         </section>
@@ -598,14 +599,14 @@ export default function SajuCompatibilityClient() {
 
           {/* Action buttons */}
           <div className={s.actionBtns} style={{ maxWidth: 540, margin: '0 auto', width: '100%' }}>
-            <button className={s.actionBtn} onClick={handleImageSave} aria-label={isKo ? '이미지로 저장' : 'Save as image'}>
+            <button className={`${ui.button} ${ui.secondary} ${ui.block}`} onClick={handleImageSave} aria-label={isKo ? '이미지로 저장' : 'Save as image'}>
               <Camera size={18} /> {isKo ? '이미지로 저장' : 'Save as Image'}
             </button>
-            <button className={s.actionBtn} onClick={() => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }} aria-label={isKo ? '결과 링크 복사' : 'Copy result link'}>
+            <button className={`${ui.button} ${ui.secondary} ${ui.block}`} onClick={() => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }} aria-label={isKo ? '결과 링크 복사' : 'Copy result link'}>
               <Link2 size={18} /> {isKo ? '결과 링크 복사' : 'Copy Result Link'}
             </button>
             {copied && <p className={s.copiedToast} style={{ textAlign: 'center' }}>{isKo ? '✅ 복사 완료!' : '✅ Copied!'}</p>}
-            <button className={`${s.actionBtnPrimary}`} onClick={handleRestart} aria-label={isKo ? '나도 테스트하기' : 'Try it yourself'}>
+            <button className={`${ui.button} ${ui.primary} ${ui.block}`} onClick={handleRestart} aria-label={isKo ? '나도 테스트하기' : 'Try it yourself'}>
               <HeartHandshake size={18} /> {isKo ? '나도 테스트하기' : 'Try it Yourself'}
             </button>
           </div>

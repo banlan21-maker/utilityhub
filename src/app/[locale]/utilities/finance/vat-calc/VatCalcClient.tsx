@@ -14,6 +14,7 @@ import {
   type SimplifiedIndustryId,
 } from '@/lib/vat';
 import s from './vat.module.css';
+import { ui } from '@/app/components/ui';
 
 type Tab = 'basic' | 'general' | 'simplified';
 
@@ -73,14 +74,14 @@ export default function VatCalcClient() {
   const moneyInput = ({ id, label, value, onChange, placeholder, hint }: {
     id: string; label: string; value: string; onChange: (v: string) => void; placeholder: string; hint?: string;
   }) => (
-    <div>
-      <label className={s.field_label} htmlFor={id}>{label}</label>
-      <div className={s.input_wrap}>
-        <input id={id} className={s.input} inputMode="numeric" placeholder={placeholder}
+    <div className={ui.field}>
+      <label className={ui.label} htmlFor={id}>{label}</label>
+      <div className={ui.inputGroup}>
+        <input id={id} className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" placeholder={placeholder}
           value={value} onChange={e => onChange(money(e.target.value))} />
-        <span className={s.suffix}>{isKo ? '원' : 'KRW'}</span>
+        <span className={ui.unit}>{isKo ? '원' : 'KRW'}</span>
       </div>
-      {hint && <p className={s.field_hint}>{hint}</p>}
+      {hint && <p className={ui.hint}>{hint}</p>}
     </div>
   );
 
@@ -91,14 +92,14 @@ export default function VatCalcClient() {
       <NavigationActions />
       <ToolHeader icon={<Calculator />} title={t('title')} subtitle={t('description')} />
 
-      <div className={s.tabs} role="tablist" aria-label={isKo ? '계산 종류' : 'Calculator type'}>
+      <div className={`${ui.segmented} ${s.tabs}`} role="tablist" aria-label={isKo ? '계산 종류' : 'Calculator type'}>
         {([
           ['basic', isKo ? '부가세 넣기·빼기' : 'Add / remove VAT', isKo ? '공급가액 ↔ 합계' : 'Net ↔ gross'],
           ['general', isKo ? '부가세 신고 (일반과세자)' : 'VAT return (general)', isKo ? '매출세액 − 매입세액' : 'Output − input tax'],
           ['simplified', isKo ? '간이과세자 부가세' : 'Simplified taxpayer', isKo ? '업종별 부가가치율' : 'Industry rates'],
         ] as const).map(([k, label, sub]) => (
           <button key={k} type="button" role="tab" aria-selected={tab === k}
-            className={`${s.tab} ${tab === k ? s.tab_active : ''}`} onClick={() => setTab(k)}>
+            className={`${ui.segment} ${tab === k ? ui.segmentActive : ''}`} onClick={() => setTab(k)}>
             {label}<small>{sub}</small>
           </button>
         ))}
@@ -106,22 +107,22 @@ export default function VatCalcClient() {
 
       {/* ── 부가세 넣기·빼기 ── */}
       {tab === 'basic' && (
-        <section className={s.card}>
-          <h2 className={s.card_title}>{isKo ? '부가세 넣기·빼기' : 'Add or remove VAT'}</h2>
-          <div className={s.chips}>
-            <button type="button" className={`${s.chip} ${mode === 'add' ? s.chip_active : ''}`} aria-pressed={mode === 'add'} onClick={() => setMode('add')}>
+        <section className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{isKo ? '부가세 넣기·빼기' : 'Add or remove VAT'}</h2>
+          <div className={`${ui.chips} ${ui.grow}`}>
+            <button type="button" className={`${ui.chip} ${mode === 'add' ? ui.chipActive : ''}`} aria-pressed={mode === 'add'} onClick={() => setMode('add')}>
               {isKo ? '공급가액 → 합계' : 'Net → total'}
             </button>
-            <button type="button" className={`${s.chip} ${mode === 'split' ? s.chip_active : ''}`} aria-pressed={mode === 'split'} onClick={() => setMode('split')}>
+            <button type="button" className={`${ui.chip} ${mode === 'split' ? ui.chipActive : ''}`} aria-pressed={mode === 'split'} onClick={() => setMode('split')}>
               {isKo ? '합계 → 공급가액·세액' : 'Total → net + VAT'}
             </button>
           </div>
           {moneyInput({ id: "vt-amount", value: amountText, onChange: setAmountText, placeholder: mode === 'add' ? '100,000' : '110,000', label: mode === 'add' ? t('label.supplyAmount') : t('label.totalAmount') })}
           <div className={s.foreign}>
             <span>{isKo ? '세율' : 'Rate'}:</span>
-            <button type="button" className={`${s.mini} ${rate === 10 ? s.mini_active : ''}`} onClick={() => setRate(10)}>{isKo ? '한국·일본 10%' : 'Korea / Japan 10%'}</button>
+            <button type="button" className={`${ui.chip} ${ui.pill} ${rate === 10 ? ui.chipActive : ''}`} onClick={() => setRate(10)}>{isKo ? '한국·일본 10%' : 'Korea / Japan 10%'}</button>
             {FOREIGN_RATES.filter(f => f.rate !== 10).map(f => (
-              <button key={f.en} type="button" className={`${s.mini} ${rate === f.rate ? s.mini_active : ''}`} onClick={() => setRate(f.rate)}>
+              <button key={f.en} type="button" className={`${ui.chip} ${ui.pill} ${rate === f.rate ? ui.chipActive : ''}`} onClick={() => setRate(f.rate)}>
                 {isKo ? f.ko : f.en} {f.rate}%
               </button>
             ))}
@@ -139,7 +140,7 @@ export default function VatCalcClient() {
                 </div>
                 <div className={`${s.row} ${s.row_total}`}><span>{isKo ? '합계 (부가세 포함)' : 'Total incl. VAT'}</span><span className={s.val}>{won(split.total)}</span></div>
               </div>
-              <button type="button" className={s.copy_btn} onClick={handleCopy}>
+              <button type="button" className={`${ui.button} ${ui.secondary} ${s.copy_btn}`} onClick={handleCopy}>
                 {copied ? <Check size={16} /> : <Copy size={16} />} {copied ? (isKo ? '복사됨' : 'Copied') : (isKo ? '결과 복사' : 'Copy')}
               </button>
             </>
@@ -149,18 +150,18 @@ export default function VatCalcClient() {
 
       {/* ── 일반과세자 신고 ── */}
       {tab === 'general' && (
-        <section className={s.card}>
-          <h2 className={s.card_title}>{isKo ? '부가세 신고 예상: 일반과세자' : 'VAT return estimate: general taxpayer'}</h2>
+        <section className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{isKo ? '부가세 신고 예상: 일반과세자' : 'VAT return estimate: general taxpayer'}</h2>
           <p className={s.hint}>
             {isKo
               ? '개인 일반과세자는 6개월마다(1월·7월 25일까지) 신고합니다. 그 기간 매출에서 받은 부가세(매출세액)에서, 사업용으로 산 물건·서비스에 낸 부가세(매입세액)를 뺀 금액을 냅니다.'
               : 'Individual general taxpayers file every six months (by 25 January and 25 July). You pay the VAT collected on sales minus the VAT paid on business purchases.'}
           </p>
-          <div className={s.chips}>
-            <button type="button" className={`${s.chip} ${!inputIncludesVat ? s.chip_active : ''}`} aria-pressed={!inputIncludesVat} onClick={() => setInputIncludesVat(false)}>
+          <div className={`${ui.chips} ${ui.grow}`}>
+            <button type="button" className={`${ui.chip} ${!inputIncludesVat ? ui.chipActive : ''}`} aria-pressed={!inputIncludesVat} onClick={() => setInputIncludesVat(false)}>
               {isKo ? '공급가액(부가세 제외)으로 입력' : 'Enter net amounts'}
             </button>
-            <button type="button" className={`${s.chip} ${inputIncludesVat ? s.chip_active : ''}`} aria-pressed={inputIncludesVat} onClick={() => setInputIncludesVat(true)}>
+            <button type="button" className={`${ui.chip} ${inputIncludesVat ? ui.chipActive : ''}`} aria-pressed={inputIncludesVat} onClick={() => setInputIncludesVat(true)}>
               {isKo ? '부가세 포함 금액으로 입력' : 'Enter VAT-inclusive amounts'}
             </button>
           </div>
@@ -191,16 +192,16 @@ export default function VatCalcClient() {
 
       {/* ── 간이과세자 ── */}
       {tab === 'simplified' && (
-        <section className={s.card}>
-          <h2 className={s.card_title}>{isKo ? '간이과세자 부가세' : 'Simplified taxpayer VAT'}</h2>
+        <section className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{isKo ? '간이과세자 부가세' : 'Simplified taxpayer VAT'}</h2>
           <p className={s.hint}>
             {isKo
               ? `직전 연도 매출(공급대가)이 ${(SIMPLIFIED_THRESHOLD / 10000).toLocaleString('ko-KR')}만 원 미만인 개인사업자는 간이과세를 받을 수 있습니다(부동산임대업·과세유흥장소는 4,800만 원). 1년(1~12월) 매출에 업종별 부가가치율과 10%를 곱하고, 매입액의 0.5%를 뺍니다.`
               : `Individuals with prior-year sales under ₩${SIMPLIFIED_THRESHOLD.toLocaleString('en-US')} can be simplified taxpayers. Tax = annual sales × industry value-added rate × 10% − 0.5% of purchases.`}
           </p>
           <div>
-            <label className={s.field_label} htmlFor="vt-ind">{isKo ? '업종' : 'Industry'}</label>
-            <select id="vt-ind" className={s.select} value={industry} onChange={e => setIndustry(e.target.value as SimplifiedIndustryId)}>
+            <label className={ui.label} htmlFor="vt-ind">{isKo ? '업종' : 'Industry'}</label>
+            <select id="vt-ind" className={ui.input} value={industry} onChange={e => setIndustry(e.target.value as SimplifiedIndustryId)}>
               {SIMPLIFIED_INDUSTRIES.map(x => <option key={x.id} value={x.id}>{(x.rate * 100).toFixed(0)}% · {isKo ? x.ko : x.en}</option>)}
             </select>
           </div>
@@ -229,7 +230,7 @@ export default function VatCalcClient() {
                 <div className={s.row}><span>{isKo ? '매입액 × 0.5% 공제' : 'Purchases × 0.5% credit'}</span><span className={`${s.val} ${s.val_minus}`}>-{won(simp.purchaseCredit)}</span></div>
                 <div className={`${s.row} ${s.row_total}`}><span>{isKo ? '납부세액' : 'VAT payable'}</span><span className={s.val}>{won(simp.payable)}</span></div>
               </div>
-              <h3 className={s.card_title} style={{ fontSize: '1rem' }}>{isKo ? '같은 매출·매입이 일반과세자라면' : 'If you were a general taxpayer'}</h3>
+              <h3 className={ui.cardTitle} style={{ fontSize: "1rem", margin: 0 }}>{isKo ? '같은 매출·매입이 일반과세자라면' : 'If you were a general taxpayer'}</h3>
               <div className={s.bars}>
                 <div className={s.bar_row}>
                   <span>{isKo ? '간이과세자' : 'Simplified'}</span>

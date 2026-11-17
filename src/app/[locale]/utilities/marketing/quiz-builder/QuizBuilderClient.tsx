@@ -23,6 +23,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './quiz.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface ResultType { id: string; emoji: string; title: string; description: string; }
@@ -163,26 +164,26 @@ export default function QuizBuilderClient() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
         {/* STEP 1: Basic Config */}
-        <section className={s.quiz_panel}>
-          <h2 className={s.quiz_section_title}><span className={s.quiz_step_badge}>1</span> {isKo ? '기본 설정' : 'Basic Config'}</h2>
+        <section className={ui.card}>
+          <h2 className={ui.cardTitle}><span className={s.quiz_step_badge}>1</span> {isKo ? '기본 설정' : 'Basic Config'}</h2>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
             <div style={{ textAlign: 'center' }}>
               <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}>{isKo ? '커버' : 'Cover'}</label>
-              <input value={quiz.coverEmoji} onChange={e => setBasic({ coverEmoji: e.target.value })} className={s.quiz_input} style={{ width: '4rem', fontSize: '2rem', height: '4rem', textAlign: 'center', padding: '0' }} maxLength={2} />
+              <input value={quiz.coverEmoji} onChange={e => setBasic({ coverEmoji: e.target.value })} className={ui.input} style={{ width: '4rem', fontSize: '2rem', height: '4rem', textAlign: 'center', padding: '0' }} maxLength={2} />
             </div>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <input value={quiz.title} onChange={e => setBasic({ title: e.target.value })} className={s.quiz_input} placeholder={isKo ? "테스트 제목 (예: 당신의 연애 유형은?)" : "Quiz Title"} />
-              <input value={quiz.description} onChange={e => setBasic({ description: e.target.value })} className={s.quiz_input} placeholder={isKo ? "소개 문구 (친구들에게 보여질 설명)" : "Introduction Text"} />
+              <input value={quiz.title} onChange={e => setBasic({ title: e.target.value })} className={ui.input} placeholder={isKo ? "테스트 제목 (예: 당신의 연애 유형은?)" : "Quiz Title"} />
+              <input value={quiz.description} onChange={e => setBasic({ description: e.target.value })} className={ui.input} placeholder={isKo ? "소개 문구 (친구들에게 보여질 설명)" : "Introduction Text"} />
             </div>
           </div>
         </section>
 
         {/* STEP 2: Result Types */}
-        <section className={s.quiz_panel}>
+        <section className={ui.card}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h2 className={s.quiz_section_title} style={{ margin: 0 }}><span className={s.quiz_step_badge}>2</span> {isKo ? '결과 유형' : 'Result Types'} ({quiz.resultTypes.length}/4)</h2>
+            <h2 className={ui.cardTitle} style={{ margin: 0 }}><span className={s.quiz_step_badge}>2</span> {isKo ? '결과 유형' : 'Result Types'} ({quiz.resultTypes.length}/4)</h2>
             {quiz.resultTypes.length < 4 && (
-              <button onClick={addRT} className={s.quiz_icon_button} style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', fontWeight: 800, color: '#8b5cf6', borderColor: '#8b5cf6', borderRadius: '0.5rem' }}>
+              <button onClick={addRT} className={`${ui.button} ${ui.secondary} ${ui.sm}`}>
                 <Plus size={16} /> {isKo ? '유형 추가' : 'Add Type'}
               </button>
             )}
@@ -191,38 +192,38 @@ export default function QuizBuilderClient() {
             {quiz.resultTypes.map(rt => (
               <div key={rt.id} className={s.quiz_card}>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <input value={rt.emoji} onChange={e => setRT(rt.id, { emoji: e.target.value })} className={s.quiz_input} style={{ width: '3rem', textAlign: 'center' }} maxLength={2} />
-                  <span style={{ fontWeight: 800, fontSize: '0.75rem', background: '#8b5cf6', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '0.3rem' }}>{isKo ? '유형' : 'Type'} {rt.id}</span>
-                  {quiz.resultTypes.length > 2 && <button onClick={() => removeRT(rt.id)} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#ef4444' }}><Trash2 size={16} /></button>}
+                  <input value={rt.emoji} onChange={e => setRT(rt.id, { emoji: e.target.value })} className={ui.input} style={{ width: '3rem', textAlign: 'center' }} maxLength={2} />
+                  <span className={ui.badge}>{isKo ? '유형' : 'Type'} {rt.id}</span>
+                  {quiz.resultTypes.length > 2 && <button onClick={() => removeRT(rt.id)} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'var(--tint-red-fg)' }}><Trash2 size={16} /></button>}
                 </div>
-                <input value={rt.title} onChange={e => setRT(rt.id, { title: e.target.value })} className={s.quiz_input} placeholder={isKo ? "유형 이름" : "Result Title"} />
-                <textarea value={rt.description} onChange={e => setRT(rt.id, { description: e.target.value })} className={s.quiz_input} style={{ resize: 'none' }} placeholder={isKo ? "유형에 대한 상세 설명..." : "Describe this result..."} rows={2} />
+                <input value={rt.title} onChange={e => setRT(rt.id, { title: e.target.value })} className={ui.input} placeholder={isKo ? "유형 이름" : "Result Title"} />
+                <textarea value={rt.description} onChange={e => setRT(rt.id, { description: e.target.value })} className={ui.input} style={{ resize: 'none' }} placeholder={isKo ? "유형에 대한 상세 설명..." : "Describe this result..."} rows={2} />
               </div>
             ))}
           </div>
         </section>
 
         {/* STEP 3: Questions */}
-        <section className={s.quiz_panel}>
+        <section className={ui.card}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h2 className={s.quiz_section_title} style={{ margin: 0 }}><span className={s.quiz_step_badge}>3</span> {isKo ? '질문 리스트' : 'Question List'} ({quiz.questions.length}/10)</h2>
-            <button onClick={addQ} className={s.quiz_icon_button} style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', fontWeight: 800, color: '#8b5cf6', borderColor: '#8b5cf6', borderRadius: '0.5rem' }}>
+            <h2 className={ui.cardTitle} style={{ margin: 0 }}><span className={s.quiz_step_badge}>3</span> {isKo ? '질문 리스트' : 'Question List'} ({quiz.questions.length}/10)</h2>
+            <button onClick={addQ} className={`${ui.button} ${ui.secondary} ${ui.sm}`}>
               <Plus size={16} /> {isKo ? '질문 추가' : 'Add Question'}
             </button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {quiz.questions.map((q, i) => (
-              <div key={q.id} className={s.quiz_card} style={{ borderLeft: '4px solid #8b5cf6' }}>
+              <div key={q.id} className={s.quiz_card} style={{ borderLeft: '4px solid var(--color-primary)' }}>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 800, color: '#8b5cf6' }}>Q{i+1}</span>
-                  <input value={q.text} onChange={e => setQText(q.id, e.target.value)} className={s.quiz_input} placeholder={isKo ? "질문을 입력하세요" : "Enter question text"} />
+                  <span style={{ fontWeight: 800, color: 'var(--color-primary)' }}>Q{i+1}</span>
+                  <input value={q.text} onChange={e => setQText(q.id, e.target.value)} className={ui.input} placeholder={isKo ? "질문을 입력하세요" : "Enter question text"} />
                   {quiz.questions.length > 1 && <button onClick={() => removeQ(q.id)} style={{ color: 'var(--text-muted)' }}><Trash2 size={18} /></button>}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingLeft: '2.5rem' }}>
                   {q.options.map((opt, oi) => (
                     <div key={opt.id} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                      <input value={opt.text} onChange={e => setOpt(q.id, opt.id, { text: e.target.value })} className={s.quiz_input} style={{ flex: 1 }} placeholder={isKo ? `선택지 ${oi+1}` : `Option ${oi+1}`} />
-                      <select value={opt.typeId} onChange={e => setOpt(q.id, opt.id, { typeId: e.target.value })} className={s.quiz_input} style={{ width: '8rem' }}>
+                      <input value={opt.text} onChange={e => setOpt(q.id, opt.id, { text: e.target.value })} className={ui.input} style={{ flex: 1 }} placeholder={isKo ? `선택지 ${oi+1}` : `Option ${oi+1}`} />
+                      <select value={opt.typeId} onChange={e => setOpt(q.id, opt.id, { typeId: e.target.value })} className={ui.input} style={{ width: '8rem' }}>
                         {quiz.resultTypes.map(rt => <option key={rt.id} value={rt.id}>{rt.emoji} {isKo ? '유형' : 'Type'} {rt.id}</option>)}
                       </select>
                     </div>
@@ -234,29 +235,29 @@ export default function QuizBuilderClient() {
         </section>
 
         {/* STEP 4: Generate */}
-        <section className={s.quiz_panel} style={{ textAlign: 'center', background: 'var(--color-primary-light)', border: '1px solid var(--border)' }}>
-          <h2 className={s.quiz_section_title} style={{ justifyContent: 'center' }}><span className={s.quiz_step_badge}>4</span> {isKo ? '테스트 완성' : 'Finish & Link'}</h2>
+        <section className={ui.card} style={{ textAlign: 'center', background: 'var(--color-primary-light)' }}>
+          <h2 className={ui.cardTitle} style={{ justifyContent: 'center' }}><span className={s.quiz_step_badge}>4</span> {isKo ? '테스트 완성' : 'Finish & Link'}</h2>
 
-          {errors.length > 0 && <div style={{ color: '#ef4444', marginBottom: '1rem', fontWeight: 600 }}>{errors[0]}</div>}
+          {errors.length > 0 && <div className={ui.error} style={{ marginBottom: '1rem' }}>{errors[0]}</div>}
 
-          <button onClick={handleGenerate} className={s.quiz_primary_button} style={{ margin: '0 auto 1.5rem' }}>
+          <button onClick={handleGenerate} className={`${ui.button} ${ui.primary} ${ui.lg}`} style={{ margin: '0 auto 1.5rem' }}>
             <Sparkles size={20} />
             {isKo ? '링크 생성하기' : 'Generate Quiz Link'}
           </button>
 
           {generatedUrl && (
-            <div className="animate-fade-in" style={{ maxWidth: '600px', margin: '0 auto', background: 'var(--surface)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
+            <div className={`animate-fade-in ${ui.card}`} style={{ maxWidth: '600px', margin: '0 auto' }}>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>{isKo ? '아래 주소를 복사해 친구들에게 공유하세요!' : 'Copy and share this link with your friends!'}</p>
               <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-                <input readOnly value={generatedUrl} className={s.quiz_input} style={{ fontSize: '0.8rem' }} />
+                <input readOnly value={generatedUrl} className={ui.input} style={{ fontSize: '0.8rem' }} />
                 <button
                   onClick={() => { navigator.clipboard.writeText(generatedUrl); setCopied(true); setTimeout(()=>setCopied(false), 2000); }}
-                  className={s.quiz_primary_button} style={{ padding: '0.5rem 1.5rem', fontSize: '0.85rem', background: copied ? '#10b981' : '#8b5cf6' }}
+                  className={`${ui.button} ${copied ? ui.green : ui.primary}`}
                 >
                   {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
                 </button>
               </div>
-              <a href={generatedUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#8b5cf6', fontWeight: 800, fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+              <a href={generatedUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', fontWeight: 800, fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                 <ExternalLink size={14} /> {isKo ? '미리보기' : 'Preview Live'}
               </a>
             </div>

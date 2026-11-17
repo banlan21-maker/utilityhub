@@ -10,6 +10,9 @@ import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import { TERMS, UNIT_CONVERSIONS, type TermCategory } from '@/lib/terms-db';
 import s from './construction-dictionary.module.css';
+import { ui } from '@/app/components/ui';
+
+const ORIGIN_TONE = { japanese: ui.amber, english: ui.blue, korean: ui.green } as const;
 
 const CATEGORY_KEYS: (TermCategory | 'all')[] = [
   'all', 'common', 'structure', 'carpentry', 'plaster', 'tile', 'plumbing', 'electric', 'scaffold', 'paint',
@@ -101,7 +104,7 @@ export default function ConstructionDictionaryClient() {
           <Search size={18} className={s.search_icon} />
           <input
             type="text"
-            className={s.search_input}
+            className={`${ui.input} ${ui.inputLg} ${s.search_input}`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('search_placeholder')}
@@ -127,7 +130,7 @@ export default function ConstructionDictionaryClient() {
           {CATEGORY_KEYS.map((k) => (
             <button
               key={k}
-              className={`${s.cat_btn} ${category === k ? s.cat_btn_active : ''}`}
+              className={`${ui.chip} ${ui.pill} ${s.cat_btn} ${category === k ? ui.chipActive : ''}`}
               onClick={() => setCategory(k)}
               aria-label={t(`cat_${k}` as 'cat_all')}
             >
@@ -143,12 +146,12 @@ export default function ConstructionDictionaryClient() {
           <div className={s.empty_msg}>{t('no_results')}</div>
         ) : (
           filtered.map((term) => (
-            <article key={`${term.category}-${term.term}`} className={s.card}>
+            <article key={`${term.category}-${term.term}`} className={`${ui.card} ${s.card}`}>
               <div className={s.card_top}>
-                <span className={s.card_category}>
+                <span className={ui.badge}>
                   {t(`cat_${term.category}` as 'cat_common')}
                 </span>
-                <span className={`${s.origin_badge} ${s[`origin_${term.origin}`]}`}>
+                <span className={`${ui.badge} ${ORIGIN_TONE[term.origin]}`}>
                   {t(`origin_${term.origin}` as 'origin_japanese')}
                 </span>
               </div>
@@ -168,36 +171,36 @@ export default function ConstructionDictionaryClient() {
       </div>
 
       {/* Converter */}
-      <section className={s.converter_panel}>
-        <h2 className={s.converter_title}>{t('converter_title')}</h2>
+      <section className={ui.card}>
+        <h2 className={ui.cardTitle}>{t('converter_title')}</h2>
 
         <div className={s.converter_section}>
           <div className={s.converter_section_title}>{t('converter_pyeong_m2')}</div>
           <div className={s.converter_row}>
-            <div className={s.converter_input_wrap}>
+            <div className={ui.inputGroup}>
               <input
                 type="text"
                 inputMode="decimal"
-                className={s.converter_input}
+                className={ui.input}
                 value={pyeong}
                 onChange={handleNumInput(handlePyeong)}
                 placeholder="0"
                 aria-label={t('converter_pyeong_label')}
               />
-              <span className={s.converter_unit}>{t('converter_pyeong_label')}</span>
+              <span className={ui.unit}>{t('converter_pyeong_label')}</span>
             </div>
             <span className={s.converter_arrow}>↔</span>
-            <div className={s.converter_input_wrap}>
+            <div className={ui.inputGroup}>
               <input
                 type="text"
                 inputMode="decimal"
-                className={s.converter_input}
+                className={ui.input}
                 value={m2}
                 onChange={handleNumInput(handleM2)}
                 placeholder="0"
                 aria-label={t('converter_m2_label')}
               />
-              <span className={s.converter_unit}>{t('converter_m2_label')}</span>
+              <span className={ui.unit}>{t('converter_m2_label')}</span>
             </div>
           </div>
         </div>
@@ -205,48 +208,48 @@ export default function ConstructionDictionaryClient() {
         <div className={s.converter_section}>
           <div className={s.converter_section_title}>{t('converter_jacchi_cm')}</div>
           <div className={s.converter_row_triple}>
-            <div className={s.converter_input_wrap}>
+            <div className={ui.inputGroup}>
               <input
                 type="text"
                 inputMode="decimal"
-                className={s.converter_input}
+                className={ui.input}
                 value={ja}
                 onChange={handleNumInput((v) => handleJaChi(v, chi))}
                 placeholder="0"
                 aria-label={t('converter_ja_label')}
               />
-              <span className={s.converter_unit}>{t('converter_ja_label')}</span>
+              <span className={ui.unit}>{t('converter_ja_label')}</span>
             </div>
-            <div className={s.converter_input_wrap}>
+            <div className={ui.inputGroup}>
               <input
                 type="text"
                 inputMode="decimal"
-                className={s.converter_input}
+                className={ui.input}
                 value={chi}
                 onChange={handleNumInput((v) => handleJaChi(ja, v))}
                 placeholder="0"
                 aria-label={t('converter_chi_label')}
               />
-              <span className={s.converter_unit}>{t('converter_chi_label')}</span>
+              <span className={ui.unit}>{t('converter_chi_label')}</span>
             </div>
             <span className={s.converter_arrow}>↔</span>
-            <div className={s.converter_input_wrap}>
+            <div className={ui.inputGroup}>
               <input
                 type="text"
                 inputMode="decimal"
-                className={s.converter_input}
+                className={ui.input}
                 value={cm}
                 onChange={handleNumInput(handleCm)}
                 placeholder="0"
                 aria-label={t('converter_cm_label')}
               />
-              <span className={s.converter_unit}>{t('converter_cm_label')}</span>
+              <span className={ui.unit}>{t('converter_cm_label')}</span>
             </div>
           </div>
         </div>
       </section>
 
-      <div className={s.disclaimer}>{t('tip_disclaimer')}</div>
+      <div className={`${ui.notice} ${ui.amber}`}>{t('tip_disclaimer')}</div>
 
       <ShareBar title={t('title')} description={t('subtitle')} />
       <RelatedTools toolId="utilities/utility/construction-dictionary" />

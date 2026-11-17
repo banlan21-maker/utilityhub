@@ -9,6 +9,7 @@ import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './sla-uptime-calc.module.css';
+import { ui } from '@/app/components/ui';
 
 /* ─── Constants ───────────────────────────────────────────── */
 
@@ -97,15 +98,15 @@ export default function SlaUptimeCalcClient() {
       <ToolHeader icon={<Activity />} title={t('title')} subtitle={t('description')} />
 
       {/* Input Panel */}
-      <section className={s.fin_panel}>
-        <div className={s.inputGroup}>
-          <label className={s.inputLabel} htmlFor="sla-input">
+      <section className={`${ui.card} ${s.fin_panel}`}>
+        <div className={`${ui.field} ${s.inputGroup}`}>
+          <label className={ui.label} htmlFor="sla-input">
             {isKo ? 'SLA 가동률 (%)' : 'SLA Uptime (%)'}
           </label>
-          <div className={s.inputWrapper}>
+          <div className={ui.inputGroup}>
             <input
               id="sla-input"
-              className={s.numInput}
+              className={`${ui.input} ${ui.inputLg} ${s.numInput}`}
               type="number"
               step="any"
               placeholder={isKo ? '예: 99.99' : 'e.g. 99.99'}
@@ -113,15 +114,15 @@ export default function SlaUptimeCalcClient() {
               onChange={handleChange}
               autoComplete="off"
             />
-            <span className={s.inputSuffix}>%</span>
+            <span className={ui.unit}>%</span>
           </div>
         </div>
 
-        <div className={s.quickBtns}>
+        <div className={`${ui.chips} ${ui.grow} ${s.quickBtns}`}>
           {QUICK_VALUES.map(v => (
             <button
               key={v}
-              className={inputVal === String(v) ? s.quickBtnActive : s.quickBtn}
+              className={`${ui.chip} ${inputVal === String(v) ? ui.chipActive : ''}`}
               onClick={() => handleQuick(v)}
               aria-label={`SLA ${v}%`}
             >
@@ -134,7 +135,7 @@ export default function SlaUptimeCalcClient() {
       {/* Result Grid */}
       <div className={s.resultGrid}>
         {periods.map((p, i) => (
-          <div key={p.key} className={i === 0 ? s.resultCardHighlight : s.resultCard}>
+          <div key={p.key} className={`${ui.card} ${i === 0 ? ui.violet : ''} ${s.resultCard}`}>
             <div className={s.cardLabel}>{p.label}</div>
             {p.hours !== null ? (
               <>

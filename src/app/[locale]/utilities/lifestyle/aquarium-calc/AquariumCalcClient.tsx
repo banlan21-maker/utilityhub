@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 
 // Fish Database
 interface Fish {
@@ -217,67 +218,58 @@ export default function AquariumCalcClient() {
         {/* Left Column - Input Section */}
         <div className="flex flex-col gap-6">
           {/* Tank Specifications */}
-          <div className="glass-panel" style={{ padding: '2rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               🐠 {t('step1Title')}
             </h2>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('tankLength')} (cm)
                 </label>
                 <input
                   type="number"
                   value={tankLength}
                   onChange={(e) => handleDimensionChange('length', parseFloat(e.target.value) || 0)}
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                  className={ui.input}
                 />
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('tankWidth')} (cm)
                 </label>
                 <input
                   type="number"
                   value={tankWidth}
                   onChange={(e) => handleDimensionChange('width', parseFloat(e.target.value) || 0)}
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                  className={ui.input}
                 />
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('tankHeight')} (cm)
                 </label>
                 <input
                   type="number"
                   value={tankHeight}
                   onChange={(e) => handleDimensionChange('height', parseFloat(e.target.value) || 0)}
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                  className={ui.input}
                 />
               </div>
             </div>
 
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div className={ui.field}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                <label className={ui.label}>
                   {t('tankLiters')} (L)
                 </label>
-                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                <div className={ui.segmented}>
                   <button
                     type="button"
                     onClick={switchToAutoMode}
                     aria-label={t('modeAuto')}
-                    style={{
-                      padding: '0.35rem 0.7rem',
-                      borderRadius: '0.5rem',
-                      border: `1px solid ${!useCustomLiters ? '#06b6d4' : 'var(--border)'}`,
-                      background: !useCustomLiters ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
-                      color: !useCustomLiters ? '#06b6d4' : 'var(--text-secondary)',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                    }}
+                    className={`${ui.segment} ${!useCustomLiters ? ui.segmentActive : ''}`}
                   >
                     {t('modeAuto')}
                   </button>
@@ -285,16 +277,7 @@ export default function AquariumCalcClient() {
                     type="button"
                     onClick={switchToCustomMode}
                     aria-label={t('modeCustom')}
-                    style={{
-                      padding: '0.35rem 0.7rem',
-                      borderRadius: '0.5rem',
-                      border: `1px solid ${useCustomLiters ? '#06b6d4' : 'var(--border)'}`,
-                      background: useCustomLiters ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
-                      color: useCustomLiters ? '#06b6d4' : 'var(--text-secondary)',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                    }}
+                    className={`${ui.segment} ${useCustomLiters ? ui.segmentActive : ''}`}
                   >
                     {t('modeCustom')}
                   </button>
@@ -308,33 +291,27 @@ export default function AquariumCalcClient() {
                   setTankLiters(parseFloat(e.target.value) || 0);
                 }}
                 min={0}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--border)',
-                  background: useCustomLiters ? 'rgba(255,255,255,0.05)' : 'rgba(6, 182, 212, 0.05)',
-                  color: 'var(--text-primary)',
-                }}
+                className={ui.input}
+                style={useCustomLiters ? undefined : { background: 'var(--tint-sky-bg)' }}
                 readOnly={!useCustomLiters}
               />
             </div>
           </div>
 
           {/* Add Fish */}
-          <div className="glass-panel" style={{ padding: '2rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               🔍 {t('step2Title')}
             </h2>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div className={ui.field} style={{ marginBottom: '1.5rem' }}>
+              <label className={ui.label}>
                 {t('selectFish')}
               </label>
               <select
                 value={selectedFishId}
                 onChange={(e) => setSelectedFishId(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)' }}
+                className={ui.input}
               >
                 <option value="">{t('selectFishPlaceholder')}</option>
                 {FISH_DATABASE.map(fish => (
@@ -346,12 +323,12 @@ export default function AquariumCalcClient() {
             </div>
 
             {selectedFishId && (
-              <div style={{ padding: '1rem', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '12px', border: '1px solid rgba(6, 182, 212, 0.3)', marginBottom: '1.5rem' }}>
+              <div className={`${ui.notice} ${ui.blue}`} style={{ marginBottom: '1.5rem' }}>
                 {(() => {
                   const fish = FISH_DATABASE.find(f => f.id === selectedFishId);
                   if (!fish) return null;
                   return (
-                    <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-primary)' }}>
+                    <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.875rem' }}>
                       <div><strong>{t('bioloadPerFish')}:</strong> {fish.bioloadPerFish}L</div>
                       <div><strong>{t('minTankSize')}:</strong> {fish.minTankSize}L</div>
                       <div><strong>{t('tempRange')}:</strong> {fish.tempRange[0]}-{fish.tempRange[1]}°C</div>
@@ -364,8 +341,8 @@ export default function AquariumCalcClient() {
             )}
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('quantity')}
                 </label>
                 <input
@@ -373,15 +350,14 @@ export default function AquariumCalcClient() {
                   value={quantity}
                   onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                   min={1}
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                  className={ui.input}
                 />
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-end' }}>
                 <button
                   onClick={handleAddFish}
                   disabled={!selectedFishId}
-                  className="primary-button"
-                  style={{ padding: '0.75rem 1.5rem', borderRadius: '12px', fontWeight: 700, whiteSpace: 'nowrap' }}
+                  className={`${ui.button} ${ui.primary}`}
                 >
                   ➕ {t('addToTank')}
                 </button>
@@ -391,8 +367,8 @@ export default function AquariumCalcClient() {
 
           {/* Current Tank */}
           {cart.length > 0 && (
-            <div className="glass-panel" style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-primary)' }}>
+            <div className={ui.card}>
+              <h3 className={ui.cardTitle}>
                 🎣 {t('currentTank')}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -422,11 +398,12 @@ export default function AquariumCalcClient() {
                       value={item.quantity}
                       onChange={(e) => handleUpdateQuantity(item.fish.id, parseInt(e.target.value) || 0)}
                       min={1}
-                      style={{ width: '60px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)', textAlign: 'center' }}
+                      className={ui.input}
+                      style={{ width: '72px', textAlign: 'center' }}
                     />
                     <button
                       onClick={() => handleRemoveFish(item.fish.id)}
-                      style={{ padding: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '8px', cursor: 'pointer', color: '#ef4444' }}
+                      className={`${ui.button} ${ui.danger} ${ui.sm}`}
                     >
                       🗑️
                     </button>
@@ -441,29 +418,16 @@ export default function AquariumCalcClient() {
         <div className="flex flex-col gap-6">
           {cart.length > 0 ? (
             <>
-              <div className="glass-panel animate-scale-in" style={{ padding: '2rem', border: `2px solid ${status.color}` }}>
+              <div className={`${ui.card} animate-scale-in`} style={{ border: `2px solid ${status.color}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                  <h2 style={{ fontSize: '1.5rem', color: 'var(--primary)', margin: 0 }}>
+                  <h2 className={ui.cardTitle} style={{ margin: 0 }}>
                     📊 {t('dashboard')}
                   </h2>
                   <button
                     type="button"
                     onClick={handleCopy}
                     aria-label={t('copyResult')}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      padding: '0.5rem 0.85rem',
-                      borderRadius: '0.65rem',
-                      border: `1px solid ${copied ? '#22c55e' : 'var(--border)'}`,
-                      background: copied ? 'rgba(34,197,94,0.1)' : 'var(--card-bg)',
-                      color: copied ? '#22c55e' : 'var(--text-primary)',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                    }}
+                    className={`${ui.button} ${ui.secondary} ${ui.sm}`}
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
                     {copied ? t('copyDone') : t('copyResult')}
@@ -536,16 +500,7 @@ export default function AquariumCalcClient() {
                     {alerts.map((alert, index) => (
                       <div
                         key={index}
-                        style={{
-                          padding: '1rem',
-                          background: alert.type === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(234, 179, 8, 0.1)',
-                          border: `1px solid ${alert.type === 'error' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(234, 179, 8, 0.3)'}`,
-                          borderRadius: '12px',
-                          color: 'var(--text-primary)',
-                          fontSize: '0.875rem',
-                          display: 'flex',
-                          gap: '0.5rem'
-                        }}
+                        className={`${ui.notice} ${alert.type === 'error' ? ui.red : ui.amber}`}
                       >
                         <span>{alert.type === 'error' ? '⚠️' : '💡'}</span>
                         <span>{alert.message}</span>
@@ -555,8 +510,8 @@ export default function AquariumCalcClient() {
                 )}
 
                 {bioloadMetrics.usagePercent <= 70 && alerts.length === 0 && (
-                  <div style={{ padding: '1.5rem', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '12px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+                  <div className={`${ui.notice} ${ui.green}`} style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                    <div style={{ fontSize: '2rem' }}>✅</div>
                     <div style={{ fontWeight: 700, marginBottom: '0.25rem', color: 'var(--text-primary)' }}>
                       {t('alertSafeTitle')}
                     </div>
@@ -568,7 +523,7 @@ export default function AquariumCalcClient() {
               </div>
             </>
           ) : (
-            <div className="glass-panel flex items-center justify-center" style={{ padding: '4rem', opacity: 0.5, minHeight: '400px' }}>
+            <div className={`${ui.card} flex items-center justify-center`} style={{ opacity: 0.6, minHeight: '400px' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🐠</div>
                 <p style={{ color: 'var(--text-secondary)' }}>{t('emptyTankMsg')}</p>
@@ -577,28 +532,6 @@ export default function AquariumCalcClient() {
           )}
         </div>
       </div>
-
-      <style jsx>{`
-        .primary-button {
-          background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
-          color: white !important;
-          border: none;
-          box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-          cursor: pointer;
-        }
-        .primary-button:hover:not(:disabled) {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5);
-        }
-        .primary-button:active:not(:disabled) {
-          transform: translateY(-1px);
-        }
-        .primary-button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      `}</style>
 
       {/* 공유하기 */}
       <ShareBar title={t('title')} description={t('subtitle')} />

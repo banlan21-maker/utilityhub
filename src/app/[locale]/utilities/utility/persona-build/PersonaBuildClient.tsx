@@ -13,6 +13,7 @@ import {
   type Card, type Mission, type Choice,
 } from '@/lib/persona-data';
 import s from './persona-build.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── 날짜 시드 (KST 고정) ───────────────────────────────────────
 function getDailySeed(): number {
@@ -256,7 +257,7 @@ export default function PersonaBuildClient() {
 
       {/* ── Start (캐릭터 + 미션 공개) ───────────────────── */}
       {gameState === 'start' && (
-        <section className={s.start_panel}>
+        <section className={ui.card}>
           <div className={s.section_title}>{t('today_character')}</div>
           <div className={s.card_row}>
             <div className={s.card} style={{ animationDelay: '0.05s' }}>
@@ -283,7 +284,7 @@ export default function PersonaBuildClient() {
             <div className={s.mission_desc}>{isKo ? mission.ko.desc : mission.en.desc}</div>
           </div>
 
-          <button className={s.start_btn} onClick={handleStart} aria-label={t('start_button')}>
+          <button className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${s.start_btn}`} onClick={handleStart} aria-label={t('start_button')}>
             {t('start_button')}
           </button>
         </section>
@@ -291,7 +292,7 @@ export default function PersonaBuildClient() {
 
       {/* ── Playing ─────────────────────────────────────── */}
       {gameState === 'playing' && (
-        <section className={s.play_panel}>
+        <section className={ui.card}>
           <div className={s.play_header}>
             <span className={s.play_mission_title}>{mission.emoji} {isKo ? mission.ko.title : mission.en.title}</span>
             <span className={s.play_progress_text}>{t('progress', { current: step + 1, total: mission.situations.length })}</span>

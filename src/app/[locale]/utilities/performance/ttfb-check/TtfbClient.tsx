@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './ttfb.module.css';
+import { ui } from '@/app/components/ui';
 
 interface TestResult {
   url: string;
@@ -163,7 +164,7 @@ export default function TtfbClient() {
 
       <ToolHeader icon={<Activity />} title={t('title')} subtitle={t('description')} />
 
-      <section className={s.ttfb_panel}>
+      <section className={`${ui.card} ${s.ttfb_panel}`}>
         {/* Input + buttons */}
         <div className={s.ttfb_input_group}>
           <input
@@ -174,13 +175,13 @@ export default function TtfbClient() {
             onKeyDown={handleKeyDown}
             placeholder={t('placeholder')}
             disabled={loading}
-            className={s.ttfb_input}
+            className={`${ui.input} ${s.ttfb_input}`}
             aria-label={isKo ? '테스트할 URL 입력' : 'Enter URL to test'}
           />
           <button
             onClick={() => runTest()}
             disabled={loading || !url.trim()}
-            className={s.ttfb_button}
+            className={`${ui.button} ${ui.primary} ${s.ttfb_button}`}
             aria-label={isKo ? '테스트 실행' : 'Run TTFB test'}
           >
             <Zap size={18} />
@@ -189,7 +190,7 @@ export default function TtfbClient() {
           <button
             onClick={runAverage}
             disabled={loading || !url.trim()}
-            className={s.ttfb_button_avg}
+            className={`${ui.button} ${ui.secondary} ${s.ttfb_button_avg}`}
             aria-label={isKo ? '3회 평균 측정' : 'Run 3-test average'}
           >
             <BarChart2 size={18} />
@@ -200,7 +201,7 @@ export default function TtfbClient() {
         </div>
 
         {error && (
-          <div className={s.ttfb_error}>
+          <div className={`${ui.notice} ${ui.red} ${s.ttfb_error}`}>
             <AlertCircle size={18} />
             {error}
           </div>
@@ -236,7 +237,7 @@ export default function TtfbClient() {
             <GradeBar ms={result.ttfb} />
             <button
               onClick={copyResult}
-              className={s.ttfb_copy_btn}
+              className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.ttfb_copy_btn}`}
               aria-label={isKo ? '결과 복사' : 'Copy result'}
             >
               {copied ? <Check size={16} /> : <Copy size={16} />}
@@ -248,9 +249,9 @@ export default function TtfbClient() {
         {/* Grade Guide */}
         <div className={s.ttfb_grade_guide}>
           {[
-            { emoji: '🟢', key: 'grade_good' as GradeKey, range: '< 200ms', color: '#10b981' },
-            { emoji: '🟡', key: 'grade_ok'   as GradeKey, range: '200–500ms', color: '#f59e0b' },
-            { emoji: '🔴', key: 'grade_poor' as GradeKey, range: '> 500ms',  color: '#ef4444' },
+            { emoji: '🟢', key: 'grade_good' as GradeKey, range: '< 200ms', color: 'var(--tint-green-fg)' },
+            { emoji: '🟡', key: 'grade_ok'   as GradeKey, range: '200–500ms', color: 'var(--tint-amber-fg)' },
+            { emoji: '🔴', key: 'grade_poor' as GradeKey, range: '> 500ms',  color: 'var(--tint-red-fg)' },
           ].map(g => (
             <div key={g.key} className={s.ttfb_grade_item}>
               <span className={s.ttfb_grade_emoji}>{g.emoji}</span>
@@ -262,10 +263,10 @@ export default function TtfbClient() {
       </section>
 
       {history.length > 0 && (
-        <div className={s.ttfb_history}>
+        <div className={`${ui.card} ${s.ttfb_history}`}>
           <div className={s.ttfb_history_header}>
-            <h3 className={s.ttfb_history_title}>{t('history_title')}</h3>
-            <button onClick={() => setHistory([])} className={s.ttfb_history_clear}>
+            <h3 className={`${ui.cardTitle} ${s.ttfb_history_title}`}>{t('history_title')}</h3>
+            <button onClick={() => setHistory([])} className={`${ui.button} ${ui.ghost} ${ui.sm}`}>
               {t('history_clear')}
             </button>
           </div>

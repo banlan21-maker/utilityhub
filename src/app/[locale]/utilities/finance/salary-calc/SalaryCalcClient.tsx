@@ -11,6 +11,7 @@ import ShareBar from '@/app/components/ShareBar';
 import { CURRENT_DATA, WEEKS_PER_MONTH } from '@/constants/wageConfig';
 import AnnualSalaryPanel from './AnnualSalaryPanel';
 import s from './salary.module.css';
+import { ui } from '@/app/components/ui';
 
 type Country = 'KR' | 'US';
 type KRMode = 'annual' | 'hourly';
@@ -106,11 +107,11 @@ function MiniStepper({
 
 function MultiplierPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   return (
-    <div className={s.sal_mult_row}>
+    <div className={ui.chips}>
       {MULTIPLIERS.map(m => (
         <button
           key={m}
-          className={`${s.sal_mult_btn} ${value === m ? s.sal_mult_btn_active : ''}`}
+          className={`${ui.chip} ${ui.pill} ${value === m ? ui.chipActive : ''}`}
           onClick={() => onChange(m)}
         >
           ×{m.toFixed(1)}
@@ -199,14 +200,9 @@ export default function SalaryCalcClient() {
       />
 
       {/* Country Tabs */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
+      <div className={`${ui.segmented} ${s.sal_seg}`}>
         {(['KR', 'US'] as Country[]).map(c => (
-          <button key={c} onClick={() => switchCountry(c)} style={{
-            padding: '0.75rem 2rem', borderRadius: '2rem', border: '1px solid var(--border)',
-            background: country === c ? '#8b5cf6' : 'var(--surface)',
-            color: country === c ? 'white' : 'var(--text-secondary)',
-            fontWeight: 800, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s',
-          }}>
+          <button key={c} onClick={() => switchCountry(c)} className={`${ui.segment} ${country === c ? ui.segmentActive : ''}`}>
             {c === 'KR' ? '🇰🇷 KOREA' : '🇺🇸 USA'}
           </button>
         ))}
@@ -214,15 +210,9 @@ export default function SalaryCalcClient() {
 
       {/* KR 계산 방식: 연봉·월급 / 시급·알바 */}
       {isKRW && (
-        <div role="tablist" aria-label={isKo ? '계산 방식' : 'Calculation mode'} style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+        <div role="tablist" aria-label={isKo ? '계산 방식' : 'Calculation mode'} className={`${ui.segmented} ${s.sal_seg}`}>
           {(['annual', 'hourly'] as KRMode[]).map(m => (
-            <button key={m} role="tab" aria-selected={krMode === m} onClick={() => setKrMode(m)} style={{
-              padding: '0.6rem 1.5rem', borderRadius: '0.75rem',
-              border: `1.5px solid ${krMode === m ? 'var(--primary)' : 'var(--border)'}`,
-              background: krMode === m ? 'var(--surface-hover)' : 'var(--surface)',
-              color: krMode === m ? 'var(--primary)' : 'var(--text-secondary)',
-              fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer',
-            }}>
+            <button key={m} role="tab" aria-selected={krMode === m} onClick={() => setKrMode(m)} className={`${ui.segment} ${krMode === m ? ui.segmentActive : ''}`}>
               {m === 'annual'
                 ? (isKo ? '💼 연봉·월급 실수령액' : '💼 Annual / Monthly Salary')
                 : (isKo ? '⏱️ 시급·알바 (주휴수당)' : '⏱️ Hourly / Part-time')}
@@ -234,14 +224,14 @@ export default function SalaryCalcClient() {
       {showAnnual ? <AnnualSalaryPanel isKo={isKo} /> : (
       <div className={s.sal_main_grid}>
         {/* ── Left: Input Panel ── */}
-        <div className={s.sal_card}>
+        <div className={ui.card}>
 
           {/* 시급 */}
-          <div className={s.sal_input_group}>
-            <label className={s.sal_label}>{isKo ? '시급 (Hourly Wage)' : 'Hourly Wage'}</label>
-            <div style={{ position: 'relative' }}>
+          <div className={`${ui.field} ${s.sal_input_group}`}>
+            <label className={ui.label}>{isKo ? '시급 (Hourly Wage)' : 'Hourly Wage'}</label>
+            <div className={ui.inputGroup}>
               <input
-                className={s.sal_input}
+                className={`${ui.input} ${ui.inputLg}`}
                 inputMode="decimal"
                 value={wageText}
                 onChange={e => {
@@ -250,11 +240,11 @@ export default function SalaryCalcClient() {
                 }}
                 placeholder="0"
               />
-              <span style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 900, color: 'var(--text-muted)', fontSize: '1.25rem' }}>
+              <span className={ui.unit}>
                 {isKRW ? '₩' : '$'}
               </span>
             </div>
-            <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+            <div className={ui.hint}>
               {isKRW
                 ? `2026 최저시급 ₩${CURRENT_DATA.KR.minWage.toLocaleString()}`
                 : `Federal min. wage $${CURRENT_DATA.US.minWage.toFixed(2)}`}
@@ -279,7 +269,7 @@ export default function SalaryCalcClient() {
                   <MiniStepper value={regular.hoursPerDay} min={0} max={24} unit="h"
                     onChange={v => setRegular(b => ({ ...b, hoursPerDay: v }))} />
                 </div>
-                <span style={{ color: '#cbd5e1', fontWeight: 700, marginTop: 16 }}>×</span>
+                <span style={{ color: 'var(--text-muted)', fontWeight: 700, marginTop: 16 }}>×</span>
                 <div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
                   <MiniStepper value={regular.daysPerWeek} min={0} max={7} unit={isKo ? '일' : 'd'}
@@ -308,7 +298,7 @@ export default function SalaryCalcClient() {
                   <MiniStepper value={overtime.hoursPerDay} min={0} max={12} unit="h"
                     onChange={v => setOvertime(b => ({ ...b, hoursPerDay: v }))} />
                 </div>
-                <span style={{ color: '#cbd5e1', fontWeight: 700, marginTop: 16 }}>×</span>
+                <span style={{ color: 'var(--text-muted)', fontWeight: 700, marginTop: 16 }}>×</span>
                 <div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
                   <MiniStepper value={overtime.daysPerWeek} min={0} max={7} unit={isKo ? '일' : 'd'}
@@ -320,7 +310,7 @@ export default function SalaryCalcClient() {
                 <MultiplierPicker value={overtime.multiplier} onChange={v => setOvertime(b => ({ ...b, multiplier: v }))} />
               </div>
               {overtime.hoursPerDay * overtime.daysPerWeek > 0 && (
-                <div className={s.sal_block_preview} style={{ color: '#f59e0b' }}>
+                <div className={s.sal_block_preview} style={{ color: 'var(--tint-amber-fg)' }}>
                   {isKo ? '주' : 'wk'} {overtime.hoursPerDay * overtime.daysPerWeek}h × {overtime.multiplier}x → {fmt(overtime.hoursPerDay * overtime.daysPerWeek * hourlyWage * overtime.multiplier)}
                 </div>
               )}
@@ -341,7 +331,7 @@ export default function SalaryCalcClient() {
                   <MiniStepper value={special.hoursPerDay} min={0} max={24} unit="h"
                     onChange={v => setSpecial(b => ({ ...b, hoursPerDay: v }))} />
                 </div>
-                <span style={{ color: '#cbd5e1', fontWeight: 700, marginTop: 16 }}>×</span>
+                <span style={{ color: 'var(--text-muted)', fontWeight: 700, marginTop: 16 }}>×</span>
                 <div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.25rem' }}>{isKo ? '근무일수/주' : 'days/wk'}</div>
                   <MiniStepper value={special.daysPerWeek} min={0} max={7} unit={isKo ? '일' : 'd'}
@@ -353,7 +343,7 @@ export default function SalaryCalcClient() {
                 <MultiplierPicker value={special.multiplier} onChange={v => setSpecial(b => ({ ...b, multiplier: v }))} />
               </div>
               {special.hoursPerDay * special.daysPerWeek > 0 && (
-                <div className={s.sal_block_preview} style={{ color: '#ef4444' }}>
+                <div className={s.sal_block_preview} style={{ color: 'var(--tint-red-fg)' }}>
                   {isKo ? '주' : 'wk'} {special.hoursPerDay * special.daysPerWeek}h × {special.multiplier}x → {fmt(special.hoursPerDay * special.daysPerWeek * hourlyWage * special.multiplier)}
                 </div>
               )}
@@ -376,7 +366,7 @@ export default function SalaryCalcClient() {
                   </div>
                   <button onClick={() => setHolidayOn(v => !v)} style={{
                     width: '44px', height: '24px', borderRadius: '12px',
-                    background: holidayOn ? '#8b5cf6' : '#cbd5e1',
+                    background: holidayOn ? 'var(--primary-fill)' : 'var(--text-muted)',
                     position: 'relative', border: 'none', cursor: 'pointer', flexShrink: 0,
                   }}>
                     <div style={{ width: '18px', height: '18px', background: 'var(--surface)', borderRadius: '50%', position: 'absolute', top: '3px', left: holidayOn ? '23px' : '3px', transition: 'left 0.2s' }} />
@@ -384,30 +374,18 @@ export default function SalaryCalcClient() {
                 </div>
 
                 {/* 공제 선택 */}
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <div className={`${ui.chips} ${ui.grow}`}>
                   {(['none', 'withholdingTax', 'insurance'] as KRDeduction[]).map(k => (
-                    <button key={k} onClick={() => setKrDeduction(k)} style={{
-                      flex: 1, minWidth: 80, padding: '0.6rem 0.5rem', borderRadius: '0.75rem',
-                      border: `1.5px solid ${krDeduction === k ? '#8b5cf6' : '#e2e8f0'}`,
-                      background: krDeduction === k ? 'var(--color-primary-light)' : 'var(--surface)',
-                      color: krDeduction === k ? '#8b5cf6' : 'var(--text-secondary)',
-                      fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer',
-                    }}>
+                    <button key={k} onClick={() => setKrDeduction(k)} className={`${ui.chip} ${krDeduction === k ? ui.chipActive : ''}`}>
                       {k === 'none' ? (isKo ? '공제 전' : 'Gross') : k === 'withholdingTax' ? '3.3%' : (isKo ? `4대보험 ${insurancePct}%` : `${insurancePct}% Insurance`)}
                     </button>
                   ))}
                 </div>
               </>
             ) : (
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div className={`${ui.chips} ${ui.grow}`}>
                 {(['none', 'fica', 'ficaFederal'] as USDeduction[]).map(u => (
-                  <button key={u} onClick={() => setUsDeduction(u)} style={{
-                    flex: 1, minWidth: 90, padding: '0.6rem 0.5rem', borderRadius: '0.75rem',
-                    border: `1.5px solid ${usDeduction === u ? '#8b5cf6' : '#e2e8f0'}`,
-                    background: usDeduction === u ? 'var(--color-primary-light)' : 'var(--surface)',
-                    color: usDeduction === u ? '#8b5cf6' : 'var(--text-secondary)',
-                    fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer',
-                  }}>
+                  <button key={u} onClick={() => setUsDeduction(u)} className={`${ui.chip} ${usDeduction === u ? ui.chipActive : ''}`}>
                     {u === 'none' ? 'Gross' : u === 'fica' ? 'FICA 7.65%' : 'FICA+Federal ~22%'}
                   </button>
                 ))}
@@ -417,7 +395,7 @@ export default function SalaryCalcClient() {
         </div>
 
         {/* ── Right: Receipt ── */}
-        <div className={s.sal_receipt}>
+        <div className={`${s.sal_receipt} light-island`}>
           <div className={s.sal_receipt_header}>
             <div className={s.sal_receipt_label}>{isKo ? '예상 월 실수령액' : 'Estimated Monthly Net'}</div>
             <div className={s.sal_receipt_net}>{fmt(res.monthlyNet)}</div>

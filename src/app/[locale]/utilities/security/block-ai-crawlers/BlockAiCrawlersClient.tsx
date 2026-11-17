@@ -10,6 +10,7 @@ import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import { AI_BOTS, normalizePaths, hasWildcard, type AiBot } from '@/lib/ai-bots';
 import s from './block-ai-crawlers.module.css';
+import { ui } from '@/app/components/ui';
 
 type Scope = 'all' | 'folder' | 'image';
 type Output = 'robots' | 'meta' | 'header' | 'llms';
@@ -208,11 +209,11 @@ export default function BlockAiCrawlersClient() {
       <ToolHeader icon={<ShieldOff />} title={t('title')} subtitle={t('subtitle')} />
 
       {/* STEP 1: 봇 선택 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('step_bots')}</div>
+      <section className={ui.card}>
+        <div className={ui.cardTitle}>{t('step_bots')}</div>
         <div className={s.bot_actions}>
-          <button className={s.bot_action_btn} onClick={selectMajor}>{t('select_all_major')}</button>
-          <button className={s.bot_action_btn} onClick={deselectAll}>{t('deselect_all')}</button>
+          <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={selectMajor}>{t('select_all_major')}</button>
+          <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={deselectAll}>{t('deselect_all')}</button>
         </div>
 
         <div className={s.bot_group_label}>{t('bots_major')}</div>
@@ -221,22 +222,22 @@ export default function BlockAiCrawlersClient() {
         </div>
 
         <div className={s.accordion_header} onClick={() => setMoreOpen((v) => !v)} role="button" aria-expanded={moreOpen}>
-          <span className={s.bot_group_label} style={{ margin: 0 }}>
-            {moreOpen ? <ChevronDown size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> : <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle' }} />}
+          <span className={`${s.bot_group_label} ${s.no_margin}`}>
+            {moreOpen ? <ChevronDown size={14} className={s.chev} /> : <ChevronRight size={14} className={s.chev} />}
             {' '}{t('bots_more')}
           </span>
           <span className={s.accordion_count}>{t('bots_more_count', { n: moreSelectedCount })}</span>
         </div>
         {moreOpen && (
-          <div className={s.bot_grid} style={{ marginTop: '0.6rem' }}>
+          <div className={`${s.bot_grid} ${s.more_grid}`}>
             {AI_BOTS.filter((b) => !b.major).map(renderBotCard)}
           </div>
         )}
       </section>
 
       {/* STEP 2: 차단 범위 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('step_scope')}</div>
+      <section className={ui.card}>
+        <div className={ui.cardTitle}>{t('step_scope')}</div>
         <div className={s.scope_list}>
           {([
             ['all', t('scope_all'), t('scope_all_desc')],
@@ -263,22 +264,22 @@ export default function BlockAiCrawlersClient() {
           <div className={s.folder_input_wrap}>
             <input
               type="text"
-              className={s.folder_input}
+              className={`${ui.input} ${s.folder_input}`}
               value={folderInput}
               onChange={(e) => setFolderInput(e.target.value)}
               onBlur={handleFolderBlur}
               placeholder={t('folder_placeholder')}
               aria-label={t('scope_folder')}
             />
-            {wildcardWarn && <div className={s.wildcard_warning} aria-live="polite">{t('path_wildcard_warning')}</div>}
+            {wildcardWarn && <div className={`${ui.notice} ${ui.amber} ${s.box_gap}`} aria-live="polite">{t('path_wildcard_warning')}</div>}
           </div>
         )}
       </section>
 
       {/* STEP 3: 산출물 */}
-      <section className={`${s.panel} ${s.output_section}`}>
-        <div className={s.section_title}>{t('step_output')}</div>
-        <div className={s.output_tabs}>
+      <section className={`${ui.card} ${s.output_section}`}>
+        <div className={ui.cardTitle}>{t('step_output')}</div>
+        <div className={`${ui.segmented} ${s.output_tabs}`}>
           {([
             ['robots', t('output_robots')],
             ['meta', t('output_meta')],
@@ -287,7 +288,7 @@ export default function BlockAiCrawlersClient() {
           ] as [Output, string][]).map(([val, label]) => (
             <button
               key={val}
-              className={`${s.output_tab} ${output === val ? s.output_tab_active : ''}`}
+              className={`${ui.segment} ${output === val ? ui.segmentActive : ''}`}
               onClick={() => setOutput(val)}
               aria-label={label}
             >
@@ -297,11 +298,11 @@ export default function BlockAiCrawlersClient() {
         </div>
 
         {output === 'header' && (
-          <div className={s.platform_sub_tabs}>
+          <div className={`${ui.chips} ${s.platform_sub_tabs}`}>
             {(['apache', 'nginx'] as HeaderPlatform[]).map((p) => (
               <button
                 key={p}
-                className={`${s.platform_sub_tab} ${headerPlatform === p ? s.platform_sub_tab_active : ''}`}
+                className={`${ui.chip} ${ui.pill} ${headerPlatform === p ? ui.chipActive : ''}`}
                 onClick={() => setHeaderPlatform(p)}
                 aria-label={p}
               >
@@ -347,17 +348,17 @@ export default function BlockAiCrawlersClient() {
         {noBots && (
           <div className={s.no_bots_overlay} role="status" aria-live="polite">
             <div className={s.no_bots_msg}>{t('no_bots_title')}</div>
-            <button className={s.no_bots_recover_btn} onClick={selectMajor}>{t('no_bots_recover')}</button>
+            <button className={`${ui.button} ${ui.primary} ${ui.sm}`} onClick={selectMajor}>{t('no_bots_recover')}</button>
           </div>
         )}
 
-        {scopeMismatchWarning && <div className={s.danger_box}>{scopeMismatchWarning}</div>}
-        {!noBots && <div className={s.guide_box}>{guide}</div>}
+        {scopeMismatchWarning && <div className={`${ui.notice} ${ui.amber} ${s.box_gap}`}>{scopeMismatchWarning}</div>}
+        {!noBots && <div className={`${ui.notice} ${ui.gray} ${s.box_gap}`}>{guide}</div>}
       </section>
 
       {/* AI 봇별 차단 효과 표 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('effect_title')}</div>
+      <section className={ui.card}>
+        <div className={ui.cardTitle}>{t('effect_title')}</div>
         <div className={s.effect_table_wrap}>
           <table className={s.effect_table}>
             <thead>
@@ -381,9 +382,9 @@ export default function BlockAiCrawlersClient() {
       </section>
 
       {/* 검증 안내 */}
-      <section className={s.panel}>
-        <div className={s.section_title}>{t('verify_title')}</div>
-        <div className={s.verify_box}>{t('verify_desc')}</div>
+      <section className={ui.card}>
+        <div className={ui.cardTitle}>{t('verify_title')}</div>
+        <div className={`${ui.notice} ${ui.green}`}>{t('verify_desc')}</div>
       </section>
 
       {toast && <div className={s.toast}>{toast}</div>}

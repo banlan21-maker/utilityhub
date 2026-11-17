@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './url-safety.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 type CheckStatus = 'idle' | 'checking' | 'safe' | 'unsafe' | 'error';
@@ -120,79 +121,67 @@ export default function UrlSafetyClient() {
 
   // Result UI
   const resultCard = status === 'safe' ? (
-    <div className="glass-panel animate-fade-in" style={{ padding: '2rem', textAlign: 'center' }}>
-      <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>✅</div>
-      <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#16a34a', marginBottom: '0.5rem' }}>{t('result_safe')}</div>
-      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', wordBreak: 'break-all' }}>{checkedUrl}</div>
-      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.75rem' }}>{t('safe_note')}</div>
+    <div className={`${ui.card} ${s.result} animate-fade-in`}>
+      <div className={s.resultIcon}>✅</div>
+      <div className={`${s.resultTitle} ${s.safeText}`}>{t('result_safe')}</div>
+      <div className={s.resultUrl}>{checkedUrl}</div>
+      <div className={s.resultNote}>{t('safe_note')}</div>
     </div>
   ) : status === 'unsafe' ? (
-    <div className="glass-panel animate-fade-in" style={{ padding: '2rem', textAlign: 'center', borderColor: '#fca5a5' }}>
-      <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🚨</div>
-      <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#dc2626', marginBottom: '0.5rem' }}>{t('result_unsafe')}</div>
-      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', wordBreak: 'break-all', marginBottom: '1rem' }}>{checkedUrl}</div>
+    <div className={`${ui.card} ${s.result} ${s.unsafe} animate-fade-in`}>
+      <div className={s.resultIcon}>🚨</div>
+      <div className={`${s.resultTitle} ${s.unsafeText}`}>{t('result_unsafe')}</div>
+      <div className={s.resultUrl}>{checkedUrl}</div>
       {threats.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', textAlign: 'left' }}>
+        <div className={s.threats}>
           {threats.map((th, i) => (
-            <div key={i} style={{ padding: '0.5rem 0.75rem', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 'var(--radius-sm)', fontSize: '0.85rem' }}>
-              <span style={{ fontWeight: 600, color: '#dc2626' }}>
-                {THREAT_LABELS[th.threatType] ?? th.threatType}
-              </span>
+            <div key={i} className={`${ui.notice} ${ui.red}`}>
+              <strong>{THREAT_LABELS[th.threatType] ?? th.threatType}</strong>
             </div>
           ))}
         </div>
       )}
     </div>
   ) : status === 'error' ? (
-    <div className="glass-panel animate-fade-in" style={{ padding: '1.5rem', textAlign: 'center' }}>
-      <div style={{ color: '#ef4444', fontSize: '0.95rem' }}>⚠️ {errorMsg}</div>
+    <div className={`${ui.notice} ${ui.red} animate-fade-in`}>
+      <div>⚠️ {errorMsg}</div>
     </div>
   ) : null;
 
   return (
-    <div>
+    <div className={s.wrap}>
       <NavigationActions />
       <ToolHeader icon={<ShieldAlert />} title={t('title')} subtitle={t('description')} />
 
       {/* How it works */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+      <div className={s.steps}>
         {(['step1', 'step2', 'step3'] as const).map((key, i) => (
-          <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-            <span style={{ width: '1.5rem', height: '1.5rem', background: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, flexShrink: 0 }}>{i + 1}</span>
+          <div key={key} className={s.step}>
+            <span className={s.stepNum}>{i + 1}</span>
             {t(key)}
-            {i < 2 && <span style={{ color: 'var(--border)' }}>→</span>}
+            {i < 2 && <span className={s.stepArrow}>→</span>}
           </div>
         ))}
       </div>
 
       {/* Input */}
-      <div className="glass-panel" style={{ padding: '1.75rem', marginBottom: '1.5rem', maxWidth: '680px', margin: '0 auto 1.5rem' }}>
-        <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>
+      <div className={`${ui.card} ${s.inputCard}`}>
+        <label className={ui.label}>
           {t('input_label')}
         </label>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className={s.inputRow}>
           <input
             type="text"
             value={input}
             onChange={e => { setInput(e.target.value); if (status !== 'idle') reset(); }}
             onKeyDown={e => e.key === 'Enter' && handleCheck()}
             placeholder={t('placeholder')}
-            style={{
-              flex: 1, minWidth: '200px', padding: '0.75rem 1rem', fontSize: '0.95rem',
-              border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
-              background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none',
-            }}
+            className={`${ui.input} ${s.urlInput}`}
           />
           <button
             onClick={handleCheck}
             disabled={status === 'checking' || !input.trim()}
-            style={{
-              padding: '0.75rem 1.5rem', fontSize: '0.95rem', fontWeight: 600,
-              backgroundColor: 'var(--primary)', color: 'white',
-              border: 'none', borderRadius: 'var(--radius-md)', cursor: 'pointer',
-              opacity: (status === 'checking' || !input.trim()) ? 0.6 : 1,
-              whiteSpace: 'nowrap',
-            }}
+            className={`${ui.button} ${ui.primary}`}
           >
             {status === 'checking' ? '🔍 ' + t('checking') : '🔍 ' + t('check_btn')}
           </button>
@@ -200,11 +189,11 @@ export default function UrlSafetyClient() {
       </div>
 
       {/* Result */}
-      <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+      <div className={s.resultWrap}>
         {resultCard}
         {(status === 'safe' || status === 'unsafe') && (
-          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <button onClick={reset} style={{ padding: '0.5rem 1.25rem', fontSize: '0.875rem', border: '1px solid var(--border)', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+          <div className={s.again}>
+            <button onClick={reset} className={`${ui.button} ${ui.secondary} ${ui.sm}`}>
               {t('check_another')}
             </button>
           </div>
@@ -212,16 +201,16 @@ export default function UrlSafetyClient() {
       </div>
 
       {/* Info boxes */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginTop: '2.5rem', maxWidth: '680px', margin: '2.5rem auto 0' }}>
+      <div className={s.infoGrid}>
         {(['info_malware', 'info_phishing', 'info_pua'] as const).map(key => (
-          <div key={key} className="glass-panel" style={{ padding: '1.25rem' }}>
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
+          <div key={key} className={ui.card}>
+            <div className={s.infoIcon}>
               {key === 'info_malware' ? '🦠' : key === 'info_phishing' ? '🎣' : '⚠️'}
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.3rem' }}>
+            <div className={s.infoTitle}>
               {t(`${key}_title` as any)}
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+            <div className={s.infoDesc}>
               {t(`${key}_desc` as any)}
             </div>
           </div>

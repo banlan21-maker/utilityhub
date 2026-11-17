@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './supplement-cost-calc.module.css';
+import { ui } from '@/app/components/ui';
 
 type Currency = 'KRW' | 'USD';
 type Category = 'omega3' | 'vitamin' | 'other';
@@ -272,16 +273,16 @@ export default function SupplementCostClient() {
     res: ProductResult,
     idSuffix: string
   ) => (
-    <div className={`${s.product_card} ${cardClass}`}>
+    <div className={`${ui.card} ${s.product_card} ${cardClass}`}>
       <h3 className={s.product_name}>{label}</h3>
 
-      <div className={s.field}>
-        <label className={s.field_label} htmlFor={`sp-price-${idSuffix}`}>
+      <div className={ui.field}>
+        <label className={ui.label} htmlFor={`sp-price-${idSuffix}`}>
           {t('label_price')}
         </label>
         <input
           id={`sp-price-${idSuffix}`}
-          className={s.input}
+          className={ui.input}
           type="number"
           inputMode="numeric"
           min="0"
@@ -291,13 +292,13 @@ export default function SupplementCostClient() {
         />
       </div>
 
-      <div className={s.field}>
-        <label className={s.field_label} htmlFor={`sp-total-${idSuffix}`}>
+      <div className={ui.field}>
+        <label className={ui.label} htmlFor={`sp-total-${idSuffix}`}>
           {t('label_total_units')}
         </label>
         <input
           id={`sp-total-${idSuffix}`}
-          className={s.input}
+          className={ui.input}
           type="number"
           inputMode="numeric"
           min="0"
@@ -307,13 +308,13 @@ export default function SupplementCostClient() {
         />
       </div>
 
-      <div className={s.field}>
-        <label className={s.field_label} htmlFor={`sp-serving-${idSuffix}`}>
+      <div className={ui.field}>
+        <label className={ui.label} htmlFor={`sp-serving-${idSuffix}`}>
           {t('label_serving_units')}
         </label>
         <input
           id={`sp-serving-${idSuffix}`}
-          className={s.input}
+          className={ui.input}
           type="number"
           inputMode="numeric"
           min="0"
@@ -323,14 +324,14 @@ export default function SupplementCostClient() {
         />
       </div>
 
-      <div className={s.field}>
-        <label className={s.field_label} htmlFor={`sp-active-${idSuffix}`}>
+      <div className={ui.field}>
+        <label className={ui.label} htmlFor={`sp-active-${idSuffix}`}>
           {t('label_active_mg')}
           <span className={s.field_basis}> {t('serving_basis_note')}</span>
         </label>
         <input
           id={`sp-active-${idSuffix}`}
-          className={s.input}
+          className={ui.input}
           type="number"
           inputMode="decimal"
           min="0"
@@ -340,14 +341,14 @@ export default function SupplementCostClient() {
         />
       </div>
 
-      <div className={s.field}>
-        <label className={s.field_label} htmlFor={`sp-capsule-${idSuffix}`}>
+      <div className={ui.field}>
+        <label className={ui.label} htmlFor={`sp-capsule-${idSuffix}`}>
           {t('label_capsule_mg')}
           <span className={s.field_basis}> {t('serving_basis_note')}</span>
         </label>
         <input
           id={`sp-capsule-${idSuffix}`}
-          className={s.input}
+          className={ui.input}
           type="number"
           inputMode="decimal"
           min="0"
@@ -359,13 +360,13 @@ export default function SupplementCostClient() {
 
       {showAdvanced && (
         <>
-          <div className={s.field}>
-            <label className={s.field_label} htmlFor={`sp-epa-${idSuffix}`}>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor={`sp-epa-${idSuffix}`}>
               {t('label_epa')}
             </label>
             <input
               id={`sp-epa-${idSuffix}`}
-              className={s.input}
+              className={ui.input}
               type="number"
               inputMode="decimal"
               min="0"
@@ -374,13 +375,13 @@ export default function SupplementCostClient() {
               aria-label={`${label} ${t('label_epa')}`}
             />
           </div>
-          <div className={s.field}>
-            <label className={s.field_label} htmlFor={`sp-dha-${idSuffix}`}>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor={`sp-dha-${idSuffix}`}>
               {t('label_dha')}
             </label>
             <input
               id={`sp-dha-${idSuffix}`}
-              className={s.input}
+              className={ui.input}
               type="number"
               inputMode="decimal"
               min="0"
@@ -392,7 +393,7 @@ export default function SupplementCostClient() {
         </>
       )}
 
-      {res.purityError && <div className={s.error_box}>{t('input_error_purity')}</div>}
+      {res.purityError && <div className={`${ui.notice} ${ui.red}`}>{t('input_error_purity')}</div>}
     </div>
   );
 
@@ -422,17 +423,17 @@ export default function SupplementCostClient() {
       {/* ── Controls ── */}
       <div className={s.controls}>
         <div className={s.control_group}>
-          <span className={s.control_label}>{t('currency_label')}</span>
-          <div className={s.toggle_row} role="group" aria-label={t('currency_label')}>
+          <span className={ui.label}>{t('currency_label')}</span>
+          <div className={ui.segmented} role="group" aria-label={t('currency_label')}>
             <button
-              className={`${s.toggle_btn} ${currency === 'KRW' ? s.toggle_btn_active : ''}`}
+              className={`${ui.segment} ${currency === 'KRW' ? ui.segmentActive : ''}`}
               aria-pressed={currency === 'KRW'}
               onClick={() => setCurrency('KRW')}
             >
               {t('currency_krw')}
             </button>
             <button
-              className={`${s.toggle_btn} ${currency === 'USD' ? s.toggle_btn_active : ''}`}
+              className={`${ui.segment} ${currency === 'USD' ? ui.segmentActive : ''}`}
               aria-pressed={currency === 'USD'}
               onClick={() => setCurrency('USD')}
             >
@@ -441,12 +442,12 @@ export default function SupplementCostClient() {
           </div>
         </div>
         <div className={s.control_group}>
-          <label className={s.control_label} htmlFor="sp-category">
+          <label className={ui.label} htmlFor="sp-category">
             {t('label_category')}
           </label>
           <select
             id="sp-category"
-            className={s.select}
+            className={ui.input}
             value={category}
             onChange={(e) => setCategory(e.target.value as Category)}
           >
@@ -464,7 +465,7 @@ export default function SupplementCostClient() {
       </div>
 
       <button
-        className={s.advanced_btn}
+        className={`${ui.button} ${ui.ghost} ${ui.sm} ${s.advanced_btn}`}
         onClick={() => setShowAdvanced((v) => !v)}
         aria-expanded={showAdvanced}
       >
@@ -475,8 +476,8 @@ export default function SupplementCostClient() {
       <p className={s.multi_hint}>{t('serving_hint')} · {t('multi_dose_hint')}</p>
 
       {/* ── Result dashboard ── */}
-      <section className={s.dashboard} aria-live="polite">
-        <h2 className={s.dashboard_title}>{t('result_title')}</h2>
+      <section className={`${ui.card} ${s.dashboard}`} aria-live="polite">
+        <h2 className={`${ui.cardTitle} ${s.dashboard_title}`}>{t('result_title')}</h2>
 
         {!bothValid ? (
           <div className={s.empty_dash}>
@@ -561,12 +562,12 @@ export default function SupplementCostClient() {
 
             {/* purity warnings (omega3 only) */}
             {warnA && (
-              <div className={s.purity_warn}>
+              <div className={`${ui.notice} ${ui.amber}`}>
                 A · {t(`purity_warn_${warnA.type}`, { p: warnA.p })}
               </div>
             )}
             {warnB && (
-              <div className={s.purity_warn}>
+              <div className={`${ui.notice} ${ui.amber}`}>
                 B · {t(`purity_warn_${warnB.type}`, { p: warnB.p })}
               </div>
             )}
@@ -614,7 +615,7 @@ export default function SupplementCostClient() {
               </div>
             )}
 
-            <button className={s.share_btn} onClick={handleShare} aria-label={t('share_btn')}>
+            <button className={`${ui.button} ${ui.primary} ${ui.block}`} onClick={handleShare} aria-label={t('share_btn')}>
               {t('share_btn')}
             </button>
 

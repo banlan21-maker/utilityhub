@@ -8,6 +8,8 @@ import ToolHeader from '@/app/components/ToolHeader';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
+import { ui } from '@/app/components/ui';
+import s from './unit-converter.module.css';
 
 // ─── Unit Data ───────────────────────────────────────────────────────────────
 
@@ -261,23 +263,6 @@ export default function UnitConverterClient() {
   const tabName = (id: string) =>
     locale === 'ko' ? TAB_NAMES[id].ko : TAB_NAMES[id].en;
 
-  const selectStyle = (active: boolean): React.CSSProperties => ({
-    padding: '0.4rem 0.3rem',
-    borderRadius: '0.65rem',
-    border: '1.5px solid',
-    borderColor: active ? 'var(--primary)' : 'transparent',
-    background: active ? 'rgba(249,115,22,0.12)' : 'transparent',
-    color: active ? 'var(--primary)' : 'var(--text-secondary)',
-    fontWeight: active ? 700 : 500,
-    fontSize: '0.75rem',
-    cursor: 'pointer',
-    whiteSpace: 'normal',
-    wordBreak: 'keep-all',
-    textAlign: 'center',
-    transition: 'all 0.15s',
-    lineHeight: 1.2,
-  });
-
   return (
     <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
       <NavigationActions />
@@ -291,17 +276,12 @@ export default function UnitConverterClient() {
       />
 
       {/* ── Tab bar (5×2 grid on desktop, 4+remaining on mobile) ── */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(5, 1fr)',
-        gap: '0.4rem',
-        marginBottom: '1.5rem',
-      }}>
+      <div className={s.tabs}>
         {CATEGORIES.map(cat => (
           <button
             key={cat.id}
             onClick={() => selectCat(cat.id)}
-            style={selectStyle(cat.id === activeCatId)}
+            className={`${ui.chip} ${s.tab} ${cat.id === activeCatId ? ui.chipActive : ''}`}
           >
             {cat.icon} {tabName(cat.id)}
           </button>
@@ -309,20 +289,20 @@ export default function UnitConverterClient() {
       </div>
 
       {/* ── Converter panel ── */}
-      <div className="glass-panel" style={{ padding: '1.75rem', maxWidth: '560px', margin: '0 auto' }}>
+      <div className={`${ui.card} ${s.panel}`}>
 
         {/* From / Swap / To row */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.5rem', alignItems: 'end', marginBottom: '1.5rem', minWidth: 0 }}>
+        <div className={s.row}>
 
           {/* FROM */}
-          <div>
-            <label style={labelStyle}>
+          <div className={ui.field}>
+            <label className={ui.label}>
               {locale === 'ko' ? '변환 전' : 'From'}
             </label>
             <select
               value={fromId}
               onChange={e => setFromId(e.target.value)}
-              style={selectInputStyle}
+              className={ui.input}
             >
               {category.units.map(u => (
                 <option key={u.id} value={u.id}>{u.label}</option>
@@ -334,37 +314,20 @@ export default function UnitConverterClient() {
           <button
             onClick={swap}
             title="Swap"
-            style={{
-              width: '2.5rem',
-              height: '2.5rem',
-              borderRadius: '50%',
-              border: '1.5px solid var(--border)',
-              background: 'var(--surface-hover)',
-              color: 'var(--text-secondary)',
-              fontSize: '1.1rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              alignSelf: 'flex-end',
-              transition: 'all 0.15s',
-            }}
-            onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }}
-            onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+            className={`${ui.button} ${ui.secondary} ${s.swap}`}
           >
             ⇄
           </button>
 
           {/* TO */}
-          <div>
-            <label style={labelStyle}>
+          <div className={ui.field}>
+            <label className={ui.label}>
               {locale === 'ko' ? '변환 후' : 'To'}
             </label>
             <select
               value={toId}
               onChange={e => setToId(e.target.value)}
-              style={selectInputStyle}
+              className={ui.input}
             >
               {category.units.map(u => (
                 <option key={u.id} value={u.id}>{u.label}</option>
@@ -374,53 +337,34 @@ export default function UnitConverterClient() {
         </div>
 
         {/* Input */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <label style={labelStyle}>
+        <div className={`${ui.field} ${s.valueField}`}>
+          <label className={ui.label}>
             {locale === 'ko' ? '값 입력' : 'Enter value'}
           </label>
-          <div style={{ position: 'relative' }}>
+          <div className={`${ui.inputGroup} ${s.valueGroup}`}>
             <input
               type="text"
               inputMode="decimal"
               placeholder="1"
               value={inputVal}
               onChange={e => setInputVal(e.target.value.replace(/[^0-9.\-]/g, ''))}
-              style={{
-                width: '100%',
-                padding: '0.85rem 3.5rem 0.85rem 1rem',
-                fontSize: '1.5rem',
-                fontWeight: 700,
-                border: '2px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--surface)',
-                color: 'var(--text-primary)',
-                outline: 'none',
-                boxSizing: 'border-box',
-                transition: 'border-color 0.2s',
-              }}
-              onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              className={`${ui.input} ${ui.inputLg}`}
             />
-            <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>
+            <span className={ui.unit}>
               {fromUnit.label}
             </span>
           </div>
         </div>
 
         {/* Result */}
-        <div style={{
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border)',
-          overflow: 'hidden',
-          background: hasVal ? 'linear-gradient(135deg, rgba(249,115,22,0.06), rgba(16,185,129,0.06))' : 'var(--surface)',
-        }}>
-          <div style={{ padding: '1.25rem' }}>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+        <div className={ui.result}>
+          <div>
+            <div className={ui.resultLabel}>
               {locale === 'ko' ? '변환 결과' : 'Result'}
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', minWidth: 0 }}>
-                <span style={{ fontSize: '2.25rem', fontWeight: 800, color: hasVal ? 'var(--primary)' : 'var(--text-muted)', letterSpacing: '-1px', wordBreak: 'break-all' }}>
+            <div className={s.resultRow}>
+              <div className={s.resultNum}>
+                <span className={ui.resultValue} style={hasVal ? undefined : { color: 'var(--text-muted)' }}>
                   {hasVal ? resultStr : '—'}
                 </span>
                 {hasVal && (
@@ -432,25 +376,15 @@ export default function UnitConverterClient() {
               {hasVal && (
                 <button
                   onClick={copy}
-                  style={{
-                    flexShrink: 0,
-                    padding: '0.35rem 0.8rem',
-                    fontSize: '0.78rem',
-                    fontWeight: 600,
-                    border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius-sm)',
-                    background: copied ? 'var(--primary)' : 'var(--surface-hover)',
-                    color: copied ? '#fff' : 'var(--text-muted)',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s',
-                  }}
+                  className={`${ui.button} ${ui.sm} ${copied ? ui.primary : ui.secondary}`}
+                  style={{ flexShrink: 0 }}
                 >
                   {copied ? '✓' : '📋'}
                 </button>
               )}
             </div>
             {hasVal && (
-              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
+              <div className={ui.hint} style={{ marginTop: '0.4rem' }}>
                 {inputVal} {fromUnit.label} = {resultStr} {toUnit.label}
               </div>
             )}
@@ -538,30 +472,6 @@ export default function UnitConverterClient() {
 }
 
 // ─── Shared styles ────────────────────────────────────────────────────────────
-
-const labelStyle: React.CSSProperties = {
-  display: 'block',
-  fontSize: '0.75rem',
-  fontWeight: 600,
-  color: 'var(--text-muted)',
-  textTransform: 'uppercase',
-  letterSpacing: '0.05em',
-  marginBottom: '0.4rem',
-};
-
-const selectInputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '0.6rem 0.75rem',
-  fontSize: '0.95rem',
-  fontWeight: 600,
-  border: '2px solid var(--border)',
-  borderRadius: 'var(--radius-md)',
-  background: 'var(--surface)',
-  color: 'var(--text-primary)',
-  outline: 'none',
-  cursor: 'pointer',
-  boxSizing: 'border-box',
-};
 
 const thStyle: React.CSSProperties = {
   padding: '0.5rem 0.75rem',

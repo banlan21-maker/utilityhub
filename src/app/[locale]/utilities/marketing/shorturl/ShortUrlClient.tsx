@@ -19,6 +19,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './shorturl.module.css';
+import { ui } from '@/app/components/ui';
 
 /* ─── Types & Storage ─── */
 interface HistoryItem {
@@ -126,41 +127,40 @@ export default function ShortUrlClient() {
       <ToolHeader icon={<Link2 />} title={isKo ? 'URL 단축기' : 'URL Shortener'} subtitle={isKo ? '긴 주소를 짧고 강력하게 변환하세요. 클릭 한 번으로 모든 SNS 공유 가능' : 'Make long links short and powerful. Perfect for social media sharing.'} />
 
       {/* Input Section */}
-      <section className={s.url_panel}>
-        <div>
-          <label className={s.url_label}>{isKo ? '긴 URL 입력' : 'Enter Long URL'}</label>
+      <section className={`${ui.card} ${s.url_panel}`}>
+        <div className={ui.field}>
+          <label className={ui.label}>{isKo ? '긴 URL 입력' : 'Enter Long URL'}</label>
           <div className={s.url_input_row}>
             <input
-              className={s.url_input}
+              className={`${ui.input} ${s.url_input}`}
               value={url}
               onChange={e => setUrl(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleShorten()}
               placeholder="https://example.com/very-long-url..."
             />
-            <button onClick={handleShorten} disabled={loading} className={s.url_primary_button}>
+            <button onClick={handleShorten} disabled={loading} className={`${ui.button} ${ui.primary} ${s.url_primary_button}`}>
               {loading ? <Zap className="animate-pulse" /> : <ChevronRight />}
               {isKo ? '지금 단축하기' : 'Shorten Now'}
             </button>
           </div>
-          {error && <p style={{ color: '#ef4444', marginTop: '0.75rem', fontSize: '0.875rem', fontWeight: 600 }}>{error}</p>}
+          {error && <p className={ui.error}>{error}</p>}
         </div>
 
         {/* Success Result */}
         {result && (
-          <div className={s.url_result_box} style={{ animation: 'fadeIn 0.4s ease-out' }}>
+          <div className={`${ui.result} ${s.url_result_box}`} style={{ animation: 'fadeIn 0.4s ease-out' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 800, marginBottom: '0.25rem' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 800, marginBottom: '0.25rem' }}>
                 <Sparkles size={12} style={{ marginRight: '4px', display: 'inline' }} />
                 {isKo ? '단축 완료!' : 'SHORTENED!'}
               </div>
-              <a href={result} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', textDecoration: 'underline', textDecorationColor: '#8b5cf6' }}>
+              <a href={result} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', textDecoration: 'underline', textDecorationColor: 'var(--color-primary)' }}>
                 {result}
               </a>
             </div>
             <button
               onClick={() => handleCopy(result)}
-              className={s.url_primary_button}
-              style={{ background: copiedUrl === result ? '#10b981' : '#8b5cf6', padding: '0.75rem 1.5rem', fontSize: '0.9rem' }}
+              className={`${ui.button} ${copiedUrl === result ? ui.green : ui.primary}`}
             >
               <Copy size={18} />
               {copiedUrl === result ? (isKo ? '복사됨' : 'Copied!') : (isKo ? '복사하기' : 'Copy')}
@@ -171,15 +171,15 @@ export default function ShortUrlClient() {
 
       {/* History Section */}
       {history.length > 0 && (
-        <section className={s.url_panel} style={{ gap: '1rem' }}>
+        <section className={`${ui.card} ${s.url_panel}`} style={{ gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <History size={18} color="#8b5cf6" />
+            <h2 className={ui.cardTitle} style={{ margin: 0 }}>
+              <History size={18} />
               {isKo ? '변환 기록' : 'Link History'}
             </h2>
             <button
               onClick={() => { if(confirm(isKo ? '모든 기록을 삭제하시겠습니까?' : 'Clear history?')) { setHistory([]); saveHistory([]); } }}
-              style={{ fontSize: '0.81rem', color: 'var(--text-muted)', background: 'none', border: 'none', padding: 0 }}
+              className={`${ui.button} ${ui.ghost} ${ui.sm}`}
             >
               {isKo ? '전체 삭제' : 'Clear All'}
             </button>
@@ -190,7 +190,7 @@ export default function ShortUrlClient() {
               <div key={item.short} className={s.url_history_item}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
-                    <a href={item.short} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 800, color: '#8b5cf6', fontSize: '1rem' }}>
+                    <a href={item.short} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 800, color: 'var(--color-primary)', fontSize: '1rem' }}>
                       {item.short}
                     </a>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{formatDate(item.createdAt)}</span>
@@ -202,10 +202,10 @@ export default function ShortUrlClient() {
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button onClick={() => handleCopy(item.short)} className={s.url_icon_button}>
-                    {copiedUrl === item.short ? <span style={{ color: '#10b981' }}>✓</span> : <Copy size={16} />}
+                    {copiedUrl === item.short ? <span style={{ color: 'var(--tint-green-fg)' }}>✓</span> : <Copy size={16} />}
                   </button>
-                  <button onClick={() => handleDelete(item.short)} className={s.url_icon_button} style={{ borderColor: '#fee2e2' }}>
-                    <Trash2 size={16} color="#ef4444" />
+                  <button onClick={() => handleDelete(item.short)} className={s.url_icon_button} style={{ borderColor: 'var(--tint-red-border)' }}>
+                    <Trash2 size={16} style={{ color: 'var(--tint-red-fg)' }} />
                   </button>
                 </div>
               </div>

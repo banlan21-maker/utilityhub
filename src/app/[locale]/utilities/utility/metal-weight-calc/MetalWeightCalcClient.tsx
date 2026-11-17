@@ -14,6 +14,7 @@ import {
 } from '@/lib/metalWeight';
 import CrossSection from './CrossSection';
 import s from './metal-weight-calc.module.css';
+import { ui } from '@/app/components/ui';
 
 interface Material { id: string; ko: string; en: string; density: number; custom?: boolean }
 interface BasketItem {
@@ -269,13 +270,13 @@ export default function MetalWeightCalcClient() {
 
       <ToolHeader icon={<Weight />} title={titleStr} subtitle={descStr} />
 
-      <section className={s.card}>
+      <section className={`${ui.card} ${s.card}`}>
         <div className={s.step}>STEP 1</div>
-        <h2 className={s.card_title}>{L('형상 선택', 'Shape')}</h2>
+        <h2 className={ui.cardTitle}>{L('형상 선택', 'Shape')}</h2>
         <div className={s.shape_grid}>
           {SHAPES.map(sh => (
             <button key={sh.id} type="button" aria-pressed={shape === sh.id}
-              className={`${s.shape_btn} ${shape === sh.id ? s.shape_on : ''}`} onClick={() => selectShape(sh.id)}>
+              className={`${ui.chip} ${s.shape_btn} ${shape === sh.id ? ui.chipActive : ''}`} onClick={() => selectShape(sh.id)}>
               <ShapeIcon id={sh.id} />
               {isKo ? SHAPE_NAMES[sh.id][0] : SHAPE_NAMES[sh.id][1]}
             </button>
@@ -283,15 +284,15 @@ export default function MetalWeightCalcClient() {
         </div>
       </section>
 
-      <section className={s.card}>
+      <section className={`${ui.card} ${s.card}`}>
         <div className={s.step}>STEP 2</div>
-        <h2 className={s.card_title}>{L('치수 입력', 'Dimensions')} — {isKo ? SHAPE_NAMES[shape][0] : SHAPE_NAMES[shape][1]}</h2>
+        <h2 className={ui.cardTitle}>{L('치수 입력', 'Dimensions')} — {isKo ? SHAPE_NAMES[shape][0] : SHAPE_NAMES[shape][1]}</h2>
         <div className={s.layout}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
             {presetGroups && (
-              <div className={s.preset_row}>
-                <label className={s.field_label} htmlFor="mw-preset">{L('KS 규격에서 고르기', 'Pick a KS size')}</label>
-                <select id="mw-preset" className={s.select} value={preset} onChange={e => applyPreset(e.target.value)}>
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="mw-preset">{L('KS 규격에서 고르기', 'Pick a KS size')}</label>
+                <select id="mw-preset" className={ui.input} value={preset} onChange={e => applyPreset(e.target.value)}>
                   <option value="">{L('— 직접 입력 —', '— Enter manually —')}</option>
                   {presetGroups.map((g, gi) => g.group
                     ? <optgroup key={gi} label={g.group}>{g.items.map(p => <option key={p.label} value={p.label}>{p.label}</option>)}</optgroup>
@@ -303,15 +304,15 @@ export default function MetalWeightCalcClient() {
               {def.fields.map(k => {
                 const [, title, desc] = fieldText[k]!;
                 return (
-                  <div key={k} className={`${s.field} ${active === k ? s.field_active : ''}`}>
-                    <label className={s.field_label} htmlFor={`mw-${k}`}>{title}{desc && <small>{desc}</small>}</label>
-                    <div className={s.input_wrap}>
-                      <input id={`mw-${k}`} className={s.input} inputMode="decimal" autoComplete="off"
+                  <div key={k} className={`${ui.field} ${active === k ? s.field_active : ''}`}>
+                    <label className={ui.label} htmlFor={`mw-${k}`}>{title}{desc && <small>{desc}</small>}</label>
+                    <div className={ui.inputGroup}>
+                      <input id={`mw-${k}`} className={ui.input} inputMode="decimal" autoComplete="off"
                         placeholder={def.optional.includes(k) ? (shape === 'sqtube' ? '2t' : '0') : String(SAMPLE_DIMS[shape][k] ?? '')}
                         value={dimText[k] ?? ''}
                         onFocus={() => setActive(k)} onBlur={() => setActive(a => (a === k ? null : a))}
                         onChange={e => { setDimText(prev => ({ ...prev, [k]: decimalInput(e.target.value) })); setPreset(''); }} />
-                      <span className={s.unit}>mm</span>
+                      <span className={ui.unit}>mm</span>
                     </div>
                   </div>
                 );
@@ -319,35 +320,35 @@ export default function MetalWeightCalcClient() {
             </div>
             <div className={s.row3}>
               {!def.sheet && (
-                <div className={s.field}>
-                  <label className={s.field_label} htmlFor="mw-len">{L('길이', 'Length')}</label>
-                  <div className={s.input_wrap}>
-                    <input id="mw-len" className={s.input} inputMode="decimal" value={lengthText} onChange={e => setLengthText(decimalInput(e.target.value))} />
-                    <span className={s.unit}>m</span>
+                <div className={ui.field}>
+                  <label className={ui.label} htmlFor="mw-len">{L('길이', 'Length')}</label>
+                  <div className={ui.inputGroup}>
+                    <input id="mw-len" className={ui.input} inputMode="decimal" value={lengthText} onChange={e => setLengthText(decimalInput(e.target.value))} />
+                    <span className={ui.unit}>m</span>
                   </div>
                 </div>
               )}
-              <div className={s.field}>
-                <label className={s.field_label} htmlFor="mw-qty">{L('수량', 'Quantity')}</label>
-                <div className={s.input_wrap}>
-                  <input id="mw-qty" className={s.input} inputMode="numeric" value={qtyText} onChange={e => setQtyText(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))} />
-                  <span className={s.unit}>{L('개', 'pcs')}</span>
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="mw-qty">{L('수량', 'Quantity')}</label>
+                <div className={ui.inputGroup}>
+                  <input id="mw-qty" className={ui.input} inputMode="numeric" value={qtyText} onChange={e => setQtyText(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))} />
+                  <span className={ui.unit}>{L('개', 'pcs')}</span>
                 </div>
               </div>
-              <div className={s.field}>
-                <label className={s.field_label} htmlFor="mw-loss">{L('로스(할증)', 'Waste allowance')}</label>
-                <div className={s.input_wrap}>
-                  <input id="mw-loss" className={s.input} inputMode="decimal" value={lossText} onChange={e => setLossText(decimalInput(e.target.value))} />
-                  <span className={s.unit}>%</span>
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="mw-loss">{L('로스(할증)', 'Waste allowance')}</label>
+                <div className={ui.inputGroup}>
+                  <input id="mw-loss" className={ui.input} inputMode="decimal" value={lossText} onChange={e => setLossText(decimalInput(e.target.value))} />
+                  <span className={ui.unit}>%</span>
                 </div>
               </div>
             </div>
             {def.sheet && (
-              <div className={s.field}>
-                <span className={s.field_label}>{L('도장 면', 'Painted faces')}</span>
-                <div className={s.chips}>
+              <div className={ui.field}>
+                <span className={ui.label}>{L('도장 면', 'Painted faces')}</span>
+                <div className={ui.chips}>
                   {([2, 1] as const).map(f => (
-                    <button key={f} type="button" className={`${s.chip} ${plateFaces === f ? s.chip_on : ''}`} onClick={() => setPlateFaces(f)} aria-pressed={plateFaces === f}>
+                    <button key={f} type="button" className={`${ui.chip} ${plateFaces === f ? ui.chipActive : ''}`} onClick={() => setPlateFaces(f)} aria-pressed={plateFaces === f}>
                       {f === 2 ? L('양면', 'Both faces') : L('한 면', 'One face')}
                     </button>
                   ))}
@@ -372,70 +373,70 @@ export default function MetalWeightCalcClient() {
         </div>
       </section>
 
-      <section className={s.card}>
+      <section className={`${ui.card} ${s.card}`}>
         <div className={s.step}>STEP 3</div>
-        <h2 className={s.card_title}>{L('재질 · 단가', 'Material · price')}</h2>
+        <h2 className={ui.cardTitle}>{L('재질 · 단가', 'Material · price')}</h2>
         <div className={s.material_row}>
-          <select className={s.select} value={matId} onChange={e => setMatId(e.target.value)} aria-label={L('재질', 'Material')}>
+          <select className={`${ui.input} ${s.material_select}`} value={matId} onChange={e => setMatId(e.target.value)} aria-label={L('재질', 'Material')}>
             {materials.map(m => <option key={m.id} value={m.id}>{isKo ? m.ko : m.en} ({m.density} g/㎤)</option>)}
           </select>
-          <button type="button" className={s.ghost_btn} onClick={() => setShowCustom(v => !v)}><Plus size={14} />{L('재질 추가', 'Add material')}</button>
+          <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={() => setShowCustom(v => !v)}><Plus size={14} />{L('재질 추가', 'Add material')}</button>
         </div>
         {showCustom && (
           <div className={s.custom_form}>
-            <div className={s.field}>
-              <label className={s.field_label} htmlFor="mw-cname">{L('재질명', 'Name')}</label>
-              <input id="mw-cname" className={s.input} style={{ paddingRight: '0.8rem' }} value={customName} onChange={e => setCustomName(e.target.value)} placeholder={L('예: 인바', 'e.g. Invar')} />
+            <div className={ui.field}>
+              <label className={ui.label} htmlFor="mw-cname">{L('재질명', 'Name')}</label>
+              <input id="mw-cname" className={ui.input} value={customName} onChange={e => setCustomName(e.target.value)} placeholder={L('예: 인바', 'e.g. Invar')} />
             </div>
-            <div className={s.field}>
-              <label className={s.field_label} htmlFor="mw-cden">{L('밀도', 'Density')}</label>
-              <div className={s.input_wrap}>
-                <input id="mw-cden" className={s.input} inputMode="decimal" value={customDensity} onChange={e => setCustomDensity(decimalInput(e.target.value))} placeholder="8.05" />
-                <span className={s.unit}>g/㎤</span>
+            <div className={ui.field}>
+              <label className={ui.label} htmlFor="mw-cden">{L('밀도', 'Density')}</label>
+              <div className={ui.inputGroup}>
+                <input id="mw-cden" className={ui.input} inputMode="decimal" value={customDensity} onChange={e => setCustomDensity(decimalInput(e.target.value))} placeholder="8.05" />
+                <span className={ui.unit}>g/㎤</span>
               </div>
             </div>
-            <button type="button" className={s.primary_btn} onClick={addCustom}>{L('저장', 'Save')}</button>
-            <button type="button" className={s.ghost_btn} onClick={() => setShowCustom(false)}>{L('취소', 'Cancel')}</button>
+            <button type="button" className={`${ui.button} ${ui.primary}`} onClick={addCustom}>{L('저장', 'Save')}</button>
+            <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={() => setShowCustom(false)}>{L('취소', 'Cancel')}</button>
           </div>
         )}
         <div className={s.fields}>
-          <div className={s.field}>
-            <label className={s.field_label} htmlFor="mw-pkg">{L('자재 단가 (선택)', 'Material price (optional)')}</label>
-            <div className={s.input_wrap}>
-              <input id="mw-pkg" className={s.input} inputMode="numeric" value={priceKg} onChange={e => setPriceKg(e.target.value.replace(/[^0-9]/g, ''))} placeholder="1200" />
-              <span className={s.unit}>{L('원/kg', '₩/kg')}</span>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="mw-pkg">{L('자재 단가 (선택)', 'Material price (optional)')}</label>
+            <div className={ui.inputGroup}>
+              <input id="mw-pkg" className={ui.input} inputMode="numeric" value={priceKg} onChange={e => setPriceKg(e.target.value.replace(/[^0-9]/g, ''))} placeholder="1200" />
+              <span className={ui.unit}>{L('원/kg', '₩/kg')}</span>
             </div>
           </div>
-          <div className={s.field}>
-            <label className={s.field_label} htmlFor="mw-pm2">{L('도장 단가 (선택)', 'Paint price (optional)')}</label>
-            <div className={s.input_wrap}>
-              <input id="mw-pm2" className={s.input} inputMode="numeric" value={priceM2} onChange={e => setPriceM2(e.target.value.replace(/[^0-9]/g, ''))} placeholder="15000" />
-              <span className={s.unit}>{L('원/㎡', '₩/㎡')}</span>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="mw-pm2">{L('도장 단가 (선택)', 'Paint price (optional)')}</label>
+            <div className={ui.inputGroup}>
+              <input id="mw-pm2" className={ui.input} inputMode="numeric" value={priceM2} onChange={e => setPriceM2(e.target.value.replace(/[^0-9]/g, ''))} placeholder="15000" />
+              <span className={ui.unit}>{L('원/㎡', '₩/㎡')}</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section className={s.card} aria-live="polite">
+      <section className={`${ui.card} ${s.card}`} aria-live="polite">
         <div className={s.step}>STEP 4</div>
-        <h2 className={s.card_title}>{L('계산 결과', 'Result')}{complete && !errorCode ? ` — ${specLabel(shape, dims)}` : ''}</h2>
+        <h2 className={ui.cardTitle}>{L('계산 결과', 'Result')}{complete && !errorCode ? ` — ${specLabel(shape, dims)}` : ''}</h2>
         {errorCode ? (
-          <div className={s.warn}>⚠️ {ERRORS[errorCode][isKo ? 0 : 1]}</div>
+          <div className={`${ui.notice} ${ui.amber}`}>⚠️ {ERRORS[errorCode][isKo ? 0 : 1]}</div>
         ) : !result ? (
           <p className={s.hint}>{L('치수와 길이·수량을 넣으면 결과가 나옵니다. KS 규격에서 고르면 치수가 자동으로 채워집니다.', 'Enter dimensions, length and quantity, or pick a KS size.')}</p>
         ) : (
           <>
             <div className={s.big_grid}>
-              <div className={s.big}>
-                <div><span className={s.big_num}>{kg(result.unitMass, def.sheet ? 2 : 3)}</span><span className={s.big_unit}>{def.sheet ? 'kg/㎡' : 'kg/m'}</span></div>
+              <div className={`${ui.result} ${s.big}`}>
+                <div><span className={ui.resultValue}>{kg(result.unitMass, def.sheet ? 2 : 3)}</span><span className={s.big_unit}>{def.sheet ? 'kg/㎡' : 'kg/m'}</span></div>
                 <div className={s.big_label}>{def.sheet ? L('㎡당 중량', 'Weight per ㎡') : L('m당 중량 (단위중량)', 'Weight per metre')}</div>
               </div>
-              <div className={s.big}>
-                <div><span className={s.big_num}>{kg(result.pieceKg)}</span><span className={s.big_unit}>kg</span></div>
+              <div className={`${ui.result} ${s.big}`}>
+                <div><span className={ui.resultValue}>{kg(result.pieceKg)}</span><span className={s.big_unit}>kg</span></div>
                 <div className={s.big_label}>{L('1개(본)당 중량', 'Per piece')}</div>
               </div>
-              <div className={s.big}>
-                <div><span className={s.big_num}>{kg(result.orderKg)}</span><span className={s.big_unit}>kg</span></div>
+              <div className={`${ui.result} ${s.big}`}>
+                <div><span className={ui.resultValue}>{kg(result.orderKg)}</span><span className={s.big_unit}>kg</span></div>
                 <div className={s.big_label}>{L(`발주 중량 (로스 ${lossPct}% 포함)`, `Order weight (+${lossPct}%)`)}</div>
               </div>
             </div>
@@ -451,14 +452,14 @@ export default function MetalWeightCalcClient() {
               `${isKo ? material.ko : material.en} ${material.density} g/㎤ 기준.${['hbeam', 'channel', 'angle', 'tshape'].includes(shape) ? ' 형강은 필렛(r)을 넣어야 KS 표 단위중량과 맞습니다.' : ''}${shape === 'sqtube' ? ' 각관은 모서리 R(기본 2t)을 반영한 KS D 3568 방식입니다.' : ''}${shape === 'checkered' ? ' 무늬 질량 1.67 kg/㎡(강판 기준)을 더했습니다.' : ''}`,
               `Density ${material.density} g/cm³.${['hbeam', 'channel', 'angle', 'tshape'].includes(shape) ? ' Include the fillet radius to match KS table weights.' : ''}`,
             )}</p>
-            <button type="button" className={s.primary_btn} onClick={addToBasket}><ShoppingCart size={18} />{L('견적 바구니에 담기', 'Add to order list')}</button>
+            <button type="button" className={`${ui.button} ${ui.primary}`} onClick={addToBasket}><ShoppingCart size={18} />{L('견적 바구니에 담기', 'Add to order list')}</button>
           </>
         )}
       </section>
 
-      <section className={s.card}>
+      <section className={`${ui.card} ${s.card}`}>
         <div className={s.step}>STEP 5</div>
-        <h2 className={s.card_title}>{L('견적 바구니 · 발주 내역', 'Order list')}</h2>
+        <h2 className={ui.cardTitle}>{L('견적 바구니 · 발주 내역', 'Order list')}</h2>
         {basket.length === 0 ? (
           <p className={s.hint}>{L('담은 항목이 없습니다. 담은 내역은 이 브라우저에 저장됩니다.', 'Nothing added yet. The list is saved in this browser.')}</p>
         ) : (
@@ -491,8 +492,8 @@ export default function MetalWeightCalcClient() {
               <div className={s.total_box}><div className={s.total_label}>{L('총 금액', 'Total cost')}</div><div className={s.total_num}>{totalCost > 0 ? won(totalCost) : '-'}</div></div>
             </div>
             <div className={s.actions}>
-              <button type="button" className={s.primary_btn} onClick={copyOrder}><Copy size={16} />{L('발주 내역 복사', 'Copy order list')}</button>
-              <button type="button" className={s.ghost_btn} onClick={() => saveBasket([])}><Trash2 size={14} />{L('모두 비우기', 'Clear all')}</button>
+              <button type="button" className={`${ui.button} ${ui.primary}`} onClick={copyOrder}><Copy size={16} />{L('발주 내역 복사', 'Copy order list')}</button>
+              <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={() => saveBasket([])}><Trash2 size={14} />{L('모두 비우기', 'Clear all')}</button>
               {copyMsg && <span className={s.copy_msg}>{copyMsg}</span>}
             </div>
           </>

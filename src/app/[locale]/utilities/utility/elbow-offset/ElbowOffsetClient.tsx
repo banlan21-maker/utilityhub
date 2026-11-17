@@ -13,6 +13,7 @@ import {
   type Standard, type Fitting, type Allowance,
 } from '@/lib/elbowOffset';
 import s from './elbow.module.css';
+import { ui } from '@/app/components/ui';
 
 type Mode = 'offset' | 'rolling' | 'cut';
 type End = 'none' | '90L' | '90S' | '45L';
@@ -90,16 +91,16 @@ export default function ElbowOffsetClient() {
   };
 
   const field = (id: string, label: string, sub: string, value: string, set: (v: string) => void, unit = 'mm') => (
-    <div className={s.field}>
-      <label className={s.field_label} htmlFor={id}>{label}{sub && <small>{sub}</small>}</label>
-      <div className={s.input_wrap}>
-        <input id={id} className={s.input} inputMode="decimal" value={value} onChange={e => set(dec(e.target.value))} />
-        <span className={s.unit}>{unit}</span>
+    <div className={ui.field}>
+      <label className={`${ui.label} ${s.field_label}`} htmlFor={id}>{label}{sub && <small>{sub}</small>}</label>
+      <div className={ui.inputGroup}>
+        <input id={id} className={`${ui.input} ${ui.inputLg}`} inputMode="decimal" value={value} onChange={e => set(dec(e.target.value))} />
+        <span className={ui.unit}>{unit}</span>
       </div>
     </div>
   );
   const chip = <T extends string | number>(cur: T, val: T, set: (v: T) => void, label: string, sub?: string) => (
-    <button key={String(val)} type="button" aria-pressed={cur === val} className={`${s.chip} ${cur === val ? s.chip_on : ''}`} onClick={() => set(val)}>
+    <button key={String(val)} type="button" aria-pressed={cur === val} className={`${ui.chip} ${s.chip} ${cur === val ? ui.chipActive : ''}`} onClick={() => set(val)}>
       {label}{sub && <small>{sub}</small>}
     </button>
   );
@@ -217,39 +218,39 @@ export default function ElbowOffsetClient() {
 
       <ToolHeader icon={<CornerDownRight />} title={titleStr} subtitle={descStr} />
 
-      <section className={s.card}>
-        <h2 className={s.card_title}>{L('1. 엘보 규격과 호칭', '1. Fitting standard and size')}</h2>
-        <div className={s.chips}>{(['ks', 'thread', 'asme'] as Standard[]).map(st => chip(std, st, pickStd, STD_TEXT[st][isKo ? 0 : 2], STD_TEXT[st][isKo ? 1 : 3]))}</div>
+      <section className={`${ui.card} ${s.card}`}>
+        <h2 className={`${ui.cardTitle} ${s.card_title}`}>{L('1. 엘보 규격과 호칭', '1. Fitting standard and size')}</h2>
+        <div className={ui.chips}>{(['ks', 'thread', 'asme'] as Standard[]).map(st => chip(std, st, pickStd, STD_TEXT[st][isKo ? 0 : 2], STD_TEXT[st][isKo ? 1 : 3]))}</div>
         <div className={s.size_grid}>{SIZES[std].map(z => chip(size, z, setSize, z))}</div>
-        <p className={s.hint}>{std === 'thread'
+        <p className={`${ui.hint} ${s.hint}`}>{std === 'thread'
           ? L('나사 엘보는 중심~끝 치수에서 파이프가 나사로 물려 들어가는 길이를 뺀 값을 엘보값으로 씁니다(90° 엘보 기준).', 'Threaded allowance = centre-to-end minus thread engagement (90° elbows).')
           : std === 'asme' ? L('ASME B16.9은 외경이 KS와 다른 미국 규격 배관(플랜트·ASTM 관)용입니다. 국내 일반 현장은 KS 용접 엘보를 고르세요.', 'ASME B16.9 is for ASME pipe; Korean building work normally uses KS fittings.')
             : L('국내에서 쓰는 KS B 1522(JIS B 2312) 맞대기 용접 엘보 치수입니다. 45°는 ASME와 크게 달라 50A에서 엘보 1개당 3.4mm 차이가 납니다.', 'KS B 1522 (JIS B 2312) butt-weld fittings used in Korea. 45° values differ from ASME by 3.4 mm per elbow at 50A.')}</p>
       </section>
 
-      <div className={s.tabs} role="tablist">
+      <div className={ui.segmented} role="tablist">
         {([
           ['offset', L('옵셋', 'Offset'), L('한 방향으로 비켜 가기', 'one direction')],
           ['rolling', L('가로+세로 옵셋', 'Rolling offset'), L('대각선으로 비켜 가기', 'two directions')],
           ['cut', L('심-심 → 절단 길이', 'C-C → cut'), L('두 이음쇠 사이', 'between fittings')],
         ] as [Mode, string, string][]).map(([k, t, sub]) => (
-          <button key={k} type="button" role="tab" aria-selected={mode === k} className={`${s.tab} ${mode === k ? s.tab_on : ''}`} onClick={() => setMode(k)}>
+          <button key={k} type="button" role="tab" aria-selected={mode === k} className={`${ui.segment} ${mode === k ? ui.segmentActive : ''}`} onClick={() => setMode(k)}>
             {t}<small>{sub}</small>
           </button>
         ))}
       </div>
 
-      <section className={s.card}>
-        <h2 className={s.card_title}>{L('2. 치수 입력', '2. Dimensions')}</h2>
+      <section className={`${ui.card} ${s.card}`}>
+        <h2 className={`${ui.cardTitle} ${s.card_title}`}>{L('2. 치수 입력', '2. Dimensions')}</h2>
         {mode !== 'cut' ? (
           <>
             <div>
-              <span className={s.label}>{L('엘보 종류 (양쪽 같은 엘보)', 'Elbow (same at both ends)')}</span>
-              <div className={s.chips}>{fits.map(fv => chip(fit, fv, setFitting, FIT_TEXT[fv]))}</div>
+              <span className={`${ui.label} ${s.label}`}>{L('엘보 종류 (양쪽 같은 엘보)', 'Elbow (same at both ends)')}</span>
+              <div className={ui.chips}>{fits.map(fv => chip(fit, fv, setFitting, FIT_TEXT[fv]))}</div>
             </div>
             {fit === 'cut' && (
               <div>
-                <div className={s.chips}>{['11.25', '22.5', '30', '60'].map(a => chip(cutAngleText, a, setCutAngleText, `${a}°`))}</div>
+                <div className={ui.chips}>{['11.25', '22.5', '30', '60'].map(a => chip(cutAngleText, a, setCutAngleText, `${a}°`))}</div>
                 <div style={{ maxWidth: 220, marginTop: '0.5rem' }}>{field('eo-ang', L('엘보 각도', 'Elbow angle'), L('90° 장반경 엘보를 잘라 만든 각도', 'cut from a 90° long-radius elbow'), cutAngleText, setCutAngleText, '°')}</div>
               </div>
             )}
@@ -267,9 +268,9 @@ export default function ElbowOffsetClient() {
             {field('eo-cc', L('심-심 치수', 'Centre-to-centre'), L('양쪽 이음쇠 중심 사이 거리 (도면 치수)', 'between fitting centres'), ccText, setCcText)}
             <div className={s.grid2}>
               {([['A', endA, setEndA], ['B', endB, setEndB]] as [string, End, (e: End) => void][]).map(([n, val, set]) => (
-                <div key={n} className={s.field}>
-                  <span className={s.field_label}>{L(`${n}쪽 끝`, `End ${n}`)}</span>
-                  <select className={s.select} value={endOptions.includes(val) ? val : '90L'} onChange={e => set(e.target.value as End)} aria-label={L(`${n}쪽 끝`, `End ${n}`)}>
+                <div key={n} className={ui.field}>
+                  <span className={ui.label}>{L(`${n}쪽 끝`, `End ${n}`)}</span>
+                  <select className={ui.input} value={endOptions.includes(val) ? val : '90L'} onChange={e => set(e.target.value as End)} aria-label={L(`${n}쪽 끝`, `End ${n}`)}>
                     {endOptions.map(o => <option key={o} value={o}>{endName(o)}</option>)}
                   </select>
                 </div>
@@ -279,23 +280,23 @@ export default function ElbowOffsetClient() {
         )}
         {std !== 'thread' && (
           <div>
-            <span className={s.label}>{L('용접 갭 (이음 1곳당)', 'Weld root gap (per joint)')}</span>
-            <div className={s.chips}>{[0, 1.5, 2, 3].map(g => chip(gap, g, setGap, `${g}mm`))}</div>
+            <span className={`${ui.label} ${s.label}`}>{L('용접 갭 (이음 1곳당)', 'Weld root gap (per joint)')}</span>
+            <div className={ui.chips}>{[0, 1.5, 2, 3].map(g => chip(gap, g, setGap, `${g}mm`))}</div>
           </div>
         )}
       </section>
 
-      <section className={s.card} aria-live="polite">
-        <h2 className={s.card_title}>{L('3. 결과', '3. Result')}</h2>
-        {cutValue === null ? <p className={s.hint}>{L('치수를 넣으면 결과가 나옵니다.', 'Enter dimensions to see the result.')}</p> : (
+      <section className={`${ui.card} ${s.card}`} aria-live="polite">
+        <h2 className={`${ui.cardTitle} ${s.card_title}`}>{L('3. 결과', '3. Result')}</h2>
+        {cutValue === null ? <p className={`${ui.hint} ${s.hint}`}>{L('치수를 넣으면 결과가 나옵니다.', 'Enter dimensions to see the result.')}</p> : (
           <>
-            <div className={s.hero}>
-              <div className={s.hero_label}>{L('파이프 절단 길이', 'Pipe cut length')}</div>
+            <div className={`${ui.result} ${s.hero}`}>
+              <div className={ui.resultLabel}>{L('파이프 절단 길이', 'Pipe cut length')}</div>
               <div className={s.hero_num}>{tooShort ? '—' : f1(cutValue)}<span className={s.hero_unit}>mm</span></div>
               <div className={s.hero_sub}>{STD_TEXT[std][isKo ? 0 : 2]} {size}{mode !== 'cut' ? ` · ${FIT_TEXT[fit]}${fit === 'cut' ? ` ${cutAngle}°` : ''}` : ''}</div>
             </div>
             {tooShort && (
-              <div className={s.warn}>{res
+              <div className={`${ui.notice} ${ui.red}`}>{res
                 ? L(`옵셋이 너무 작아 엘보끼리 맞붙습니다. 이 엘보로는 옵셋이 최소 ${f1(res.minOffset)}mm 이상이어야 합니다. 각도가 작은 엘보(45° 등)를 쓰거나 엘보를 직접 맞대세요.`, `Offset too small: at least ${f1(res.minOffset)} mm is needed with this elbow.`)
                 : L('심-심 치수가 엘보값 합보다 작습니다. 이음쇠끼리 직접 맞대야 하는 거리입니다.', 'The C-C distance is shorter than the fitting allowances.')}</div>
             )}
@@ -324,14 +325,14 @@ export default function ElbowOffsetClient() {
                 </div>
               </div>
             )}
-            {!tooShort && <button type="button" className={s.btn} onClick={copy}><Copy size={16} />{copied || L('결과 복사', 'Copy')}</button>}
-            <p className={s.hint}>{L('엘보값은 표준 치수표 값이라 제조사마다 1~2mm 차이가 날 수 있습니다. 첫 이음은 실물 엘보를 재서 확인하세요.', 'Fittings vary by 1–2 mm between makers; measure the first one.')}</p>
+            {!tooShort && <button type="button" className={`${ui.button} ${ui.primary} ${s.btn}`} onClick={copy}><Copy size={16} />{copied || L('결과 복사', 'Copy')}</button>}
+            <p className={`${ui.hint} ${s.hint}`}>{L('엘보값은 표준 치수표 값이라 제조사마다 1~2mm 차이가 날 수 있습니다. 첫 이음은 실물 엘보를 재서 확인하세요.', 'Fittings vary by 1–2 mm between makers; measure the first one.')}</p>
           </>
         )}
       </section>
 
-      <section className={s.card}>
-        <h2 className={s.card_title}>{L(`엘보값 표 — ${STD_TEXT[std][0]}`, `Allowance table — ${STD_TEXT[std][2]}`)}</h2>
+      <section className={`${ui.card} ${s.card}`}>
+        <h2 className={`${ui.cardTitle} ${s.card_title}`}>{L(`엘보값 표 — ${STD_TEXT[std][0]}`, `Allowance table — ${STD_TEXT[std][2]}`)}</h2>
         <div className={s.table_wrap}>
           <table className={s.table}>
             <thead>
@@ -351,7 +352,7 @@ export default function ElbowOffsetClient() {
             </tbody>
           </table>
         </div>
-        <span className={s.label}>{L('각도별 옵셋 배수 (암산용)', 'Offset multipliers')}</span>
+        <span className={`${ui.label} ${s.label}`}>{L('각도별 옵셋 배수 (암산용)', 'Offset multipliers')}</span>
         <div className={s.table_wrap}>
           <table className={s.table}>
             <thead><tr><th>{L('엘보 각도', 'Angle')}</th><th>{L('빗변 = 옵셋 ×', 'Travel = offset ×')}</th><th>{L('전진 = 옵셋 ×', 'Run = offset ×')}</th></tr></thead>

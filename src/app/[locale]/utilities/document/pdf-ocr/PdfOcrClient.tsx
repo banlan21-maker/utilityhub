@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './pdf-ocr.module.css';
+import { ui } from '@/app/components/ui';
 
 const LANGUAGE_OPTIONS = [
   { value: 'kor+eng', label: '한국어 + 영어 (기본값)' },
@@ -326,7 +327,7 @@ export default function PdfOcrClient() {
 
       {/* Mobile warning */}
       {showMobileWarning && (
-        <div className={s.mobileWarning}>
+        <div className={`${ui.notice} ${ui.amber} ${s.mobileWarning}`}>
           <AlertTriangle size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
           <div style={{ flex: 1 }}>
             <strong>{isKo ? 'PC 환경을 권장합니다' : 'PC recommended'}</strong>
@@ -358,7 +359,7 @@ export default function PdfOcrClient() {
 
       {/* Main panel */}
       {!isProcessing && !isDone && (
-        <div className={s.panel}>
+        <div className={`${ui.card} ${s.panel}`}>
           {/* Upload zone */}
           {!file ? (
             <div
@@ -414,12 +415,12 @@ export default function PdfOcrClient() {
           )}
 
           {/* Language option */}
-          <div>
-            <label className={s.field_label}>
+          <div className={ui.field}>
+            <label className={ui.label}>
               {isKo ? 'OCR 언어' : 'OCR Language'}
             </label>
             <select
-              className={s.select_field}
+              className={ui.input}
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               aria-label={isKo ? 'OCR 언어 선택' : 'Select OCR language'}
@@ -433,8 +434,8 @@ export default function PdfOcrClient() {
           </div>
 
           {/* Quality option */}
-          <div>
-            <label className={s.field_label}>
+          <div className={ui.field}>
+            <label className={ui.label}>
               {isKo ? '렌더링 품질' : 'Rendering Quality'}
             </label>
             {isMobileDevice && (
@@ -468,7 +469,7 @@ export default function PdfOcrClient() {
 
           {/* Large file warning */}
           {largeFileWarning && (
-            <div className={s.large_warn}>
+            <div className={`${ui.notice} ${ui.amber}`}>
               <AlertTriangle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
                 <strong>{isKo ? '⚠️ 페이지 수가 많습니다' : '⚠️ Large document detected'}</strong>
@@ -482,12 +483,12 @@ export default function PdfOcrClient() {
 
           {/* Error */}
           {error && (
-            <div className={s.error_box}>
+            <div className={`${ui.notice} ${ui.red}`}>
               <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
                 {error}
                 <br />
-                <button className={s.error_retry} onClick={() => setError('')} aria-label={isKo ? '다시 시도' : 'Retry'}>
+                <button className={`${ui.button} ${ui.danger} ${ui.sm} ${s.error_retry}`} onClick={() => setError('')} aria-label={isKo ? '다시 시도' : 'Retry'}>
                   {isKo ? '다시 시도' : 'Retry'}
                 </button>
               </div>
@@ -496,7 +497,7 @@ export default function PdfOcrClient() {
 
           {/* Convert button */}
           <button
-            className={s.convert_btn}
+            className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`}
             onClick={processOCR}
             disabled={!file || isProcessing}
             aria-label={isKo ? '검색 가능한 PDF로 변환하기' : 'Convert to searchable PDF'}
@@ -508,7 +509,7 @@ export default function PdfOcrClient() {
 
       {/* Progress */}
       {isProcessing && (
-        <div className={s.progress_box}>
+        <div className={`${ui.card} ${s.progress_box}`}>
           <p className={s.progress_title}>
             🔄 {isKo ? 'OCR 처리 중...' : 'Processing OCR...'}
           </p>
@@ -540,7 +541,7 @@ export default function PdfOcrClient() {
           </p>
           <div className={s.done_actions}>
             <button
-              className={s.done_btn_primary}
+              className={`${ui.button} ${ui.primary}`}
               onClick={() => savedPdfRef?.save()}
               aria-label={isKo ? '다시 다운로드' : 'Download again'}
             >
@@ -548,7 +549,7 @@ export default function PdfOcrClient() {
               {isKo ? '다시 다운로드' : 'Download again'}
             </button>
             <button
-              className={s.done_btn_secondary}
+              className={`${ui.button} ${ui.secondary}`}
               onClick={removeFile}
               aria-label={isKo ? '새 파일 변환' : 'Convert new file'}
             >
@@ -560,8 +561,8 @@ export default function PdfOcrClient() {
       )}
 
       {/* Usage info box */}
-      <div className={s.info_box}>
-        <p className={s.info_title}>
+      <div className={`${ui.card} ${s.info_box}`}>
+        <p className={ui.cardTitle} style={{ margin: 0 }}>
           💡 {isKo ? '이 툴이 가장 효과적인 경우' : 'Best use cases'}
         </p>
         <div className={s.info_section}>
@@ -610,7 +611,7 @@ export default function PdfOcrClient() {
       </div>
 
       {/* Disclaimer */}
-      <div className={s.disclaimer}>
+      <div className={`${ui.notice} ${ui.amber} ${s.disclaimer}`}>
         <h4>⚠️ {isKo ? '사용 전 반드시 확인하세요' : 'Important notices before use'}</h4>
         <h5>{isKo ? '[인식률]' : '[Accuracy]'}</h5>
         <p>

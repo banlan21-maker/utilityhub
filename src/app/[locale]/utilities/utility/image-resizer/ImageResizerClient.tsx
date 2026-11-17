@@ -9,6 +9,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
 
 // cropperjs CSS (bundled inside react-cropper's node_modules)
 import 'react-cropper/node_modules/cropperjs/dist/cropper.css';
@@ -178,25 +179,6 @@ export default function ImageResizerClient() {
     newImg:   isKo ? '새 이미지' : 'New Image',
   };
 
-  const presetBtnStyle = (active: boolean): React.CSSProperties => ({
-    padding: '0.4rem 0.7rem',
-    borderRadius: 'var(--radius-sm)',
-    border: '1.5px solid',
-    borderColor: active ? 'var(--primary)' : 'var(--border)',
-    background: active ? 'rgba(249,115,22,0.12)' : 'var(--surface)',
-    color: active ? 'var(--primary)' : 'var(--text-secondary)',
-    fontWeight: active ? 700 : 500,
-    fontSize: '0.78rem',
-    cursor: 'pointer',
-    transition: 'all 0.15s',
-    whiteSpace: 'nowrap' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    alignItems: 'center',
-    gap: '0.15rem',
-    lineHeight: 1.2,
-  });
-
   return (
     <div>
       <NavigationActions />
@@ -211,11 +193,11 @@ export default function ImageResizerClient() {
           onDragOver={e => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
           style={{
-            maxWidth: '640px',
+            maxWidth: 'var(--tool-width-narrow)',
             margin: '0 auto',
-            border: `2px dashed ${dragging ? 'var(--primary)' : 'var(--border)'}`,
-            borderRadius: 'var(--radius-lg)',
-            background: dragging ? 'rgba(249,115,22,0.06)' : 'var(--surface)',
+            border: `2px dashed ${dragging ? 'var(--color-primary)' : 'var(--border)'}`,
+            borderRadius: 'var(--radius-card)',
+            background: dragging ? 'var(--color-primary-light)' : 'var(--surface)',
             padding: '4.5rem 2rem',
             textAlign: 'center',
             cursor: 'pointer',
@@ -224,7 +206,7 @@ export default function ImageResizerClient() {
         >
           <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>✂️</div>
           <p style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>{T.drop}</p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{T.dropSub}</p>
+          <p className={ui.hint}>{T.dropSub}</p>
           <input ref={inputRef} type="file" accept="image/*" onChange={onFileChange} style={{ display: 'none' }} />
         </div>
       ) : (
@@ -235,19 +217,20 @@ export default function ImageResizerClient() {
           <div style={{ flex: '0 0 290px', minWidth: '260px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
             {/* SNS Presets */}
-            <div className="glass-panel" style={{ padding: '1.25rem' }}>
-              <p style={sectionLabel}>{T.presets}</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            <div className={ui.card}>
+              <p className={ui.cardTitle}>{T.presets}</p>
+              <div className={ui.chips} style={{ gap: '0.4rem' }}>
                 {PRESETS.map(p => (
                   <button
                     key={p.id}
                     onClick={() => applyPreset(p)}
-                    style={presetBtnStyle(activePreset === p.id)}
+                    className={`${ui.chip} ${ui.pill} ${activePreset === p.id ? ui.chipActive : ''}`}
+                    style={{ flexDirection: 'column', gap: '0.15rem', lineHeight: 1.2 }}
                     title={p.badge}
                   >
                     <span>{isKo ? p.labelKo : p.label}</span>
                     {p.badge && (
-                      <span style={{ fontSize: '0.62rem', color: activePreset === p.id ? 'var(--primary)' : 'var(--text-muted)', fontWeight: 400 }}>
+                      <span style={{ fontSize: '0.62rem', color: activePreset === p.id ? 'var(--color-primary)' : 'var(--text-muted)', fontWeight: 400 }}>
                         {p.badge}
                       </span>
                     )}
@@ -257,58 +240,48 @@ export default function ImageResizerClient() {
             </div>
 
             {/* Custom size */}
-            <div className="glass-panel" style={{ padding: '1.25rem' }}>
-              <p style={sectionLabel}>{T.custom}</p>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <div style={{ flex: 1 }}>
-                  <label style={microLabel}>W (px)</label>
+            <div className={ui.card}>
+              <p className={ui.cardTitle}>{T.custom}</p>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <label className={ui.label} style={{ display: 'block', marginBottom: '0.25rem' }}>W (px)</label>
                   <input
                     type="number"
                     placeholder="1080"
                     value={customW}
                     onChange={e => setCustomW(e.target.value)}
-                    style={numInput}
+                    className={ui.input}
                   />
                 </div>
-                <span style={{ color: 'var(--text-muted)', marginTop: '1.2rem', fontWeight: 700 }}>×</span>
-                <div style={{ flex: 1 }}>
-                  <label style={microLabel}>H (px)</label>
+                <span style={{ color: 'var(--text-muted)', fontWeight: 700, lineHeight: 'var(--control-h)' }}>×</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <label className={ui.label} style={{ display: 'block', marginBottom: '0.25rem' }}>H (px)</label>
                   <input
                     type="number"
                     placeholder="1080"
                     value={customH}
                     onChange={e => setCustomH(e.target.value)}
-                    style={numInput}
+                    className={ui.input}
                   />
                 </div>
                 <button
                   onClick={applyCustom}
-                  style={{
-                    marginTop: '1.2rem',
-                    padding: '0.55rem 0.9rem',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1.5px solid var(--primary)',
-                    background: 'rgba(249,115,22,0.1)',
-                    color: 'var(--primary)',
-                    fontWeight: 700,
-                    fontSize: '0.8rem',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                  }}
+                  className={`${ui.button} ${ui.secondary}`}
+                  style={{ padding: '0 0.8rem' }}
                 >
                   {T.apply}
                 </button>
               </div>
               {outputW > 0 && outputH > 0 && (
-                <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+                <p className={ui.hint} style={{ marginTop: '0.5rem' }}>
                   📐 {isKo ? '출력 크기' : 'Output'}: {outputW} × {outputH}px
                 </p>
               )}
             </div>
 
             {/* Transform */}
-            <div className="glass-panel" style={{ padding: '1.25rem' }}>
-              <p style={sectionLabel}>{T.transform}</p>
+            <div className={ui.card}>
+              <p className={ui.cardTitle}>{T.transform}</p>
               <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
                 {[
                   { label: '↺ -90°', fn: () => rotate(-90) },
@@ -319,19 +292,7 @@ export default function ImageResizerClient() {
                   <button
                     key={btn.label}
                     onClick={btn.fn}
-                    style={{
-                      padding: '0.4rem 0.75rem',
-                      borderRadius: 'var(--radius-sm)',
-                      border: '1px solid var(--border)',
-                      background: 'var(--surface-hover)',
-                      color: 'var(--text-secondary)',
-                      fontWeight: 600,
-                      fontSize: '0.78rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s',
-                    }}
-                    onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }}
-                    onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                    className={`${ui.button} ${ui.secondary} ${ui.sm}`}
                   >
                     {btn.label}
                   </button>
@@ -340,27 +301,14 @@ export default function ImageResizerClient() {
             </div>
 
             {/* Output format */}
-            <div className="glass-panel" style={{ padding: '1.25rem' }}>
-              <p style={sectionLabel}>{T.format}</p>
-              <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '1rem' }}>
+            <div className={ui.card}>
+              <p className={ui.cardTitle}>{T.format}</p>
+              <div className={ui.segmented} style={{ marginBottom: '1rem' }}>
                 {(['jpeg', 'png', 'webp'] as OutputFormat[]).map(f => (
                   <button
                     key={f}
                     onClick={() => setOutputFormat(f)}
-                    style={{
-                      flex: 1,
-                      padding: '0.45rem 0.5rem',
-                      borderRadius: 'var(--radius-sm)',
-                      border: '1.5px solid',
-                      borderColor: outputFormat === f ? 'var(--primary)' : 'var(--border)',
-                      background: outputFormat === f ? 'rgba(249,115,22,0.1)' : 'var(--surface)',
-                      color: outputFormat === f ? 'var(--primary)' : 'var(--text-secondary)',
-                      fontWeight: 700,
-                      fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      textTransform: 'uppercase',
-                      transition: 'all 0.15s',
-                    }}
+                    className={`${ui.segment} ${outputFormat === f ? ui.segmentActive : ''}`}
                   >
                     {f === 'jpeg' ? 'JPG' : f.toUpperCase()}
                   </button>
@@ -370,14 +318,14 @@ export default function ImageResizerClient() {
               {outputFormat !== 'png' && (
                 <>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                    <span style={microLabel}>{T.quality}</span>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)' }}>{Math.round(quality * 100)}%</span>
+                    <span className={ui.label}>{T.quality}</span>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-primary)' }}>{Math.round(quality * 100)}%</span>
                   </div>
                   <input
                     type="range" min="0.1" max="1" step="0.05"
                     value={quality}
                     onChange={e => setQuality(parseFloat(e.target.value))}
-                    style={{ width: '100%', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                    style={{ width: '100%', accentColor: 'var(--color-primary)', cursor: 'pointer' }}
                   />
                 </>
               )}
@@ -386,42 +334,14 @@ export default function ImageResizerClient() {
             {/* Action buttons */}
             <button
               onClick={download}
-              style={{
-                width: '100%',
-                padding: '0.9rem',
-                fontSize: '1rem',
-                fontWeight: 700,
-                borderRadius: 'var(--radius-md)',
-                border: 'none',
-                background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                color: '#fff',
-                cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(249,115,22,0.4)',
-                transition: 'all 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-              }}
-              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(249,115,22,0.5)'; }}
-              onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 14px rgba(249,115,22,0.4)'; }}
+              className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`}
             >
               ✂️ {T.download}
             </button>
 
             <button
               onClick={reset}
-              style={{
-                width: '100%',
-                padding: '0.65rem',
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border)',
-                background: 'var(--surface)',
-                color: 'var(--text-secondary)',
-                cursor: 'pointer',
-              }}
+              className={`${ui.button} ${ui.secondary} ${ui.block}`}
             >
               🔄 {T.newImg}
             </button>
@@ -429,7 +349,7 @@ export default function ImageResizerClient() {
 
           {/* ── Right: Cropper ── */}
           <div style={{ flex: '1 1 400px', minWidth: '300px' }}>
-            <div className="glass-panel" style={{ padding: '1rem', overflow: 'hidden' }}>
+            <div className={ui.card} style={{ padding: '1rem', overflow: 'hidden' }}>
               <Cropper
                 ref={cropperRef}
                 src={src}
@@ -444,7 +364,7 @@ export default function ImageResizerClient() {
                 checkOrientation={false}
               />
             </div>
-            <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.5rem', textAlign: 'center' }}>
+            <p className={ui.hint} style={{ marginTop: '0.5rem', textAlign: 'center' }}>
               {isKo ? '드래그로 크롭 영역을 조절하세요' : 'Drag to adjust the crop area'}
             </p>
           </div>
@@ -452,7 +372,7 @@ export default function ImageResizerClient() {
       )}
 
       {/* ── SEO ── */}
-      <div style={{ maxWidth: '860px', margin: '0 auto' }}>
+      <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto' }}>
         {/* 공유하기 */}
         <ShareBar title={T.title} description={T.subtitle} />
 
@@ -510,35 +430,3 @@ export default function ImageResizerClient() {
     </div>
   );
 }
-
-// ─── Shared micro styles ──────────────────────────────────────────────────────
-
-const sectionLabel: React.CSSProperties = {
-  fontSize: '0.72rem',
-  fontWeight: 700,
-  color: 'var(--text-muted)',
-  textTransform: 'uppercase',
-  letterSpacing: '0.06em',
-  marginBottom: '0.6rem',
-};
-
-const microLabel: React.CSSProperties = {
-  display: 'block',
-  fontSize: '0.7rem',
-  fontWeight: 600,
-  color: 'var(--text-muted)',
-  marginBottom: '0.25rem',
-};
-
-const numInput: React.CSSProperties = {
-  width: '100%',
-  padding: '0.5rem 0.6rem',
-  fontSize: '0.9rem',
-  fontWeight: 600,
-  border: '1.5px solid var(--border)',
-  borderRadius: 'var(--radius-sm)',
-  background: 'var(--surface)',
-  color: 'var(--text-primary)',
-  outline: 'none',
-  boxSizing: 'border-box',
-};

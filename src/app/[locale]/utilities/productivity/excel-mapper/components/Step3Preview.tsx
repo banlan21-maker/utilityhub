@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { ParsedExcelData, MappingRule } from '../ExcelMapperClient';
+import { ui } from '@/app/components/ui';
+import s from '../excel-mapper.module.css';
 
 interface Step3PreviewProps {
   parsedData: ParsedExcelData;
@@ -66,36 +68,36 @@ export default function Step3Preview({ parsedData, mappingRules, onBack, onReset
   return (
     <div>
       <div style={{ marginBottom: '2rem' }}>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+        <h3 className={ui.cardTitle}>
           {t('previewTitle')}
         </h3>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+        <p className={s.previewDesc}>
           {t('previewDesc')}
         </p>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
-          <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#f97316', marginBottom: '0.25rem' }}>
+        <div className={s.stats}>
+          <div className={`${ui.card} ${s.stat}`}>
+            <div className={s.statValue}>
               {parsedData.dataRows.length}
             </div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+            <div className={ui.resultLabel}>
               {t('inputRows')}
             </div>
           </div>
-          <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#f97316', marginBottom: '0.25rem' }}>
+          <div className={`${ui.card} ${s.stat}`}>
+            <div className={s.statValue}>
               {outputData.length - 1}
             </div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+            <div className={ui.resultLabel}>
               {t('outputRows')}
             </div>
           </div>
-          <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#f97316', marginBottom: '0.25rem' }}>
+          <div className={`${ui.card} ${s.stat}`}>
+            <div className={s.statValue}>
               {mappingRules.length}
             </div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+            <div className={ui.resultLabel}>
               {t('columns')}
             </div>
           </div>
@@ -106,7 +108,7 @@ export default function Step3Preview({ parsedData, mappingRules, onBack, onReset
           <div style={{ overflowX: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: 'rgba(249, 115, 22, 0.1)' }}>
+                <tr style={{ background: 'var(--color-primary-light)' }}>
                   <th
                     style={{
                       padding: '0.75rem',
@@ -126,7 +128,7 @@ export default function Step3Preview({ parsedData, mappingRules, onBack, onReset
                         padding: '0.75rem',
                         textAlign: 'left',
                         fontWeight: 600,
-                        color: '#f97316',
+                        color: 'var(--color-primary)',
                         borderBottom: '2px solid var(--border)',
                       }}
                     >
@@ -167,61 +169,34 @@ export default function Step3Preview({ parsedData, mappingRules, onBack, onReset
             </table>
           </div>
           {outputData.length > 11 && (
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+            <p className={`${ui.hint} ${s.tableNote}`}>
               {t('showingFirst10Rows')} ({outputData.length - 1} {t('totalRows')})
             </p>
           )}
         </div>
 
         {/* Export button */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+        <div className={s.exportRow}>
           <button
             onClick={handleExport}
             disabled={isExporting}
-            style={{
-              padding: '1rem 3rem',
-              border: 'none',
-              borderRadius: 'var(--radius-md)',
-              background: '#f97316',
-              color: 'white',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              cursor: isExporting ? 'not-allowed' : 'pointer',
-              opacity: isExporting ? 0.6 : 1,
-              boxShadow: 'var(--shadow-md)',
-            }}
+            className={`${ui.button} ${ui.primary} ${ui.lg}`}
           >
             {isExporting ? t('exporting') : t('exportExcel')}
           </button>
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+      <div className={s.actions}>
         <button
           onClick={onBack}
-          style={{
-            padding: '0.75rem 1.5rem',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--surface)',
-            color: 'var(--text-primary)',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className={`${ui.button} ${ui.secondary}`}
         >
           {t('back')}
         </button>
         <button
           onClick={onReset}
-          style={{
-            padding: '0.75rem 1.5rem',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--surface)',
-            color: 'var(--text-primary)',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className={`${ui.button} ${ui.secondary}`}
         >
           {t('startOver')}
         </button>

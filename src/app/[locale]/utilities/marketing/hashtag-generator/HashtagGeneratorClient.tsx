@@ -17,6 +17,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './hashtag.module.css';
+import { ui } from '@/app/components/ui';
 
 /* ─── Hashtag Database ─── */
 type Platform = 'instagram' | 'youtube';
@@ -99,12 +100,12 @@ export default function HashtagGeneratorClient() {
       <NavigationActions />
       <ToolHeader icon={<Hash />} title={isKo ? '해시태그 생성기' : 'Hashtag Generator'} subtitle={isKo ? '키워드 하나로 인기 해시태그 즉시 생성' : 'Generate 30 popular hashtags instantly'} />
 
-      <section className={s.hashtag_panel}>
+      <section className={`${ui.card} ${s.hashtag_panel}`}>
         <div>
-          <label className={s.hashtag_label}>{isKo ? '1. 플랫폼 선택' : '1. Select Platform'}</label>
-          <div className={s.hashtag_button_group}>
+          <label className={`${ui.label} ${s.hashtag_label}`}>{isKo ? '1. 플랫폼 선택' : '1. Select Platform'}</label>
+          <div className={ui.segmented}>
             {(['instagram', 'youtube'] as Platform[]).map(p => (
-              <button key={p} onClick={() => setPlatform(p)} className={`${s.hashtag_platform_btn} ${platform === p ? s.hashtag_platform_btn_active : ''}`}>
+              <button key={p} onClick={() => setPlatform(p)} className={`${ui.segment} ${s.hashtag_platform_btn} ${platform === p ? ui.segmentActive : ''}`}>
                 {p === 'instagram' ? <Instagram size={18} /> : <Youtube size={18} />}
                 {p === 'instagram' ? (isKo ? '인스타그램' : 'Instagram') : (isKo ? '유튜브' : 'YouTube')}
               </button>
@@ -112,19 +113,19 @@ export default function HashtagGeneratorClient() {
           </div>
         </div>
         <div>
-          <label className={s.hashtag_label}>{isKo ? '2. 키워드 입력' : '2. Enter Keyword'}</label>
+          <label className={`${ui.label} ${s.hashtag_label}`}>{isKo ? '2. 키워드 입력' : '2. Enter Keyword'}</label>
           <div className={s.hashtag_input_row}>
-            <input className={s.hashtag_input} value={keyword} onChange={e => setKeyword(e.target.value)} onKeyDown={e => e.key === 'Enter' && setSubmitted(keyword.trim())} placeholder={isKo ? "예: 맛집, 카페..." : "e.g. food, cafe..."} />
-            <button onClick={() => setSubmitted(keyword.trim())} className={s.hashtag_primary_btn}><TrendingUp size={20} /> {isKo ? '생성' : 'Generate'}</button>
+            <input className={`${ui.input} ${s.hashtag_input}`} value={keyword} onChange={e => setKeyword(e.target.value)} onKeyDown={e => e.key === 'Enter' && setSubmitted(keyword.trim())} placeholder={isKo ? "예: 맛집, 카페..." : "e.g. food, cafe..."} />
+            <button onClick={() => setSubmitted(keyword.trim())} className={`${ui.button} ${ui.primary} ${s.hashtag_primary_btn}`}><TrendingUp size={20} /> {isKo ? '생성' : 'Generate'}</button>
           </div>
         </div>
       </section>
 
       {tags.length > 0 ? (
-        <section className={s.hashtag_panel}>
+        <section className={`${ui.card} ${s.hashtag_panel}`}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-            <h3 style={{ fontWeight: 800 }}>{submitted} 관련 태그</h3>
-            <button onClick={() => { navigator.clipboard.writeText(tags.join(' ')); setCopied(true); setTimeout(() => setCopied(false), 2000); }} className={s.hashtag_copy_btn} style={{ background: copied ? '#10b981' : '#8b5cf6' }}>
+            <h3 className={ui.cardTitle} style={{ margin: 0 }}>{submitted} 관련 태그</h3>
+            <button onClick={() => { navigator.clipboard.writeText(tags.join(' ')); setCopied(true); setTimeout(() => setCopied(false), 2000); }} className={`${ui.button} ${ui.sm} ${copied ? ui.green : ui.primary}`}>
               <Copy size={18} /> {copied ? '복사됨!' : '전시 복사'}
             </button>
           </div>
@@ -133,10 +134,10 @@ export default function HashtagGeneratorClient() {
               <span key={i} className={s.hashtag_chip} style={{ background: platform === 'instagram' ? 'linear-gradient(135deg, #f9ce34 0%, #ee2a7b 50%, #6228d7 100%)' : '#ef4444' }}>{tag}</span>
             ))}
           </div>
-          <textarea className={s.hashtag_textarea} readOnly value={tags.join(' ')} rows={3} />
+          <textarea className={`${ui.input} ${s.hashtag_textarea}`} readOnly value={tags.join(' ')} rows={3} />
         </section>
       ) : (
-        <div className={s.hashtag_empty}><Zap size={48} color="#e2e8f0" /><p>{isKo ? '키워드를 입력하세요' : 'Enter a keyword'}</p></div>
+        <div className={s.hashtag_empty}><Zap size={48} style={{ color: 'var(--border)' }} /><p>{isKo ? '키워드를 입력하세요' : 'Enter a keyword'}</p></div>
       )}
 
       <ShareBar title={isKo ? '해시태그 생성기' : 'Hashtag Generator'} description="키워드 하나로 해시태그 즉시 생성" />

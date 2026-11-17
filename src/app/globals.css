@@ -4,7 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* .light-island: 다크 모드에서도 종이·영수증·내보내기 영역은 라이트 색 그대로 (토큰을 라이트 값으로 다시 선언) */
+:root, .light-island {
   /* Dynamic vibrant colors */
   --primary: #4f46e5;      /* Indigo 600 */
   --primary-hover: #4338ca;
@@ -21,7 +22,7 @@
   /* Text */
   --text-primary: #0f172a;
   --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text-muted: #64748b;   /* 흰 배경 대비 4.7:1 (예전 #94a3b8은 2.6:1) */
   
   /* Borders & Shadows */
   --border: #e2e8f0;
@@ -59,6 +60,28 @@
   --color-border: var(--border);
   --color-bg-card: var(--surface);
   --color-bg-page: var(--background);
+
+  /* 채운 버튼 배경(흰 글씨와 대비 5.7:1)과 강조색 위 글자색 */
+  --primary-fill: #7c3aed;
+  --primary-fill-hover: #6d28d9;
+  --on-primary: #ffffff;
+
+  /* 도구 공통 부품 치수 */
+  --control-h: 48px;
+  --control-h-sm: 38px;
+  --radius-control: 12px;
+  --radius-card: 16px;
+  --focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.28);
+
+  /* 연한 색 상자(안내·결과·경고) — 라이트는 파스텔, 다크는 반투명 색 + 밝은 글자 */
+  --tint-violet-bg: #f5f3ff; --tint-violet-border: #ddd6fe; --tint-violet-fg: #6d28d9;
+  --tint-blue-bg: #eff6ff;   --tint-blue-border: #bfdbfe;   --tint-blue-fg: #1d4ed8;
+  --tint-sky-bg: #f0f9ff;    --tint-sky-border: #bae6fd;    --tint-sky-fg: #0369a1;
+  --tint-green-bg: #f0fdf4;  --tint-green-border: #bbf7d0;  --tint-green-fg: #15803d;
+  --tint-amber-bg: #fffbeb;  --tint-amber-border: #fde68a;  --tint-amber-fg: #b45309;
+  --tint-orange-bg: #fff7ed; --tint-orange-border: #fed7aa; --tint-orange-fg: #c2410c;
+  --tint-red-bg: #fef2f2;    --tint-red-border: #fecaca;    --tint-red-fg: #b91c1c;
+  --tint-pink-bg: #fdf2f8;   --tint-pink-border: #fbcfe8;   --tint-pink-fg: #be185d;
 }
 
 @media (min-width: 768px) {
@@ -68,7 +91,8 @@
   }
 }
 
-[data-theme='dark'] {
+/* .dark-island: 라이트 모드에서도 항상 어두운 영역(코드 편집기·훈련 화면)은 다크 토큰 사용 */
+[data-theme='dark'], .dark-island {
   /* 기본 입력칸·선택 상자·스크롤바도 어둡게 */
   color-scheme: dark;
   --primary: #818cf8;      /* Indigo 400 */
@@ -81,7 +105,7 @@
   
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
+  --text-muted: #94a3b8;   /* 어두운 배경 대비 5.5:1 (예전 #64748b은 3:1) */
   
   --border: #334155;
   
@@ -91,6 +115,20 @@
   --color-primary: #a78bfa;
   --color-primary-hover: #8b5cf6;
   --color-primary-light: rgba(167, 139, 250, 0.16);
+
+  --primary-fill: #7c3aed;
+  --primary-fill-hover: #8b5cf6;
+  --on-primary: #0f172a;
+  --focus-ring: 0 0 0 3px rgba(167, 139, 250, 0.35);
+
+  --tint-violet-bg: rgba(139, 92, 246, 0.14); --tint-violet-border: rgba(167, 139, 250, 0.35); --tint-violet-fg: #c4b5fd;
+  --tint-blue-bg: rgba(59, 130, 246, 0.14);   --tint-blue-border: rgba(96, 165, 250, 0.35);   --tint-blue-fg: #93c5fd;
+  --tint-sky-bg: rgba(14, 165, 233, 0.14);    --tint-sky-border: rgba(56, 189, 248, 0.35);    --tint-sky-fg: #7dd3fc;
+  --tint-green-bg: rgba(34, 197, 94, 0.13);   --tint-green-border: rgba(74, 222, 128, 0.32);  --tint-green-fg: #86efac;
+  --tint-amber-bg: rgba(245, 158, 11, 0.14);  --tint-amber-border: rgba(251, 191, 36, 0.35);  --tint-amber-fg: #fcd34d;
+  --tint-orange-bg: rgba(249, 115, 22, 0.14); --tint-orange-border: rgba(251, 146, 60, 0.35); --tint-orange-fg: #fdba74;
+  --tint-red-bg: rgba(239, 68, 68, 0.14);     --tint-red-border: rgba(248, 113, 113, 0.35);   --tint-red-fg: #fca5a5;
+  --tint-pink-bg: rgba(236, 72, 153, 0.14);   --tint-pink-border: rgba(244, 114, 182, 0.35);  --tint-pink-fg: #f9a8d4;
 }
 
 /* Base Resets */
@@ -165,4 +203,14 @@ h2 { font-size: 1.5rem; }
 @media (min-width: 768px) {
   h1 { font-size: 2.75rem; }
   h2 { font-size: 1.75rem; }
+}
+
+.light-island {
+  color-scheme: light;
+  color: var(--text-primary);
+}
+
+.dark-island {
+  color-scheme: dark;
+  color: var(--text-primary);
 }

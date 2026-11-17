@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 
 // ── Date helpers ─────────────────────────────────────────────────────────
 // `<input type="date">`는 "YYYY-MM-DD" 문자열을 주는데, `new Date(str)`는
@@ -144,12 +145,12 @@ export default function DdayCalcClient() {
       <NavigationActions />
       <ToolHeader icon={<CalendarDays />} title={t('title')} subtitle={t('description')} />
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: '640px', margin: '0 auto', width: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: 'var(--tool-width-narrow)', margin: '0 auto', width: '100%' }}>
         {/* Main D-Day Section */}
-        <div className="glass-panel" style={{ padding: '2.5rem 2rem' }}>
+        <div className={ui.card}>
           {/* 날짜 입력 (위) */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
-            <label style={{ fontWeight: 700, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+            <label className={ui.label}>
               {t('targetDateLabel')}
             </label>
             <input
@@ -157,34 +158,14 @@ export default function DdayCalcClient() {
               value={targetDate}
               onChange={(e) => setTargetDate(e.target.value)}
               aria-label={t('targetDateLabel')}
-              style={{
-                padding: '0.85rem 1rem',
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                borderRadius: '0.85rem',
-                border: '2px solid var(--border)',
-                outline: 'none',
-                background: 'var(--surface)',
-                color: 'var(--text-primary)',
-                width: '100%',
-                maxWidth: '280px',
-                textAlign: 'center',
-              }}
+              className={`${ui.input} ${ui.inputLg}`}
+              style={{ maxWidth: '280px', textAlign: 'center' }}
             />
           </div>
 
           {/* 결과 카드 (아래) */}
           {ddayData && (
-            <div
-              style={{
-                padding: '2rem 1.5rem',
-                background: 'linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(139,92,246,0.02) 100%)',
-                borderRadius: '1.25rem',
-                border: '1px solid rgba(139,92,246,0.15)',
-                textAlign: 'center',
-                width: '100%',
-              }}
-            >
+            <div className={ui.result} style={{ textAlign: 'center', width: '100%' }}>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                 {t('dDayResult')}
               </p>
@@ -192,7 +173,7 @@ export default function DdayCalcClient() {
                 style={{
                   fontSize: '4.5rem',
                   fontWeight: 900,
-                  color: 'var(--primary)',
+                  color: 'var(--color-primary)',
                   margin: 0,
                   letterSpacing: '-3px',
                   lineHeight: 1,
@@ -201,7 +182,7 @@ export default function DdayCalcClient() {
                 {ddayData.label}
               </p>
               {ddayData.isToday && (
-                <p style={{ color: '#10b981', fontWeight: 700, marginTop: '0.75rem', fontSize: '0.95rem' }}>
+                <p style={{ color: 'var(--tint-green-fg)', fontWeight: 700, marginTop: '0.75rem', fontSize: '0.95rem' }}>
                   {t('isToday')}
                 </p>
               )}
@@ -212,7 +193,7 @@ export default function DdayCalcClient() {
                     style={{
                       marginTop: '1.75rem',
                       paddingTop: '1.5rem',
-                      borderTop: '1px dashed rgba(139,92,246,0.25)',
+                      borderTop: '1px dashed var(--tint-violet-border)',
                       display: 'grid',
                       gridTemplateColumns: 'repeat(3, 1fr)',
                       gap: '0.5rem',
@@ -222,7 +203,7 @@ export default function DdayCalcClient() {
                       <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>{t('months')}</p>
                       <p style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{ddayData.months}</p>
                     </div>
-                    <div style={{ borderLeft: '1px solid rgba(139,92,246,0.15)', borderRight: '1px solid rgba(139,92,246,0.15)' }}>
+                    <div style={{ borderLeft: '1px solid var(--tint-violet-border)', borderRight: '1px solid var(--tint-violet-border)' }}>
                       <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>{t('weeks')}</p>
                       <p style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
                         {ddayData.weeks}
@@ -250,21 +231,8 @@ export default function DdayCalcClient() {
                 type="button"
                 onClick={handleCopy}
                 aria-label={t('copy_button')}
-                style={{
-                  marginTop: '1.5rem',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.55rem 1.15rem',
-                  borderRadius: '2rem',
-                  border: `1px solid ${copied ? '#10b981' : 'rgba(139,92,246,0.3)'}`,
-                  background: copied ? 'rgba(16,185,129,0.1)' : 'rgba(255,255,255,0.6)',
-                  color: copied ? '#10b981' : 'var(--primary)',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
+                className={`${ui.button} ${ui.secondary} ${ui.sm}`}
+                style={{ marginTop: '1.5rem' }}
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? t('copy_done') : t('copy_button')}
@@ -274,67 +242,40 @@ export default function DdayCalcClient() {
         </div>
 
         {/* Date Arithmetic Section */}
-        <div className="glass-panel" style={{ padding: '2.5rem' }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
+        <div className={ui.card}>
+          <h2 className={ui.cardTitle}>
             {t('dateAddTitle')}
           </h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{t('addDays')}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('addDays')}</label>
               <input
                 type="number"
                 inputMode="numeric"
                 value={addDays}
                 onChange={(e) => setAddDays(e.target.value)}
                 placeholder={t('placeholderDays')}
-                className="glass-panel"
+                className={ui.input}
                 aria-label={t('addDays')}
-                style={{
-                  padding: '0.75rem',
-                  fontSize: '1rem',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border)',
-                  outline: 'none',
-                  background: 'var(--surface)',
-                  color: 'var(--text-primary)',
-                }}
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{t('addMonths')}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('addMonths')}</label>
               <input
                 type="number"
                 inputMode="numeric"
                 value={addMonths}
                 onChange={(e) => setAddMonths(e.target.value)}
                 placeholder="0"
-                className="glass-panel"
+                className={ui.input}
                 aria-label={t('addMonths')}
-                style={{
-                  padding: '0.75rem',
-                  fontSize: '1rem',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border)',
-                  outline: 'none',
-                  background: 'var(--surface)',
-                  color: 'var(--text-primary)',
-                }}
               />
             </div>
           </div>
 
-          <div
-            style={{
-              marginTop: '2rem',
-              padding: '1.5rem',
-              background: 'var(--surface)',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border)',
-              textAlign: 'center',
-            }}
-          >
+          <div className={ui.result} style={{ marginTop: '1.5rem', textAlign: 'center' }}>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
               {t('result')}
             </p>

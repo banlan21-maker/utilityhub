@@ -10,6 +10,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './grid-poker.module.css';
+import { ui } from '@/app/components/ui';
 
 // ─────────────────── Types ───────────────────
 const SUITS = ['♠', '♥', '♦', '♣'] as const;
@@ -361,7 +362,7 @@ export default function GridPokerClient() {
       />
 
       {/* Game Panel */}
-      <section className={s.fin_panel}>
+      <section className={`${ui.card} ${s.fin_panel}`}>
         {phase === 'playing' && (
           <>
             {/* Next card */}
@@ -470,7 +471,7 @@ export default function GridPokerClient() {
             </table>
 
             {/* Share Button */}
-            <button className={s.shareBtn} onClick={handleShare} aria-label={isKo ? '결과 공유하기' : 'Share result'}>
+            <button className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${s.shareBtn}`} onClick={handleShare} aria-label={isKo ? '결과 공유하기' : 'Share result'}>
               {isKo ? '🎯 결과 공유하기' : '🎯 Share Result'}
             </button>
 

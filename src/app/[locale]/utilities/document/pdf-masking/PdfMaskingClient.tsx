@@ -7,6 +7,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 import { Shield, Upload, Download, Eye, EyeOff, AlertTriangle, CheckCircle, FileText, Trash2, Lock, ShieldCheck } from 'lucide-react';
 
 // ⚠️ jsPDF / pdfjs-dist 는 모듈 최상단에서 import 하면 안 된다.
@@ -243,21 +244,8 @@ export default function PdfMaskingClient() {
           : '100% Local Processing | AI Privacy Detection | No Server Upload'}
       >
         {/* Security Badge */}
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
-          color: 'white',
-          padding: '0.75rem 1.5rem',
-          borderRadius: '50px',
-          fontSize: '0.95rem',
-          fontWeight: 600,
-          boxShadow: '0 4px 12px rgba(30, 58, 138, 0.3)',
-          marginTop: '1rem',
-          marginBottom: '1rem',
-        }}>
-          <Lock size={18} />
+        <div className={`${ui.badge} ${ui.blue}`} style={{ marginTop: '1rem', marginBottom: '1rem', whiteSpace: 'normal' }}>
+          <Lock size={14} />
           {isKorean ? '로컬 보안 구역 작동 중 (오프라인 안전)' : 'Local Security Zone Active (Offline Safe)'}
         </div>
 
@@ -288,33 +276,23 @@ export default function PdfMaskingClient() {
               transition: 'all 0.3s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#1e3a8a';
-              e.currentTarget.style.background = 'rgba(30, 58, 138, 0.05)';
+              e.currentTarget.style.borderColor = 'var(--color-primary)';
+              e.currentTarget.style.background = 'var(--tint-violet-bg)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--border)';
               e.currentTarget.style.background = 'var(--surface)';
             }}
           >
-            <Shield size={64} style={{ margin: '0 auto 1.5rem', color: '#1e3a8a' }} />
+            <Shield size={64} style={{ margin: '0 auto 1.5rem', color: 'var(--color-primary)' }} />
             <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text-primary)' }}>
               {isKorean ? 'PDF 파일을 드래그하거나 클릭하여 업로드' : 'Drag & Drop PDF or Click to Upload'}
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1rem' }}>
               {isKorean ? 'AI가 개인정보를 자동으로 탐지하고 보안 점수를 제공합니다' : 'AI automatically detects personal information and provides a security score'}
             </p>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'rgba(16, 185, 129, 0.1)',
-              color: '#10b981',
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              fontSize: '0.9rem',
-              fontWeight: 600,
-            }}>
-              <CheckCircle size={16} />
+            <div className={`${ui.badge} ${ui.green}`}>
+              <CheckCircle size={14} />
               {isKorean ? '서버 업로드 없음 • 100% 안전' : 'No Server Upload • 100% Safe'}
             </div>
           </div>
@@ -331,9 +309,9 @@ export default function PdfMaskingClient() {
 
       {/* Processing */}
       {processing && (
-        <div className="glass-panel animate-slide-up" style={{ padding: '2rem', marginBottom: '2rem' }}>
+        <div className={`${ui.card} animate-slide-up`} style={{ marginBottom: '2rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-            <Shield size={48} style={{ color: '#1e3a8a', animation: 'pulse 2s infinite' }} />
+            <Shield size={48} style={{ color: 'var(--color-primary)', animation: 'pulse 2s infinite' }} />
             <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginTop: '1rem', color: 'var(--text-primary)' }}>
               {isKorean ? 'AI 보안 분석 중...' : 'AI Security Analysis...'}
             </h3>
@@ -351,7 +329,7 @@ export default function PdfMaskingClient() {
             <div style={{
               width: `${progress}%`,
               height: '100%',
-              background: 'linear-gradient(90deg, #1e3a8a, #10b981)',
+              background: 'var(--primary-fill)',
               transition: 'width 0.3s',
             }} />
           </div>
@@ -365,10 +343,10 @@ export default function PdfMaskingClient() {
       {pdfFile && !processing && (
         <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {/* Security Score */}
-          <div className="glass-panel" style={{ padding: '2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <div className={ui.card}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
               <div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+                <h3 className={ui.cardTitle} style={{ marginBottom: '0.35rem' }}>
                   {isKorean ? '보안 검사 결과' : 'Security Scan Results'}
                 </h3>
                 <p style={{ color: 'var(--text-secondary)' }}>
@@ -381,18 +359,7 @@ export default function PdfMaskingClient() {
                   setDetectedInfo([]);
                   setPages([]);
                 }}
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  borderRadius: '8px',
-                  border: '2px solid var(--border)',
-                  background: 'var(--surface)',
-                  color: 'var(--text-primary)',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                }}
+                className={`${ui.button} ${ui.secondary}`}
               >
                 <Trash2 size={18} />
                 {isKorean ? '새 파일' : 'New File'}
@@ -402,32 +369,32 @@ export default function PdfMaskingClient() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
               <div style={{
                 padding: '1.5rem',
-                background: securityScore >= 80 ? 'rgba(16, 185, 129, 0.1)' : securityScore >= 50 ? 'rgba(251, 191, 36, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                borderRadius: '12px',
-                border: `2px solid ${securityScore >= 80 ? '#10b981' : securityScore >= 50 ? '#fbbf24' : '#ef4444'}`,
+                background: securityScore >= 80 ? 'var(--tint-green-bg)' : securityScore >= 50 ? 'var(--tint-amber-bg)' : 'var(--tint-red-bg)',
+                borderRadius: 'var(--radius-control)',
+                border: `1px solid ${securityScore >= 80 ? 'var(--tint-green-border)' : securityScore >= 50 ? 'var(--tint-amber-border)' : 'var(--tint-red-border)'}`,
               }}>
                 <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
                   {isKorean ? '보안 점수' : 'Security Score'}
                 </div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: securityScore >= 80 ? '#10b981' : securityScore >= 50 ? '#fbbf24' : '#ef4444' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: securityScore >= 80 ? 'var(--tint-green-fg)' : securityScore >= 50 ? 'var(--tint-amber-fg)' : 'var(--tint-red-fg)' }}>
                   {securityScore}
                 </div>
               </div>
 
-              <div style={{ padding: '1.5rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '12px', border: '2px solid #ef4444' }}>
+              <div style={{ padding: '1.5rem', background: 'var(--tint-red-bg)', borderRadius: 'var(--radius-control)', border: '1px solid var(--tint-red-border)' }}>
                 <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
                   {isKorean ? '탐지된 개인정보' : 'Detected Info'}
                 </div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: '#ef4444' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--tint-red-fg)' }}>
                   {detectedInfo.length}
                 </div>
               </div>
 
-              <div style={{ padding: '1.5rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '12px', border: '2px solid #3b82f6' }}>
+              <div style={{ padding: '1.5rem', background: 'var(--tint-blue-bg)', borderRadius: 'var(--radius-control)', border: '1px solid var(--tint-blue-border)' }}>
                 <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
                   {isKorean ? '마스킹 예정' : 'Will Be Masked'}
                 </div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: '#3b82f6' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--tint-blue-fg)' }}>
                   {detectedInfo.filter(info => info.masked).length}
                 </div>
               </div>
@@ -436,44 +403,22 @@ export default function PdfMaskingClient() {
 
           {/* Detected Information List */}
           {detectedInfo.length > 0 && (
-            <div className="glass-panel" style={{ padding: '2rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div className={ui.card}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                <h3 className={ui.cardTitle} style={{ margin: 0 }}>
                   {isKorean ? '탐지된 개인정보 목록' : 'Detected Personal Information'}
                 </h3>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button
                     onClick={() => toggleAllMasks(true)}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      borderRadius: '8px',
-                      border: 'none',
-                      background: '#ef4444',
-                      color: 'white',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                    }}
+                    className={`${ui.button} ${ui.danger} ${ui.sm}`}
                   >
                     <EyeOff size={16} />
                     {isKorean ? '전체 가리기' : 'Mask All'}
                   </button>
                   <button
                     onClick={() => toggleAllMasks(false)}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      borderRadius: '8px',
-                      border: '2px solid var(--border)',
-                      background: 'var(--surface)',
-                      color: 'var(--text-primary)',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                    }}
+                    className={`${ui.button} ${ui.secondary} ${ui.sm}`}
                   >
                     <Eye size={16} />
                     {isKorean ? '전체 표시' : 'Show All'}
@@ -487,9 +432,10 @@ export default function PdfMaskingClient() {
                     key={info.id}
                     style={{
                       padding: '1rem',
-                      background: info.masked ? 'rgba(239, 68, 68, 0.05)' : 'var(--surface)',
-                      border: `2px solid ${info.masked ? '#ef4444' : 'var(--border)'}`,
-                      borderRadius: '8px',
+                      background: info.masked ? 'var(--tint-red-bg)' : 'var(--surface)',
+                      border: `1px solid ${info.masked ? 'var(--tint-red-border)' : 'var(--border)'}`,
+                      borderRadius: 'var(--radius-control)',
+                      gap: '0.75rem',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
@@ -503,37 +449,19 @@ export default function PdfMaskingClient() {
                         </div>
                         <div style={{
                           fontFamily: 'monospace',
-                          color: info.masked ? '#ef4444' : 'var(--text-secondary)',
+                          color: info.masked ? 'var(--tint-red-fg)' : 'var(--text-secondary)',
                           textDecoration: info.masked ? 'line-through' : 'none',
                         }}>
                           {info.text}
                         </div>
                       </div>
-                      <div style={{
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '4px',
-                        background: 'rgba(59, 130, 246, 0.1)',
-                        color: '#3b82f6',
-                        fontSize: '0.85rem',
-                        fontWeight: 600,
-                      }}>
+                      <div className={`${ui.badge} ${ui.blue}`}>
                         {isKorean ? `페이지 ${info.page}` : `Page ${info.page}`}
                       </div>
                     </div>
                     <button
                       onClick={() => toggleMask(info.id)}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        borderRadius: '8px',
-                        border: 'none',
-                        background: info.masked ? '#10b981' : '#ef4444',
-                        color: 'white',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                      }}
+                      className={`${ui.button} ${ui.sm} ${info.masked ? ui.secondary : ui.danger}`}
                     >
                       {info.masked ? <Eye size={16} /> : <EyeOff size={16} />}
                       {info.masked ? (isKorean ? '표시' : 'Show') : (isKorean ? '가리기' : 'Mask')}
@@ -545,25 +473,11 @@ export default function PdfMaskingClient() {
           )}
 
           {/* Action Buttons */}
-          <div className="glass-panel" style={{ padding: '2rem' }}>
+          <div className={ui.card}>
             <button
               onClick={generateSecuredPdf}
               disabled={processing}
-              style={{
-                width: '100%',
-                padding: '1.25rem',
-                borderRadius: '12px',
-                border: 'none',
-                background: processing ? '#94a3b8' : 'linear-gradient(135deg, #1e3a8a 0%, #10b981 100%)',
-                color: 'white',
-                fontSize: '1.1rem',
-                fontWeight: 700,
-                cursor: processing ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.75rem',
-              }}
+              className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`}
             >
               <Download size={24} />
               {processing
@@ -717,8 +631,8 @@ export default function PdfMaskingClient() {
       />
 
       {/* Security Disclaimer */}
-      <div className="glass-panel" style={{ padding: '1.5rem', marginTop: '2rem', borderLeft: '4px solid #1e3a8a' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+      <div className={ui.card} style={{ marginTop: '2rem', borderLeft: '4px solid var(--color-primary)' }}>
+        <h3 className={ui.cardTitle} style={{ marginBottom: '0.5rem' }}>
           {isKorean ? '🛡️ 보안 면책 조항' : '🛡️ Security Disclaimer'}
         </h3>
         <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>

@@ -16,52 +16,58 @@
   animation: fadeIn 0.4s ease-out;
 }
 
-.fin_header {
+.main_panel { margin-bottom: 2rem; }
+.stepBody { margin-top: 2rem; }
+
+/* Step 1 */
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-card);
+  padding: 4rem 2rem;
   text-align: center;
-  margin-bottom: 2rem;
+  cursor: pointer;
+  background: var(--surface);
+  transition: border-color 0.2s, background-color 0.2s;
 }
+.dropzone:hover,
+.dropzoneActive { border-color: var(--color-primary); background: var(--color-primary-light); }
 
-.fin_title {
-  font-size: 2.25rem;
+.fileInfo { margin-bottom: 2rem; }
+.main_panel .fileInfo { padding: 1rem; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+
+.tableNote { margin-top: 0.5rem; }
+
+.actions { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.actionsEnd { justify-content: flex-end; }
+
+/* Step 2 */
+.howTo { flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; }
+.howToTitle { font-size: 1.05rem; font-weight: 700; margin: 0; }
+.howToBody { color: var(--text-primary); line-height: 1.8; }
+
+.targetPanel { margin-bottom: 1.5rem; }
+
+.ruleList { display: flex; flex-direction: column; gap: 0.75rem; }
+.ruleRow { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; }
+.main_panel .ruleRow { padding: 0.85rem 1rem; }
+
+/* Step 3 */
+.previewDesc { color: var(--text-secondary); margin-bottom: 1.5rem; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.stat { text-align: center; }
+.main_panel .stat { padding: 1rem; }
+.statValue {
+  font-size: 2rem;
   font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 0.75rem;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+  font-variant-numeric: tabular-nums;
 }
-
-.fin_subtitle {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-}
-
-.main_panel {
-  padding: 2rem;
-  background: var(--color-bg-card, #ffffff);
-  border-radius: var(--radius-card, 1.5rem);
-  border: 1px solid var(--color-border, var(--border));
-  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
-  margin-bottom: 2rem;
-}
-
-.ad_placeholder {
-  width: 100%;
-  min-height: 90px;
-  background: var(--surface-hover);
-  border: 1px dashed var(--border);
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  margin: 2rem 0;
-}
+.exportRow { display: flex; justify-content: center; margin-bottom: 2rem; }
 
 @media (max-width: 640px) {
-  .tool_title {
-    font-size: 1.75rem;
-  }
-
-  .main_panel {
-    padding: 1.5rem;
-  }
+  .grid2 { grid-template-columns: 1fr; }
+  .stats { gap: 0.5rem; }
 }

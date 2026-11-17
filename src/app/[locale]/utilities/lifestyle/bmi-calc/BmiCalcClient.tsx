@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 
 export default function BmiCalcClient() {
   const t = useTranslations('BmiWater');
@@ -70,35 +71,35 @@ export default function BmiCalcClient() {
 
       <div className="grid gap-8 md:grid-cols-2 animate-slide-up">
         {/* Input Form */}
-        <div className="glass-panel" style={{ padding: '2rem' }}>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('height')}</label>
+        <div className={`${ui.card} flex flex-col gap-5`}>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('height')}</label>
             <input
               type="number"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
               placeholder="170"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'inherit' }}
+              className={`${ui.input} ${ui.inputLg}`}
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('weight')}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('weight')}</label>
             <input
               type="number"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               placeholder="70"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'inherit' }}
+              className={`${ui.input} ${ui.inputLg}`}
             />
           </div>
 
-          <div style={{ marginBottom: '2rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('activity')}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('activity')}</label>
             <select
               value={activity}
               onChange={(e) => setActivity(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'inherit' }}
+              className={ui.input}
             >
               <option value="activityLow">{t('activityLow')}</option>
               <option value="activityNormal">{t('activityNormal')}</option>
@@ -108,8 +109,7 @@ export default function BmiCalcClient() {
 
           <button
             onClick={calculate}
-            className="primary-button"
-            style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontWeight: 700, cursor: 'pointer', border: 'none' }}
+            className={`${ui.button} ${ui.primary} ${ui.block} ${ui.lg}`}
           >
             {t('calculate')}
           </button>
@@ -120,7 +120,7 @@ export default function BmiCalcClient() {
           {results ? (
             <>
               {/* BMI Card */}
-              <div className="glass-panel animate-scale-in" style={{ padding: '2rem', borderTop: `4px solid ${getStatusColor(results.statusKey)}` }}>
+              <div className={`${ui.card} animate-scale-in`} style={{ borderTop: `4px solid ${getStatusColor(results.statusKey)}` }}>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{t('bmiResult')}</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
                   <span style={{ fontSize: '3rem', fontWeight: 800 }}>{results.bmi}</span>
@@ -153,41 +153,12 @@ export default function BmiCalcClient() {
               </p>
             </>
           ) : (
-            <div className="glass-panel flex-1 flex items-center justify-center opacity-50" style={{ padding: '2rem' }}>
+            <div className={`${ui.card} flex-1 flex items-center justify-center`} style={{ color: 'var(--text-muted)' }}>
               <p>{t('emptyState')}</p>
             </div>
           )}
         </div>
       </div>
-
-      <style jsx>{`
-        .primary-button {
-          background: var(--primary) !important;
-          color: white !important;
-          border: none;
-          box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .primary-button:hover {
-          background: var(--primary-hover) !important;
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
-        }
-        .primary-button:active {
-          transform: translateY(-1px);
-        }
-        input, select {
-          border: 1px solid var(--border);
-          background: var(--surface);
-          color: var(--text-primary);
-          transition: all 0.2s ease;
-        }
-        input:focus, select:focus {
-          border-color: var(--primary);
-          box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
-          outline: none;
-        }
-      `}</style>
 
       {/* 공유하기 */}
       <ShareBar title={t('title')} description={t('description')} />

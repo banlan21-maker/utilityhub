@@ -6,6 +6,7 @@ import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
+import { ui } from '@/app/components/ui';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface ResultType { id: string; emoji: string; title: string; description: string; }
@@ -131,7 +132,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
 
   // ── Intro ──────────────────────────────────────────────────────────────
   if (phase === 'intro') return (
-    <div style={{ maxWidth: '520px', margin: '0 auto', textAlign: 'center', padding: '2rem 0' }}>
+    <div style={{ maxWidth: 'var(--tool-width-narrow)', margin: '0 auto', textAlign: 'center', padding: '2rem 0' }}>
       <ToolHeader icon={quiz.coverEmoji || undefined} title={quiz.title} subtitle={quiz.description} />
       <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '2.5rem' }}>
         {isKo
@@ -140,9 +141,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
       </p>
       <button
         onClick={() => setPhase('playing')}
-        style={{ padding: '1rem 3rem', fontSize: '1.1rem', fontWeight: 700, background: 'var(--primary)', color: 'white', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'all 0.2s', border: 'none' }}
-        onMouseOver={e => { e.currentTarget.style.background = 'var(--primary-hover)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-        onMouseOut={e => { e.currentTarget.style.background = 'var(--primary)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+        className={`${ui.button} ${ui.primary} ${ui.lg}`}
       >
         {isKo ? '테스트 시작하기 →' : 'Start the Quiz →'}
       </button>
@@ -151,7 +150,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
 
   // ── Playing ────────────────────────────────────────────────────────────
   if (phase === 'playing') return (
-    <div style={{ maxWidth: '580px', margin: '0 auto', padding: '0.5rem 0' }}>
+    <div style={{ maxWidth: 'var(--tool-width-narrow)', margin: '0 auto', padding: '0.5rem 0' }}>
       {/* Progress bar */}
       <div style={{ marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
@@ -159,7 +158,7 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
           <span>{Math.round(progressPct)}%</span>
         </div>
         <div style={{ height: '7px', background: 'var(--border)', borderRadius: '999px', overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${progressPct}%`, background: 'var(--primary)', borderRadius: '999px', transition: 'width 0.5s ease' }} />
+          <div style={{ height: '100%', width: `${progressPct}%`, background: 'var(--color-primary)', borderRadius: '999px', transition: 'width 0.5s ease' }} />
         </div>
       </div>
 
@@ -202,11 +201,11 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
 
   // ── Result ─────────────────────────────────────────────────────────────
   if (phase === 'result' && result) return (
-    <div style={{ maxWidth: '580px', margin: '0 auto', padding: '0.5rem 0' }}>
+    <div style={{ maxWidth: 'var(--tool-width-narrow)', margin: '0 auto', padding: '0.5rem 0' }}>
       {/* Result card */}
-      <div className="glass-panel animate-fade-in" style={{ padding: '2.5rem', marginBottom: '1.5rem', textAlign: 'center', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), var(--surface))' }}>
+      <div className={`${ui.card} animate-fade-in`} style={{ marginBottom: '1.5rem', textAlign: 'center', background: 'linear-gradient(135deg, var(--tint-violet-bg), var(--surface))' }}>
         <div style={{ fontSize: '5rem', lineHeight: 1, marginBottom: '1rem' }}>{result.emoji}</div>
-        <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{isKo ? '나의 유형' : 'Your Type'}</p>
+        <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-primary)', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{isKo ? '나의 유형' : 'Your Type'}</p>
         <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1rem', lineHeight: 1.3 }}>
           {result.title}
         </h2>
@@ -223,11 +222,11 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
             return (
               <div key={rt.id} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.85rem' }}>
                 <span style={{ width: '1.4rem', textAlign: 'center', flexShrink: 0 }}>{rt.emoji}</span>
-                <span style={{ minWidth: '6.5rem', fontWeight: isWinner ? 700 : 400, color: isWinner ? 'var(--primary)' : 'var(--text-secondary)', flexShrink: 0, fontSize: '0.82rem' }}>{rt.title}</span>
+                <span style={{ minWidth: '6.5rem', fontWeight: isWinner ? 700 : 400, color: isWinner ? 'var(--color-primary)' : 'var(--text-secondary)', flexShrink: 0, fontSize: '0.82rem' }}>{rt.title}</span>
                 <div style={{ flex: 1, height: '7px', background: 'var(--border)', borderRadius: '999px', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: `${pct}%`, background: isWinner ? 'var(--primary)' : '#cbd5e1', borderRadius: '999px', transition: 'width 1.2s ease 0.3s' }} />
+                  <div style={{ height: '100%', width: `${pct}%`, background: isWinner ? 'var(--color-primary)' : 'var(--text-muted)', borderRadius: '999px', transition: 'width 1.2s ease 0.3s' }} />
                 </div>
-                <span style={{ minWidth: '2.5rem', textAlign: 'right', color: isWinner ? 'var(--primary)' : 'var(--text-secondary)', fontWeight: isWinner ? 700 : 400, fontSize: '0.82rem' }}>{pct}%</span>
+                <span style={{ minWidth: '2.5rem', textAlign: 'right', color: isWinner ? 'var(--color-primary)' : 'var(--text-secondary)', fontWeight: isWinner ? 700 : 400, fontSize: '0.82rem' }}>{pct}%</span>
               </div>
             );
           })}
@@ -235,27 +234,28 @@ function QuizPlayer({ quiz }: { quiz: QuizDef }) {
       </div>
 
       {/* Share */}
-      <div className="glass-panel" style={{ padding: '1.25rem', marginBottom: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-        <p style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-secondary)', margin: 0 }}>{isKo ? '결과 공유하기' : 'Share Your Result'}</p>
+      <div className={ui.card} style={{ marginBottom: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+        <p className={ui.label} style={{ margin: 0 }}>{isKo ? '결과 공유하기' : 'Share Your Result'}</p>
         <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
           <a
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${result.emoji} ${isKo ? '나의 결과' : 'My result'}: ${result.title}\n${quiz.title}`)}&url=${encodeURIComponent(shareUrl)}`}
             target="_blank" rel="noopener noreferrer"
-            style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', background: '#000', color: 'white', borderRadius: 'var(--radius-md)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            className={`${ui.button} ${ui.sm}`}
+            style={{ background: '#000', color: 'white', textDecoration: 'none' }}>
             {isKo ? '𝕏 X 공유' : '𝕏 Share on X'}
           </a>
           <button onClick={handleCopy}
-            style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', border: `1px solid ${copied ? '#10b981' : 'var(--border)'}`, background: copied ? '#ecfdf5' : 'var(--surface)', color: copied ? '#065f46' : 'var(--text-primary)', borderRadius: 'var(--radius-md)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            className={`${ui.button} ${ui.sm} ${copied ? ui.green : ui.secondary}`}>
             {copied ? (isKo ? '✓ 복사됨' : '✓ Copied') : (isKo ? '🔗 링크 복사' : '🔗 Copy Link')}
           </button>
           {resultImg && (
             <button onClick={handleDownloadImg}
-              style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              className={`${ui.button} ${ui.secondary} ${ui.sm}`}>
               {isKo ? '🖼️ 이미지 저장' : '🖼️ Save Image'}
             </button>
           )}
           <button onClick={handleRestart}
-            style={{ padding: '0.6rem 1.1rem', fontWeight: 600, fontSize: '0.85rem', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)', cursor: 'pointer' }}>
+            className={`${ui.button} ${ui.secondary} ${ui.sm}`}>
             {isKo ? '🔄 다시 하기' : '🔄 Play Again'}
           </button>
         </div>
@@ -291,7 +291,7 @@ function PlayContent() {
   if (!encoded) return (
     <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
       <p style={{ marginBottom: '1rem' }}>{isKo ? '유효한 퀴즈 링크가 아닙니다.' : 'This is not a valid quiz link.'}</p>
-      <Link href="/utilities/marketing/quiz-builder" style={{ color: 'var(--primary)', fontWeight: 600 }}>{isKo ? '퀴즈 만들러 가기 →' : 'Create a Quiz →'}</Link>
+      <Link href="/utilities/marketing/quiz-builder" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>{isKo ? '퀴즈 만들러 가기 →' : 'Create a Quiz →'}</Link>
     </div>
   );
 

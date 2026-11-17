@@ -11,6 +11,7 @@ import ShareBar from '@/app/components/ShareBar';
 import { REGIONS, TILT_FACTOR, AZIMUTH_FACTOR, FIELD_FACTOR, VALIDATION, SPOT_LAST_YEAR, pvCalc, thermalCalc, bizCalc, recWeight, type PvSite } from '@/lib/solar';
 import { ELECTRICITY, CITY_GAS, KEROSENE, CO2, SMP, SOLAR_MARKET } from '@/constants/energyPrices';
 import s from './solar.module.css';
+import { ui } from '@/app/components/ui';
 
 type Tab = 'pv' | 'thermal' | 'biz';
 type Fuel = 'gas' | 'kerosene' | 'electric';
@@ -158,25 +159,25 @@ export default function SolarMasterClient() {
   };
 
   const field = (id: string, label: string, sub: string, value: string, set: (v: string) => void, unit: string, mode: 'dec' | 'int' | 'money' = 'dec') => (
-    <div className={s.field}>
-      <label className={s.field_label} htmlFor={id}>{label}{sub && <small>{sub}</small>}</label>
-      <div className={s.input_wrap}>
-        <input id={id} className={s.input} inputMode={mode === 'dec' ? 'decimal' : 'numeric'}
+    <div className={ui.field}>
+      <label className={`${ui.label} ${s.field_label}`} htmlFor={id}>{label}{sub && <small>{sub}</small>}</label>
+      <div className={ui.inputGroup}>
+        <input id={id} className={ui.input} inputMode={mode === 'dec' ? 'decimal' : 'numeric'}
           value={mode === 'money' ? comma(value) : value}
           onChange={e => set(mode === 'dec' ? dec(e.target.value) : digits(e.target.value))} />
-        <span className={s.unit}>{unit}</span>
+        <span className={ui.unit}>{unit}</span>
       </div>
     </div>
   );
   const chip = <T extends string | number>(cur: T, val: T, set: (v: T) => void, label: string, sub?: string) => (
-    <button key={String(val)} type="button" aria-pressed={cur === val} className={`${s.chip} ${cur === val ? s.chip_on : ''}`} onClick={() => set(val)}>
+    <button key={String(val)} type="button" aria-pressed={cur === val} className={`${ui.chip} ${s.chip} ${cur === val ? ui.chipActive : ''}`} onClick={() => set(val)}>
       {label}{sub && <small>{sub}</small>}
     </button>
   );
   const regionSelect = (id: string, val: string, set: (v: string) => void) => (
-    <div className={s.field}>
-      <label className={s.field_label} htmlFor={id}>{L('지역', 'Region')}<small>{L('일평균 발전시간', 'avg daily yield hours')} {REGIONS.find(r => r.id === val)!.hours}h</small></label>
-      <select id={id} className={s.select} value={val} onChange={e => set(e.target.value)}>
+    <div className={ui.field}>
+      <label className={`${ui.label} ${s.field_label}`} htmlFor={id}>{L('지역', 'Region')}<small>{L('일평균 발전시간', 'avg daily yield hours')} {REGIONS.find(r => r.id === val)!.hours}h</small></label>
+      <select id={id} className={ui.input} value={val} onChange={e => set(e.target.value)}>
         {REGIONS.map(r => <option key={r.id} value={r.id}>{isKo ? r.ko : r.en} ({r.hours}h)</option>)}
       </select>
     </div>
@@ -220,39 +221,39 @@ export default function SolarMasterClient() {
 
       <ToolHeader icon={<Sun />} title={titleStr} subtitle={descStr} />
 
-      <div className={s.tabs} role="tablist">
-        <button type="button" role="tab" aria-selected={tab === 'pv'} className={`${s.tab} ${tab === 'pv' ? s.tab_pv : ''}`} onClick={() => setTab('pv')}>
+      <div className={`${ui.segmented} ${s.tabs}`} role="tablist">
+        <button type="button" role="tab" aria-selected={tab === 'pv'} className={`${ui.segment} ${tab === 'pv' ? `${ui.segmentActive} ${s.tab_pv}` : ''}`} onClick={() => setTab('pv')}>
           ⚡ {L('태양광 발전', 'Solar PV')}<small>{L('전기요금 절감', 'electricity savings')}</small>
         </button>
-        <button type="button" role="tab" aria-selected={tab === 'thermal'} className={`${s.tab} ${tab === 'thermal' ? s.tab_th : ''}`} onClick={() => setTab('thermal')}>
+        <button type="button" role="tab" aria-selected={tab === 'thermal'} className={`${ui.segment} ${tab === 'thermal' ? `${ui.segmentActive} ${s.tab_th}` : ''}`} onClick={() => setTab('thermal')}>
           🔥 {L('태양열 온수', 'Solar hot water')}<small>{L('가스·등유 절감', 'gas or oil savings')}</small>
         </button>
-        <button type="button" role="tab" aria-selected={tab === 'biz'} className={`${s.tab} ${tab === 'biz' ? s.tab_biz : ''}`} onClick={() => setTab('biz')}>
+        <button type="button" role="tab" aria-selected={tab === 'biz'} className={`${ui.segment} ${tab === 'biz' ? `${ui.segmentActive} ${s.tab_biz}` : ''}`} onClick={() => setTab('biz')}>
           🏭 {L('발전사업', 'Power plant')}<small>{L('전력 판매 수익', 'selling power')}</small>
         </button>
       </div>
 
       {tab === 'pv' ? (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('1. 설치 조건', '1. System')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('1. 설치 조건', '1. System')}</h2>
             <div className={s.grid3}>
               {regionSelect('pv-region', region, setRegion)}
               {field('pv-w', L('패널 1장 출력', 'Panel rating'), L('제품 사양 W', 'from the datasheet'), panelW, setPanelW, 'W', 'int')}
               {field('pv-n', L('패널 수', 'Panels'), L(`설치 용량 ${f(kWp, 2)}kWp`, `${f(kWp, 2)} kWp`), panelN, setPanelN, L('장', 'pcs'), 'int')}
             </div>
             <div>
-              <span className={s.label}>{L('경사각', 'Tilt')}</span>
-              <div className={s.chips}>{Object.keys(TILT_FACTOR).map(k => chip(tilt, k, setTilt, `${k}°`, `×${TILT_FACTOR[k]}`))}</div>
+              <span className={`${ui.label} ${s.label}`}>{L('경사각', 'Tilt')}</span>
+              <div className={ui.chips}>{Object.keys(TILT_FACTOR).map(k => chip(tilt, k, setTilt, `${k}°`, `×${TILT_FACTOR[k]}`))}</div>
             </div>
             <div>
-              <span className={s.label}>{L('방향', 'Orientation')}</span>
-              <div className={s.chips}>{Object.keys(AZIMUTH_FACTOR).map(k => chip(azimuth, k, setAzimuth, ({ south: L('남향', 'South'), southeast: L('남동', 'SE'), southwest: L('남서', 'SW'), east: L('동향', 'East'), west: L('서향', 'West') } as Record<string, string>)[k], `×${AZIMUTH_FACTOR[k]}`))}</div>
+              <span className={`${ui.label} ${s.label}`}>{L('방향', 'Orientation')}</span>
+              <div className={ui.chips}>{Object.keys(AZIMUTH_FACTOR).map(k => chip(azimuth, k, setAzimuth, ({ south: L('남향', 'South'), southeast: L('남동', 'SE'), southwest: L('남서', 'SW'), east: L('동향', 'East'), west: L('서향', 'West') } as Record<string, string>)[k], `×${AZIMUTH_FACTOR[k]}`))}</div>
             </div>
             <div className={s.grid2}>
               <div>
-                <span className={s.label}>{L('그늘 손실', 'Shading')}</span>
-                <div className={s.chips}>{[0, 5, 10, 20].map(p => chip(shade, p, setShade, `${p}%`))}</div>
+                <span className={`${ui.label} ${s.label}`}>{L('그늘 손실', 'Shading')}</span>
+                <div className={ui.chips}>{[0, 5, 10, 20].map(p => chip(shade, p, setShade, `${p}%`))}</div>
               </div>
               {field('pv-deg', L('연간 출력 감소(노화)', 'Degradation'), L('보통 0.5%/년', 'typically 0.5 %/yr'), degrade, setDegrade, L('%/년', '%/yr'))}
             </div>
@@ -260,11 +261,11 @@ export default function SolarMasterClient() {
               <input type="checkbox" checked={fieldCorrection} onChange={e => setFieldCorrection(e.target.checked)} />
               <span>{L(`실측 보정 적용 (×${FIELD_FACTOR})`, `Apply field correction (×${FIELD_FACTOR})`)}<small>{L('실제 발전소 실측은 모의값보다 약 11% 적었습니다(먼지·부분 고장·노후 등). 끄면 이상적인 운영 기준입니다.', 'Measured plants produced about 11% less than the simulation; turn off for ideal operation.')}</small></span>
             </label>
-            <p className={s.hint}>{L('지역 발전시간은 정남향 30° 기준 모의 결과로 온도·인버터 손실이 이미 들어 있습니다. 경사·방향 보정은 경험치입니다.', 'Regional hours already include temperature and inverter losses (south, 30°). Tilt and orientation factors are rules of thumb.')}</p>
+            <p className={`${ui.hint} ${s.hint}`}>{L('지역 발전시간은 정남향 30° 기준 모의 결과로 온도·인버터 손실이 이미 들어 있습니다. 경사·방향 보정은 경험치입니다.', 'Regional hours already include temperature and inverter losses (south, 30°). Tilt and orientation factors are rules of thumb.')}</p>
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('2. 전기 사용량과 비용', '2. Usage and cost')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('2. 전기 사용량과 비용', '2. Usage and cost')}</h2>
             <div className={s.grid2}>
               {field('pv-use', L('월 전기 사용량', 'Monthly use'), L('7·8월 제외', 'except Jul–Aug'), usage, setUsage, 'kWh', 'int')}
               {field('pv-use-s', L('여름(7·8월) 사용량', 'Jul–Aug use'), L('에어컨 사용 반영', 'with air conditioning'), summerUsage, setSummerUsage, 'kWh', 'int')}
@@ -275,13 +276,13 @@ export default function SolarMasterClient() {
               <input type="checkbox" checked={netMetering} onChange={e => setNetMetering(e.target.checked)} />
               <span>{L('남는 전력 다음 달로 이월 (상계거래)', 'Carry surplus to next month (net metering)')}<small>{L('주택 태양광은 한전과 상계거래 계약을 하면 남은 발전량을 다음 달 사용량에서 뺍니다.', 'Surplus generation offsets later months.')}</small></span>
             </label>
-            <p className={s.hint}>{L('보조금은 한국에너지공단 주택지원사업·지자체 사업마다 금액이 다릅니다. 모집 공고에서 확정 금액을 확인해 넣으세요.', 'Subsidies vary by programme and municipality; enter the confirmed amount.')}</p>
+            <p className={`${ui.hint} ${s.hint}`}>{L('보조금은 한국에너지공단 주택지원사업·지자체 사업마다 금액이 다릅니다. 모집 공고에서 확정 금액을 확인해 넣으세요.', 'Subsidies vary by programme and municipality; enter the confirmed amount.')}</p>
             {priceBox}
           </section>
 
-          <section className={s.card} aria-live="polite">
-            <h2 className={s.card_title}>{L('3. 결과', '3. Result')}</h2>
-            {!pv ? <p className={s.hint}>{L('패널 출력과 수를 넣으세요.', 'Enter panel rating and count.')}</p> : (
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
+            <h2 className={ui.cardTitle}>{L('3. 결과', '3. Result')}</h2>
+            {!pv ? <p className={`${ui.hint} ${s.hint}`}>{L('패널 출력과 수를 넣으세요.', 'Enter panel rating and count.')}</p> : (
               <>
                 <div className={s.hero_grid}>
                   <div className={s.hero}>
@@ -312,14 +313,14 @@ export default function SolarMasterClient() {
                   </table>
                 </div>
                 <div className={s.chart}>{barChart(pv.yearly.map(y => y.cumulative), pv.yearly.map(y => `${y.year}`), L('연도별 누적 수익 (설치비 차감, 노화 반영)', 'Cumulative return by year'), s.ch_bar, true)}</div>
-                <p className={s.hint}>{L('전기요금 단가는 지금 수준으로 유지된다고 가정했습니다. 인버터 교체(보통 10~15년)나 요금 인상은 반영하지 않습니다.', 'Assumes today’s tariff; inverter replacement and tariff changes are not included.')}</p>
+                <p className={`${ui.hint} ${s.hint}`}>{L('전기요금 단가는 지금 수준으로 유지된다고 가정했습니다. 인버터 교체(보통 10~15년)나 요금 인상은 반영하지 않습니다.', 'Assumes today’s tariff; inverter replacement and tariff changes are not included.')}</p>
                 <div className={`${s.actions} ${s.no_print}`}>
-                  <button type="button" className={s.btn} onClick={() => copy(L(
+                  <button type="button" className={`${ui.button} ${ui.primary}`} onClick={() => copy(L(
                     `[태양광 수익 계산] ${regionName(region)} ${f(kWp, 2)}kWp (${panelW}W × ${panelN}장, ${tilt}°)\n연 발전 ${f(pv.annualGen)}kWh (${f(pv.specificYield)} kWh/kWp)\n연 절감 ${won(pv.annualSaving)} · 회수 ${pv.paybackYears === null ? '20년 초과' : `${f(pv.paybackYears, 1)}년`}`,
                     `[Solar PV] ${f(kWp, 2)} kWp, ${f(pv.annualGen)} kWh/yr, saves ${won(pv.annualSaving)}/yr`,
                   ))}><Copy size={16} />{L('결과 복사', 'Copy')}</button>
-                  <button type="button" className={s.ghost} onClick={toInvoice}><FileText size={16} />{L('견적서로 보내기', 'Send to invoice')}</button>
-                  <button type="button" className={s.ghost} onClick={() => window.print()}><Printer size={16} />{L('인쇄·PDF', 'Print / PDF')}</button>
+                  <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={toInvoice}><FileText size={16} />{L('견적서로 보내기', 'Send to invoice')}</button>
+                  <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={() => window.print()}><Printer size={16} />{L('인쇄·PDF', 'Print / PDF')}</button>
                   {msg && <span className={s.msg}>{msg}</span>}
                 </div>
               </>
@@ -328,14 +329,14 @@ export default function SolarMasterClient() {
         </>
       ) : tab === 'thermal' ? (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('1. 집열판과 온수 사용', '1. Collector and hot water')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('1. 집열판과 온수 사용', '1. Collector and hot water')}</h2>
             <div className={s.grid3}>
               {regionSelect('th-region', thRegion, setThRegion)}
               {field('th-area', L('집열판 면적', 'Collector area'), L('총 면적', 'total'), area, setArea, '㎡')}
               {field('th-eff', L('연평균 집열 효율', 'Annual efficiency'), L('시스템 전체 기준', 'whole system'), effText, setEffText, '%')}
             </div>
-            <div className={s.chips}>
+            <div className={ui.chips}>
               {chip(collector, 'flat', v => { setCollector(v); setEffText('45'); }, L('평판형', 'Flat plate'), L('효율 약 45%', '≈45%'))}
               {chip(collector, 'tube', v => { setCollector(v); setEffText('55'); }, L('진공관형', 'Evacuated tube'), L('효율 약 55%', '≈55%'))}
             </div>
@@ -344,12 +345,12 @@ export default function SolarMasterClient() {
               {field('th-hot', L('온수 온도', 'Hot water temp'), '', hotC, setHotC, '℃')}
               {field('th-cold', L('수돗물 온도', 'Cold water temp'), L('연평균', 'annual avg'), coldC, setColdC, '℃')}
             </div>
-            <p className={s.hint}>{L('집열량이 하루 필요한 열보다 많으면 남는 열은 버려지므로 절감액에 넣지 않습니다. 겨울에는 수돗물이 더 차가워 실제 태양열 비율이 이 계산보다 낮을 수 있습니다.', 'Heat beyond daily demand is not counted. In winter colder mains water lowers the real solar share.')}</p>
+            <p className={`${ui.hint} ${s.hint}`}>{L('집열량이 하루 필요한 열보다 많으면 남는 열은 버려지므로 절감액에 넣지 않습니다. 겨울에는 수돗물이 더 차가워 실제 태양열 비율이 이 계산보다 낮을 수 있습니다.', 'Heat beyond daily demand is not counted. In winter colder mains water lowers the real solar share.')}</p>
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('2. 지금 쓰는 열원과 비용', '2. Current heater and cost')}</h2>
-            <div className={s.chips}>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('2. 지금 쓰는 열원과 비용', '2. Current heater and cost')}</h2>
+            <div className={ui.chips}>
               {chip(fuel, 'gas', v => { setFuel(v); setBoilerEff('87'); }, L('도시가스 보일러', 'Gas boiler'))}
               {chip(fuel, 'kerosene', v => { setFuel(v); setBoilerEff('85'); }, L('기름(등유) 보일러', 'Oil boiler'))}
               {chip(fuel, 'electric', v => { setFuel(v); setBoilerEff('98'); }, L('전기 온수기', 'Electric heater'))}
@@ -365,9 +366,9 @@ export default function SolarMasterClient() {
             {priceBox}
           </section>
 
-          <section className={s.card} aria-live="polite">
-            <h2 className={s.card_title}>{L('3. 결과', '3. Result')}</h2>
-            {!th ? <p className={s.hint}>{L('면적·온수량·온도를 확인하세요 (온수 온도가 수돗물보다 높아야 합니다).', 'Check area, volume and temperatures.')}</p> : (
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
+            <h2 className={ui.cardTitle}>{L('3. 결과', '3. Result')}</h2>
+            {!th ? <p className={`${ui.hint} ${s.hint}`}>{L('면적·온수량·온도를 확인하세요 (온수 온도가 수돗물보다 높아야 합니다).', 'Check area, volume and temperatures.')}</p> : (
               <>
                 <div className={s.hero_grid}>
                   <div className={s.hero}>
@@ -387,7 +388,7 @@ export default function SolarMasterClient() {
                   <div className={s.stat}><div className={s.stat_num}>{f(th.wastedPct)}%</div><div className={s.stat_label}>{L('남아서 버리는 열', 'Surplus heat')}</div></div>
                   <div className={s.stat}><div className={s.stat_num}>{f(th.co2Kg)} kg</div><div className={s.stat_label}>{L('CO₂ 감축/년', 'CO₂ saved/yr')}</div></div>
                 </div>
-                {th.wastedPct > 25 && <p className={s.hint}>⚠️ {L(`집열판이 사용량에 비해 커서 모은 열의 ${f(th.wastedPct)}%가 남습니다. 면적을 줄이거나 온수 사용량을 다시 확인해 보세요.`, `About ${f(th.wastedPct)}% of collected heat is surplus; the collector may be oversized.`)}</p>}
+                {th.wastedPct > 25 && <p className={`${ui.hint} ${s.hint}`}>⚠️ {L(`집열판이 사용량에 비해 커서 모은 열의 ${f(th.wastedPct)}%가 남습니다. 면적을 줄이거나 온수 사용량을 다시 확인해 보세요.`, `About ${f(th.wastedPct)}% of collected heat is surplus; the collector may be oversized.`)}</p>}
                 <div className={s.chart}>{barChart(th.months.map(m => m.used), th.months.map(m => `${m.month}${L('월', '')}`), L('월별 태양열로 데운 열량 (MJ)', 'Monthly useful solar heat (MJ)'), s.ch_bar2)}</div>
                 <div className={s.table_wrap}>
                   <table className={s.table}>
@@ -399,12 +400,12 @@ export default function SolarMasterClient() {
                   </table>
                 </div>
                 <div className={`${s.actions} ${s.no_print}`}>
-                  <button type="button" className={s.btn} onClick={() => copy(L(
+                  <button type="button" className={`${ui.button} ${ui.primary}`} onClick={() => copy(L(
                     `[태양열 온수 계산] ${regionName(thRegion)} 집열판 ${area}㎡, 하루 ${liters}L (${coldC}→${hotC}℃)\n태양열 충당 ${f(th.solarFraction * 100)}% · 연 절감 ${won(th.annualSaving)} · 회수 ${th.paybackYears === null ? '-' : `${f(th.paybackYears, 1)}년`}`,
                     `[Solar thermal] ${area} m², ${liters} L/day, saves ${won(th.annualSaving)}/yr`,
                   ))}><Copy size={16} />{L('결과 복사', 'Copy')}</button>
-                  <button type="button" className={s.ghost} onClick={toInvoice}><FileText size={16} />{L('견적서로 보내기', 'Send to invoice')}</button>
-                  <button type="button" className={s.ghost} onClick={() => window.print()}><Printer size={16} />{L('인쇄·PDF', 'Print / PDF')}</button>
+                  <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={toInvoice}><FileText size={16} />{L('견적서로 보내기', 'Send to invoice')}</button>
+                  <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={() => window.print()}><Printer size={16} />{L('인쇄·PDF', 'Print / PDF')}</button>
                   {msg && <span className={s.msg}>{msg}</span>}
                 </div>
               </>
@@ -413,16 +414,16 @@ export default function SolarMasterClient() {
         </>
       ) : (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('1. 발전소', '1. Plant')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('1. 발전소', '1. Plant')}</h2>
             <div className={s.grid3}>
               {regionSelect('bz-region', bzRegion, setBzRegion)}
               {field('bz-kw', L('설비 용량', 'Capacity'), L('인버터 기준 kW', 'AC kW'), bzKW, setBzKW, 'kW')}
               {field('bz-deg', L('연간 출력 감소(노화)', 'Degradation'), L('보통 0.5%/년', 'typically 0.5 %/yr'), bzDegrade, setBzDegrade, L('%/년', '%/yr'))}
             </div>
             <div>
-              <span className={s.label}>{L('설치 장소', 'Site type')}<small className={s.label_sub}>{L(`REC 가중치 ${weight || '—'} (현물 판매에만 적용)`, `REC weight ${weight || '—'} (spot sales only)`)}</small></span>
-              <div className={s.chips}>
+              <span className={`${ui.label} ${s.label}`}>{L('설치 장소', 'Site type')}<small className={s.label_sub}>{L(`REC 가중치 ${weight || '—'} (현물 판매에만 적용)`, `REC weight ${weight || '—'} (spot sales only)`)}</small></span>
+              <div className={ui.chips}>
                 {chip(bzSite, 'land', setBzSite, L('일반부지', 'Land'), L('100kW 미만 1.2 · 3MW까지 1.0', '1.2 <100 kW, 1.0 to 3 MW'))}
                 {chip(bzSite, 'building', setBzSite, L('건축물 지붕', 'Rooftop'), L('3MW까지 1.5', '1.5 to 3 MW'))}
                 {chip(bzSite, 'floating', setBzSite, L('수상(저수지 등)', 'Floating'), L('1.6 · 1.4 · 1.2', '1.6 / 1.4 / 1.2'))}
@@ -430,36 +431,36 @@ export default function SolarMasterClient() {
               </div>
             </div>
             <div>
-              <span className={s.label}>{L('경사각', 'Tilt')}</span>
-              <div className={s.chips}>{Object.keys(TILT_FACTOR).map(k => chip(bzTilt, k, setBzTilt, `${k}°`, `×${TILT_FACTOR[k]}`))}</div>
+              <span className={`${ui.label} ${s.label}`}>{L('경사각', 'Tilt')}</span>
+              <div className={ui.chips}>{Object.keys(TILT_FACTOR).map(k => chip(bzTilt, k, setBzTilt, `${k}°`, `×${TILT_FACTOR[k]}`))}</div>
             </div>
             <div className={s.grid2}>
               <div>
-                <span className={s.label}>{L('방향', 'Orientation')}</span>
-                <div className={s.chips}>{Object.keys(AZIMUTH_FACTOR).map(k => chip(bzAzimuth, k, setBzAzimuth, ({ south: L('남향', 'S'), southeast: L('남동', 'SE'), southwest: L('남서', 'SW'), east: L('동향', 'E'), west: L('서향', 'W') } as Record<string, string>)[k]))}</div>
+                <span className={`${ui.label} ${s.label}`}>{L('방향', 'Orientation')}</span>
+                <div className={ui.chips}>{Object.keys(AZIMUTH_FACTOR).map(k => chip(bzAzimuth, k, setBzAzimuth, ({ south: L('남향', 'S'), southeast: L('남동', 'SE'), southwest: L('남서', 'SW'), east: L('동향', 'E'), west: L('서향', 'W') } as Record<string, string>)[k]))}</div>
               </div>
               <div>
-                <span className={s.label}>{L('그늘 손실', 'Shading')}</span>
-                <div className={s.chips}>{[0, 3, 5, 10].map(p => chip(bzShade, p, setBzShade, `${p}%`))}</div>
+                <span className={`${ui.label} ${s.label}`}>{L('그늘 손실', 'Shading')}</span>
+                <div className={ui.chips}>{[0, 3, 5, 10].map(p => chip(bzShade, p, setBzShade, `${p}%`))}</div>
               </div>
             </div>
             <label className={s.toggle}>
               <input type="checkbox" checked={bzField} onChange={e => setBzField(e.target.checked)} />
               <span>{L(`실측 보정 적용 (×${FIELD_FACTOR})`, `Apply field correction (×${FIELD_FACTOR})`)}<small>{L('한국동서발전 당진·울산 사업용 발전소 4년 실측에 맞춘 값입니다. 금융·투자 검토에는 켜 두는 것을 권합니다.', 'Matched to four years of measured output from utility plants; keep on for financing.')}</small></span>
             </label>
-            <p className={s.hint}>{L('REC 가중치는 용량 구간별로 나눠 매긴 뒤 평균합니다(운영지침 별표 2). 100kW 미만 구간은 99.999kW까지라서 정확히 100kW면 1.199, 99.9kW면 1.2입니다. 500m 안에 같은 사업자의 발전소가 있으면 용량을 합산해 매깁니다.', 'REC weights are applied band by band and averaged (exactly 100 kW gives 1.199; 99.9 kW gives 1.2). Plants of the same owner within 500 m are combined.')}</p>
+            <p className={`${ui.hint} ${s.hint}`}>{L('REC 가중치는 용량 구간별로 나눠 매긴 뒤 평균합니다(운영지침 별표 2). 100kW 미만 구간은 99.999kW까지라서 정확히 100kW면 1.199, 99.9kW면 1.2입니다. 500m 안에 같은 사업자의 발전소가 있으면 용량을 합산해 매깁니다.', 'REC weights are applied band by band and averaged (exactly 100 kW gives 1.199; 99.9 kW gives 1.2). Plants of the same owner within 500 m are combined.')}</p>
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('2. 판매 방식과 단가', '2. Sales and prices')}</h2>
-            <div className={s.warn}>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('2. 판매 방식과 단가', '2. Sales and prices')}</h2>
+            <div className={`${ui.notice} ${ui.amber} ${s.warn}`}>
               <AlertTriangle size={18} aria-hidden />
               <p>{L(
                 '재생에너지법 개정(2026.8.20 국회 통과)으로 2027년부터 신규 발전소는 REC를 받지 않고 정부 계약시장(경쟁입찰, 20년 고정가격)에서 팝니다. REC 신규 발급은 2026.12.31까지이고, 기존 발전소의 REC 현물시장은 2029년 말까지 운영될 예정입니다. 계약시장 상한가·우대가격 등 세부 기준은 하위법령에서 정해집니다.',
                 'Under the 2026 amendment of Korea’s Renewable Energy Act, new plants from 2027 sell through a government contract market (competitive bids, 20-year fixed price) instead of earning RECs. New REC issuance ends on 31 Dec 2026 and the spot market for existing plants is expected to run until the end of 2029.',
               )}</p>
             </div>
-            <div className={s.chips}>
+            <div className={ui.chips}>
               {chip(sale, 'contract', setSale, L('계약시장 · 20년 고정가격', 'Contract market · 20-yr fixed'), L('2027년 이후 신규 발전소', 'new plants from 2027'))}
               {chip(sale, 'spot', setSale, L('현물 판매 · SMP + REC', 'Spot · SMP + REC'), L('2026년까지 REC 받은 기존 발전소', 'existing REC plants'))}
             </div>
@@ -488,8 +489,8 @@ export default function SolarMasterClient() {
             </div>
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('3. 사업비와 대출', '3. Costs and loan')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('3. 사업비와 대출', '3. Costs and loan')}</h2>
             <div className={s.grid3}>
               {field('bz-capex', L('설치비 (kW당)', 'Capex per kW'), L(`총 ${manwon(capex)}원 · 땅값 제외`, `total ${won(capex)}, excl. land`), capexPerKW, setCapexPerKW, L('원/kW', 'KRW/kW'), 'money')}
               {field('bz-om', L('운영비 (kW당·년)', 'O&M per kW·yr'), L(`연 ${manwon(num(omPerKW) * kW)}원 · 안전관리·보험·모니터링`, `${won(num(omPerKW) * kW)}/yr`), omPerKW, setOmPerKW, L('원', 'KRW'), 'money')}
@@ -500,12 +501,12 @@ export default function SolarMasterClient() {
               {field('bz-rate', L('대출 금리', 'Interest rate'), L('연 이율', 'annual'), rate, setRate, '%')}
               {field('bz-term', L('상환 기간', 'Loan term'), L('원리금 균등 상환', 'level payments'), loanYears, setLoanYears, L('년', 'yr'), 'int')}
             </div>
-            <p className={s.hint}>{L('설치비 기본값 kW당 120만 원은 100kW급 일반부지 사업비 1.1억~1.4억 원(토지 보유, 2026년 업체 자료)의 중간값입니다. 계통연계비·인허가비를 포함하고 땅값은 빼서 넣으세요. 운영비 기본값(100kW 연 200만 원)은 예시이니 안전관리 대행·보험 견적으로 바꿔 넣으세요. 법인세·종합소득세는 빼고 계산합니다.', 'Default capex ₩1.2M/kW is the midpoint of 2026 quotes for 100 kW on owned land; replace defaults with your quotes. Income tax is not included.')}</p>
+            <p className={`${ui.hint} ${s.hint}`}>{L('설치비 기본값 kW당 120만 원은 100kW급 일반부지 사업비 1.1억~1.4억 원(토지 보유, 2026년 업체 자료)의 중간값입니다. 계통연계비·인허가비를 포함하고 땅값은 빼서 넣으세요. 운영비 기본값(100kW 연 200만 원)은 예시이니 안전관리 대행·보험 견적으로 바꿔 넣으세요. 법인세·종합소득세는 빼고 계산합니다.', 'Default capex ₩1.2M/kW is the midpoint of 2026 quotes for 100 kW on owned land; replace defaults with your quotes. Income tax is not included.')}</p>
           </section>
 
-          <section className={s.card} aria-live="polite">
-            <h2 className={s.card_title}>{L('4. 결과 (20년)', '4. Result (20 years)')}</h2>
-            {!biz ? <p className={s.hint}>{L('설비 용량을 넣으세요.', 'Enter the capacity.')}</p> : (
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
+            <h2 className={ui.cardTitle}>{L('4. 결과 (20년)', '4. Result (20 years)')}</h2>
+            {!biz ? <p className={`${ui.hint} ${s.hint}`}>{L('설비 용량을 넣으세요.', 'Enter the capacity.')}</p> : (
               <>
                 <div className={s.hero_grid}>
                   <div className={s.hero}>
@@ -525,7 +526,7 @@ export default function SolarMasterClient() {
                   <div className={s.stat}><div className={s.stat_num}>{pct(biz.equityIrr)}</div><div className={s.stat_label}>{L('자기자본 IRR', 'Equity IRR')}</div></div>
                   <div className={s.stat}><div className={`${s.stat_num} ${biz.minDscr !== null && biz.minDscr < 1.2 ? s.neg : ''}`}>{biz.minDscr === null ? '—' : f(biz.minDscr, 2)}</div><div className={s.stat_label}>{L('최소 DSCR (상환 여력)', 'Min DSCR')}</div></div>
                 </div>
-                {biz.minDscr !== null && biz.minDscr < 1.2 && <p className={s.hint}>⚠️ {L(`상환 기간 중 영업이익이 원리금의 ${f(biz.minDscr, 2)}배밖에 안 되는 해가 있습니다. 금융기관은 보통 1.2~1.3배 이상을 요구하니 대출 비율을 낮추거나 기간을 늘려 보세요.`, `Debt service coverage falls to ${f(biz.minDscr, 2)}; lenders usually want 1.2–1.3 or more.`)}</p>}
+                {biz.minDscr !== null && biz.minDscr < 1.2 && <p className={`${ui.hint} ${s.hint}`}>⚠️ {L(`상환 기간 중 영업이익이 원리금의 ${f(biz.minDscr, 2)}배밖에 안 되는 해가 있습니다. 금융기관은 보통 1.2~1.3배 이상을 요구하니 대출 비율을 낮추거나 기간을 늘려 보세요.`, `Debt service coverage falls to ${f(biz.minDscr, 2)}; lenders usually want 1.2–1.3 or more.`)}</p>}
                 <div className={s.chart}>{barChart(biz.rows.map(y => y.cumulative), biz.rows.map(y => `${y.year}`), L('연도별 자기자본 누적 현금 (운영비·원리금 차감)', 'Cumulative equity cash flow'), s.ch_bar, true)}</div>
                 <div className={s.table_wrap}>
                   <table className={s.table}>
@@ -536,13 +537,13 @@ export default function SolarMasterClient() {
                     <tfoot><tr><td>{L('합계', 'Total')}</td><td>{f(biz.rows.reduce((a, y) => a + y.gen, 0))}</td><td></td><td>{f(biz.totalRevenue)}</td><td>{f(biz.totalCost)}</td><td>{f(biz.totalInterest)}</td><td>{f(biz.rows.reduce((a, y) => a + y.principal, 0))}</td><td>{f(biz.net + biz.equity)}</td><td>{f(biz.net)}</td></tr></tfoot>
                   </table>
                 </div>
-                <p className={s.hint}>{L('계약시장 단가는 20년 동안 그대로이고, 현물 단가는 입력한 SMP·REC가 2029년까지 유지된다고 가정했습니다(실제 SMP·REC는 매달 변합니다). 세금, 감가상각, 20년 뒤 설비 잔존가치와 철거비는 넣지 않았습니다.', 'Contract prices stay fixed for 20 years; spot prices are held at the entered SMP and REC until 2029 (real prices move monthly). Taxes, depreciation, residual value and decommissioning are not included.')}</p>
+                <p className={`${ui.hint} ${s.hint}`}>{L('계약시장 단가는 20년 동안 그대로이고, 현물 단가는 입력한 SMP·REC가 2029년까지 유지된다고 가정했습니다(실제 SMP·REC는 매달 변합니다). 세금, 감가상각, 20년 뒤 설비 잔존가치와 철거비는 넣지 않았습니다.', 'Contract prices stay fixed for 20 years; spot prices are held at the entered SMP and REC until 2029 (real prices move monthly). Taxes, depreciation, residual value and decommissioning are not included.')}</p>
                 <div className={`${s.actions} ${s.no_print}`}>
-                  <button type="button" className={s.btn} onClick={() => copy(L(
+                  <button type="button" className={`${ui.button} ${ui.primary}`} onClick={() => copy(L(
                     `[태양광 발전사업 수익] ${regionName(bzRegion)} ${f(kW, 1)}kW (${sale === 'contract' ? `계약시장 ${f(num(contractPrice) + num(premium), 1)}원/kWh` : `현물 SMP+REC×${weight}`})\n1년차 발전 ${f(biz.gen1)}kWh · 판매 ${won(biz.rows[0].revenue)}\n설치비 ${won(capex)} (대출 ${loanPct}% ${rate}% ${loanYears}년)\n사업 IRR ${pct(biz.projectIrr)} · 자기자본 IRR ${pct(biz.equityIrr)} · 회수 ${biz.paybackYears === null ? '20년 초과' : `${f(biz.paybackYears, 1)}년`}`,
                     `[Solar plant] ${f(kW, 1)} kW, year-1 revenue ${won(biz.rows[0].revenue)}, project IRR ${pct(biz.projectIrr)}, equity IRR ${pct(biz.equityIrr)}`,
                   ))}><Copy size={16} />{L('결과 복사', 'Copy')}</button>
-                  <button type="button" className={s.ghost} onClick={() => window.print()}><Printer size={16} />{L('인쇄·PDF', 'Print / PDF')}</button>
+                  <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={() => window.print()}><Printer size={16} />{L('인쇄·PDF', 'Print / PDF')}</button>
                   {msg && <span className={s.msg}>{msg}</span>}
                 </div>
               </>
@@ -552,9 +553,9 @@ export default function SolarMasterClient() {
       )}
 
       {tab !== 'thermal' && (
-        <section className={s.card}>
-          <h2 className={s.card_title}>{L('검증: 실제 발전소 실측과 비교', 'Validation against measured plants')}</h2>
-          <p className={s.hint}>{L('한국동서발전이 공개한 발전기별 시간대 실측 발전량(공공데이터포털, 2022.4~2026.6, 결측·정지일 제외)을 연간 kWh/kWp로 바꿔 이 계산기의 모의값과 비교했습니다.', 'Hourly measured output published by Korea East-West Power (2022-04 to 2026-06, outage days excluded) compared with this calculator.')}</p>
+        <section className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{L('검증: 실제 발전소 실측과 비교', 'Validation against measured plants')}</h2>
+          <p className={`${ui.hint} ${s.hint}`}>{L('한국동서발전이 공개한 발전기별 시간대 실측 발전량(공공데이터포털, 2022.4~2026.6, 결측·정지일 제외)을 연간 kWh/kWp로 바꿔 이 계산기의 모의값과 비교했습니다.', 'Hourly measured output published by Korea East-West Power (2022-04 to 2026-06, outage days excluded) compared with this calculator.')}</p>
           <div className={s.table_wrap}>
             <table className={s.table}>
               <thead><tr><th>{L('발전소', 'Plant')}</th><th>{L('비교 지역', 'Reference')}</th><th>{L('실측', 'Measured')}</th><th>{L('모의', 'Simulated')}</th><th>{L('보정 후', 'Corrected')}</th></tr></thead>
@@ -563,7 +564,7 @@ export default function SolarMasterClient() {
               ))}</tbody>
             </table>
           </div>
-          <p className={s.hint}>{L('단위 kWh/kWp·년. 당진·울산은 보정 후 실측과 1% 안팎으로 맞습니다. 동해는 다른 두 곳보다 약 24% 낮아 그늘·방향 같은 현장 조건 영향으로 보고 보정 계산에서 뺐습니다. 월별 패턴은 논문의 전국 평균 월표가 세 곳 모두에서 실측과 가장 가까웠습니다(연간을 맞춘 뒤 월 오차 10~15%). 유럽연합 PVGIS(ERA5)는 같은 곳을 실측보다 약 20% 높게 계산했습니다.', 'kWh/kWp per year. Dangjin and Ulsan match within 1% after correction; Donghae is an outlier (site conditions) and was excluded. PVGIS (ERA5) overestimated these sites by about 20%.')}</p>
+          <p className={`${ui.hint} ${s.hint}`}>{L('단위 kWh/kWp·년. 당진·울산은 보정 후 실측과 1% 안팎으로 맞습니다. 동해는 다른 두 곳보다 약 24% 낮아 그늘·방향 같은 현장 조건 영향으로 보고 보정 계산에서 뺐습니다. 월별 패턴은 논문의 전국 평균 월표가 세 곳 모두에서 실측과 가장 가까웠습니다(연간을 맞춘 뒤 월 오차 10~15%). 유럽연합 PVGIS(ERA5)는 같은 곳을 실측보다 약 20% 높게 계산했습니다.', 'kWh/kWp per year. Dangjin and Ulsan match within 1% after correction; Donghae is an outlier (site conditions) and was excluded. PVGIS (ERA5) overestimated these sites by about 20%.')}</p>
         </section>
       )}
 

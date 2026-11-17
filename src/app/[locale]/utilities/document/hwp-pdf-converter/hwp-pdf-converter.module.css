@@ -6,14 +6,6 @@
 }
 
 .container {
-  --hc-pdf: #dc2626;
-  --hc-docx: #2563eb;
-  --hc-ok: #059669;
-  --hc-warn-bg: #fef3c7;
-  --hc-warn-text: #92400e;
-  --hc-err-bg: #fef2f2;
-  --hc-err-text: #b91c1c;
-
   max-width: var(--tool-width);
   margin: 0 auto;
   width: 100%;
@@ -24,16 +16,6 @@
   animation: fadeIn 0.6s ease-out;
 }
 
-:global([data-theme='dark']) .container {
-  --hc-pdf: #f87171;
-  --hc-docx: #60a5fa;
-  --hc-ok: #34d399;
-  --hc-warn-bg: #422006;
-  --hc-warn-text: #fde68a;
-  --hc-err-bg: #3b0d0d;
-  --hc-err-text: #fca5a5;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .container { animation: none; }
 }
@@ -42,11 +24,6 @@
   max-width: 640px;
   margin: 0 auto;
   width: 100%;
-  padding: 1.75rem;
-  background: var(--surface);
-  border-radius: 1.25rem;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -55,7 +32,7 @@
 
 .dropzone {
   border: 2px dashed var(--border);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-card);
   padding: 3rem 1.5rem;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
@@ -63,8 +40,8 @@
 }
 
 .dropzone:hover,
-.dropzone:focus-visible { border-color: var(--primary); background: var(--surface-hover); outline: none; }
-.dropzone_active { border-color: var(--primary); background: var(--surface-hover); }
+.dropzone:focus-visible { border-color: var(--color-primary); background: var(--surface-hover); outline: none; }
+.dropzone_active { border-color: var(--color-primary); background: var(--surface-hover); }
 .dropzone_icon { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
 .dropzone_label { font-weight: 700; color: var(--text-primary); margin: 0 0 0.35rem; word-break: break-all; }
 .dropzone_hint { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
@@ -73,76 +50,27 @@
 
 .button_row { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
 
-.btn_pdf,
-.btn_docx,
-.btn_download {
-  flex: 1;
-  min-width: 160px;
-  min-height: 50px;
-  padding: 0.8rem 1.2rem;
-  border: none;
-  border-radius: 0.85rem;
-  color: #fff;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.btn_pdf, .btn_download_pdf { background: var(--hc-pdf); }
-.btn_docx, .btn_download_docx { background: var(--hc-docx); }
-.btn_pdf:disabled, .btn_docx:disabled { opacity: 0.6; cursor: wait; }
+.btn_main { flex: 1; min-width: 160px; }
 
 .result_box { display: flex; flex-direction: column; gap: 0.75rem; }
-.result_title { margin: 0; font-size: 1.2rem; color: var(--hc-ok); }
+.result_title { margin: 0; font-size: 1.2rem; color: var(--tint-green-fg); }
 .notice { font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
 
-.warning,
-.error {
-  margin: 0;
-  padding: 0.85rem 1rem;
-  border-radius: 0.75rem;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  text-align: left;
-}
+.alert { margin: 0; text-align: left; }
 
-.warning { background: var(--hc-warn-bg); color: var(--hc-warn-text); }
-.error { background: var(--hc-err-bg); color: var(--hc-err-text); }
-
-.btn_reset {
-  align-self: center;
-  padding: 0.55rem 1.1rem;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  background: var(--surface);
-  color: var(--text-secondary);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.ad_slot {
-  width: 100%;
-  min-height: 90px;
-  border: 1px dashed var(--border);
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
+.btn_reset { align-self: center; }
 
 /* ── PDF 렌더용 (화면 밖). 출력 문서는 테마와 무관하게 흰 종이·검은 글씨 ── */
 .offscreen { position: absolute; left: -20000px; top: 0; pointer-events: none; }
 
-.doc_page { box-sizing: border-box; background: var(--surface); overflow: hidden; }
+.doc_page { box-sizing: border-box; background: #fff; overflow: hidden; }
 
 .doc_page_body {
   color: #111;
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   font-size: 15px;
   line-height: 1.65;
-  background: var(--surface);
+  background: #fff;
 }
 
 .doc_p { margin: 0 0 0.9em; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }

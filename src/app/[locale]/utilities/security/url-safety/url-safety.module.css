@@ -1,13 +1,36 @@
-.ad_placeholder {
-  width: 100%;
-  min-height: 90px;
-  background: rgba(226, 232, 240, 0.3);
-  border: 1px dashed var(--border);
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  font-size: 0.875rem;
-  margin: 2rem 0;
+/* 레이아웃만 — 카드·버튼·입력칸 모양은 공통 ui 키트 */
+.wrap { width: 100%; }
+
+.steps { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--text-secondary); }
+.stepNum {
+  width: 1.5rem; height: 1.5rem; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--primary-fill); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
 }
+.stepArrow { color: var(--text-muted); }
+
+.inputCard { display: flex; flex-direction: column; gap: 0.5rem; max-width: var(--tool-width-narrow); margin: 0 auto 1.5rem; }
+.inputRow { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.urlInput { flex: 1; min-width: 200px; width: auto; }
+
+.resultWrap { max-width: var(--tool-width-narrow); margin: 0 auto; }
+.result { text-align: center; }
+.resultWrap .unsafe { border-color: var(--tint-red-border); }
+.resultIcon { font-size: 3rem; margin-bottom: 0.75rem; }
+.resultTitle { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+.safeText { color: var(--tint-green-fg); }
+.unsafeText { color: var(--tint-red-fg); }
+.resultUrl { font-size: 0.85rem; color: var(--text-secondary); word-break: break-all; }
+.resultNote { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem; }
+.threats { display: flex; flex-direction: column; gap: 0.5rem; text-align: left; margin-top: 1rem; }
+.again { text-align: center; margin-top: 1rem; }
+
+.infoGrid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;
+  max-width: var(--tool-width-narrow); margin: 2.5rem auto 0;
+}
+.infoIcon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.infoTitle { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
+.infoDesc { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; }

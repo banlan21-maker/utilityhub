@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import rxs from './regex-tester.module.css';
+import { ui } from '@/app/components/ui';
 
 /* ─── Cheat sheet patterns (라벨은 i18n 키로 분리) ─── */
 interface CheatItem {
@@ -60,7 +61,7 @@ function HighlightedText({
   if (!regex || !text) {
     return (
       <span style={{ color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>
-        {text || <span style={{ color: 'var(--text-secondary)' }}>{emptyHint}</span>}
+        {text || <span style={{ color: '#94a3b8' }}>{emptyHint}</span>}
       </span>
     );
   }
@@ -151,7 +152,7 @@ export default function RegexTesterClient() {
         {/* Main column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Pattern input */}
-          <div className="glass-panel" style={{ padding: '1rem' }}>
+          <div className={ui.card}>
             <div
               style={{
                 display: 'flex',
@@ -160,8 +161,8 @@ export default function RegexTesterClient() {
                 marginBottom: '0.6rem',
               }}
             >
-              <span style={labelStyle}>{t('label.pattern')}</span>
-              <button onClick={() => setShowCheat((v) => !v)} style={ghostBtn} aria-label={t('btn.cheatsheet')}>
+              <span className={ui.label}>{t('label.pattern')}</span>
+              <button onClick={() => setShowCheat((v) => !v)} className={`${ui.button} ${ui.ghost} ${ui.sm}`} aria-label={t('btn.cheatsheet')}>
                 {showCheat ? '◀ ' : '▶ '}
                 {t('btn.cheatsheet')}
               </button>
@@ -193,25 +194,14 @@ export default function RegexTesterClient() {
                 marginTop: '0.75rem',
               }}
             >
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginRight: '0.25rem' }}>Flags:</span>
+              <span className={ui.hint} style={{ marginRight: '0.25rem' }}>Flags:</span>
               {FLAG_OPTIONS.map((f) => (
                 <button
                   key={f}
                   onClick={() => toggleFlag(f)}
                   aria-label={`flag ${f}`}
-                  style={{
-                    padding: '0.2rem 0.55rem',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1.5px solid',
-                    fontFamily: codeFont,
-                    borderColor: flags.includes(f) ? 'var(--primary)' : 'var(--border)',
-                    background: flags.includes(f) ? 'rgba(79,70,229,0.15)' : 'var(--surface)',
-                    color: flags.includes(f) ? 'var(--primary)' : 'var(--text-muted)',
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s',
-                  }}
+                  className={`${ui.chip} ${ui.pill} ${flags.includes(f) ? ui.chipActive : ''}`}
+                  style={{ fontFamily: codeFont }}
                 >
                   {f}
                 </button>
@@ -220,7 +210,7 @@ export default function RegexTesterClient() {
                 style={{
                   marginLeft: 'auto',
                   fontSize: '0.78rem',
-                  color: error ? '#f87171' : matchCount > 0 ? '#10b981' : 'var(--text-muted)',
+                  color: error ? 'var(--tint-red-fg)' : matchCount > 0 ? 'var(--tint-green-fg)' : 'var(--text-muted)',
                   fontWeight: 600,
                 }}
               >
@@ -236,17 +226,17 @@ export default function RegexTesterClient() {
 
             {/* 에러 상세 (한국어 안내 + 원문) */}
             {error && (
-              <div className={rxs.rx_error_box}>
+              <div className={`${ui.notice} ${ui.red} ${rxs.rx_error_box}`}>
                 <code>{error}</code>
               </div>
             )}
           </div>
 
           {/* Test string */}
-          <div className="glass-panel" style={{ padding: '1rem' }}>
+          <div className={ui.card}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-              <span style={labelStyle}>{t('label.testString')}</span>
-              <button onClick={() => setTestText('')} style={ghostBtn} aria-label={t('btn.clear')}>
+              <span className={ui.label}>{t('label.testString')}</span>
+              <button onClick={() => setTestText('')} className={`${ui.button} ${ui.ghost} ${ui.sm}`} aria-label={t('btn.clear')}>
                 {t('btn.clear')}
               </button>
             </div>
@@ -261,8 +251,8 @@ export default function RegexTesterClient() {
           </div>
 
           {/* Live result */}
-          <div className="glass-panel" style={{ padding: '1rem' }}>
-            <span style={{ ...labelStyle, display: 'block', marginBottom: '0.6rem' }}>{t('label.result')}</span>
+          <div className={ui.card}>
+            <span className={ui.label} style={{ display: 'block', marginBottom: '0.6rem' }}>{t('label.result')}</span>
             <div
               style={{
                 minHeight: '120px',
@@ -284,29 +274,14 @@ export default function RegexTesterClient() {
                 {displayedTokens.map((m, i) => (
                   <code
                     key={i}
-                    style={{
-                      padding: '0.15rem 0.5rem',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'rgba(251,191,36,0.15)',
-                      color: '#fbbf24',
-                      fontSize: '0.78rem',
-                      fontFamily: codeFont,
-                    }}
+                    className={`${ui.badge} ${ui.amber}`}
+                    style={{ fontFamily: codeFont }}
                   >
                     {m}
                   </code>
                 ))}
                 {moreCount > 0 && (
-                  <span
-                    style={{
-                      padding: '0.15rem 0.5rem',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'rgba(148,163,184,0.15)',
-                      color: 'var(--text-muted)',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                    }}
-                  >
+                  <span className={`${ui.badge} ${ui.gray}`}>
                     {t('status.more_results', { n: moreCount })}
                   </span>
                 )}
@@ -318,37 +293,16 @@ export default function RegexTesterClient() {
         {/* Cheat sheet sidebar */}
         {showCheat && (
           <div
-            className="glass-panel"
-            style={{ padding: '1rem', height: 'fit-content', maxHeight: '600px', overflowY: 'auto' }}
+            className={`${ui.card} ${rxs.rx_cheat}`}
           >
-            <span style={{ ...labelStyle, display: 'block', marginBottom: '0.75rem' }}>{t('cheat.title')}</span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <span className={ui.label} style={{ display: 'block', marginBottom: '0.75rem' }}>{t('cheat.title')}</span>
+            <div className={rxs.rx_cheat_list}>
               {CHEAT.map((item) => (
                 <button
                   key={item.pattern}
                   onClick={() => applyCheat(item)}
                   aria-label={t(`cheat.items.${item.key}` as 'cheat.items.email')}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    padding: '0.6rem 0.75rem',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1px solid var(--border)',
-                    background: 'var(--surface)',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'all 0.15s',
-                    width: '100%',
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--primary)';
-                    e.currentTarget.style.background = 'var(--surface-hover)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.background = 'var(--surface)';
-                  }}
+                  className={`${ui.chip} ${rxs.rx_cheat_btn}`}
                 >
                   <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
                     {t(`cheat.items.${item.key}` as 'cheat.items.email')}
@@ -356,8 +310,9 @@ export default function RegexTesterClient() {
                   <code
                     style={{
                       fontSize: '0.72rem',
-                      color: '#93c5fd',
+                      color: 'var(--tint-blue-fg)',
                       fontFamily: codeFont,
+                      fontWeight: 500,
                       wordBreak: 'break-all',
                     }}
                   >
@@ -369,13 +324,13 @@ export default function RegexTesterClient() {
 
             {/* Quick reference */}
             <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-              <span style={{ ...labelStyle, display: 'block', marginBottom: '0.5rem' }}>{t('cheat.quickRef')}</span>
+              <span className={ui.label} style={{ display: 'block', marginBottom: '0.5rem' }}>{t('cheat.quickRef')}</span>
               {QUICK_REF.map(({ sym, key }) => (
                 <div
                   key={sym}
                   style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem', fontSize: '0.78rem' }}
                 >
-                  <code style={{ color: '#fbbf24', fontFamily: codeFont, minWidth: '52px', flexShrink: 0 }}>{sym}</code>
+                  <code style={{ color: 'var(--tint-amber-fg)', fontFamily: codeFont, minWidth: '52px', flexShrink: 0 }}>{sym}</code>
                   <span style={{ color: 'var(--text-secondary)' }}>{t(`quickRef.${key}` as 'quickRef.any_char')}</span>
                 </div>
               ))}
@@ -470,20 +425,4 @@ const codeTextareaStyle: React.CSSProperties = {
   outline: 'none',
   boxSizing: 'border-box',
   transition: 'border-color 0.2s',
-};
-const labelStyle: React.CSSProperties = {
-  fontSize: '0.78rem',
-  fontWeight: 700,
-  color: 'var(--text-muted)',
-  textTransform: 'uppercase',
-  letterSpacing: '0.07em',
-};
-const ghostBtn: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  cursor: 'pointer',
-  fontSize: '0.78rem',
-  fontWeight: 600,
-  color: 'var(--primary)',
-  padding: 0,
 };

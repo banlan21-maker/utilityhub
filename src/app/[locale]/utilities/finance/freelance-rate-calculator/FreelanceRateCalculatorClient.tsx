@@ -6,6 +6,7 @@ import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './frc.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Types ──
 type Country = 'KR' | 'US';
@@ -422,16 +423,7 @@ export default function FreelanceRateCalculatorClient() {
           </div>
 
           {/* 국가별 미반영 항목 안내 */}
-          <p style={{
-            marginTop: '1.25rem',
-            padding: '0.75rem 1rem',
-            background: 'rgba(254, 243, 199, 0.6)',
-            border: '1px solid rgba(252, 211, 77, 0.5)',
-            borderRadius: '0.6rem',
-            fontSize: '0.78rem',
-            color: '#78350f',
-            lineHeight: 1.55,
-          }}>
+          <p className={`${ui.notice} ${ui.amber}`} style={{ marginTop: '1.25rem' }}>
             {country === 'KR'
               ? (isKo
                   ? '⚠️ 건강보험은 지역가입자 소득 보험료율 7.09% 단순 적용. 부동산·자동차 보유 시 재산점수가 추가되어 실제 부담은 더 클 수 있습니다. 산재·고용보험은 임의가입이라 미포함.'
@@ -449,7 +441,7 @@ export default function FreelanceRateCalculatorClient() {
       </button>
 
       {/* ── Receipt (off-screen capture target) ── */}
-      <div ref={receiptRef} className={s.frc_receipt}>
+      <div ref={receiptRef} className={`${s.frc_receipt} light-island`}>
         <p className={s.frc_receipt_logo}>⚡ theutilhub</p>
         <p className={s.frc_receipt_cert}>
           {isKo ? '프리랜서 적정 단가 계산 결과' : 'Freelance Rate Summary'}

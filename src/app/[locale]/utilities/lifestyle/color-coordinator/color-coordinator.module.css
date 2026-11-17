@@ -1,24 +1,12 @@
-/* OOTD 컬러 코디네이터 — 테마 변수 사용(다크 모드 자동) */
+/* OOTD 컬러 코디네이터 — 공통 부품(ui.module.css) + 사이트 토큰 (다크 모드 자동) */
 
 .container {
-  --cc-accent: #8b5cf6;
-  --cc-accent-soft: #f3efff;
-  --cc-accent-line: #d9ccfb;
-  --cc-good: #15803d;
-  --cc-ok: #b45309;
-  --cc-warn: #c2410c;
+  --cc-accent: var(--color-primary);
+  --cc-accent-soft: var(--color-primary-light);
+  --cc-accent-line: var(--tint-violet-border);
   max-width: var(--tool-width);
   margin: 0 auto;
   padding: 1rem;
-}
-
-:global([data-theme='dark']) .container {
-  --cc-accent: #a78bfa;
-  --cc-accent-soft: rgba(167, 139, 250, 0.14);
-  --cc-accent-line: rgba(167, 139, 250, 0.4);
-  --cc-good: #4ade80;
-  --cc-ok: #fbbf24;
-  --cc-warn: #fb923c;
 }
 
 /* ── 배치: 데스크톱은 왼쪽 마네킹 고정, 오른쪽에 카드 ── */
@@ -40,14 +28,13 @@
 .palette { grid-area: palette; }
 .looks { grid-area: looks; }
 .harmony { grid-area: harmony; }
-.saveBtn { grid-area: save; }
 
 .figCard {
   position: sticky;
   top: calc(var(--header-height, 64px) + 0.75rem);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-card);
   padding: 0.6rem;
   box-shadow: var(--shadow-md);
 }
@@ -81,14 +68,9 @@
   margin: 0.45rem 0 0.2rem;
 }
 
-/* ── 카드 공통 ── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  padding: 1rem;
-  min-width: 0;
-}
+/* ── 카드 공통 (모양은 ui.card) ── */
+.card { min-width: 0; }
+.mainGrid .card { padding: 1.15rem; }
 
 .cardHead {
   display: flex;
@@ -97,33 +79,8 @@
   gap: 0.5rem;
   margin-bottom: 0.6rem;
 }
+.cardTitle { flex-wrap: wrap; }
 .cardHead .cardTitle { margin: 0; }
-
-.cardTitle {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: var(--cc-accent);
-  margin: 0 0 0.7rem;
-}
-
-.ghostBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-}
-.ghostBtn:hover:not(:disabled) { background: var(--surface-hover); }
-.ghostBtn:disabled { opacity: 0.4; cursor: default; }
 
 /* ── 아이템 목록 ── */
 .slotList {
@@ -205,7 +162,7 @@
   border-radius: 50%;
   color: var(--text-muted);
 }
-.slotRemove:hover { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+.slotRemove:hover { background: var(--tint-red-bg); color: var(--tint-red-fg); }
 
 /* ── 팔레트 ── */
 .curColor {
@@ -224,38 +181,9 @@
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
 
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-bottom: 0.75rem;
-}
+.tabs { margin-bottom: 0.75rem; }
 
-.tab {
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  transition: all 0.15s;
-}
-.tab:hover { background: var(--surface-hover); }
-.tabOn, .tabOn:hover {
-  background: var(--cc-accent);
-  border-color: var(--cc-accent);
-  color: #fff;
-}
-
-.seasonNote {
-  font-size: 0.8rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  background: var(--cc-accent-soft);
-  border-radius: 0.6rem;
-  padding: 0.55rem 0.75rem;
-  margin: 0 0 0.75rem;
-}
+.seasonNote { margin: 0 0 0.75rem; }
 
 .swGroup + .swGroup { margin-top: 0.6rem; }
 
@@ -286,21 +214,7 @@
 .swatchOn { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--cc-accent); }
 .swCheck { pointer-events: none; }
 
-.customBtn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.75rem;
-  padding: 0.35rem 0.85rem;
-  border: 1.5px dashed var(--cc-accent-line);
-  border-radius: 999px;
-  color: var(--cc-accent);
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-.customBtn:hover { background: var(--cc-accent-soft); }
+.customBtn { position: relative; margin-top: 0.75rem; }
 .customBtn:focus-within { outline: 2px solid var(--cc-accent); outline-offset: 2px; }
 
 .hiddenInput {
@@ -327,27 +241,11 @@
   gap: 0.5rem;
 }
 
-.lookBtn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
-  padding: 0.7rem 0.4rem;
-  border: 1px solid var(--border);
-  border-radius: 0.85rem;
-  background: var(--surface);
-  transition: all 0.15s;
-}
-.lookBtn:hover { background: var(--surface-hover); border-color: var(--cc-accent-line); }
-.lookBtnOn, .lookBtnOn:hover {
-  background: var(--cc-accent-soft);
-  border-color: var(--cc-accent);
-}
+.lookBtns .lookBtn { flex-direction: column; gap: 0.1rem; padding: 0.7rem 0.4rem; }
 
 .lookEmoji { font-size: 1.25rem; }
-.lookName { font-size: 0.88rem; font-weight: 800; color: var(--text-primary); }
-.lookBtnOn .lookName { color: var(--cc-accent); }
-.lookDesc { font-size: 0.72rem; color: var(--text-muted); }
+.lookName { font-size: 0.88rem; font-weight: 800; }
+.lookDesc { font-size: 0.72rem; font-weight: 500; color: var(--text-muted); }
 
 /* ── 조합 점검 ── */
 .verdict {
@@ -355,9 +253,9 @@
   font-weight: 800;
   margin: -0.2rem 0 0.6rem;
 }
-.v_good { color: var(--cc-good); }
-.v_ok { color: var(--cc-ok); }
-.v_warn { color: var(--cc-warn); }
+.v_good { color: var(--tint-green-fg); }
+.v_ok { color: var(--tint-amber-fg); }
+.v_warn { color: var(--tint-orange-fg); }
 
 .checks {
   list-style: none;
@@ -374,27 +272,12 @@
   color: var(--text-secondary);
 }
 .checks li svg { flex-shrink: 0; margin-top: 0.2rem; }
-.c_good svg { color: var(--cc-good); }
-.c_ok svg { color: var(--cc-ok); }
-.c_warn svg { color: var(--cc-warn); }
+.c_good svg { color: var(--tint-green-fg); }
+.c_ok svg { color: var(--tint-amber-fg); }
+.c_warn svg { color: var(--tint-orange-fg); }
 
-/* ── 저장 ── */
-.saveBtn {
-  width: 100%;
-  padding: 0.9rem;
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  color: #fff;
-  font-weight: 800;
-  font-size: 1rem;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.saveBtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35); }
-.saveBtn:disabled { opacity: 0.7; cursor: progress; }
+/* ── 저장 (모양은 ui.button) ── */
+.saveBtn { grid-area: save; }
 
 /* ── 모바일: 마네킹과 아이템 목록을 나란히, 나머지는 아래 ── */
 @media (max-width: 720px) {
@@ -413,56 +296,27 @@
   .skinChip { width: 20px; height: 20px; }
   .skinRow { gap: 0.3rem; }
   .figHint { display: none; }
-  .slots { padding: 0.7rem 0.55rem; }
+  .mainGrid .slots { padding: 0.7rem 0.55rem; }
   .slotMain { padding: 0.45rem 0.4rem; gap: 0.45rem; flex-wrap: wrap; row-gap: 0; }
   .slotLabel { font-size: 0.84rem; }
   .slotColor { flex-basis: 100%; padding-left: calc(22px + 0.45rem); font-size: 0.72rem; }
   .slotDot { width: 18px; height: 18px; }
   .slotColor { padding-left: calc(18px + 0.45rem); }
   .slotAdd { padding: 0.15rem 0.45rem; font-size: 0.7rem; }
-  .ghostBtn { padding: 0.25rem 0.45rem; font-size: 0.72rem; }
 }
 
-/* ── 머리 길이·아이템 모양 ── */
-.hairRow {
-  display: flex;
-  justify-content: center;
-  gap: 0.35rem;
-  margin-top: 0.5rem;
-}
-
-.hairBtn,
-.styleBtn {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  transition: all 0.15s;
-}
-.hairBtn:hover,
-.styleBtn:hover { background: var(--surface-hover); }
-.hairBtnOn, .hairBtnOn:hover,
-.styleBtnOn, .styleBtnOn:hover {
-  background: var(--cc-accent-soft);
-  border-color: var(--cc-accent);
-  color: var(--cc-accent);
-}
+/* ── 머리 길이·아이템 모양 (모양은 ui.chip) ── */
+.hairRow { justify-content: center; margin-top: 0.5rem; }
 
 .styleRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
   margin-bottom: 0.85rem;
   padding-bottom: 0.85rem;
   border-bottom: 1px dashed var(--border);
 }
-.styleBtn { font-size: 0.82rem; padding: 0.4rem 0.85rem; }
 
 .slotMain:disabled { cursor: default; }
 
 @media (max-width: 720px) {
-  .hairRow { gap: 0.2rem; }
-  .hairBtn { font-size: 0.65rem; padding: 0.2rem 0.4rem; }
+  .figCard .hairRow { gap: 0.2rem; }
+  .hairRow .hairBtn { font-size: 0.65rem; padding: 0.2rem 0.4rem; min-height: 26px; }
 }

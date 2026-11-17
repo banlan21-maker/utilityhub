@@ -17,6 +17,7 @@ import {
 import { defaultPerBox, tileOrder } from '@/lib/interiorMaterial';
 import { trackEvent } from '@/lib/track';
 import s from './tile-visualizer.module.css';
+import { ui } from '@/app/components/ui';
 
 const SAMPLE_SRC = '/images/tile-visualizer/bathroom.jpg';
 const SAMPLE_MASK = '/images/tile-visualizer/bathroom-mask.webp';
@@ -486,14 +487,14 @@ export default function TileVisualizerClient() {
   const loading = z.on && z.tile.kind === 'preset' && !!preset(z.tile.id).tex && srcTex.current.get(preset(z.tile.id).tex!.src) === 'loading';
 
   const chip = <T extends string | number | boolean>(cur: T, val: T, set: (v: T) => void, label: React.ReactNode, key?: string) => (
-    <button key={key ?? String(val)} type="button" aria-pressed={cur === val} className={`${s.chip} ${cur === val ? s.chip_on : ''}`} onClick={() => set(val)}>{label}</button>
+    <button key={key ?? String(val)} type="button" aria-pressed={cur === val} className={`${ui.chip} ${cur === val ? ui.chipActive : ''}`} onClick={() => set(val)}>{label}</button>
   );
   const field = (id: string, label: string, value: string, set: (v: string) => void, unit: string, mode: 'dec' | 'int' = 'dec') => (
-    <div className={s.field}>
-      <label className={s.field_label} htmlFor={id}>{label}</label>
-      <div className={s.input_wrap}>
-        <input id={id} className={s.input} inputMode={mode === 'dec' ? 'decimal' : 'numeric'} value={value} onChange={e => set(mode === 'dec' ? dec(e.target.value) : digits(e.target.value))} />
-        <span className={s.unit}>{unit}</span>
+    <div className={ui.field}>
+      <label className={ui.label} htmlFor={id}>{label}</label>
+      <div className={ui.inputGroup}>
+        <input id={id} className={ui.input} inputMode={mode === 'dec' ? 'decimal' : 'numeric'} value={value} onChange={e => set(mode === 'dec' ? dec(e.target.value) : digits(e.target.value))} />
+        <span className={ui.unit}>{unit}</span>
       </div>
     </div>
   );
@@ -507,10 +508,10 @@ export default function TileVisualizerClient() {
       <ToolHeader icon={<Layers />} title={titleStr} subtitle={descStr} />
 
       <div className={s.source}>
-        <button type="button" aria-pressed={source === 'sample'} className={`${s.src_btn} ${source === 'sample' ? s.src_on : ''}`} onClick={() => { setSource('sample'); setTool('tile'); setSplit(null); }}>
+        <button type="button" aria-pressed={source === 'sample'} className={`${ui.chip} ${source === 'sample' ? ui.chipActive : ''} ${s.src_btn}`} onClick={() => { setSource('sample'); setTool('tile'); setSplit(null); }}>
           <ImageIcon size={18} />{L('샘플 욕실', 'Sample bathroom')}<small>{L('바로 타일 바꿔 보기', 'try tiles right away')}</small>
         </button>
-        <label className={`${s.src_btn} ${source === 'photo' ? s.src_on : ''}`}>
+        <label className={`${ui.chip} ${source === 'photo' ? ui.chipActive : ''} ${s.src_btn}`}>
           <Upload size={18} />{baseRef.current.photo ? L('내 사진 바꾸기', 'Change my photo') : L('내 욕실 사진 올리기', 'Upload my photo')}<small>{L('사진은 내 기기 안에서만 처리', 'processed on your device')}</small>
           <input type="file" accept="image/*" className={s.hidden} onChange={e => { onPhoto(e.target.files?.[0]); e.target.value = ''; }} />
         </label>
@@ -558,21 +559,21 @@ export default function TileVisualizerClient() {
             {loupe && <canvas ref={loupeRef} width={240} height={240} className={`${s.loupe} ${loupe.x < 0.5 ? s.loupe_r : ''}`} aria-hidden />}
           </div>
           <div className={s.stage_bar}>
-            <button type="button" aria-pressed={split !== null} className={`${s.ghost} ${split !== null ? s.ghost_on : ''}`} onClick={() => setSplit(v => (v === null ? 0.5 : null))} disabled={editing}>
+            <button type="button" aria-pressed={split !== null} className={`${ui.button} ${ui.secondary} ${split !== null ? ui.chipActive : ''} ${s.ghost}`} onClick={() => setSplit(v => (v === null ? 0.5 : null))} disabled={editing}>
               <SplitSquareHorizontal size={16} />{L('전후 비교', 'Before / after')}
             </button>
-            <button type="button" className={s.btn} onClick={download} disabled={!ready || busy}><Download size={16} />{busy ? L('만드는 중…', 'Rendering…') : L('이미지 저장', 'Save image')}</button>
+            <button type="button" className={`${ui.button} ${ui.primary}`} onClick={download} disabled={!ready || busy}><Download size={16} />{busy ? L('만드는 중…', 'Rendering…') : L('이미지 저장', 'Save image')}</button>
           </div>
           {loading && <p className={s.msg}>{L('타일 텍스처 불러오는 중…', 'Loading tile texture…')}</p>}
           {msg && <p className={s.msg} role="status">{msg}</p>}
         </div>
 
         <div className={s.panel}>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('1. 면 선택', '1. Surface')}</h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={`${ui.cardTitle} ${s.card_title}`}>{L('1. 면 선택', '1. Surface')}</h2>
             <div className={s.zone_grid}>
               {ZONE_IDS.map(id => (
-                <button key={id} type="button" aria-pressed={active === id} className={`${s.zone_btn} ${active === id ? s.zone_on : ''} ${zones[id].on ? '' : s.zone_off}`} onClick={() => setActive(id)}>
+                <button key={id} type="button" aria-pressed={active === id} className={`${ui.chip} ${active === id ? ui.chipActive : ''} ${s.zone_btn} ${zones[id].on ? '' : s.zone_off}`} onClick={() => setActive(id)}>
                   {zoneName(id)}<small>{zones[id].on ? `${zones[id].tw}×${zones[id].th}` : L('원래대로', 'original')}</small>
                 </button>
               ))}
@@ -583,21 +584,21 @@ export default function TileVisualizerClient() {
             </label>
             {source === 'photo' && (
               <>
-                <div className={s.tools}>
+                <div className={ui.chips}>
                   {chip(tool, 'corners', setTool, <><Move size={15} />{L('꼭짓점 맞추기', 'Corners')}</>)}
                   {chip(tool, 'brush', setTool, <><Brush size={15} />{L('가림 칠하기', 'Mask objects')}</>)}
                   {chip(tool, 'tile', setTool, <><Layers size={15} />{L('보기', 'View')}</>)}
                 </div>
-                {tool === 'corners' && <p className={s.hint}>{L('사진 위 1~4번 점을 끌어 이 면의 네 모서리에 맞추세요(1 왼쪽 위 → 2 오른쪽 위 → 3 오른쪽 아래 → 4 왼쪽 아래, 바닥은 1·2가 안쪽). 끄는 동안 확대경이 나타납니다. 면이 사진 밖으로 이어지면 점을 사진 바깥 여백에 둬도 됩니다.', 'Drag points 1–4 to the corners of this surface (top-left, top-right, bottom-right, bottom-left; for the floor 1–2 are the far side). A magnifier appears while dragging.')}</p>}
-                {badQuad && <p className={s.warn}>{L('점 순서가 꼬여 면이 뒤집혔습니다. 1→2→3→4가 시계 방향이 되게 옮겨 주세요.', 'The corners cross; arrange 1→2→3→4 clockwise.')}</p>}
+                {tool === 'corners' && <p className={`${ui.hint} ${s.hint}`}>{L('사진 위 1~4번 점을 끌어 이 면의 네 모서리에 맞추세요(1 왼쪽 위 → 2 오른쪽 위 → 3 오른쪽 아래 → 4 왼쪽 아래, 바닥은 1·2가 안쪽). 끄는 동안 확대경이 나타납니다. 면이 사진 밖으로 이어지면 점을 사진 바깥 여백에 둬도 됩니다.', 'Drag points 1–4 to the corners of this surface (top-left, top-right, bottom-right, bottom-left; for the floor 1–2 are the far side). A magnifier appears while dragging.')}</p>}
+                {badQuad && <p className={`${ui.notice} ${ui.amber}`}>{L('점 순서가 꼬여 면이 뒤집혔습니다. 1→2→3→4가 시계 방향이 되게 옮겨 주세요.', 'The corners cross; arrange 1→2→3→4 clockwise.')}</p>}
                 {tool === 'brush' && (
                   <>
-                    <p className={s.hint}>{L('변기·세면대·욕조·거울처럼 타일 앞에 있는 물건을 문지르면 그 부분은 원래 사진이 보입니다(보라색 표시).', 'Paint over objects in front of the tiles (toilet, basin, mirror) to keep them from the original photo.')}</p>
-                    <div className={s.tools}>
+                    <p className={`${ui.hint} ${s.hint}`}>{L('변기·세면대·욕조·거울처럼 타일 앞에 있는 물건을 문지르면 그 부분은 원래 사진이 보입니다(보라색 표시).', 'Paint over objects in front of the tiles (toilet, basin, mirror) to keep them from the original photo.')}</p>
+                    <div className={ui.chips}>
                       {chip(erase, false, setErase, <><Brush size={15} />{L('칠하기', 'Paint')}</>, 'paint')}
                       {chip(erase, true, setErase, <><Eraser size={15} />{L('지우기', 'Erase')}</>, 'erase')}
-                      <button type="button" className={s.chip} onClick={undoMask}><Undo2 size={15} />{L('되돌리기', 'Undo')}</button>
-                      <button type="button" className={s.chip} onClick={clearMask}><Trash2 size={15} />{L('모두 지우기', 'Clear')}</button>
+                      <button type="button" className={ui.chip} onClick={undoMask}><Undo2 size={15} />{L('되돌리기', 'Undo')}</button>
+                      <button type="button" className={ui.chip} onClick={clearMask}><Trash2 size={15} />{L('모두 지우기', 'Clear')}</button>
                     </div>
                     <label className={s.range}><span>{L('붓 크기', 'Brush size')}</span><input type="range" min={5} max={80} value={brush} onChange={e => setBrush(Number(e.target.value))} /></label>
                   </>
@@ -606,79 +607,79 @@ export default function TileVisualizerClient() {
                   {field('zw', active === 'floor' ? L('실제 가로 (폭)', 'Real width') : L('실제 가로', 'Real width'), z.W, v => updActive({ W: v }), 'm')}
                   {field('zh', active === 'floor' ? L('실제 세로 (깊이)', 'Real depth') : L('실제 높이', 'Real height'), z.H, v => updActive({ H: v }), 'm')}
                 </div>
-                <p className={s.hint}>{L('줄자로 잰 실제 치수를 넣어야 타일 크기가 맞습니다. 점을 사진 가장자리에 뒀다면 사진에 보이는 부분의 길이를 넣으세요.', 'Enter measured dimensions so tiles are to scale; if a corner sits at the photo edge, enter the length of the visible part.')}</p>
+                <p className={`${ui.hint} ${s.hint}`}>{L('줄자로 잰 실제 치수를 넣어야 타일 크기가 맞습니다. 점을 사진 가장자리에 뒀다면 사진에 보이는 부분의 길이를 넣으세요.', 'Enter measured dimensions so tiles are to scale; if a corner sits at the photo edge, enter the length of the visible part.')}</p>
               </>
             )}
-            {source === 'sample' && <p className={s.hint}>{L('샘플 욕실 치수: 정면 벽 폭 1.5m × 높이 2.4m, 사진에 보이는 바닥 깊이 약 2.05m (원래 바닥·벽 타일 줄눈으로 원근을 맞춘 값). 거울 속 벽도 새 타일로 비춥니다.', 'Sample room: back wall 1.5 m × 2.4 m, visible floor depth ≈ 2.05 m. The mirror reflects the new tiles too.')}</p>}
+            {source === 'sample' && <p className={`${ui.hint} ${s.hint}`}>{L('샘플 욕실 치수: 정면 벽 폭 1.5m × 높이 2.4m, 사진에 보이는 바닥 깊이 약 2.05m (원래 바닥·벽 타일 줄눈으로 원근을 맞춘 값). 거울 속 벽도 새 타일로 비춥니다.', 'Sample room: back wall 1.5 m × 2.4 m, visible floor depth ≈ 2.05 m. The mirror reflects the new tiles too.')}</p>}
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L(`2. ${zoneName(active)} 타일`, `2. ${zoneName(active)} tile`)}<small>{tileLabel}</small></h2>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={`${ui.cardTitle} ${s.card_title}`}>{L(`2. ${zoneName(active)} 타일`, `2. ${zoneName(active)} tile`)}<small>{tileLabel}</small></h2>
             <div className={s.swatches}>
               {TILE_PRESETS.map(p => (
-                <button key={p.id} type="button" aria-pressed={z.tile.kind === 'preset' && z.tile.id === p.id} className={`${s.swatch} ${z.tile.kind === 'preset' && z.tile.id === p.id ? s.swatch_on : ''}`}
+                <button key={p.id} type="button" aria-pressed={z.tile.kind === 'preset' && z.tile.id === p.id} className={`${ui.chip} ${z.tile.kind === 'preset' && z.tile.id === p.id ? ui.chipActive : ''} ${s.swatch}`}
                   onClick={() => updActive({ on: true, tile: { kind: 'preset', id: p.id }, finish: p.finish, tw: String(p.size[0]), th: String(p.size[1]) })}>
                   <span className={s.swatch_color} style={p.tex ? { backgroundImage: `url(${p.tex.src})`, backgroundSize: '220%', filter: p.tex.gain ? `brightness(${p.tex.gain[0]})` : undefined } : { background: p.swatch }} />{isKo ? p.ko : p.en}
                 </button>
               ))}
-              <label className={`${s.swatch} ${z.tile.kind === 'upload' ? s.swatch_on : ''}`}>
+              <label className={`${ui.chip} ${z.tile.kind === 'upload' ? ui.chipActive : ''} ${s.swatch}`}>
                 <span className={s.swatch_color}><Upload size={14} /></span>{L('타일 사진', 'Tile photo')}
                 <input type="file" accept="image/*" className={s.hidden} onChange={e => { onTileUpload(e.target.files?.[0]); e.target.value = ''; }} />
               </label>
             </div>
-            {z.tile.kind === 'upload' && <p className={s.hint}>{L('정면에서 찍은 타일 한 장 사진(줄눈 없이 타일만, 그늘 없이 밝게)을 올리면 가장 자연스럽습니다.', 'Use an evenly lit, straight-on photo of one tile without grout.')}</p>}
+            {z.tile.kind === 'upload' && <p className={`${ui.hint} ${s.hint}`}>{L('정면에서 찍은 타일 한 장 사진(줄눈 없이 타일만, 그늘 없이 밝게)을 올리면 가장 자연스럽습니다.', 'Use an evenly lit, straight-on photo of one tile without grout.')}</p>}
 
-            <span className={s.label}>{L('타일 크기 (가로 × 세로 mm)', 'Tile size (W × H mm)')}</span>
-            <div className={s.chips}>
+            <span className={ui.label}>{L('타일 크기 (가로 × 세로 mm)', 'Tile size (W × H mm)')}</span>
+            <div className={ui.chips}>
               {SIZES.map(([a, b]) => chip(`${z.tw}x${z.th}`, `${a}x${b}`, () => updActive({ tw: String(a), th: String(b) }), `${a}×${b}`))}
             </div>
             <div className={s.grid3}>
               {field('tw', L('가로', 'Width'), z.tw, v => updActive({ tw: v }), 'mm', 'int')}
               {field('th', L('세로', 'Height'), z.th, v => updActive({ th: v }), 'mm', 'int')}
-              <button type="button" className={s.rotate} onClick={() => updActive({ tw: z.th, th: z.tw })}><RotateCw size={15} />{L('가로·세로 바꾸기', 'Rotate')}</button>
+              <button type="button" className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={() => updActive({ tw: z.th, th: z.tw })}><RotateCw size={15} />{L('가로·세로 바꾸기', 'Rotate')}</button>
             </div>
 
-            <span className={s.label}>{L('배치', 'Layout')}</span>
-            <div className={s.chips}>
+            <span className={ui.label}>{L('배치', 'Layout')}</span>
+            <div className={ui.chips}>
               {chip(z.stagger, 0, v => updActive({ stagger: v }), L('일자', 'Stack'))}
               {chip(z.stagger, 1 / 2, v => updActive({ stagger: v }), L('1/2 엇갈림', '1/2 offset'))}
               {chip(z.stagger, 1 / 3, v => updActive({ stagger: v }), L('1/3 엇갈림', '1/3 offset'))}
             </div>
-            <div className={s.chips}>
+            <div className={ui.chips}>
               {chip(z.origin, 'corner' as Origin, v => updActive({ origin: v }), L('모서리부터', 'From corner'))}
               {chip(z.origin, 'center' as Origin, v => updActive({ origin: v }), L('가운데 맞춤', 'Centered'))}
             </div>
 
-            <span className={s.label}>{L(`줄눈 ${z.grout}mm`, `Grout ${z.grout} mm`)}</span>
-            <div className={s.chips}>
+            <span className={ui.label}>{L(`줄눈 ${z.grout}mm`, `Grout ${z.grout} mm`)}</span>
+            <div className={ui.chips}>
               {['1', '1.5', '2', '3', '5'].map(g => chip(z.grout, g, v => updActive({ grout: v }), `${g}mm`))}
             </div>
-            <div className={s.chips}>
+            <div className={ui.chips}>
               {GROUT_COLORS.map(c => (
-                <button key={c.hex} type="button" aria-pressed={z.groutColor === c.hex} className={`${s.chip} ${z.groutColor === c.hex ? s.chip_on : ''}`} onClick={() => updActive({ groutColor: c.hex })}>
+                <button key={c.hex} type="button" aria-pressed={z.groutColor === c.hex} className={`${ui.chip} ${z.groutColor === c.hex ? ui.chipActive : ''}`} onClick={() => updActive({ groutColor: c.hex })}>
                   <span className={s.dot} style={{ background: c.hex }} />{isKo ? c.ko : c.en}
                 </button>
               ))}
-              <label className={s.chip}><input type="color" className={s.color} value={z.groutColor} onChange={e => updActive({ groutColor: e.target.value })} aria-label={L('줄눈 색 직접 고르기', 'Custom grout colour')} />{L('직접', 'Custom')}</label>
+              <label className={ui.chip}><input type="color" className={s.color} value={z.groutColor} onChange={e => updActive({ groutColor: e.target.value })} aria-label={L('줄눈 색 직접 고르기', 'Custom grout colour')} />{L('직접', 'Custom')}</label>
             </div>
 
-            <span className={s.label}>{L('표면 마감', 'Finish')}</span>
-            <div className={s.chips}>
+            <span className={ui.label}>{L('표면 마감', 'Finish')}</span>
+            <div className={ui.chips}>
               {chip(z.finish, 'matte' as Finish, v => updActive({ finish: v }), L('무광', 'Matte'))}
               {chip(z.finish, 'satin' as Finish, v => updActive({ finish: v }), L('반광', 'Satin'))}
               {chip(z.finish, 'polished' as Finish, v => updActive({ finish: v }), L('유광', 'Polished'))}
             </div>
-            <p className={s.hint}>{L('유광일수록 원래 사진의 조명 반사가 남고, 바닥은 욕조·변기 같은 물건이 흐리게 비칩니다.', 'Glossier finishes keep light reflections; polished floors reflect objects above them.')}</p>
+            <p className={`${ui.hint} ${s.hint}`}>{L('유광일수록 원래 사진의 조명 반사가 남고, 바닥은 욕조·변기 같은 물건이 흐리게 비칩니다.', 'Glossier finishes keep light reflections; polished floors reflect objects above them.')}</p>
             <div className={s.grid2}>
               <label className={s.range}><span>{L(`조명·그림자 ${z.shade}%`, `Lighting ${z.shade}%`)}</span><input type="range" min={0} max={100} value={z.shade} onChange={e => updActive({ shade: Number(e.target.value) })} /></label>
               <label className={s.range}><span>{L(`밝기 ${z.bright}%`, `Brightness ${z.bright}%`)}</span><input type="range" min={70} max={130} value={z.bright} onChange={e => updActive({ bright: Number(e.target.value) })} /></label>
             </div>
-            <button type="button" className={s.ghost} onClick={copyToWalls} disabled={active === 'floor'}>{L('이 타일을 다른 벽에도 적용', 'Apply to the other walls')}</button>
+            <button type="button" className={`${ui.button} ${ui.secondary}`} onClick={copyToWalls} disabled={active === 'floor'}>{L('이 타일을 다른 벽에도 적용', 'Apply to the other walls')}</button>
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L(`3. ${zoneName(active)} 타일 수량`, `3. ${zoneName(active)} quantity`)}</h2>
-            {!qty ? <p className={s.hint}>{L('면 치수와 타일 크기를 확인하세요.', 'Check dimensions and tile size.')}</p> : (
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={`${ui.cardTitle} ${s.card_title}`}>{L(`3. ${zoneName(active)} 타일 수량`, `3. ${zoneName(active)} quantity`)}</h2>
+            {!qty ? <p className={`${ui.hint} ${s.hint}`}>{L('면 치수와 타일 크기를 확인하세요.', 'Check dimensions and tile size.')}</p> : (
               <>
                 <div className={s.stats}>
                   <div className={s.stat}><b>{f(qty.area, 2)}㎡</b><span>{L(`${z.W}m × ${z.H}m`, `${z.W} m × ${z.H} m`)}</span></div>
@@ -686,7 +687,7 @@ export default function TileVisualizerClient() {
                   <div className={s.stat}><b>{f(qty.order.withSpare)}{L('장', ' pcs')}</b><span>{L('여유 5% 포함', 'with 5% spare')}</span></div>
                   <div className={s.stat}><b>{f(qty.order.boxes)}{L('박스', ' boxes')}</b><span>{L(`박스당 ${qty.perBox}장 가정`, `${qty.perBox} per box`)}</span></div>
                 </div>
-                <p className={s.hint}>{L('문·창문·욕조 자리를 빼지 않은 면 전체 기준입니다. 개구부 차감과 박스 입수를 바꿔 계산하려면 ', 'Whole surface, openings not deducted. For openings and box sizes use the ')}
+                <p className={`${ui.hint} ${s.hint}`}>{L('문·창문·욕조 자리를 빼지 않은 면 전체 기준입니다. 개구부 차감과 박스 입수를 바꿔 계산하려면 ', 'Whole surface, openings not deducted. For openings and box sizes use the ')}
                   <Link href="/utilities/utility/interior-material-calc" className={s.inline_link}>{L('타일·도배 계산기', 'tile & wallpaper calculator')}</Link>{L('를 쓰세요.', '.')}</p>
               </>
             )}

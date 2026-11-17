@@ -10,19 +10,7 @@
 }
 
 /* ── Encryption Badge ────────────────────── */
-.encBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  border-radius: 9999px;
-  color: #22c55e;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.3rem 0.85rem;
-  margin-top: 0.75rem;
-}
+.encBadge { margin-top: 0.75rem; }
 
 /* ── Key Error Card ──────────────────────── */
 .keyErrorCard {
@@ -70,9 +58,9 @@
 
 /* ── Share URL Bar ───────────────────────── */
 .shareUrlBar {
-  background: rgba(249, 115, 22, 0.07);
-  border: 1px solid rgba(249, 115, 22, 0.3);
-  border-radius: 0.875rem;
+  background: var(--tint-orange-bg);
+  border: 1px solid var(--tint-orange-border);
+  border-radius: var(--radius-control);
   padding: 0.875rem 1.125rem;
   margin-bottom: 1.25rem;
 }
@@ -80,7 +68,7 @@
 .shareUrlLabel {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #f97316;
+  color: var(--tint-orange-fg);
   margin-bottom: 0.5rem;
 }
 
@@ -100,27 +88,7 @@
   font-family: 'Courier New', monospace;
 }
 
-.copyBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  background: rgba(249, 115, 22, 0.15);
-  border: 1px solid #f97316;
-  border-radius: 9999px;
-  color: #f97316;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.3rem 0.75rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-
-.copyBtn:hover {
-  background: rgba(249, 115, 22, 0.25);
-  transform: translateY(-1px);
-}
+.copyBtn { flex-shrink: 0; }
 
 /* ── Timer Card ──────────────────────────── */
 .timerCard {

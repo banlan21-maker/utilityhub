@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 
 export default function PetCalorieClient() {
   const t = useTranslations('PetFood');
@@ -76,44 +77,42 @@ export default function PetCalorieClient() {
 
       <div className="grid gap-8 md:grid-cols-2 animate-slide-up">
         {/* Input Section */}
-        <div className="glass-panel" style={{ padding: '2rem' }}>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('petType')}</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className={ui.card}>
+          <div className={ui.field} style={{ marginBottom: '1.5rem' }}>
+            <label className={ui.label}>{t('petType')}</label>
+            <div className={ui.segmented}>
               <button
                 onClick={() => setPetType('dog')}
-                className={petType === 'dog' ? 'active-tab' : 'tab'}
-                style={{ padding: '0.75rem', borderRadius: '12px', cursor: 'pointer', border: 'none' }}
+                className={`${ui.segment} ${petType === 'dog' ? ui.segmentActive : ''}`}
               >
                 🐶 {t('dog')}
               </button>
               <button
                 onClick={() => setPetType('cat')}
-                className={petType === 'cat' ? 'active-tab' : 'tab'}
-                style={{ padding: '0.75rem', borderRadius: '12px', cursor: 'pointer', border: 'none' }}
+                className={`${ui.segment} ${petType === 'cat' ? ui.segmentActive : ''}`}
               >
                 🐱 {t('cat')}
               </button>
             </div>
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('weight')}</label>
+          <div className={ui.field} style={{ marginBottom: '1.5rem' }}>
+            <label className={ui.label}>{t('weight')}</label>
             <input
               type="number"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               placeholder="0.0"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'inherit' }}
+              className={`${ui.input} ${ui.inputLg}`}
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('age')}</label>
+          <div className={ui.field} style={{ marginBottom: '1.5rem' }}>
+            <label className={ui.label}>{t('age')}</label>
             <select
               value={ageStage}
               onChange={(e) => setAgeStage(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'inherit' }}
+              className={ui.input}
             >
               <option value="puppy">{t('puppy')}</option>
               <option value="adult">{t('adult')}</option>
@@ -123,12 +122,12 @@ export default function PetCalorieClient() {
             </select>
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('activity')}</label>
+          <div className={ui.field} style={{ marginBottom: '1.5rem' }}>
+            <label className={ui.label}>{t('activity')}</label>
             <select
               value={activity}
               onChange={(e) => setActivity(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'inherit' }}
+              className={ui.input}
             >
               <option value="low">{t('low')}</option>
               <option value="normal">{t('normal')}</option>
@@ -136,20 +135,19 @@ export default function PetCalorieClient() {
             </select>
           </div>
 
-          <div style={{ marginBottom: '2rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('foodKcal')}</label>
+          <div className={ui.field} style={{ marginBottom: '2rem' }}>
+            <label className={ui.label}>{t('foodKcal')}</label>
             <input
               type="number"
               value={foodKcal}
               onChange={(e) => setFoodKcal(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'inherit' }}
+              className={ui.input}
             />
           </div>
 
           <button
             onClick={calculate}
-            className="primary-button"
-            style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontWeight: 700, cursor: 'pointer', border: 'none' }}
+            className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`}
           >
             {t('calculate')}
           </button>
@@ -158,8 +156,8 @@ export default function PetCalorieClient() {
         {/* Result Section */}
         <div className="flex flex-col gap-4">
           {results ? (
-            <div className="glass-panel animate-scale-in" style={{ padding: '2rem', flex: 1, border: '2px solid var(--primary)' }}>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--primary)' }}>Calculation Results</h2>
+            <div className={`${ui.card} animate-scale-in`} style={{ flex: 1, border: '2px solid var(--color-primary)' }}>
+              <h2 className={ui.cardTitle}>Calculation Results</h2>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div style={{ padding: '1rem', background: 'var(--surface-hover)', borderRadius: '12px', border: '1px solid var(--border)' }}>
@@ -169,12 +167,12 @@ export default function PetCalorieClient() {
 
                 <div style={{ padding: '1rem', background: 'var(--surface-hover)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>{t('resultDer')}</p>
-                  <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary)' }}>{results.der} <span style={{ fontSize: '1rem', fontWeight: 400 }}>{t('kcalPerDay')}</span></p>
+                  <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-primary)' }}>{results.der} <span style={{ fontSize: '1rem', fontWeight: 400 }}>{t('kcalPerDay')}</span></p>
                 </div>
 
-                <div style={{ padding: '1.5rem', background: 'var(--gradient-main)', borderRadius: '12px', color: 'white', boxShadow: '0 4px 15px rgba(79, 70, 229, 0.3)' }}>
-                  <p style={{ fontSize: '1rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('resultFood')}</p>
-                  <p style={{ fontSize: '2.5rem', fontWeight: 800 }}>{results.foodAmount} <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>{t('gramPerDay')}</span></p>
+                <div className={ui.result}>
+                  <p className={ui.resultLabel}>{t('resultFood')}</p>
+                  <p className={ui.resultValue}>{results.foodAmount} <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>{t('gramPerDay')}</span></p>
                 </div>
               </div>
 
@@ -183,48 +181,13 @@ export default function PetCalorieClient() {
               </p>
             </div>
           ) : (
-            <div className="glass-panel flex items-center justify-center" style={{ padding: '2rem', flex: 1, opacity: 0.5 }}>
+            <div className={`${ui.card} flex items-center justify-center`} style={{ flex: 1, opacity: 0.5 }}>
               <p style={{ textAlign: 'center' }}>{t('emptyResult')}</p>
             </div>
           )}
         </div>
       </div>
 
-      <style jsx>{`
-        .tab {
-          background: var(--surface);
-          color: var(--text-secondary);
-          border: 1px solid var(--border);
-          transition: all 0.2s ease;
-          box-shadow: var(--shadow-sm);
-        }
-        .tab:hover {
-          background: var(--surface-hover);
-          border-color: var(--primary);
-          color: var(--primary);
-        }
-        .active-tab {
-          background: var(--primary) !important;
-          color: white !important;
-          border: 1px solid var(--primary) !important;
-          box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
-        }
-        .primary-button {
-          background: var(--primary) !important;
-          color: white !important;
-          border: none;
-          box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .primary-button:hover {
-          background: var(--primary-hover) !important;
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
-        }
-        .primary-button:active {
-          transform: translateY(-1px);
-        }
-      `}</style>
 
       {/* 공유하기 */}
       <ShareBar title={t('title')} description={t('description')} />

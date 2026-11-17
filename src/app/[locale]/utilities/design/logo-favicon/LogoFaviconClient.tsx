@@ -9,6 +9,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
 import s from './logo-favicon.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type Shape = 'circle' | 'rounded' | 'square' | 'hexagon';
@@ -224,32 +225,6 @@ export default function LogoFaviconClient() {
     }
   }, [config]);
 
-  const inputStyle: React.CSSProperties = {
-    padding: '0.6rem 0.75rem',
-    fontSize: '0.95rem',
-    borderRadius: 'var(--radius-sm)',
-    outline: 'none',
-    color: 'var(--text-primary)',
-    background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    width: '100%',
-    boxSizing: 'border-box',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: '0.85rem',
-    fontWeight: 500,
-    color: 'var(--text-secondary)',
-    marginBottom: '0.35rem',
-    display: 'block',
-  };
-
-  const sectionStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.35rem',
-  };
-
   return (
     <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', width: '100%' }}>
       <NavigationActions />
@@ -257,12 +232,12 @@ export default function LogoFaviconClient() {
       {/* Tool Start Card - V4 Standard */}
       <ToolHeader icon={<ImageIcon />} title={t('title')} subtitle={t('description')} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '2rem', alignItems: 'start' }}>
+      <div className={s.layout}>
 
         {/* ── Left: Preview ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-secondary)', margin: 0 }}>{t('preview')}</h2>
+        <div className={s.column}>
+          <div className={`${ui.card} ${s.previewCard}`}>
+            <h2 className={`${ui.cardTitle} ${s.title}`}>{t('preview')}</h2>
 
             {/* Main 256px preview */}
             <canvas
@@ -286,32 +261,21 @@ export default function LogoFaviconClient() {
             <button
               onClick={handleDownload}
               disabled={isGenerating}
-              style={{
-                width: '100%', padding: '0.9rem',
-                fontSize: '1rem', fontWeight: 600,
-                backgroundColor: generated ? '#10b981' : 'var(--primary)',
-                color: 'white',
-                borderRadius: 'var(--radius-md)',
-                transition: 'background-color 0.2s, opacity 0.2s',
-                opacity: isGenerating ? 0.7 : 1,
-                cursor: isGenerating ? 'not-allowed' : 'pointer',
-              }}
-              onMouseOver={e => { if (!isGenerating) e.currentTarget.style.backgroundColor = generated ? '#059669' : 'var(--primary-hover)'; }}
-              onMouseOut={e => { e.currentTarget.style.backgroundColor = generated ? '#10b981' : 'var(--primary)'; }}
+              className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${generated ? ui.green : ''}`}
             >
               {isGenerating ? t('generating') : generated ? t('downloaded') : t('download')}
             </button>
 
             {generated && (
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', margin: 0 }}>
+              <p className={ui.hint} style={{ textAlign: 'center', margin: 0 }}>
                 {t('download_hint')}
               </p>
             )}
           </div>
 
           {/* File list */}
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
-            <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>{t('includes')}</p>
+          <div className={ui.card}>
+            <p className={`${ui.label} ${s.listTitle}`}>{t('includes')}</p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {[
                 'favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png',
@@ -320,7 +284,7 @@ export default function LogoFaviconClient() {
                 'logo-1024x1024.png', 'site.webmanifest', 'README.md',
               ].map(f => (
                 <li key={f} style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', gap: '0.5rem' }}>
-                  <span style={{ color: '#10b981' }}>✓</span>
+                  <span style={{ color: 'var(--tint-green-fg)' }}>✓</span>
                   <span>{f}</span>
                 </li>
               ))}
@@ -329,12 +293,12 @@ export default function LogoFaviconClient() {
         </div>
 
         {/* ── Right: Controls ── */}
-        <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+        <div className={`${ui.card} ${s.controls}`}>
 
           {/* Mode toggle */}
-          <div>
-            <span style={labelStyle}>{t('content_type')}</span>
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div className={ui.field}>
+            <span className={ui.label}>{t('content_type')}</span>
+            <div className={ui.segmented}>
               {[
                 { value: false, label: t('use_text') },
                 { value: true, label: t('use_emoji') },
@@ -342,15 +306,7 @@ export default function LogoFaviconClient() {
                 <button
                   key={String(opt.value)}
                   onClick={() => updateConfig({ showEmoji: opt.value })}
-                  style={{
-                    flex: 1, padding: '0.6rem',
-                    borderRadius: 'var(--radius-sm)',
-                    fontWeight: 500, fontSize: '0.9rem',
-                    backgroundColor: config.showEmoji === opt.value ? 'var(--primary)' : 'var(--surface)',
-                    color: config.showEmoji === opt.value ? 'white' : 'var(--text-secondary)',
-                    border: `1px solid ${config.showEmoji === opt.value ? 'var(--primary)' : 'var(--border)'}`,
-                    cursor: 'pointer', transition: 'all 0.2s',
-                  }}
+                  className={`${ui.segment} ${config.showEmoji === opt.value ? ui.segmentActive : ''}`}
                 >
                   {opt.label}
                 </button>
@@ -360,43 +316,38 @@ export default function LogoFaviconClient() {
 
           {/* Text input */}
           {!config.showEmoji && (
-            <div style={sectionStyle}>
-              <label style={labelStyle}>{t('text_label')}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('text_label')}</label>
               <input
                 type="text"
                 value={config.text}
                 maxLength={3}
                 placeholder="AB"
                 onChange={e => updateConfig({ text: e.target.value })}
-                style={inputStyle}
+                className={ui.input}
               />
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('text_hint')}</span>
+              <span className={ui.hint}>{t('text_hint')}</span>
             </div>
           )}
 
           {/* Emoji picker */}
           {config.showEmoji && (
-            <div style={sectionStyle}>
-              <label style={labelStyle}>{t('emoji_label')}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('emoji_label')}</label>
               <input
                 type="text"
                 value={config.emoji}
                 placeholder="🚀"
                 onChange={e => updateConfig({ emoji: e.target.value })}
-                style={{ ...inputStyle, fontSize: '1.5rem', textAlign: 'center' }}
+                className={ui.input}
+                style={{ fontSize: '1.5rem', textAlign: 'center' }}
               />
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.4rem' }}>
+              <div className={`${ui.chips} ${s.emojiGrid}`}>
                 {EMOJI_PRESETS.map(em => (
                   <button
                     key={em}
                     onClick={() => updateConfig({ emoji: em })}
-                    style={{
-                      fontSize: '1.35rem', width: '2.5rem', height: '2.5rem',
-                      borderRadius: 'var(--radius-sm)',
-                      border: `1px solid ${config.emoji === em ? 'var(--primary)' : 'var(--border)'}`,
-                      background: config.emoji === em ? 'var(--primary-light, rgba(109,40,217,0.1))' : 'var(--surface)',
-                      cursor: 'pointer',
-                    }}
+                    className={`${ui.chip} ${config.emoji === em ? ui.chipActive : ''} ${s.emojiBtn}`}
                   >
                     {em}
                   </button>
@@ -406,32 +357,24 @@ export default function LogoFaviconClient() {
           )}
 
           {/* Shape */}
-          <div style={sectionStyle}>
-            <label style={labelStyle}>{t('shape_label')}</label>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              {SHAPES.map(s => (
+          <div className={ui.field}>
+            <label className={ui.label}>{t('shape_label')}</label>
+            <div className={`${ui.chips} ${ui.grow} ${s.shapeRow}`}>
+              {SHAPES.map(shape => (
                 <button
-                  key={s.value}
-                  onClick={() => updateConfig({ shape: s.value })}
-                  style={{
-                    flex: 1, padding: '0.6rem',
-                    fontSize: '1.3rem',
-                    borderRadius: 'var(--radius-sm)',
-                    border: `2px solid ${config.shape === s.value ? 'var(--primary)' : 'var(--border)'}`,
-                    background: config.shape === s.value ? 'var(--primary-light, rgba(109,40,217,0.1))' : 'var(--surface)',
-                    cursor: 'pointer', transition: 'all 0.2s',
-                    color: 'var(--text-primary)',
-                  }}
+                  key={shape.value}
+                  onClick={() => updateConfig({ shape: shape.value })}
+                  className={`${ui.chip} ${config.shape === shape.value ? ui.chipActive : ''}`}
                 >
-                  {s.label}
+                  {shape.label}
                 </button>
               ))}
             </div>
           </div>
 
           {/* Color presets */}
-          <div style={sectionStyle}>
-            <label style={labelStyle}>{t('palette_label')}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('palette_label')}</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               {PRESET_PALETTES.map(p => (
                 <button
@@ -442,10 +385,10 @@ export default function LogoFaviconClient() {
                     width: '2.25rem', height: '2.25rem',
                     borderRadius: '50%',
                     background: `linear-gradient(135deg, ${p.grad}, ${p.bg})`,
-                    border: `2px solid ${config.bgColor === p.bg ? 'var(--primary)' : 'transparent'}`,
+                    border: `2px solid ${config.bgColor === p.bg ? 'var(--color-primary)' : 'transparent'}`,
                     cursor: 'pointer',
                     boxShadow: 'var(--shadow-sm)',
-                    outline: config.bgColor === p.bg ? '2px solid var(--primary)' : 'none',
+                    outline: config.bgColor === p.bg ? '2px solid var(--color-primary)' : 'none',
                     outlineOffset: '2px',
                   }}
                 />
@@ -454,38 +397,38 @@ export default function LogoFaviconClient() {
           </div>
 
           {/* Custom colors */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={sectionStyle}>
-              <label style={labelStyle}>{t('bg_color')}</label>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <div className={s.colorGrid}>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('bg_color')}</label>
+              <div className={s.pickRow}>
                 <input
                   type="color"
                   value={config.bgColor}
                   onChange={e => updateConfig({ bgColor: e.target.value })}
-                  style={{ width: '2.5rem', height: '2.5rem', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', padding: '2px' }}
+                  className={s.colorInput}
                 />
                 <input
                   type="text"
                   value={config.bgColor}
                   onChange={e => updateConfig({ bgColor: e.target.value })}
-                  style={{ ...inputStyle, flex: 1, fontFamily: 'monospace' }}
+                  className={`${ui.input} ${s.hexInput}`}
                 />
               </div>
             </div>
-            <div style={sectionStyle}>
-              <label style={labelStyle}>{t('text_color')}</label>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('text_color')}</label>
+              <div className={s.pickRow}>
                 <input
                   type="color"
                   value={config.textColor}
                   onChange={e => updateConfig({ textColor: e.target.value })}
-                  style={{ width: '2.5rem', height: '2.5rem', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', padding: '2px' }}
+                  className={s.colorInput}
                 />
                 <input
                   type="text"
                   value={config.textColor}
                   onChange={e => updateConfig({ textColor: e.target.value })}
-                  style={{ ...inputStyle, flex: 1, fontFamily: 'monospace' }}
+                  className={`${ui.input} ${s.hexInput}`}
                 />
               </div>
             </div>
@@ -493,7 +436,7 @@ export default function LogoFaviconClient() {
 
           {/* Gradient toggle */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <label style={{ ...labelStyle, marginBottom: 0 }}>{t('gradient_label')}</label>
+            <label className={ui.label}>{t('gradient_label')}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               {config.useGradient && (
                 <input
@@ -508,7 +451,7 @@ export default function LogoFaviconClient() {
                 style={{
                   width: '3rem', height: '1.6rem',
                   borderRadius: '999px',
-                  background: config.useGradient ? 'var(--primary)' : 'var(--border)',
+                  background: config.useGradient ? 'var(--primary-fill)' : 'var(--border)',
                   position: 'relative', cursor: 'pointer', border: 'none',
                   transition: 'background 0.2s',
                 }}
@@ -527,8 +470,8 @@ export default function LogoFaviconClient() {
 
           {/* Font size (text mode only) */}
           {!config.showEmoji && (
-            <div style={sectionStyle}>
-              <label style={labelStyle}>{t('font_size')}: {config.fontSize}%</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('font_size')}: {config.fontSize}%</label>
               <input
                 type="range"
                 min={25}
@@ -542,22 +485,15 @@ export default function LogoFaviconClient() {
 
           {/* Font weight (text mode only) */}
           {!config.showEmoji && (
-            <div style={sectionStyle}>
-              <label style={labelStyle}>{t('font_weight')}</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className={ui.field}>
+              <label className={ui.label}>{t('font_weight')}</label>
+              <div className={`${ui.chips} ${ui.grow}`}>
                 {(['normal', '600', 'bold'] as FontWeight[]).map(w => (
                   <button
                     key={w}
                     onClick={() => updateConfig({ fontWeight: w })}
-                    style={{
-                      flex: 1, padding: '0.5rem',
-                      fontWeight: w, fontSize: '0.9rem',
-                      borderRadius: 'var(--radius-sm)',
-                      border: `1px solid ${config.fontWeight === w ? 'var(--primary)' : 'var(--border)'}`,
-                      background: config.fontWeight === w ? 'var(--primary-light, rgba(109,40,217,0.1))' : 'var(--surface)',
-                      color: 'var(--text-primary)',
-                      cursor: 'pointer', transition: 'all 0.2s',
-                    }}
+                    className={`${ui.chip} ${config.fontWeight === w ? ui.chipActive : ''}`}
+                    style={{ fontWeight: w }}
                   >
                     {w === 'normal' ? t('weight_normal') : w === '600' ? t('weight_medium') : t('weight_bold')}
                   </button>

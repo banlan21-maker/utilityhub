@@ -10,6 +10,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import html2canvas from 'html2canvas';
 import s from './meeting.module.css';
+import { ui } from '@/app/components/ui';
 import { MEETING_BURNER_SEO } from './seoContent';
 
 // Salary presets (annual)
@@ -175,11 +176,11 @@ export default function MeetingBurnerClient() {
 
       {/* Setup Section */}
       {!isRunning && !showReceipt && (
-        <div className={s.setupCard}>
-          <h2 className={s.sectionTitle}>{isKorean ? '🚀 초기 설정' : '🚀 Easy Setup'}</h2>
+        <div className={`${ui.card} ${s.setupCard}`}>
+          <h2 className={ui.cardTitle}>{isKorean ? '🚀 초기 설정' : '🚀 Easy Setup'}</h2>
 
-          <div className={s.inputGroup}>
-            <label className={s.label}>
+          <div className={ui.field}>
+            <label className={`${ui.label} ${s.label}`}>
               <Users size={20} />
               {isKorean ? '참석자 수' : 'Participants'}
             </label>
@@ -194,8 +195,8 @@ export default function MeetingBurnerClient() {
             <span className={s.value}>{participants} {isKorean ? '명' : 'people'}</span>
           </div>
 
-          <div className={s.inputGroup}>
-            <label className={s.label}>
+          <div className={ui.field}>
+            <label className={`${ui.label} ${s.label}`}>
               <DollarSign size={20} />
               {isKorean ? '평균 연봉' : 'Avg Annual Salary'}
             </label>
@@ -203,24 +204,24 @@ export default function MeetingBurnerClient() {
               type="number"
               value={avgSalary}
               onChange={(e) => setAvgSalary(Number(e.target.value))}
-              className={s.input}
+              className={ui.input}
               placeholder={isKorean ? '연봉 입력 (원)' : 'Enter salary (KRW)'}
             />
-            <div className={s.presets}>
-              <button onClick={() => applyPreset('junior')} className={s.presetBtn}>
+            <div className={`${ui.chips} ${ui.grow} ${s.presets}`}>
+              <button onClick={() => applyPreset('junior')} className={ui.chip}>
                 {isKorean ? '주니어 (3,500만)' : 'Junior (35M)'}
               </button>
-              <button onClick={() => applyPreset('senior')} className={s.presetBtn}>
+              <button onClick={() => applyPreset('senior')} className={ui.chip}>
                 {isKorean ? '시니어 (6,000만)' : 'Senior (60M)'}
               </button>
-              <button onClick={() => applyPreset('executive')} className={s.presetBtn}>
+              <button onClick={() => applyPreset('executive')} className={ui.chip}>
                 {isKorean ? '임원 (1억)' : 'Executive (100M)'}
               </button>
             </div>
           </div>
 
-          <div className={s.inputGroup}>
-            <label className={s.label}>
+          <div className={ui.field}>
+            <label className={`${ui.label} ${s.label}`}>
               <Clock size={20} />
               {isKorean ? '목표 회의 시간' : 'Target Meeting Duration'}
             </label>
@@ -228,12 +229,12 @@ export default function MeetingBurnerClient() {
               type="number"
               value={targetMinutes}
               onChange={(e) => setTargetMinutes(Number(e.target.value))}
-              className={s.input}
+              className={ui.input}
               placeholder={isKorean ? '목표 시간 (분)' : 'Target time (min)'}
             />
           </div>
 
-          <button onClick={startTimer} className={s.startBtn}>
+          <button onClick={startTimer} className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`}>
             {isKorean ? '🔥 회의 시작' : '🔥 Start Meeting'}
           </button>
         </div>
@@ -333,7 +334,7 @@ export default function MeetingBurnerClient() {
       <RelatedTools toolId="utilities/productivity/meeting-burner" />
 
       {/* Ad Section */}
-      <div className={s.adSection}>
+      <div className={`${ui.notice} ${ui.green} ${s.adSection}`}>
         <p className={s.adText}>
           {isKorean
             ? '💡 효율적인 회의를 위한 타임박싱 기법도 함께 활용해보세요!'

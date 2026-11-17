@@ -14,6 +14,7 @@ import {
 } from './cwv';
 import { SEO_EN, SEO_KO } from './content';
 import s from './core-web-vitals.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── 등급 이름 (뱃지·결과 카드·설명문 모두 같은 표현) ──
 const RATING_LABEL: Record<'ko' | 'en', Record<Rating, string>> = {
@@ -156,14 +157,14 @@ export default function CoreWebVitalsClient() {
       <ToolHeader icon={<Layers />} title={titleStr} subtitle={descStr} />
 
       {/* 기기 탭 */}
-      <div className={s.device_tabs} role="tablist" aria-label={isKo ? '측정 기기' : 'Device'}>
+      <div className={`${ui.segmented} ${s.device_tabs}`} role="tablist" aria-label={isKo ? '측정 기기' : 'Device'}>
         {(['mobile', 'desktop'] as Device[]).map((d) => (
           <button
             key={d}
             type="button"
             role="tab"
             aria-selected={device === d}
-            className={`${s.device_tab} ${device === d ? s.device_tab_on : ''}`}
+            className={`${ui.segment} ${device === d ? ui.segmentActive : ''} ${s.device_tab}`}
             onClick={() => pickDevice(d)}
           >
             {d === 'mobile' ? <Smartphone size={16} /> : <Monitor size={16} />}
@@ -173,7 +174,7 @@ export default function CoreWebVitalsClient() {
         ))}
       </div>
 
-      <section className={s.panel} aria-label={isKo ? `${deviceName(device)} 지표 입력` : `${deviceName(device)} metric inputs`}>
+      <section className={ui.card} aria-label={isKo ? `${deviceName(device)} 지표 입력` : `${deviceName(device)} metric inputs`}>
         {METRIC_KEYS.map((k) => {
           const conf = METRICS[k];
           const parsed = parseMetric(k, current[k]);
@@ -205,7 +206,7 @@ export default function CoreWebVitalsClient() {
                 <input
                   type="text"
                   inputMode="decimal"
-                  className={s.number_input}
+                  className={`${ui.input} ${s.number_input}`}
                   value={current[k]}
                   placeholder={k === 'lcp' ? '2.5' : k === 'inp' ? '200' : '0.1'}
                   onChange={(e) => setValue(k, e.target.value)}
@@ -225,17 +226,17 @@ export default function CoreWebVitalsClient() {
               </div>
 
               {parsed.invalid && (
-                <div className={s.note} role="alert">{isKo ? '숫자만 입력해 주세요 (예: 2.5, 2500ms)' : 'Please enter a number (e.g. 2.5 or 2500ms)'}</div>
+                <div className={`${ui.notice} ${ui.amber} ${s.note}`} role="alert">{isKo ? '숫자만 입력해 주세요 (예: 2.5, 2500ms)' : 'Please enter a number (e.g. 2.5 or 2500ms)'}</div>
               )}
               {parsed.convertedFrom && parsed.value !== null && (
-                <div className={s.note_info}>
+                <div className={`${ui.notice} ${ui.gray} ${s.note}`}>
                   {isKo
                     ? `${parsed.convertedFrom}를 ${formatMetric(k, parsed.value)}로 바꿔 판정했습니다.`
                     : `Converted ${parsed.convertedFrom} to ${formatMetric(k, parsed.value)}.`}
                 </div>
               )}
               {parsed.value !== null && parsed.value > conf.max && (
-                <div className={s.note}>
+                <div className={`${ui.notice} ${ui.amber} ${s.note}`}>
                   {isKo
                     ? `슬라이더 최대(${conf.max}${conf.unit})를 넘는 값입니다. 입력값 ${formatMetric(k, parsed.value)} 기준으로 판정합니다.`
                     : `Above the slider maximum (${conf.max}${conf.unit}); rated on your input ${formatMetric(k, parsed.value)}.`}
@@ -253,7 +254,7 @@ export default function CoreWebVitalsClient() {
             const v = result.values[k];
             const r = result.ratings[k];
             return (
-              <div key={k} className={s.result_card}>
+              <div key={k} className={`${ui.card} ${s.result_card}`}>
                 <div className={s.result_metric_name}>{k.toUpperCase()}</div>
                 <div className={s.result_value}>{v === null ? '—' : formatMetric(k, v)}</div>
                 {r
@@ -262,7 +263,7 @@ export default function CoreWebVitalsClient() {
               </div>
             );
           })}
-          <div className={`${s.result_card} ${s.result_card_overall}`}>
+          <div className={`${ui.card} ${s.result_card} ${s.result_card_overall}`}>
             <div className={s.result_metric_name}>{isKo ? `종합 · ${deviceName(device)}` : `Overall · ${deviceName(device)}`}</div>
             <div className={s.result_value}>
               {result.overall
@@ -278,8 +279,8 @@ export default function CoreWebVitalsClient() {
 
       {/* 모바일·데스크톱 나란히 비교 */}
       {(both.mobile.entered > 0 && both.desktop.entered > 0) ? (
-        <section className={s.compare} aria-label={isKo ? '모바일·데스크톱 비교' : 'Mobile vs desktop'}>
-          <h2 className={s.tips_title}>📱🖥️ {isKo ? '모바일·데스크톱 비교' : 'Mobile vs desktop'}</h2>
+        <section className={ui.card} aria-label={isKo ? '모바일·데스크톱 비교' : 'Mobile vs desktop'}>
+          <h2 className={ui.cardTitle}>📱🖥️ {isKo ? '모바일·데스크톱 비교' : 'Mobile vs desktop'}</h2>
           <table className={s.compare_table}>
             <thead>
               <tr><th></th><th>{deviceName('mobile')}</th><th>{deviceName('desktop')}</th></tr>
@@ -325,8 +326,8 @@ export default function CoreWebVitalsClient() {
       )}
 
       {/* 개선 팁: Good이 아닌 지표만, Poor 먼저 */}
-      <section className={s.tips_box} aria-label={isKo ? '개선 팁' : 'Improvement tips'}>
-        <h2 className={s.tips_title}>💡 {isKo ? '개선 팁' : 'Improvement Tips'}</h2>
+      <section className={ui.card} aria-label={isKo ? '개선 팁' : 'Improvement tips'}>
+        <h2 className={ui.cardTitle}>💡 {isKo ? '개선 팁' : 'Improvement Tips'}</h2>
         {tipGroups.length > 0 ? (
           tipGroups.map(({ k, r, tips }) => (
             <div key={k} className={s.tip_group}>
@@ -347,8 +348,8 @@ export default function CoreWebVitalsClient() {
       </section>
 
       {/* 결과 해석 가이드 (서버 HTML에 포함되는 고정 내용) */}
-      <section className={s.tips_box} aria-labelledby="cwv-guide">
-        <h2 id="cwv-guide" className={s.tips_title}>📖 {isKo ? '결과 해석 가이드' : 'How to read your results'}</h2>
+      <section className={ui.card} aria-labelledby="cwv-guide">
+        <h2 id="cwv-guide" className={ui.cardTitle}>📖 {isKo ? '결과 해석 가이드' : 'How to read your results'}</h2>
         <ul className={s.tips_list}>
           {(isKo ? [
             '숫자는 어디서? PageSpeed Insights 위쪽의 "실제 사용자 경험(필드 데이터)" 값이나 서치콘솔 → 코어 웹 바이탈 보고서 값을 넣으세요. 구글이 쓰는 것은 실험실(Lighthouse) 점수가 아니라 실제 방문자 28일치의 75번째 백분위 값입니다.',

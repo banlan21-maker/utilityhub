@@ -20,76 +20,13 @@
   }
 }
 
-.sal_card {
-  background: var(--surface);
-  border-radius: 1.5rem;
-  border: 1px solid var(--border);
-  padding: 2.5rem;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
-}
-
-.sal_label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
 .sal_input_group {
   margin-bottom: 1.5rem;
 }
 
-.sal_input {
-  width: 100%;
-  padding: 1rem 1.25rem;
-  font-size: 1.5rem;
-  font-weight: 800;
-  border: 2px solid var(--border);
-  border-radius: 1.25rem;
-  background: var(--surface-hover);
-  color: var(--text-primary);
-  transition: all 0.2s;
-  outline: none;
-}
-
-.sal_input:focus {
-  border-color: #8b5cf6;
-  background: var(--surface);
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
-}
-
-.sal_stepper {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: var(--surface-hover);
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  border: 1.5px solid var(--border);
-}
-
-.sal_step_btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: var(--surface);
-  color: #8b5cf6;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.sal_step_btn:hover {
-  background: #8b5cf6;
-  color: white;
+.sal_seg {
+  align-self: center;
+  width: min(100%, 440px);
 }
 
 .sal_receipt {
@@ -167,7 +104,7 @@
 .sal_work_block {
   background: var(--surface-hover);
   border: 1.5px solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-control);
   padding: 1.25rem;
   margin-bottom: 0.75rem;
 }
@@ -215,7 +152,7 @@
 }
 
 .sal_mini_btn:hover {
-  background: #8b5cf6;
+  background: var(--primary-fill);
   color: white;
 }
 
@@ -227,33 +164,9 @@
   text-align: center;
 }
 
-.sal_mult_row {
-  display: flex;
-  gap: 0.3rem;
-  flex-wrap: wrap;
-}
-
-.sal_mult_btn {
-  padding: 0.3rem 0.55rem;
-  border-radius: 0.5rem;
-  border: 1.5px solid var(--border);
-  background: var(--surface);
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.sal_mult_btn_active {
-  background: #f5f3ff;
-  border-color: #8b5cf6;
-  color: #8b5cf6;
-}
-
 .sal_block_preview {
   font-size: 0.72rem;
-  color: #8b5cf6;
+  color: var(--color-primary);
   font-weight: 700;
   margin-top: 0.6rem;
   text-align: right;
@@ -283,21 +196,8 @@
 }
 
 .sal_copy_btn_done {
-  color: #16a34a;
+  color: var(--tint-green-fg);
   border-color: #16a34a;
-  background: #f0fdf4;
+  background: var(--tint-green-bg);
 }
 
-.sal_ad_placeholder {
-  width: 100%;
-  min-height: 250px;
-  background: var(--surface-hover);
-  border: 1px dashed var(--border);
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  margin: 2rem 0;
-}

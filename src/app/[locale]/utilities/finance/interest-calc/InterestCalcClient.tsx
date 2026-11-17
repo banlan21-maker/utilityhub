@@ -34,6 +34,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './interest.module.css';
+import { ui } from '@/app/components/ui';
 
 type InterestType = 'simple' | 'compound';
 type Period = 'year' | 'month' | 'day';
@@ -117,17 +118,17 @@ export default function InterestCalcClient() {
       <NavigationActions />
       <ToolHeader icon={<TrendingUp />} title={t('title')} subtitle={t('description')} />
 
-      <section className={s.int_panel}>
+      <section className={`${ui.card} ${s.int_panel}`}>
         {/* Type Toggle */}
-        <div className={s.int_type_tabs}>
+        <div className={ui.segmented}>
           <button
-            className={`${s.int_type_btn} ${type === 'simple' ? s.int_type_btn_active : ''}`}
+            className={`${ui.segment} ${type === 'simple' ? ui.segmentActive : ''}`}
             onClick={() => setType('simple')}
           >
             {t('type.simple')}
           </button>
           <button
-            className={`${s.int_type_btn} ${type === 'compound' ? s.int_type_btn_active : ''}`}
+            className={`${ui.segment} ${type === 'compound' ? ui.segmentActive : ''}`}
             onClick={() => setType('compound')}
           >
             {t('type.compound')}
@@ -135,58 +136,58 @@ export default function InterestCalcClient() {
         </div>
 
         {/* Inputs */}
-        <div className={s.int_input_group}>
-          <label className={s.int_label}>{t('label.principal')}</label>
-          <div style={{ position: 'relative' }}>
+        <div className={ui.field}>
+          <label className={ui.label}>{t('label.principal')}</label>
+          <div className={ui.inputGroup}>
             <input
-              className={s.int_input}
+              className={`${ui.input} ${ui.inputLg}`}
               value={principal}
               onChange={e => setPrincipal(e.target.value.replace(/[^0-9.]/g, ''))}
               placeholder="0"
             />
-            <span style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)' }}>{isKo ? '원' : ''}</span>
+            <span className={ui.unit}>{isKo ? '원' : ''}</span>
           </div>
         </div>
 
-        <div className={s.int_input_group}>
-          <label className={s.int_label}>{t('label.rate')} (p.a.)</label>
-          <div className={s.int_rate_presets}>
+        <div className={ui.field}>
+          <label className={ui.label}>{t('label.rate')} (p.a.)</label>
+          <div className={ui.chips}>
             {RATE_PRESETS.map(p => (
               <button
                 key={p}
-                className={`${s.int_rate_preset_btn} ${rate === String(p) ? s.int_rate_preset_btn_active : ''}`}
+                className={`${ui.chip} ${ui.pill} ${rate === String(p) ? ui.chipActive : ''}`}
                 onClick={() => setRate(String(p))}
               >
                 {p}%
               </button>
             ))}
           </div>
-          <div style={{ position: 'relative' }}>
+          <div className={ui.inputGroup}>
             <input
-              className={s.int_input}
+              className={`${ui.input} ${ui.inputLg}`}
               value={rate}
               onChange={e => setRate(e.target.value.replace(/[^0-9.]/g, ''))}
               placeholder="0.00"
             />
-            <span style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)' }}>%</span>
+            <span className={ui.unit}>%</span>
           </div>
         </div>
 
-        <div className={s.int_input_group}>
-          <label className={s.int_label}>{t('label.duration')}</label>
+        <div className={ui.field}>
+          <label className={ui.label}>{t('label.duration')}</label>
           <div className={s.int_duration_row}>
             <input
-              className={s.int_input}
+              className={`${ui.input} ${ui.inputLg}`}
               style={{ flex: 1 }}
               value={duration}
               onChange={e => setDuration(e.target.value.replace(/[^0-9.]/g, ''))}
               placeholder="0"
             />
-            <div style={{ display: 'flex', gap: '0.25rem' }}>
+            <div className={`${ui.segmented} ${s.int_period_seg}`}>
               {(['year', 'month', 'day'] as Period[]).map(per => (
                 <button
                   key={per}
-                  className={`${s.int_period_btn} ${period === per ? s.int_period_btn_active : ''}`}
+                  className={`${ui.segment} ${period === per ? ui.segmentActive : ''}`}
                   onClick={() => setPeriod(per)}
                 >
                   {t(`period.${per}`)}
@@ -197,13 +198,13 @@ export default function InterestCalcClient() {
         </div>
 
         {type === 'compound' && (
-          <div className={s.int_input_group}>
-            <label className={s.int_label}>{t('label.compoundFreq')}</label>
-            <div className={s.int_freq_tabs}>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('label.compoundFreq')}</label>
+            <div className={ui.chips}>
               {FREQ_OPTIONS.map(opt => (
                 <button
                   key={opt.value}
-                  className={`${s.int_freq_btn} ${freq === opt.value ? s.int_freq_btn_active : ''}`}
+                  className={`${ui.chip} ${ui.pill} ${freq === opt.value ? ui.chipActive : ''}`}
                   onClick={() => setFreq(opt.value)}
                 >
                   {t(opt.labelKey)}
@@ -215,7 +216,7 @@ export default function InterestCalcClient() {
 
         {/* Result Area */}
         {hasResult && (
-          <div className={s.int_result_box} style={{ animation: 'bounceIn 0.5s ease-out' }}>
+          <div className={`${ui.result} ${s.int_result_box}`} style={{ animation: 'bounceIn 0.5s ease-out' }}>
             <div className={s.int_result_grid}>
               <div>
                 <div className={s.int_result_item_label}>{t('result.principal')}</div>
@@ -223,7 +224,7 @@ export default function InterestCalcClient() {
               </div>
               <div>
                 <div className={s.int_result_item_label}>{t('result.interest')}</div>
-                <div className={s.int_result_item_value} style={{ color: '#10b981' }}>+{fmt(interest)}</div>
+                <div className={s.int_result_item_value} style={{ color: 'var(--tint-green-fg)' }}>+{fmt(interest)}</div>
               </div>
             </div>
             <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
@@ -242,13 +243,13 @@ export default function InterestCalcClient() {
               <div className={s.int_compare_sep}>vs</div>
               <div>
                 <div className={s.int_compare_label}>{isKo ? '복리' : 'Compound'}</div>
-                <div className={s.int_compare_val} style={{ color: '#8b5cf6' }}>{fmt(compoundTotal)}{isKo ? '원' : ''}</div>
+                <div className={s.int_compare_val} style={{ color: 'var(--color-primary)' }}>{fmt(compoundTotal)}{isKo ? '원' : ''}</div>
               </div>
             </div>
             {/* 복사 버튼 */}
             <div className={s.int_copy_row}>
               <button
-                className={`${s.int_copy_btn} ${copied ? s.int_copy_btn_done : ''}`}
+                className={`${ui.button} ${ui.secondary} ${ui.sm} ${copied ? s.int_copy_btn_done : ''}`}
                 onClick={handleCopy}
                 aria-label={isKo ? '결과 복사' : 'Copy result'}
               >

@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './brain-boost.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Constants ─────────────────────────────────────────────
 const SOUND_LETTERS = ['C', 'H', 'K', 'L', 'Q', 'R', 'S', 'T']; // 명확히 구분되는 자음
@@ -354,11 +355,11 @@ export default function BrainBoostClient() {
       {/* ── SETUP ── */}
       {state === 'setup' && (
         <>
-          <section className={s.panel}>
-            <h2 className={s.section_title}>⚙️ {t('setup_title')}</h2>
+          <section className={ui.card}>
+            <h2 className={ui.cardTitle}>⚙️ {t('setup_title')}</h2>
 
-            <div className={s.field}>
-              <label className={s.field_label}>{t('level_label')}</label>
+            <div className={`${ui.field} ${s.field}`}>
+              <label className={ui.label}>{t('level_label')}</label>
               <div className={s.level_row}>
                 <button
                   className={s.level_btn}
@@ -380,13 +381,13 @@ export default function BrainBoostClient() {
               </div>
             </div>
 
-            <div className={s.field}>
-              <label className={s.field_label}>{t('length_label')}</label>
-              <div className={s.option_row}>
+            <div className={`${ui.field} ${s.field}`}>
+              <label className={ui.label}>{t('length_label')}</label>
+              <div className={ui.segmented}>
                 {(['short', 'standard', 'long'] as SessionLen[]).map((k) => (
                   <button
                     key={k}
-                    className={`${s.option_btn} ${sessionLen === k ? s.option_btn_active : ''}`}
+                    className={`${ui.segment} ${sessionLen === k ? ui.segmentActive : ''}`}
                     onClick={() => setSessionLen(k)}
                     aria-label={t(`length_${k}` as 'length_short')}
                   >
@@ -396,13 +397,13 @@ export default function BrainBoostClient() {
               </div>
             </div>
 
-            <div className={s.field}>
-              <label className={s.field_label}>{t('stim_interval')}</label>
-              <div className={s.option_row}>
+            <div className={`${ui.field} ${s.field}`}>
+              <label className={ui.label}>{t('stim_interval')}</label>
+              <div className={ui.segmented}>
                 {(['fast', 'normal', 'slow'] as Interval[]).map((k) => (
                   <button
                     key={k}
-                    className={`${s.option_btn} ${interval === k ? s.option_btn_active : ''}`}
+                    className={`${ui.segment} ${interval === k ? ui.segmentActive : ''}`}
                     onClick={() => setIntervalKey(k)}
                     aria-label={t(`stim_interval_${k}` as 'stim_interval_fast')}
                   >
@@ -412,17 +413,17 @@ export default function BrainBoostClient() {
               </div>
             </div>
 
-            <div className={s.field}>
-              <label className={s.field_label}>{t('sound_label')}</label>
-              <div className={s.toggle_row}>
+            <div className={`${ui.field} ${s.field}`}>
+              <label className={ui.label}>{t('sound_label')}</label>
+              <div className={ui.segmented}>
                 <button
-                  className={`${s.toggle_btn} ${soundOn ? s.toggle_btn_active : ''}`}
+                  className={`${ui.segment} ${soundOn ? ui.segmentActive : ''}`}
                   onClick={() => setSoundOn(true)}
                 >
                   {t('sound_on')}
                 </button>
                 <button
-                  className={`${s.toggle_btn} ${!soundOn ? s.toggle_btn_active : ''}`}
+                  className={`${ui.segment} ${!soundOn ? ui.segmentActive : ''}`}
                   onClick={() => setSoundOn(false)}
                 >
                   {t('sound_off')}
@@ -430,17 +431,17 @@ export default function BrainBoostClient() {
               </div>
             </div>
 
-            <div className={s.field}>
-              <label className={s.field_label}>{t('adaptive_label')}</label>
-              <div className={s.toggle_row}>
+            <div className={`${ui.field} ${s.field}`}>
+              <label className={ui.label}>{t('adaptive_label')}</label>
+              <div className={ui.segmented}>
                 <button
-                  className={`${s.toggle_btn} ${adaptive ? s.toggle_btn_active : ''}`}
+                  className={`${ui.segment} ${adaptive ? ui.segmentActive : ''}`}
                   onClick={() => setAdaptive(true)}
                 >
                   {t('adaptive_on')}
                 </button>
                 <button
-                  className={`${s.toggle_btn} ${!adaptive ? s.toggle_btn_active : ''}`}
+                  className={`${ui.segment} ${!adaptive ? ui.segmentActive : ''}`}
                   onClick={() => setAdaptive(false)}
                 >
                   {t('adaptive_off')}
@@ -448,17 +449,17 @@ export default function BrainBoostClient() {
               </div>
             </div>
 
-            <button className={s.start_btn} onClick={startSession} aria-label={t('start_button')}>
+            <button className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${s.start_btn}`} onClick={startSession} aria-label={t('start_button')}>
               {t('start_button')}
             </button>
-            <button className={s.tutorial_link} onClick={() => setShowTutorial(true)}>
+            <button className={`${ui.button} ${ui.ghost} ${ui.block} ${s.tutorial_link}`} onClick={() => setShowTutorial(true)}>
               {t('tutorial_button')}
             </button>
           </section>
 
           {/* Stats */}
-          <section className={s.panel}>
-            <h2 className={s.section_title}>📊 {t('stats_title')}</h2>
+          <section className={ui.card}>
+            <h2 className={ui.cardTitle}>📊 {t('stats_title')}</h2>
             {history.length === 0 ? (
               <p className={s.empty_msg}>{t('empty_stats')}</p>
             ) : (
@@ -485,7 +486,7 @@ export default function BrainBoostClient() {
                     <div className={s.stat_value}>{stats.streak}</div>
                   </div>
                 </div>
-                <button onClick={resetStats} className={s.stats_reset_btn}>{t('stats_reset')}</button>
+                <button onClick={resetStats} className={`${ui.button} ${ui.ghost} ${ui.sm} ${ui.block} ${s.stats_reset_btn}`}>{t('stats_reset')}</button>
               </>
             )}
           </section>
@@ -494,7 +495,7 @@ export default function BrainBoostClient() {
 
       {/* ── RUNNING ── */}
       {state === 'running' && (
-        <section className={s.panel}>
+        <section className={ui.card}>
           <div className={s.game_wrap}>
             <div className={s.progress_row}>
               <span>N = {n}</span>
@@ -544,7 +545,7 @@ export default function BrainBoostClient() {
 
             <p className={s.shortcut_hint}>{t('shortcut_hint')}</p>
 
-            <button className={s.stop_btn} onClick={stopSession}>
+            <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={stopSession}>
               {t('stop_button')}
             </button>
           </div>
@@ -618,7 +619,7 @@ export default function BrainBoostClient() {
                 <div>{t(`tutorial_step_${i}` as 'tutorial_step_1')}</div>
               </div>
             ))}
-            <button className={s.modal_close_btn} onClick={closeTutorial}>
+            <button className={`${ui.button} ${ui.primary} ${ui.block} ${s.modal_close_btn}`} onClick={closeTutorial}>
               {t('tutorial_close')}
             </button>
           </div>

@@ -9,6 +9,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
 import s from './font-preview.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Font Data ──────────────────────────────────────────────────────────────
 type FontCategory = 'sans-serif' | 'serif' | 'monospace' | 'display';
@@ -108,43 +109,36 @@ function FontCard({ font, previewText, fontSize, copied, onCopy }: {
     return () => observer.disconnect();
   }, [font]);
 
-  const categoryColors: Record<FontCategory, { bg: string; color: string }> = {
-    'sans-serif': { bg: '#dbeafe', color: '#1e3a8a' },
-    'serif':      { bg: '#fce7f3', color: '#831843' },
-    'monospace':  { bg: '#dcfce7', color: '#14532d' },
-    'display':    { bg: '#fef9c3', color: '#78350f' },
+  const categoryTint: Record<FontCategory, string> = {
+    'sans-serif': 'blue',
+    'serif':      'pink',
+    'monospace':  'green',
+    'display':    'amber',
   };
-  const catStyle = categoryColors[font.category];
+  const tint = categoryTint[font.category];
+  const catStyle = { background: `var(--tint-${tint}-bg)`, borderColor: `var(--tint-${tint}-border)`, color: `var(--tint-${tint}-fg)` };
 
   return (
     <div
       ref={cardRef}
-      className="glass-panel"
-      style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative' }}
+      className={`${ui.card} ${s.fontCard}`}
     >
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
         <div>
           <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{font.name}</h3>
           <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.35rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '999px', background: catStyle.bg, color: catStyle.color }}>
+            <span className={ui.badge} style={catStyle}>
               {font.category}
             </span>
-            <span style={{ fontSize: '0.68rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '999px', background: 'var(--border)', color: 'var(--text-secondary)' }}>
+            <span className={`${ui.badge} ${ui.gray}`}>
               {locale === 'ko' || !font.tagEn ? font.tag : font.tagEn}
             </span>
           </div>
         </div>
         <button
           onClick={() => onCopy(font)}
-          style={{
-            padding: '0.4rem 0.75rem', fontSize: '0.75rem', fontWeight: 600,
-            borderRadius: 'var(--radius-sm)',
-            border: `1px solid ${copied ? '#10b981' : 'var(--border)'}`,
-            background: copied ? '#ecfdf5' : 'var(--surface)',
-            color: copied ? '#065f46' : 'var(--text-secondary)',
-            cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap', flexShrink: 0,
-          }}
+          className={`${ui.button} ${ui.secondary} ${ui.sm} ${copied ? ui.green : ''} ${s.copyBtn}`}
         >
           {copied ? '✓ Copied' : '</> CSS'}
         </button>
@@ -166,7 +160,7 @@ function FontCard({ font, previewText, fontSize, copied, onCopy }: {
           </p>
         ) : (
           <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-            <div style={{ width: '1rem', height: '1rem', borderRadius: '50%', border: '2px solid var(--primary)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+            <div style={{ width: '1rem', height: '1rem', borderRadius: '50%', border: '2px solid var(--color-primary)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
             <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Loading font…</span>
           </div>
         )}
@@ -215,7 +209,7 @@ function HarmonyCard({ pair, koText, enText, fontSize }: {
   }, [pair]);
 
   return (
-    <div ref={cardRef} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div ref={cardRef} className={`${ui.card} ${s.harmonyCard}`}>
       {/* Pair header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -223,7 +217,7 @@ function HarmonyCard({ pair, koText, enText, fontSize }: {
           <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>+</span>
           <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>{pair.korean.name}</span>
         </div>
-        <span style={{ fontSize: '0.72rem', fontWeight: 600, padding: '0.2rem 0.65rem', borderRadius: '999px', background: 'linear-gradient(90deg, #6366f1, #a855f7)', color: 'white' }}>
+        <span className={`${ui.badge} ${ui.violet}`}>
           {pair.vibe}
         </span>
       </div>
@@ -247,7 +241,7 @@ function HarmonyCard({ pair, koText, enText, fontSize }: {
         </div>
       ) : (
         <div style={{ height: '6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-          <div style={{ width: '1rem', height: '1rem', borderRadius: '50%', border: '2px solid var(--primary)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+          <div style={{ width: '1rem', height: '1rem', borderRadius: '50%', border: '2px solid var(--color-primary)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
           <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Loading fonts…</span>
         </div>
       )}
@@ -301,22 +295,15 @@ export default function FontPreviewClient() {
         <ToolHeader icon={<Type />} title={t('title')} subtitle={t('description')} />
 
         {/* ── Controls ── */}
-        <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div className={`${ui.card} ${s.controls}`}>
 
           {/* Tab switcher */}
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <div className={ui.segmented}>
             {tabList.map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => setTab(key)}
-                style={{
-                  padding: '0.5rem 1.25rem', fontWeight: 600, fontSize: '0.9rem',
-                  borderRadius: 'var(--radius-md)',
-                  border: `1px solid ${tab === key ? 'var(--primary)' : 'var(--border)'}`,
-                  background: tab === key ? 'var(--primary)' : 'var(--surface)',
-                  color: tab === key ? 'white' : 'var(--text-secondary)',
-                  cursor: 'pointer', transition: 'all 0.2s',
-                }}
+                className={`${ui.segment} ${tab === key ? ui.segmentActive : ''}`}
               >
                 {label}
               </button>
@@ -326,8 +313,8 @@ export default function FontPreviewClient() {
           {/* Text inputs */}
           <div style={{ display: 'grid', gridTemplateColumns: tab === 'harmony' ? '1fr 1fr' : '1fr', gap: '0.75rem' }}>
             {tab !== 'korean' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('en_input_label')}
                 </label>
                 <input
@@ -335,17 +322,13 @@ export default function FontPreviewClient() {
                   value={enText}
                   onChange={e => setEnText(e.target.value)}
                   placeholder={t('en_placeholder')}
-                  style={{
-                    padding: '0.65rem 0.9rem', fontSize: '0.95rem',
-                    borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)',
-                    outline: 'none', background: 'var(--surface)', color: 'var(--text-primary)',
-                  }}
+                  className={ui.input}
                 />
               </div>
             )}
             {tab !== 'latin' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('ko_input_label')}
                 </label>
                 <input
@@ -353,11 +336,7 @@ export default function FontPreviewClient() {
                   value={koText}
                   onChange={e => setKoText(e.target.value)}
                   placeholder={t('ko_placeholder')}
-                  style={{
-                    padding: '0.65rem 0.9rem', fontSize: '0.95rem',
-                    borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)',
-                    outline: 'none', background: 'var(--surface)', color: 'var(--text-primary)',
-                  }}
+                  className={ui.input}
                 />
               </div>
             )}
@@ -365,7 +344,7 @@ export default function FontPreviewClient() {
 
           {/* Font size slider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+            <label className={ui.label} style={{ whiteSpace: 'nowrap' }}>
               {t('size_label')}: <strong style={{ color: 'var(--text-primary)' }}>{fontSize}px</strong>
             </label>
             <input

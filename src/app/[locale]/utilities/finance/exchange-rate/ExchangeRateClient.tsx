@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './exchange.module.css';
+import { ui } from '@/app/components/ui';
 
 interface Currency {
   code: string;
@@ -227,14 +228,14 @@ export default function ExchangeRateClient() {
       <NavigationActions />
       <ToolHeader icon={<ArrowLeftRight />} title={t('title')} subtitle={t('description')} />
 
-      <section className={s.ex_panel}>
+      <section className={`${ui.card} ${s.ex_panel}`}>
         {/* Amount Input */}
-        <div className={s.ex_input_group}>
-          <label className={s.ex_label}>{t('amount')}</label>
+        <div className={ui.field}>
+          <label className={ui.label}>{t('amount')}</label>
           <div className={s.ex_amount_input_wrapper}>
             <span className={s.ex_amount_symbol}>{fromCur.symbol}</span>
             <input
-              className={s.ex_amount_input}
+              className={`${ui.input} ${ui.inputLg} ${s.ex_amount_input}`}
               value={amount}
               onChange={e => {
                 const v = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
@@ -249,9 +250,9 @@ export default function ExchangeRateClient() {
 
         {/* Currency Selectors */}
         <div className={s.ex_selector_row}>
-          <div>
-            <label className={s.ex_label}>{t('from')}</label>
-            <select value={from} onChange={e => setFrom(e.target.value)} className={s.ex_select} aria-label={isKo ? '출발 통화' : 'From currency'}>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('from')}</label>
+            <select value={from} onChange={e => setFrom(e.target.value)} className={ui.input} aria-label={isKo ? '출발 통화' : 'From currency'}>
               {CURRENCIES.map(c => (
                 <option key={c.code} value={c.code}>
                   {c.flag} {c.code} ({isKo ? c.nameKo : c.nameEn})
@@ -262,9 +263,9 @@ export default function ExchangeRateClient() {
           <button onClick={swap} className={s.ex_swap_btn} title={t('swap')} aria-label={t('swap')}>
             <ArrowLeftRight size={24} />
           </button>
-          <div>
-            <label className={s.ex_label}>{t('to')}</label>
-            <select value={to} onChange={e => setTo(e.target.value)} className={s.ex_select} aria-label={isKo ? '도착 통화' : 'To currency'}>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('to')}</label>
+            <select value={to} onChange={e => setTo(e.target.value)} className={ui.input} aria-label={isKo ? '도착 통화' : 'To currency'}>
               {CURRENCIES.map(c => (
                 <option key={c.code} value={c.code}>
                   {c.flag} {c.code} ({isKo ? c.nameKo : c.nameEn})
@@ -275,11 +276,11 @@ export default function ExchangeRateClient() {
         </div>
 
         {/* Result */}
-        <div className={s.ex_result_display}>
+        <div className={`${ui.result} ${s.ex_result_display}`}>
           {loading ? (
             <div style={{ color: 'var(--text-muted)', fontSize: '1.25rem', fontWeight: 700 }}>{t('loading')}</div>
           ) : error ? (
-            <div style={{ color: '#ef4444' }}>{error}</div>
+            <div style={{ color: 'var(--tint-red-fg)' }}>{error}</div>
           ) : converted !== null ? (
             <>
               <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 800 }}>
@@ -288,7 +289,7 @@ export default function ExchangeRateClient() {
               <div className={s.ex_result_main}>
                 {toCur.symbol} {formatConverted(converted)}
               </div>
-              <div style={{ fontSize: '1.1rem', color: '#8b5cf6', fontWeight: 900 }}>
+              <div style={{ fontSize: '1.1rem', color: 'var(--color-primary)', fontWeight: 900 }}>
                 {toCur.flag} {to}
               </div>
               <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'center', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>
@@ -313,7 +314,7 @@ export default function ExchangeRateClient() {
               </div>
             </div>
             {chartLoading ? (
-              <div style={{ height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e2e8f0' }}>Loading...</div>
+              <div style={{ height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>Loading...</div>
             ) : (
               <Sparkline data={historyRates} color="#8b5cf6" />
             )}

@@ -1,13 +1,5 @@
-.ad_placeholder {
-  width: 100%;
-  min-height: 90px;
-  background: rgba(226, 232, 240, 0.3);
-  border: 1px dashed var(--border);
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  font-size: 0.875rem;
-  margin: 2rem 0;
-}
+/* 레이아웃만 — 카드·버튼·입력·탭 모양은 공통 UI 키트(ui.module.css)가 맡는다 */
+.controls { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem; }
+.fontCard { display: flex; flex-direction: column; gap: 1rem; position: relative; }
+.harmonyCard { display: flex; flex-direction: column; gap: 1.25rem; }
+.copyBtn { flex-shrink: 0; }

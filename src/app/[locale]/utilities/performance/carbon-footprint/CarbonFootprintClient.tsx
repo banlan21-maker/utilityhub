@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './carbon-footprint.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Constants ──────────────────────────────────────
 const KWH_PER_GB = 1.805;
@@ -46,11 +47,11 @@ function getGradeLabel(grade: Grade, isKo: boolean): string {
 
 function getGradeCssClass(grade: Grade): string {
   const map: Record<Grade, string> = {
-    'A+': s.grade_a_plus,
-    'A':  s.grade_a,
-    'B':  s.grade_b,
-    'C':  s.grade_c,
-    'D':  s.grade_d,
+    'A+': ui.green,
+    'A':  ui.green,
+    'B':  ui.amber,
+    'C':  ui.amber,
+    'D':  ui.red,
   };
   return map[grade];
 }
@@ -172,9 +173,11 @@ export default function CarbonFootprintClient() {
     : '';
 
   const copyBtnClass = [
-    s.copy_btn,
-    copyStatus === 'success' ? s.copy_btn_success : '',
-    copyStatus === 'error' ? s.copy_btn_error : '',
+    ui.button,
+    ui.secondary,
+    ui.block,
+    copyStatus === 'success' ? ui.green : '',
+    copyStatus === 'error' ? ui.red : '',
   ].join(' ').trim();
 
   const copyBtnText =
@@ -191,13 +194,13 @@ export default function CarbonFootprintClient() {
       <ToolHeader icon={<Flame />} title={t('title')} subtitle={t('description')} />
 
       {/* Input Panel */}
-      <section className={s.panel}>
+      <section className={`${ui.card} ${s.panel}`}>
         <div className={s.input_grid}>
           {/* Page Size */}
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? '페이지 크기 (MB)' : 'Page Size (MB)'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '페이지 크기 (MB)' : 'Page Size (MB)'}</label>
             <input
-              className={s.input}
+              className={ui.input}
               type="number"
               step="0.1"
               min="0"
@@ -209,7 +212,7 @@ export default function CarbonFootprintClient() {
               }}
               aria-label={isKo ? '페이지 크기 (MB)' : 'Page Size in MB'}
             />
-            <span className={s.field_hint}>
+            <span className={ui.hint}>
               {isKo
                 ? '일반 사이트: 약 2~3MB / 최적화: 0.5~1MB / 쇼핑몰: 5~8MB'
                 : 'Typical: ~2–3MB / Optimized: 0.5–1MB / E-commerce: 5–8MB'}
@@ -217,10 +220,10 @@ export default function CarbonFootprintClient() {
           </div>
 
           {/* Monthly Pageviews */}
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? '월간 페이지뷰 (회)' : 'Monthly Pageviews'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '월간 페이지뷰 (회)' : 'Monthly Pageviews'}</label>
             <input
-              className={s.input}
+              className={ui.input}
               type="number"
               step="1"
               min="0"
@@ -232,7 +235,7 @@ export default function CarbonFootprintClient() {
               }}
               aria-label={isKo ? '월간 페이지뷰' : 'Monthly Pageviews'}
             />
-            <span className={s.field_hint}>
+            <span className={ui.hint}>
               {isKo
                 ? '소규모 블로그: 1,000~5,000 / 중소기업: 10,000~50,000 / 대형: 100,000+'
                 : 'Small blog: 1K–5K / SMB: 10K–50K / Large service: 100K+'}
@@ -240,10 +243,10 @@ export default function CarbonFootprintClient() {
           </div>
 
           {/* Hosting Type */}
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? '호스팅 에너지 유형' : 'Hosting Energy Type'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '호스팅 에너지 유형' : 'Hosting Energy Type'}</label>
             <select
-              className={s.select}
+              className={ui.input}
               value={hosting}
               onChange={e => setHosting(e.target.value as 'conventional' | 'green')}
               aria-label={isKo ? '호스팅 에너지 유형' : 'Hosting Energy Type'}
@@ -254,10 +257,10 @@ export default function CarbonFootprintClient() {
           </div>
 
           {/* Return Visitor Ratio */}
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? '재방문자 비율' : 'Return Visitor Ratio'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '재방문자 비율' : 'Return Visitor Ratio'}</label>
             <select
-              className={s.select}
+              className={ui.input}
               value={returnRatioStr}
               onChange={e => setReturnRatioStr(e.target.value)}
               aria-label={isKo ? '재방문자 비율' : 'Return Visitor Ratio'}
@@ -271,12 +274,12 @@ export default function CarbonFootprintClient() {
 
         {/* Result Area */}
         {shouldShowResult && result && (
-          <div className={s.result_wrap} style={{ marginTop: '1.5rem' }}>
+          <div className={s.result_wrap}>
             {/* Main CO₂ */}
             <div className={s.result_main}>
               <div className={s.result_co2}>{formatNumber(result.co2Annual)} kg CO₂</div>
               <div className={s.result_co2_label}>{isKo ? '연간 배출량 추정치' : 'Estimated annual emissions'}</div>
-              <span className={`${s.grade_badge} ${getGradeCssClass(result.grade)}`}>
+              <span className={`${ui.badge} ${getGradeCssClass(result.grade)} ${s.grade_badge}`}>
                 {getGradeLabel(result.grade, isKo)}
               </span>
             </div>
@@ -298,7 +301,7 @@ export default function CarbonFootprintClient() {
             </div>
 
             {/* Tree Box */}
-            <div className={s.tree_box}>
+            <div className={`${ui.notice} ${ui.green} ${s.tree_box}`}>
               {treeEmoji}{' '}
               {isKo
                 ? `나무 ${result.treesNeeded}그루가 1년간 흡수해야 상쇄되는 양이에요`
@@ -306,7 +309,7 @@ export default function CarbonFootprintClient() {
             </div>
 
             {/* Tip Box */}
-            <div className={`${s.tip_box} ${result.grade === 'A+' || result.grade === 'A' ? s.tip_box_green : ''}`}>
+            <div className={`${ui.notice} ${result.grade === 'A+' || result.grade === 'A' ? ui.green : ui.amber} ${s.tip_box}`}>
               {getTip(result.grade, isKo)}
             </div>
 

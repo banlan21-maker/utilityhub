@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { ParsedExcelData, MappingRule } from '../ExcelMapperClient';
+import { ui } from '@/app/components/ui';
+import s from '../excel-mapper.module.css';
 
 interface Step2MappingProps {
   parsedData: ParsedExcelData;
@@ -81,11 +83,11 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
   return (
     <div>
       {/* Instructions */}
-      <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(249, 115, 22, 0.1)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(249, 115, 22, 0.3)' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#f97316', marginBottom: '1rem' }}>
+      <div className={`${ui.notice} ${ui.violet} ${s.howTo}`}>
+        <h3 className={s.howToTitle}>
           📋 {t('howToUse')}
         </h3>
-        <div style={{ color: 'var(--text-primary)', lineHeight: 1.8 }}>
+        <div className={s.howToBody}>
           <p style={{ marginBottom: '0.5rem' }}>
             <strong>1. {t('forFixedValue')}:</strong> {t('clickCellInstruction')}
           </p>
@@ -96,8 +98,8 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
       </div>
 
       {/* Target Column Input */}
-      <div style={{ marginBottom: '1.5rem', padding: '1.5rem', background: 'var(--surface)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
-        <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+      <div className={`${ui.card} ${ui.field} ${s.targetPanel}`}>
+        <label className={ui.label}>
           {t('targetColumnName')}
         </label>
         <input
@@ -105,31 +107,12 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
           value={targetColumnInput}
           onChange={(e) => setTargetColumnInput(e.target.value)}
           placeholder={t('targetColumnPlaceholder2')}
-          style={{
-            width: '100%',
-            padding: '0.875rem',
-            border: '2px solid var(--border)',
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--surface-hover)',
-            color: 'var(--text-primary)',
-            fontSize: '1rem',
-            fontWeight: 500,
-          }}
+          className={ui.input}
         />
         {selectedCell && (
           <button
             onClick={handleAddFixedValue}
-            style={{
-              marginTop: '0.75rem',
-              padding: '0.75rem 1.5rem',
-              border: 'none',
-              borderRadius: 'var(--radius-md)',
-              background: '#f97316',
-              color: 'white',
-              fontWeight: 600,
-              cursor: 'pointer',
-              width: '100%',
-            }}
+            className={`${ui.button} ${ui.primary} ${ui.block}`}
           >
             ✓ {t('addAsFixedValue')}
           </button>
@@ -138,13 +121,13 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
 
       {/* Excel Preview Table */}
       <div style={{ marginBottom: '2rem' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+        <h3 className={ui.cardTitle}>
           {t('clickTableToMap')}
         </h3>
         <div style={{ overflowX: 'auto', border: '2px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ background: 'rgba(249, 115, 22, 0.15)' }}>
+              <tr style={{ background: 'var(--color-primary-light)' }}>
                 <th
                   style={{
                     padding: '0.75rem',
@@ -155,7 +138,7 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
                     width: '50px',
                     position: 'sticky',
                     left: 0,
-                    background: 'rgba(249, 115, 22, 0.15)',
+                    background: 'var(--color-primary-light)',
                   }}
                 >
                   #
@@ -168,17 +151,17 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
                       padding: '0.75rem',
                       textAlign: 'left',
                       fontWeight: 600,
-                      color: '#f97316',
+                      color: 'var(--color-primary)',
                       borderBottom: '2px solid var(--border)',
                       cursor: 'pointer',
-                      background: 'rgba(249, 115, 22, 0.15)',
+                      background: 'var(--color-primary-light)',
                       transition: 'background 0.2s ease',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(249, 115, 22, 0.25)';
+                      e.currentTarget.style.background = 'var(--tint-violet-border)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(249, 115, 22, 0.15)';
+                      e.currentTarget.style.background = 'var(--color-primary-light)';
                     }}
                   >
                     Col {colIndex + 1}
@@ -193,7 +176,7 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
                   style={{
                     background:
                       rowIndex === parsedData.headerRowIndex - 1
-                        ? 'rgba(59, 130, 246, 0.1)'
+                        ? 'var(--tint-blue-bg)'
                         : rowIndex >= parsedData.dataStartRowIndex - 1
                         ? 'var(--surface)'
                         : 'var(--surface-hover)',
@@ -210,7 +193,7 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
                       left: 0,
                       background:
                         rowIndex === parsedData.headerRowIndex - 1
-                          ? 'rgba(59, 130, 246, 0.1)'
+                          ? 'var(--tint-blue-bg)'
                           : rowIndex >= parsedData.dataStartRowIndex - 1
                           ? 'var(--surface)'
                           : 'var(--surface-hover)',
@@ -227,23 +210,23 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
                         borderBottom: '1px solid var(--border)',
                         color:
                           rowIndex === parsedData.headerRowIndex - 1
-                            ? '#3b82f6'
+                            ? 'var(--tint-blue-fg)'
                             : 'var(--text-primary)',
                         fontWeight: rowIndex === parsedData.headerRowIndex - 1 ? 600 : 400,
                         cursor: 'pointer',
                         background:
                           selectedCell?.row === rowIndex && selectedCell?.col === colIndex
-                            ? 'rgba(249, 115, 22, 0.2)'
+                            ? 'var(--color-primary-light)'
                             : 'transparent',
                         transition: 'background 0.2s ease',
                         border:
                           selectedCell?.row === rowIndex && selectedCell?.col === colIndex
-                            ? '2px solid #f97316'
+                            ? '2px solid var(--color-primary)'
                             : '1px solid transparent',
                       }}
                       onMouseEnter={(e) => {
                         if (!(selectedCell?.row === rowIndex && selectedCell?.col === colIndex)) {
-                          e.currentTarget.style.background = 'rgba(249, 115, 22, 0.05)';
+                          e.currentTarget.style.background = 'var(--surface-hover)';
                         }
                       }}
                       onMouseLeave={(e) => {
@@ -261,7 +244,7 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
           </table>
         </div>
         {parsedData.allRows.length > 15 && (
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+          <p className={`${ui.hint} ${s.tableNote}`}>
             {t('showing15rows')} ({parsedData.allRows.length} {t('totalRows')})
           </p>
         )}
@@ -270,25 +253,17 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
       {/* Added Rules */}
       {rules.length > 0 && (
         <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+          <h3 className={ui.cardTitle}>
             ✅ {t('addedRules')} ({rules.length})
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className={s.ruleList}>
             {rules.map((rule, index) => (
               <div
                 key={rule.id}
-                style={{
-                  padding: '1rem',
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
+                className={`${ui.card} ${s.ruleRow}`}
               >
                 <div>
-                  <span style={{ fontWeight: 600, color: '#f97316' }}>{rule.targetColumn}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--color-primary)' }}>{rule.targetColumn}</span>
                   <span style={{ color: 'var(--text-secondary)', margin: '0 0.5rem' }}>←</span>
                   {rule.type === 'fixed' ? (
                     <span style={{ color: 'var(--text-primary)' }}>
@@ -303,15 +278,7 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
                 </div>
                 <button
                   onClick={() => removeRule(rule.id)}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius-sm)',
-                    background: 'transparent',
-                    color: 'var(--text-secondary)',
-                    cursor: 'pointer',
-                    fontSize: '0.875rem',
-                  }}
+                  className={`${ui.button} ${ui.ghost} ${ui.sm}`}
                 >
                   {t('remove')}
                 </button>
@@ -321,32 +288,16 @@ export default function Step2Mapping({ parsedData, onComplete, onBack }: Step2Ma
         </div>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+      <div className={s.actions}>
         <button
           onClick={onBack}
-          style={{
-            padding: '0.75rem 1.5rem',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--surface)',
-            color: 'var(--text-primary)',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className={`${ui.button} ${ui.secondary}`}
         >
           {t('back')}
         </button>
         <button
           onClick={handleContinue}
-          style={{
-            padding: '0.75rem 2rem',
-            border: 'none',
-            borderRadius: 'var(--radius-md)',
-            background: '#f97316',
-            color: 'white',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className={`${ui.button} ${ui.primary}`}
         >
           {t('continue')} ({rules.length})
         </button>

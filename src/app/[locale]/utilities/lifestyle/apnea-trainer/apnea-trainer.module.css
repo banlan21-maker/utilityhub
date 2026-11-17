@@ -34,7 +34,7 @@
 
 /* ── Container ── */
 .ap_container {
-  max-width: 640px;
+  max-width: var(--tool-width-narrow);
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -192,19 +192,7 @@
 .ap_seo_wrap p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; margin: 0 0 0.5rem; }
 .ap_seo_wrap ul { padding-left: 1.2rem; margin: 0; }
 .ap_seo_wrap li { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.25rem; }
-.ap_disclaimer {
-  margin-top: 1rem; padding: 0.85rem 1rem;
-  background: #fff7ed; border: 1px solid #fed7aa;
-  border-radius: 0.65rem; font-size: 0.8rem; color: #9a3412; line-height: 1.6;
-}
-.ap_faq { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
-.ap_faq_item { border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
-.ap_faq_q {
-  width: 100%; padding: 0.85rem 1rem; text-align: left;
-  background: var(--surface); border: none; font-size: 0.88rem; font-weight: 700;
-  color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between;
-}
-.ap_faq_a { padding: 0.75rem 1rem; font-size: 0.83rem; color: var(--text-secondary); line-height: 1.65; background: var(--surface-hover); }
+.ap_seo_wrap .ap_disclaimer { margin-top: 1rem; font-size: 0.8rem; }
 
 /* ── Responsive ── */
 @media (max-width: 480px) {

@@ -33,7 +33,7 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
           style={{
             height: '100%',
             width: `${((currentStep - 1) / 2) * 100}%`,
-            background: '#f97316',
+            background: 'var(--primary-fill)',
             transition: 'width 0.3s ease',
           }}
         />
@@ -56,8 +56,8 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
               width: '40px',
               height: '40px',
               borderRadius: '50%',
-              background: currentStep >= step.number ? '#f97316' : 'var(--surface)',
-              border: `2px solid ${currentStep >= step.number ? '#f97316' : 'var(--border)'}`,
+              background: currentStep >= step.number ? 'var(--primary-fill)' : 'var(--surface)',
+              border: `2px solid ${currentStep >= step.number ? 'var(--primary-fill)' : 'var(--border)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -72,7 +72,7 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
           <span
             style={{
               fontSize: '0.875rem',
-              color: currentStep >= step.number ? '#f97316' : 'var(--text-secondary)',
+              color: currentStep >= step.number ? 'var(--color-primary)' : 'var(--text-secondary)',
               fontWeight: currentStep === step.number ? 600 : 400,
               textAlign: 'center',
             }}

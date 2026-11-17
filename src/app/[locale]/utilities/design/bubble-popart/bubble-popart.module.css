@@ -22,12 +22,8 @@
   align-items: start;
 }
 
+/* 설정 패널 — 카드 모양은 ui.card, 여기선 배치만 */
 .settingsPanel {
-  background: var(--color-bg-card, #ffffff);
-  border: 1px solid var(--color-border, var(--border));
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-card, 0 10px 15px -3px rgb(0 0 0 / 0.05));
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -68,38 +64,15 @@
   z-index: 5;
 }
 
-/* Sections */
+/* Sections (글자 모양은 ui.label / ui.hint) */
 .stepTitle {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: var(--color-text-secondary, #64748b);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  display: block;
   margin-bottom: 0.55rem;
 }
 
-.input {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  border-radius: 0.85rem;
-  border: 1px solid var(--color-border, var(--border));
-  font-size: 0.95rem;
-  font-weight: 600;
-  outline: none;
-  transition: border-color 0.2s;
-  background: var(--surface);
-  color: var(--text-primary);
-}
-.input:focus {
-  border-color: var(--color-primary, #8b5cf6);
-}
-
 .charCount {
-  font-size: 0.72rem;
-  color: var(--color-text-secondary, #94a3b8);
   text-align: right;
   margin-top: 0.3rem;
-  font-weight: 600;
 }
 
 /* 색상 프리셋 (원형) */
@@ -140,28 +113,9 @@
   overflow: hidden;
 }
 
-/* 모드 토글 */
+/* 모드 토글 (모양은 ui.segmented) */
 .toggleRow {
-  display: flex;
-  gap: 0.4rem;
   margin-bottom: 0.5rem;
-}
-.toggleBtn {
-  flex: 1;
-  padding: 0.55rem 0.7rem;
-  border-radius: 0.7rem;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.2s;
-}
-.toggleBtnActive {
-  background: var(--color-primary, #8b5cf6);
-  color: white;
-  border-color: var(--color-primary, #8b5cf6);
 }
 
 /* 슬라이더 */
@@ -171,20 +125,20 @@
   justify-content: space-between;
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--color-text-primary, #1e293b);
+  color: var(--text-primary);
   margin-bottom: 0.3rem;
 }
 .sliderValue {
-  color: var(--color-primary, #8b5cf6);
+  color: var(--color-primary);
   font-weight: 800;
 }
 .slider {
   width: 100%;
-  accent-color: var(--color-primary, #8b5cf6);
+  accent-color: var(--color-primary);
 }
 .kerningHint {
   font-size: 0.68rem;
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-muted);
   display: flex;
   justify-content: space-between;
   margin-top: 0.2rem;
@@ -196,26 +150,11 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
 }
-.sizeBtn {
-  padding: 0.6rem 0.5rem;
-  border-radius: 0.7rem;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.2s;
-  display: flex;
+/* 칩 모양은 ui.chip — 두 줄(이름+크기) 배치만 */
+.sizeGrid .sizeBtn {
   flex-direction: column;
-  align-items: center;
   gap: 0.15rem;
-}
-.sizeBtn:hover { border-color: var(--color-primary, #8b5cf6); }
-.sizeBtnActive {
-  background: #f5f3ff;
-  color: var(--color-primary, #8b5cf6);
-  border-color: var(--color-primary, #8b5cf6);
+  padding: 0.6rem 0.5rem;
 }
 .sizeBtnSub {
   font-size: 0.65rem;
@@ -235,58 +174,13 @@
 .checkbox {
   width: 20px;
   height: 20px;
-  accent-color: var(--color-primary, #8b5cf6);
+  accent-color: var(--color-primary);
   cursor: pointer;
 }
 .checkLabel {
   font-size: 0.88rem;
   font-weight: 700;
-  color: var(--color-text-primary, #1e293b);
-}
-
-/* 다운로드 버튼 */
-.downloadBtn {
-  width: 100%;
-  padding: 0.95rem 1rem;
-  border-radius: 1rem;
-  border: none;
-  background: linear-gradient(135deg, var(--color-primary, #8b5cf6) 0%, var(--color-primary-hover, #7c3aed) 100%);
-  color: white;
-  font-size: 0.95rem;
-  font-weight: 900;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-}
-.downloadBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
-}
-.downloadBtn:active:not(:disabled) {
-  transform: scale(0.97);
-}
-.downloadBtn:disabled {
-  background: #cbd5e1;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-.downloadBtnDone {
-  background: #10b981 !important;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
-}
-
-.adPlaceholder {
-  width: 100%;
-  min-height: 90px;
-  background: var(--surface-hover);
-  border: 1px dashed var(--border);
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin: 2rem 0;
+  color: var(--text-primary);
 }
 
 /* 모바일 — 1열 + 캔버스 sticky */
@@ -306,22 +200,8 @@
   }
 }
 
-/* 다크모드 — 설정 패널 가독성 */
+/* 다크모드 — 캔버스 영역 */
 @media (prefers-color-scheme: dark) {
-  .input {
-    background: #1e293b;
-    color: #f1f5f9;
-    border-color: #334155;
-  }
-  .toggleBtn,
-  .sizeBtn {
-    background: #1e293b;
-    color: #cbd5e1;
-    border-color: #334155;
-  }
-  .sizeBtnActive {
-    background: rgba(139, 92, 246, 0.15);
-  }
   .canvasWrapper {
     background: #ffffff; /* 캔버스는 항상 흰 배경 유지 */
   }

@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './world-time.module.css';
+import { ui } from '@/app/components/ui';
 
 
 interface TzItem {
@@ -69,13 +70,7 @@ function zoneLabel(z: TzItem, isKorean: boolean) {
 function HourBadge({ hour, isKorean }: { hour: number; isKorean: boolean }) {
   const day = isDaytime(hour);
   return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: '3px',
-      padding: '2px 8px', borderRadius: 'var(--radius-full)', fontSize: '0.72rem',
-      background: day ? 'rgba(251,191,36,0.18)' : 'rgba(99,102,241,0.18)',
-      color: day ? '#b45309' : '#6366f1',
-      fontWeight: 600,
-    }}>
+    <span className={`${ui.badge} ${day ? ui.amber : ui.violet}`}>
       {day ? '☀️' : '🌙'} {isKorean ? (day ? '낮' : '밤') : (day ? 'Day' : 'Night')}
     </span>
   );
@@ -131,15 +126,15 @@ export default function WorldTimeClient() {
       <ToolHeader icon={<Globe />} title={t('title')} subtitle={t('description')} />
 
       {/* Control Panel */}
-      <div className={s.control_panel}>
+      <div className={`${ui.card} ${s.control_panel}`}>
         <div className={s.base_selector}>
-          <label className={s.base_label}>
+          <label className={`${ui.label} ${s.base_label}`}>
             {t('base_label')}
           </label>
           <select
             value={baseId}
             onChange={e => setBaseId(e.target.value)}
-            className={s.base_select}
+            className={`${ui.input} ${s.base_select}`}
           >
             {ALL_TIMEZONES.map(z => (
               <option key={z.id} value={z.id}>{z.flag} {zoneLabel(z, isKorean)}</option>
@@ -148,7 +143,7 @@ export default function WorldTimeClient() {
           {sliderHour !== null && (
             <button
               onClick={() => setSliderHour(null)}
-              className={s.reset_time}
+              className={`${ui.button} ${ui.ghost} ${ui.sm}`}
             >
               ↺ {t('reset_time')}
             </button>
@@ -188,10 +183,10 @@ export default function WorldTimeClient() {
           return (
             <div
               key={zone.id}
-              className={`${s.timezone_card} ${isBase ? s.timezone_card_base : ''}`}
+              className={`${ui.card} ${s.timezone_card} ${isBase ? s.timezone_card_base : ''}`}
             >
               {isBase && (
-                <span className={s.base_badge}>
+                <span className={`${ui.badge} ${s.base_badge}`}>
                   {t('base')}
                 </span>
               )}
@@ -237,16 +232,16 @@ export default function WorldTimeClient() {
 
       {/* Add zone dropdown */}
       {showAdd && availableToAdd.length > 0 && (
-        <div className={s.add_zone_panel}>
-          <p className={s.add_zone_title}>
+        <div className={`${ui.card} ${s.add_zone_panel}`}>
+          <p className={`${ui.label} ${s.add_zone_title}`}>
             {t('select_zone')}
           </p>
-          <div className={s.add_zone_buttons}>
+          <div className={ui.chips}>
             {availableToAdd.map(z => (
               <button
                 key={z.id}
                 onClick={() => { toggleZone(z.id); setShowAdd(false); }}
-                className={s.city_button}
+                className={`${ui.chip} ${ui.pill}`}
               >
                 {z.flag} {zoneLabel(z, isKorean)}
               </button>

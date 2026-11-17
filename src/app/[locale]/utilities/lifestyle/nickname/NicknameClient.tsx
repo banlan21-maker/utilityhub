@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 
 export default function NicknameClient() {
   const t = useTranslations('Nickname');
@@ -84,26 +85,25 @@ export default function NicknameClient() {
 
       <div className="grid gap-8 md:grid-cols-2 animate-slide-up">
         {/* Form */}
-        <div className="glass-panel" style={{ padding: '2rem' }}>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('birthDate')}</label>
+        <div className={ui.card}>
+          <div className={ui.field} style={{ marginBottom: '1.5rem' }}>
+            <label className={ui.label}>{t('birthDate')}</label>
             <input
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', color: 'inherit' }}
+              className={ui.input}
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('gender')}</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+          <div className={ui.field} style={{ marginBottom: '1.5rem' }}>
+            <label className={ui.label}>{t('gender')}</label>
+            <div className={ui.segmented}>
               {['male', 'female', 'neutral'].map((g) => (
                 <button
                   key={g}
                   onClick={() => setGender(g)}
-                  className={gender === g ? 'active-tab' : 'tab'}
-                  style={{ padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', border: 'none', fontSize: '0.9rem' }}
+                  className={`${ui.segment} ${gender === g ? ui.segmentActive : ''}`}
                 >
                   {t(g)}
                 </button>
@@ -111,15 +111,14 @@ export default function NicknameClient() {
             </div>
           </div>
 
-          <div style={{ marginBottom: '2rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>{t('style')}</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+          <div className={ui.field} style={{ marginBottom: '2rem' }}>
+            <label className={ui.label}>{t('style')}</label>
+            <div className={ui.segmented}>
               {['classic', 'modern', 'cute', 'cool'].map((s) => (
                 <button
                   key={s}
                   onClick={() => setStyle(s)}
-                  className={style === s ? 'active-tab' : 'tab'}
-                  style={{ padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', border: 'none', fontSize: '0.9rem' }}
+                  className={`${ui.segment} ${style === s ? ui.segmentActive : ''}`}
                 >
                   {t(s)}
                 </button>
@@ -130,8 +129,7 @@ export default function NicknameClient() {
           <button
             onClick={recommend}
             disabled={!birthDate}
-            className="primary-button"
-            style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontWeight: 700, cursor: 'pointer', border: 'none', opacity: birthDate ? 1 : 0.5 }}
+            className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`}
           >
             {t('recommend')}
           </button>
@@ -140,25 +138,25 @@ export default function NicknameClient() {
         {/* Result */}
         <div className="flex flex-col">
           {result ? (
-            <div className="glass-panel animate-scale-in flex-1 flex flex-col items-center justify-center text-center" style={{ padding: '3rem', border: '2px dashed var(--primary)' }}>
+            <div className={`${ui.card} animate-scale-in flex-1 flex flex-col items-center justify-center text-center`} style={{ padding: '3rem', border: '2px dashed var(--color-primary)' }}>
               <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>{t('resultTitle')}</p>
-              <h2 style={{ fontSize: '4rem', fontWeight: 900, color: 'var(--primary)', marginBottom: '1.5rem', textShadow: '0 0 20px rgba(var(--primary-rgb), 0.3)' }}>
+              <h2 style={{ fontSize: '4rem', fontWeight: 900, color: 'var(--color-primary)', marginBottom: '1.5rem', textShadow: '0 0 20px rgba(var(--primary-rgb), 0.3)' }}>
                 {result.name}
               </h2>
-              <div style={{ padding: '1rem 2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '30px', marginBottom: '2rem' }}>
+              <div style={{ padding: '1rem 2rem', background: 'var(--surface-hover)', borderRadius: '30px', marginBottom: '2rem' }}>
                 <span style={{ fontWeight: 600, marginRight: '0.5rem' }}>{t('meaning')}:</span>
                 <span>{result.meaning}</span>
               </div>
 
               <button
                 onClick={() => setResult(null)}
-                style={{ background: 'none', border: '1px solid var(--border)', padding: '0.5rem 1.5rem', borderRadius: '20px', color: 'var(--text-secondary)', cursor: 'pointer' }}
+                className={`${ui.button} ${ui.secondary}`}
               >
                 {t('reset')}
               </button>
             </div>
           ) : (
-            <div className="glass-panel flex-1 flex flex-col items-center justify-center text-center opacity-50" style={{ padding: '2rem' }}>
+            <div className={`${ui.card} flex-1 flex flex-col items-center justify-center text-center opacity-50`} style={{ padding: '2rem' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✨</div>
               <p style={{ whiteSpace: 'pre-wrap' }}>{t('emptyState')}</p>
             </div>
@@ -166,41 +164,6 @@ export default function NicknameClient() {
         </div>
       </div>
 
-      <style jsx>{`
-        .tab {
-          background: var(--surface);
-          color: var(--text-secondary);
-          border: 1px solid var(--border);
-          transition: all 0.2s ease;
-          box-shadow: var(--shadow-sm);
-        }
-        .tab:hover {
-          background: var(--surface-hover);
-          border-color: var(--primary);
-          color: var(--primary);
-        }
-        .active-tab {
-          background: var(--primary) !important;
-          color: white !important;
-          border: 1px solid var(--primary) !important;
-          box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
-        }
-        .primary-button {
-          background: var(--primary) !important;
-          color: white !important;
-          border: none;
-          box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .primary-button:hover:not(:disabled) {
-          background: var(--primary-hover) !important;
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
-        }
-        .primary-button:active:not(:disabled) {
-          transform: translateY(-1px);
-        }
-      `}</style>
 
       {/* 공유하기 */}
       <ShareBar title={t('title')} description={t('description')} />

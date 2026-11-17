@@ -14,6 +14,7 @@ import {
 } from '@/lib/wireSize';
 import WireSizeUS from './WireSizeUS';
 import s from './wire-size-calc.module.css';
+import { ui } from '@/app/components/ui';
 
 type WireKind = 'hfix' | 'cv' | 'pvc';
 
@@ -168,76 +169,76 @@ export default function WireSizeCalcClient() {
 
       <ToolHeader icon={<Zap />} title={titleStr} subtitle={descStr} />
 
-      <div className={s.std} role="group" aria-label={isKo ? '적용 기준' : 'Code'}>
-        <button type="button" aria-pressed={std === 'kec'} className={`${s.std_btn} ${std === 'kec' ? s.std_on : ''}`} onClick={() => setStd('kec')}>
+      <div className={ui.segmented} role="group" aria-label={isKo ? '적용 기준' : 'Code'}>
+        <button type="button" aria-pressed={std === 'kec'} className={`${ui.segment} ${std === 'kec' ? ui.segmentActive : ''}`} onClick={() => setStd('kec')}>
           {isKo ? '한국 KEC (㎟)' : 'IEC / Korea KEC (mm²)'}<small>{isKo ? 'HFIX·CV, IEC 60364-5-52' : 'HFIX, CV · IEC 60364-5-52'}</small>
         </button>
-        <button type="button" aria-pressed={std === 'nec'} className={`${s.std_btn} ${std === 'nec' ? s.std_on : ''}`} onClick={() => setStd('nec')}>
+        <button type="button" aria-pressed={std === 'nec'} className={`${ui.segment} ${std === 'nec' ? ui.segmentActive : ''}`} onClick={() => setStd('nec')}>
           {isKo ? '미국 NEC (AWG)' : 'US NEC (AWG)'}<small>{isKo ? 'THHN·NM-B, Table 310.16' : 'THHN, NM-B · Table 310.16'}</small>
         </button>
       </div>
 
       {std === 'nec' ? <WireSizeUS isKo={isKo} locale={locale} /> : (<>
       {/* ── 부하 ── */}
-      <section className={s.card}>
-        <div className={s.step_label}>STEP 1</div>
-        <h2 className={s.card_title}>{isKo ? '전원과 부하' : 'Supply and load'}</h2>
-        <button type="button" className={s.example_btn} onClick={fillExample}>
+      <section className={`${ui.card} ${s.card}`}>
+        <div className={`${ui.badge} ${s.step_label}`}>STEP 1</div>
+        <h2 className={ui.cardTitle}>{isKo ? '전원과 부하' : 'Supply and load'}</h2>
+        <button type="button" className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.example_btn}`} onClick={fillExample}>
           {isKo ? '예시 채우기: 분전반 → 에어컨 25A, 15m, 같은 관 3회로' : 'Example: panel → A/C 25 A, 15 m, 3 circuits in one conduit'}
         </button>
-        <div>
-          <label className={s.field_label} htmlFor="ws-system">{isKo ? '전기 방식' : 'System'}</label>
-          <select id="ws-system" className={s.select} value={system} onChange={e => setSystem(e.target.value as SystemType)}>
+        <div className={ui.field}>
+          <label className={ui.label} htmlFor="ws-system">{isKo ? '전기 방식' : 'System'}</label>
+          <select id="ws-system" className={ui.input} value={system} onChange={e => setSystem(e.target.value as SystemType)}>
             {(Object.keys(SYSTEMS) as SystemType[]).map(k => <option key={k} value={k}>{systemName(k)}</option>)}
           </select>
         </div>
-        <div className={s.chips} role="group" aria-label={isKo ? '부하 입력 방식' : 'Load input'}>
-          <button type="button" className={`${s.chip} ${inputMode === 'ampere' ? s.chip_active : ''}`} aria-pressed={inputMode === 'ampere'} onClick={() => setInputMode('ampere')}>
+        <div className={`${ui.chips} ${ui.grow}`} role="group" aria-label={isKo ? '부하 입력 방식' : 'Load input'}>
+          <button type="button" className={`${ui.chip} ${inputMode === 'ampere' ? ui.chipActive : ''}`} aria-pressed={inputMode === 'ampere'} onClick={() => setInputMode('ampere')}>
             {isKo ? '전류(A)로 입력' : 'Current (A)'}
           </button>
-          <button type="button" className={`${s.chip} ${inputMode === 'kw' ? s.chip_active : ''}`} aria-pressed={inputMode === 'kw'} onClick={() => setInputMode('kw')}>
+          <button type="button" className={`${ui.chip} ${inputMode === 'kw' ? ui.chipActive : ''}`} aria-pressed={inputMode === 'kw'} onClick={() => setInputMode('kw')}>
             {isKo ? '용량(kW)으로 입력' : 'Power (kW)'}
           </button>
         </div>
         <div className={s.grid2}>
           {inputMode === 'ampere' ? (
-            <div>
-              <label className={s.field_label} htmlFor="ws-amp">{isKo ? '부하전류 IB (A)' : 'Load current IB (A)'}</label>
-              <input id="ws-amp" className={s.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 25' : 'e.g. 25'}
+            <div className={ui.field}>
+              <label className={ui.label} htmlFor="ws-amp">{isKo ? '부하전류 IB (A)' : 'Load current IB (A)'}</label>
+              <input id="ws-amp" className={ui.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 25' : 'e.g. 25'}
                 value={ampText} onChange={e => setAmpText(e.target.value)} />
             </div>
           ) : (
             <>
-              <div>
-                <label className={s.field_label} htmlFor="ws-kw">{isKo ? '부하 용량 (kW)' : 'Load (kW)'}</label>
-                <input id="ws-kw" className={s.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 5' : 'e.g. 5'}
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="ws-kw">{isKo ? '부하 용량 (kW)' : 'Load (kW)'}</label>
+                <input id="ws-kw" className={ui.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 5' : 'e.g. 5'}
                   value={kwText} onChange={e => setKwText(e.target.value)} />
-                {loadA > 0 && <p className={s.field_hint}>{isKo ? `환산 전류 ${loadA.toFixed(1)}A` : `= ${loadA.toFixed(1)} A`}</p>}
+                {loadA > 0 && <p className={ui.hint}>{isKo ? `환산 전류 ${loadA.toFixed(1)}A` : `= ${loadA.toFixed(1)} A`}</p>}
               </div>
-              <div>
-                <label className={s.field_label} htmlFor="ws-pf">{isKo ? '역률' : 'Power factor'}</label>
-                <select id="ws-pf" className={s.select} value={pf} onChange={e => setPf(Number(e.target.value))}>
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="ws-pf">{isKo ? '역률' : 'Power factor'}</label>
+                <select id="ws-pf" className={ui.input} value={pf} onChange={e => setPf(Number(e.target.value))}>
                   {[1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7].map(v => <option key={v} value={v}>{v.toFixed(2)}</option>)}
                 </select>
               </div>
             </>
           )}
-          <div>
-            <label className={s.field_label} htmlFor="ws-len">{isKo ? '배선 길이 (편도, m)' : 'Cable length (one-way, m)'}</label>
-            <input id="ws-len" className={s.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 35' : 'e.g. 35'}
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="ws-len">{isKo ? '배선 길이 (편도, m)' : 'Cable length (one-way, m)'}</label>
+            <input id="ws-len" className={ui.input} type="number" inputMode="decimal" min="0" placeholder={isKo ? '예: 35' : 'e.g. 35'}
               value={lengthText} onChange={e => setLengthText(e.target.value)} />
           </div>
         </div>
       </section>
 
       {/* ── 전선과 공사방법 ── */}
-      <section className={s.card}>
-        <div className={s.step_label}>STEP 2</div>
-        <h2 className={s.card_title}>{isKo ? '전선 종류와 공사방법' : 'Wire type and installation'}</h2>
-        <div className={s.chips} role="radiogroup" aria-label={isKo ? '전선 종류' : 'Wire type'}>
+      <section className={`${ui.card} ${s.card}`}>
+        <div className={`${ui.badge} ${s.step_label}`}>STEP 2</div>
+        <h2 className={ui.cardTitle}>{isKo ? '전선 종류와 공사방법' : 'Wire type and installation'}</h2>
+        <div className={`${ui.chips} ${ui.grow}`} role="radiogroup" aria-label={isKo ? '전선 종류' : 'Wire type'}>
           {(Object.keys(WIRES) as WireKind[]).map(w => (
             <button key={w} type="button" role="radio" aria-checked={wire === w}
-              className={`${s.chip} ${wire === w ? s.chip_active : ''}`} onClick={() => chooseWire(w)}>
+              className={`${ui.chip} ${wire === w ? ui.chipActive : ''}`} onClick={() => chooseWire(w)}>
               {wireName(w)}
             </button>
           ))}
@@ -247,7 +248,7 @@ export default function WireSizeCalcClient() {
             const allowed = wireSpec.methods.includes(m);
             return (
               <button key={m} type="button" role="radio" aria-checked={method === m} disabled={!allowed}
-                className={`${s.method_card} ${method === m ? s.method_active : ''}`} onClick={() => setMethod(m)}>
+                className={`${ui.chip} ${s.method_card} ${method === m ? ui.chipActive : ''}`} onClick={() => setMethod(m)}>
                 <MethodIcon m={m} />
                 <span className={s.method_code}>{isKo ? `공사방법 ${m}` : `Method ${m}`}</span>
                 <span className={s.method_name}>{methodName(m)}</span>
@@ -256,51 +257,51 @@ export default function WireSizeCalcClient() {
           })}
         </div>
         {wire === 'hfix' && (
-          <p className={s.field_hint}>{isKo ? '절연전선(HFIX)은 전선관이나 몰드 안에만 시설할 수 있어 A1·B1만 선택됩니다.' : 'Insulated wires (HFIX) must run in conduit, so only A1 and B1 apply.'}</p>
+          <p className={ui.hint}>{isKo ? '절연전선(HFIX)은 전선관이나 몰드 안에만 시설할 수 있어 A1·B1만 선택됩니다.' : 'Insulated wires (HFIX) must run in conduit, so only A1 and B1 apply.'}</p>
         )}
         <div className={s.grid2}>
-          <div>
-            <label className={s.field_label} htmlFor="ws-amb">{isKo ? '주위온도 (°C)' : 'Ambient temperature (°C)'}</label>
-            <select id="ws-amb" className={s.select} value={ambient} onChange={e => setAmbient(Number(e.target.value))}>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="ws-amb">{isKo ? '주위온도 (°C)' : 'Ambient temperature (°C)'}</label>
+            <select id="ws-amb" className={ui.input} value={ambient} onChange={e => setAmbient(Number(e.target.value))}>
               {AMBIENT_TEMPS.map(t => <option key={t} value={t}>{t}°C{t === 30 ? (isKo ? ' (기준)' : ' (reference)') : ''}</option>)}
             </select>
-            <p className={s.field_hint}>{isKo ? '천장 속·기계실은 35~40°C로 보는 것이 안전합니다.' : 'Use 35–40 °C for ceiling voids and plant rooms.'}</p>
+            <p className={ui.hint}>{isKo ? '천장 속·기계실은 35~40°C로 보는 것이 안전합니다.' : 'Use 35–40 °C for ceiling voids and plant rooms.'}</p>
           </div>
-          <div>
-            <label className={s.field_label} htmlFor="ws-cir">{isKo ? '같은 관·트레이의 회로 수' : 'Circuits sharing the route'}</label>
-            <input id="ws-cir" className={s.input} type="number" inputMode="numeric" min="1" step="1"
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="ws-cir">{isKo ? '같은 관·트레이의 회로 수' : 'Circuits sharing the route'}</label>
+            <input id="ws-cir" className={ui.input} type="number" inputMode="numeric" min="1" step="1"
               value={circuitsText} onChange={e => setCircuitsText(e.target.value)} />
-            <p className={s.field_hint}>{isKo ? '이 회로를 포함한 수. 회로가 많을수록 허용전류가 줄어듭니다.' : 'Including this one. More circuits reduce ampacity.'}</p>
+            <p className={ui.hint}>{isKo ? '이 회로를 포함한 수. 회로가 많을수록 허용전류가 줄어듭니다.' : 'Including this one. More circuits reduce ampacity.'}</p>
           </div>
         </div>
       </section>
 
       {/* ── 전압강하 한도 ── */}
-      <section className={s.card}>
-        <div className={s.step_label}>STEP 3</div>
-        <h2 className={s.card_title}>{isKo ? '전압강하 한도 (KEC 232.3.9)' : 'Voltage drop limit (KEC 232.3.9)'}</h2>
+      <section className={`${ui.card} ${s.card}`}>
+        <div className={`${ui.badge} ${s.step_label}`}>STEP 3</div>
+        <h2 className={ui.cardTitle}>{isKo ? '전압강하 한도 (KEC 232.3.9)' : 'Voltage drop limit (KEC 232.3.9)'}</h2>
         <div className={s.grid2}>
-          <div>
-            <span className={s.field_label}>{isKo ? '수전 방식' : 'Supply'}</span>
-            <div className={s.chips}>
-              <button type="button" className={`${s.chip} ${supply === 'lv' ? s.chip_active : ''}`} aria-pressed={supply === 'lv'} onClick={() => setSupply('lv')}>{isKo ? '저압 수전' : 'LV supply'}</button>
-              <button type="button" className={`${s.chip} ${supply === 'hv' ? s.chip_active : ''}`} aria-pressed={supply === 'hv'} onClick={() => setSupply('hv')}>{isKo ? '고압 이상 수전' : 'HV supply'}</button>
+          <div className={ui.field}>
+            <span className={ui.label}>{isKo ? '수전 방식' : 'Supply'}</span>
+            <div className={`${ui.chips} ${ui.grow}`}>
+              <button type="button" className={`${ui.chip} ${supply === 'lv' ? ui.chipActive : ''}`} aria-pressed={supply === 'lv'} onClick={() => setSupply('lv')}>{isKo ? '저압 수전' : 'LV supply'}</button>
+              <button type="button" className={`${ui.chip} ${supply === 'hv' ? ui.chipActive : ''}`} aria-pressed={supply === 'hv'} onClick={() => setSupply('hv')}>{isKo ? '고압 이상 수전' : 'HV supply'}</button>
             </div>
           </div>
-          <div>
-            <span className={s.field_label}>{isKo ? '용도' : 'Use'}</span>
-            <div className={s.chips}>
-              <button type="button" className={`${s.chip} ${usage === 'lighting' ? s.chip_active : ''}`} aria-pressed={usage === 'lighting'} onClick={() => setUsage('lighting')}>{isKo ? '조명' : 'Lighting'}</button>
-              <button type="button" className={`${s.chip} ${usage === 'other' ? s.chip_active : ''}`} aria-pressed={usage === 'other'} onClick={() => setUsage('other')}>{isKo ? '기타(동력·콘센트)' : 'Other'}</button>
+          <div className={ui.field}>
+            <span className={ui.label}>{isKo ? '용도' : 'Use'}</span>
+            <div className={`${ui.chips} ${ui.grow}`}>
+              <button type="button" className={`${ui.chip} ${usage === 'lighting' ? ui.chipActive : ''}`} aria-pressed={usage === 'lighting'} onClick={() => setUsage('lighting')}>{isKo ? '조명' : 'Lighting'}</button>
+              <button type="button" className={`${ui.chip} ${usage === 'other' ? ui.chipActive : ''}`} aria-pressed={usage === 'other'} onClick={() => setUsage('other')}>{isKo ? '기타(동력·콘센트)' : 'Other'}</button>
             </div>
           </div>
         </div>
         <div className={s.grid2}>
-          <div>
-            <label className={s.field_label} htmlFor="ws-drop">{isKo ? '이 회로에 적용할 한도 (%)' : 'Limit for this circuit (%)'}</label>
-            <input id="ws-drop" className={s.input} type="number" inputMode="decimal" min="0.5" step="0.1"
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="ws-drop">{isKo ? '이 회로에 적용할 한도 (%)' : 'Limit for this circuit (%)'}</label>
+            <input id="ws-drop" className={ui.input} type="number" inputMode="decimal" min="0.5" step="0.1"
               placeholder={autoLimit.toFixed(2)} value={dropOverride} onChange={e => setDropOverride(e.target.value)} />
-            <p className={s.field_hint}>
+            <p className={ui.hint}>
               {isKo
                 ? `KEC 한도 ${autoLimit.toFixed(2)}%(인입구~기기 전체). 간선과 나눠 쓴다면 이 회로 몫만 입력하세요.`
                 : `KEC limit ${autoLimit.toFixed(2)}% (origin to equipment). Enter this circuit's share if the feeder uses part of it.`}
@@ -311,18 +312,18 @@ export default function WireSizeCalcClient() {
 
       {/* ── 결과 ── */}
       {result && (
-        <section className={s.card} aria-live="polite">
-          <div className={s.step_label}>{isKo ? '결과' : 'RESULT'}</div>
+        <section className={`${ui.card} ${s.card}`} aria-live="polite">
+          <div className={`${ui.badge} ${s.step_label}`}>{isKo ? '결과' : 'RESULT'}</div>
           {result.recommended === null ? (
-            <div className={s.warn_box}>
+            <div className={`${ui.notice} ${ui.amber}`}>
               {isKo
                 ? '300㎟로도 조건을 만족하지 못합니다. 병렬 포설, 전압 상향, 배선 경로 단축 등 설계 검토가 필요합니다.'
                 : 'Even 300 mm² does not satisfy the conditions. Consider parallel conductors, a higher voltage or a shorter route.'}
             </div>
           ) : (
             <>
-              <div className={s.hero}>
-                <span className={s.hero_num}>{result.recommended}</span>
+              <div className={`${ui.result} ${s.hero}`}>
+                <span className={ui.resultValue}>{result.recommended}</span>
                 <span className={s.hero_unit}>mm² (SQ)</span>
               </div>
               <p className={s.hero_sub}>
@@ -331,7 +332,7 @@ export default function WireSizeCalcClient() {
                 {result.governing === 'min' && (isKo ? `저압 옥내배선 최소 굵기 ${MIN_INDOOR_SIZE}㎟ (KEC 231.3.1)` : `Minimum indoor wiring size ${MIN_INDOOR_SIZE} mm² (KEC 231.3.1)`)}
               </p>
 
-              <h3 className={s.card_title} style={{ fontSize: '1rem' }}>{isKo ? '과부하 보호 협조 (KEC 212.4)' : 'Overload coordination (KEC 212.4)'}</h3>
+              <h3 className={ui.cardTitle} style={{ fontSize: '1rem', margin: 0 }}>{isKo ? '과부하 보호 협조 (KEC 212.4)' : 'Overload coordination (KEC 212.4)'}</h3>
               <div className={s.chain}>
                 <div className={s.chain_box}>
                   <div className={s.chain_val}>{loadA.toFixed(1)}A</div>
@@ -348,13 +349,13 @@ export default function WireSizeCalcClient() {
                   <div className={s.chain_lbl}>{isKo ? `IZ 전선 허용전류 (${result.recommended}㎟, 보정 후)` : `IZ ampacity (${result.recommended} mm², corrected)`}</div>
                 </div>
               </div>
-              <div className={`${s.verdict} ${izOk ? s.verdict_pass : s.verdict_fail}`}>
+              <div className={`${ui.notice} ${izOk ? ui.green : ui.red} ${s.verdict}`}>
                 {izOk
                   ? (isKo ? `차단기 ${result.breakerA}A가 전선을 보호합니다.` : `The ${result.breakerA} A breaker protects this cable.`)
                   : (isKo ? '차단기 정격이 전선 허용전류보다 큽니다. 굵기를 올리세요.' : 'Breaker exceeds cable ampacity. Increase the size.')}
               </div>
 
-              <h3 className={s.card_title} style={{ fontSize: '1rem' }}>{isKo ? '기준별 필요 굵기' : 'Size needed by each check'}</h3>
+              <h3 className={ui.cardTitle} style={{ fontSize: '1rem', margin: 0 }}>{isKo ? '기준별 필요 굵기' : 'Size needed by each check'}</h3>
               <div className={s.bars}>
                 {([
                   ['ampacity', isKo ? '허용전류' : 'Ampacity', result.sizeByAmpacity, s.bar_amp],
@@ -384,7 +385,7 @@ export default function WireSizeCalcClient() {
               : `Basis: ampacity from IEC 60364-5-52 Annex B tables B.52.2–B.52.5, B.52.10, B.52.12 (copper, 30 °C air), correction tables B.52.14 and B.52.17 (${method === 'E' ? 'single layer on tray' : 'bunched'}), coordination KEC 212.4.1, drop limit KEC 232.3.9, drop e = K·L·I/(1000·A) simplified (pf 1). Verify with the cable maker's data for final design.`}
           </p>
 
-          <button type="button" className={s.copy_btn} onClick={handleCopy}><Copy size={16} /> {isKo ? '결과 복사' : 'Copy result'}</button>
+          <button type="button" className={`${ui.button} ${ui.secondary} ${s.copy_btn}`} onClick={handleCopy}><Copy size={16} /> {isKo ? '결과 복사' : 'Copy result'}</button>
           {copyMsg && <p className={`${s.copy_msg} ${copyMsg.startsWith('✓') ? '' : s.copy_fail}`} role="status">{copyMsg}</p>}
         </section>
       )}

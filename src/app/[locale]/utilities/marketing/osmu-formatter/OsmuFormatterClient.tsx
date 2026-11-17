@@ -22,6 +22,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './osmu.module.css';
+import { ui } from '@/app/components/ui';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -203,18 +204,18 @@ export default function OsmuFormatterClient() {
       <div className={s.osmu_split_layout}>
 
         {/* Left: Editor */}
-        <section className={`${s.osmu_panel} glass-panel`}>
+        <section className={`${ui.card} ${s.osmu_panel}`}>
           <div className={s.osmu_panel_header}>
-            <h2 className={s.osmu_panel_title}>
-              <FileText size={20} color="var(--primary)" />
+            <h2 className={`${ui.cardTitle} ${s.osmu_panel_title}`}>
+              <FileText size={20} />
               {isKo ? '원문 입력' : 'Original Text'}
             </h2>
-            <button onClick={clear} className={s.osmu_secondary_button}>
+            <button onClick={clear} className={`${ui.button} ${ui.secondary} ${ui.sm}`}>
               <Trash2 size={16} /> {isKo ? '초기화' : 'Clear'}
             </button>
           </div>
           <textarea
-            className={s.osmu_textarea}
+            className={`${ui.input} ${s.osmu_textarea}`}
             value={originalText}
             onChange={(e) => setOriginalText(e.target.value)}
             placeholder={isKo
@@ -228,8 +229,8 @@ export default function OsmuFormatterClient() {
         </section>
 
         {/* Right: Preview & Format */}
-        <section className={`${s.osmu_panel} glass-panel`}>
-          <div className={s.osmu_tabs}>
+        <section className={`${ui.card} ${s.osmu_panel}`}>
+          <div className={`${ui.segmented} ${s.osmu_tabs}`}>
             {[
               { id: 'instagram', icon: <Instagram size={16} />, label: isKo ? '인스타그램' : 'Instagram' },
               { id: 'x',         icon: <Twitter size={16} />,   label: isKo ? 'X (Twitter)' : 'X' },
@@ -239,7 +240,7 @@ export default function OsmuFormatterClient() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as TabType)}
-                className={`${s.osmu_tab_button} ${activeTab === tab.id ? s.osmu_tab_button_active : ''}`}
+                className={`${ui.segment} ${s.osmu_tab_button} ${activeTab === tab.id ? ui.segmentActive : ''}`}
               >
                 {tab.icon} {tab.label}
               </button>
@@ -261,7 +262,7 @@ export default function OsmuFormatterClient() {
                 </div>
                 <div className={s.osmu_result_card}>
                   <div className={s.osmu_card_label}>{isKo ? '#️⃣ 추천 해시태그' : '#️⃣ Suggested Hashtags'}</div>
-                  <div className={s.osmu_card_content} style={{ color: 'var(--primary)', fontWeight: 600 }}>{result.instagramHashtags || '#...'}</div>
+                  <div className={s.osmu_card_content} style={{ color: 'var(--color-primary)', fontWeight: 600 }}>{result.instagramHashtags || '#...'}</div>
                   <button onClick={() => copy(result.instagramHashtags)} className={s.osmu_copy_button}><Copy size={16}/></button>
                 </div>
               </>
@@ -330,7 +331,7 @@ export default function OsmuFormatterClient() {
           </div>
 
           <div className={s.osmu_action_row}>
-            <button onClick={() => copy(originalText)} className={s.osmu_primary_button}>
+            <button onClick={() => copy(originalText)} className={`${ui.button} ${ui.primary} ${ui.block}`}>
               <Copy size={20} /> {isKo ? '전체 복사' : 'Copy All'}
             </button>
           </div>

@@ -9,6 +9,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
 import s from './gif-master.module.css';
+import { ui } from '@/app/components/ui';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type MainTab = 'compress' | 'create';
@@ -80,8 +81,8 @@ export default function GifMasterClient() {
     return (
       <div className={s.container}>
         <NavigationActions />
-        <div className={s.card} style={{ textAlign: 'center', padding: '3rem' }}>
-          <p style={{ fontSize: '1rem', color: '#dc2626', fontWeight: 700, marginBottom: '0.5rem' }}>
+        <div className={ui.card} style={{ textAlign: 'center', padding: '3rem' }}>
+          <p style={{ fontSize: '1rem', color: 'var(--tint-red-fg)', fontWeight: 700, marginBottom: '0.5rem' }}>
             {isKo ? '라이브러리 로드에 실패했습니다.' : 'Failed to load required libraries.'}
           </p>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
@@ -106,14 +107,14 @@ export default function GifMasterClient() {
       />
 
       {/* Main Tabs */}
-      <div className={s.main_tabs} role="tablist">
+      <div className={ui.segmented} role="tablist">
         {([['compress', isKo ? '🗜️ GIF 압축' : '🗜️ GIF Compress'], ['create', isKo ? '✨ GIF 생성' : '✨ GIF Create']] as const).map(([t, label]) => (
           <button
             key={t}
             role="tab"
             aria-selected={mainTab === t}
             onClick={() => setMainTab(t)}
-            className={`${s.main_tab} ${mainTab === t ? s.main_tab_active : ''}`}
+            className={`${ui.segment} ${mainTab === t ? ui.segmentActive : ''}`}
           >
             {label}
           </button>
@@ -308,8 +309,8 @@ function CompressTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean })
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Upload */}
-      <div className={s.card}>
-        <p className={s.card_title}>{isKo ? '1. GIF 파일 업로드' : '1. Upload GIF'}</p>
+      <div className={ui.card}>
+        <p className={ui.cardTitle}>{isKo ? '1. GIF 파일 업로드' : '1. Upload GIF'}</p>
         {!file ? (
           <div
             className={`${s.upload_zone} ${isDrag ? s.upload_zone_drag : ''}`}
@@ -336,29 +337,29 @@ function CompressTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean })
         )}
         <input ref={inputRef} type="file" accept=".gif" style={{ display: 'none' }}
           onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
-        {error && <p className={s.error_msg} style={{ marginTop: '0.75rem' }}>{error}</p>}
+        {error && <p className={`${ui.notice} ${ui.red}`} style={{ marginTop: '0.75rem' }}>{error}</p>}
       </div>
 
       {/* Settings */}
       {file && !resultUrl && (
-        <div className={s.card}>
-          <p className={s.card_title}>{isKo ? '2. 압축 설정' : '2. Compression Settings'}</p>
+        <div className={ui.card}>
+          <p className={ui.cardTitle}>{isKo ? '2. 압축 설정' : '2. Compression Settings'}</p>
           <div className={s.settings_grid} style={{ marginBottom: '1rem' }}>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? `품질: ${quality}` : `Quality: ${quality}`}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? `품질: ${quality}` : `Quality: ${quality}`}</label>
               <div className={s.slider_row}>
                 <input type="range" min={1} max={100} value={quality} className={s.slider}
                   onChange={e => setQuality(Number(e.target.value))} aria-label="quality" />
                 <span className={s.slider_val}>{quality}</span>
               </div>
-              <span className={s.hint}>{quality <= 30 ? (isKo ? '최대 압축' : 'Max compress') : quality <= 70 ? (isKo ? '균형 (권장)' : 'Balanced (rec.)') : (isKo ? '고품질' : 'High quality')}</span>
+              <span className={ui.hint}>{quality <= 30 ? (isKo ? '최대 압축' : 'Max compress') : quality <= 70 ? (isKo ? '균형 (권장)' : 'Balanced (rec.)') : (isKo ? '고품질' : 'High quality')}</span>
             </div>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? '배속 조절' : 'Playback Speed'}</label>
-              <div className={s.radio_group}>
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? '배속 조절' : 'Playback Speed'}</label>
+              <div className={ui.chips}>
                 {([0.5, 1, 2] as SpeedOption[]).map(v => (
                   <button key={v} onClick={() => setSpeed(v)}
-                    className={`${s.radio_btn} ${speed === v ? s.radio_btn_active : ''}`}
+                    className={`${ui.chip} ${ui.pill} ${speed === v ? ui.chipActive : ''}`}
                     aria-label={`${v}x speed`}>
                     {v}×
                   </button>
@@ -366,14 +367,14 @@ function CompressTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean })
               </div>
             </div>
           </div>
-          <div className={s.field} style={{ marginBottom: '1.25rem' }}>
-            <label className={s.label}>{isKo ? '프레임 레이트' : 'Frame Rate'}</label>
-            <div className={s.radio_group}>
-              <button onClick={() => setHalfFps(false)} className={`${s.radio_btn} ${!halfFps ? s.radio_btn_active : ''}`}
+          <div className={ui.field} style={{ marginBottom: '1.25rem' }}>
+            <label className={ui.label}>{isKo ? '프레임 레이트' : 'Frame Rate'}</label>
+            <div className={ui.chips}>
+              <button onClick={() => setHalfFps(false)} className={`${ui.chip} ${ui.pill} ${!halfFps ? ui.chipActive : ''}`}
                 aria-label="original fps">
                 {isKo ? '원본 유지' : 'Original'}
               </button>
-              <button onClick={() => setHalfFps(true)} className={`${s.radio_btn} ${halfFps ? s.radio_btn_active : ''}`}
+              <button onClick={() => setHalfFps(true)} className={`${ui.chip} ${ui.pill} ${halfFps ? ui.chipActive : ''}`}
                 aria-label="half fps">
                 {isKo ? '절반으로 줄이기' : 'Half FPS'}
               </button>
@@ -386,7 +387,7 @@ function CompressTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean })
               <div className={s.progress_bar_bg}><div className={s.progress_bar_fill} style={{ width: `${progress}%` }} /></div>
             </div>
           ) : (
-            <button className={s.btn_primary} onClick={handleCompress} disabled={!libLoaded}
+            <button className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`} onClick={handleCompress} disabled={!libLoaded}
               aria-label={isKo ? '압축 시작' : 'Start compression'}>
               🗜️ {isKo ? '압축 시작' : 'Start Compression'}
             </button>
@@ -396,8 +397,8 @@ function CompressTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean })
 
       {/* Result */}
       {resultUrl && file && (
-        <div className={s.card}>
-          <p className={s.card_title}>{isKo ? '3. 압축 결과' : '3. Result'}</p>
+        <div className={ui.card}>
+          <p className={ui.cardTitle}>{isKo ? '3. 압축 결과' : '3. Result'}</p>
           <div className={s.compare_grid}>
             <div className={s.compare_item}>
               <span className={s.compare_label}>{isKo ? '원본' : 'Original'}</span>
@@ -416,11 +417,11 @@ function CompressTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean })
             {saved}% {isKo ? '감소' : 'reduced'} · {Math.abs(Number(origKB) - Number(resKB)).toFixed(1)}KB {isKo ? '절약' : 'saved'}
           </div>
           <div className={s.btn_row}>
-            <button className={s.btn_primary} style={{ flex: 1 }} onClick={download}
+            <button className={`${ui.button} ${ui.primary}`} style={{ flex: 1 }} onClick={download}
               aria-label={isKo ? '다운로드' : 'Download'}>
               <Download size={16} /> {isKo ? '압축 파일 다운로드' : 'Download Compressed GIF'}
             </button>
-            <button className={s.btn_secondary} onClick={reset} aria-label={isKo ? '다시 하기' : 'Reset'}>
+            <button className={`${ui.button} ${ui.secondary}`} onClick={reset} aria-label={isKo ? '다시 하기' : 'Reset'}>
               <RefreshCw size={14} /> {isKo ? '다시 하기' : 'Reset'}
             </button>
           </div>
@@ -445,10 +446,10 @@ function CreateTab({ isKo, libLoaded, sub, setSub }: {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div className={s.sub_tabs} role="tablist">
+      <div className={ui.segmented} role="tablist">
         {subs.map(({ key, label }) => (
           <button key={key} role="tab" aria-selected={sub === key}
-            className={`${s.sub_tab} ${sub === key ? s.sub_tab_active : ''}`}
+            className={`${ui.segment} ${sub === key ? ui.segmentActive : ''}`}
             onClick={() => setSub(key)}>
             {label}
           </button>
@@ -569,17 +570,17 @@ function ImagesTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div className={s.card}>
-        <p className={s.card_title}>{isKo ? '이미지 업로드 (최대 20장)' : 'Upload Images (max 20)'}</p>
+      <div className={ui.card}>
+        <p className={ui.cardTitle}>{isKo ? '이미지 업로드 (최대 20장)' : 'Upload Images (max 20)'}</p>
         <div className={s.upload_zone} onClick={() => inputRef.current?.click()}
           role="button" aria-label={isKo ? '이미지 업로드' : 'Upload images'}>
-          <Upload size={28} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
+          <Upload size={28} style={{ marginBottom: '0.5rem', color: 'var(--text-muted)' }} />
           <p className={s.upload_text}>{isKo ? '클릭하여 이미지 추가' : 'Click to add images'}</p>
           <p className={s.upload_hint}>PNG / JPG / GIF / WebP · {isKo ? '장당 최대 10MB' : 'Max 10MB each'}</p>
         </div>
         <input ref={inputRef} type="file" accept=".png,.jpg,.jpeg,.gif,.webp" multiple style={{ display: 'none' }}
           onChange={e => e.target.files && addFiles(e.target.files)} />
-        {error && <p className={s.error_msg} style={{ marginTop: '0.5rem' }}>{error}</p>}
+        {error && <p className={`${ui.notice} ${ui.red}`} style={{ marginTop: '0.5rem' }}>{error}</p>}
 
         {frames.length > 0 && (
           <div className={s.frames_grid}>
@@ -603,29 +604,29 @@ function ImagesTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
       </div>
 
       {frames.length >= 2 && (
-        <div className={s.card}>
-          <p className={s.card_title}>{isKo ? '설정' : 'Settings'}</p>
+        <div className={ui.card}>
+          <p className={ui.cardTitle}>{isKo ? '설정' : 'Settings'}</p>
           <div className={s.settings_grid}>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? `프레임 간격: ${delay}ms (${(delay/1000).toFixed(1)}초)` : `Frame Delay: ${delay}ms`}</label>
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? `프레임 간격: ${delay}ms (${(delay/1000).toFixed(1)}초)` : `Frame Delay: ${delay}ms`}</label>
               <div className={s.slider_row}>
                 <input type="range" min={100} max={2000} step={100} value={delay} className={s.slider}
                   onChange={e => setDelay(Number(e.target.value))} aria-label="frame delay" />
                 <span className={s.slider_val}>{delay}</span>
               </div>
             </div>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? '반복 설정' : 'Loop'}</label>
-              <select className={s.select} value={loops} onChange={e => setLoops(Number(e.target.value))} aria-label="loop count">
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? '반복 설정' : 'Loop'}</label>
+              <select className={ui.input} value={loops} onChange={e => setLoops(Number(e.target.value))} aria-label="loop count">
                 <option value={0}>{isKo ? '무한 반복' : 'Infinite'}</option>
                 <option value={1}>{isKo ? '1회' : '1 time'}</option>
                 <option value={3}>{isKo ? '3회' : '3 times'}</option>
                 <option value={5}>{isKo ? '5회' : '5 times'}</option>
               </select>
             </div>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? '출력 크기' : 'Output Size'}</label>
-              <select className={s.select} value={outWidth} onChange={e => setOutWidth(Number(e.target.value))} aria-label="output size">
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? '출력 크기' : 'Output Size'}</label>
+              <select className={ui.input} value={outWidth} onChange={e => setOutWidth(Number(e.target.value))} aria-label="output size">
                 <option value={0}>{isKo ? '원본 크기 유지' : 'Original size'}</option>
                 <option value={480}>480px</option>
                 <option value={320}>320px</option>
@@ -643,15 +644,15 @@ function ImagesTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={resultUrl} alt="result" className={s.preview_img} style={{ display: 'block', margin: '0 auto 1rem' }} />
               <div className={s.btn_row}>
-                <button className={s.btn_primary} style={{ flex: 1 }} onClick={download}
+                <button className={`${ui.button} ${ui.primary}`} style={{ flex: 1 }} onClick={download}
                   aria-label={isKo ? '다운로드' : 'Download'}>
                   <Download size={16} /> {isKo ? 'GIF 다운로드' : 'Download GIF'}
                 </button>
-                <button className={s.btn_secondary} onClick={reset} aria-label="reset"><RefreshCw size={14} /></button>
+                <button className={`${ui.button} ${ui.secondary}`} onClick={reset} aria-label="reset"><RefreshCw size={14} /></button>
               </div>
             </div>
           ) : (
-            <button className={s.btn_primary} style={{ marginTop: '1rem' }} onClick={handleGenerate}
+            <button className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`} style={{ marginTop: '1rem' }} onClick={handleGenerate}
               disabled={!libLoaded} aria-label={isKo ? 'GIF 생성' : 'Generate GIF'}>
               ✨ {isKo ? 'GIF 생성' : 'Generate GIF'}
             </button>
@@ -780,44 +781,44 @@ function TextTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div className={s.card}>
-        <p className={s.card_title}>{isKo ? '텍스트 입력' : 'Enter Text'}</p>
-        <textarea className={s.textarea} maxLength={50} value={text}
+      <div className={ui.card}>
+        <p className={ui.cardTitle}>{isKo ? '텍스트 입력' : 'Enter Text'}</p>
+        <textarea className={ui.input} maxLength={50} value={text}
           onChange={e => { setText(e.target.value); setResultUrl(''); }}
           placeholder={isKo ? '텍스트를 입력하세요 (최대 50자)' : 'Enter text (max 50 chars)'} />
         <p className={s.char_count}>{text.length} / 50</p>
       </div>
 
-      <div className={s.card}>
-        <p className={s.card_title}>{isKo ? '스타일 & 애니메이션' : 'Style & Animation'}</p>
+      <div className={ui.card}>
+        <p className={ui.cardTitle}>{isKo ? '스타일 & 애니메이션' : 'Style & Animation'}</p>
         <div className={s.settings_grid} style={{ marginBottom: '1rem' }}>
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? `폰트 크기: ${fontSize}px` : `Font Size: ${fontSize}px`}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? `폰트 크기: ${fontSize}px` : `Font Size: ${fontSize}px`}</label>
             <div className={s.slider_row}>
               <input type="range" min={16} max={72} value={fontSize} className={s.slider}
                 onChange={e => setFontSize(Number(e.target.value))} aria-label="font size" />
               <span className={s.slider_val}>{fontSize}</span>
             </div>
           </div>
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? '캔버스 크기' : 'Canvas Size'}</label>
-            <select className={s.select} value={canvasSize}
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '캔버스 크기' : 'Canvas Size'}</label>
+            <select className={ui.input} value={canvasSize}
               onChange={e => setCanvasSize(e.target.value as typeof canvasSize)} aria-label="canvas size">
               <option value="320x180">320 × 180</option>
               <option value="480x270">480 × 270</option>
               <option value="640x360">640 × 360</option>
             </select>
           </div>
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? '텍스트 색상' : 'Text Color'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '텍스트 색상' : 'Text Color'}</label>
             <div className={s.color_row}>
               <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)}
                 className={s.color_input} aria-label="text color" />
               <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{textColor}</span>
             </div>
           </div>
-          <div className={s.field}>
-            <label className={s.label}>{isKo ? '배경 색상' : 'Background Color'}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{isKo ? '배경 색상' : 'Background Color'}</label>
             <div className={s.color_row}>
               <input type="color" value={bgColor} onChange={e => setBgColor(e.target.value)}
                 className={s.color_input} aria-label="background color" />
@@ -826,12 +827,12 @@ function TextTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
           </div>
         </div>
 
-        <div className={s.field} style={{ marginBottom: '1rem' }}>
-          <label className={s.label}>{isKo ? '애니메이션 효과' : 'Animation Effect'}</label>
+        <div className={ui.field} style={{ marginBottom: '1rem' }}>
+          <label className={ui.label}>{isKo ? '애니메이션 효과' : 'Animation Effect'}</label>
           <div className={s.effect_grid}>
             {effects.map(({ key, label }) => (
               <button key={key} onClick={() => { setEffect(key); setResultUrl(''); }}
-                className={`${s.effect_btn} ${effect === key ? s.effect_btn_active : ''}`}
+                className={`${ui.chip} ${effect === key ? ui.chipActive : ''}`}
                 aria-label={label}>
                 {label}
               </button>
@@ -839,11 +840,11 @@ function TextTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
           </div>
         </div>
 
-        <p className={s.label} style={{ marginBottom: '0.5rem' }}>{isKo ? '실시간 미리보기' : 'Live Preview'}</p>
+        <p className={ui.label} style={{ marginBottom: '0.5rem' }}>{isKo ? '실시간 미리보기' : 'Live Preview'}</p>
         <canvas ref={previewRef} width={cw} height={ch} className={s.text_preview_canvas} style={{ maxWidth: '100%' }} />
       </div>
 
-      <div className={s.card}>
+      <div className={ui.card}>
         {processing ? (
           <div className={s.progress_wrap}>
             <p className={s.progress_label}>{isKo ? `GIF 생성 중... ${progress}%` : `Generating... ${progress}%`}</p>
@@ -854,15 +855,15 @@ function TextTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={resultUrl} alt="result" className={s.preview_img} style={{ display: 'block', margin: '0 auto 1rem' }} />
             <div className={s.btn_row}>
-              <button className={s.btn_primary} style={{ flex: 1 }} onClick={download}
+              <button className={`${ui.button} ${ui.primary}`} style={{ flex: 1 }} onClick={download}
                 aria-label={isKo ? '다운로드' : 'Download'}>
                 <Download size={16} /> {isKo ? 'GIF 다운로드' : 'Download GIF'}
               </button>
-              <button className={s.btn_secondary} onClick={reset} aria-label="reset"><RefreshCw size={14} /></button>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={reset} aria-label="reset"><RefreshCw size={14} /></button>
             </div>
           </div>
         ) : (
-          <button className={s.btn_primary} onClick={handleGenerate} disabled={!libLoaded || !text.trim()}
+          <button className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`} onClick={handleGenerate} disabled={!libLoaded || !text.trim()}
             aria-label={isKo ? 'GIF 생성' : 'Generate GIF'}>
             ✨ {isKo ? 'GIF 생성 & 다운로드' : 'Generate & Download GIF'}
           </button>
@@ -988,8 +989,8 @@ function VideoTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div className={s.card}>
-        <p className={s.card_title}>{isKo ? '동영상 업로드' : 'Upload Video'}</p>
+      <div className={ui.card}>
+        <p className={ui.cardTitle}>{isKo ? '동영상 업로드' : 'Upload Video'}</p>
         {!videoFile ? (
           <div className={`${s.upload_zone} ${isDrag ? s.upload_zone_drag : ''}`}
             onClick={() => inputRef.current?.click()}
@@ -997,7 +998,7 @@ function VideoTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
             onDragLeave={() => setIsDrag(false)}
             onDrop={e => { e.preventDefault(); setIsDrag(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
             role="button" aria-label={isKo ? '동영상 업로드' : 'Upload video'}>
-            <Upload size={32} color="#94a3b8" style={{ marginBottom: '0.5rem' }} />
+            <Upload size={32} style={{ marginBottom: '0.5rem', color: 'var(--text-muted)' }} />
             <p className={s.upload_text}>{isKo ? 'MP4·WebM·MOV 파일 업로드' : 'Upload MP4 / WebM / MOV'}</p>
             <p className={s.upload_hint}>{isKo ? '최대 100MB' : 'Max 100MB'}</p>
           </div>
@@ -1007,40 +1008,40 @@ function VideoTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
         <input ref={inputRef} type="file" accept=".mp4,.webm,.mov" style={{ display: 'none' }}
           onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
         {videoFile && (
-          <p className={s.info_msg} style={{ marginTop: '0.75rem' }}>
+          <p className={ui.notice} style={{ marginTop: '0.75rem' }}>
             💡 {isKo ? '10초 이내 구간을 선택하면 더 좋은 결과를 얻을 수 있어요' : '10 seconds or less gives the best results'}
           </p>
         )}
-        {error && <p className={s.error_msg} style={{ marginTop: '0.5rem' }}>{error}</p>}
+        {error && <p className={`${ui.notice} ${ui.red}`} style={{ marginTop: '0.5rem' }}>{error}</p>}
       </div>
 
       {videoFile && !resultUrl && (
-        <div className={s.card}>
-          <p className={s.card_title}>{isKo ? '구간 및 출력 설정' : 'Clip & Output Settings'}</p>
+        <div className={ui.card}>
+          <p className={ui.cardTitle}>{isKo ? '구간 및 출력 설정' : 'Clip & Output Settings'}</p>
           <div className={s.time_row} style={{ marginBottom: '1rem' }}>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? '시작 시간 (초)' : 'Start (sec)'}</label>
-              <input type="number" className={s.input} value={startTime} min={0} step={0.1}
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? '시작 시간 (초)' : 'Start (sec)'}</label>
+              <input type="number" className={ui.input} value={startTime} min={0} step={0.1}
                 onChange={e => setStartTime(Number(e.target.value))} aria-label="start time" />
             </div>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? '종료 시간 (초)' : 'End (sec)'}</label>
-              <input type="number" className={s.input} value={endTime} min={0} step={0.1}
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? '종료 시간 (초)' : 'End (sec)'}</label>
+              <input type="number" className={ui.input} value={endTime} min={0} step={0.1}
                 onChange={e => setEndTime(Number(e.target.value))} aria-label="end time" />
             </div>
           </div>
           <div className={s.settings_grid} style={{ marginBottom: '1.25rem' }}>
-            <div className={s.field}>
-              <label className={s.label}>FPS</label>
-              <select className={s.select} value={fps} onChange={e => setFps(Number(e.target.value))} aria-label="fps">
+            <div className={ui.field}>
+              <label className={ui.label}>FPS</label>
+              <select className={ui.input} value={fps} onChange={e => setFps(Number(e.target.value))} aria-label="fps">
                 <option value={5}>5 fps ({isKo ? '용량 작음' : 'smaller'})</option>
                 <option value={10}>10 fps ({isKo ? '균형 (권장)' : 'balanced'})</option>
                 <option value={15}>15 fps ({isKo ? '자연스러움' : 'smoother'})</option>
               </select>
             </div>
-            <div className={s.field}>
-              <label className={s.label}>{isKo ? '출력 너비' : 'Output Width'}</label>
-              <select className={s.select} value={outputWidth} onChange={e => setOutputWidth(Number(e.target.value))} aria-label="output width">
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? '출력 너비' : 'Output Width'}</label>
+              <select className={ui.input} value={outputWidth} onChange={e => setOutputWidth(Number(e.target.value))} aria-label="output width">
                 <option value={320}>320px</option>
                 <option value={480}>480px</option>
                 <option value={640}>640px</option>
@@ -1054,7 +1055,7 @@ function VideoTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
               <div className={s.progress_bar_bg}><div className={s.progress_bar_fill} style={{ width: `${progressPct}%` }} /></div>
             </div>
           ) : (
-            <button className={s.btn_primary} onClick={handleConvert} disabled={!libLoaded}
+            <button className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`} onClick={handleConvert} disabled={!libLoaded}
               aria-label={isKo ? 'GIF 변환 시작' : 'Start GIF Conversion'}>
               🎬 {isKo ? 'GIF 변환 시작' : 'Start GIF Conversion'}
             </button>
@@ -1063,16 +1064,16 @@ function VideoTab({ isKo, libLoaded }: { isKo: boolean; libLoaded: boolean }) {
       )}
 
       {resultUrl && (
-        <div className={s.card}>
-          <p className={s.card_title}>{isKo ? '변환 결과' : 'Result'}</p>
+        <div className={ui.card}>
+          <p className={ui.cardTitle}>{isKo ? '변환 결과' : 'Result'}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={resultUrl} alt="result gif" className={s.preview_img} style={{ display: 'block', margin: '0 auto 1rem' }} />
           <div className={s.btn_row}>
-            <button className={s.btn_primary} style={{ flex: 1 }} onClick={download}
+            <button className={`${ui.button} ${ui.primary}`} style={{ flex: 1 }} onClick={download}
               aria-label={isKo ? '다운로드' : 'Download'}>
               <Download size={16} /> {isKo ? 'GIF 다운로드' : 'Download GIF'}
             </button>
-            <button className={s.btn_secondary} onClick={reset} aria-label="reset"><RefreshCw size={14} /></button>
+            <button className={`${ui.button} ${ui.secondary}`} onClick={reset} aria-label="reset"><RefreshCw size={14} /></button>
           </div>
         </div>
       )}

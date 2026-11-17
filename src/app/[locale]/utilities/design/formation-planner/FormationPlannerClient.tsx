@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './formation-planner.module.css';
+import { ui } from '@/app/components/ui';
 import { FORMATION_PLANNER_SEO } from './seoContent';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -562,18 +563,18 @@ export default function FormationPlannerClient() {
       {/* Title + Background selector */}
       <div className={s.topControls}>
         <input
-          className={s.titleInput}
+          className={ui.input}
           type="text"
           value={title}
           onChange={e => setTitle(e.target.value)}
           placeholder={isKo ? '전술 제목을 입력하세요 (예: 2026 월드컵 결승전 전술)' : 'Enter tactic title (e.g. World Cup Final Formation)'}
           maxLength={50}
         />
-        <div className={s.bgSelector}>
+        <div className={ui.chips}>
           {BG_OPTIONS.map(opt => (
             <button
               key={opt.value}
-              className={`${s.bgBtn} ${background === opt.value ? s.bgBtnActive : ''}`}
+              className={`${ui.chip} ${ui.pill} ${background === opt.value ? ui.chipActive : ''}`}
               onClick={() => setBackground(opt.value)}
               aria-label={isKo ? opt.ko : opt.en}
             >
@@ -614,9 +615,9 @@ export default function FormationPlannerClient() {
           {/* Toolbar */}
           <div className={s.toolbar}>
             {/* Add piece controls */}
-            <div className={s.addSection}>
+            <div className={`${ui.card} ${s.addSection}`}>
               <input
-                className={s.textInput}
+                className={`${ui.input} ${s.textInput}`}
                 type="text"
                 value={addText}
                 onChange={e => setAddText(e.target.value.slice(0, 2))}
@@ -629,41 +630,41 @@ export default function FormationPlannerClient() {
                   <button
                     key={c}
                     className={`${s.colorDot} ${addColor === c ? s.colorDotActive : ''}`}
-                    style={{ background: c, border: c === '#ffffff' ? '1px solid #94a3b8' : undefined }}
+                    style={{ background: c, border: c === '#ffffff' ? '1px solid var(--border)' : undefined }}
                     onClick={() => setAddColor(c)}
                     aria-label={`color ${c}`}
                   />
                 ))}
               </div>
-              <button className={s.addBtn} onClick={handleAddPiece} aria-label={isKo ? '말 추가' : 'Add piece'}>
+              <button className={`${ui.button} ${ui.primary} ${ui.sm} ${s.addBtn}`} onClick={handleAddPiece} aria-label={isKo ? '말 추가' : 'Add piece'}>
                 <Plus size={16} /> {isKo ? '추가' : 'Add'}
               </button>
             </div>
 
             <div className={s.actionRow}>
-              <button className={s.actionBtn} onClick={doUndo} aria-label={isKo ? '되돌리기' : 'Undo'}>
+              <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={doUndo} aria-label={isKo ? '되돌리기' : 'Undo'}>
                 <Undo2 size={16} /> {isKo ? '되돌리기' : 'Undo'}
               </button>
-              <button className={s.actionBtn} onClick={handleExportImage} aria-label={isKo ? '이미지 저장' : 'Save image'}>
+              <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={handleExportImage} aria-label={isKo ? '이미지 저장' : 'Save image'}>
                 <Download size={16} /> {isKo ? '이미지 저장' : 'Save Image'}
               </button>
-              <label className={`${s.actionBtn} ${showPath ? s.actionBtnActive : ''}`} style={{ cursor: 'pointer' }}>
+              <label className={`${ui.button} ${ui.secondary} ${ui.sm} ${showPath ? ui.chipActive : ''}`} style={{ cursor: 'pointer' }}>
                 <input
                   type="checkbox"
                   checked={showPath}
                   onChange={e => setShowPath(e.target.checked)}
-                  style={{ width: 14, height: 14, accentColor: '#8b5cf6', cursor: 'pointer' }}
+                  style={{ width: 14, height: 14, accentColor: 'var(--color-primary)', cursor: 'pointer' }}
                 />
                 {isKo ? '경로 표시' : 'Show Path'}
               </label>
               {showPath && (
-                <button className={s.actionBtn} onClick={handleClearPaths} aria-label={isKo ? '경로 지우기' : 'Clear paths'}>
+                <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={handleClearPaths} aria-label={isKo ? '경로 지우기' : 'Clear paths'}>
                   {isKo ? '경로 지우기' : 'Clear Paths'}
                 </button>
               )}
               <div className={s.recordGroup}>
                 <button
-                  className={`${s.recordBtn} ${recording ? s.recordBtnActive : ''}`}
+                  className={`${ui.button} ${ui.danger} ${ui.sm} ${recording ? s.recordBtnActive : ''}`}
                   onClick={recording ? handleStopRecord : handleStartRecord}
                   aria-label={recording ? (isKo ? '녹화 중지' : 'Stop recording') : (isKo ? '녹화 시작' : 'Start recording')}
                 >
@@ -696,10 +697,10 @@ export default function FormationPlannerClient() {
         </div>
 
         {/* Smart Legend — PC */}
-        <div className={s.legendPanel}>
+        <div className={`${ui.card} ${s.legendPanel}`}>
           <div className={s.legendHeader}>
             <span>📋 {isKo ? '스마트 범례' : 'Smart Legend'}</span>
-            <span className={s.legendCount}>{pieces.length}</span>
+            <span className={`${ui.badge} ${ui.violet}`}>{pieces.length}</span>
           </div>
           {pieces.length === 0 ? (
             <p className={s.legendEmpty}>{isKo ? '말을 추가하면 자동으로 범례가 생성됩니다.' : 'Add pieces to auto-generate the legend.'}</p>
@@ -709,7 +710,7 @@ export default function FormationPlannerClient() {
                 const { label } = getLegendPrefix(piece.text, piece.color);
                 return (
                   <div key={piece.id} className={`${s.legendItem} ${selectedId === piece.id ? s.legendItemSelected : ''}`} onClick={() => setSelectedId(piece.id)}>
-                    <div className={s.legendIcon} style={{ background: piece.color, border: piece.color === '#ffffff' ? '1px solid #94a3b8' : 'none' }}>
+                    <div className={s.legendIcon} style={{ background: piece.color, border: piece.color === '#ffffff' ? '1px solid var(--border)' : 'none' }}>
                       {label && <span style={{ color: getContrast(piece.color), fontSize: label.length > 1 ? '0.6rem' : '0.75rem', fontWeight: 700 }}>{label}</span>}
                     </div>
                     <input
@@ -734,7 +735,7 @@ export default function FormationPlannerClient() {
 
       {/* Mobile legend drawer */}
       <div className={s.drawerTrigger}>
-        <button className={s.drawerToggle} onClick={() => setLegendOpen(o => !o)} aria-label={isKo ? '범례 보기' : 'View legend'}>
+        <button className={`${ui.button} ${ui.primary} ${ui.block}`} onClick={() => setLegendOpen(o => !o)} aria-label={isKo ? '범례 보기' : 'View legend'}>
           {legendOpen ? <><ChevronDown size={16} /> {isKo ? '범례 닫기 ▼' : 'Close Legend ▼'}</> : <><ChevronUp size={16} /> {isKo ? `범례 보기 ▲ (${pieces.length}명)` : `Legend ▲ (${pieces.length})`}</>}
         </button>
       </div>
@@ -754,7 +755,7 @@ export default function FormationPlannerClient() {
                 const { label } = getLegendPrefix(piece.text, piece.color);
                 return (
                   <div key={piece.id} className={s.legendItem}>
-                    <div className={s.legendIcon} style={{ background: piece.color, border: piece.color === '#ffffff' ? '1px solid #94a3b8' : 'none' }}>
+                    <div className={s.legendIcon} style={{ background: piece.color, border: piece.color === '#ffffff' ? '1px solid var(--border)' : 'none' }}>
                       {label && <span style={{ color: getContrast(piece.color), fontSize: label.length > 1 ? '0.6rem' : '0.75rem', fontWeight: 700 }}>{label}</span>}
                     </div>
                     <input

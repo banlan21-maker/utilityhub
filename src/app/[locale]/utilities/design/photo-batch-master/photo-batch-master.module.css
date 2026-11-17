@@ -6,37 +6,9 @@
   padding: 1rem 1rem 4rem;
 }
 
-/* ── Sections ── */
+/* ── Sections (카드·버튼·입력·탭·칩 모양은 공통 UI 키트 ui.module.css) ── */
 .section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1.5rem;
-  padding: 1.75rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
-}
-
-.sectionTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.stepBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 800;
-  padding: 0.2rem 0.55rem;
-  border-radius: 9999px;
-  letter-spacing: 0.05em;
 }
 
 /* ── Preview center (large top area) ── */
@@ -64,8 +36,8 @@
 }
 
 .sampleDropzoneLg:hover {
-  border-color: #8b5cf6;
-  background: #faf5ff;
+  border-color: var(--color-primary);
+  background: var(--tint-violet-bg);
 }
 
 .sampleImg {
@@ -108,27 +80,10 @@
 
 .previewLabel {
   font-size: 0.78rem;
-  color: #8b5cf6;
+  color: var(--color-primary);
   font-weight: 600;
   margin: 0;
 }
-
-.changePhotoBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.9rem;
-  border: 1.5px solid #c4b5fd;
-  border-radius: 9999px;
-  background: #f5f3ff;
-  color: #7c3aed;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.changePhotoBtn:hover { background: #ede9fe; }
 
 /* ── Controls grid (sliders left | watermark right) ── */
 .controlsGrid {
@@ -142,38 +97,6 @@
   .controlsGrid {
     grid-template-columns: 1fr;
   }
-}
-
-/* ── Legacy step1Grid (keep for no-breakage) ── */
-.step1Grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-/* ── Sample upload (legacy, unused in new layout) ── */
-.sampleArea {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.sampleDropzone {
-  aspect-ratio: 4/3;
-  background: var(--surface-hover);
-  border: 2px dashed var(--border);
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  overflow: hidden;
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.sampleDropzone:hover {
-  border-color: #8b5cf6;
-  background: #faf5ff;
 }
 
 /* ── Sliders card ── */
@@ -198,7 +121,7 @@
 }
 
 .sliderVal {
-  color: #8b5cf6;
+  color: var(--color-primary);
   min-width: 36px;
   text-align: right;
 }
@@ -209,7 +132,7 @@
   width: 100%;
   height: 5px;
   border-radius: 9999px;
-  background: #e2e8f0;
+  background: var(--border);
   outline: none;
   cursor: pointer;
   transition: background 0.2s;
@@ -221,7 +144,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #8b5cf6;
+  background: var(--color-primary);
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(139, 92, 246, 0.4);
   transition: transform 0.15s;
@@ -240,51 +163,12 @@
 
 .presetNameInput {
   flex: 1;
-  padding: 0.5rem 0.75rem;
-  border: 1.5px solid var(--border);
-  border-radius: 0.6rem;
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  background: var(--surface-hover);
-  outline: none;
-  transition: border-color 0.2s;
+  min-width: 0;
 }
-
-.presetNameInput:focus {
-  border-color: #8b5cf6;
-}
-
-.saveBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: white;
-  border: none;
-  border-radius: 0.6rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.2s, transform 0.15s;
-}
-
-.saveBtn:hover { opacity: 0.9; }
-.saveBtn:active { transform: scale(0.96); }
 
 .resetBtn {
-  padding: 0.4rem 0.8rem;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 0.5rem;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  align-self: flex-start;
 }
-
-.resetBtn:hover { border-color: #8b5cf6; color: #8b5cf6; }
 
 /* ── Saved presets ── */
 .savedPresets {
@@ -294,11 +178,6 @@
 }
 
 .savedPresetsTitle {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   margin: 0 0 0.6rem;
 }
 
@@ -318,8 +197,8 @@
 }
 
 .presetChipActive {
-  border-color: #8b5cf6;
-  background: #f5f3ff;
+  border-color: var(--color-primary);
+  background: var(--tint-violet-bg);
 }
 
 .presetChipName {
@@ -332,7 +211,7 @@
   cursor: pointer;
 }
 
-.presetChipActive .presetChipName { color: #8b5cf6; }
+.presetChipActive .presetChipName { color: var(--color-primary); }
 
 .presetChipDelete {
   display: inline-flex;
@@ -342,11 +221,11 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #cbd5e1;
+  color: var(--text-muted);
   transition: color 0.15s;
 }
 
-.presetChipDelete:hover { color: #ef4444; }
+.presetChipDelete:hover { color: var(--tint-red-fg); }
 
 /* ── Batch dropzone ── */
 .batchDropzone {
@@ -365,8 +244,8 @@
 
 .batchDropzone:hover,
 .batchDropzoneActive {
-  border-color: #8b5cf6;
-  background: #faf5ff;
+  border-color: var(--color-primary);
+  background: var(--tint-violet-bg);
 }
 
 .batchDropText {
@@ -388,61 +267,6 @@
   gap: 0.6rem;
   margin-top: 1rem;
 }
-
-.applyBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.4rem;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
-}
-
-.applyBtn:disabled { opacity: 0.6; cursor: not-allowed; }
-.applyBtn:not(:disabled):hover { opacity: 0.9; }
-.applyBtn:not(:disabled):active { transform: scale(0.97); }
-
-.zipBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.2rem;
-  background: #10b981;
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
-}
-
-.zipBtn:disabled { opacity: 0.4; cursor: not-allowed; }
-.zipBtn:not(:disabled):hover { opacity: 0.9; }
-.zipBtn:not(:disabled):active { transform: scale(0.97); }
-
-.clearBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.6rem 1rem;
-  background: transparent;
-  border: 1.5px solid #fca5a5;
-  color: #ef4444;
-  border-radius: 9999px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.clearBtn:hover { background: #fef2f2; }
 
 /* ── Item list ── */
 .itemList {
@@ -508,7 +332,7 @@
   gap: 0.3rem;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #10b981;
+  color: var(--tint-green-fg);
 }
 
 .statusProcessing {
@@ -516,13 +340,13 @@
   align-items: center;
   gap: 0.3rem;
   font-size: 0.78rem;
-  color: #8b5cf6;
+  color: var(--color-primary);
 }
 
 .statusError {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #ef4444;
+  color: var(--tint-red-fg);
 }
 
 .statusPending {
@@ -539,13 +363,13 @@
   height: 24px;
   background: transparent;
   border: none;
-  color: #cbd5e1;
+  color: var(--text-muted);
   border-radius: 50%;
   cursor: pointer;
   transition: color 0.15s, background 0.15s;
 }
 
-.itemRemove:hover { color: #ef4444; background: #fef2f2; }
+.itemRemove:hover { color: var(--tint-red-fg); background: var(--tint-red-bg); }
 
 /* ── Spin animation ── */
 .spin {
@@ -557,23 +381,6 @@
   to   { transform: rotate(360deg); }
 }
 
-/* ── Ad placeholder ── */
-.adPlaceholder {
-  width: 100%;
-  min-height: 90px;
-  background: var(--surface-hover);
-  border: 2px dashed var(--border);
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  margin: 1.5rem 0;
-}
-
 /* ── Hidden input ── */
 .hiddenInput {
   display: none;
@@ -583,34 +390,15 @@
    WATERMARK SECTION
 ══════════════════════════════════════════ */
 
-/* Tab switcher */
+/* Tab switcher (모양은 ui.segmented) — 아이콘·글자 한 줄 정렬 */
 .wmTabs {
-  display: flex;
-  gap: 0.5rem;
   margin-bottom: 1.25rem;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 0;
 }
-
-.wmTab {
+.wmTabs > button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
-  padding: 0.55rem 1rem;
-  background: transparent;
-  border: none;
-  border-bottom: 2.5px solid transparent;
-  margin-bottom: -2px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 0.18s, border-color 0.18s;
-}
-
-.wmTabActive {
-  color: #8b5cf6;
-  border-bottom-color: #8b5cf6;
 }
 
 /* Panel container */
@@ -635,7 +423,7 @@
 .wmToggleRow input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #8b5cf6;
+  accent-color: var(--color-primary);
   cursor: pointer;
 }
 
@@ -661,54 +449,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-}
-
-.wmFieldLabel {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Text input (for watermark text) */
-.wmTextInput {
-  width: 100%;
-  padding: 0.55rem 0.75rem;
-  border: 1.5px solid var(--border);
-  border-radius: 0.6rem;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  background: var(--surface);
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
-}
-
-.wmTextInput:focus { border-color: #8b5cf6; }
-
-/* Font grid */
-.fontGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.fontChip {
-  padding: 0.35rem 0.75rem;
-  border: 1.5px solid var(--border);
-  border-radius: 9999px;
-  background: var(--surface);
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-}
-
-.fontChipActive {
-  border-color: #8b5cf6;
-  color: #8b5cf6;
-  background: #f5f3ff;
 }
 
 /* Color row */
@@ -749,7 +489,7 @@
 .colorDot:hover { transform: scale(1.2); }
 
 .colorDotActive {
-  box-shadow: 0 0 0 3px #8b5cf6, 0 1px 3px rgba(0,0,0,0.15);
+  box-shadow: 0 0 0 3px var(--color-primary), 0 1px 3px rgba(0,0,0,0.15);
   transform: scale(1.1);
 }
 
@@ -760,27 +500,13 @@
   gap: 4px;
 }
 
-.posCell {
+/* 칸 모양은 ui.chip — 정사각형 크기만 */
+.posGrid .posCell {
   width: 36px;
   height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid var(--border);
-  border-radius: 0.5rem;
-  background: var(--surface);
+  min-height: 0;
+  padding: 0;
   font-size: 1rem;
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-}
-
-.posCell:hover { border-color: #8b5cf6; color: #8b5cf6; }
-
-.posCellActive {
-  border-color: #8b5cf6;
-  background: #8b5cf6;
-  color: white;
 }
 
 /* Image watermark upload */
@@ -795,18 +521,18 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.75rem 1rem;
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed var(--border);
   border-radius: 0.75rem;
-  background: white;
+  background: var(--surface);
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   font-weight: 500;
   text-align: left;
   transition: border-color 0.2s, background 0.2s;
 }
 
-.wmImgSelectBtn:hover { border-color: #8b5cf6; background: #faf5ff; }
+.wmImgSelectBtn:hover { border-color: var(--color-primary); background: var(--tint-violet-bg); }
 
 .wmImgPreviewWrap {
   position: relative;

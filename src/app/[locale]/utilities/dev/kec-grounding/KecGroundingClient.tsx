@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './kec-grounding.module.css';
+import { ui } from '@/app/components/ui';
 
 const STANDARD_SQ = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300];
 
@@ -71,64 +72,70 @@ export default function KecGroundingClient() {
 
         <ToolHeader icon={<Zap />} title={t('title')} subtitle={t('subtitle')} />
 
-        <div className={`glass-panel ${s.panel}`}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>🧮 {t('calculatorTitle')}</h2>
+        <div className={`${ui.card} ${s.panel}`}>
+          <h2 className={ui.cardTitle}>🧮 {t('calculatorTitle')}</h2>
 
-          <div className={s.tab_bar}>
+          <div className={`${ui.segmented} ${s.tab_bar}`}>
             <button
               onClick={() => setActiveTab('method-a')}
-              className={`${s.tab_btn} ${activeTab === 'method-a' ? s.tab_btn_active : s.tab_btn_inactive}`}
+              className={`${ui.segment} ${activeTab === 'method-a' ? ui.segmentActive : ''}`}
               aria-label={t('tabA')}
             >{t('tabA')}</button>
             <button
               onClick={() => setActiveTab('method-b')}
-              className={`${s.tab_btn} ${activeTab === 'method-b' ? s.tab_btn_active : s.tab_btn_inactive}`}
+              className={`${ui.segment} ${activeTab === 'method-b' ? ui.segmentActive : ''}`}
               aria-label={t('tabB')}
             >{t('tabB')}</button>
           </div>
 
           {activeTab === 'method-a' && (
             <div>
-              <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--text-primary)' }}>
-                <strong>📌 {t('tabAInfo')}</strong>
-                <ul style={{ marginLeft: '1rem', marginTop: '0.5rem' }}>
-                  <li>S ≤ 16㎟ → {t('tabARule1')}</li>
-                  <li>16㎟ &lt; S ≤ 35㎟ → {t('tabARule2')}</li>
-                  <li>S &gt; 35㎟ → {t('tabARule3')}</li>
-                </ul>
+              <div className={`${ui.notice} ${ui.blue} ${s.info}`}>
+                <div>
+                  <strong>📌 {t('tabAInfo')}</strong>
+                  <ul style={{ marginLeft: '1rem', marginTop: '0.5rem' }}>
+                    <li>S ≤ 16㎟ → {t('tabARule1')}</li>
+                    <li>16㎟ &lt; S ≤ 35㎟ → {t('tabARule2')}</li>
+                    <li>S &gt; 35㎟ → {t('tabARule3')}</li>
+                  </ul>
+                </div>
               </div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>{t('phaseConductorLabel')}</label>
-              <div className={s.input_row}>
-                <input type="number" placeholder="16" value={phaseConductor} onChange={(e) => handlePhaseConductorChange(e.target.value)} min="0" step="0.1" className={s.input_field} />
-                <div className={s.unit_badge}>㎟</div>
+              <div className={ui.field}>
+                <label className={ui.label}>{t('phaseConductorLabel')}</label>
+                <div className={ui.inputGroup}>
+                  <input type="number" placeholder="16" value={phaseConductor} onChange={(e) => handlePhaseConductorChange(e.target.value)} min="0" step="0.1" className={`${ui.input} ${ui.inputLg}`} />
+                  <span className={ui.unit}>㎟</span>
+                </div>
               </div>
             </div>
           )}
 
           {activeTab === 'method-b' && (
             <div>
-              <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--text-primary)' }}>
-                <strong>📌 {t('tabBInfo')}</strong>
-                <p style={{ fontFamily: 'monospace', marginTop: '0.5rem' }}>S = √(I² × t) / k</p>
+              <div className={`${ui.notice} ${ui.amber} ${s.info}`}>
+                <div>
+                  <strong>📌 {t('tabBInfo')}</strong>
+                  <p style={{ fontFamily: 'monospace', marginTop: '0.5rem' }}>S = √(I² × t) / k</p>
+                </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>{t('faultCurrentLabel')}</label>
-                  <div className={s.input_row}>
-                    <input type="number" placeholder="1000" value={faultCurrent} onChange={(e) => setFaultCurrent(e.target.value)} className={s.input_field} />
-                    <div className={s.unit_badge}>A (RMS)</div>
+                <div className={ui.field}>
+                  <label className={ui.label}>{t('faultCurrentLabel')}</label>
+                  <div className={ui.inputGroup}>
+                    <input type="number" placeholder="1000" value={faultCurrent} onChange={(e) => setFaultCurrent(e.target.value)} className={`${ui.input} ${ui.inputLg}`} style={{ paddingRight: '5rem' }} />
+                    <span className={ui.unit}>A (RMS)</span>
                   </div>
                 </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>{t('breakTimeLabel')}</label>
-                  <div className={s.input_row}>
-                    <input type="number" placeholder="1" value={breakTime} onChange={(e) => setBreakTime(e.target.value)} className={s.input_field} />
-                    <div className={s.unit_badge}>{t('seconds')}</div>
+                <div className={ui.field}>
+                  <label className={ui.label}>{t('breakTimeLabel')}</label>
+                  <div className={ui.inputGroup}>
+                    <input type="number" placeholder="1" value={breakTime} onChange={(e) => setBreakTime(e.target.value)} className={`${ui.input} ${ui.inputLg}`} style={{ paddingRight: '4rem' }} />
+                    <span className={ui.unit}>{t('seconds')}</span>
                   </div>
                 </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-primary)' }}>{t('kValueLabel')}</label>
-                  <select value={kValue} onChange={(e) => setKValue(e.target.value)} style={{ width: '100%', padding: '0.75rem', border: '1px solid var(--border)', borderRadius: '0.5rem', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
+                <div className={ui.field}>
+                  <label className={ui.label}>{t('kValueLabel')}</label>
+                  <select value={kValue} onChange={(e) => setKValue(e.target.value)} className={ui.input}>
                     {Object.entries(K_VALUES).map(([key, data]) => <option key={key} value={key}>{data.label} (k = {data.value})</option>)}
                   </select>
                 </div>
@@ -138,19 +145,19 @@ export default function KecGroundingClient() {
         </div>
 
         {activeResult !== null && (
-          <div className="glass-panel" style={{ borderRadius: '1rem', padding: '2rem', marginBottom: '2rem', border: '2px solid #3b82f6' }}>
-            <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: 'var(--text-primary)' }}>✓ {t('resultTitle')}</h2>
+          <div className={`${ui.card} ${s.panel}`}>
+            <h2 className={ui.cardTitle}>✓ {t('resultTitle')}</h2>
             <div style={{ textAlign: 'center', paddingBottom: '1rem', borderBottom: '1px solid var(--border)', marginBottom: '1.5rem' }}>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>{t('theoreticalMin')}</p>
               <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{activeResult.toFixed(2)} ㎟</p>
             </div>
-            <div style={{ textAlign: 'center', background: 'linear-gradient(to bottom right, #3b82f6, #2563eb)', color: 'white', borderRadius: '1rem', padding: '2rem' }}>
-              <p style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('recommendedSize')}</p>
-              <p className={s.result_number}>{recommendedSize}</p>
-              <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>SQ (㎟)</p>
-              <p style={{ fontSize: '0.875rem', opacity: 0.9, marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.3)' }}>{t('standardCableNote')}</p>
+            <div className={ui.result} style={{ textAlign: 'center' }}>
+              <p className={ui.resultLabel}>{t('recommendedSize')}</p>
+              <p className={`${ui.resultValue} ${s.result_number}`}>{recommendedSize}</p>
+              <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>SQ (㎟)</p>
+              <p className={ui.hint} style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--tint-violet-border)' }}>{t('standardCableNote')}</p>
             </div>
-            <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '0.5rem', padding: '1rem', marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
+            <div className={`${ui.notice} ${ui.amber}`} style={{ marginTop: '1.5rem' }}>
               <span style={{ fontSize: '1.25rem' }}>⚠️</span>
               <div style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                 <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{t('warningTitle')}</p>

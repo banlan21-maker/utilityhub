@@ -8,6 +8,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import JSZip from 'jszip';
+import { ui } from '@/app/components/ui';
 import { Upload, FileImage, FileText, Download, Trash2, GripVertical, Shield, Settings } from 'lucide-react';
 
 // ⚠️ jsPDF / pdfjs-dist 는 모듈 최상단에서 import 하면 안 된다.
@@ -265,50 +266,23 @@ export default function ImgPdfConverterClient() {
           : '100% Local Processing | No Server Upload | Unlimited Free'}
       >
         {/* Security Badge */}
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)',
-          color: 'white',
-          padding: '0.5rem 1.5rem',
-          borderRadius: '50px',
-          fontSize: '0.9rem',
-          fontWeight: 600,
-          boxShadow: '0 4px 12px rgba(29, 78, 216, 0.3)',
-          marginTop: '1rem'
-        }}>
-          <Shield size={18} />
+        <div className={`${ui.badge} ${ui.blue}`} style={{ marginTop: '1rem', whiteSpace: 'normal' }}>
+          <Shield size={14} />
           {isKorean ? '100% 오프라인 처리 (파일이 서버로 전송되지 않습니다)' : '100% Offline Processing (Files never leave your device)'}
         </div>
       </ToolHeader>
 
       {/* Mode Toggle */}
-      <div className="glass-panel animate-slide-up" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+      <div className="animate-slide-up" style={{ marginBottom: '2rem' }}>
+        <div className={ui.segmented}>
           <button
             onClick={() => {
               setMode('images-to-pdf');
               setImages([]);
               setPdfImages([]);
             }}
-            style={{
-              flex: 1,
-              minWidth: '200px',
-              padding: '1.5rem',
-              borderRadius: '12px',
-              border: mode === 'images-to-pdf' ? '3px solid #1d4ed8' : '2px solid var(--border)',
-              background: mode === 'images-to-pdf' ? 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' : 'var(--surface)',
-              color: mode === 'images-to-pdf' ? 'white' : 'var(--text-primary)',
-              fontWeight: 700,
-              fontSize: '1.1rem',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.75rem',
-            }}
+            className={`${ui.segment} ${mode === 'images-to-pdf' ? ui.segmentActive : ''}`}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
           >
             <FileImage size={24} />
             {isKorean ? '이미지 → PDF' : 'Images → PDF'}
@@ -319,23 +293,8 @@ export default function ImgPdfConverterClient() {
               setImages([]);
               setPdfImages([]);
             }}
-            style={{
-              flex: 1,
-              minWidth: '200px',
-              padding: '1.5rem',
-              borderRadius: '12px',
-              border: mode === 'pdf-to-images' ? '3px solid #1d4ed8' : '2px solid var(--border)',
-              background: mode === 'pdf-to-images' ? 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' : 'var(--surface)',
-              color: mode === 'pdf-to-images' ? 'white' : 'var(--text-primary)',
-              fontWeight: 700,
-              fontSize: '1.1rem',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.75rem',
-            }}
+            className={`${ui.segment} ${mode === 'pdf-to-images' ? ui.segmentActive : ''}`}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
           >
             <FileText size={24} />
             {isKorean ? 'PDF → 이미지' : 'PDF → Images'}
@@ -347,75 +306,46 @@ export default function ImgPdfConverterClient() {
       {mode === 'images-to-pdf' && (
         <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {/* Settings Panel */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <Settings size={20} style={{ color: '#1d4ed8' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                {isKorean ? 'PDF 설정' : 'PDF Settings'}
-              </h3>
-            </div>
+          <div className={ui.card}>
+            <h3 className={ui.cardTitle}>
+              <Settings size={20} />
+              {isKorean ? 'PDF 설정' : 'PDF Settings'}
+            </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {isKorean ? '용지 크기' : 'Paper Size'}
                 </label>
                 <select
                   value={paperSize}
                   onChange={(e) => setPaperSize(e.target.value as PaperSize)}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    borderRadius: '8px',
-                    border: '2px solid var(--border)',
-                    background: 'var(--surface)',
-                    color: 'var(--text-primary)',
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                  }}
+                  className={ui.input}
                 >
                   <option value="auto">{isKorean ? '자동 (이미지 크기)' : 'Auto (Image Size)'}</option>
                   <option value="a4">A4</option>
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {isKorean ? '방향' : 'Orientation'}
                 </label>
                 <select
                   value={orientation}
                   onChange={(e) => setOrientation(e.target.value as Orientation)}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    borderRadius: '8px',
-                    border: '2px solid var(--border)',
-                    background: 'var(--surface)',
-                    color: 'var(--text-primary)',
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                  }}
+                  className={ui.input}
                 >
                   <option value="portrait">{isKorean ? '세로' : 'Portrait'}</option>
                   <option value="landscape">{isKorean ? '가로' : 'Landscape'}</option>
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {isKorean ? '여백' : 'Margin'}
                 </label>
                 <select
                   value={margin}
                   onChange={(e) => setMargin(Number(e.target.value) as Margin)}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    borderRadius: '8px',
-                    border: '2px solid var(--border)',
-                    background: 'var(--surface)',
-                    color: 'var(--text-primary)',
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                  }}
+                  className={ui.input}
                 >
                   <option value={0}>{isKorean ? '없음' : 'None'}</option>
                   <option value={10}>{isKorean ? '작게 (10mm)' : 'Small (10mm)'}</option>
@@ -442,15 +372,15 @@ export default function ImgPdfConverterClient() {
               transition: 'all 0.3s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#1d4ed8';
-              e.currentTarget.style.background = 'rgba(29, 78, 216, 0.05)';
+              e.currentTarget.style.borderColor = 'var(--color-primary)';
+              e.currentTarget.style.background = 'var(--tint-violet-bg)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--border)';
               e.currentTarget.style.background = 'var(--surface)';
             }}
           >
-            <Upload size={48} style={{ margin: '0 auto 1rem', color: '#1d4ed8' }} />
+            <Upload size={48} style={{ margin: '0 auto 1rem', color: 'var(--color-primary)' }} />
             <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
               {isKorean ? '이미지 파일을 드래그하거나 클릭하여 업로드' : 'Drag & Drop Images or Click to Upload'}
             </h3>
@@ -470,26 +400,15 @@ export default function ImgPdfConverterClient() {
 
           {/* Image List */}
           {images.length > 0 && (
-            <div className="glass-panel" style={{ padding: '2rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div className={ui.card}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                <h3 className={ui.cardTitle} style={{ margin: 0 }}>
                   {isKorean ? `업로드된 이미지 (${images.length}개)` : `Uploaded Images (${images.length})`}
                 </h3>
                 <button
                   onClick={convertImagesToPdf}
                   disabled={converting}
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    background: converting ? '#94a3b8' : 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)',
-                    color: 'white',
-                    fontWeight: 700,
-                    cursor: converting ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
+                  className={`${ui.button} ${ui.primary}`}
                 >
                   <Download size={18} />
                   {converting ? `${isKorean ? '변환 중...' : 'Converting...'} ${progress}%` : isKorean ? 'PDF로 변환' : 'Convert to PDF'}
@@ -512,7 +431,7 @@ export default function ImgPdfConverterClient() {
                     <div style={{
                       width: `${progress}%`,
                       height: '100%',
-                      background: 'linear-gradient(90deg, #1d4ed8, #1e40af)',
+                      background: 'var(--primary-fill)',
                       transition: 'width 0.3s',
                     }} />
                   </div>
@@ -607,15 +526,15 @@ export default function ImgPdfConverterClient() {
               transition: 'all 0.3s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#1d4ed8';
-              e.currentTarget.style.background = 'rgba(29, 78, 216, 0.05)';
+              e.currentTarget.style.borderColor = 'var(--color-primary)';
+              e.currentTarget.style.background = 'var(--tint-violet-bg)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--border)';
               e.currentTarget.style.background = 'var(--surface)';
             }}
           >
-            <Upload size={48} style={{ margin: '0 auto 1rem', color: '#1d4ed8' }} />
+            <Upload size={48} style={{ margin: '0 auto 1rem', color: 'var(--color-primary)' }} />
             <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
               {isKorean ? 'PDF 파일을 드래그하거나 클릭하여 업로드' : 'Drag & Drop PDF or Click to Upload'}
             </h3>
@@ -637,26 +556,15 @@ export default function ImgPdfConverterClient() {
 
           {/* Extracted Images */}
           {pdfImages.length > 0 && (
-            <div className="glass-panel" style={{ padding: '2rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div className={ui.card}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                <h3 className={ui.cardTitle} style={{ margin: 0 }}>
                   {isKorean ? `추출된 이미지 (${pdfImages.length}페이지)` : `Extracted Images (${pdfImages.length} pages)`}
                 </h3>
                 <button
                   onClick={downloadImagesAsZip}
                   disabled={converting}
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    background: converting ? '#94a3b8' : 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)',
-                    color: 'white',
-                    fontWeight: 700,
-                    cursor: converting ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
+                  className={`${ui.button} ${ui.primary}`}
                 >
                   <Download size={18} />
                   {converting ? `${isKorean ? 'ZIP 생성 중...' : 'Creating ZIP...'} ${progress}%` : isKorean ? 'ZIP으로 다운로드' : 'Download as ZIP'}
@@ -675,7 +583,7 @@ export default function ImgPdfConverterClient() {
                     <div style={{
                       width: `${progress}%`,
                       height: '100%',
-                      background: 'linear-gradient(90deg, #1d4ed8, #1e40af)',
+                      background: 'var(--primary-fill)',
                       transition: 'width 0.3s',
                     }} />
                   </div>
@@ -857,8 +765,8 @@ export default function ImgPdfConverterClient() {
       />
 
       {/* Disclaimer */}
-      <div className="glass-panel" style={{ padding: '1.5rem', marginTop: '2rem', borderLeft: '4px solid #1d4ed8' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+      <div className={ui.card} style={{ marginTop: '2rem', borderLeft: '4px solid var(--color-primary)' }}>
+        <h3 className={ui.cardTitle} style={{ marginBottom: '0.5rem' }}>
           {isKorean ? '⚖️ 면책 조항' : '⚖️ Disclaimer'}
         </h3>
         <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>

@@ -11,6 +11,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './bomb-pad.module.css';
+import { ui } from '@/app/components/ui';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -374,7 +375,7 @@ function BombPadContent() {
           : 'A shared notepad alive 72h from the last edit — nobody writes = BOOM'}
       >
         {/* 암호화 배지 */}
-        <div className={s.encBadge}>
+        <div className={`${ui.badge} ${ui.green} ${s.encBadge}`}>
           <ShieldCheck size={14} />
           {isKo
             ? '종단간 암호화(AES-256) — 운영자도 내용을 볼 수 없습니다'
@@ -389,7 +390,7 @@ function BombPadContent() {
         </div>
         <div className={s.shareUrlRow}>
           <span className={s.shareUrlText}>{typeof window !== 'undefined' ? window.location.href : ''}</span>
-          <button onClick={handleCopyUrl} className={s.copyBtn} aria-label={isKo ? 'URL 복사' : 'Copy URL'}>
+          <button onClick={handleCopyUrl} className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.copyBtn}`} aria-label={isKo ? 'URL 복사' : 'Copy URL'}>
             <Copy size={14} />
             {urlCopied ? (isKo ? '✅ 복사됨!' : '✅ Copied!') : (isKo ? '복사' : 'Copy')}
           </button>

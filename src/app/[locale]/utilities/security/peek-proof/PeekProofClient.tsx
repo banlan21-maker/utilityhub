@@ -15,6 +15,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './peek-proof.module.css';
+import { ui } from '@/app/components/ui';
 
 const STRENGTH_MIN = 2;
 const STRENGTH_MAX = 12;
@@ -213,12 +214,12 @@ export default function PeekProofClient() {
       {/* ── 2-column ── */}
       <div className={s.layout}>
         {/* ── Settings (left) ── */}
-        <aside className={s.settings}>
-          <h2 className={s.settings_title}>{t('settings_title')}</h2>
+        <aside className={`${ui.card} ${s.settings}`}>
+          <h2 className={`${ui.cardTitle} ${s.tight}`}>{t('settings_title')}</h2>
 
           {/* protection strength */}
-          <div className={s.field}>
-            <label className={s.field_label} htmlFor="pp-strength">
+          <div className={ui.field}>
+            <label className={`${ui.label} ${s.field_label}`} htmlFor="pp-strength">
               <span>{t('strength_label')}</span>
               <span className={s.field_value}>{strength}px</span>
             </label>
@@ -235,12 +236,12 @@ export default function PeekProofClient() {
               aria-valuemax={STRENGTH_MAX}
               aria-label={t('strength_label')}
             />
-            <span className={s.field_hint}>{t('strength_hint')}</span>
+            <span className={ui.hint}>{t('strength_hint')}</span>
           </div>
 
           {/* font size */}
-          <div className={s.field}>
-            <label className={s.field_label} htmlFor="pp-font">
+          <div className={ui.field}>
+            <label className={`${ui.label} ${s.field_label}`} htmlFor="pp-font">
               <span>{t('fontsize_label')}</span>
               <span className={s.field_value}>{fontSize}px</span>
             </label>
@@ -277,13 +278,13 @@ export default function PeekProofClient() {
           </div>
 
           {/* ESC guide */}
-          <div className={s.info_box}>
+          <div className={`${ui.notice} ${ui.green} ${s.stack}`}>
             <p className={s.info_box_title}>{t('esc_guide_title')}</p>
             {t('esc_guide_body')}
           </div>
 
           {/* single-line tip */}
-          <div className={s.tip_inline}>{t('single_line_tip')}</div>
+          <div className={`${ui.notice} ${ui.amber}`}>{t('single_line_tip')}</div>
 
           {/* clipboard auto-clear option */}
           <div className={`${s.clip_box} ${autoClear ? s.clip_box_active : ''}`}>
@@ -308,7 +309,7 @@ export default function PeekProofClient() {
           <div className={s.actions}>
             {countdown !== null ? (
               <button
-                className={`${s.btn} ${s.btn_countdown}`}
+                className={`${ui.button} ${ui.danger} ${ui.block}`}
                 onClick={cancelCountdown}
                 aria-label={t('clipboard_countdown_cancel')}
               >
@@ -316,20 +317,18 @@ export default function PeekProofClient() {
               </button>
             ) : (
               <button
-                className={`${s.btn} ${s.btn_primary}`}
+                className={`${ui.button} ${ui.primary} ${ui.block}`}
                 onClick={() => setModal('copy')}
                 disabled={text.length === 0}
-                style={text.length === 0 ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
                 aria-label={t('copy_btn')}
               >
                 <Copy size={16} /> {t('copy_btn')}
               </button>
             )}
             <button
-              className={`${s.btn} ${s.btn_ghost}`}
+              className={`${ui.button} ${ui.secondary} ${ui.block}`}
               onClick={() => setModal('reset')}
               disabled={text.length === 0}
-              style={text.length === 0 ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
               aria-label={t('reset_btn')}
             >
               <RotateCcw size={16} /> {t('reset_btn')}
@@ -351,7 +350,7 @@ export default function PeekProofClient() {
               {t('current_line', { line: activeLine + 1 })}
             </span>
             <button
-              className={`${s.panic_btn} ${panic ? s.panic_btn_active : ''}`}
+              className={`${ui.button} ${ui.sm} ${panic ? ui.danger : ui.secondary}`}
               onClick={() => setPanic((p) => !p)}
               aria-pressed={panic}
               aria-label={panic ? t('panic_active') : t('panic_label')}
@@ -418,8 +417,8 @@ export default function PeekProofClient() {
       </div>
 
       {/* ── Tips ── */}
-      <section className={s.tips}>
-        <h2 className={s.tips_title}>{t('tips_title')}</h2>
+      <section className={ui.card}>
+        <h2 className={ui.cardTitle}>{t('tips_title')}</h2>
         <ul className={s.tips_list}>
           <li>{t('tip_1')}</li>
           <li>{t('tip_2')}</li>
@@ -497,10 +496,10 @@ export default function PeekProofClient() {
               {!autoClear && <><br /><br />{t('clipboard_security_notice')}</>}
             </p>
             <div className={s.modal_actions}>
-              <button className={`${s.btn} ${s.btn_ghost}`} onClick={() => setModal(null)}>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={() => setModal(null)}>
                 {t('modal_cancel')}
               </button>
-              <button className={`${s.btn} ${s.btn_primary}`} onClick={doCopy}>
+              <button className={`${ui.button} ${ui.primary}`} onClick={doCopy}>
                 {t('copy_confirm_ok')}
               </button>
             </div>
@@ -519,10 +518,10 @@ export default function PeekProofClient() {
             <h3 className={s.modal_title}>{t('reset_confirm_title')}</h3>
             <p className={s.modal_body}>{t('reset_confirm_body')}</p>
             <div className={s.modal_actions}>
-              <button className={`${s.btn} ${s.btn_ghost}`} onClick={() => setModal(null)}>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={() => setModal(null)}>
                 {t('modal_cancel')}
               </button>
-              <button className={`${s.btn} ${s.btn_primary}`} onClick={doReset}>
+              <button className={`${ui.button} ${ui.primary}`} onClick={doReset}>
                 {t('reset_confirm_ok')}
               </button>
             </div>

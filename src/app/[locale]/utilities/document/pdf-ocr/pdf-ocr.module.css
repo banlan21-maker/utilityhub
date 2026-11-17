@@ -17,18 +17,7 @@
 }
 
 /* ── Mobile warning ── */
-.mobileWarning {
-  display: flex;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  background: #FEF3C7;
-  border: 1px solid #FDE68A;
-  border-radius: 1rem;
-  color: #92400E;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  align-items: flex-start;
-}
+.mobileWarning > div { flex: 1; }
 
 .mobileWarning p {
   margin: 0.25rem 0 0;
@@ -44,7 +33,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #92400E;
+  color: var(--tint-amber-fg);
   padding: 0.25rem;
   border-radius: 0.5rem;
   display: flex;
@@ -53,11 +42,6 @@
 
 /* ── Panel ── */
 .panel {
-  background: var(--surface);
-  border-radius: 1.5rem;
-  border: 1px solid var(--border);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
-  padding: 2rem 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -66,7 +50,7 @@
 /* ── Upload zone ── */
 .upload_zone {
   border: 2px dashed var(--border);
-  border-radius: 1rem;
+  border-radius: var(--radius-card);
   padding: 2.5rem 1.5rem;
   text-align: center;
   cursor: pointer;
@@ -76,8 +60,8 @@
 
 .upload_zone:hover,
 .upload_zone_drag {
-  border-color: #8b5cf6;
-  background: #faf5ff;
+  border-color: var(--color-primary);
+  background: var(--tint-violet-bg);
 }
 
 .upload_icon {
@@ -105,7 +89,7 @@
   padding: 1rem 1.25rem;
   background: var(--surface-hover);
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
 }
 
 .file_name {
@@ -123,7 +107,7 @@
 
 .file_size_warn {
   font-size: 0.8rem;
-  color: #d97706;
+  color: var(--tint-amber-fg);
   font-weight: 600;
   margin-top: 0.35rem;
 }
@@ -141,35 +125,10 @@
 }
 
 .file_remove:hover {
-  color: #ef4444;
+  color: var(--tint-red-fg);
 }
 
 /* ── Options ── */
-.field_label {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 0.4rem;
-}
-
-.select_field {
-  width: 100%;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 0.6rem;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  background: var(--surface-hover);
-  outline: none;
-  transition: border-color 0.15s;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-.select_field:focus {
-  border-color: #8b5cf6;
-}
 
 .quality_group {
   display: flex;
@@ -181,9 +140,10 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-height: var(--control-h);
   padding: 0.65rem 1rem;
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   background: var(--surface-hover);
   cursor: pointer;
   transition: all 0.15s;
@@ -192,13 +152,13 @@
 }
 
 .quality_label:hover {
-  border-color: #c4b5fd;
+  border-color: var(--tint-violet-border);
 }
 
 .quality_active {
-  border-color: #8b5cf6 !important;
-  background: #faf5ff !important;
-  color: #1e293b !important;
+  border-color: var(--color-primary) !important;
+  background: var(--color-primary-light) !important;
+  color: var(--text-primary) !important;
 }
 
 .quality_disabled {
@@ -208,7 +168,7 @@
 }
 
 .quality_radio {
-  accent-color: #8b5cf6;
+  accent-color: var(--color-primary);
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
@@ -216,64 +176,17 @@
 
 .quality_fixed_note {
   font-size: 0.78rem;
-  color: #d97706;
+  color: var(--tint-amber-fg);
   font-weight: 600;
   margin-top: 0.25rem;
 }
 
 /* ── Large file warning ── */
-.large_warn {
-  display: flex;
-  gap: 0.6rem;
-  align-items: flex-start;
-  padding: 0.85rem 1rem;
-  background: #FEF3C7;
-  border: 1px solid #FDE68A;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  color: #92400E;
-  font-weight: 600;
-  line-height: 1.5;
-}
 
 /* ── Convert button ── */
-.convert_btn {
-  width: 100%;
-  padding: 0.9rem;
-  background: #8b5cf6;
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.convert_btn:hover:not(:disabled) {
-  background: #7c3aed;
-}
-
-.convert_btn:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.convert_btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 
 /* ── Progress ── */
 .progress_box {
-  background: var(--surface);
-  border-radius: 1.5rem;
-  border: 1px solid var(--border);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
-  padding: 2rem 2.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -294,7 +207,7 @@
 
 .progress_bar_wrap {
   width: 100%;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 9999px;
   height: 10px;
   overflow: hidden;
@@ -302,7 +215,7 @@
 
 .progress_bar_fill {
   height: 100%;
-  background: #8b5cf6;
+  background: var(--primary-fill);
   border-radius: 9999px;
   transition: width 0.3s ease;
 }
@@ -310,14 +223,14 @@
 .progress_pct {
   font-size: 1rem;
   font-weight: 700;
-  color: #8b5cf6;
+  color: var(--color-primary);
 }
 
 .progress_warn {
   font-size: 0.82rem;
-  color: #92400E;
+  color: var(--tint-amber-fg);
   font-weight: 700;
-  background: #FEF3C7;
+  background: var(--tint-amber-bg);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   word-break: keep-all;
@@ -325,9 +238,9 @@
 
 /* ── Done ── */
 .done_box {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 1.5rem;
+  background: var(--tint-green-bg);
+  border: 1px solid var(--tint-green-border);
+  border-radius: var(--radius-card);
   padding: 2rem 2.5rem;
   text-align: center;
   display: flex;
@@ -339,19 +252,19 @@
 .done_title {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #166534;
+  color: var(--tint-green-fg);
 }
 
 .done_filename {
   font-size: 0.9rem;
-  color: #15803d;
+  color: var(--tint-green-fg);
   font-weight: 600;
   word-break: break-all;
 }
 
 .done_note {
   font-size: 0.85rem;
-  color: #166534;
+  color: var(--tint-green-fg);
 }
 
 .done_actions {
@@ -362,89 +275,15 @@
   margin-top: 0.5rem;
 }
 
-.done_btn_primary {
-  padding: 0.65rem 1.5rem;
-  background: #8b5cf6;
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: background 0.15s;
-}
-
-.done_btn_primary:hover {
-  background: #7c3aed;
-}
-
-.done_btn_secondary {
-  padding: 0.65rem 1.5rem;
-  background: var(--surface-hover);
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.done_btn_secondary:hover {
-  background: #e2e8f0;
-}
-
 /* ── Error ── */
-.error_box {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
-  padding: 1rem 1.25rem;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 1rem;
-  color: #991b1b;
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1.5;
-}
 
-.error_retry {
-  margin-top: 0.75rem;
-  padding: 0.5rem 1.25rem;
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.error_retry:hover {
-  background: #dc2626;
-}
+.error_retry { margin-top: 0.75rem; }
 
 /* ── Info box ── */
 .info_box {
-  background: var(--surface);
-  border-radius: 1.5rem;
-  border: 1px solid var(--border);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
-  padding: 2rem 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.info_title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
 }
 
 .info_section {
@@ -463,7 +302,7 @@
 }
 
 .info_item_warn {
-  color: #92400E;
+  color: var(--tint-amber-fg);
 }
 
 .info_divider {
@@ -480,14 +319,9 @@
 }
 
 /* ── Disclaimer ── */
-.disclaimer {
-  padding: 1.25rem 1.5rem;
-  background: #FEF3C7;
-  border: 1px solid #FDE68A;
-  border-radius: 1rem;
-  font-size: 0.85rem;
-  color: #92400E;
-  line-height: 1.6;
+.container .disclaimer {
+  flex-direction: column;
+  gap: 0;
 }
 
 .disclaimer h4 {
@@ -511,13 +345,7 @@
     padding: 1rem 1rem 3rem;
   }
 
-  .panel {
-    padding: 1.25rem 1rem;
-  }
-
-  .progress_box,
-  .done_box,
-  .info_box {
+  .done_box {
     padding: 1.25rem 1rem;
   }
 }

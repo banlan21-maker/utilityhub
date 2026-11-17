@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
 
 /* ─── Helpers ─── */
 function extractVideoId(input: string): string | null {
@@ -41,11 +42,7 @@ function Input({ value, onChange, onEnter, isKo }: { value: string; onChange: (v
       onChange={e => onChange(e.target.value)}
       onKeyDown={e => e.key === 'Enter' && onEnter()}
       placeholder={isKo ? "https://www.youtube.com/watch?v=... 또는 youtu.be/... 또는 11자리 ID" : "https://www.youtube.com/watch?v=... or youtu.be/... or 11-character ID"}
-      style={{
-        flex: 1, padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
-        background: 'var(--surface)', border: '1px solid var(--border)',
-        color: 'var(--text-primary)', fontSize: '0.95rem', outline: 'none',
-      }}
+      className={ui.input}
     />
   );
 }
@@ -62,15 +59,12 @@ function ThumbnailCard({
   if (imgError) return null;
 
   return (
-    <div className="glass-panel" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+    <div className={ui.card} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{label}</span>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{size}</span>
         {badge && (
-          <span style={{
-            marginLeft: 'auto', background: 'var(--primary)', color: '#fff',
-            fontSize: '0.65rem', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: 700,
-          }}>
+          <span className={ui.badge} style={{ marginLeft: 'auto' }}>
             {badge}
           </span>
         )}
@@ -85,22 +79,15 @@ function ThumbnailCard({
         <button
           onClick={onDownload}
           disabled={downloading}
-          style={{
-            flex: 1, padding: '0.5rem', borderRadius: 'var(--radius-sm)',
-            background: 'var(--primary)', color: '#fff', border: 'none',
-            cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
-            opacity: downloading ? 0.7 : 1,
-          }}
+          className={`${ui.button} ${ui.primary} ${ui.sm}`}
+          style={{ flex: 1 }}
         >
           {isKo ? (downloading ? '다운로드 중...' : '⬇ 다운로드') : (downloading ? 'Downloading...' : '⬇ Download')}
         </button>
         <button
           onClick={onCopyUrl}
-          style={{
-            flex: 1, padding: '0.5rem', borderRadius: 'var(--radius-sm)',
-            background: 'var(--surface)', color: 'var(--text-primary)', border: '1px solid var(--border)',
-            cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
-          }}
+          className={`${ui.button} ${ui.secondary} ${ui.sm}`}
+          style={{ flex: 1 }}
         >
           {isKo ? (copied ? '✓ 복사됨' : '📋 URL 복사') : (copied ? '✓ Copied' : '📋 Copy URL')}
         </button>
@@ -155,10 +142,6 @@ export default function YtThumbnailClient() {
     setTimeout(() => setCopiedKey(''), 2000);
   };
 
-  const labelStyle: React.CSSProperties = {
-    display: 'block', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem',
-  };
-
   return (
     <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
       <NavigationActions />
@@ -173,25 +156,21 @@ export default function YtThumbnailClient() {
       />
 
       {/* Input Panel */}
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <label style={labelStyle}>{isKo ? 'YouTube URL 또는 영상 ID' : 'YouTube URL or video ID'}</label>
+      <div className={`${ui.card} ${ui.field}`} style={{ marginBottom: '2rem' }}>
+        <label className={ui.label}>{isKo ? 'YouTube URL 또는 영상 ID' : 'YouTube URL or video ID'}</label>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: '200px' }}>
             <Input value={input} onChange={setInput} onEnter={handleExtract} isKo={isKo} />
           </div>
           <button
             onClick={handleExtract}
-            style={{
-              padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',
-              background: 'var(--primary)', color: '#fff', border: 'none',
-              cursor: 'pointer', fontWeight: 700, fontSize: '0.95rem', whiteSpace: 'nowrap',
-            }}
+            className={`${ui.button} ${ui.primary}`}
           >
             {isKo ? '썸네일 추출' : 'Extract Thumbnail'}
           </button>
         </div>
-        {error && <p style={{ color: '#f87171', marginTop: '0.5rem', fontSize: '0.85rem' }}>{error}</p>}
-        <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+        {error && <p className={ui.error}>{error}</p>}
+        <p className={ui.hint}>
           {isKo
             ? '지원: youtube.com/watch?v=… · youtu.be/… · shorts/… · 11자리 영상 ID'
             : 'Supported: youtube.com/watch?v=… · youtu.be/… · shorts/… · 11-character video ID'}
@@ -226,7 +205,7 @@ export default function YtThumbnailClient() {
 
       {/* Empty state */}
       {!videoId && (
-        <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem' }}>
+        <div className={ui.card} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📸</div>
           <p>{isKo ? 'YouTube URL을 입력하면 썸네일이 여기에 표시됩니다' : 'Enter a YouTube URL and the thumbnails will appear here'}</p>
         </div>

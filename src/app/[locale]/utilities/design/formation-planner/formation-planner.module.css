@@ -12,55 +12,6 @@
   margin-bottom: 1rem;
 }
 
-.titleInput {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1.5px solid var(--border);
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  background: var(--surface);
-  color: var(--text-primary);
-  transition: border-color 0.2s;
-  box-sizing: border-box;
-}
-
-.titleInput:focus {
-  outline: none;
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
-}
-
-.bgSelector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.bgBtn {
-  padding: 0.4rem 0.85rem;
-  border: 1.5px solid var(--border);
-  border-radius: 9999px;
-  background: var(--surface);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.18s;
-  white-space: nowrap;
-}
-
-.bgBtn:hover {
-  border-color: #8b5cf6;
-  color: #8b5cf6;
-}
-
-.bgBtnActive {
-  background: #8b5cf6;
-  border-color: #8b5cf6;
-  color: white;
-}
-
 /* ── Main Layout ─────────────────────────── */
 .mainLayout {
   display: grid;
@@ -117,7 +68,7 @@
   transform: scale(1.05);
 }
 
-/* ── Toolbar ─────────────────────────────── */
+/* ── Toolbar (카드·입력·버튼 모양은 공통 UI 키트) ── */
 .toolbar {
   display: flex;
   flex-direction: column;
@@ -129,28 +80,13 @@
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 0.875rem;
-  padding: 0.65rem 0.9rem;
 }
+.toolbar .addSection { padding: 0.65rem 0.9rem; }
 
-.textInput {
+.addSection .textInput {
   width: 72px;
-  padding: 0.4rem 0.6rem;
-  border: 1.5px solid var(--border);
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 700;
   text-align: center;
-  color: var(--text-primary);
-  background: var(--surface-hover);
-  transition: border-color 0.2s;
-}
-
-.textInput:focus {
-  outline: none;
-  border-color: #8b5cf6;
+  font-weight: 700;
 }
 
 .colorRow {
@@ -175,64 +111,15 @@
 }
 
 .colorDotActive {
-  border-color: #8b5cf6 !important;
+  border-color: var(--color-primary) !important;
   transform: scale(1.25);
-  box-shadow: 0 0 0 2px white, 0 0 0 4px #8b5cf6;
-}
-
-.addBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  background: #8b5cf6;
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  padding: 0.45rem 1rem;
-  font-size: 0.83rem;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-
-.addBtn:hover {
-  background: #7c3aed;
-  transform: translateY(-1px);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--color-primary);
 }
 
 .actionRow {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-}
-
-.actionBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.45rem 0.9rem;
-  border: 1.5px solid var(--border);
-  border-radius: 9999px;
-  background: var(--surface);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.18s;
-  white-space: nowrap;
-}
-
-.actionBtn:hover {
-  border-color: #8b5cf6;
-  color: #8b5cf6;
-  transform: translateY(-1px);
-}
-
-.actionBtnActive {
-  border-color: #8b5cf6;
-  color: #8b5cf6;
-  background: #f5f3ff;
 }
 
 .recordGroup {
@@ -242,29 +129,11 @@
   margin-left: auto;
 }
 
-.recordBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 1rem;
-  border: 1.5px solid #ef4444;
-  border-radius: 9999px;
-  background: var(--surface);
-  color: #ef4444;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.recordBtn:hover {
-  background: #fef2f2;
-}
-
-.recordBtnActive {
+/* 녹화 중: ui.danger 위에 진한 빨강 + 깜빡임 (녹화 상태 표시) */
+.recordGroup .recordBtnActive {
   background: #ef4444;
-  color: white;
+  border-color: #ef4444;
+  color: #fff;
   animation: recordPulse 1.5s ease-in-out infinite;
 }
 
@@ -306,8 +175,8 @@
 }
 
 .infoBtn:hover {
-  border-color: #8b5cf6;
-  color: #8b5cf6;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .tooltip {
@@ -325,35 +194,25 @@
   z-index: 50;
 }
 
-/* ── Legend Panel (PC) ───────────────────── */
+/* ── Legend Panel (PC) — 카드 모양은 ui.card ── */
 .legendPanel {
-  background: var(--surface);
-  border: 1.5px solid #ede9fe;
-  border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.08);
   max-height: 600px;
   display: flex;
   flex-direction: column;
 }
+.mainLayout .legendPanel { padding: 0; }
 
 .legendHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.875rem 1rem;
-  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-  color: white;
+  background: var(--tint-violet-bg);
+  border-bottom: 1px solid var(--tint-violet-border);
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 0.9rem;
-}
-
-.legendCount {
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 9999px;
-  padding: 0.1rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
 }
 
 .legendEmpty {
@@ -381,11 +240,11 @@
 }
 
 .legendItem:hover {
-  background: #f8f4ff;
+  background: var(--tint-violet-bg);
 }
 
 .legendItemSelected {
-  background: #ede9fe;
+  background: var(--tint-violet-bg);
 }
 
 .legendIcon {
@@ -412,11 +271,11 @@
 
 .legendInput:focus {
   outline: none;
-  border-color: #8b5cf6;
+  border-color: var(--color-primary);
 }
 
 .legendInput::placeholder {
-  color: #cbd5e1;
+  color: var(--text-muted);
 }
 
 .legendDelete {
@@ -425,7 +284,7 @@
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: #cbd5e1;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -435,8 +294,8 @@
 }
 
 .legendDelete:hover {
-  background: #fee2e2;
-  color: #ef4444;
+  background: var(--tint-red-bg);
+  color: var(--tint-red-fg);
 }
 
 /* ── Mobile Drawer ───────────────────────── */
@@ -446,23 +305,6 @@
   bottom: 1rem;
   z-index: 30;
   margin-top: 0.75rem;
-}
-
-.drawerToggle {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  width: 100%;
-  justify-content: center;
-  padding: 0.75rem;
-  background: #8b5cf6;
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
 }
 
 .drawer {
@@ -488,7 +330,7 @@
 .drawerHandle {
   width: 36px;
   height: 4px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 9999px;
   margin: 0.75rem auto 0;
   flex-shrink: 0;
@@ -501,7 +343,7 @@
   padding: 0.75rem 1rem;
   font-weight: 700;
   font-size: 0.9rem;
-  color: #8b5cf6;
+  color: var(--color-primary);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -544,7 +386,7 @@
     align-items: flex-start;
   }
 
-  .textInput {
+  .addSection .textInput {
     width: 100%;
   }
 

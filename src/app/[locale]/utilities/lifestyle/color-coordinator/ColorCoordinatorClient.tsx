@@ -16,6 +16,7 @@ import OutfitFigure, { FIG_H, FIG_W, type HairStyle } from './OutfitFigure';
 import { SEO_EN, SEO_KO } from './content';
 import { trackEvent } from '@/lib/track';
 import s from './color-coordinator.module.css';
+import { ui } from '@/app/components/ui';
 
 const INITIAL_SLOTS: SlotsMap = {
   hat:    { color: '#1E1F23', active: false, optional: true,  style: 'bucket' },
@@ -283,9 +284,9 @@ export default function ColorCoordinatorClient() {
               />
             ))}
           </div>
-          <div className={s.hairRow} role="group" aria-label={isKo ? '머리 길이' : 'Hair'}>
+          <div className={`${ui.chips} ${s.hairRow}`} role="group" aria-label={isKo ? '머리 길이' : 'Hair'}>
             {(['short', 'long'] as const).map((h) => (
-              <button key={h} type="button" className={`${s.hairBtn} ${hair === h ? s.hairBtnOn : ''}`} aria-pressed={hair === h} onClick={() => setHair(h)}>
+              <button key={h} type="button" className={`${ui.chip} ${ui.pill} ${s.hairBtn} ${hair === h ? ui.chipActive : ''}`} aria-pressed={hair === h} onClick={() => setHair(h)}>
                 {h === 'short' ? (isKo ? '짧은 머리' : 'Short hair') : (isKo ? '긴 머리' : 'Long hair')}
               </button>
             ))}
@@ -294,10 +295,10 @@ export default function ColorCoordinatorClient() {
         </div>
 
         {/* 아이템 */}
-        <section className={`${s.card} ${s.slots}`} aria-labelledby="cc-items">
+        <section className={`${ui.card} ${s.card} ${s.slots}`} aria-labelledby="cc-items">
           <div className={s.cardHead}>
-            <h2 id="cc-items" className={s.cardTitle}>{isKo ? '아이템' : 'Pieces'}</h2>
-            <button type="button" className={s.ghostBtn} onClick={undo} disabled={!history.length}>
+            <h2 id="cc-items" className={`${ui.cardTitle} ${s.cardTitle}`}>{isKo ? '아이템' : 'Pieces'}</h2>
+            <button type="button" className={`${ui.button} ${ui.ghost} ${ui.sm}`} onClick={undo} disabled={!history.length}>
               <RotateCcw size={13} /> {isKo ? '되돌리기' : 'Undo'}
             </button>
           </div>
@@ -339,20 +340,20 @@ export default function ColorCoordinatorClient() {
         </section>
 
         {/* 팔레트 */}
-        <section className={`${s.card} ${s.palette}`} aria-labelledby="cc-palette">
-          <h2 id="cc-palette" className={s.cardTitle}>
+        <section className={`${ui.card} ${s.card} ${s.palette}`} aria-labelledby="cc-palette">
+          <h2 id="cc-palette" className={`${ui.cardTitle} ${s.cardTitle}`}>
             {isKo ? `${label(selected)} 모양·색` : `${label(selected)} style & color`}
             <span className={s.curColor}>
               <span className={s.curDot} style={{ background: cur.color }} />
               {colorName(cur.color)} · {cur.color}
             </span>
           </h2>
-          <div className={s.styleRow} role="group" aria-label={isKo ? '모양' : 'Style'}>
+          <div className={`${ui.chips} ${s.styleRow}`} role="group" aria-label={isKo ? '모양' : 'Style'}>
             {STYLES[selected].map((st) => (
               <button
                 key={st.key}
                 type="button"
-                className={`${s.styleBtn} ${cur.style === st.key ? s.styleBtnOn : ''}`}
+                className={`${ui.chip} ${ui.pill} ${cur.style === st.key ? ui.chipActive : ''}`}
                 aria-pressed={cur.style === st.key}
                 onClick={() => pickStyle(st.key)}
               >
@@ -361,12 +362,12 @@ export default function ColorCoordinatorClient() {
             ))}
           </div>
           <p className={s.swGroupName}>{isKo ? '퍼스널 컬러 팔레트' : 'Personal color palette'}</p>
-          <div className={s.tabs} role="group" aria-label={isKo ? '퍼스널 컬러' : 'Personal color'}>
+          <div className={`${ui.segmented} ${s.tabs}`} role="group" aria-label={isKo ? '퍼스널 컬러' : 'Personal color'}>
             {SEASON_TABS.map((k) => (
               <button
                 key={k}
                 type="button"
-                className={`${s.tab} ${season === k ? s.tabOn : ''}`}
+                className={`${ui.segment} ${season === k ? ui.segmentActive : ''}`}
                 aria-pressed={season === k}
                 onClick={() => setSeason(k)}
               >
@@ -374,7 +375,7 @@ export default function ColorCoordinatorClient() {
               </button>
             ))}
           </div>
-          {seasonInfo && <p className={s.seasonNote}>{isKo ? seasonInfo.noteKo : seasonInfo.noteEn}</p>}
+          {seasonInfo && <p className={`${ui.notice} ${ui.violet} ${s.seasonNote}`}>{isKo ? seasonInfo.noteKo : seasonInfo.noteEn}</p>}
           {swatchGroups.map((g) => (
             <div key={g.en} className={s.swGroup}>
               {!seasonInfo && <p className={s.swGroupName}>{isKo ? g.ko : g.en}</p>}
@@ -399,7 +400,7 @@ export default function ColorCoordinatorClient() {
               </div>
             </div>
           ))}
-          <label className={s.customBtn}>
+          <label className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.customBtn}`}>
             <Plus size={12} /> {isKo ? '커스텀 색상' : 'Custom color'}
             <input
               type="color"
@@ -411,8 +412,8 @@ export default function ColorCoordinatorClient() {
         </section>
 
         {/* 룩 추천 */}
-        <section className={`${s.card} ${s.looks}`} aria-labelledby="cc-looks">
-          <h2 id="cc-looks" className={s.cardTitle}>{isKo ? '룩 자동 추천' : 'Auto looks'}</h2>
+        <section className={`${ui.card} ${s.card} ${s.looks}`} aria-labelledby="cc-looks">
+          <h2 id="cc-looks" className={`${ui.cardTitle} ${s.cardTitle}`}>{isKo ? '룩 자동 추천' : 'Auto looks'}</h2>
           <p className={s.lookBase}>
             {isKo
               ? <>기준: <b>{label(selected)} · {colorName(cur.color)}</b> — 나머지 아이템 색을 채웁니다. 같은 버튼을 다시 누르면 다른 조합.</>
@@ -423,7 +424,7 @@ export default function ColorCoordinatorClient() {
               <button
                 key={l.key}
                 type="button"
-                className={`${s.lookBtn} ${look?.key === l.key ? s.lookBtnOn : ''}`}
+                className={`${ui.chip} ${s.lookBtn} ${look?.key === l.key ? ui.chipActive : ''}`}
                 onClick={() => applyLook(l.key)}
               >
                 <span className={s.lookEmoji} aria-hidden="true">{l.emoji}</span>
@@ -435,8 +436,8 @@ export default function ColorCoordinatorClient() {
         </section>
 
         {/* 조합 점검 */}
-        <section className={`${s.card} ${s.harmony}`} aria-labelledby="cc-harmony" aria-live="polite">
-          <h2 id="cc-harmony" className={s.cardTitle}>{isKo ? '조합 점검' : 'Harmony check'}</h2>
+        <section className={`${ui.card} ${s.card} ${s.harmony}`} aria-labelledby="cc-harmony" aria-live="polite">
+          <h2 id="cc-harmony" className={`${ui.cardTitle} ${s.cardTitle}`}>{isKo ? '조합 점검' : 'Harmony check'}</h2>
           <p className={`${s.verdict} ${s[`v_${harmony.verdict}`]}`}>{isKo ? harmony.ko : harmony.en}</p>
           <ul className={s.checks}>
             {harmony.checks.map((c) => (
@@ -448,7 +449,7 @@ export default function ColorCoordinatorClient() {
           </ul>
         </section>
 
-        <button type="button" className={s.saveBtn} onClick={handleSave} disabled={saving}>
+        <button type="button" className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${s.saveBtn}`} onClick={handleSave} disabled={saving}>
           <Download size={18} />
           {saving ? (isKo ? '이미지 만드는 중…' : 'Creating image…') : (isKo ? '코디 저장 (PNG 1080×1350)' : 'Save outfit (PNG 1080×1350)')}
         </button>

@@ -14,6 +14,7 @@ import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, Width
 import { saveAs } from 'file-saver';
 import { FileType } from 'lucide-react';
 import s from './hwp-pdf-converter.module.css';
+import { ui } from '@/app/components/ui';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -269,7 +270,7 @@ export default function HwpConverterClient() {
 
       <ToolHeader icon={<FileType />} title={t('title')} subtitle={t('description')} />
 
-      <div className={s.panel}>
+      <div className={`${ui.card} ${s.panel}`}>
         <div
           role="button"
           tabIndex={0}
@@ -297,10 +298,10 @@ export default function HwpConverterClient() {
 
         {file && !done && (
           <div className={s.button_row}>
-            <button onClick={() => convertFile('pdf')} disabled={isConverting} className={s.btn_pdf}>
+            <button onClick={() => convertFile('pdf')} disabled={isConverting} className={`${ui.button} ${ui.primary} ${ui.lg} ${s.btn_main}`}>
               {isConverting && conversionType === 'pdf' ? t('converting') : t('download_pdf')}
             </button>
-            <button onClick={() => convertFile('docx')} disabled={isConverting} className={s.btn_docx}>
+            <button onClick={() => convertFile('docx')} disabled={isConverting} className={`${ui.button} ${ui.primary} ${ui.lg} ${s.btn_main}`}>
               {isConverting && conversionType === 'docx' ? t('converting') : t('download_docx')}
             </button>
           </div>
@@ -310,21 +311,21 @@ export default function HwpConverterClient() {
           <div className={s.result_box}>
             <h3 className={s.result_title}>✅ {t('done')}</h3>
             <p className={s.notice}>{t('stats', { count: paragraphs.length })}</p>
-            {warning && <p className={s.warning} role="alert">{warning}</p>}
+            {warning && <p className={`${ui.notice} ${ui.amber} ${s.alert}`} role="alert">{warning}</p>}
             <div className={s.button_row}>
               {pdfBlob && (
-                <button onClick={downloadPdf} className={`${s.btn_download} ${s.btn_download_pdf}`}>{t('download_pdf')}</button>
+                <button onClick={downloadPdf} className={`${ui.button} ${ui.primary} ${ui.lg} ${s.btn_main}`}>{t('download_pdf')}</button>
               )}
               {docxBlob && (
-                <button onClick={downloadDocx} className={`${s.btn_download} ${s.btn_download_docx}`}>{t('download_docx')}</button>
+                <button onClick={downloadDocx} className={`${ui.button} ${ui.primary} ${ui.lg} ${s.btn_main}`}>{t('download_docx')}</button>
               )}
             </div>
             <p className={s.notice}>{t('notice')}</p>
-            <button onClick={resetConverter} className={s.btn_reset}>{t('reset')}</button>
+            <button onClick={resetConverter} className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.btn_reset}`}>{t('reset')}</button>
           </div>
         )}
 
-        {error && <p className={s.error} role="alert">{error}</p>}
+        {error && <p className={`${ui.notice} ${ui.red} ${s.alert}`} role="alert">{error}</p>}
       </div>
 
       <ShareBar title={t('title')} description={t('description')} />

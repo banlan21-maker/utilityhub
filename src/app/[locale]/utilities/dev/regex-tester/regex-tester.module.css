@@ -7,7 +7,7 @@
 }
 
 .rx_grid {
-  max-width: 960px;
+  max-width: var(--tool-width);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
@@ -38,43 +38,41 @@
 }
 .rx_flag_str {
   font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
-  color: #93c5fd;
+  color: var(--tint-blue-fg);
   font-size: 1rem;
   min-width: 2rem;
   text-align: center;
   flex-shrink: 0;
 }
 
-/* ── 에러 박스 ─────────────────────────────────────────── */
+/* ── 에러 박스 (모양은 ui.notice + ui.red) ─────────────── */
 .rx_error_box {
   margin-top: 0.6rem;
-  padding: 0.6rem 0.8rem;
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: var(--radius-sm);
-  font-size: 0.78rem;
-  line-height: 1.5;
-  color: #fca5a5;
   word-break: break-all;
 }
 .rx_error_box code {
   font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
-  color: #f87171;
+  font-size: 0.78rem;
 }
 
-/* ── 광고 단일 ─────────────────────────────────────────── */
-.rx_ad {
-  max-width: 960px;
-  margin: 1.5rem auto 0;
-  min-height: 90px;
-  background: rgba(226, 232, 240, 0.3);
-  border: 1px dashed var(--border);
-  border-radius: 0.5rem;
+/* ── 치트시트 (모양은 ui.card / ui.chip) ────────────────── */
+.rx_cheat {
+  height: fit-content;
+  max-height: 600px;
+  overflow-y: auto;
+}
+.rx_cheat_list {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  font-size: 0.875rem;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.rx_cheat_list .rx_cheat_btn {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
 }
 
 /* ── 모바일 ─────────────────────────────────────────────── */

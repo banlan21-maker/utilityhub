@@ -17,6 +17,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './bulk-renamer.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── constants ──
 const ROW_H = 40;
@@ -432,21 +433,21 @@ export default function BulkRenamerClient() {
       <ToolHeader icon={<FileEdit />} title={t('title')} subtitle={t('subtitle')} />
 
       {/* ── Step 1: input ── */}
-      <section className={s.panel}>
-        <h2 className={s.step_title}>{t('step1_title')}</h2>
+      <section className={ui.card}>
+        <h2 className={ui.cardTitle}>{t('step1_title')}</h2>
         <div
           className={`${s.dropzone} ${dragActive ? s.dropzone_active : ''}`}
           onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
           onDragLeave={() => setDragActive(false)}
           onDrop={onDrop}
         >
-          <Upload size={32} color="#3b82f6" />
+          <Upload size={32} color="var(--tint-blue-fg)" />
           <span className={s.dropzone_text}>{t('dropzone_text')}</span>
           <div className={s.dropzone_btns}>
-            <button className={`${s.btn} ${s.btn_primary}`} onClick={() => fileInputRef.current?.click()}>
+            <button className={`${ui.button} ${ui.primary}`} onClick={() => fileInputRef.current?.click()}>
               <Upload size={16} /> {t('select_files_btn')}
             </button>
-            <button className={`${s.btn} ${s.btn_ghost}`} onClick={() => folderInputRef.current?.click()}>
+            <button className={`${ui.button} ${ui.secondary}`} onClick={() => folderInputRef.current?.click()}>
               <FolderOpen size={16} /> {t('select_folder_btn')}
             </button>
           </div>
@@ -468,10 +469,10 @@ export default function BulkRenamerClient() {
         </div>
         <p className={s.security_notice}>{t('security_notice')}</p>
         {files.length > 0 && (
-          <div className={s.files_bar}>
+          <div className={`${ui.notice} ${ui.blue} ${s.files_bar}`}>
             <span>{t('files_summary', { count: files.length, size: formatBytes(totalBytes) })}</span>
-            <button className={s.clear_btn} onClick={clearFiles}>
-              <Trash2 size={13} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+            <button className={`${ui.button} ${ui.ghost} ${ui.sm}`} onClick={clearFiles}>
+              <Trash2 size={13} />
               {t('clear_files')}
             </button>
           </div>
@@ -480,27 +481,27 @@ export default function BulkRenamerClient() {
 
       {/* ── Step 2: rules + preview ── */}
       {files.length > 0 && (
-        <section className={s.panel}>
-          <h2 className={s.step_title}>{t('step2_title')}</h2>
+        <section className={ui.card}>
+          <h2 className={ui.cardTitle}>{t('step2_title')}</h2>
           <div className={s.step2_grid}>
             {/* rules */}
             <div className={s.rules}>
               {/* find/replace */}
               <div className={s.rule_group}>
                 <p className={s.rule_group_title}>{t('find_replace_title')}</p>
-                <div className={s.field}>
-                  <label className={s.field_label}>{t('find_label')}</label>
-                  <input className={s.input} value={find} onChange={(e) => setFind(e.target.value)} />
+                <div className={ui.field}>
+                  <label className={ui.label}>{t('find_label')}</label>
+                  <input className={ui.input} value={find} onChange={(e) => setFind(e.target.value)} />
                 </div>
-                <div className={s.field}>
-                  <label className={s.field_label}>{t('replace_label')}</label>
-                  <input className={s.input} value={replace} onChange={(e) => setReplace(e.target.value)} />
+                <div className={ui.field}>
+                  <label className={ui.label}>{t('replace_label')}</label>
+                  <input className={ui.input} value={replace} onChange={(e) => setReplace(e.target.value)} />
                 </div>
                 <label className={s.check_row}>
                   <input type="checkbox" checked={useRegex} onChange={(e) => setUseRegex(e.target.checked)} />
                   {t('use_regex_label')}
                 </label>
-                {regexError && <span className={s.regex_err}>{t('regex_error')}</span>}
+                {regexError && <span className={ui.error}>{t('regex_error')}</span>}
               </div>
 
               {/* whitespace */}
@@ -515,11 +516,11 @@ export default function BulkRenamerClient() {
               {/* case */}
               <div className={s.rule_group}>
                 <p className={s.rule_group_title}>{t('case_title')}</p>
-                <div className={s.seg}>
+                <div className={ui.segmented}>
                   {(['none', 'lower', 'upper', 'title'] as CaseMode[]).map((m) => (
                     <button
                       key={m}
-                      className={`${s.seg_btn} ${caseMode === m ? s.seg_btn_active : ''}`}
+                      className={`${ui.segment} ${caseMode === m ? ui.segmentActive : ''}`}
                       onClick={() => setCaseMode(m)}
                       aria-pressed={caseMode === m}
                     >
@@ -537,10 +538,10 @@ export default function BulkRenamerClient() {
                   {t('fullrename_enable')}
                 </label>
                 {fullRename && (
-                  <div className={s.field} style={{ marginTop: '0.5rem' }}>
-                    <label className={s.field_label}>{t('fullrename_base')}</label>
+                  <div className={ui.field} style={{ marginTop: '0.5rem' }}>
+                    <label className={ui.label}>{t('fullrename_base')}</label>
                     <input
-                      className={s.input}
+                      className={ui.input}
                       value={fullBase}
                       onChange={(e) => setFullBase(e.target.value)}
                       placeholder={t('fullrename_placeholder')}
@@ -552,24 +553,24 @@ export default function BulkRenamerClient() {
               {/* affix */}
               <div className={s.rule_group}>
                 <p className={s.rule_group_title}>{t('affix_title')}</p>
-                <div className={s.field}>
-                  <label className={s.field_label}>{t('prefix_label')}</label>
-                  <input className={s.input} value={prefix} onChange={(e) => setPrefix(e.target.value)} />
+                <div className={ui.field}>
+                  <label className={ui.label}>{t('prefix_label')}</label>
+                  <input className={ui.input} value={prefix} onChange={(e) => setPrefix(e.target.value)} />
                 </div>
-                <div className={s.field}>
-                  <label className={s.field_label}>{t('suffix_label')}</label>
-                  <input className={s.input} value={suffix} onChange={(e) => setSuffix(e.target.value)} />
+                <div className={ui.field}>
+                  <label className={ui.label}>{t('suffix_label')}</label>
+                  <input className={ui.input} value={suffix} onChange={(e) => setSuffix(e.target.value)} />
                 </div>
               </div>
 
               {/* date */}
               <div className={s.rule_group}>
                 <p className={s.rule_group_title}>{t('date_title')}</p>
-                <div className={s.seg}>
+                <div className={ui.segmented}>
                   {(['none', 'prefix', 'suffix'] as DateMode[]).map((m) => (
                     <button
                       key={m}
-                      className={`${s.seg_btn} ${dateMode === m ? s.seg_btn_active : ''}`}
+                      className={`${ui.segment} ${dateMode === m ? ui.segmentActive : ''}`}
                       onClick={() => setDateMode(m)}
                       aria-pressed={dateMode === m}
                     >
@@ -578,13 +579,13 @@ export default function BulkRenamerClient() {
                   ))}
                 </div>
                 {dateMode !== 'none' && (
-                  <div className={s.field} style={{ marginTop: '0.5rem' }}>
-                    <label className={s.field_label}>{t('date_format_label')}</label>
-                    <div className={s.seg}>
+                  <div className={ui.field} style={{ marginTop: '0.5rem' }}>
+                    <label className={ui.label}>{t('date_format_label')}</label>
+                    <div className={ui.segmented}>
                       {['YYYY-MM-DD', 'YYYYMMDD', 'YYMMDD'].map((f) => (
                         <button
                           key={f}
-                          className={`${s.seg_btn} ${dateFormat === f ? s.seg_btn_active : ''}`}
+                          className={`${ui.segment} ${dateFormat === f ? ui.segmentActive : ''}`}
                           onClick={() => setDateFormat(f)}
                           aria-pressed={dateFormat === f}
                         >
@@ -606,29 +607,29 @@ export default function BulkRenamerClient() {
                 {numbering && (
                   <>
                     <div className={s.row2} style={{ marginTop: '0.5rem' }}>
-                      <div className={s.field}>
-                        <label className={s.field_label}>{t('numbering_start')}</label>
-                        <input className={s.input} type="number" inputMode="numeric" value={numStart} onChange={(e) => setNumStart(e.target.value)} />
+                      <div className={ui.field}>
+                        <label className={ui.label}>{t('numbering_start')}</label>
+                        <input className={ui.input} type="number" inputMode="numeric" value={numStart} onChange={(e) => setNumStart(e.target.value)} />
                       </div>
-                      <div className={s.field}>
-                        <label className={s.field_label}>{t('numbering_pad')}</label>
-                        <input className={s.input} type="number" inputMode="numeric" value={numPad} onChange={(e) => setNumPad(e.target.value)} />
+                      <div className={ui.field}>
+                        <label className={ui.label}>{t('numbering_pad')}</label>
+                        <input className={ui.input} type="number" inputMode="numeric" value={numPad} onChange={(e) => setNumPad(e.target.value)} />
                       </div>
                     </div>
                     <div className={s.row2}>
-                      <div className={s.field}>
-                        <label className={s.field_label}>{t('numbering_position')}</label>
-                        <div className={s.seg}>
+                      <div className={ui.field}>
+                        <label className={ui.label}>{t('numbering_position')}</label>
+                        <div className={ui.segmented}>
                           {(['prefix', 'suffix'] as NumPos[]).map((p) => (
-                            <button key={p} className={`${s.seg_btn} ${numPos === p ? s.seg_btn_active : ''}`} onClick={() => setNumPos(p)} aria-pressed={numPos === p}>
+                            <button key={p} className={`${ui.segment} ${numPos === p ? ui.segmentActive : ''}`} onClick={() => setNumPos(p)} aria-pressed={numPos === p}>
                               {t(`date_${p}`)}
                             </button>
                           ))}
                         </div>
                       </div>
-                      <div className={s.field}>
-                        <label className={s.field_label}>{t('numbering_sep')}</label>
-                        <input className={s.input} value={numSep} onChange={(e) => setNumSep(e.target.value)} maxLength={3} />
+                      <div className={ui.field}>
+                        <label className={ui.label}>{t('numbering_sep')}</label>
+                        <input className={ui.input} value={numSep} onChange={(e) => setNumSep(e.target.value)} maxLength={3} />
                       </div>
                     </div>
                   </>
@@ -643,9 +644,9 @@ export default function BulkRenamerClient() {
                   {t('ext_enable')}
                 </label>
                 {extEnable && (
-                  <div className={s.field} style={{ marginTop: '0.5rem' }}>
-                    <label className={s.field_label}>{t('ext_label')}</label>
-                    <input className={s.input} value={extValue} onChange={(e) => setExtValue(e.target.value)} placeholder={t('ext_placeholder')} />
+                  <div className={ui.field} style={{ marginTop: '0.5rem' }}>
+                    <label className={ui.label}>{t('ext_label')}</label>
+                    <input className={ui.input} value={extValue} onChange={(e) => setExtValue(e.target.value)} placeholder={t('ext_placeholder')} />
                   </div>
                 )}
               </div>
@@ -655,16 +656,16 @@ export default function BulkRenamerClient() {
             <div className={s.preview}>
               <div className={s.preview_head}>
                 <h3 className={s.preview_title}>{t('preview_title')}</h3>
-                <div className={s.seg}>
+                <div className={ui.segmented}>
                   {(['original', 'name', 'date'] as SortMode[]).map((m) => (
-                    <button key={m} className={`${s.seg_btn} ${sortMode === m ? s.seg_btn_active : ''}`} onClick={() => setSortMode(m)} aria-pressed={sortMode === m}>
+                    <button key={m} className={`${ui.segment} ${sortMode === m ? ui.segmentActive : ''}`} onClick={() => setSortMode(m)} aria-pressed={sortMode === m}>
                       {t(`sort_${m}`)}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {anyNormalized && <div className={s.normalized_warn}>{t('normalized_warning')}</div>}
+              {anyNormalized && <div className={`${ui.notice} ${ui.amber}`}>{t('normalized_warning')}</div>}
               {sortMode === 'date' && <p className={s.date_warn}>{t('sort_date_warning')}</p>}
 
               <div className={s.table_head}>
@@ -691,10 +692,10 @@ export default function BulkRenamerClient() {
                         role="row"
                       >
                         <span className={s.cell_idx}>{realIdx + 1}</span>
-                        <span className={s.cell} style={{ color: 'var(--text-muted)' }} title={r.before}>{r.before}</span>
+                        <span className={`${s.cell} ${s.cell_before}`} title={r.before}>{r.before}</span>
                         <span className={`${s.cell} ${s.cell_after} ${r.conflict ? s.cell_conflict : ''}`} title={r.after}>
                           {r.after}
-                          {r.conflict && <span className={s.conflict_tag}>{t('conflict_badge')}</span>}
+                          {r.conflict && <span className={`${ui.badge} ${ui.amber} ${s.conflict_tag}`}>{t('conflict_badge')}</span>}
                         </span>
                         <span
                           className={s.badge_norm}
@@ -715,11 +716,11 @@ export default function BulkRenamerClient() {
 
       {/* ── Step 3: output ── */}
       {files.length > 0 && (
-        <section className={s.panel}>
-          <h2 className={s.step_title}>{t('step3_title')}</h2>
+        <section className={ui.card}>
+          <h2 className={ui.cardTitle}>{t('step3_title')}</h2>
           <div className={s.output_row}>
             <button
-              className={`${s.btn} ${s.btn_primary}`}
+              className={`${ui.button} ${ui.primary}`}
               onClick={downloadZip}
               disabled={isProcessing || zipBlocked || results.length === 0}
               aria-busy={isProcessing}
@@ -728,7 +729,7 @@ export default function BulkRenamerClient() {
             </button>
             {supportsFolder && (
               <button
-                className={`${s.btn} ${s.btn_ghost}`}
+                className={`${ui.button} ${ui.secondary}`}
                 onClick={saveToFolder}
                 disabled={isProcessing || results.length === 0}
                 aria-busy={isProcessing}
@@ -810,16 +811,16 @@ export default function BulkRenamerClient() {
             <h3 className={s.modal_title}>{t('overwrite_title')}</h3>
             <p className={s.modal_body}>{t('overwrite_body', { count: overwrite.count })}</p>
             <div className={s.modal_actions}>
-              <button className={`${s.btn} ${s.btn_primary}`} onClick={() => resolveOverwrite('keepboth')}>
+              <button className={`${ui.button} ${ui.primary}`} onClick={() => resolveOverwrite('keepboth')}>
                 {t('overwrite_keepboth')}
               </button>
-              <button className={`${s.btn} ${s.btn_ghost}`} onClick={() => resolveOverwrite('skip')}>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={() => resolveOverwrite('skip')}>
                 {t('overwrite_skip')}
               </button>
-              <button className={`${s.btn} ${s.btn_ghost}`} onClick={() => resolveOverwrite('replace')}>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={() => resolveOverwrite('replace')}>
                 {t('overwrite_replace')}
               </button>
-              <button className={`${s.btn} ${s.btn_ghost}`} onClick={() => setOverwrite(null)}>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={() => setOverwrite(null)}>
                 {t('modal_cancel')}
               </button>
             </div>

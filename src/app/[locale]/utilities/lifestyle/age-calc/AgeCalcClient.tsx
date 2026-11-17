@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
 
 /* ─── Constants ─── */
 const BRANCHES = [
@@ -236,13 +237,7 @@ export default function AgeCalcClient() {
     return calcMilitary(enlistDate, b.months);
   }, [enlistDate, branch]);
 
-  const panelStyle: React.CSSProperties = { padding: '2rem', marginBottom: '2rem' };
-  const inputStyle: React.CSSProperties = {
-    padding: '0.65rem 1rem', borderRadius: 'var(--radius-md)',
-    background: 'var(--surface)', border: '1px solid var(--border)',
-    color: 'var(--text-primary)', fontSize: '0.95rem', outline: 'none',
-  };
-  const labelStyle: React.CSSProperties = { fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.35rem' };
+  const panelStyle: React.CSSProperties = { marginBottom: '2rem' };
   const resultCard = (label: string, value: string, sub?: string, color?: string) => (
     <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem', borderLeft: `4px solid ${color ?? 'var(--primary)'}` }}>
       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{label}</div>
@@ -272,19 +267,12 @@ export default function AgeCalcClient() {
       />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+      <div className={ui.segmented} style={{ marginBottom: '2rem' }}>
         {TABS.map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            style={{
-              padding: '0.6rem 1.25rem', borderRadius: 'var(--radius-md)',
-              border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem',
-              background: tab === t.id ? 'var(--primary)' : 'var(--surface)',
-              color: tab === t.id ? '#fff' : 'var(--text-primary)',
-              borderBottom: tab === t.id ? '3px solid var(--primary)' : '3px solid transparent',
-              transition: 'all 0.15s',
-            }}
+            className={`${ui.segment} ${tab === t.id ? ui.segmentActive : ''}`}
           >
             {t.icon} {t.label}
           </button>
@@ -293,11 +281,11 @@ export default function AgeCalcClient() {
 
       {/* ── Age Tab ── */}
       {tab === 'age' && (
-        <div className="glass-panel" style={panelStyle}>
+        <div className={ui.card} style={panelStyle}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div>
-              <label style={labelStyle}>{isKo ? '생년월일' : 'Date of birth'}</label>
-              <input type="date" value={birthDate} onChange={e => saveBirth(e.target.value)} style={inputStyle} />
+            <div className={ui.field}>
+              <label className={ui.label}>{isKo ? '생년월일' : 'Date of birth'}</label>
+              <input type="date" value={birthDate} onChange={e => saveBirth(e.target.value)} className={ui.input} style={{ maxWidth: '280px' }} />
             </div>
 
             {ageResult && (
@@ -328,8 +316,8 @@ export default function AgeCalcClient() {
               </p>
             )}
 
-            <div className="glass-panel" style={{ padding: '1rem', background: 'var(--surface)', marginTop: '0.5rem' }}>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+            <div className={`${ui.notice} ${ui.blue}`} style={{ marginTop: '0.5rem' }}>
+              <p style={{ fontSize: '0.8rem', margin: 0 }}>
                 {isKo ? (
                   <>ℹ️ <strong>만나이 통일법 (2023.6.28 시행)</strong> — 공공·행정·법령 문서에서 모두 '만 나이' 기준을 사용합니다. 단, 병역·연금 등 일부 법률은 별도 기준을 적용할 수 있습니다.</>
                 ) : (
@@ -343,16 +331,16 @@ export default function AgeCalcClient() {
 
       {/* ── Military Tab ── */}
       {tab === 'military' && (
-        <div className="glass-panel" style={panelStyle}>
+        <div className={ui.card} style={panelStyle}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div>
-                <label style={labelStyle}>{isKo ? '입대일' : 'Enlistment date'}</label>
-                <input type="date" value={enlistDate} onChange={e => saveEnlist(e.target.value)} style={{ ...inputStyle, width: '100%', boxSizing: 'border-box' }} />
+              <div className={ui.field}>
+                <label className={ui.label}>{isKo ? '입대일' : 'Enlistment date'}</label>
+                <input type="date" value={enlistDate} onChange={e => saveEnlist(e.target.value)} className={ui.input} />
               </div>
-              <div>
-                <label style={labelStyle}>{isKo ? '군별 / 복무 유형' : 'Branch / service type'}</label>
-                <select value={branch} onChange={e => saveBranch(e.target.value)} style={{ ...inputStyle, width: '100%', boxSizing: 'border-box' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>{isKo ? '군별 / 복무 유형' : 'Branch / service type'}</label>
+                <select value={branch} onChange={e => saveBranch(e.target.value)} className={ui.input}>
                   {BRANCHES.map(b => (
                     <option key={b.id} value={b.id}>{isKo ? <>{b.name} ({b.months}개월)</> : <>{b.nameEn} ({b.months} months)</>}</option>
                   ))}
@@ -415,15 +403,15 @@ export default function AgeCalcClient() {
 
       {/* ── Ovulation Tab ── */}
       {tab === 'ovulation' && (
-        <div className="glass-panel" style={panelStyle}>
+        <div className={ui.card} style={panelStyle}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div>
-                <label style={labelStyle}>{isKo ? '마지막 생리 시작일' : 'First day of last period'}</label>
-                <input type="date" value={lmp} onChange={e => saveLmp(e.target.value)} style={{ ...inputStyle, width: '100%', boxSizing: 'border-box' }} />
+              <div className={ui.field}>
+                <label className={ui.label}>{isKo ? '마지막 생리 시작일' : 'First day of last period'}</label>
+                <input type="date" value={lmp} onChange={e => saveLmp(e.target.value)} className={ui.input} />
               </div>
-              <div>
-                <label style={labelStyle}>{isKo ? <>평균 생리 주기 (일): {cycleLength}일</> : <>Average cycle length: {cycleLength} days</>}</label>
+              <div className={ui.field}>
+                <label className={ui.label}>{isKo ? <>평균 생리 주기 (일): {cycleLength}일</> : <>Average cycle length: {cycleLength} days</>}</label>
                 <input
                   type="range" min={21} max={35} value={cycleLength}
                   onChange={e => saveCycle(Number(e.target.value))}
@@ -443,8 +431,8 @@ export default function AgeCalcClient() {
               </p>
             )}
 
-            <div style={{ padding: '1rem', background: 'var(--surface)', borderRadius: 'var(--radius-md)' }}>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+            <div className={`${ui.notice} ${ui.amber}`}>
+              <p style={{ fontSize: '0.8rem', margin: 0 }}>
                 {isKo
                   ? '⚠️ 본 도구는 평균 주기를 기반으로 한 참고용 예측값입니다. 실제 배란일과 가임기는 개인의 건강 상태에 따라 다를 수 있으므로 전문의 상담을 권장합니다.'
                   : '⚠️ This tool gives a reference estimate based on your average cycle. Actual ovulation and fertile days vary with individual health, so please consult a doctor for medical advice.'}

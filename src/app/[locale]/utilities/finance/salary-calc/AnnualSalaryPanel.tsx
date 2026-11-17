@@ -5,6 +5,7 @@ import { Plus, Minus } from 'lucide-react';
 import { calcKRNetPay } from '@/lib/krPayroll';
 import { KR_INSURANCE_2026 as INS } from '@/constants/wageConfig';
 import s from './salary.module.css';
+import { ui } from '@/app/components/ui';
 
 type Basis = 'annual' | 'monthly';
 
@@ -26,16 +27,6 @@ function Stepper({ value, min, max, onChange, unit, label }: {
     </div>
   );
 }
-
-const chip = (active: boolean): React.CSSProperties => ({
-  flex: 1, minWidth: 80, padding: '0.6rem 0.5rem', borderRadius: '0.75rem',
-  border: `1.5px solid ${active ? 'var(--primary)' : 'var(--border)'}`,
-  background: active ? 'var(--surface-hover)' : 'var(--surface)',
-  color: active ? 'var(--primary)' : 'var(--text-secondary)',
-  fontSize: '0.8rem', fontWeight: 800, cursor: 'pointer',
-});
-
-const smallLabel: React.CSSProperties = { fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.35rem' };
 
 export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
   const [basis, setBasis] = useState<Basis>('annual');
@@ -104,51 +95,51 @@ export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
     <>
       <div className={s.sal_main_grid}>
         {/* ── 입력 ── */}
-        <div className={s.sal_card}>
-          <div className={s.sal_input_group}>
-            <div style={smallLabel}>{T.basis}</div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button type="button" style={chip(basis === 'annual')} aria-pressed={basis === 'annual'}
+        <div className={ui.card}>
+          <div className={`${ui.field} ${s.sal_input_group}`}>
+            <div className={ui.label}>{T.basis}</div>
+            <div className={`${ui.chips} ${ui.grow}`}>
+              <button type="button" className={`${ui.chip} ${basis === 'annual' ? ui.chipActive : ''}`} aria-pressed={basis === 'annual'}
                 onClick={() => { setBasis('annual'); setAmountText((monthlyGross * 12).toLocaleString('ko-KR')); }}>
                 {T.annual}
               </button>
-              <button type="button" style={chip(basis === 'monthly')} aria-pressed={basis === 'monthly'}
+              <button type="button" className={`${ui.chip} ${basis === 'monthly' ? ui.chipActive : ''}`} aria-pressed={basis === 'monthly'}
                 onClick={() => { setBasis('monthly'); setAmountText(monthlyGross.toLocaleString('ko-KR')); }}>
                 {T.monthly}
               </button>
             </div>
           </div>
 
-          <div className={s.sal_input_group}>
-            <label className={s.sal_label} htmlFor="annual-amount">{T.amount}</label>
-            <div style={{ position: 'relative' }}>
-              <input id="annual-amount" className={s.sal_input} inputMode="numeric" value={amountText}
+          <div className={`${ui.field} ${s.sal_input_group}`}>
+            <label className={ui.label} htmlFor="annual-amount">{T.amount}</label>
+            <div className={ui.inputGroup}>
+              <input id="annual-amount" className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" value={amountText}
                 onChange={onMoney(setAmountText)} placeholder="0" />
-              <span style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 900, color: 'var(--text-muted)', fontSize: '1.25rem' }}>₩</span>
+              <span className={ui.unit}>₩</span>
             </div>
             {basis === 'annual' && (
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.6rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, cursor: 'pointer' }}>
                 <input type="checkbox" checked={severanceIncluded} onChange={e => setSeveranceIncluded(e.target.checked)} />
                 {T.severance}
               </label>
             )}
           </div>
 
-          <div className={s.sal_input_group}>
-            <label className={s.sal_label} htmlFor="annual-nontax">{T.nonTaxable}</label>
-            <input id="annual-nontax" className={s.sal_input} inputMode="numeric" value={nonTaxableText}
+          <div className={`${ui.field} ${s.sal_input_group}`}>
+            <label className={ui.label} htmlFor="annual-nontax">{T.nonTaxable}</label>
+            <input id="annual-nontax" className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" value={nonTaxableText}
               onChange={onMoney(setNonTaxableText)} placeholder="0" />
-            <div style={{ marginTop: '0.4rem', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>{T.nonTaxableHint}</div>
+            <div className={ui.hint}>{T.nonTaxableHint}</div>
           </div>
 
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <div>
-              <div style={smallLabel}>{T.family}</div>
+            <div className={ui.field}>
+              <div className={ui.label}>{T.family}</div>
               <Stepper label={T.family} value={family} min={1} max={20} unit={isKo ? '명' : ''}
                 onChange={v => { setFamily(v); setChildren(c => Math.min(c, v - 1)); }} />
             </div>
-            <div>
-              <div style={smallLabel}>{T.children}</div>
+            <div className={ui.field}>
+              <div className={ui.label}>{T.children}</div>
               <Stepper label={T.children} value={children} min={0} max={Math.max(0, family - 1)} unit={isKo ? '명' : ''}
                 onChange={setChildren} />
             </div>
@@ -156,7 +147,7 @@ export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
         </div>
 
         {/* ── 결과 ── */}
-        <div className={s.sal_receipt} aria-live="polite">
+        <div className={`${s.sal_receipt} light-island`} aria-live="polite">
           <div className={s.sal_receipt_header}>
             <div className={s.sal_receipt_label}>{T.net}</div>
             <div className={s.sal_receipt_net}>{won(r.monthlyNet)}</div>
@@ -188,8 +179,8 @@ export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
       </div>
 
       {/* ── 연봉별 실수령액 표 (서버 렌더에도 포함되는 정적 계산값) ── */}
-      <section className={s.sal_card} style={{ marginTop: '2rem' }} aria-labelledby="salary-table-title">
-        <h2 id="salary-table-title" style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>{T.tableTitle}</h2>
+      <section className={ui.card} style={{ marginTop: '2rem' }} aria-labelledby="salary-table-title">
+        <h2 id="salary-table-title" className={ui.cardTitle} style={{ marginBottom: '0.35rem' }}>{T.tableTitle}</h2>
         <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>{T.tableNote}</p>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', minWidth: 420 }}>

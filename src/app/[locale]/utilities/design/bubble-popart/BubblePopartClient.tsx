@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './bubble-popart.module.css';
+import { ui } from '@/app/components/ui';
 
 const BG_PRESETS = [
   { name: '노랑', en: 'Yellow', hex: '#FFD93D' },
@@ -311,25 +312,25 @@ export default function BubblePopartClient() {
         </div>
 
         {/* 좌측 설정 */}
-        <div className={s.settingsPanel}>
+        <div className={`${ui.card} ${s.settingsPanel}`}>
           {/* STEP 1: 텍스트 */}
           <div>
-            <div className={s.stepTitle}>{t('step_text')}</div>
+            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_text')}</div>
             <input
               type="text"
-              className={s.input}
+              className={ui.input}
               value={text}
               maxLength={10}
               onChange={(e) => setText(e.target.value)}
               placeholder={t('step_text_placeholder')}
               aria-label={t('step_text')}
             />
-            <div className={s.charCount}>{text.length}/10</div>
+            <div className={`${ui.hint} ${s.charCount}`}>{text.length}/10</div>
           </div>
 
           {/* STEP 2: 배경색 */}
           <div>
-            <div className={s.stepTitle}>{t('step_bg')}</div>
+            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_bg')}</div>
             <div className={s.colorPresets}>
               {BG_PRESETS.map((c) => (
                 <button
@@ -354,17 +355,17 @@ export default function BubblePopartClient() {
 
           {/* STEP 3: 글자 색상 */}
           <div>
-            <div className={s.stepTitle}>{t('step_color')}</div>
-            <div className={s.toggleRow}>
+            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_color')}</div>
+            <div className={`${ui.segmented} ${s.toggleRow}`}>
               <button
-                className={`${s.toggleBtn} ${colorMode === 'multi' ? s.toggleBtnActive : ''}`}
+                className={`${ui.segment} ${colorMode === 'multi' ? ui.segmentActive : ''}`}
                 onClick={() => setColorMode('multi')}
                 aria-label={t('color_mode_multi')}
               >
                 {t('color_mode_multi')}
               </button>
               <button
-                className={`${s.toggleBtn} ${colorMode === 'single' ? s.toggleBtnActive : ''}`}
+                className={`${ui.segment} ${colorMode === 'single' ? ui.segmentActive : ''}`}
                 onClick={() => setColorMode('single')}
                 aria-label={t('color_mode_single')}
               >
@@ -385,7 +386,7 @@ export default function BubblePopartClient() {
 
           {/* STEP 4: 글자 크기 & 자간 */}
           <div>
-            <div className={s.stepTitle}>{t('step_size')}</div>
+            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_size')}</div>
             <div className={s.sliderRow}>
               <span>{t('label_size')}</span>
               <span className={s.sliderValue}>{fontSize}px</span>
@@ -422,12 +423,12 @@ export default function BubblePopartClient() {
 
           {/* STEP 5: 출력 크기 */}
           <div>
-            <div className={s.stepTitle}>{t('step_output')}</div>
+            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_output')}</div>
             <div className={s.sizeGrid}>
               {SIZE_PRESETS.map((p, i) => (
                 <button
                   key={p.key}
-                  className={`${s.sizeBtn} ${sizePreset === i ? s.sizeBtnActive : ''}`}
+                  className={`${ui.chip} ${sizePreset === i ? ui.chipActive : ''} ${s.sizeBtn}`}
                   onClick={() => setSizePreset(i)}
                   aria-label={t(`preset_${p.key}` as 'preset_square')}
                 >
@@ -440,7 +441,7 @@ export default function BubblePopartClient() {
 
           {/* STEP 6: 장식 옵션 */}
           <div>
-            <div className={s.stepTitle}>{t('step_deco')}</div>
+            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_deco')}</div>
             <label className={s.checkRow}>
               <input
                 type="checkbox"
@@ -475,7 +476,7 @@ export default function BubblePopartClient() {
 
           {/* 다운로드 */}
           <button
-            className={`${s.downloadBtn} ${downloaded ? s.downloadBtnDone : ''}`}
+            className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${downloaded ? ui.green : ''}`}
             onClick={handleDownload}
             disabled={!text || !fontLoaded}
             aria-label={t('download')}

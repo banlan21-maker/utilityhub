@@ -1,13 +1,35 @@
-.ad_placeholder {
-  width: 100%;
-  min-height: 90px;
-  background: rgba(226, 232, 240, 0.3);
-  border: 1px dashed var(--border);
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  font-size: 0.875rem;
-  margin: 2rem 0;
+/* 레이아웃·마스킹 결과 표시만 — 카드·버튼·입력칸 모양은 공통 ui 키트 */
+.layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 1.25rem; }
+.center { text-align: center; }
+.blockLabel { display: block; margin-bottom: 0.5rem; }
+
+.rules { display: flex; flex-direction: column; gap: 0.6rem; }
+.rule { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; }
+.rule input { width: 1rem; height: 1rem; margin-top: 0.15rem; cursor: pointer; accent-color: var(--color-primary); flex-shrink: 0; }
+.ruleName { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+.ruleExample { display: block; font-size: 0.72rem; color: var(--text-secondary); font-family: monospace; margin-top: 0.1rem; }
+.warn { margin-top: 0.85rem; }
+
+.count { font-size: 2.5rem; font-weight: 800; color: var(--text-secondary); }
+.countActive { color: var(--tint-green-fg); }
+.countLabel { margin-top: 0.25rem; }
+
+/* 텍스트 영역은 고정폭 글꼴 (ui.input 위에 덮어쓰므로 복합 선택자) */
+.layout .mono { font-family: monospace; font-size: 0.9rem; line-height: 1.7; }
+.layout .outGreen { background: var(--tint-green-bg); }
+
+.outHead { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.outActions { display: flex; gap: 0.5rem; align-items: center; }
+.diffToggle { display: flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer; }
+.diffToggle input { accent-color: var(--color-primary); }
+.layout .copied { border-color: var(--tint-green-border); background: var(--tint-green-bg); color: var(--tint-green-fg); }
+
+.diffBox {
+  min-height: 10rem; padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border); border-radius: var(--radius-control);
+  background: var(--surface); color: var(--text-primary);
+  font-family: monospace; font-size: 0.9rem; line-height: 1.7;
+  white-space: pre-wrap; overflow: auto; word-break: break-word;
 }
+.hl { background: var(--tint-amber-bg); color: var(--tint-amber-fg); border-radius: 2px; padding: 0 1px; }

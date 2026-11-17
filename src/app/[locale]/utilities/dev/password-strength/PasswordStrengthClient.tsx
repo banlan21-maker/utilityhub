@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
 
 /* ─── Charset ─── */
 const CHARS = {
@@ -104,7 +105,7 @@ function CheckOption({ label, note, checked, onChange }: {
   return (
     <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', padding: '0.4rem 0' }}>
       <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)}
-        style={{ width: '16px', height: '16px', accentColor: 'var(--primary)', cursor: 'pointer' }} />
+        style={{ width: '16px', height: '16px', accentColor: 'var(--color-primary)', cursor: 'pointer' }} />
       <span style={{ fontSize: '0.88rem', color: 'var(--text-primary)' }}>{label}</span>
       {note && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{note}</span>}
     </label>
@@ -145,22 +146,17 @@ export default function PasswordStrengthClient() {
       <NavigationActions />
       <ToolHeader icon={<ShieldCheck />} title={t('title')} subtitle={t('description')}>
         {/* Privacy badge */}
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.45rem 1rem', borderRadius: 'var(--radius-full)', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', fontSize: '0.78rem', color: '#10b981', fontWeight: 600 }}>
+        <div className={`${ui.badge} ${ui.green}`}>
           🔒 {t('badge')}
         </div>
       </ToolHeader>
 
-      <div style={{ maxWidth: '640px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ maxWidth: 'var(--tool-width-narrow)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
         {/* Mode tabs */}
-        <div style={{ display: 'flex', background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '4px' }}>
+        <div className={ui.segmented}>
           {(['generate', 'analyze'] as const).map(m => (
-            <button key={m} onClick={() => setAnalyzeMode(m)} style={{
-              flex: 1, padding: '0.6rem', borderRadius: 'calc(var(--radius-md) - 2px)', border: 'none',
-              background: analyzeMode === m ? 'var(--primary)' : 'transparent',
-              color: analyzeMode === m ? '#fff' : 'var(--text-secondary)',
-              fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s',
-            }}>
+            <button key={m} onClick={() => setAnalyzeMode(m)} className={`${ui.segment} ${analyzeMode === m ? ui.segmentActive : ''}`}>
               {m === 'generate' ? `🎲 ${t('mode.generate')}` : `🔍 ${t('mode.analyze')}`}
             </button>
           ))}
@@ -168,7 +164,7 @@ export default function PasswordStrengthClient() {
 
         {/* Generator */}
         {analyzeMode === 'generate' && (
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div className={ui.card}>
 
             {/* Generated output */}
             <div style={{ position: 'relative', marginBottom: '1rem' }}>
@@ -185,7 +181,7 @@ export default function PasswordStrengthClient() {
                 <button onClick={copyGen} style={{
                   position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)',
                   padding: '0.35rem 0.65rem', border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)', background: copiedGen ? 'var(--primary)' : 'var(--surface-hover)',
+                  borderRadius: 'var(--radius-sm)', background: copiedGen ? 'var(--primary-fill)' : 'var(--surface-hover)',
                   color: copiedGen ? '#fff' : 'var(--text-muted)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
                 }}>
                   {copiedGen ? '✓' : '📋'}
@@ -193,26 +189,18 @@ export default function PasswordStrengthClient() {
               )}
             </div>
 
-            <button onClick={generate} style={{
-              width: '100%', padding: '0.8rem', marginBottom: '1.25rem',
-              borderRadius: 'var(--radius-md)', border: 'none',
-              background: 'var(--primary)', color: '#fff',
-              fontWeight: 700, fontSize: '1rem', cursor: 'pointer', transition: 'opacity 0.15s',
-            }}
-              onMouseOver={e => e.currentTarget.style.opacity = '0.9'}
-              onMouseOut={e => e.currentTarget.style.opacity = '1'}
-            >
+            <button onClick={generate} className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`} style={{ marginBottom: '1.25rem' }}>
               🎲 {t('btn.generate')}
             </button>
 
             {/* Length slider */}
             <div style={{ marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                <span style={labelStyle}>{t('label.length')}</span>
-                <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '1.1rem' }}>{length}</span>
+                <span className={ui.label}>{t('label.length')}</span>
+                <span style={{ fontWeight: 700, color: 'var(--color-primary)', fontSize: '1.1rem' }}>{length}</span>
               </div>
               <input type="range" min={8} max={64} value={length} onChange={e => setLength(+e.target.value)}
-                style={{ width: '100%', accentColor: 'var(--primary)' }} />
+                style={{ width: '100%', accentColor: 'var(--color-primary)' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                 <span>8</span><span>64</span>
               </div>
@@ -230,7 +218,7 @@ export default function PasswordStrengthClient() {
             {/* History */}
             {history.length > 1 && (
               <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-                <span style={{ ...labelStyle, display: 'block', marginBottom: '0.5rem' }}>{t('label.history')}</span>
+                <span className={ui.label} style={{ display: 'block', marginBottom: '0.5rem' }}>{t('label.history')}</span>
                 {history.slice(1).map((pw, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.3rem 0', borderBottom: '1px solid var(--border)', gap: '0.5rem' }}>
                     <code style={{ fontFamily: codeFont, fontSize: '0.78rem', color: 'var(--text-secondary)', wordBreak: 'break-all', flex: 1 }}>{pw}</code>
@@ -244,17 +232,16 @@ export default function PasswordStrengthClient() {
 
         {/* Analyze mode */}
         {analyzeMode === 'analyze' && (
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
-            <label style={{ ...labelStyle, display: 'block', marginBottom: '0.4rem' }}>{t('label.check')}</label>
+          <div className={ui.card}>
+            <label className={ui.label} style={{ display: 'block', marginBottom: '0.4rem' }}>{t('label.check')}</label>
             <div style={{ position: 'relative', marginBottom: '1rem' }}>
               <input
                 type={showAnalysis ? 'text' : 'password'}
                 value={analysisInput}
                 onChange={e => setAnalysisInput(e.target.value)}
                 placeholder={t('placeholder.check')}
-                style={{ width: '100%', padding: '0.85rem 3rem 0.85rem 1rem', fontFamily: codeFont, fontSize: '1rem', fontWeight: 600, border: '2px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s', letterSpacing: '0.05em' }}
-                onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-                onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                className={`${ui.input} ${ui.inputLg}`}
+                style={{ paddingRight: '3rem', fontFamily: codeFont, letterSpacing: '0.05em' }}
               />
               <button onClick={() => setShowAnalysis(v => !v)} style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '1.1rem' }}>
                 {showAnalysis ? '🙈' : '👁️'}
@@ -265,9 +252,9 @@ export default function PasswordStrengthClient() {
 
         {/* Strength panel — shown for both modes when there's a value */}
         {analyzeTarget && (
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div className={ui.card}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-              <span style={labelStyle}>{t('label.strength')}</span>
+              <span className={ui.label}>{t('label.strength')}</span>
               <span style={{ fontWeight: 800, fontSize: '1rem', color: strength.color }}>
                 {strength.label}
               </span>
@@ -285,13 +272,15 @@ export default function PasswordStrengthClient() {
               </div>
             </div>
 
-            <div style={{ marginTop: '0.75rem', padding: '1rem', borderRadius: 'var(--radius-md)', background: strength.score >= 3 ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', border: `1px solid ${strength.score >= 3 ? 'rgba(16,185,129,0.25)' : 'rgba(239,68,68,0.25)'}` }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>{t('result.crackTime')}</div>
-              <div style={{ fontWeight: 800, fontSize: '1.15rem', color: strength.color, lineHeight: 1.3 }}>
-                {strength.crackTime}
-              </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
-                * 1조 회/초 (최신 GPU 클러스터 기준)
+            <div className={`${ui.notice} ${strength.score >= 3 ? ui.green : ui.red}`} style={{ marginTop: '0.75rem' }}>
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>{t('result.crackTime')}</div>
+                <div style={{ fontWeight: 800, fontSize: '1.15rem', color: strength.color, lineHeight: 1.3 }}>
+                  {strength.crackTime}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                  * 1조 회/초 (최신 GPU 클러스터 기준)
+                </div>
               </div>
             </div>
 
@@ -305,7 +294,7 @@ export default function PasswordStrengthClient() {
                 { ok: /[^a-zA-Z0-9]/.test(analyzeTarget), label: t('check.symbol') },
               ].map(({ ok, label }) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem' }}>
-                  <span style={{ color: ok ? '#10b981' : 'var(--text-muted)', fontSize: '1rem' }}>{ok ? '✓' : '○'}</span>
+                  <span style={{ color: ok ? 'var(--tint-green-fg)' : 'var(--text-muted)', fontSize: '1rem' }}>{ok ? '✓' : '○'}</span>
                   <span style={{ color: ok ? 'var(--text-primary)' : 'var(--text-muted)' }}>{label}</span>
                 </div>
               ))}
@@ -374,7 +363,3 @@ export default function PasswordStrengthClient() {
 }
 
 const codeFont = '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace';
-const labelStyle: React.CSSProperties = {
-  fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)',
-  textTransform: 'uppercase', letterSpacing: '0.07em',
-};

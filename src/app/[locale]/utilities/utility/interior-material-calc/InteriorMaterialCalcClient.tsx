@@ -14,6 +14,7 @@ import {
   type TilePattern, type TileSpec, type Placed, type RollSpec,
 } from '@/lib/interiorMaterial';
 import s from './interior.module.css';
+import { ui } from '@/app/components/ui';
 
 type Tab = 'tile' | 'paper';
 type TileMode = 'rect' | 'bath' | 'area';
@@ -147,16 +148,16 @@ export default function InteriorMaterialCalcClient() {
   };
 
   const field = (id: string, label: string, value: string, set: (v: string) => void, unit: string) => (
-    <div className={s.field}>
-      <label className={s.field_label} htmlFor={id}>{label}</label>
-      <div className={s.input_wrap}>
-        <input id={id} className={s.input} inputMode="decimal" value={value} onChange={e => set(dec(e.target.value))} />
-        <span className={s.unit}>{unit}</span>
+    <div className={ui.field}>
+      <label className={ui.label} htmlFor={id}>{label}</label>
+      <div className={ui.inputGroup}>
+        <input id={id} className={ui.input} inputMode="decimal" value={value} onChange={e => set(dec(e.target.value))} />
+        <span className={ui.unit}>{unit}</span>
       </div>
     </div>
   );
   const chip = <T extends string | number | boolean>(cur: T, val: T, set: (v: T) => void, label: string, sub?: string) => (
-    <button key={String(val)} type="button" aria-pressed={cur === val} className={`${s.chip} ${cur === val ? s.chip_on : ''}`} onClick={() => set(val)}>
+    <button key={String(val)} type="button" aria-pressed={cur === val} className={`${ui.chip} ${sub ? s.chip_sub : ''} ${cur === val ? ui.chipActive : ''}`} onClick={() => set(val)}>
       {label}{sub && <small>{sub}</small>}
     </button>
   );
@@ -244,9 +245,9 @@ export default function InteriorMaterialCalcClient() {
 
       <ToolHeader icon={<LayoutGrid />} title={titleStr} subtitle={descStr} />
 
-      <div className={s.tabs} role="tablist">
+      <div className={ui.segmented} role="tablist">
         {(['tile', 'paper'] as Tab[]).map(t => (
-          <button key={t} type="button" role="tab" aria-selected={tab === t} className={`${s.tab} ${tab === t ? s.tab_on : ''}`} onClick={() => setTab(t)}>
+          <button key={t} type="button" role="tab" aria-selected={tab === t} className={`${ui.segment} ${tab === t ? ui.segmentActive : ''}`} onClick={() => setTab(t)}>
             {t === 'tile' ? L('🔲 타일', '🔲 Tiles') : L('🖼 도배지', '🖼 Wallpaper')}
             <small>{t === 'tile' ? L('박스 수·로스율', 'Boxes and waste') : L('롤 수·재단', 'Rolls and cutting')}</small>
           </button>
@@ -255,9 +256,9 @@ export default function InteriorMaterialCalcClient() {
 
       {tab === 'tile' ? (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('1. 어디에 붙이나요?', '1. Where?')}</h2>
-            <div className={s.chips}>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('1. 어디에 붙이나요?', '1. Where?')}</h2>
+            <div className={ui.chips}>
               {chip(tileMode, 'rect', setTileMode, L('바닥·벽 한 면', 'Floor / one wall'), L('직사각형', 'Rectangle'))}
               {chip(tileMode, 'bath', setTileMode, L('욕실 벽 4면', 'Bathroom walls'), L('둘레 × 높이', 'Perimeter × height'))}
               {chip(tileMode, 'area', setTileMode, L('면적만 알 때', 'Area only'), L('㎡ · 평', 'm² or pyeong'))}
@@ -292,20 +293,20 @@ export default function InteriorMaterialCalcClient() {
             {tileMode === 'area' && (
               <div className={s.grid2}>
                 {field('t-ar', L('시공 면적', 'Area'), areaText, setAreaText, areaUnit === 'm2' ? '㎡' : L('평', 'py'))}
-                <div className={s.field}>
-                  <span className={s.field_label}>{L('단위', 'Unit')}</span>
-                  <div className={s.chips}>{chip(areaUnit, 'm2', setAreaUnit, '㎡')}{chip(areaUnit, 'py', setAreaUnit, L('평', 'pyeong'))}</div>
+                <div className={ui.field}>
+                  <span className={ui.label}>{L('단위', 'Unit')}</span>
+                  <div className={ui.chips}>{chip(areaUnit, 'm2', setAreaUnit, '㎡')}{chip(areaUnit, 'py', setAreaUnit, L('평', 'pyeong'))}</div>
                 </div>
               </div>
             )}
             {tileMode === 'area' && <p className={s.hint}>{L('면적만으로 세면 가장자리에서 잘리는 장이 빠집니다. 여유분을 10% 이상 잡으세요.', 'Counting by area misses edge cuts; allow 10% or more.')}</p>}
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('2. 타일과 시공 방법', '2. Tile and layout')}</h2>
-            <div>
-              <span className={s.label}>{L('타일 규격 (mm)', 'Tile size (mm)')}</span>
-              <div className={s.chips}>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('2. 타일과 시공 방법', '2. Tile and layout')}</h2>
+            <div className={ui.field}>
+              <span className={ui.label}>{L('타일 규격 (mm)', 'Tile size (mm)')}</span>
+              <div className={ui.chips}>
                 {TILE_SIZES.map(([w, h], i) => chip(sizeIdx, i, v => { setSizeIdx(v); setPerBoxText(''); }, `${w}×${h}`))}
                 {chip(sizeIdx, TILE_SIZES.length, v => { setSizeIdx(v); setPerBoxText(''); }, L('직접 입력', 'Custom'))}
               </div>
@@ -317,17 +318,17 @@ export default function InteriorMaterialCalcClient() {
               </div>
             )}
             {sw !== sh && (
-              <div>
-                <span className={s.label}>{L('타일 방향', 'Orientation')}</span>
-                <div className={s.chips}>
+              <div className={ui.field}>
+                <span className={ui.label}>{L('타일 방향', 'Orientation')}</span>
+                <div className={ui.chips}>
                   {chip(landscape, true, setLandscape, L('가로로 길게', 'Landscape'), `${Math.max(sw, sh)}×${Math.min(sw, sh)}`)}
                   {chip(landscape, false, setLandscape, L('세로로 길게', 'Portrait'), `${Math.min(sw, sh)}×${Math.max(sw, sh)}`)}
                 </div>
               </div>
             )}
-            <div>
-              <span className={s.label}>{L('붙이는 방법', 'Layout')}</span>
-              <div className={s.chips}>
+            <div className={ui.field}>
+              <span className={ui.label}>{L('붙이는 방법', 'Layout')}</span>
+              <div className={ui.chips}>
                 {chip(pattern, 'grid', setPattern, patternName('grid'))}
                 {chip(pattern, 'half', setPattern, patternName('half'), L('벽돌 쌓기', 'brick'))}
                 {chip(pattern, 'third', setPattern, patternName('third'), L('대형 타일 권장', 'large tiles'))}
@@ -336,28 +337,28 @@ export default function InteriorMaterialCalcClient() {
             </div>
             <div className={s.grid3}>
               {field('t-gap', L('줄눈 간격', 'Grout joint'), gap, setGap, 'mm')}
-              <div className={s.field}>
-                <label className={s.field_label} htmlFor="t-box">{L('박스당 장수', 'Pieces per box')}</label>
-                <div className={s.input_wrap}>
-                  <input id="t-box" className={s.input} inputMode="numeric" placeholder={String(tileOk ? defaultPerBox(tile) : '')} value={perBoxText} onChange={e => setPerBoxText(e.target.value.replace(/[^0-9]/g, ''))} />
-                  <span className={s.unit}>{L('장', 'pcs')}</span>
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="t-box">{L('박스당 장수', 'Pieces per box')}</label>
+                <div className={ui.inputGroup}>
+                  <input id="t-box" className={ui.input} inputMode="numeric" placeholder={String(tileOk ? defaultPerBox(tile) : '')} value={perBoxText} onChange={e => setPerBoxText(e.target.value.replace(/[^0-9]/g, ''))} />
+                  <span className={ui.unit}>{L('장', 'pcs')}</span>
                 </div>
               </div>
             </div>
             <p className={s.hint}>{L(`박스당 장수를 비워 두면 1박스 1.44㎡ 기준(${tileOk ? defaultPerBox(tile) : '-'}장)으로 셉니다. 제품마다 다르니 박스 표기를 확인해 넣으세요.`, `Blank = 1.44 m² per box (${tileOk ? defaultPerBox(tile) : '-'} pcs). Check the box label.`)}</p>
-            <div>
-              <span className={s.label}>{L('여유분 (파손·보수용)', 'Spare (breakage, repairs)')}</span>
-              <div className={s.chips}>{[0, 3, 5, 10].map(p => chip(tileSpare, p, setTileSpare, `${p}%`))}</div>
+            <div className={ui.field}>
+              <span className={ui.label}>{L('여유분 (파손·보수용)', 'Spare (breakage, repairs)')}</span>
+              <div className={ui.chips}>{[0, 3, 5, 10].map(p => chip(tileSpare, p, setTileSpare, `${p}%`))}</div>
             </div>
           </section>
 
-          <section className={s.card} aria-live="polite">
-            <h2 className={s.card_title}>{L('결과', 'Result')}</h2>
-            {tileErr ? <div className={s.warn}>{tileErr}</div> : !order ? <p className={s.hint}>{L('치수를 넣으면 결과가 나옵니다.', 'Enter dimensions to see the result.')}</p> : (
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
+            <h2 className={ui.cardTitle}>{L('결과', 'Result')}</h2>
+            {tileErr ? <div className={`${ui.notice} ${ui.amber}`}>{tileErr}</div> : !order ? <p className={s.hint}>{L('치수를 넣으면 결과가 나옵니다.', 'Enter dimensions to see the result.')}</p> : (
               <>
-                <div className={s.hero}>
-                  <div className={s.hero_label}>{L('주문 수량', 'Order')}</div>
-                  <div className={s.hero_num}>{int(order.boxes)}<span className={s.hero_unit}>{L('박스', 'boxes')}</span></div>
+                <div className={`${ui.result} ${s.hero}`}>
+                  <div className={ui.resultLabel}>{L('주문 수량', 'Order')}</div>
+                  <div className={ui.resultValue}>{int(order.boxes)}<span className={s.hero_unit}>{L('박스', 'boxes')}</span></div>
                   <div className={s.hero_sub}>{int(order.orderPieces)}{L('장', ' pcs')} · {f1(order.orderM2)}㎡ ({tile.w}×{tile.h}, {patternName(pattern)})</div>
                 </div>
                 <div className={s.rows}>
@@ -382,7 +383,7 @@ export default function InteriorMaterialCalcClient() {
                     </div>
                   )}
                 </div>
-                <button type="button" className={s.copy_btn} onClick={() => copy(L(
+                <button type="button" className={`${ui.button} ${ui.secondary} ${s.copy_btn}`} onClick={() => copy(L(
                   `[타일 소요량] ${tile.w}×${tile.h}mm ${patternName(pattern)}, 줄눈 ${tile.gap}mm\n시공 ${f1(order.areaM2)}㎡ / 필요 ${int(order.pieces)}장 + 여유 ${tileSpare}% = ${int(order.withSpare)}장\n주문 ${int(order.boxes)}박스 (${int(order.orderPieces)}장, 박스당 ${perBox}장, ${f1(order.orderM2)}㎡)`,
                   `[Tiles] ${tile.w}×${tile.h} mm ${patternName(pattern)}, ${tile.gap} mm joint\nArea ${f1(order.areaM2)} m² / ${int(order.pieces)} pcs + ${tileSpare}% = ${int(order.withSpare)} pcs\nOrder ${int(order.boxes)} boxes (${int(order.orderPieces)} pcs, ${perBox}/box)`,
                 ))}><Copy size={16} />{copied || L('결과 복사', 'Copy result')}</button>
@@ -392,9 +393,9 @@ export default function InteriorMaterialCalcClient() {
         </>
       ) : (
         <>
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('1. 어떻게 계산할까요?', '1. How to measure')}</h2>
-            <div className={s.chips}>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('1. 어떻게 계산할까요?', '1. How to measure')}</h2>
+            <div className={ui.chips}>
               {chip(paperMode, 'room', setPaperMode, L('방 크기로', 'By room size'), L('가로·세로·층고', 'W × D × H'))}
               {chip(paperMode, 'pyeong', setPaperMode, L('집 평수로', 'By flat size'), L('빠른 어림', 'quick estimate'))}
             </div>
@@ -418,9 +419,9 @@ export default function InteriorMaterialCalcClient() {
                   </div>
                   <p className={s.hint}>{L('문 폭만큼은 폭 수에서 빼고, 창 위·아래 짧은 조각은 남는 자투리로 붙인다고 보고 폭 수에서 빼지 않습니다.', 'Door widths reduce the strip count; short pieces above and below windows come from offcuts.')}</p>
                 </div>
-                <div>
-                  <span className={s.label}>{L('무늬 반복 길이', 'Pattern repeat')}</span>
-                  <div className={s.chips}>
+                <div className={ui.field}>
+                  <span className={ui.label}>{L('무늬 반복 길이', 'Pattern repeat')}</span>
+                  <div className={ui.chips}>
                     {[['0', L('단색·무지', 'Plain')], ['0.53', '53cm'], ['0.64', '64cm']].map(([v, l]) => chip(repeat, v, setRepeat, l))}
                   </div>
                   <div style={{ maxWidth: 200, marginTop: '0.5rem' }}>{field('p-rep', L('직접 입력', 'Custom'), repeat, setRepeat, 'm')}</div>
@@ -431,9 +432,9 @@ export default function InteriorMaterialCalcClient() {
               <>
                 <div className={s.grid2}>
                   {field('p-py', L('집 평수', 'Flat size'), pyeongText, setPyeongText, L('평', 'py'))}
-                  <div className={s.field}>
-                    <span className={s.field_label}>{L('기준', 'Basis')}</span>
-                    <div className={s.chips}>{chip(pyBasis, 'supply', setPyBasis, L('분양평수', 'Supply'), '× 2.5')}{chip(pyBasis, 'exclusive', setPyBasis, L('실평수', 'Exclusive'), '× 3')}</div>
+                  <div className={ui.field}>
+                    <span className={ui.label}>{L('기준', 'Basis')}</span>
+                    <div className={ui.chips}>{chip(pyBasis, 'supply', setPyBasis, L('분양평수', 'Supply'), '× 2.5')}{chip(pyBasis, 'exclusive', setPyBasis, L('실평수', 'Exclusive'), '× 3')}</div>
                   </div>
                 </div>
                 <p className={s.hint}>{L('아파트 도배 면적은 보통 분양평수 × 2.5, 실평수 × 3으로 어림합니다(벽+천장). 방별로 정확히 하려면 "방 크기로"를 쓰세요.', 'Apartment wall + ceiling area is roughly supply area × 2.5 or exclusive area × 3. Use "By room size" for precision.')}</p>
@@ -441,9 +442,9 @@ export default function InteriorMaterialCalcClient() {
             )}
           </section>
 
-          <section className={s.card}>
-            <h2 className={s.card_title}>{L('2. 벽지 종류', '2. Wallpaper')}</h2>
-            <select className={s.select} value={paperIdx} onChange={e => setPaperIdx(Number(e.target.value))} aria-label={L('벽지 종류', 'Wallpaper type')}>
+          <section className={`${ui.card} ${s.card}`}>
+            <h2 className={ui.cardTitle}>{L('2. 벽지 종류', '2. Wallpaper')}</h2>
+            <select className={ui.input} value={paperIdx} onChange={e => setPaperIdx(Number(e.target.value))} aria-label={L('벽지 종류', 'Wallpaper type')}>
               {PAPERS.map((p, i) => <option key={p.id} value={i}>{isKo ? p.ko : p.en}</option>)}
               <option value={PAPERS.length}>{L('직접 입력', 'Custom')}</option>
             </select>
@@ -454,21 +455,21 @@ export default function InteriorMaterialCalcClient() {
               </div>
             )}
             <p className={s.hint}>{L('대표 규격입니다. 실크는 15.5m 제품도 있으니 다르면 직접 입력하세요.', 'Typical sizes; enter your product if it differs.')}</p>
-            <div>
-              <span className={s.label}>{L('여유분', 'Spare')}</span>
-              <div className={s.chips}>{[0, 5, 10].map(p => chip(paperSpare, p, setPaperSpare, `${p}%`))}</div>
+            <div className={ui.field}>
+              <span className={ui.label}>{L('여유분', 'Spare')}</span>
+              <div className={ui.chips}>{[0, 5, 10].map(p => chip(paperSpare, p, setPaperSpare, `${p}%`))}</div>
             </div>
           </section>
 
-          <section className={s.card} aria-live="polite">
-            <h2 className={s.card_title}>{L('결과', 'Result')}</h2>
+          <section className={`${ui.card} ${s.card}`} aria-live="polite">
+            <h2 className={ui.cardTitle}>{L('결과', 'Result')}</h2>
             {room && 'error' in room ? (
-              <div className={s.warn}>{L('한 폭 길이가 롤 길이보다 깁니다. 층고·방 크기나 롤 길이를 확인하세요.', 'A strip is longer than the roll. Check the height, room size or roll length.')}</div>
+              <div className={`${ui.notice} ${ui.amber}`}>{L('한 폭 길이가 롤 길이보다 깁니다. 층고·방 크기나 롤 길이를 확인하세요.', 'A strip is longer than the roll. Check the height, room size or roll length.')}</div>
             ) : roomRes ? (
               <>
-                <div className={s.hero}>
-                  <div className={s.hero_label}>{L('주문 수량', 'Order')}</div>
-                  <div className={s.hero_num}>{roomRes.rolls}<span className={s.hero_unit}>{L('롤', 'rolls')}</span></div>
+                <div className={`${ui.result} ${s.hero}`}>
+                  <div className={ui.resultLabel}>{L('주문 수량', 'Order')}</div>
+                  <div className={ui.resultValue}>{roomRes.rolls}<span className={s.hero_unit}>{L('롤', 'rolls')}</span></div>
                   <div className={s.hero_sub}>{L(`여유 없이 딱 맞게 ${roomRes.rollsNoSpare}롤 · ${paperName}`, `${roomRes.rollsNoSpare} with no spare · ${paperName}`)}</div>
                 </div>
                 <div className={s.rows}>
@@ -488,16 +489,16 @@ export default function InteriorMaterialCalcClient() {
                     <span><i style={{ background: 'var(--im-left)' }} />{L('남는 자투리 (창 위아래 등에 사용)', 'Offcut (used around windows)')}</span>
                   </div>
                 </div>
-                <button type="button" className={s.copy_btn} onClick={() => copy(L(
+                <button type="button" className={`${ui.button} ${ui.secondary} ${s.copy_btn}`} onClick={() => copy(L(
                   `[도배 소요량] ${paperName}\n방 ${roomW}×${roomD}m, 층고 ${roomH}m${ceiling ? ', 천장 포함' : ''}${num(repeat) > 0 ? `, 무늬 반복 ${repeat}m` : ''}\n벽 ${roomRes.wallStrips}폭(${f1(roomRes.wallStripLen)}m)${ceiling ? ` + 천장 ${roomRes.ceilingStrips}폭(${f1(roomRes.ceilingStripLen)}m)` : ''} + 여유 ${roomRes.spareStrips}폭\n주문 ${roomRes.rolls}롤 (딱 맞게 ${roomRes.rollsNoSpare}롤)`,
                   `[Wallpaper] ${paperName}\nRoom ${roomW}×${roomD} m, height ${roomH} m${ceiling ? ', incl. ceiling' : ''}\nOrder ${roomRes.rolls} rolls (${roomRes.rollsNoSpare} with no spare)`,
                 ))}><Copy size={16} />{copied || L('결과 복사', 'Copy result')}</button>
               </>
             ) : byPy ? (
               <>
-                <div className={s.hero}>
-                  <div className={s.hero_label}>{L('주문 수량 (어림)', 'Order (estimate)')}</div>
-                  <div className={s.hero_num}>{byPy.rolls}<span className={s.hero_unit}>{L('롤', 'rolls')}</span></div>
+                <div className={`${ui.result} ${s.hero}`}>
+                  <div className={ui.resultLabel}>{L('주문 수량 (어림)', 'Order (estimate)')}</div>
+                  <div className={ui.resultValue}>{byPy.rolls}<span className={s.hero_unit}>{L('롤', 'rolls')}</span></div>
                   <div className={s.hero_sub}>{paperName}</div>
                 </div>
                 <div className={s.rows}>
@@ -507,7 +508,7 @@ export default function InteriorMaterialCalcClient() {
                   <div className={`${s.row} ${s.row_em}`}><span>{L(`여유분 ${paperSpare}% 더해 올림`, `+${paperSpare}% rounded up`)}</span><strong>{byPy.rolls}{L('롤', ' rolls')}</strong></div>
                 </div>
                 <p className={s.hint}>{L('평수 계산은 면적으로만 어림한 값이라 폭 재단 손실이 빠져 있습니다. 실제로는 1~2롤 더 들 수 있으니, 정확한 수량은 방 크기로 계산해 합치세요.', 'This area-only estimate ignores strip offcuts; allow 1–2 extra rolls or calculate room by room.')}</p>
-                <button type="button" className={s.copy_btn} onClick={() => copy(L(
+                <button type="button" className={`${ui.button} ${ui.secondary} ${s.copy_btn}`} onClick={() => copy(L(
                   `[도배 소요량 어림] ${paperName}\n${pyeongText}평(${pyBasis === 'supply' ? '분양' : '실평수'}) → 도배 면적 약 ${f1(byPy.areaPyeong, 1)}평 (벽+천장)\n주문 ${byPy.rolls}롤 (여유 ${paperSpare}% 포함)`,
                   `[Wallpaper estimate] ${paperName}\n${pyeongText} py → about ${f1(byPy.areaPyeong, 1)} py\nOrder ${byPy.rolls} rolls`,
                 ))}><Copy size={16} />{copied || L('결과 복사', 'Copy result')}</button>

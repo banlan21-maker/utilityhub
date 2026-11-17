@@ -19,6 +19,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './qr.module.css';
+import { ui } from '@/app/components/ui';
 
 export default function QrGeneratorClient() {
   const locale = useLocale();
@@ -69,9 +70,9 @@ export default function QrGeneratorClient() {
 
       <ToolHeader icon={<QrCode />} title={isKo ? '고해상도 QR 생성기' : 'HD QR Code Generator'} subtitle={isKo ? '링크나 텍스트를 고화질 QR 코드로 즉시 변환하고 소장하세요' : 'Turn any URL or text into a high-quality QR code instantly'} />
 
-      <section className={s.qr_panel}>
-        <div className={s.qr_input_wrapper}>
-          <label className={s.hashtag_label} style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700, display: 'flex', justifyContent: 'space-between' }}>
+      <section className={`${ui.card} ${s.qr_panel}`}>
+        <div className={`${ui.field} ${s.qr_input_wrapper}`}>
+          <label className={ui.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
             {isKo ? 'URL 또는 텍스트 입력' : 'Enter URL or Text'}
             {inputValue && <Trash2 size={16} style={{ cursor: 'pointer' }} onClick={clear} />}
           </label>
@@ -80,11 +81,11 @@ export default function QrGeneratorClient() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={isKo ? "https://..." : "e.g. your website link"}
-            className={s.qr_input}
+            className={`${ui.input} ${ui.inputLg}`}
           />
         </div>
 
-        <div className={s.qr_drawing_area} style={{ background: inputValue.trim() ? '#ffffff' : '#f1f5f9', border: inputValue.trim() ? '1px solid #e2e8f0' : '2px dashed #cbd5e1' }}>
+        <div className={s.qr_drawing_area} style={{ background: inputValue.trim() ? '#ffffff' : 'var(--surface-hover)', border: inputValue.trim() ? '1px solid #e2e8f0' : '2px dashed var(--border)' }}>
           {inputValue.trim() ? (
             <div className="animate-fade-in" style={{ textAlign: 'center' }}>
               <div className={s.qr_svg_wrapper}>
@@ -105,14 +106,14 @@ export default function QrGeneratorClient() {
                 />
               </div>
 
-              <button onClick={handleDownload} className={s.qr_primary_button}>
+              <button onClick={handleDownload} className={`${ui.button} ${ui.primary} ${ui.lg} ${s.qr_primary_button}`}>
                 <Download size={22} />
                 {isKo ? 'PNG 이미지 저장' : 'Save as PNG'}
               </button>
             </div>
           ) : (
             <div className={s.qr_empty_state}>
-              <Smartphone size={48} color="#e2e8f0" style={{ marginBottom: '1rem' }} />
+              <Smartphone size={48} style={{ marginBottom: '1rem', color: 'var(--border)' }} />
               <p>{isKo ? 'URL을 입력하면 이곳에 QR 코드가 생성됩니다.' : 'QR Code will appear here when you type.'}</p>
             </div>
           )}

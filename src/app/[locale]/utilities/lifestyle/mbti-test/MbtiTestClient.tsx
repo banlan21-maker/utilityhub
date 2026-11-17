@@ -10,6 +10,7 @@ import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import styles from './page.module.css';
+import { ui } from '@/app/components/ui';
 
 type Step = 'start' | 'quiz' | 'loading' | 'result';
 
@@ -88,11 +89,11 @@ export default function MbtiTestClient() {
   const renderStart = () => (
     <>
       <ToolHeader icon={<Waves />} title={t('title')} subtitle={t('description')} />
-      <div className={`${styles.card} ${styles.fadeIn}`} style={{ textAlign: 'center' }}>
+      <div className={`${ui.card} ${styles.card} ${styles.fadeIn}`} style={{ textAlign: 'center' }}>
         <div style={{ fontSize: '4.5rem', marginBottom: '3rem', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}>
           🌊🐬🦦🐢🌊
         </div>
-        <button className={styles.startBtn} onClick={startTest}>
+        <button className={`${ui.button} ${ui.primary} ${ui.lg} ${styles.startBtn}`} onClick={startTest}>
           {t('startBtn')}
         </button>
       </div>
@@ -104,7 +105,7 @@ export default function MbtiTestClient() {
     const progress = ((currentIdx + 1) / questions.length) * 100;
 
     return (
-      <div className={`${styles.card} ${isAnimating ? styles.fadeOut : styles.fadeIn}`}>
+      <div className={`${ui.card} ${styles.card} ${isAnimating ? styles.fadeOut : styles.fadeIn}`}>
         <div className={styles.progressBar}>
           <div className={styles.progressFill} style={{ width: `${progress}%` }} />
         </div>
@@ -127,10 +128,10 @@ export default function MbtiTestClient() {
   };
 
   const renderLoading = () => (
-    <div className={`${styles.card} ${styles.fadeIn}`}>
+    <div className={`${ui.card} ${styles.card} ${styles.fadeIn}`}>
       <div className={styles.loaderArea}>
         <div className={styles.spinner} />
-        <h2 style={{ color: 'var(--primary)', marginTop: '2rem', animation: 'pulse 1.5s infinite' }}>{t('loading')}</h2>
+        <h2 style={{ color: 'var(--color-primary)', marginTop: '2rem', animation: 'pulse 1.5s infinite' }}>{t('loading')}</h2>
       </div>
     </div>
   );
@@ -141,7 +142,7 @@ export default function MbtiTestClient() {
     const imageUrl = `/img/sea-mbti/${resultMBTI.toLowerCase()}.jpeg`;
 
     return (
-      <div className={`${styles.card} ${styles.fadeIn}`}>
+      <div className={`${ui.card} ${styles.card} ${styles.fadeIn}`}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <p className={styles.resultTitle}>{t('resultIntro')}</p>
           <h2 className={styles.resultAnimal}>{result.animal} <span style={{ opacity: 0.5, fontSize: '0.9em' }}>({resultMBTI})</span></h2>
@@ -168,7 +169,7 @@ export default function MbtiTestClient() {
         </div>
 
         <div className={styles.matchCard}>
-          <p style={{ fontWeight: 600, color: '#0ea5e9', marginBottom: '0.5rem', fontSize: '1rem' }}>
+          <p style={{ fontWeight: 600, color: 'var(--tint-sky-fg)', marginBottom: '0.5rem', fontSize: '1rem' }}>
             💙 {t('matchTitle')} 💙
           </p>
           <p style={{ fontSize: '1.6rem', fontWeight: 900 }}>
@@ -184,7 +185,7 @@ export default function MbtiTestClient() {
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-          <button className={styles.restartBtn} onClick={() => setStep('start')}>
+          <button className={`${ui.button} ${ui.secondary}`} onClick={() => setStep('start')}>
             {t('restartBtn')}
           </button>
         </div>

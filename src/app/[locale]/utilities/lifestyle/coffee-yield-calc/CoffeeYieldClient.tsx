@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './coffee-yield-calc.module.css';
+import { ui } from '@/app/components/ui';
 
 type Mode = 'basic' | 'pro';
 type Method = 'drip' | 'espresso';
@@ -245,11 +246,11 @@ export default function CoffeeYieldClient() {
       <ToolHeader icon={<Coffee />} title={t('title')} subtitle={t('subtitle')} />
 
       {/* ── Mode toggle ── */}
-      <div className={s.toggle_row} role="tablist" aria-label={t('mode_label')}>
+      <div className={`${ui.segmented} ${s.toggle_row}`} role="tablist" aria-label={t('mode_label')}>
         <button
           role="tab"
           aria-selected={mode === 'basic'}
-          className={`${s.toggle_btn} ${mode === 'basic' ? s.toggle_btn_active : ''}`}
+          className={`${ui.segment} ${mode === 'basic' ? ui.segmentActive : ''}`}
           onClick={() => setMode('basic')}
         >
           {t('mode_basic')}
@@ -257,7 +258,7 @@ export default function CoffeeYieldClient() {
         <button
           role="tab"
           aria-selected={mode === 'pro'}
-          className={`${s.toggle_btn} ${mode === 'pro' ? s.toggle_btn_active : ''}`}
+          className={`${ui.segment} ${mode === 'pro' ? ui.segmentActive : ''}`}
           onClick={() => setMode('pro')}
         >
           {t('mode_pro')}
@@ -267,20 +268,20 @@ export default function CoffeeYieldClient() {
       {/* ── 2-column ── */}
       <div className={s.layout}>
         {/* ── Input panel (left) ── */}
-        <section className={s.panel} aria-label={t('method_label')}>
+        <section className={`${ui.card} ${s.panel}`} aria-label={t('method_label')}>
           {/* method toggle */}
-          <div className={s.field}>
-            <span className={s.field_label}>{t('method_label')}</span>
-            <div className={s.method_row}>
+          <div className={ui.field}>
+            <span className={ui.label}>{t('method_label')}</span>
+            <div className={ui.segmented}>
               <button
-                className={`${s.method_btn} ${method === 'drip' ? s.method_btn_active : ''}`}
+                className={`${ui.segment} ${method === 'drip' ? ui.segmentActive : ''}`}
                 aria-pressed={method === 'drip'}
                 onClick={() => switchMethod('drip')}
               >
                 {t('method_drip')}
               </button>
               <button
-                className={`${s.method_btn} ${method === 'espresso' ? s.method_btn_active : ''}`}
+                className={`${ui.segment} ${method === 'espresso' ? ui.segmentActive : ''}`}
                 aria-pressed={method === 'espresso'}
                 onClick={() => switchMethod('espresso')}
               >
@@ -290,13 +291,13 @@ export default function CoffeeYieldClient() {
           </div>
 
           {/* dose */}
-          <div className={s.field}>
-            <label className={s.field_label} htmlFor="cy-dose">
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="cy-dose">
               {t('label_bean')}
             </label>
             <input
               id="cy-dose"
-              className={s.input}
+              className={ui.input}
               type="number"
               inputMode="decimal"
               min="0"
@@ -309,13 +310,13 @@ export default function CoffeeYieldClient() {
           </div>
 
           {/* ratio presets */}
-          <div className={s.field}>
-            <span className={s.field_label}>{t('label_ratio')}</span>
+          <div className={ui.field}>
+            <span className={ui.label}>{t('label_ratio')}</span>
             <div className={s.ratio_grid}>
               {presets.map((p) => (
                 <button
                   key={p.value}
-                  className={`${s.ratio_btn} ${ratioSel === p.value ? s.ratio_btn_active : ''}`}
+                  className={`${ui.chip} ${s.ratio_btn} ${ratioSel === p.value ? ui.chipActive : ''}`}
                   aria-pressed={ratioSel === p.value}
                   onClick={() => selectPreset(p.value)}
                 >
@@ -324,7 +325,7 @@ export default function CoffeeYieldClient() {
                 </button>
               ))}
               <button
-                className={`${s.ratio_btn} ${ratioSel === 'custom' ? s.ratio_btn_active : ''}`}
+                className={`${ui.chip} ${s.ratio_btn} ${ratioSel === 'custom' ? ui.chipActive : ''}`}
                 aria-pressed={ratioSel === 'custom'}
                 onClick={selectCustom}
               >
@@ -334,7 +335,7 @@ export default function CoffeeYieldClient() {
             </div>
             {ratioSel === 'custom' && (
               <input
-                className={s.input}
+                className={ui.input}
                 type="number"
                 inputMode="decimal"
                 min="0"
@@ -346,19 +347,19 @@ export default function CoffeeYieldClient() {
                 autoFocus
               />
             )}
-            {method === 'drip' && <p className={s.sca_note}>{t('sca_ratio_note')}</p>}
+            {method === 'drip' && <p className={ui.hint}>{t('sca_ratio_note')}</p>}
           </div>
 
           {/* pro-only inputs */}
           {mode === 'pro' && (
             <>
-              <div className={s.field}>
-                <label className={s.field_label} htmlFor="cy-output">
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="cy-output">
                   {t('label_output')}
                 </label>
                 <input
                   id="cy-output"
-                  className={s.input}
+                  className={ui.input}
                   type="number"
                   inputMode="decimal"
                   min="0"
@@ -369,13 +370,13 @@ export default function CoffeeYieldClient() {
                   aria-label={t('label_output')}
                 />
               </div>
-              <div className={s.field}>
-                <label className={s.field_label} htmlFor="cy-tds">
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="cy-tds">
                   {t('label_tds')}
                 </label>
                 <input
                   id="cy-tds"
-                  className={s.input}
+                  className={ui.input}
                   type="number"
                   inputMode="decimal"
                   min="0"
@@ -389,11 +390,11 @@ export default function CoffeeYieldClient() {
             </>
           )}
 
-          {!calc.doseValid && <div className={s.error_box}>{t('input_error_dose')}</div>}
+          {!calc.doseValid && <div className={`${ui.notice} ${ui.red}`}>{t('input_error_dose')}</div>}
         </section>
 
         {/* ── Result panel (right) ── */}
-        <section className={`${s.panel} ${s.result_panel}`} aria-live="polite">
+        <section className={`${ui.card} ${s.panel} ${s.result_panel}`} aria-live="polite">
           {!hasResult ? (
             <div className={s.empty_result}>
               <span className={s.empty_result_icon}>☕</span>
@@ -416,10 +417,10 @@ export default function CoffeeYieldClient() {
               {/* pro: yield + chart + feedback */}
               {mode === 'pro' && (
                 <>
-                  {calc.outputWarn && <div className={s.warn_box}>{t('input_warn_output')}</div>}
+                  {calc.outputWarn && <div className={`${ui.notice} ${ui.amber}`}>{t('input_warn_output')}</div>}
 
                   {calc.unrealistic && (
-                    <div className={s.error_box}>{t('input_error_unrealistic')}</div>
+                    <div className={`${ui.notice} ${ui.red}`}>{t('input_error_unrealistic')}</div>
                   )}
 
                   {calc.yieldPct !== null && !calc.unrealistic && (
@@ -552,12 +553,12 @@ export default function CoffeeYieldClient() {
                       {/* feedback */}
                       {calc.verdict && (
                         <div
-                          className={`${s.feedback} ${
+                          className={`${ui.notice} ${s.feedback} ${
                             calc.verdict === 'under'
-                              ? s.feedback_under
+                              ? ui.amber
                               : calc.verdict === 'ideal'
-                                ? s.feedback_ideal
-                                : s.feedback_over
+                                ? ui.green
+                                : ui.red
                           }`}
                         >
                           <span className={s.feedback_verdict}>{t(`verdict_${calc.verdict}`)}</span>
@@ -570,7 +571,7 @@ export default function CoffeeYieldClient() {
               )}
 
               {/* share */}
-              <button className={s.share_btn} onClick={handleShare} aria-label={t('share_result_btn')}>
+              <button className={`${ui.button} ${ui.primary} ${ui.block}`} onClick={handleShare} aria-label={t('share_result_btn')}>
                 {t('share_result_btn')}
               </button>
             </>

@@ -9,6 +9,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -160,7 +161,7 @@ export default function ImageProcessorClient() {
     ? parseFloat(getSaving(original.size, compressed.size))
     : 0;
 
-  const savingColor = savingPct >= 30 ? '#10b981' : savingPct >= 10 ? '#f59e0b' : 'var(--text-secondary)';
+  const savingColor = savingPct >= 30 ? 'var(--tint-green-fg)' : savingPct >= 10 ? 'var(--tint-amber-fg)' : 'var(--text-secondary)';
 
   return (
     <div>
@@ -169,19 +170,11 @@ export default function ImageProcessorClient() {
       <ToolHeader icon={<ImageIcon />} title={T.title} subtitle={T.subtitle} />
 
       {/* ── Security badge ── */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
+      <div className={`${ui.notice} ${ui.green}`} style={{
         justifyContent: 'center',
-        gap: '0.5rem',
-        background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05))',
-        border: '1px solid rgba(16,185,129,0.3)',
-        borderRadius: '2rem',
-        padding: '0.6rem 1.25rem',
-        maxWidth: '640px',
+        alignItems: 'center',
+        maxWidth: 'var(--tool-width-narrow)',
         margin: '0 auto 2rem',
-        fontSize: '0.82rem',
-        color: '#059669',
         fontWeight: 600,
         textAlign: 'center',
       }}>
@@ -198,13 +191,11 @@ export default function ImageProcessorClient() {
           onDragOver={e => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
           style={{
-            maxWidth: '640px',
+            maxWidth: 'var(--tool-width-narrow)',
             margin: '0 auto',
-            border: `2px dashed ${dragging ? 'var(--primary)' : 'var(--border)'}`,
-            borderRadius: 'var(--radius-lg)',
-            background: dragging
-              ? 'rgba(249,115,22,0.06)'
-              : 'var(--surface)',
+            border: `2px dashed ${dragging ? 'var(--color-primary)' : 'var(--border)'}`,
+            borderRadius: 'var(--radius-card)',
+            background: dragging ? 'var(--color-primary-light)' : 'var(--surface)',
             padding: '4rem 2rem',
             textAlign: 'center',
             cursor: 'pointer',
@@ -213,22 +204,22 @@ export default function ImageProcessorClient() {
         >
           <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🖼️</div>
           <p style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>{T.dropTitle}</p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{T.dropSub}</p>
-          {error && <p style={{ marginTop: '1rem', color: '#ef4444', fontSize: '0.875rem', fontWeight: 600 }}>{error}</p>}
+          <p className={ui.hint}>{T.dropSub}</p>
+          {error && <p className={ui.error} style={{ marginTop: '1rem' }}>{error}</p>}
           <input ref={inputRef} type="file" accept="image/*" onChange={onInputChange} style={{ display: 'none' }} />
         </div>
       ) : (
-        <div style={{ maxWidth: '720px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div style={{ maxWidth: 'var(--tool-width-narrow)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
           {/* ── Controls ── */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div className={ui.card}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
 
               {/* Quality slider */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <label style={labelStyle}>{T.quality}</label>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>
+                  <label className={ui.label}>{T.quality}</label>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-primary)' }}>
                     {Math.round(quality * 100)}%
                   </span>
                 </div>
@@ -237,9 +228,9 @@ export default function ImageProcessorClient() {
                   min="0.1" max="1.0" step="0.05"
                   value={quality}
                   onChange={e => setQuality(parseFloat(e.target.value))}
-                  style={{ width: '100%', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                  style={{ width: '100%', accentColor: 'var(--color-primary)', cursor: 'pointer' }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                <div className={ui.hint} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.2rem' }}>
                   <span>{isKo ? '최소' : 'Min'}</span>
                   <span>{isKo ? '최대 (원본)' : 'Max (Original)'}</span>
                 </div>
@@ -247,24 +238,13 @@ export default function ImageProcessorClient() {
 
               {/* Max width */}
               <div>
-                <label style={{ ...labelStyle, marginBottom: '0.5rem', display: 'block' }}>{T.maxWidth}</label>
-                <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                <label className={ui.label} style={{ marginBottom: '0.5rem', display: 'block' }}>{T.maxWidth}</label>
+                <div className={ui.chips} style={{ gap: '0.4rem' }}>
                   {[800, 1280, 1920, 2560].map(w => (
                     <button
                       key={w}
                       onClick={() => setMaxWidthPx(w)}
-                      style={{
-                        padding: '0.35rem 0.65rem',
-                        fontSize: '0.78rem',
-                        fontWeight: 600,
-                        borderRadius: 'var(--radius-sm)',
-                        border: '1.5px solid',
-                        borderColor: maxWidthPx === w ? 'var(--primary)' : 'var(--border)',
-                        background: maxWidthPx === w ? 'rgba(249,115,22,0.1)' : 'var(--surface-hover)',
-                        color: maxWidthPx === w ? 'var(--primary)' : 'var(--text-muted)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s',
-                      }}
+                      className={`${ui.chip} ${ui.pill} ${maxWidthPx === w ? ui.chipActive : ''}`}
                     >
                       {w}px
                     </button>
@@ -275,19 +255,19 @@ export default function ImageProcessorClient() {
           </div>
 
           {/* ── Stats dashboard ── */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div className={ui.card}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
 
               {/* Original */}
-              <div style={{ textAlign: 'center', padding: '1rem', borderRadius: 'var(--radius-md)', background: 'var(--surface-hover)' }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>{T.original}</div>
+              <div style={{ textAlign: 'center', padding: '1rem', borderRadius: 'var(--radius-control)', background: 'var(--surface-hover)' }}>
+                <div style={statLabelStyle}>{T.original}</div>
                 <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)' }}>{formatSize(original.size)}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>{original.width} × {original.height}</div>
               </div>
 
               {/* Saving */}
-              <div style={{ textAlign: 'center', padding: '1rem', borderRadius: 'var(--radius-md)', background: loading ? 'var(--surface-hover)' : 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05))', border: loading ? 'none' : '1px solid rgba(16,185,129,0.2)' }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>{T.saving}</div>
+              <div style={{ textAlign: 'center', padding: '1rem', borderRadius: 'var(--radius-control)', background: loading ? 'var(--surface-hover)' : 'var(--tint-green-bg)', border: loading ? 'none' : '1px solid var(--tint-green-border)' }}>
+                <div style={statLabelStyle}>{T.saving}</div>
                 {loading ? (
                   <div style={{ fontSize: '1.35rem', color: 'var(--text-muted)' }}>⏳</div>
                 ) : (
@@ -303,13 +283,13 @@ export default function ImageProcessorClient() {
               </div>
 
               {/* Compressed */}
-              <div style={{ textAlign: 'center', padding: '1rem', borderRadius: 'var(--radius-md)', background: 'var(--surface-hover)' }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>{T.compressed}</div>
+              <div style={{ textAlign: 'center', padding: '1rem', borderRadius: 'var(--radius-control)', background: 'var(--surface-hover)' }}>
+                <div style={statLabelStyle}>{T.compressed}</div>
                 {loading ? (
-                  <div style={{ fontSize: '1.35rem', color: 'var(--primary)' }}>⏳</div>
+                  <div style={{ fontSize: '1.35rem', color: 'var(--color-primary)' }}>⏳</div>
                 ) : (
                   <>
-                    <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--primary)' }}>{compressed ? formatSize(compressed.size) : '—'}</div>
+                    <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--color-primary)' }}>{compressed ? formatSize(compressed.size) : '—'}</div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>{compressed ? `${compressed.width} × ${compressed.height}` : ''}</div>
                   </>
                 )}
@@ -323,7 +303,7 @@ export default function ImageProcessorClient() {
                   <div style={{
                     height: '100%',
                     width: `${100 - Math.min(savingPct, 100)}%`,
-                    background: 'linear-gradient(90deg, var(--primary), #f59e0b)',
+                    background: 'var(--color-primary)',
                     borderRadius: '3px',
                     transition: 'width 0.5s ease',
                   }} />
@@ -337,25 +317,15 @@ export default function ImageProcessorClient() {
           </div>
 
           {/* ── Preview ── */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{T.preview}</span>
-              <div style={{ display: 'flex', background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '3px', gap: '2px' }}>
+          <div className={ui.card}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+              <span className={ui.label}>{T.preview}</span>
+              <div className={ui.segmented}>
                 {(['original', 'compressed'] as const).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setPreview(tab)}
-                    style={{
-                      padding: '0.35rem 0.75rem',
-                      borderRadius: 'calc(var(--radius-md) - 1px)',
-                      border: 'none',
-                      background: preview === tab ? 'var(--primary)' : 'transparent',
-                      color: preview === tab ? '#fff' : 'var(--text-secondary)',
-                      fontWeight: 600,
-                      fontSize: '0.78rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s',
-                    }}
+                    className={`${ui.segment} ${preview === tab ? ui.segmentActive : ''}`}
                   >
                     {tab === 'original' ? T.original : T.compressed}
                   </button>
@@ -365,7 +335,7 @@ export default function ImageProcessorClient() {
 
             <div style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'repeating-conic-gradient(#e5e7eb 0% 25%, white 0% 50%) 0 0 / 20px 20px', position: 'relative', minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {loading && preview === 'compressed' ? (
-                <div style={{ padding: '3rem', color: 'var(--text-muted)', fontWeight: 600 }}>{T.processing}</div>
+                <div style={{ padding: '3rem', color: '#64748b', fontWeight: 600 }}>{T.processing}</div>
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -382,51 +352,25 @@ export default function ImageProcessorClient() {
             <button
               onClick={download}
               disabled={!compressed || loading}
-              style={{
-                flex: '1 1 200px',
-                padding: '0.9rem 1.5rem',
-                fontSize: '1rem',
-                fontWeight: 700,
-                borderRadius: 'var(--radius-md)',
-                border: 'none',
-                background: (!compressed || loading) ? 'var(--border)' : 'linear-gradient(135deg, #f97316, #ea580c)',
-                color: (!compressed || loading) ? 'var(--text-muted)' : '#fff',
-                cursor: (!compressed || loading) ? 'not-allowed' : 'pointer',
-                boxShadow: (!compressed || loading) ? 'none' : '0 4px 14px rgba(249,115,22,0.4)',
-                transition: 'all 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-              }}
+              className={`${ui.button} ${ui.primary} ${ui.lg}`}
+              style={{ flex: '1 1 200px' }}
             >
               <span>⬇️</span> {T.download}
             </button>
             <button
               onClick={reset}
-              style={{
-                padding: '0.9rem 1.25rem',
-                fontSize: '0.9rem',
-                fontWeight: 600,
-                borderRadius: 'var(--radius-md)',
-                border: '1.5px solid var(--border)',
-                background: 'var(--surface)',
-                color: 'var(--text-secondary)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                whiteSpace: 'nowrap',
-              }}
+              className={`${ui.button} ${ui.secondary} ${ui.lg}`}
             >
               🔄 {T.reset}
             </button>
           </div>
 
-          {error && <p style={{ color: '#ef4444', fontSize: '0.875rem', fontWeight: 600, textAlign: 'center' }}>{error}</p>}
+          {error && <p className={ui.error} style={{ textAlign: 'center' }}>{error}</p>}
         </div>
       )}
 
       {/* ── SEO Section ── */}
-      <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+      <div style={{ maxWidth: 'var(--tool-width-narrow)', margin: '0 auto' }}>
         {/* 공유하기 */}
         <ShareBar title={T.title} description={T.subtitle} />
 
@@ -485,10 +429,11 @@ export default function ImageProcessorClient() {
   );
 }
 
-const labelStyle: React.CSSProperties = {
-  fontSize: '0.75rem',
+const statLabelStyle: React.CSSProperties = {
+  fontSize: '0.72rem',
   fontWeight: 700,
   color: 'var(--text-muted)',
   textTransform: 'uppercase',
   letterSpacing: '0.05em',
+  marginBottom: '0.4rem',
 };

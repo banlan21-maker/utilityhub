@@ -7,6 +7,7 @@ import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 import GenderSelection from './components/GenderSelection';
 import QuestionScreen from './components/QuestionScreen';
 import ResultScreen from './components/ResultScreen';
@@ -45,7 +46,7 @@ export default function TetoEgenTestClient() {
 
       <ToolHeader icon={<Smile />} title={t('title')} subtitle={t('description')} />
 
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem', minHeight: '500px' }}>
+      <div className={ui.card} style={{ marginBottom: '2rem', minHeight: '500px' }}>
         {screen === 'gender' && <GenderSelection onSelect={handleGenderSelect} />}
         {screen === 'questions' && <QuestionScreen onComplete={handleTestComplete} />}
         {screen === 'result' && gender && (

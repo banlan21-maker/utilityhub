@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
 
 /* ─── Sample JSON ─── */
 const SAMPLE = `{
@@ -103,15 +104,9 @@ const toggleStyle: React.CSSProperties = {
 };
 
 /* ─── Action Button ─── */
-function ActionBtn({ onClick, children, active }: { onClick: () => void; children: React.ReactNode; active?: boolean }) {
+function ActionBtn({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
   return (
-    <button onClick={onClick} style={{
-      padding: '0.4rem 0.85rem', borderRadius: 'var(--radius-sm)',
-      border: '1.5px solid', borderColor: active ? 'var(--primary)' : 'var(--border)',
-      background: active ? 'var(--primary)' : 'var(--surface-hover)',
-      color: active ? '#fff' : 'var(--text-secondary)',
-      fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s',
-    }}>
+    <button onClick={onClick} className={`${ui.button} ${ui.secondary} ${ui.sm}`}>
       {children}
     </button>
   );
@@ -150,12 +145,12 @@ export default function JsonFormatterClient() {
       <NavigationActions />
       <ToolHeader icon={<Braces />} title={t('title')} subtitle={t('description')} />
 
-      <div style={{ maxWidth: '900px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+      <div style={{ maxWidth: 'var(--tool-width)', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
 
         {/* Input panel */}
-        <div className="glass-panel" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <div className={ui.card} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={labelStyle}>{t('label.input')}</span>
+            <span className={ui.label}>{t('label.input')}</span>
             <div style={{ display: 'flex', gap: '0.4rem' }}>
               <ActionBtn onClick={() => setInput(SAMPLE)}>{t('btn.sample')}</ActionBtn>
               <ActionBtn onClick={() => setInput('')}>{t('btn.clear')}</ActionBtn>
@@ -169,7 +164,7 @@ export default function JsonFormatterClient() {
             style={{ ...codeTextareaStyle, minHeight: '380px' }}
           />
           {/* Status bar */}
-          <div style={{ fontSize: '0.75rem', color: hasInput ? (isValid ? '#10b981' : '#ef4444') : 'var(--text-muted)' }}>
+          <div style={{ fontSize: '0.75rem', color: hasInput ? (isValid ? 'var(--tint-green-fg)' : 'var(--tint-red-fg)') : 'var(--text-muted)' }}>
             {hasInput
               ? isValid
                 ? `✓ ${t('status.valid')} · ${Object.keys(parsed ?? {}).length || (Array.isArray(parsed) ? parsed.length : 0)} ${t('status.keys')}`
@@ -179,12 +174,12 @@ export default function JsonFormatterClient() {
         </div>
 
         {/* Output panel */}
-        <div className="glass-panel" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <div className={ui.card} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
-            <div style={{ display: 'flex', gap: '0.35rem' }}>
-              <ActionBtn onClick={() => setMode('pretty')} active={mode === 'pretty'}>{t('btn.pretty')}</ActionBtn>
-              <ActionBtn onClick={() => setMode('tree')} active={mode === 'tree'}>{t('btn.tree')}</ActionBtn>
-              <ActionBtn onClick={() => setMode('minify')} active={mode === 'minify'}>{t('btn.minify')}</ActionBtn>
+            <div className={ui.segmented}>
+              {([['pretty', t('btn.pretty')], ['tree', t('btn.tree')], ['minify', t('btn.minify')]] as const).map(([m, label]) => (
+                <button key={m} onClick={() => setMode(m)} className={`${ui.segment} ${mode === m ? ui.segmentActive : ''}`}>{label}</button>
+              ))}
             </div>
             {isValid && (
               <ActionBtn onClick={copy}>{copied ? `✓ ${t('btn.copied')}` : `📋 ${t('btn.copy')}`}</ActionBtn>
@@ -198,7 +193,7 @@ export default function JsonFormatterClient() {
             lineHeight: 1.6, color: '#e2e8f0',
           }}>
             {!hasInput && (
-              <span style={{ color: 'var(--text-secondary)' }}>{t('output.empty')}</span>
+              <span style={{ color: '#94a3b8' }}>{t('output.empty')}</span>
             )}
             {hasInput && !isValid && (
               <div style={{ color: '#f87171' }}>
@@ -218,7 +213,7 @@ export default function JsonFormatterClient() {
           </div>
 
           {isValid && mode === 'minify' && (
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <div className={ui.hint}>
               {t('status.saved', {
                 original: pretty.length.toLocaleString(),
                 minified: minified.length.toLocaleString(),
@@ -296,14 +291,4 @@ const codeTextareaStyle: React.CSSProperties = {
   background: '#0f172a', color: '#e2e8f0',
   outline: 'none', boxSizing: 'border-box',
   transition: 'border-color 0.2s',
-};
-const labelStyle: React.CSSProperties = {
-  fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)',
-  textTransform: 'uppercase', letterSpacing: '0.07em',
-};
-const adStyle: React.CSSProperties = {
-  width: '728px', maxWidth: '100%', height: '90px',
-  background: 'var(--surface-hover)', border: '1px dashed var(--border)',
-  borderRadius: 'var(--radius-md)', display: 'flex',
-  alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
 };

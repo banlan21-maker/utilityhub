@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './coin.module.css';
+import { ui } from '@/app/components/ui';
 
 interface FiatCurrency {
   code: string;
@@ -163,24 +164,17 @@ export default function CoinProfitClient() {
       <NavigationActions />
       <ToolHeader icon={<Bitcoin />} title={t('title')} subtitle={t('description')} />
 
-      <section className={s.coin_card}>
+      <section className={`${ui.card} ${s.coin_card}`}>
         {/* Fiat Selector */}
-        <div className={s.coin_selector_group}>
-          <label className={s.coin_label}>{t('fiat_label')}</label>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className={ui.field}>
+          <label className={ui.label}>{t('fiat_label')}</label>
+          <div className={ui.segmented}>
             {FIAT.map(f => (
               <button
                 key={f.code}
                 onClick={() => handleFiatChange(f.code)}
                 aria-pressed={fiatCode === f.code}
-                style={{
-                  flex: 1, padding: '0.75rem', borderRadius: '0.75rem',
-                  border: '1px solid #334155',
-                  background: fiatCode === f.code ? '#8b5cf6' : '#1e293b',
-                  color: '#fff', fontSize: '0.9rem', fontWeight: 800,
-                  cursor: 'pointer', display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', gap: '0.5rem',
-                }}
+                className={`${ui.segment} ${fiatCode === f.code ? ui.segmentActive : ''}`}
               >
                 {f.flag} {f.label}
               </button>
@@ -190,19 +184,19 @@ export default function CoinProfitClient() {
 
         {/* API error */}
         {coinError && (
-          <div className={s.coin_error}>
+          <div className={`${ui.notice} ${ui.red}`}>
             <AlertCircle size={16} />
             {coinError}
           </div>
         )}
 
         {/* Coin Search */}
-        <div className={s.coin_selector_group} ref={searchRef} style={{ position: 'relative' }}>
-          <label className={s.coin_label}>{t('coin_label')}</label>
+        <div className={ui.field} ref={searchRef} style={{ position: 'relative' }}>
+          <label className={ui.label}>{t('coin_label')}</label>
           <div style={{ position: 'relative' }}>
             <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
             <input
-              className={s.coin_input}
+              className={ui.input}
               style={{ paddingLeft: '2.75rem' }}
               value={query}
               onChange={e => { setQuery(e.target.value); setShowDropdown(true); }}
@@ -228,7 +222,7 @@ export default function CoinProfitClient() {
                     <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>{c.name}</div>
                     <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{c.symbol.toUpperCase()}</div>
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: c.price_change_percentage_24h >= 0 ? '#ef4444' : '#3b82f6', fontWeight: 800 }}>
+                  <div style={{ fontSize: '0.75rem', color: c.price_change_percentage_24h >= 0 ? 'var(--tint-red-fg)' : 'var(--tint-blue-fg)', fontWeight: 800 }}>
                     {c.price_change_percentage_24h >= 0 ? '+' : ''}{c.price_change_percentage_24h.toFixed(2)}%
                   </div>
                 </div>
@@ -239,13 +233,13 @@ export default function CoinProfitClient() {
 
         {/* Selected Coin Banner */}
         {selectedCoin && (
-          <div style={{ background: '#1e293b', padding: '1.25rem', borderRadius: '1rem', border: '1px solid #334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className={s.coin_banner}>
             <img src={selectedCoin.image} width={40} height={40} alt={selectedCoin.name} style={{ borderRadius: '50%' }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 800 }}>
                 {selectedCoin.name} {t('current_price')}
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#f8fafc' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-primary)' }}>
                 {fetchingPrice
                   ? <span className={s.coin_pulse}>···</span>
                   : formatMoney(selectedCoin.current_price)}
@@ -254,7 +248,7 @@ export default function CoinProfitClient() {
             <div style={{ textAlign: 'right' }}>
               <button
                 onClick={() => refreshPrice(selectedCoin, fiatCode)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8b5cf6' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)' }}
                 aria-label={isKo ? '가격 새로고침' : 'Refresh price'}
               >
                 <RefreshCcw size={20} className={fetchingPrice ? s.coin_spin : ''} />
@@ -265,21 +259,21 @@ export default function CoinProfitClient() {
         )}
 
         {/* Inputs */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
-          <div>
-            <label className={s.coin_label}>{t('buy_price')}</label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('buy_price')}</label>
             <input
-              className={s.coin_input}
+              className={`${ui.input} ${ui.inputLg}`}
               value={buyPrice}
               onChange={e => setBuyPrice(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'))}
               placeholder={t('buy_price_placeholder')}
               aria-label={isKo ? '매수 단가' : 'Buy price'}
             />
           </div>
-          <div>
-            <label className={s.coin_label}>{t('quantity')}</label>
+          <div className={ui.field}>
+            <label className={ui.label}>{t('quantity')}</label>
             <input
-              className={s.coin_input}
+              className={`${ui.input} ${ui.inputLg}`}
               value={quantity}
               onChange={e => setQuantity(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'))}
               placeholder={t('qty_placeholder')}
@@ -303,28 +297,28 @@ export default function CoinProfitClient() {
               <div
                 className={s.coin_result_item}
                 style={{
-                  border: `1px solid ${isProfit ? '#ef4444' : '#3b82f6'}`,
-                  background: isProfit ? 'rgba(239,68,68,0.05)' : 'rgba(59,130,246,0.05)',
+                  border: `1px solid ${isProfit ? 'var(--tint-red-border)' : 'var(--tint-blue-border)'}`,
+                  background: isProfit ? 'var(--tint-red-bg)' : 'var(--tint-blue-bg)',
                 }}
               >
-                <div className={s.coin_result_label} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>
+                <div className={s.coin_result_label} style={{ color: isProfit ? 'var(--tint-red-fg)' : 'var(--tint-blue-fg)' }}>
                   {t('profit_amount')}
                 </div>
-                <div className={s.coin_result_value} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>
+                <div className={s.coin_result_value} style={{ color: isProfit ? 'var(--tint-red-fg)' : 'var(--tint-blue-fg)' }}>
                   {isProfit ? '+' : ''}{formatMoney(profit)}
                 </div>
               </div>
               <div
                 className={s.coin_result_item}
                 style={{
-                  border: `1px solid ${isProfit ? '#ef4444' : '#3b82f6'}`,
-                  background: isProfit ? 'rgba(239,68,68,0.05)' : 'rgba(59,130,246,0.05)',
+                  border: `1px solid ${isProfit ? 'var(--tint-red-border)' : 'var(--tint-blue-border)'}`,
+                  background: isProfit ? 'var(--tint-red-bg)' : 'var(--tint-blue-bg)',
                 }}
               >
-                <div className={s.coin_result_label} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>
+                <div className={s.coin_result_label} style={{ color: isProfit ? 'var(--tint-red-fg)' : 'var(--tint-blue-fg)' }}>
                   {t('profit_rate')}
                 </div>
-                <div className={s.coin_result_value} style={{ color: isProfit ? '#ef4444' : '#3b82f6' }}>
+                <div className={s.coin_result_value} style={{ color: isProfit ? 'var(--tint-red-fg)' : 'var(--tint-blue-fg)' }}>
                   {isProfit ? '+' : ''}{profitRate.toFixed(2)}%
                 </div>
               </div>

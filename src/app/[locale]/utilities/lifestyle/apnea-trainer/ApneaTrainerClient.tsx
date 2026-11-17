@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './apnea-trainer.module.css';
+import { ui } from '@/app/components/ui';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type TrainingMode = 'co2' | 'o2';
@@ -372,7 +373,7 @@ export default function ApneaTrainerClient() {
         <div className={s.ap_badge}>🫁 Apnea Pro</div>
       </ToolHeader>
 
-    <div className={s.ap_wrap}>
+    <div className={`${s.ap_wrap} dark-island`}>
 
       <div className={s.ap_container}>
 
@@ -611,7 +612,7 @@ export default function ApneaTrainerClient() {
             <li><strong>{isKo ? '건강 이상 시 즉시 중단' : 'Stop immediately if you feel unwell'}</strong> — {isKo ? '두통, 어지러움, 시야 이상이 느껴지면 즉시 STOP 버튼을 누르고 정상 호흡을 회복하세요.' : 'Press STOP and breathe normally at any sign of headache, dizziness, or vision disturbance.'}</li>
           </ul>
 
-          <div className={s.ap_disclaimer}>
+          <div className={`${ui.notice} ${ui.amber} ${s.ap_disclaimer}`}>
             ⚠️ {isKo
               ? '본 앱은 교육 및 훈련 보조 도구로 제공되며, 의학적 또는 전문 코칭 조언을 대체하지 않습니다. 프리다이빙은 생명에 위협이 될 수 있는 활동입니다. 반드시 공인 프리다이빙 강사의 지도하에 안전한 환경에서 훈련하시기 바랍니다.'
               : 'This app is provided as an educational and training support tool and does not replace medical or professional coaching advice. Freediving is an activity that can pose serious risks to life. Always train under the guidance of a certified freediving instructor in a safe environment.'}

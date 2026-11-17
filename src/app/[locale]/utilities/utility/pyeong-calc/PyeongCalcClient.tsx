@@ -13,6 +13,7 @@ import {
   EXCLUSIVE_RATIO, COMMON_EXCLUSIVE, type BuildingType,
 } from '@/lib/pyeong';
 import s from './pyeong.module.css';
+import { ui } from '@/app/components/ui';
 
 type Tab = 'convert' | 'class' | 'price';
 
@@ -32,7 +33,7 @@ function CopyButton({ value, isKo }: { value: string; isKo: boolean }) {
     } catch { /* 클립보드 권한이 없으면 무시 */ }
   };
   return (
-    <button type="button" onClick={copy} className={`${s.copy} ${copied ? s.copy_done : ''}`}>
+    <button type="button" onClick={copy} className={`${ui.button} ${ui.sm} ${copied ? ui.primary : ui.secondary}`}>
       {copied ? (isKo ? '✓ 복사됨' : '✓ Copied') : (isKo ? '복사' : 'Copy')}
     </button>
   );
@@ -103,8 +104,8 @@ export default function PyeongCalcClient() {
 
       <ToolHeader icon={<Ruler />} title={t('title')} subtitle={t('description')} />
 
-      <section className={s.card} aria-labelledby="py-what">
-        <h2 id="py-what" className={s.card_title}>{isKo ? '1평은 몇 ㎡? — 평 환산표' : 'What is a pyeong? 1 pyeong = 3.3058 m²'}</h2>
+      <section className={`${ui.card} ${s.card}`} aria-labelledby="py-what">
+        <h2 id="py-what" className={ui.cardTitle}>{isKo ? '1평은 몇 ㎡? — 평 환산표' : 'What is a pyeong? 1 pyeong = 3.3058 m²'}</h2>
         <p className={s.hint}>{isKo
           ? '평(坪)은 사방 6자(1자 = 10/33m)인 정사각형 넓이로, 1평 = 400/121㎡ ≈ 3.3058㎡(약 35.58ft²)입니다. 일본의 쓰보(坪)와 같은 크기로 다다미 2장 정도이며, ㎡에 0.3025를 곱하면 평이 됩니다.'
           : 'A pyeong (평, 坪) is the traditional Korean unit of floor area: a square six ja (10/33 m) on each side, so 1 pyeong = 400/121 m² ≈ 3.3058 m² ≈ 35.58 ft² — the same as the Japanese tsubo, roughly two tatami mats. Multiply pyeong by 3.3058 for square meters, or square meters by 0.3025 for pyeong. Koreans still describe apartments and shops in pyeong, although contracts must use m².'}</p>
@@ -120,14 +121,14 @@ export default function PyeongCalcClient() {
         </div>
       </section>
 
-      <div className={s.tabs} role="tablist" aria-label={isKo ? '계산 종류' : 'Calculator type'}>
+      <div className={`${ui.segmented} ${s.tabs}`} role="tablist" aria-label={isKo ? '계산 종류' : 'Calculator type'}>
         {([
           ['convert', isKo ? '㎡ ↔ 평 변환' : '㎡ ↔ pyeong', isKo ? '단위만 바꾸기' : 'Unit conversion'],
           ['class', isKo ? '몇 평형? (전용 ↔ 평형)' : 'Pyeong class', isKo ? '84㎡ = 34평형' : '84㎡ = 34-pyeong class'],
           ['price', isKo ? '평당 가격' : 'Price per pyeong', isKo ? '매매가 ÷ 면적' : 'Price ÷ area'],
         ] as const).map(([k, label, sub]) => (
           <button key={k} type="button" role="tab" aria-selected={tab === k}
-            className={`${s.tab} ${tab === k ? s.tab_active : ''}`} onClick={() => setTab(k)}>
+            className={`${ui.segment} ${tab === k ? ui.segmentActive : ''}`} onClick={() => setTab(k)}>
             {label}<small>{sub}</small>
           </button>
         ))}
@@ -135,33 +136,33 @@ export default function PyeongCalcClient() {
 
       {/* ── ① ㎡ ↔ 평 ── */}
       {tab === 'convert' && (
-        <section className={s.card}>
-          <div className={s.chips}>
+        <section className={`${ui.card} ${s.card}`}>
+          <div className={`${ui.chips} ${ui.grow}`}>
             {(['sqm2pyeong', 'pyeong2sqm'] as const).map(d => (
               <button key={d} type="button" aria-pressed={direction === d}
-                className={`${s.chip} ${direction === d ? s.chip_active : ''}`}
+                className={`${ui.chip} ${direction === d ? ui.chipActive : ''}`}
                 onClick={() => { setDirection(d); setInputVal(''); }}>
                 {d === 'sqm2pyeong' ? `㎡ → ${pyUnit}` : `${pyUnit} → ㎡`}
               </button>
             ))}
           </div>
-          <div>
-            <label className={s.field_label} htmlFor="py-in">{direction === 'sqm2pyeong' ? t('label.sqm') : t('label.pyeong')}</label>
-            <div className={s.input_wrap}>
-              <input id="py-in" className={s.input} inputMode="decimal" placeholder={direction === 'sqm2pyeong' ? '84' : '34'}
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="py-in">{direction === 'sqm2pyeong' ? t('label.sqm') : t('label.pyeong')}</label>
+            <div className={ui.inputGroup}>
+              <input id="py-in" className={`${ui.input} ${ui.inputLg}`} inputMode="decimal" placeholder={direction === 'sqm2pyeong' ? '84' : '34'}
                 value={inputVal} onChange={e => setInputVal(decimalInput(e.target.value))} />
-              <span className={s.suffix}>{direction === 'sqm2pyeong' ? '㎡' : pyUnit}</span>
+              <span className={ui.unit}>{direction === 'sqm2pyeong' ? '㎡' : pyUnit}</span>
             </div>
           </div>
           <div className={s.decimals}>
             <span>{t('label.decimals')}</span>
             {[0, 1, 2, 3, 4].map(d => (
-              <button key={d} type="button" aria-pressed={decimals === d} className={`${s.mini} ${decimals === d ? s.mini_active : ''}`} onClick={() => setDecimals(d)}>{d}</button>
+              <button key={d} type="button" aria-pressed={decimals === d} className={`${ui.chip} ${ui.pill} ${decimals === d ? ui.chipActive : ''}`} onClick={() => setDecimals(d)}>{d}</button>
             ))}
           </div>
-          <div className={s.chips} aria-label={t('label.presets')}>
+          <div className={ui.chips} aria-label={t('label.presets')}>
             {COMMON_EXCLUSIVE.map(e => (
-              <button key={e} type="button" className={`${s.mini} ${direction === 'sqm2pyeong' && num === e ? s.mini_active : ''}`} onClick={() => setPreset(e)}>
+              <button key={e} type="button" className={`${ui.chip} ${ui.pill} ${direction === 'sqm2pyeong' && num === e ? ui.chipActive : ''}`} onClick={() => setPreset(e)}>
                 {isKo ? `전용 ${e}㎡` : `${e}㎡`}
               </button>
             ))}
@@ -171,8 +172,8 @@ export default function PyeongCalcClient() {
             <div className={s.result} aria-live="polite">
               <div className={s.result_main}>
                 <div>
-                  <div className={s.result_from}>{direction === 'sqm2pyeong' ? `${inputVal} ㎡ =` : `${inputVal} ${pyUnit} =`}</div>
-                  <span className={s.result_num}>{direction === 'sqm2pyeong' ? fmt(pyeong) : fmt(sqm)}</span>
+                  <div className={ui.resultLabel}>{direction === 'sqm2pyeong' ? `${inputVal} ㎡ =` : `${inputVal} ${pyUnit} =`}</div>
+                  <span className={ui.resultValue}>{direction === 'sqm2pyeong' ? fmt(pyeong) : fmt(sqm)}</span>
                   <span className={s.result_unit}>{direction === 'sqm2pyeong' ? pyUnit : '㎡'}</span>
                 </div>
                 <CopyButton value={direction === 'sqm2pyeong' ? fmt(pyeong) : fmt(sqm)} isKo={isKo} />
@@ -192,7 +193,7 @@ export default function PyeongCalcClient() {
               )}
             </div>
           )}
-          <p className={s.field_hint}>
+          <p className={ui.hint}>
             {isKo
               ? '※ 1평 = 400/121㎡(약 3.3058㎡). 평은 법정 계량단위가 아니어서 계약서·등기부에는 ㎡로 적습니다.'
               : '※ 1 pyeong = 400/121 ㎡ (≈ 3.3058 ㎡). Pyeong is not a legal unit in Korea; contracts and registries use ㎡.'}
@@ -202,45 +203,45 @@ export default function PyeongCalcClient() {
 
       {/* ── ② 전용 ↔ 평형 ── */}
       {tab === 'class' && (
-        <section className={s.card}>
-          <h2 className={s.card_title}>{isKo ? '전용면적 ↔ 평형' : 'Exclusive area ↔ pyeong class'}</h2>
+        <section className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{isKo ? '전용면적 ↔ 평형' : 'Exclusive area ↔ pyeong class'}</h2>
           <p className={s.hint}>
             {isKo
               ? '"34평형"처럼 부르는 평형은 공용 계단·복도까지 더한 공급면적 기준이라, 광고에 나오는 전용면적을 평으로 바꾼 값보다 큽니다. 전용 84㎡는 전용 기준 25.4평이지만 공급면적이 약 112㎡라 34평형으로 부릅니다.'
               : 'Korean "pyeong classes" are based on supply area, which adds shared stairs and corridors to the exclusive area. An 84㎡ unit is 25.4 pyeong exclusive but about 112㎡ supply, so it is called a 34-pyeong class.'}
           </p>
-          <div className={s.chips}>
-            <button type="button" aria-pressed={classMode === 'toClass'} className={`${s.chip} ${classMode === 'toClass' ? s.chip_active : ''}`} onClick={() => { setClassMode('toClass'); setClassInput(''); }}>
+          <div className={`${ui.chips} ${ui.grow}`}>
+            <button type="button" aria-pressed={classMode === 'toClass'} className={`${ui.chip} ${classMode === 'toClass' ? ui.chipActive : ''}`} onClick={() => { setClassMode('toClass'); setClassInput(''); }}>
               {isKo ? '전용면적 → 몇 평형' : 'Exclusive ㎡ → class'}
             </button>
-            <button type="button" aria-pressed={classMode === 'toExclusive'} className={`${s.chip} ${classMode === 'toExclusive' ? s.chip_active : ''}`} onClick={() => { setClassMode('toExclusive'); setClassInput(''); }}>
+            <button type="button" aria-pressed={classMode === 'toExclusive'} className={`${ui.chip} ${classMode === 'toExclusive' ? ui.chipActive : ''}`} onClick={() => { setClassMode('toExclusive'); setClassInput(''); }}>
               {isKo ? '평형 → 전용면적' : 'Class → exclusive ㎡'}
             </button>
           </div>
           <div className={s.grid2}>
-            <div>
-              <label className={s.field_label} htmlFor="py-class">{classMode === 'toClass' ? (isKo ? '전용면적 (㎡)' : 'Exclusive area (㎡)') : (isKo ? '평형' : 'Pyeong class')}</label>
-              <div className={s.input_wrap}>
-                <input id="py-class" className={s.input} inputMode="decimal" placeholder={classMode === 'toClass' ? '84' : '34'}
+            <div className={ui.field}>
+              <label className={ui.label} htmlFor="py-class">{classMode === 'toClass' ? (isKo ? '전용면적 (㎡)' : 'Exclusive area (㎡)') : (isKo ? '평형' : 'Pyeong class')}</label>
+              <div className={ui.inputGroup}>
+                <input id="py-class" className={`${ui.input} ${ui.inputLg}`} inputMode="decimal" placeholder={classMode === 'toClass' ? '84' : '34'}
                   value={classInput} onChange={e => setClassInput(decimalInput(e.target.value))} />
-                <span className={s.suffix}>{classMode === 'toClass' ? '㎡' : (isKo ? '평형' : 'py')}</span>
+                <span className={ui.unit}>{classMode === 'toClass' ? '㎡' : (isKo ? '평형' : 'py')}</span>
               </div>
             </div>
-            <div>
-              <span className={s.field_label}>{isKo ? '건물 유형' : 'Building type'}</span>
-              <div className={s.chips}>
+            <div className={ui.field}>
+              <span className={ui.label}>{isKo ? '건물 유형' : 'Building type'}</span>
+              <div className={ui.chips}>
                 {(Object.keys(EXCLUSIVE_RATIO) as BuildingType[]).map(b => (
-                  <button key={b} type="button" aria-pressed={building === b} className={`${s.mini} ${building === b ? s.mini_active : ''}`} onClick={() => { setBuilding(b); setRatioText(''); }}>
+                  <button key={b} type="button" aria-pressed={building === b} className={`${ui.chip} ${ui.pill} ${building === b ? ui.chipActive : ''}`} onClick={() => { setBuilding(b); setRatioText(''); }}>
                     {buildingName(b)}
                   </button>
                 ))}
               </div>
-              <div className={s.input_wrap} style={{ marginTop: '0.5rem' }}>
-                <input className={s.input} style={{ fontSize: '1rem', minHeight: 44 }} inputMode="decimal" aria-label={isKo ? '전용률' : 'Exclusive ratio'}
+              <div className={ui.inputGroup} style={{ marginTop: '0.25rem' }}>
+                <input className={ui.input} inputMode="decimal" aria-label={isKo ? '전용률' : 'Exclusive ratio'}
                   placeholder={`${Math.round(range.typical * 100)}`} value={ratioText} onChange={e => setRatioText(decimalInput(e.target.value))} />
-                <span className={s.suffix}>%</span>
+                <span className={ui.unit}>%</span>
               </div>
-              <p className={s.field_hint}>
+              <p className={ui.hint}>
                 {isKo
                   ? `전용률(전용 ÷ ${building === 'officetel' ? '계약' : '공급'}면적). ${buildingName(building)}은 보통 ${Math.round(range.min * 100)}~${Math.round(range.max * 100)}%. 분양 공고의 공급면적을 알면 직접 넣으세요.`
                   : `Exclusive ratio; ${buildingName(building)} is usually ${Math.round(range.min * 100)}–${Math.round(range.max * 100)}%.`}
@@ -254,8 +255,8 @@ export default function PyeongCalcClient() {
                 <>
                   <div className={s.result_main}>
                     <div>
-                      <div className={s.result_from}>{isKo ? `전용 ${classInput}㎡ (${buildingName(building)})` : `${classInput}㎡ exclusive (${buildingName(building)})`}</div>
-                      <span className={s.result_num}>{isKo ? '약 ' : '≈ '}{pyeongClass(classNum, ratio)}</span>
+                      <div className={ui.resultLabel}>{isKo ? `전용 ${classInput}㎡ (${buildingName(building)})` : `${classInput}㎡ exclusive (${buildingName(building)})`}</div>
+                      <span className={ui.resultValue}>{isKo ? '약 ' : '≈ '}{pyeongClass(classNum, ratio)}</span>
                       <span className={s.result_unit}>{isKo ? '평형' : '-pyeong class'}</span>
                     </div>
                   </div>
@@ -269,8 +270,8 @@ export default function PyeongCalcClient() {
                 <>
                   <div className={s.result_main}>
                     <div>
-                      <div className={s.result_from}>{isKo ? `${classInput}평형 (${buildingName(building)})` : `${classInput}-pyeong class (${buildingName(building)})`}</div>
-                      <span className={s.result_num}>{isKo ? '전용 약 ' : '≈ '}{fmt(exclusiveFromClass(classNum, ratio), 0)}</span>
+                      <div className={ui.resultLabel}>{isKo ? `${classInput}평형 (${buildingName(building)})` : `${classInput}-pyeong class (${buildingName(building)})`}</div>
+                      <span className={ui.resultValue}>{isKo ? '전용 약 ' : '≈ '}{fmt(exclusiveFromClass(classNum, ratio), 0)}</span>
                       <span className={s.result_unit}>㎡</span>
                     </div>
                   </div>
@@ -284,7 +285,7 @@ export default function PyeongCalcClient() {
             </div>
           )}
           {building === 'officetel' && (
-            <div className={s.note}>
+            <div className={`${ui.notice} ${ui.amber}`}>
               {isKo
                 ? '오피스텔은 아파트와 달리 공용 주차장·관리실까지 포함한 계약면적으로 분양하는 경우가 많아, 같은 "평형"이라도 실제 쓰는 전용면적이 아파트보다 훨씬 작습니다.'
                 : 'Officetels are often sold by contract area including parking and facilities, so the same "class" has much less usable space than an apartment.'}
@@ -295,24 +296,24 @@ export default function PyeongCalcClient() {
 
       {/* ── ③ 평당 가격 ── */}
       {tab === 'price' && (
-        <section className={s.card}>
-          <h2 className={s.card_title}>{isKo ? '평당 가격 계산' : 'Price per pyeong'}</h2>
+        <section className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{isKo ? '평당 가격 계산' : 'Price per pyeong'}</h2>
           <div className={s.grid2}>
-            <div>
-              <label className={s.field_label} htmlFor="py-price">{isKo ? '매매가·분양가 (원)' : 'Price (KRW)'}</label>
-              <div className={s.input_wrap}>
-                <input id="py-price" className={s.input} inputMode="numeric" placeholder="1,000,000,000"
+            <div className={ui.field}>
+              <label className={ui.label} htmlFor="py-price">{isKo ? '매매가·분양가 (원)' : 'Price (KRW)'}</label>
+              <div className={ui.inputGroup}>
+                <input id="py-price" className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" placeholder="1,000,000,000"
                   value={priceText} onChange={e => { const n = digits(e.target.value); setPriceText(n ? n.toLocaleString('ko-KR') : ''); }} />
-                <span className={s.suffix}>{isKo ? '원' : 'KRW'}</span>
+                <span className={ui.unit}>{isKo ? '원' : 'KRW'}</span>
               </div>
-              {price > 0 && <p className={s.field_hint}>{krw(price)}</p>}
+              {price > 0 && <p className={ui.hint}>{krw(price)}</p>}
             </div>
-            <div>
-              <label className={s.field_label} htmlFor="py-parea">{isKo ? '전용면적 (㎡)' : 'Exclusive area (㎡)'}</label>
-              <div className={s.input_wrap}>
-                <input id="py-parea" className={s.input} inputMode="decimal" placeholder="84"
+            <div className={ui.field}>
+              <label className={ui.label} htmlFor="py-parea">{isKo ? '전용면적 (㎡)' : 'Exclusive area (㎡)'}</label>
+              <div className={ui.inputGroup}>
+                <input id="py-parea" className={`${ui.input} ${ui.inputLg}`} inputMode="decimal" placeholder="84"
                   value={priceArea} onChange={e => setPriceArea(decimalInput(e.target.value))} />
-                <span className={s.suffix}>㎡</span>
+                <span className={ui.unit}>㎡</span>
               </div>
             </div>
           </div>
@@ -320,8 +321,8 @@ export default function PyeongCalcClient() {
             <div className={s.result} aria-live="polite">
               <div className={s.result_main}>
                 <div>
-                  <div className={s.result_from}>{isKo ? `평형 기준 (약 ${pyeongClass(area, EXCLUSIVE_RATIO.apartment.typical)}평형) 평당가` : `Per pyeong (class ≈ ${pyeongClass(area, EXCLUSIVE_RATIO.apartment.typical)})`}</div>
-                  <span className={s.result_num} style={{ fontSize: '1.9rem' }}>{krw(upSupply.perPyeong)}</span>
+                  <div className={ui.resultLabel}>{isKo ? `평형 기준 (약 ${pyeongClass(area, EXCLUSIVE_RATIO.apartment.typical)}평형) 평당가` : `Per pyeong (class ≈ ${pyeongClass(area, EXCLUSIVE_RATIO.apartment.typical)})`}</div>
+                  <span className={ui.resultValue} style={{ fontSize: '1.9rem' }}>{krw(upSupply.perPyeong)}</span>
                 </div>
               </div>
               <div className={s.row}>
@@ -331,7 +332,7 @@ export default function PyeongCalcClient() {
               <div className={s.row}><span>{isKo ? '전용 ㎡당 가격' : 'Per exclusive ㎡'}</span><span className={s.val}>{krw(up.perSqm)}</span></div>
             </div>
           )}
-          <p className={s.field_hint}>
+          <p className={ui.hint}>
             {isKo
               ? '※ 시세 기사나 분양 광고의 "평당가"는 보통 공급면적(평형) 기준이라 전용면적 기준보다 낮게 나옵니다. 비교할 때는 같은 기준끼리 비교하세요. 평형 기준은 아파트 전용률 75%로 추정한 값입니다.'
               : '※ Prices quoted "per pyeong" in Korean media usually use supply area (the class), which gives a lower figure than exclusive area. The class basis assumes a 75% apartment ratio.'}
@@ -340,8 +341,8 @@ export default function PyeongCalcClient() {
       )}
 
       {/* ── 환산표 (서버 렌더에도 포함) ── */}
-      <section className={s.card} aria-labelledby="py-table">
-        <h2 id="py-table" className={s.card_title}>{isKo ? '아파트 전용면적별 평수·평형 환산표' : 'Apartment exclusive area → pyeong and class'}</h2>
+      <section className={`${ui.card} ${s.card}`} aria-labelledby="py-table">
+        <h2 id="py-table" className={ui.cardTitle}>{isKo ? '아파트 전용면적별 평수·평형 환산표' : 'Apartment exclusive area → pyeong and class'}</h2>
         <div className={s.table_wrap}>
           <table className={s.table}>
             <thead>
@@ -364,7 +365,7 @@ export default function PyeongCalcClient() {
             </tbody>
           </table>
         </div>
-        <p className={s.field_hint}>{isKo ? '전용률 75% 기준 추정치입니다. 실제 평형은 단지 설계에 따라 1~2평 차이가 날 수 있습니다.' : 'Estimated with a 75% exclusive ratio; actual classes vary by complex.'}</p>
+        <p className={ui.hint}>{isKo ? '전용률 75% 기준 추정치입니다. 실제 평형은 단지 설계에 따라 1~2평 차이가 날 수 있습니다.' : 'Estimated with a 75% exclusive ratio; actual classes vary by complex.'}</p>
       </section>
 
       <ShareBar title={t('title')} description={t('description')} />

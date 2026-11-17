@@ -8,6 +8,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
+import { ui } from '@/app/components/ui';
 import { Lunar, Solar } from 'lunar-javascript';
 
 // 천간 (天干)
@@ -207,22 +208,20 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
         {/* Left Column - Input Section */}
         <div className="flex flex-col gap-6">
           {/* Step 1: 성별 선택 */}
-          <div className="glass-panel mystic-panel" style={{ padding: '2rem' }}>
-            <h2 className="mystic-title" style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               ✨ {t('step1Gender')}
             </h2>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div className={ui.segmented}>
               <button
                 onClick={() => setGender('male')}
-                className={gender === 'male' ? 'gender-btn active' : 'gender-btn'}
-                style={{ flex: 1, padding: '1rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s' }}
+                className={`${ui.segment} ${gender === 'male' ? ui.segmentActive : ''}`}
               >
                 👨 {t('male')}
               </button>
               <button
                 onClick={() => setGender('female')}
-                className={gender === 'female' ? 'gender-btn active' : 'gender-btn'}
-                style={{ flex: 1, padding: '1rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s' }}
+                className={`${ui.segment} ${gender === 'female' ? ui.segmentActive : ''}`}
               >
                 👩 {t('female')}
               </button>
@@ -230,22 +229,20 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
           </div>
 
           {/* Step 2: 달력 종류 */}
-          <div className="glass-panel mystic-panel" style={{ padding: '2rem' }}>
-            <h2 className="mystic-title" style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               📅 {t('step2Calendar')}
             </h2>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+            <div className={ui.segmented} style={{ marginBottom: '1rem' }}>
               <button
                 onClick={() => setCalendarType('solar')}
-                className={calendarType === 'solar' ? 'calendar-btn active' : 'calendar-btn'}
-                style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s' }}
+                className={`${ui.segment} ${calendarType === 'solar' ? ui.segmentActive : ''}`}
               >
                 ☀️ {t('solar')}
               </button>
               <button
                 onClick={() => setCalendarType('lunar')}
-                className={calendarType === 'lunar' ? 'calendar-btn active' : 'calendar-btn'}
-                style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s' }}
+                className={`${ui.segment} ${calendarType === 'lunar' ? ui.segmentActive : ''}`}
               >
                 🌙 {t('lunar')}
               </button>
@@ -264,50 +261,47 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
           </div>
 
           {/* Step 3: 생년월일 */}
-          <div className="glass-panel mystic-panel" style={{ padding: '2rem' }}>
-            <h2 className="mystic-title" style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               🎂 {t('step3Birth')}
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('year')}
                 </label>
                 <select
                   value={year}
                   onChange={(e) => setYear(parseInt(e.target.value))}
-                  className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
+                  className={ui.input}
                 >
                   {Array.from({ length: 101 }, (_, i) => 2025 - i).map(y => (
                     <option key={y} value={y}>{y}</option>
                   ))}
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('month')}
                 </label>
                 <select
                   value={month}
                   onChange={(e) => setMonth(parseInt(e.target.value))}
-                  className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
+                  className={ui.input}
                 >
                   {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                     <option key={m} value={m}>{isKo ? `${m}월` : m}</option>
                   ))}
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div className={ui.field}>
+                <label className={ui.label}>
                   {t('day')}
                 </label>
                 <select
                   value={day}
                   onChange={(e) => setDay(parseInt(e.target.value))}
-                  className="mystic-input"
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', cursor: 'pointer' }}
+                  className={ui.input}
                 >
                   {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
                     <option key={d} value={d}>{isKo ? `${d}일` : d}</option>
@@ -318,15 +312,14 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
           </div>
 
           {/* Step 4: 태어난 시간 */}
-          <div className="glass-panel mystic-panel" style={{ padding: '2rem' }}>
-            <h2 className="mystic-title" style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               ⏰ {t('step4Time')}
             </h2>
             <select
               value={hour}
               onChange={(e) => setHour(e.target.value === 'unknown' ? 'unknown' : parseInt(e.target.value))}
-              className="mystic-input"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)' }}
+              className={ui.input}
             >
               <option value="unknown">{t('unknownTime')}</option>
               <option value={0}>{isKo ? '23:00-01:00 (子時/자시)' : '23:00–01:00 (Rat hour, 子時)'}</option>
@@ -345,8 +338,8 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
           </div>
 
           {/* Step 5: 분석 옵션 */}
-          <div className="glass-panel mystic-panel" style={{ padding: '2rem' }}>
-            <h2 className="mystic-title" style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>
               🔮 {t('step5Analysis')}
             </h2>
             <div style={{ display: 'grid', gap: '0.75rem' }}>
@@ -354,8 +347,8 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
                 <button
                   key={type}
                   onClick={() => setAnalysisType(type)}
-                  className={analysisType === type ? 'analysis-btn active' : 'analysis-btn'}
-                  style={{ padding: '1rem', borderRadius: '8px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s', textAlign: 'left' }}
+                  className={`${ui.chip} ${analysisType === type ? ui.chipActive : ''}`}
+                  style={{ justifyContent: 'flex-start', textAlign: 'left' }}
                 >
                   {type === 'general' && '🌟 '}
                   {type === 'wealth' && '💰 '}
@@ -370,8 +363,7 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
           {/* Generate Button */}
           <button
             onClick={calculateSaju}
-            className="generate-btn"
-            style={{ padding: '1.25rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 700, cursor: 'pointer', border: 'none' }}
+            className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block}`}
           >
             ✨ {t('generatePrompt')}
           </button>
@@ -382,8 +374,8 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
           {sajuData && generatedPrompt ? (
             <>
               {/* 사주팔자 결과 */}
-              <div className="glass-panel mystic-panel animate-scale-in" style={{ padding: '2rem' }}>
-                <h2 className="mystic-title" style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>
+              <div className={`${ui.card} animate-scale-in`}>
+                <h2 className={ui.cardTitle}>
                   🎴 {t('yourSaju')}
                 </h2>
                 <div style={{ display: 'grid', gap: '1rem' }}>
@@ -407,15 +399,15 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
               </div>
 
               {/* 생성된 프롬프트 */}
-              <div className="glass-panel mystic-panel animate-scale-in" style={{ padding: '2rem' }}>
-                <h2 className="mystic-title" style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>
+              <div className={`${ui.card} animate-scale-in`}>
+                <h2 className={ui.cardTitle}>
                   📝 {t('generatedPrompt')}
                 </h2>
                 <div
                   className="prompt-display"
                   style={{
                     background: 'var(--surface)',
-                    border: '1px solid rgba(251, 191, 36, 0.5)',
+                    border: '1px solid var(--tint-amber-border)',
                     borderRadius: '12px',
                     padding: '1.5rem',
                     fontSize: '0.95rem',
@@ -431,8 +423,8 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
                 </div>
                 <button
                   onClick={copyToClipboard}
-                  className="copy-btn"
-                  style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', border: 'none', marginBottom: '1rem' }}
+                  className={`${ui.button} ${ui.primary} ${ui.block}`}
+                  style={{ marginBottom: '1rem' }}
                 >
                   {copied ? '✅ ' + t('copied') : '📋 ' + t('copyPrompt')}
                 </button>
@@ -443,8 +435,7 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
                     href="https://chat.openai.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="quick-link-btn"
-                    style={{ padding: '0.875rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, textAlign: 'center', textDecoration: 'none', cursor: 'pointer' }}
+                    className={`${ui.button} ${ui.secondary} ${ui.sm}`}
                   >
                     🤖 ChatGPT
                   </a>
@@ -452,8 +443,7 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
                     href="https://claude.ai/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="quick-link-btn"
-                    style={{ padding: '0.875rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, textAlign: 'center', textDecoration: 'none', cursor: 'pointer' }}
+                    className={`${ui.button} ${ui.secondary} ${ui.sm}`}
                   >
                     🧠 Claude
                   </a>
@@ -461,8 +451,7 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
                     href="https://gemini.google.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="quick-link-btn"
-                    style={{ padding: '0.875rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, textAlign: 'center', textDecoration: 'none', cursor: 'pointer' }}
+                    className={`${ui.button} ${ui.secondary} ${ui.sm}`}
                   >
                     💎 Gemini
                   </a>
@@ -470,15 +459,15 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
               </div>
 
               {/* 사용 팁 */}
-              <div className="glass-panel mystic-panel" style={{ padding: '1.5rem', background: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
-                <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', lineHeight: '1.6' }}>
-                  <strong style={{ color: '#fbbf24' }}>💡 {t('tipTitle')}</strong><br />
+              <div className={`${ui.notice} ${ui.amber}`}>
+                <div>
+                  <strong>💡 {t('tipTitle')}</strong><br />
                   {t('tipContent')}
                 </div>
               </div>
             </>
           ) : (
-            <div className="glass-panel flex items-center justify-center" style={{ padding: '4rem', opacity: 0.5, minHeight: '600px' }}>
+            <div className={`${ui.card} flex items-center justify-center`} style={{ opacity: 0.6, minHeight: '600px' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🔮</div>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t('emptyState')}</p>
@@ -488,74 +477,13 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
         </div>
       </div>
 
-      {/* Mystic Modern Theme Styles */}
+      {/* 사주 기둥 결과 + 프롬프트 스크롤바 */}
       <style jsx>{`
-        .mystic-panel {
-          background: var(--card-bg);
-          border: 1px solid rgba(251, 191, 36, 0.3);
-          box-shadow: 0 4px 20px rgba(251, 191, 36, 0.1);
-        }
-
-        .mystic-title {
-          color: #d97706 !important;
-          font-weight: 700;
-        }
-
-        .mystic-input {
-          border: 1px solid rgba(251, 191, 36, 0.3) !important;
-          background: var(--surface) !important;
-          color: var(--text-primary) !important;
-          transition: all 0.3s;
-        }
-
-        .mystic-input:focus {
-          outline: none;
-          border-color: #fbbf24 !important;
-          box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
-        }
-
-        .gender-btn, .calendar-btn, .analysis-btn {
-          background: var(--surface);
-          border: 1px solid rgba(251, 191, 36, 0.3);
-          color: var(--text-primary);
-        }
-
-        .gender-btn:hover, .calendar-btn:hover, .analysis-btn:hover {
-          background: rgba(251, 191, 36, 0.15);
-          border-color: #fbbf24;
-          transform: translateY(-2px);
-        }
-
-        .gender-btn.active, .calendar-btn.active, .analysis-btn.active {
-          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-          border-color: #fbbf24;
-          color: #0f172a;
-          font-weight: 700;
-          box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
-        }
-
-        .generate-btn {
-          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-          color: #0f172a;
-          font-weight: 700;
-          box-shadow: 0 8px 25px rgba(251, 191, 36, 0.5);
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .generate-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 35px rgba(251, 191, 36, 0.6);
-        }
-
-        .generate-btn:active {
-          transform: translateY(-1px);
-        }
-
         .saju-pillar {
           padding: 1rem;
-          background: rgba(251, 191, 36, 0.08);
-          border: 1px solid rgba(251, 191, 36, 0.3);
-          border-radius: 8px;
+          background: var(--tint-amber-bg);
+          border: 1px solid var(--tint-amber-border);
+          border-radius: var(--radius-control);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -563,7 +491,7 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
 
         .pillar-label {
           font-size: 0.875rem;
-          color: #d97706;
+          color: var(--tint-amber-fg);
           font-weight: 700;
         }
 
@@ -572,34 +500,6 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
           color: var(--text-primary);
           font-weight: 700;
           font-family: 'Noto Serif KR', serif;
-        }
-
-        .copy-btn {
-          background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-          color: white;
-          font-weight: 700;
-          box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
-          transition: all 0.3s;
-        }
-
-        .copy-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
-        }
-
-        .quick-link-btn {
-          background: var(--surface);
-          border: 1px solid rgba(251, 191, 36, 0.3);
-          color: var(--text-primary);
-          font-weight: 600;
-          transition: all 0.3s;
-        }
-
-        .quick-link-btn:hover {
-          background: rgba(251, 191, 36, 0.15);
-          border-color: #fbbf24;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
         }
 
         .prompt-display::-webkit-scrollbar {
@@ -612,12 +512,8 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
         }
 
         .prompt-display::-webkit-scrollbar-thumb {
-          background: rgba(251, 191, 36, 0.5);
+          background: var(--tint-amber-border);
           border-radius: 4px;
-        }
-
-        .prompt-display::-webkit-scrollbar-thumb:hover {
-          background: #fbbf24;
         }
       `}</style>
 

@@ -8,6 +8,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './decision.module.css';
+import { ui } from '@/app/components/ui';
 import { SEO_KO, SEO_EN } from './content';
 
 /* ── Types ── */
@@ -72,12 +73,12 @@ function WheelMode({ isKo }: { isKo: boolean }) {
     <div className={s.wheel_wrap}>
       {/* Items panel */}
       <div className={s.wheel_items_panel}>
-        <label className={s.dm_label}>{isKo ? '선택지 입력 (최소 2개)' : 'Enter Options (min 2)'}</label>
+        <label className={`${ui.label} ${s.dm_label}`}>{isKo ? '선택지 입력 (최소 2개)' : 'Enter Options (min 2)'}</label>
         {items.map((item, i) => (
           <div key={i} className={s.wheel_item_row}>
             <div style={{ width: 12, height: 12, borderRadius: '50%', background: WHEEL_COLORS[i % WHEEL_COLORS.length], flexShrink: 0 }} />
             <input
-              className={s.wheel_item_input}
+              className={`${ui.input} ${s.wheel_item_input}`}
               value={item}
               onChange={e => {
                 const next = [...items];
@@ -92,7 +93,7 @@ function WheelMode({ isKo }: { isKo: boolean }) {
           </div>
         ))}
         {items.length < 8 && (
-          <button className={s.dm_btn_sm} style={{ marginTop: '0.5rem' }}
+          <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} style={{ marginTop: '0.5rem' }}
             onClick={() => setItems([...items, ''])}>
             + {isKo ? '추가' : 'Add'}
           </button>
@@ -137,14 +138,14 @@ function WheelMode({ isKo }: { isKo: boolean }) {
         </svg>
       </div>
 
-      <button className={s.dm_btn} onClick={spin} disabled={spinning || validItems.length < 2}>
+      <button className={`${ui.button} ${ui.primary} ${ui.lg}`} onClick={spin} disabled={spinning || validItems.length < 2}>
         {spinning ? (isKo ? '돌아가는 중...' : 'Spinning...') : (isKo ? '🎡 돌려라!' : '🎡 Spin!')}
       </button>
 
       {winner && (
-        <div className={s.dm_result}>
-          <div className={s.dm_result_label}>{isKo ? '결과' : 'Result'}</div>
-          <div className={s.dm_result_value}>🎉 {winner}</div>
+        <div className={`${ui.result} ${s.dm_result}`}>
+          <div className={ui.resultLabel}>{isKo ? '결과' : 'Result'}</div>
+          <div className={ui.resultValue}>🎉 {winner}</div>
         </div>
       )}
     </div>
@@ -192,11 +193,11 @@ function DiceMode({ isKo }: { isKo: boolean }) {
   return (
     <div className={s.dice_wrap}>
       <div>
-        <label className={s.dm_label}>{isKo ? '주사위 개수' : 'Number of Dice'}</label>
-        <div className={s.dice_count_row}>
+        <label className={`${ui.label} ${s.dm_label}`}>{isKo ? '주사위 개수' : 'Number of Dice'}</label>
+        <div className={ui.chips}>
           {[1,2,3,4,5].map(n => (
             <button key={n}
-              className={`${s.dm_btn_sm} ${count === n ? s.dm_btn_sm_active : ''}`}
+              className={`${ui.chip} ${count === n ? ui.chipActive : ''}`}
               onClick={() => changeCount(n)}>
               {n}
             </button>
@@ -226,7 +227,7 @@ function DiceMode({ isKo }: { isKo: boolean }) {
         </div>
       )}
 
-      <button className={s.dm_btn} onClick={roll} disabled={rolling}>
+      <button className={`${ui.button} ${ui.primary} ${ui.lg}`} onClick={roll} disabled={rolling}>
         {rolling ? (isKo ? '굴리는 중...' : 'Rolling...') : (isKo ? '🎲 굴려라!' : '🎲 Roll!')}
       </button>
     </div>
@@ -271,7 +272,7 @@ function LotMode({ isKo }: { isKo: boolean }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       <div className={s.lot_controls}>
         <div>
-          <label className={s.dm_label}>{isKo ? '전체 인원' : 'Total'}</label>
+          <label className={`${ui.label} ${s.dm_label}`}>{isKo ? '전체 인원' : 'Total'}</label>
           <div className={s.lot_counter}>
             <button className={s.lot_cnt_btn} onClick={() => { const nt = Math.max(2, total - 1); setTotal(nt); setWinners(w => Math.min(w, nt - 1)); }}>−</button>
             <span className={s.lot_cnt_val}>{total}</span>
@@ -279,14 +280,14 @@ function LotMode({ isKo }: { isKo: boolean }) {
           </div>
         </div>
         <div>
-          <label className={s.dm_label}>{isKo ? '당첨 인원' : 'Winners'}</label>
+          <label className={`${ui.label} ${s.dm_label}`}>{isKo ? '당첨 인원' : 'Winners'}</label>
           <div className={s.lot_counter}>
             <button className={s.lot_cnt_btn} onClick={() => setWinners(w => Math.max(1, w - 1))}>−</button>
             <span className={s.lot_cnt_val}>{winners}</span>
             <button className={s.lot_cnt_btn} onClick={() => setWinners(w => Math.min(total - 1, w + 1))}>+</button>
           </div>
         </div>
-        <button className={s.dm_btn_sm} onClick={reset}>{isKo ? '🔄 리셋' : '🔄 Reset'}</button>
+        <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={reset}>{isKo ? '🔄 리셋' : '🔄 Reset'}</button>
       </div>
 
       <div className={s.lot_cards_grid}>
@@ -305,9 +306,9 @@ function LotMode({ isKo }: { isKo: boolean }) {
       </div>
 
       {done && (
-        <div className={s.dm_result}>
-          <div className={s.dm_result_label}>{isKo ? '추첨 완료' : 'All Revealed'}</div>
-          <div className={s.dm_result_value}>
+        <div className={`${ui.result} ${s.dm_result}`}>
+          <div className={ui.resultLabel}>{isKo ? '추첨 완료' : 'All Revealed'}</div>
+          <div className={ui.resultValue}>
             {isKo ? `${winners}명 당첨!` : `${winners} winner${winners > 1 ? 's' : ''}!`}
           </div>
         </div>
@@ -486,42 +487,42 @@ function LadderMode({ isKo }: { isKo: boolean }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <div>
-          <label className={s.dm_label}>{isKo ? '인원 수' : 'Players'}</label>
-          <div style={{ display: 'flex', gap: '0.4rem' }}>
+          <label className={`${ui.label} ${s.dm_label}`}>{isKo ? '인원 수' : 'Players'}</label>
+          <div className={ui.chips}>
             {[2,3,4,5,6].map(n => (
               <button key={n}
-                className={`${s.dm_btn_sm} ${count === n ? s.dm_btn_sm_active : ''}`}
+                className={`${ui.chip} ${count === n ? ui.chipActive : ''}`}
                 onClick={() => changeCount(n)}>{n}</button>
             ))}
           </div>
         </div>
-        <button className={s.dm_btn} style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }} onClick={generate}>
+        <button className={`${ui.button} ${ui.primary}`} style={{ alignSelf: 'flex-end' }} onClick={generate}>
           {isKo ? '🪜 사다리 생성' : '🪜 Generate'}
         </button>
       </div>
 
       <div className={s.ladder_inputs}>
         <div className={s.ladder_col_inputs}>
-          <label className={s.dm_label}>{isKo ? '참가자' : 'Players'}</label>
+          <label className={`${ui.label} ${s.dm_label}`}>{isKo ? '참가자' : 'Players'}</label>
           {names.map((n, i) => (
             <div key={i} className={s.ladder_input_row}>
               <span className={s.ladder_num}>{i + 1}</span>
-              <input className={s.dm_input} style={{ padding: '0.4rem 0.6rem' }}
+              <input className={ui.input} style={{ padding: '0.4rem 0.6rem' }}
                 value={n}
                 onChange={e => { const a = [...names]; a[i] = e.target.value; setNames(a); }}
                 placeholder={isKo ? `참가자 ${i+1}` : `Player ${i+1}`}
               />
               {generated && (
-                <button className={s.dm_btn_sm} onClick={() => runOne(i)}>GO</button>
+                <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={() => runOne(i)}>GO</button>
               )}
             </div>
           ))}
         </div>
         <div className={s.ladder_col_inputs}>
-          <label className={s.dm_label}>{isKo ? '결과' : 'Prizes'}</label>
+          <label className={`${ui.label} ${s.dm_label}`}>{isKo ? '결과' : 'Prizes'}</label>
           {prizes.map((p, i) => (
             <div key={i} className={s.ladder_input_row}>
-              <input className={s.dm_input} style={{ padding: '0.4rem 0.6rem' }}
+              <input className={ui.input} style={{ padding: '0.4rem 0.6rem' }}
                 value={p}
                 onChange={e => { const a = [...prizes]; a[i] = e.target.value; setPrizes(a); }}
                 placeholder={isKo ? `결과 ${i+1}` : `Prize ${i+1}`}
@@ -530,7 +531,7 @@ function LadderMode({ isKo }: { isKo: boolean }) {
                 const who = landing.indexOf(i);
                 if (who < 0 || !results[who]) return null;
                 return (
-                  <span style={{ fontSize: '0.72rem', color: '#8b5cf6', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--color-primary)', fontWeight: 800, whiteSpace: 'nowrap' }}>
                     ← {names[who] ? names[who].slice(0, 4) : `P${who + 1}`}
                   </span>
                 );
@@ -544,7 +545,7 @@ function LadderMode({ isKo }: { isKo: boolean }) {
         {/* Top labels */}
         <div style={{ display: 'flex', width: W, margin: '0 auto' }}>
           {names.map((n, i) => (
-            <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '0.72rem', fontWeight: 800, color: runIdx === i ? '#8b5cf6' : '#475569', padding: '0.25rem 0' }}>
+            <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '0.72rem', fontWeight: 800, color: runIdx === i ? 'var(--color-primary)' : 'var(--text-secondary)', padding: '0.25rem 0' }}>
               {n || `P${i+1}`}
             </div>
           ))}
@@ -561,17 +562,17 @@ function LadderMode({ isKo }: { isKo: boolean }) {
       </div>
 
       {generated && (
-        <button className={s.dm_btn_sm} style={{ alignSelf: 'center' }} onClick={runAllFn}>
+        <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} style={{ alignSelf: 'center' }} onClick={runAllFn}>
           {isKo ? '⚡ 전체 공개' : '⚡ Reveal All'}
         </button>
       )}
 
       {runAll && results.length > 0 && (
-        <div className={s.dm_result}>
-          <div className={s.dm_result_label}>{isKo ? '전체 결과' : 'All Results'}</div>
+        <div className={`${ui.result} ${s.dm_result}`}>
+          <div className={ui.resultLabel}>{isKo ? '전체 결과' : 'All Results'}</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '0.5rem' }}>
             {names.map((n, i) => (
-              <span key={i} style={{ background: '#f5f3ff', border: '1.5px solid #e9d5ff', borderRadius: '0.5rem', padding: '0.25rem 0.6rem', fontSize: '0.82rem', fontWeight: 800, color: '#7c3aed' }}>
+              <span key={i} style={{ background: 'var(--tint-violet-bg)', border: '1.5px solid var(--tint-violet-border)', borderRadius: '0.5rem', padding: '0.25rem 0.6rem', fontSize: '0.82rem', fontWeight: 800, color: 'var(--tint-violet-fg)' }}>
                 {n || `P${i+1}`} → {results[i]}
               </span>
             ))}
@@ -580,9 +581,9 @@ function LadderMode({ isKo }: { isKo: boolean }) {
       )}
 
       {runIdx !== null && results[runIdx] && !runAll && (
-        <div className={s.dm_result}>
-          <div className={s.dm_result_label}>{names[runIdx] || `P${runIdx+1}`}{isKo ? ' 결과' : ' Result'}</div>
-          <div className={s.dm_result_value}>🎯 {results[runIdx]}</div>
+        <div className={`${ui.result} ${s.dm_result}`}>
+          <div className={ui.resultLabel}>{names[runIdx] || `P${runIdx+1}`}{isKo ? ' 결과' : ' Result'}</div>
+          <div className={ui.resultValue}>🎯 {results[runIdx]}</div>
         </div>
       )}
     </div>
@@ -707,14 +708,14 @@ function ArrowMode({ isKo }: { isKo: boolean }) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: 300 }}>
-        <label className={s.dm_label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <label className={`${ui.label} ${s.dm_label}`} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <input type="checkbox" checked={useCustom} onChange={e => setUseCustom(e.target.checked)} />
           {isKo ? '직접 입력 사용' : 'Use Custom Labels'}
         </label>
         {useCustom && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
             {sectors.map((sec, i) => (
-              <input key={i} className={s.dm_input} style={{ padding: '0.35rem 0.6rem', fontSize: '0.82rem' }}
+              <input key={i} className={ui.input} style={{ padding: '0.35rem 0.6rem', fontSize: '0.82rem' }}
                 placeholder={sec}
                 value={customLabels[i]}
                 onChange={e => {
@@ -728,14 +729,14 @@ function ArrowMode({ isKo }: { isKo: boolean }) {
         )}
       </div>
 
-      <button className={s.dm_btn} onClick={spinArrow} disabled={spinning}>
+      <button className={`${ui.button} ${ui.primary} ${ui.lg}`} onClick={spinArrow} disabled={spinning}>
         {spinning ? (isKo ? '돌아가는 중...' : 'Spinning...') : (isKo ? '🏹 화살표 돌리기!' : '🏹 Spin Arrow!')}
       </button>
 
       {result && (
-        <div className={s.dm_result}>
-          <div className={s.dm_result_label}>{isKo ? '화살표가 가리키는 곳' : 'Arrow Points To'}</div>
-          <div className={s.dm_result_value}>🏹 {result}</div>
+        <div className={`${ui.result} ${s.dm_result}`}>
+          <div className={ui.resultLabel}>{isKo ? '화살표가 가리키는 곳' : 'Arrow Points To'}</div>
+          <div className={ui.resultValue}>🏹 {result}</div>
         </div>
       )}
     </div>
@@ -772,11 +773,11 @@ export default function DecisionMasterClient() {
       />
 
       {/* Tabs */}
-      <nav className={s.dm_tabs}>
+      <nav className={`${ui.segmented} ${s.dm_tabs}`}>
         {TABS.map(t => (
           <button
             key={t.id}
-            className={`${s.dm_tab} ${mode === t.id ? s.dm_tab_active : ''}`}
+            className={`${ui.segment} ${s.dm_tab} ${mode === t.id ? ui.segmentActive : ''}`}
             onClick={() => setMode(t.id)}
           >
             {t.icon}<br />{isKo ? t.ko : t.en}
@@ -785,7 +786,7 @@ export default function DecisionMasterClient() {
       </nav>
 
       {/* Mode Card */}
-      <div className={s.dm_card}>
+      <div className={`${ui.card} ${s.dm_card}`}>
         {mode === 'ladder' && <LadderMode isKo={isKo} />}
         {mode === 'wheel'  && <WheelMode  isKo={isKo} />}
         {mode === 'dice'   && <DiceMode   isKo={isKo} />}
@@ -802,7 +803,7 @@ export default function DecisionMasterClient() {
 
       {/* SEO */}
       <SeoSection ko={SEO_KO} en={SEO_EN} />
-      <div className={s.disclaimer}>
+      <div className={`${ui.notice} ${ui.amber} ${s.disclaimer}`}>
         {isKo
           ? "⚠️ 이 도구의 모든 결과는 순수 오락·편의 목적의 랜덤 생성값으로, 법적 효력이 없습니다. 중요한 결정은 반드시 당사자 간 합의를 통해 이루어져야 합니다."
           : "⚠️ All results generated by this tool are for entertainment and convenience only and carry no legal weight. Important decisions should always be made through mutual agreement between all parties involved."}

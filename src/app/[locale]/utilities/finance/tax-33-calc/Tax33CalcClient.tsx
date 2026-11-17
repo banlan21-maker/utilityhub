@@ -13,6 +13,7 @@ import {
   BASIC_DEDUCTION_PER_PERSON, STANDARD_TAX_CREDIT, REGIONAL_2026,
 } from '@/lib/freelanceTax';
 import s from './tax.module.css';
+import { ui } from '@/app/components/ui';
 
 const digits = (v: string) => Number(v.replace(/[^0-9]/g, '')) || 0;
 const money = (v: string) => { const n = digits(v); return n ? n.toLocaleString('ko-KR') : ''; };
@@ -77,28 +78,28 @@ export default function Tax33CalcClient() {
       <NavigationActions />
       <ToolHeader icon={<Receipt />} title={t('title')} subtitle={t('description')} />
 
-      <div role="note" className={s.notice}>{t('country_notice')}</div>
+      <div role="note" className={`${ui.notice} ${ui.amber} ${s.notice}`}>{t('country_notice')}</div>
 
       {/* ── ① 이번 계약 ── */}
-      <section className={s.card}>
-        <div className={s.step_label}>STEP 1</div>
-        <h2 className={s.card_title}>{isKo ? '이번 계약: 3.3% 떼고 얼마 받나' : 'This payment: net after 3.3%'}</h2>
-        <div className={s.tabs} role="tablist">
-          <button type="button" role="tab" aria-selected={mode === 'normal'} className={`${s.tab} ${mode === 'normal' ? s.tab_active : ''}`}
+      <section className={`${ui.card} ${s.card}`}>
+        <div className={ui.badge}>STEP 1</div>
+        <h2 className={ui.cardTitle}>{isKo ? '이번 계약: 3.3% 떼고 얼마 받나' : 'This payment: net after 3.3%'}</h2>
+        <div className={ui.segmented} role="tablist">
+          <button type="button" role="tab" aria-selected={mode === 'normal'} className={`${ui.segment} ${mode === 'normal' ? ui.segmentActive : ''}`}
             onClick={() => { setMode('normal'); setAmountText(''); }}>{t('mode_normal')}</button>
-          <button type="button" role="tab" aria-selected={mode === 'reverse'} className={`${s.tab} ${mode === 'reverse' ? s.tab_active : ''}`}
+          <button type="button" role="tab" aria-selected={mode === 'reverse'} className={`${ui.segment} ${mode === 'reverse' ? ui.segmentActive : ''}`}
             onClick={() => { setMode('reverse'); setAmountText(''); }}>{t('mode_reverse')}</button>
         </div>
-        <div>
-          <label className={s.field_label} htmlFor="tx-amount">{mode === 'normal' ? t('label.gross') : t('input_label_net')}</label>
-          <div className={s.input_wrap}>
-            <input id="tx-amount" className={s.input} inputMode="numeric" placeholder="3,000,000"
+        <div className={ui.field}>
+          <label className={ui.label} htmlFor="tx-amount">{mode === 'normal' ? t('label.gross') : t('input_label_net')}</label>
+          <div className={ui.inputGroup}>
+            <input id="tx-amount" className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" placeholder="3,000,000"
               value={amountText} onChange={e => setAmountText(money(e.target.value))} />
-            <span className={s.suffix}>{isKo ? '원' : 'KRW'}</span>
+            <span className={ui.unit}>{isKo ? '원' : 'KRW'}</span>
           </div>
-          <div className={s.presets}>
+          <div className={ui.chips}>
             {[50, 100, 200, 300, 500, 1000].map(v => (
-              <button key={v} type="button" className={s.preset} onClick={() => setAmountText((v * 10000).toLocaleString('ko-KR'))}>
+              <button key={v} type="button" className={`${ui.chip} ${ui.pill}`} onClick={() => setAmountText((v * 10000).toLocaleString('ko-KR'))}>
                 {isKo ? `${v}만원` : `₩${(v * 10000).toLocaleString('en-US')}`}
               </button>
             ))}
@@ -125,7 +126,7 @@ export default function Tax33CalcClient() {
                 <span className={s.val}>{won(w.net)}</span>
               </div>
             </div>
-            <button type="button" className={s.copy_btn} onClick={handleCopy}>
+            <button type="button" className={`${ui.button} ${ui.secondary} ${s.copy_btn}`} onClick={handleCopy}>
               {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />} {copied ? t('copy_done') : t('copy_button')}
             </button>
           </>
@@ -133,55 +134,55 @@ export default function Tax33CalcClient() {
       </section>
 
       {/* ── ② 5월 종합소득세 ── */}
-      <section className={s.card}>
-        <div className={s.step_label}>STEP 2</div>
-        <h2 className={s.card_title}>{isKo ? '5월 종합소득세: 환급받을까, 더 낼까' : 'May income tax: refund or extra payment?'}</h2>
+      <section className={`${ui.card} ${s.card}`}>
+        <div className={ui.badge}>STEP 2</div>
+        <h2 className={ui.cardTitle}>{isKo ? '5월 종합소득세: 환급받을까, 더 낼까' : 'May income tax: refund or extra payment?'}</h2>
         <p className={s.hint}>
           {isKo
             ? '1년 동안 뗀 3.3%는 "미리 낸 세금"입니다. 5월에 경비를 빼고 실제 세금을 계산해 미리 낸 세금이 더 많으면 돌려받고, 적으면 더 냅니다.'
             : 'The 3.3% withheld during the year is tax paid in advance. In May the real tax is worked out after expenses; if you prepaid more you get a refund, otherwise you pay the difference.'}
         </p>
-        <div>
-          <label className={s.field_label} htmlFor="tx-rev">{isKo ? '1년간 받은 계약 금액 합계 (세전)' : 'Total gross payments for the year'}</label>
-          <div className={s.input_wrap}>
-            <input id="tx-rev" className={s.input} inputMode="numeric" placeholder="30,000,000"
+        <div className={ui.field}>
+          <label className={ui.label} htmlFor="tx-rev">{isKo ? '1년간 받은 계약 금액 합계 (세전)' : 'Total gross payments for the year'}</label>
+          <div className={ui.inputGroup}>
+            <input id="tx-rev" className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" placeholder="30,000,000"
               value={revenueText} onChange={e => setRevenueText(money(e.target.value))} />
-            <span className={s.suffix}>{isKo ? '원' : 'KRW'}</span>
+            <span className={ui.unit}>{isKo ? '원' : 'KRW'}</span>
           </div>
           {w && (
-            <button type="button" className={s.link_btn} style={{ marginTop: '0.6rem' }}
+            <button type="button" className={`${ui.button} ${ui.secondary} ${ui.sm} ${s.link_btn}`}
               onClick={() => setRevenueText((w.gross * 12).toLocaleString('ko-KR'))}>
               {isKo ? `위 계약 금액 × 12개월로 채우기 (${won(w.gross * 12)})` : `Fill with the amount above × 12 (${won(w.gross * 12)})`}
             </button>
           )}
         </div>
 
-        <div>
-          <span className={s.field_label}>{isKo ? '필요경비' : 'Business expenses'}</span>
-          <div className={s.tabs}>
-            <button type="button" className={`${s.chip} ${expenseMode === 'rate' ? s.chip_active : ''}`} aria-pressed={expenseMode === 'rate'} onClick={() => setExpenseMode('rate')}>
+        <div className={ui.field}>
+          <span className={ui.label}>{isKo ? '필요경비' : 'Business expenses'}</span>
+          <div className={`${ui.chips} ${ui.grow}`}>
+            <button type="button" className={`${ui.chip} ${expenseMode === 'rate' ? ui.chipActive : ''}`} aria-pressed={expenseMode === 'rate'} onClick={() => setExpenseMode('rate')}>
               {isKo ? '경비율(%)로' : 'By rate (%)'}
             </button>
-            <button type="button" className={`${s.chip} ${expenseMode === 'amount' ? s.chip_active : ''}`} aria-pressed={expenseMode === 'amount'} onClick={() => setExpenseMode('amount')}>
+            <button type="button" className={`${ui.chip} ${expenseMode === 'amount' ? ui.chipActive : ''}`} aria-pressed={expenseMode === 'amount'} onClick={() => setExpenseMode('amount')}>
               {isKo ? '실제 경비 금액으로' : 'By amount'}
             </button>
           </div>
-          <div style={{ marginTop: '0.6rem' }}>
+          <div className={ui.field} style={{ marginTop: '0.2rem' }}>
             {expenseMode === 'rate' ? (
-              <div className={s.input_wrap}>
-                <input className={s.input} type="number" inputMode="decimal" min="0" max="100" step="0.1"
+              <div className={ui.inputGroup}>
+                <input className={`${ui.input} ${ui.inputLg}`} type="number" inputMode="decimal" min="0" max="100" step="0.1"
                   aria-label={isKo ? '경비율' : 'Expense rate'} placeholder={isKo ? '예: 60' : 'e.g. 60'}
                   value={expenseRateText} onChange={e => setExpenseRateText(e.target.value)} />
-                <span className={s.suffix}>%</span>
+                <span className={ui.unit}>%</span>
               </div>
             ) : (
-              <div className={s.input_wrap}>
-                <input className={s.input} inputMode="numeric" aria-label={isKo ? '경비 금액' : 'Expense amount'} placeholder="18,000,000"
+              <div className={ui.inputGroup}>
+                <input className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" aria-label={isKo ? '경비 금액' : 'Expense amount'} placeholder="18,000,000"
                   value={expenseAmountText} onChange={e => setExpenseAmountText(money(e.target.value))} />
-                <span className={s.suffix}>{isKo ? '원' : 'KRW'}</span>
+                <span className={ui.unit}>{isKo ? '원' : 'KRW'}</span>
               </div>
             )}
-            <p className={s.field_hint}>
+            <p className={ui.hint}>
               {isKo
                 ? '장부를 쓰지 않는 소규모 프리랜서는 업종별 단순경비율로 신고하는 경우가 많습니다. 본인 업종코드의 경비율은 홈택스 → 조회/발급 → 기준·단순경비율에서 확인하세요.'
                 : 'Small freelancers without books usually file with the simple expense rate for their business code. Look it up on Hometax (기준·단순경비율).'}
@@ -190,21 +191,21 @@ export default function Tax33CalcClient() {
         </div>
 
         <div className={s.grid2}>
-          <div>
-            <label className={s.field_label} htmlFor="tx-dep">{isKo ? '기본공제 인원 (본인 포함)' : 'Dependents incl. yourself'}</label>
-            <select id="tx-dep" className={s.input} style={{ paddingRight: '1rem' }} value={dependents} onChange={e => setDependents(Number(e.target.value))}>
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="tx-dep">{isKo ? '기본공제 인원 (본인 포함)' : 'Dependents incl. yourself'}</label>
+            <select id="tx-dep" className={ui.input} value={dependents} onChange={e => setDependents(Number(e.target.value))}>
               {[1, 2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n}{isKo ? '명' : ''}</option>)}
             </select>
-            <p className={s.field_hint}>{isKo ? `1인당 ${BASIC_DEDUCTION_PER_PERSON / 10000}만 원 공제` : `₩${BASIC_DEDUCTION_PER_PERSON.toLocaleString('en-US')} per person`}</p>
+            <p className={ui.hint}>{isKo ? `1인당 ${BASIC_DEDUCTION_PER_PERSON / 10000}만 원 공제` : `₩${BASIC_DEDUCTION_PER_PERSON.toLocaleString('en-US')} per person`}</p>
           </div>
-          <div>
-            <label className={s.field_label} htmlFor="tx-pen">{isKo ? '그해 낸 국민연금 (선택)' : 'National pension paid (optional)'}</label>
-            <div className={s.input_wrap}>
-              <input id="tx-pen" className={s.input} inputMode="numeric" placeholder="0"
+          <div className={ui.field}>
+            <label className={ui.label} htmlFor="tx-pen">{isKo ? '그해 낸 국민연금 (선택)' : 'National pension paid (optional)'}</label>
+            <div className={ui.inputGroup}>
+              <input id="tx-pen" className={`${ui.input} ${ui.inputLg}`} inputMode="numeric" placeholder="0"
                 value={pensionText} onChange={e => setPensionText(money(e.target.value))} />
-              <span className={s.suffix}>{isKo ? '원' : 'KRW'}</span>
+              <span className={ui.unit}>{isKo ? '원' : 'KRW'}</span>
             </div>
-            <p className={s.field_hint}>{isKo ? '지역가입자로 낸 연금은 전액 소득공제' : 'Fully deductible'}</p>
+            <p className={ui.hint}>{isKo ? '지역가입자로 낸 연금은 전액 소득공제' : 'Fully deductible'}</p>
           </div>
         </div>
 
@@ -248,7 +249,7 @@ export default function Tax33CalcClient() {
               </div>
               <div className={`${s.row} ${s.row_total}`}><span>{isKo ? '결정세액 (소득세)' : 'Final income tax'}</span><span className={s.val}>{won(annual.decidedTax)}</span></div>
             </div>
-            <p className={s.field_hint}>
+            <p className={ui.hint}>
               {isKo
                 ? '※ 월급(근로소득)이 함께 있으면 두 소득을 합산해 세율이 올라가고 표준세액공제 대신 근로자 공제가 적용되므로, 실제 세금은 이 추정보다 많아질 수 있습니다.'
                 : '※ With salary income, both incomes are combined at higher rates and the standard credit does not apply, so the real tax can be higher than this estimate.'}
@@ -258,24 +259,24 @@ export default function Tax33CalcClient() {
       </section>
 
       {/* ── ③ 건강보험·국민연금 ── */}
-      <section className={s.card}>
-        <div className={s.step_label}>STEP 3</div>
-        <h2 className={s.card_title}>{isKo ? '매달 건강보험·국민연금 (추정)' : 'Monthly health insurance & pension (estimate)'}</h2>
+      <section className={`${ui.card} ${s.card}`}>
+        <div className={ui.badge}>STEP 3</div>
+        <h2 className={ui.cardTitle}>{isKo ? '매달 건강보험·국민연금 (추정)' : 'Monthly health insurance & pension (estimate)'}</h2>
         <p className={s.hint}>
           {isKo
             ? '프리랜서의 보험료는 3.3%처럼 계약금에서 떼지 않습니다. 5월에 신고한 소득금액(수입 − 경비)을 기준으로 그해 11월부터 매달 따로 고지됩니다.'
             : 'Freelancer premiums are not deducted from each payment. They are billed monthly from November, based on the income (revenue − expenses) declared in May.'}
         </p>
-        <div className={s.tabs}>
-          <button type="button" className={`${s.chip} ${!employee ? s.chip_active : ''}`} aria-pressed={!employee} onClick={() => setEmployee(false)}>
+        <div className={`${ui.chips} ${ui.grow}`}>
+          <button type="button" className={`${ui.chip} ${!employee ? ui.chipActive : ''}`} aria-pressed={!employee} onClick={() => setEmployee(false)}>
             {isKo ? '프리랜서만 (지역가입자)' : 'Freelance only (regional)'}
           </button>
-          <button type="button" className={`${s.chip} ${employee ? s.chip_active : ''}`} aria-pressed={employee} onClick={() => setEmployee(true)}>
+          <button type="button" className={`${ui.chip} ${employee ? ui.chipActive : ''}`} aria-pressed={employee} onClick={() => setEmployee(true)}>
             {isKo ? '직장인 부업' : 'Side job with salary'}
           </button>
         </div>
         {!ins ? (
-          <p className={s.field_hint}>{isKo ? 'STEP 2에 연간 수입과 경비를 넣으면 계산됩니다.' : 'Fill in STEP 2 to see the estimate.'}</p>
+          <p className={ui.hint}>{isKo ? 'STEP 2에 연간 수입과 경비를 넣으면 계산됩니다.' : 'Fill in STEP 2 to see the estimate.'}</p>
         ) : (
           <>
             <div className={s.receipt} aria-live="polite">
@@ -290,7 +291,7 @@ export default function Tax33CalcClient() {
               )}
               <div className={`${s.row} ${s.row_total}`}><span>{isKo ? '매달 합계 (추정)' : 'Monthly total (est.)'}</span><span className={s.val}>{won(ins.total)}</span></div>
             </div>
-            <div className={s.info_box}>
+            <div className={`${ui.notice} ${ui.blue}`}>
               {employee
                 ? (isKo
                   ? '직장인은 회사에서 건강보험·국민연금을 내므로, 월급 외 소득이 연 2,000만 원을 넘을 때만 초과분에 건강보험료(소득월액보험료)가 추가됩니다. 국민연금은 추가되지 않습니다.'

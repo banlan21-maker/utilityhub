@@ -9,6 +9,7 @@ import ToolHeader from '@/app/components/ToolHeader';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
 
 // --- Constants & Tables ---
 
@@ -56,25 +57,14 @@ const formatOhm = (val: number) => {
 // --- Components ---
 
 const ShadcnTabs = ({ active, onChange, tabs }: { active: string, onChange: (id: string) => void, tabs: { id: string, label: string }[] }) => (
-  <div style={{ display: 'flex', background: 'var(--surface-hover)', padding: '4px', borderRadius: '10px', marginBottom: '2rem' }}>
+  <div className={ui.segmented} style={{ marginBottom: '2rem' }}>
     {tabs.map(tab => (
       <button
         key={tab.id}
         onClick={() => onChange(tab.id)}
-        style={{
-          flex: 1, padding: '10px 16px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600,
-          position: 'relative', overflow: 'hidden', transition: 'color 0.2s',
-          color: active === tab.id ? 'var(--text-primary)' : 'var(--text-muted)'
-        }}
+        className={`${ui.segment} ${active === tab.id ? ui.segmentActive : ''}`}
       >
-        {active === tab.id && (
-          <motion.div
-            layoutId="tab-bg"
-            style={{ position: 'absolute', inset: 0, background: 'var(--surface)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', zIndex: 0 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
-          />
-        )}
-        <span style={{ position: 'relative', zIndex: 10 }}>{tab.label}</span>
+        {tab.label}
       </button>
     ))}
   </div>
@@ -174,20 +164,14 @@ export default function ResistorCalcClient() {
         tabs={[{ id: 'band', label: t('tabBand') }, { id: 'smd', label: t('tabSmd') }]}
       />
 
-      <div className="glass-panel" style={{ padding: '2.5rem', marginBottom: '2rem', minHeight: '400px' }}>
+      <div className={ui.card} style={{ marginBottom: '2rem', minHeight: '400px' }}>
         <AnimatePresence mode="wait">
           {activeTab === 'band' ? (
             <motion.div key="band" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
 
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '2.5rem' }}>
+              <div className={ui.chips} style={{ justifyContent: 'center', marginBottom: '2.5rem' }}>
                 {[4, 5, 6].map(b => (
-                  <button key={b} onClick={() => setBandCount(b)} style={{
-                    padding: '8px 24px', borderRadius: 'full', border: '1px solid',
-                    background: bandCount === b ? 'var(--surface-hover)' : 'none',
-                    borderColor: bandCount === b ? ACCENT_ORANGE : 'var(--border)',
-                    color: bandCount === b ? ACCENT_ORANGE : 'var(--text-muted)',
-                    fontWeight: 700, fontSize: '0.85rem'
-                  }}>{b} {t('bands')}</button>
+                  <button key={b} onClick={() => setBandCount(b)} className={`${ui.chip} ${ui.pill} ${bandCount === b ? ui.chipActive : ''}`}>{b} {t('bands')}</button>
                 ))}
               </div>
 
@@ -197,17 +181,14 @@ export default function ResistorCalcClient() {
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '1.5rem' }}>
                 {Array.from({ length: bandCount }).map((_, i) => (
-                  <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <label style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>{t(`bandLabel${i + 1}`)}</label>
+                  <div key={i} className={ui.field}>
+                    <label className={ui.label}>{t(`bandLabel${i + 1}`)}</label>
                     <select
                       value={selectedColors[i]}
                       onChange={e => {
                         const next = [...selectedColors]; next[i] = e.target.value; setSelectedColors(next);
                       }}
-                      style={{
-                        padding: '10px', borderRadius: '8px', background: 'var(--background)',
-                        border: '1px solid var(--border)', color: 'var(--text-primary)', fontSize: '0.85rem'
-                      }}
+                      className={ui.input}
                     >
                       {COLOR_TABLE.map(color => {
                         const skip = (bandCount === 4 && ((i < 2 && color.value === null) || (i === 2 && color.multiplier === null) || (i === 3 && color.tolerance === null))) ||
@@ -222,8 +203,8 @@ export default function ResistorCalcClient() {
               <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--border)', textAlign: 'center' }}>
                 <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} key={bandResult.ohm} style={{ fontSize: '4.5rem', fontWeight: 900, color: ACCENT_ORANGE }}>{bandResult.ohm}</motion.div>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}>
-                  <span className="glass-panel" style={{ padding: '4px 12px', fontSize: '1rem', fontWeight: 700 }}>{bandResult.tol || '±--%'}</span>
-                  {bandResult.ppm && <span className="glass-panel" style={{ padding: '4px 12px', fontSize: '1rem', fontWeight: 700 }}>{bandResult.ppm}</span>}
+                  <span className={`${ui.badge} ${ui.gray}`} style={{ fontSize: '1rem', padding: '0.25rem 0.75rem' }}>{bandResult.tol || '±--%'}</span>
+                  {bandResult.ppm && <span className={`${ui.badge} ${ui.gray}`} style={{ fontSize: '1rem', padding: '0.25rem 0.75rem' }}>{bandResult.ppm}</span>}
                 </div>
               </div>
 
@@ -231,17 +212,12 @@ export default function ResistorCalcClient() {
           ) : (
             <motion.div key="smd" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               <div style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '1rem' }}>{t('enterSmdCode')}</label>
+                <label className={ui.label} style={{ display: 'block', marginBottom: '1rem' }}>{t('enterSmdCode')}</label>
                 <input
                   value={smdCode} onChange={e => setSmdCode(e.target.value)}
                   placeholder="e.g. 103, 1002, 01C" maxLength={4}
-                  style={{
-                    width: '100%', fontSize: '3rem', textAlign: 'center', fontWeight: 500, fontFamily: 'monospace',
-                    padding: '20px', borderRadius: '16px', background: 'var(--background)', border: '2px solid var(--border)',
-                    color: 'var(--text-primary)', outline: 'none', transition: 'border-color 0.2s'
-                  }}
-                  onFocus={e => e.target.style.borderColor = ACCENT_ORANGE}
-                  onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                  className={`${ui.input} ${ui.inputLg}`}
+                  style={{ fontSize: '3rem', textAlign: 'center', fontWeight: 500, fontFamily: 'monospace', minHeight: '96px' }}
                 />
               </div>
 
@@ -250,7 +226,7 @@ export default function ResistorCalcClient() {
               </div>
 
               <div style={{ textAlign: 'center' }}>
-                <motion.div key={smdResult.ohm} initial={{ scale: 0.9 }} animate={{ scale: 1 }} style={{ fontSize: '4.5rem', fontWeight: 900, color: '#10b981' }}>{smdResult.ohm}</motion.div>
+                <motion.div key={smdResult.ohm} initial={{ scale: 0.9 }} animate={{ scale: 1 }} style={{ fontSize: '4.5rem', fontWeight: 900, color: 'var(--tint-green-fg)' }}>{smdResult.ohm}</motion.div>
                 <div style={{ color: 'var(--text-muted)', fontWeight: 600 }}>{smdResult.tol} ({t('smdHint')})</div>
               </div>
             </motion.div>

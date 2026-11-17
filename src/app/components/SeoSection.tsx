@@ -150,7 +150,7 @@ export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps
                 width: '2rem',
                 height: '2rem',
                 background: 'var(--primary)',
-                color: 'white',
+                color: 'var(--on-primary)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',

@@ -12,6 +12,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import confetti from 'canvas-confetti';
 import s from './challenge.module.css';
+import { ui } from '@/app/components/ui';
 
 type ThemeColor = {
   name: string;
@@ -231,21 +232,21 @@ export default function ThirtyDayChallengeClient() {
       />
 
       {/* Main Panel */}
-      <div className={s.tool_panel}>
+      <div className={`${ui.card} ${s.tool_panel}`}>
         {!isSetup ? (
           <div className={s.setup_form}>
-            <div className={s.form_group}>
-              <label className={s.form_label}><Sparkles size={18} />{isKorean ? '챌린지 목표' : 'Challenge Goal'}</label>
+            <div className={ui.field}>
+              <label className={`${ui.label} ${s.form_label}`}><Sparkles size={18} />{isKorean ? '챌린지 목표' : 'Challenge Goal'}</label>
               <input type="text" value={challengeTitle} onChange={e => setChallengeTitle(e.target.value)}
                 placeholder={isKorean ? '예: 매일 푸시업 30개 하기' : 'e.g., 30 push-ups every day'}
-                className={s.input} maxLength={50} />
+                className={ui.input} maxLength={50} />
             </div>
-            <div className={s.form_group}>
-              <label className={s.form_label}><Calendar size={18} />{isKorean ? '시작 날짜' : 'Start Date'}</label>
-              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className={s.input} />
+            <div className={ui.field}>
+              <label className={`${ui.label} ${s.form_label}`}><Calendar size={18} />{isKorean ? '시작 날짜' : 'Start Date'}</label>
+              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className={ui.input} />
             </div>
-            <div className={s.form_group}>
-              <label className={s.form_label}><Palette size={18} />{isKorean ? '테마 컬러' : 'Theme Color'}</label>
+            <div className={ui.field}>
+              <label className={`${ui.label} ${s.form_label}`}><Palette size={18} />{isKorean ? '테마 컬러' : 'Theme Color'}</label>
               <div className={s.theme_grid}>
                 {THEMES.map((th, idx) => (
                   <button key={idx} onClick={() => setSelectedTheme(idx)}
@@ -258,7 +259,7 @@ export default function ThirtyDayChallengeClient() {
                 ))}
               </div>
             </div>
-            <button onClick={handleStartChallenge} className={s.start_button} style={{ background: theme.gradient }}>
+            <button onClick={handleStartChallenge} className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${s.start_button}`} style={{ background: theme.gradient }}>
               {isKorean ? '챌린지 시작하기' : 'Start Challenge'}
             </button>
           </div>
@@ -275,7 +276,7 @@ export default function ThirtyDayChallengeClient() {
               <div className={s.progress_info}>
                 <span className={s.progress_text}>
                   ✅ {completedCount}/30 {isKorean ? '일 완료' : 'days done'}
-                  {failedCount > 0 && <span className={s.fail_badge}>❌ {failedCount} {isKorean ? '일 실패' : 'missed'}</span>}
+                  {failedCount > 0 && <span className={`${ui.badge} ${ui.red}`}>❌ {failedCount} {isKorean ? '일 실패' : 'missed'}</span>}
                 </span>
                 <span className={s.progress_percent} style={{ color: theme.primary }}>{progressPercent}%</span>
               </div>
@@ -324,10 +325,10 @@ export default function ThirtyDayChallengeClient() {
 
             {/* Action Buttons */}
             <div className={s.action_buttons}>
-              <button onClick={exportToPDF} className={s.action_button} style={{ borderColor: theme.primary, color: theme.primary }}>
+              <button onClick={exportToPDF} className={`${ui.button} ${ui.secondary}`} style={{ borderColor: theme.primary, color: theme.primary }}>
                 <Download size={18} />{isKorean ? 'PDF 다운로드' : 'Download PDF'}
               </button>
-              <button onClick={handleReset} className={s.action_button}>
+              <button onClick={handleReset} className={`${ui.button} ${ui.secondary}`}>
                 <RefreshCw size={18} />{isKorean ? '챌린지 초기화' : 'Reset Challenge'}
               </button>
             </div>
@@ -372,9 +373,9 @@ export default function ThirtyDayChallengeClient() {
             </button>
 
             {/* Memo input */}
-            <label className={s.modal_label}>{isKorean ? '메모 (선택)' : 'Note (optional)'}</label>
+            <label className={ui.label}>{isKorean ? '메모 (선택)' : 'Note (optional)'}</label>
             <textarea
-              className={s.modal_textarea}
+              className={ui.input}
               value={memoInput}
               onChange={e => setMemoInput(e.target.value)}
               placeholder={isKorean ? '예: 푸시업 25개 완료, 오늘 힘들었지만 해냄 💪' : 'e.g., Did 25 push-ups, tough day but made it 💪'}
@@ -385,10 +386,10 @@ export default function ThirtyDayChallengeClient() {
             <p className={s.modal_char}>{memoInput.length}/80</p>
 
             <div className={s.modal_actions}>
-              <button className={s.modal_save} style={{ background: theme.gradient }} onClick={() => saveMemo()}>
+              <button className={`${ui.button} ${ui.primary}`} style={{ background: theme.gradient }} onClick={() => saveMemo()}>
                 {isKorean ? '저장' : 'Save'}
               </button>
-              <button className={s.modal_cancel} onClick={() => setMemoModal(null)}>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={() => setMemoModal(null)}>
                 {isKorean ? '취소' : 'Cancel'}
               </button>
             </div>

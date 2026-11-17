@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './burn-message.module.css';
+import { ui } from '@/app/components/ui';
 
 const MAX_LEN = 1500;
 const EXPIRY_MS = 3_600_000; // 1시간
@@ -295,7 +296,7 @@ export default function BurnMessageClient() {
 
       {/* ── State 0: compat ── */}
       {state === 'compat' && (
-        <div className={s.compat_box}>
+        <div className={`${ui.card} ${s.compat_box}`}>
           <div className={s.compat_icon}>⚠️</div>
           <div className={s.compat_title}>{t('compat_title')}</div>
           <div className={s.compat_desc}>{t('compat_desc')}</div>
@@ -305,10 +306,10 @@ export default function BurnMessageClient() {
 
       {/* ── State 1: write ── */}
       {state === 'write' && (
-        <section className={s.panel}>
-          <div className={s.notice_yellow}>{t('security_notice')}</div>
+        <section className={`${ui.card} ${s.panel}`}>
+          <div className={`${ui.notice} ${ui.amber} ${s.gap_bottom}`}>{t('security_notice')}</div>
           <textarea
-            className={s.textarea}
+            className={`${ui.input} ${s.textarea}`}
             value={message}
             maxLength={MAX_LEN}
             onChange={(e) => setMessage(e.target.value.slice(0, MAX_LEN))}
@@ -323,7 +324,7 @@ export default function BurnMessageClient() {
           </div>
 
           <button
-            className={s.btn_primary}
+            className={`${ui.button} ${ui.primary} ${ui.block} ${ui.lg} ${s.gap_top_lg}`}
             onClick={handleGenerate}
             disabled={charCount === 0}
             aria-label={t('generate_btn')}
@@ -335,17 +336,17 @@ export default function BurnMessageClient() {
             <div className={s.link_box}>
               <div className={s.link_url}>{generatedUrl}</div>
               <button
-                className={`${s.copy_btn} ${linkCopied ? s.copy_btn_done : ''}`}
+                className={`${ui.button} ${ui.secondary} ${ui.block} ${linkCopied ? s.done : ''}`}
                 onClick={handleCopyLink}
                 aria-label={t('copy_btn')}
               >
                 {linkCopied ? t('copy_done') : t('copy_btn')}
               </button>
-              <p className={s.notice_gray}>{t('expiry_note')}</p>
+              <p className={`${ui.hint} ${s.note}`}>{t('expiry_note')}</p>
               {urlLen > 4000 ? (
-                <div className={s.notice_red}>{t('url_warning_high')}</div>
+                <div className={`${ui.notice} ${ui.red} ${s.gap_top}`}>{t('url_warning_high')}</div>
               ) : urlLen > 2000 ? (
-                <div className={s.notice_yellow} style={{ marginBottom: 0, marginTop: '0.6rem' }}>{t('url_warning_medium')}</div>
+                <div className={`${ui.notice} ${ui.amber} ${s.gap_top}`}>{t('url_warning_medium')}</div>
               ) : null}
             </div>
           )}
@@ -354,7 +355,7 @@ export default function BurnMessageClient() {
 
       {/* ── State 2: unlock ── */}
       {state === 'unlock' && decoded && (
-        <section className={s.panel}>
+        <section className={`${ui.card} ${s.panel}`}>
           <div className={s.center_col}>
             <div className={s.lock_icon}><Lock size={44} color="#f43f5e" /></div>
             <div className={s.state_title}>{t('unlock_title')}</div>
@@ -363,7 +364,7 @@ export default function BurnMessageClient() {
               <div className={s.countdown_label}>{t('remaining_time')}</div>
               <div className={s.countdown_big} aria-live="off">{fmtRemaining(remainingMs)}</div>
             </div>
-            <button className={s.btn_dark} onClick={handleReveal} aria-label={t('reveal_btn')}>
+            <button className={`${ui.button} ${ui.primary} ${ui.block} ${ui.lg}`} onClick={handleReveal} aria-label={t('reveal_btn')}>
               {t('reveal_btn')}
             </button>
           </div>
@@ -372,7 +373,7 @@ export default function BurnMessageClient() {
 
       {/* ── State 3: read & burn ── */}
       {state === 'read' && decoded && (
-        <section className={s.panel}>
+        <section className={`${ui.card} ${s.panel}`}>
           {!blurred && (
             <>
               <div className={s.burn_timer_row}>
@@ -394,7 +395,7 @@ export default function BurnMessageClient() {
 
           {!blurred && (
             <button
-              className={`${s.copy_msg_btn} ${msgCopied ? s.copy_msg_btn_done : ''}`}
+              className={`${ui.button} ${ui.secondary} ${ui.block} ${s.gap_top} ${msgCopied ? s.done : ''}`}
               onClick={handleCopyMessage}
               aria-label={t('copy_message')}
             >
@@ -404,26 +405,26 @@ export default function BurnMessageClient() {
 
           {/* 블러 후 + 다시보기 미사용 → 다시보기 버튼 첫 렌더링 */}
           {blurred && !viewAgainUsed && (
-            <button className={s.view_again_btn} onClick={handleViewAgain} aria-label={t('view_again')}>
+            <button className={`${ui.button} ${ui.secondary} ${ui.block} ${s.gap_top}`} onClick={handleViewAgain} aria-label={t('view_again')}>
               {t('view_again')} ({READ_COUNTDOWN}{t('seconds')})
             </button>
           )}
 
           {/* 다시보기 사용 후 영구 파괴 안내 */}
           {blurred && viewAgainUsed && (
-            <p className={s.notice_gray}>{t('permanent_destroyed_notice')}</p>
+            <p className={`${ui.hint} ${s.note}`}>{t('permanent_destroyed_notice')}</p>
           )}
         </section>
       )}
 
       {/* ── State 4-A: burned ── */}
       {state === 'burned' && (
-        <section className={s.panel}>
+        <section className={`${ui.card} ${s.panel}`}>
           <div className={s.center_col}>
             <div className={s.big_icon}>💥</div>
             <div className={s.state_title}>{t('burned_title')}</div>
             <div className={s.state_warning}>{t('burned_desc')}</div>
-            <button className={s.new_msg_btn} onClick={handleNewMessage} aria-label={t('new_message_btn')}>
+            <button className={`${ui.button} ${ui.secondary} ${s.gap_top}`} onClick={handleNewMessage} aria-label={t('new_message_btn')}>
               {t('new_message_btn')}
             </button>
           </div>
@@ -432,13 +433,13 @@ export default function BurnMessageClient() {
 
       {/* ── State 4-B: expired ── */}
       {state === 'expired' && (
-        <section className={s.panel}>
+        <section className={`${ui.card} ${s.panel}`}>
           <div className={s.center_col}>
             <div className={s.big_icon}>⏱️</div>
             <div className={s.state_title}>{t('expired_title')}</div>
             <div className={s.state_warning}>{t('expired_desc')}</div>
-            <p className={s.notice_gray}>{t('clock_skew_notice')}</p>
-            <button className={s.new_msg_btn} onClick={handleNewMessage} aria-label={t('new_message_btn')}>
+            <p className={`${ui.hint} ${s.note}`}>{t('clock_skew_notice')}</p>
+            <button className={`${ui.button} ${ui.secondary} ${s.gap_top}`} onClick={handleNewMessage} aria-label={t('new_message_btn')}>
               {t('new_message_btn')}
             </button>
           </div>

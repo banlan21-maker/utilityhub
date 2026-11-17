@@ -9,6 +9,7 @@ import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './privacy-masking.module.css';
+import { ui } from '@/app/components/ui';
 
 // ── Korean Surnames (단성 + 복성) ────────────────────────────────────────────
 // 일반 단어 오탐을 줄이기 위해 화이트리스트 기반 매칭 사용.
@@ -182,7 +183,7 @@ function buildHighlighted(original: string, masked: string): React.ReactNode[] {
   return maskedWords.map((word, i) => {
     const changed = word !== origWords[i];
     return (
-      <span key={i} style={changed ? { background: '#fef08a', color: '#78350f', borderRadius: '2px', padding: '0 1px' } : undefined}>
+      <span key={i} className={changed ? s.hl : undefined}>
         {word}
       </span>
     );
@@ -224,14 +225,6 @@ export default function PrivacyMaskingClient() {
     } catch { /* ignore */ }
   };
 
-  const inp: React.CSSProperties = {
-    width: '100%', boxSizing: 'border-box',
-    padding: '1rem', fontSize: '0.9rem', lineHeight: 1.7,
-    border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
-    background: 'var(--surface)', color: 'var(--text-primary)',
-    outline: 'none', resize: 'vertical', fontFamily: 'monospace',
-  };
-
   const isNameKrEnabled = enabled.has('name_kr');
 
   return (
@@ -239,68 +232,58 @@ export default function PrivacyMaskingClient() {
       <NavigationActions />
       <ToolHeader icon={<Shield />} title={t('title')} subtitle={t('description')}>
         {/* Privacy badge */}
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.25rem', background: '#dcfce7', border: '1px solid #86efac', borderRadius: '999px', fontSize: '0.85rem', fontWeight: 600, color: '#14532d' }}>
+        <div className={`${ui.badge} ${ui.green}`}>
           🔒 {t('privacy_badge')}
         </div>
       </ToolHeader>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', alignItems: 'start' }}>
+      <div className={s.layout}>
 
         {/* ── Left: Controls ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div className={s.col}>
 
           {/* Rule toggles */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' }}>{t('rules_title')}</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+          <div className={ui.card}>
+            <h2 className={ui.cardTitle}>{t('rules_title')}</h2>
+            <div className={s.rules}>
               {RULES.map((rule) => (
-                <label key={rule.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', cursor: 'pointer' }}>
+                <label key={rule.id} className={s.rule}>
                   <input
                     type="checkbox"
                     checked={enabled.has(rule.id)}
                     onChange={() => toggleRule(rule.id)}
-                    style={{ width: '1rem', height: '1rem', marginTop: '0.15rem', cursor: 'pointer', accentColor: 'var(--primary)', flexShrink: 0 }}
                     aria-label={t(`rule_${rule.id}` as 'rule_email')}
                   />
                   <div>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    <span className={s.ruleName}>
                       {t(`rule_${rule.id}` as 'rule_email')}
                     </span>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'block', fontFamily: 'monospace', marginTop: '0.1rem' }}>{isKo ? rule.example : (rule.exampleEn ?? rule.example)}</span>
+                    <span className={s.ruleExample}>{isKo ? rule.example : (rule.exampleEn ?? rule.example)}</span>
                   </div>
                 </label>
               ))}
             </div>
 
             {isNameKrEnabled && (
-              <div style={{
-                marginTop: '0.85rem',
-                padding: '0.65rem 0.85rem',
-                background: '#fef3c7',
-                border: '1px solid #fcd34d',
-                borderRadius: '0.5rem',
-                color: '#92400e',
-                fontSize: '0.75rem',
-                lineHeight: 1.5,
-              }}>
+              <div className={`${ui.notice} ${ui.amber} ${s.warn}`}>
                 {t('rule_name_warning')}
               </div>
             )}
           </div>
 
           {/* Stats */}
-          <div className="glass-panel" style={{ padding: '1.25rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800, color: count > 0 ? '#10b981' : 'var(--text-secondary)' }}>{count}</div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>{t('masked_count')}</div>
+          <div className={`${ui.card} ${s.center}`}>
+            <div className={`${s.count} ${count > 0 ? s.countActive : ''}`}>{count}</div>
+            <div className={`${ui.hint} ${s.countLabel}`}>{t('masked_count')}</div>
           </div>
         </div>
 
         {/* ── Right: Text areas ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className={s.col}>
 
           {/* Input */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>
+          <div className={ui.card}>
+            <label className={`${ui.label} ${s.blockLabel}`}>
               {t('input_label')}
             </label>
             <textarea
@@ -308,46 +291,37 @@ export default function PrivacyMaskingClient() {
               onChange={(e) => setInput(e.target.value)}
               rows={7}
               placeholder={t('placeholder')}
-              style={inp}
+              className={`${ui.input} ${s.mono}`}
               aria-label={t('input_label')}
             />
           </div>
 
           {/* Output */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+          <div className={ui.card}>
+            <div className={s.outHead}>
+              <label className={ui.label}>
                 {t('output_label')}
               </label>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.78rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-                  <input type="checkbox" checked={showDiff} onChange={(e) => setShowDiff(e.target.checked)} style={{ accentColor: 'var(--primary)' }} />
+              <div className={s.outActions}>
+                <label className={s.diffToggle}>
+                  <input type="checkbox" checked={showDiff} onChange={(e) => setShowDiff(e.target.checked)} />
                   {t('highlight')}
                 </label>
                 <button
                   onClick={handleCopy}
                   aria-label={t('copy_button')}
-                  style={{
-                    padding: '0.35rem 0.8rem',
-                    fontSize: '0.78rem',
-                    fontWeight: 600,
-                    border: `1px solid ${copied ? '#10b981' : 'var(--border)'}`,
-                    background: copied ? '#ecfdf5' : 'var(--surface)',
-                    color: copied ? '#065f46' : 'var(--text-secondary)',
-                    borderRadius: 'var(--radius-sm)',
-                    cursor: 'pointer',
-                  }}
+                  className={`${ui.button} ${ui.secondary} ${ui.sm} ${copied ? s.copied : ''}`}
                 >
                   {copied ? t('copy_icon_done') : t('copy_icon_button')}
                 </button>
               </div>
             </div>
             {showDiff ? (
-              <div style={{ ...inp, minHeight: '10rem', whiteSpace: 'pre-wrap', overflow: 'auto' }}>
+              <div className={s.diffBox}>
                 {buildHighlighted(input, masked)}
               </div>
             ) : (
-              <textarea readOnly value={masked} rows={7} style={{ ...inp, background: '#f0fdf4' }} aria-label={t('output_label')} />
+              <textarea readOnly value={masked} rows={7} className={`${ui.input} ${s.mono} ${s.outGreen}`} aria-label={t('output_label')} />
             )}
           </div>
         </div>

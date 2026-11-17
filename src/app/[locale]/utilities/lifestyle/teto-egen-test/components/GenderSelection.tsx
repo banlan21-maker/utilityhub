@@ -24,9 +24,9 @@ export default function GenderSelection({ onSelect }: GenderSelectionProps) {
           style={{
             width: '200px',
             height: '200px',
-            border: '3px solid #3b82f6',
+            border: '3px solid var(--tint-blue-fg)',
             borderRadius: 'var(--radius-lg)',
-            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)',
+            background: 'var(--tint-blue-bg)',
             cursor: 'pointer',
             transition: 'all 0.3s ease',
             display: 'flex',
@@ -45,7 +45,7 @@ export default function GenderSelection({ onSelect }: GenderSelectionProps) {
           }}
         >
           <div style={{ fontSize: '4rem' }}>👨</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#3b82f6' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--tint-blue-fg)' }}>
             {t('male')}
           </div>
         </button>
@@ -55,9 +55,9 @@ export default function GenderSelection({ onSelect }: GenderSelectionProps) {
           style={{
             width: '200px',
             height: '200px',
-            border: '3px solid #ec4899',
+            border: '3px solid var(--tint-pink-fg)',
             borderRadius: 'var(--radius-lg)',
-            background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
+            background: 'var(--tint-pink-bg)',
             cursor: 'pointer',
             transition: 'all 0.3s ease',
             display: 'flex',
@@ -76,7 +76,7 @@ export default function GenderSelection({ onSelect }: GenderSelectionProps) {
           }}
         >
           <div style={{ fontSize: '4rem' }}>👩</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ec4899' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--tint-pink-fg)' }}>
             {t('female')}
           </div>
         </button>

@@ -8,6 +8,7 @@ import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import SeoSection from '@/app/components/SeoSection';
 import s from './resume-helper.module.css';
+import { ui } from '@/app/components/ui';
 
 const softwareSchema = {
   "@context": "https://schema.org",
@@ -183,16 +184,16 @@ export default function ResumeHelperClient() {
       <ToolHeader icon={<FileText />} title="자소서 작성 헬퍼" subtitle="실시간 글자 수 / 바이트 카운터 + 부산대 맞춤법 검사기 연동" />
 
       {/* ── Preset selector ── */}
-      <section className={s.preset_panel}>
-        <h2 className={s.preset_title}>
+      <section className={`${ui.card} ${s.preset_panel}`}>
+        <h2 className={ui.cardTitle}>
           글자 수 제한 프리셋
         </h2>
-        <div className={s.preset_buttons} style={{ marginBottom: presetIdx === PRESETS.length - 1 ? '1rem' : 0 }}>
+        <div className={ui.chips} style={{ marginBottom: presetIdx === PRESETS.length - 1 ? '1rem' : 0 }}>
           {PRESETS.map((p, i) => (
             <button
               key={i}
               onClick={() => handlePreset(i)}
-              className={`${s.preset_button} ${presetIdx === i ? s.preset_button_active : ''}`}
+              className={`${ui.chip} ${ui.pill} ${presetIdx === i ? ui.chipActive : ''}`}
             >
               {p.label}
             </button>
@@ -201,41 +202,43 @@ export default function ResumeHelperClient() {
 
         {presetIdx === PRESETS.length - 1 && (
           <div className={s.custom_input_row}>
-            <label className={s.custom_label}>최대 글자 수:</label>
+            <label className={`${ui.label} ${s.custom_label}`}>최대 글자 수:</label>
             <input
               type="number"
               min={1}
               value={customMax}
               onChange={e => handleCustomMax(e.target.value)}
-              className={s.custom_input}
+              className={`${ui.input} ${s.custom_input}`}
             />
-            <span className={s.custom_unit}>자</span>
+            <span className={ui.hint}>자</span>
           </div>
         )}
       </section>
 
       {/* ── Count mode toggle ── */}
       <div className={s.count_mode_row}>
-        <span className={s.count_mode_label}>글자 수 기준:</span>
-        {[true, false].map(ws => (
-          <button
-            key={String(ws)}
-            onClick={() => handleToggleSpace(ws)}
-            className={`${s.count_mode_button} ${countWithSpace === ws ? s.count_mode_button_active : ''}`}
-          >
-            {ws ? '공백 포함' : '공백 제외'}
-          </button>
-        ))}
+        <span className={ui.label}>글자 수 기준:</span>
+        <div className={ui.segmented}>
+          {[true, false].map(ws => (
+            <button
+              key={String(ws)}
+              onClick={() => handleToggleSpace(ws)}
+              className={`${ui.segment} ${countWithSpace === ws ? ui.segmentActive : ''}`}
+            >
+              {ws ? '공백 포함' : '공백 제외'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Textarea ── */}
-      <section style={{ marginBottom: '1.5rem' }}>
+      <section className={s.editor}>
         <textarea
           value={text}
           onChange={e => handleText(e.target.value)}
           placeholder="자기소개서 내용을 입력하세요..."
           rows={14}
-          className={`${s.textarea} ${charCount > maxChars ? s.textarea_over_limit : ''}`}
+          className={`${ui.input} ${s.textarea} ${charCount > maxChars ? s.textarea_over_limit : ''}`}
         />
 
         {/* Progress bar */}
@@ -257,12 +260,8 @@ export default function ResumeHelperClient() {
       </section>
 
       {/* ── Stats ── */}
-      <section className="glass-panel animate-fade-in" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-          gap: '1rem',
-        }}>
+      <section className={`${ui.card} ${s.stats_card} animate-fade-in`}>
+        <div className={s.stats_grid}>
           {[
             { label: `글자 수 (${countWithSpace ? '공백 포함' : '공백 제외'})`, value: charCount.toLocaleString(), highlight: charCount > maxChars },
             { label: '제한까지 남은 글자', value: remaining >= 0 ? `+${remaining.toLocaleString()}` : remaining.toLocaleString(), highlight: remaining < 0 },
@@ -274,7 +273,7 @@ export default function ResumeHelperClient() {
               <div style={{
                 fontSize: '1.6rem',
                 fontWeight: 700,
-                color: s.highlight ? '#ef4444' : 'var(--primary)',
+                color: s.highlight ? 'var(--tint-red-fg)' : 'var(--color-primary)',
                 fontVariantNumeric: 'tabular-nums',
               }}>
                 {s.value}
@@ -287,15 +286,7 @@ export default function ResumeHelperClient() {
         </div>
 
         {/* Limit indicator */}
-        <div style={{
-          marginTop: '1rem',
-          padding: '0.5rem 0.75rem',
-          borderRadius: 'var(--radius-md)',
-          background: charCount > maxChars ? 'rgba(239,68,68,0.1)' : 'rgba(99,102,241,0.08)',
-          fontSize: '0.85rem',
-          color: charCount > maxChars ? '#ef4444' : 'var(--text-secondary)',
-          textAlign: 'center',
-        }}>
+        <div className={`${ui.notice} ${charCount > maxChars ? ui.red : ui.violet} ${s.limit_note}`}>
           {charCount > maxChars
             ? `⚠️ 제한 초과! ${Math.abs(remaining).toLocaleString()}자를 줄여야 합니다.`
             : `${charCount.toLocaleString()} / ${maxChars.toLocaleString()}자 (${pct.toFixed(1)}% 사용)`}
@@ -303,44 +294,25 @@ export default function ResumeHelperClient() {
       </section>
 
       {/* ── Action buttons ── */}
-      <section className="animate-fade-in" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+      <section className={`${s.actions} animate-fade-in`}>
         <button
           onClick={handleCopyAndOpen}
           disabled={text.trim() === ''}
-          style={{
-            flex: 1, minWidth: 200,
-            padding: '0.85rem 1.5rem',
-            borderRadius: 'var(--radius-md)',
-            border: 'none',
-            background: text.trim() === '' ? 'var(--border)' : 'var(--primary)',
-            color: '#fff',
-            fontSize: '0.95rem',
-            fontWeight: 600,
-            cursor: text.trim() === '' ? 'not-allowed' : 'pointer',
-            transition: 'opacity 0.2s',
-          }}
+          className={`${ui.button} ${ui.primary} ${ui.lg} ${s.spell_btn}`}
         >
           {copied ? '✅ 복사 완료! 부산대 맞춤법 검사기 열림' : '🔍 맞춤법 검사하기 (텍스트 복사 + 새 탭 열기)'}
         </button>
 
         <button
           onClick={handleClear}
-          style={{
-            padding: '0.85rem 1.25rem',
-            borderRadius: 'var(--radius-md)',
-            border: '1.5px solid var(--border)',
-            background: 'transparent',
-            color: 'var(--text-secondary)',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-          }}
+          className={`${ui.button} ${ui.secondary} ${ui.lg}`}
         >
           🗑️ 초기화
         </button>
       </section>
 
       {/* ── Spell check tips ── */}
-      <section className="glass-panel animate-fade-in" style={{ padding: '1.25rem', marginBottom: '2rem', borderLeft: '3px solid var(--primary)' }}>
+      <section className={`${ui.card} ${s.tips} animate-fade-in`}>
         <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
           💡 맞춤법 검사 사용 방법
         </h3>

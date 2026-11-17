@@ -9,6 +9,7 @@ import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import SeoSection from '@/app/components/SeoSection';
 import s from './ivm.module.css';
+import { ui } from '@/app/components/ui';
 import { SEO_KO, SEO_EN } from './content';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -333,14 +334,14 @@ export default function InvoiceMakerClient() {
         title={isKo ? '1분 인보이스 & 견적서 메이커' : '1-Minute Invoice & Quote Maker'}
         subtitle={isKo ? '브라우저에서 바로 — 가입 없이, 무료로, 즉시 PDF 출력' : 'Browser-based · No sign-up · Free · Instant PDF'}
       >
-        <div className={s.ivm_badge}>🧾 Invoice / Quote Maker</div>
+        <div className={`${ui.badge} ${ui.blue}`}>🧾 Invoice / Quote Maker</div>
       </ToolHeader>
 
       {/* Country Toggle */}
-      <div className={s.ivm_toggle_row}>
+      <div className={`${ui.segmented} ${s.ivm_toggle_row}`}>
         {(['KR','US'] as CountryMode[]).map(m => (
           <button key={m} onClick={() => setMode(m)}
-            className={`${s.ivm_toggle_btn} ${data.countryMode === m ? s.ivm_toggle_active : ''}`}>
+            className={`${ui.segment} ${data.countryMode === m ? ui.segmentActive : ''}`}>
             {m === 'KR' ? (isKo ? '🇰🇷 한국 (KRW)' : '🇰🇷 Korea (KRW)') : '🇺🇸 US (USD)'}
           </button>
         ))}
@@ -350,19 +351,19 @@ export default function InvoiceMakerClient() {
       <div className={s.ivm_layout}>
 
         {/* Issuer */}
-        <div className={s.ivm_card}>
-          <p className={s.ivm_card_title}>📤 {isKo ? '발행인 정보' : 'From (Issuer)'}</p>
+        <div className={ui.card}>
+          <p className={ui.cardTitle}>📤 {isKo ? '발행인 정보' : 'From (Issuer)'}</p>
           <div className={s.ivm_logo_wrap}>
             <div className={s.ivm_logo_preview}>
               {data.issuer.logoBase64
                 ? <img src={data.issuer.logoBase64} alt="logo" />
                 : <span>LOGO</span>}
             </div>
-            <button className={s.ivm_logo_btn} onClick={() => fileInputRef.current?.click()}>
+            <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={() => fileInputRef.current?.click()}>
               {isKo ? '로고 업로드' : 'Upload Logo'}
             </button>
             {data.issuer.logoBase64 && (
-              <button className={s.ivm_logo_btn} onClick={() => setIssuerField('logoBase64', '')}>
+              <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={() => setIssuerField('logoBase64', '')}>
                 {isKo ? '제거' : 'Remove'}
               </button>
             )}
@@ -377,56 +378,56 @@ export default function InvoiceMakerClient() {
             { k: 'bank' as keyof Issuer, label: data.countryMode === 'KR' ? (isKo ? '은행명' : 'Bank') : 'Bank' },
             { k: 'account' as keyof Issuer, label: data.countryMode === 'KR' ? (isKo ? '계좌번호' : 'Account no.') : 'Account' },
           ].map(({ k, label }) => (
-            <div key={k} className={s.ivm_field}>
-              <label className={s.ivm_label}>{label}</label>
-              <input className={s.ivm_input} value={data.issuer[k]} onChange={e => setIssuerField(k, e.target.value)} />
+            <div key={k} className={`${ui.field} ${s.ivm_field}`}>
+              <label className={ui.label}>{label}</label>
+              <input className={ui.input} value={data.issuer[k]} onChange={e => setIssuerField(k, e.target.value)} />
             </div>
           ))}
         </div>
 
         {/* Client + Meta */}
-        <div className={s.ivm_card}>
-          <p className={s.ivm_card_title}>📥 {isKo ? '수신인 정보' : 'To (Client)'}</p>
+        <div className={ui.card}>
+          <p className={ui.cardTitle}>📥 {isKo ? '수신인 정보' : 'To (Client)'}</p>
           {[
             { k: 'clientName' as keyof InvoiceData, label: isKo ? '이름/업체명' : 'Name / Company' },
             { k: 'clientEmail' as keyof InvoiceData, label: 'Email' },
             { k: 'clientAddress' as keyof InvoiceData, label: isKo ? '주소' : 'Address' },
           ].map(({ k, label }) => (
-            <div key={k} className={s.ivm_field}>
-              <label className={s.ivm_label}>{label}</label>
-              <input className={s.ivm_input} value={data[k] as string}
+            <div key={k} className={`${ui.field} ${s.ivm_field}`}>
+              <label className={ui.label}>{label}</label>
+              <input className={ui.input} value={data[k] as string}
                 onChange={e => setField(k, e.target.value)} />
             </div>
           ))}
 
-          <p className={s.ivm_card_title} style={{ marginTop: '1rem' }}>📋 {isKo ? '인보이스 정보' : 'Invoice Info'}</p>
-          <div className={s.ivm_field}>
-            <label className={s.ivm_label}>{isKo ? '인보이스 번호' : 'Invoice #'}</label>
+          <p className={ui.cardTitle} style={{ marginTop: '1.5rem' }}>📋 {isKo ? '인보이스 정보' : 'Invoice Info'}</p>
+          <div className={`${ui.field} ${s.ivm_field}`}>
+            <label className={ui.label}>{isKo ? '인보이스 번호' : 'Invoice #'}</label>
             <div className={s.ivm_inv_row}>
-              <input className={s.ivm_input} value={data.invNo}
+              <input className={ui.input} value={data.invNo}
                 onChange={e => setField('invNo', e.target.value)} />
-              <button className={s.ivm_regen_btn} onClick={regenInvNo}>🔄 {isKo ? '재생성' : 'Regen'}</button>
+              <button className={`${ui.button} ${ui.secondary}`} onClick={regenInvNo}>🔄 {isKo ? '재생성' : 'Regen'}</button>
             </div>
           </div>
           <div className={s.ivm_row2}>
-            <div className={s.ivm_field}>
-              <label className={s.ivm_label}>{isKo ? '발행일' : 'Issue Date'}</label>
-              <input type="date" className={s.ivm_input} value={data.issueDate}
+            <div className={`${ui.field} ${s.ivm_field}`}>
+              <label className={ui.label}>{isKo ? '발행일' : 'Issue Date'}</label>
+              <input type="date" className={ui.input} value={data.issueDate}
                 onChange={e => setField('issueDate', e.target.value)} />
             </div>
-            <div className={s.ivm_field}>
-              <label className={s.ivm_label}>{isKo ? '납기일' : 'Due Date'}</label>
-              <input type="date" className={s.ivm_input} value={data.dueDate}
+            <div className={`${ui.field} ${s.ivm_field}`}>
+              <label className={ui.label}>{isKo ? '납기일' : 'Due Date'}</label>
+              <input type="date" className={ui.input} value={data.dueDate}
                 onChange={e => setField('dueDate', e.target.value)} />
             </div>
           </div>
 
           {/* Payment QR */}
-          <div className={s.ivm_field} style={{ marginTop: '0.5rem' }}>
-            <label className={s.ivm_label}>
+          <div className={`${ui.field} ${s.ivm_field}`} style={{ marginTop: '0.5rem' }}>
+            <label className={ui.label}>
               {data.countryMode === 'KR' ? (isKo ? '카카오/토스 결제 링크' : 'KakaoPay/Toss payment link') : 'PayPal/Venmo Pay Link'}
             </label>
-            <input className={s.ivm_input} value={data.payLink}
+            <input className={ui.input} value={data.payLink}
               placeholder={data.countryMode === 'KR' ? 'https://toss.me/...' : 'https://paypal.me/...'}
               onChange={e => setField('payLink', e.target.value)} />
           </div>
@@ -441,8 +442,8 @@ export default function InvoiceMakerClient() {
         </div>
 
         {/* Line Items */}
-        <div className={`${s.ivm_card} ${s.ivm_card_full}`}>
-          <p className={s.ivm_card_title}>📦 {isKo ? '품목 목록' : 'Line Items'}</p>
+        <div className={`${ui.card} ${s.ivm_card_full}`}>
+          <p className={ui.cardTitle}>📦 {isKo ? '품목 목록' : 'Line Items'}</p>
           <div className={s.ivm_items_header}>
             <span>{isKo ? '품목명' : 'Description'}</span>
             <span>{isKo ? '수량' : 'Qty'}</span>
@@ -452,14 +453,14 @@ export default function InvoiceMakerClient() {
           </div>
           {data.items.map(it => (
             <div key={it.id} className={s.ivm_item_row}>
-              <input className={`${s.ivm_input} ${s.ivm_input_sm}`} value={it.desc}
+              <input className={ui.input} value={it.desc}
                 placeholder={isKo ? '항목 설명' : 'Item description'}
                 onChange={e => setItem(it.id, 'desc', e.target.value)} />
-              <input type="number" className={`${s.ivm_input} ${s.ivm_input_sm}`} value={it.qty} min={1}
+              <input type="number" className={ui.input} value={it.qty} min={1}
                 onChange={e => setItem(it.id, 'qty', Math.max(1, Number(e.target.value)))} />
-              <input type="number" className={`${s.ivm_input} ${s.ivm_input_sm}`} value={it.unitPrice} min={0}
+              <input type="number" className={ui.input} value={it.unitPrice} min={0}
                 onChange={e => setItem(it.id, 'unitPrice', Number(e.target.value))} />
-              <span style={{ fontSize:'0.85rem', fontWeight:700, color:'#1e40af', paddingLeft:'0.2rem' }}>
+              <span style={{ fontSize:'0.85rem', fontWeight:700, color:'var(--color-primary)', paddingLeft:'0.2rem' }}>
                 {fmt(it.qty * it.unitPrice, data.countryMode)}
               </span>
               <button className={s.ivm_del_btn}
@@ -468,7 +469,7 @@ export default function InvoiceMakerClient() {
               </button>
             </div>
           ))}
-          <button className={s.ivm_add_item_btn}
+          <button className={`${ui.button} ${ui.secondary} ${ui.block} ${s.ivm_add_item_btn}`}
             onClick={() => setData(prev => ({ ...prev, items: [...prev.items, newItem()] }))}>
             + {isKo ? '품목 추가' : 'Add Item'}
           </button>
@@ -480,7 +481,7 @@ export default function InvoiceMakerClient() {
                 {data.countryMode === 'KR' ? (isKo ? '세금 유형 & 세율' : 'Tax type & rate') : 'Tax Rate'}
               </span>
               {data.countryMode === 'KR' && (
-                <select className={s.ivm_input} style={{ width:'auto', marginRight:'0.5rem' }}
+                <select className={ui.input} style={{ width:'auto', marginRight:'0.5rem' }}
                   value={data.taxRate}
                   onChange={e => setField('taxRate', Number(e.target.value))}>
                   <option value={10}>{isKo ? '부가세 10%' : 'VAT 10%'}</option>
@@ -489,7 +490,7 @@ export default function InvoiceMakerClient() {
                 </select>
               )}
               {data.countryMode === 'US' && (
-                <input type="number" className={s.ivm_input} style={{ width:'80px' }}
+                <input type="number" className={ui.input} style={{ width:'80px' }}
                   value={data.taxRate} step={0.25} min={0}
                   onChange={e => setField('taxRate', Number(e.target.value))} />
               )}
@@ -501,9 +502,9 @@ export default function InvoiceMakerClient() {
           </div>
 
           {/* Notes */}
-          <div className={s.ivm_field} style={{ marginTop:'1rem' }}>
-            <label className={s.ivm_label}>{isKo ? '비고 / 결제 안내' : 'Notes / Payment Terms'}</label>
-            <textarea className={s.ivm_textarea} value={data.notes}
+          <div className={`${ui.field} ${s.ivm_field}`} style={{ marginTop:'1rem' }}>
+            <label className={ui.label}>{isKo ? '비고 / 결제 안내' : 'Notes / Payment Terms'}</label>
+            <textarea className={ui.input} value={data.notes}
               placeholder={isKo ? '결제 기한, 계좌 안내, 특이사항 등...' : 'Payment terms, special instructions...'}
               onChange={e => setField('notes', e.target.value)} />
           </div>
@@ -511,8 +512,8 @@ export default function InvoiceMakerClient() {
 
         {/* History */}
         {history.length > 0 && (
-          <div className={`${s.ivm_card} ${s.ivm_card_full}`}>
-            <p className={s.ivm_card_title}>🕒 {isKo ? '최근 5개 불러오기' : 'Recent (Load)'}</p>
+          <div className={`${ui.card} ${s.ivm_card_full}`}>
+            <p className={ui.cardTitle}>🕒 {isKo ? '최근 5개 불러오기' : 'Recent (Load)'}</p>
             <div className={s.ivm_history_list}>
               {history.map((h, i) => (
                 <div key={i} className={s.ivm_history_item} onClick={() => loadHistory(h)}>
@@ -528,16 +529,16 @@ export default function InvoiceMakerClient() {
 
       {/* Action Buttons */}
       <div className={s.ivm_actions}>
-        <button className={`${s.ivm_btn} ${s.ivm_btn_primary}`} onClick={exportPDF}>
+        <button className={`${ui.button} ${ui.primary} ${s.ivm_btn}`} onClick={exportPDF}>
           📄 {isKo ? 'PDF 저장' : 'Save PDF'}
         </button>
-        <button className={`${s.ivm_btn} ${s.ivm_btn_green}`} onClick={exportExcel}>
+        <button className={`${ui.button} ${ui.secondary} ${s.ivm_btn}`} onClick={exportExcel}>
           📊 {isKo ? 'Excel 저장' : 'Save Excel'}
         </button>
-        <button className={`${s.ivm_btn} ${s.ivm_btn_orange}`} onClick={genShareLink}>
+        <button className={`${ui.button} ${ui.secondary} ${s.ivm_btn}`} onClick={genShareLink}>
           🔗 {isKo ? '공유 링크' : 'Share link'}
         </button>
-        <button className={`${s.ivm_btn} ${s.ivm_btn_slate}`}
+        <button className={`${ui.button} ${ui.secondary} ${s.ivm_btn}`}
           onClick={() => {
             saveToHistory(data);
             showToast(isKo ? '저장되었습니다' : 'Saved to history');
@@ -552,7 +553,7 @@ export default function InvoiceMakerClient() {
       )}
 
       {/* Off-screen PDF preview */}
-      <div ref={previewRef} className={s.ivm_preview}>
+      <div ref={previewRef} className={`${s.ivm_preview} light-island`}>
         <div className={s.ivm_preview_header}>
           <div>
             {data.issuer.logoBase64 && <img src={data.issuer.logoBase64} className={s.ivm_preview_logo} alt="logo" />}
@@ -645,7 +646,7 @@ export default function InvoiceMakerClient() {
 
       {/* SEO Section */}
       <SeoSection ko={SEO_KO} en={SEO_EN} />
-      <section className={s.ivm_seo}>
+      <section className={`${ui.card} ${s.ivm_seo}`}>
         <h2>{isKo ? '⚠️ 면책 조항' : '⚠️ Disclaimer'}</h2>
         <p>
           {isKo
