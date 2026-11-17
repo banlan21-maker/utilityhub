@@ -227,8 +227,11 @@ export default function FreelanceRateCalculatorClient() {
   const hoursMax = 300;
 
 
-  const now = new Date();
-  const dateStr = now.toLocaleDateString(isKo ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  // 영수증 날짜는 브라우저에서만 계산 (서버는 UTC라 오전 9시 전엔 날짜가 달라 하이드레이션 오류)
+  const [dateStr, setDateStr] = useState('');
+  useEffect(() => {
+    setDateStr(new Date().toLocaleDateString(isKo ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+  }, [isKo]);
 
   return (
     <div className={s.frc_wrap}>

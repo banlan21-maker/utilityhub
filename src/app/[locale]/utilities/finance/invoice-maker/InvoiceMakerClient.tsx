@@ -91,7 +91,7 @@ const defaultIssuer = (): Issuer => ({
 
 const defaultData = (mode: CountryMode = 'KR'): InvoiceData => ({
   invNo: '',
-  issueDate: todayStr(),
+  issueDate: '', // 서버(UTC)와 브라우저 날짜가 달라 하이드레이션 오류가 나므로 마운트 후 채운다
   dueDate: '',
   issuer: defaultIssuer(),
   clientName: '', clientEmail: '', clientAddress: '',
@@ -126,6 +126,7 @@ export default function InvoiceMakerClient() {
     setData(prev => ({
       ...prev,
       invNo,
+      issueDate: prev.issueDate || todayStr(),
       issuer: { ...prev.issuer, ...(saved as Partial<Issuer>) },
     }));
   }, []);
