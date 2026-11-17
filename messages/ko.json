@@ -666,7 +666,7 @@
     },
     "core-web-vitals": {
       "title": "Core Web Vitals 판정기",
-      "desc": "LCP·INP·CLS 수치를 입력하면 Google 공식 기준으로 Good/Needs Work/Poor 등급을 즉시 판정합니다."
+      "desc": "LCP·INP·CLS 수치를 입력하면 구글 공식 기준으로 Good(양호)·Needs Improvement(개선 필요)·Poor(나쁨)를 즉시 판정합니다."
     },
     "metaTitle": "웹 성능 측정 도구 모음 — TTFB·Core Web Vitals·SLA 계산 | Utility Hub",
     "metaDescription": "TTFB 응답 속도 측정, Core Web Vitals(LCP·CLS·INP) 점검, SLA 가동률 계산, 웹사이트 탄소발자국 계산까지. 설치 없이 브라우저에서 바로 쓰는 무료 웹 성능·모니터링 도구 모음입니다.",

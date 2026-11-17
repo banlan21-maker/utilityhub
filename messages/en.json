@@ -666,7 +666,7 @@
     },
     "core-web-vitals": {
       "title": "Core Web Vitals Checker",
-      "desc": "Enter your LCP, INP, and CLS scores to instantly get Google's Good / Needs Work / Poor ratings."
+      "desc": "Enter your LCP, INP and CLS values to instantly get Google’s Good / Needs Improvement / Poor ratings."
     },
     "metaTitle": "Web Performance Tools — TTFB, Core Web Vitals & SLA Calculator | Utility Hub",
     "metaDescription": "Free browser-based web performance tools: measure TTFB, check Core Web Vitals (LCP, CLS, INP), calculate SLA uptime and allowed downtime, and estimate your website carbon footprint. No sign-up required.",

@@ -13,6 +13,7 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-18', type: 'update', href: '/utilities/performance/core-web-vitals', ko: 'Core Web Vitals 판정기 — 모바일·데스크톱 비교, 공유 링크, 표시 오류 수정', en: 'Core Web Vitals Checker — mobile vs desktop, share links, display fixes' },
   { date: '2026-11-18', type: 'fix', href: '/utilities/utility/decision-master', ko: '결정 도우미 — 돌림판·화살표 당첨 칸, 사다리 결과 오류 수정', en: 'Decision Master — wheel, arrow and ladder results fixed' },
   { date: '2026-11-18', type: 'fix', href: '/utilities/finance/invoice-maker', ko: '견적서 — 원천징수 3.3%를 빼서 실지급액 표시', en: 'Invoice Maker — 3.3% withholding now deducted' },
   { date: '2026-11-18', type: 'fix', href: '/utilities/productivity/meeting-burner', ko: '회의비용 계산기 — 다른 탭을 봐도 시간이 정확히 흐름', en: 'Meeting Cost Timer — accurate in background tabs' },
