@@ -3,6 +3,7 @@
 import 'server-only';
 import { CITY_GAS, ELECTRICITY, KEROSENE, SMP, SOLAR_MARKET } from '@/constants/energyPrices';
 import { WAGE_DATA } from '@/constants/wageConfig';
+import { REFERENCE_VALUES } from '@/constants/referenceValues';
 
 export type AlertLevel = 'danger' | 'warn' | 'info' | 'ok';
 export interface AdminAlert {
@@ -74,7 +75,7 @@ const CALENDAR: CalItem[] = [
   {
     id: 'min-wage', title: '최저임금 다음 해 값 추가',
     detail: '8월 5일 전후 고시 → 1월 1일 시행. wageConfig에 다음 해(Y+1) 시급을 넣어야 시급·주휴수당 계산기가 맞음',
-    where: 'src/constants/wageConfig.ts · 시급/연봉 계산기', source: 'https://www.minimumwage.go.kr',
+    where: 'src/constants/wageConfig.ts(연봉 계산기) · src/constants/referenceValues.ts(알바 계산기)', source: 'https://www.minimumwage.go.kr',
     window: [[8, 10], [12, 31]], done: (y) => hasWageYear(y + 1), level: 'warn',
   },
   {
@@ -134,6 +135,43 @@ function calendar(): AdminAlert[] {
   // 이번 해 최저임금 데이터가 아예 없으면 계산기가 틀린 값을 보여 주는 중
   if (!hasWageYear(year)) {
     out.unshift({ id: 'min-wage-missing', level: 'danger', title: `${year}년 최저임금 데이터 없음`, detail: '시급·연봉 계산기가 지난해 값으로 계산 중', where: 'src/constants/wageConfig.ts' });
+  }
+  return out;
+}
+
+/**
+ * 기준값 파일(src/constants/referenceValues.ts) 점검
+ * - 다음 확인 예정일이 지났는데 마지막 확인일이 그대로인 항목
+ * - 12월인데 다음 해 값이 없는 항목
+ * - 미확정(pending) 값
+ */
+function referenceValueAlerts(): AdminAlert[] {
+  const now = KST();
+  const today = now.toISOString().slice(0, 10);
+  const year = now.getUTCFullYear();
+  const out: AdminAlert[] = [];
+  const where = 'src/constants/referenceValues.ts';
+  const ids = [...new Set(REFERENCE_VALUES.map((r) => r.id))];
+  for (const id of ids) {
+    const rows = REFERENCE_VALUES.filter((r) => r.id === id).sort((a, b) => a.effectiveFrom.localeCompare(b.effectiveFrom));
+    const latest = rows[rows.length - 1];
+    const name = latest.name;
+    const tools = latest.usedBy.join(', ');
+    const overdue = rows.filter((r) => r.nextCheck <= today && r.lastChecked < r.nextCheck);
+    if (overdue.length) {
+      const r = overdue[overdue.length - 1];
+      out.push({ id: `ref-due-${id}`, level: 'warn', title: `기준값 확인 기한 지남: ${name}`,
+        detail: `확인 예정일 ${r.nextCheck} · 마지막 확인 ${r.lastChecked}. 공식 출처로 확인 후 lastChecked·nextCheck를 고치세요 (${tools})`,
+        where, source: r.source.url });
+    }
+    if (now.getUTCMonth() === 11 && !rows.some((r) => r.effectiveFrom.startsWith(String(year + 1)))) {
+      out.push({ id: `ref-next-${id}`, level: 'warn', title: `${year + 1}년 기준값 없음: ${name}`,
+        detail: `1월 1일부터 쓸 ${year + 1}년 값이 아직 없습니다 (${tools})`, where, source: latest.source.url });
+    }
+    for (const r of rows.filter((x) => x.status === 'pending' && x.effectiveFrom.slice(0, 4) >= String(year))) {
+      out.push({ id: `ref-pending-${id}-${r.effectiveFrom}`, level: 'info', title: `미확정 기준값: ${name} (${r.effectiveFrom.slice(0, 4)})`,
+        detail: `${r.value}${r.unit} 임시 적용${r.note ? ` · ${r.note}` : ''}`, where, source: r.source.url });
+    }
   }
   return out;
 }
@@ -199,7 +237,7 @@ export async function buildAlerts(extra: AdminAlert[] = []): Promise<{ alerts: A
     .map((w) => ({ id: `wf-${w.name}`, level: 'danger', title: `자동 갱신 실패: ${w.name}`, detail: `${w.at.slice(0, 10)} 실행 실패 — GitHub Actions 로그 확인`, source: w.url }));
   const fresh = freshness(workflows);
   const order: Record<AlertLevel, number> = { danger: 0, warn: 1, info: 2, ok: 3 };
-  const alerts = [...wfAlerts, ...extra, ...fresh.filter((f) => f.level !== 'ok'), ...calendar(), ...oneOff()]
+  const alerts = [...wfAlerts, ...extra, ...fresh.filter((f) => f.level !== 'ok'), ...calendar(), ...referenceValueAlerts(), ...oneOff()]
     .sort((a, b) => order[a.level] - order[b.level]);
   return { alerts, fresh, workflows };
 }

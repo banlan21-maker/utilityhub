@@ -24,6 +24,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/finance/vat-calc', icon: '🧾', ko: '부가세(VAT) 계산기', en: 'VAT Calculator', category: 'finance' },
   { id: 'utilities/finance/interest-calc', icon: '💰', ko: '이자 계산기', en: 'Interest Calculator', category: 'finance' },
   { id: 'utilities/finance/tax-33-calc', icon: '🧾', ko: '3.3% 세금 계산기', en: 'Freelancer 3.3% Tax Calculator', category: 'finance' },
+  { id: 'utilities/finance/alba-pay-calc', icon: '🕒', ko: '알바 급여·주휴수당 계산기', en: 'Part-time Pay Calculator (Korea)', category: 'finance' },
   { id: 'utilities/finance/salary-calc', icon: '💼', ko: '연봉 실수령액 계산기', en: 'Salary Take-Home Calculator', category: 'finance' },
   { id: 'utilities/finance/smart-percent', icon: '💹', ko: '스마트 퍼센트 계산기', en: 'Smart Percentage Calculator', category: 'finance' },
   { id: 'utilities/finance/freelance-rate-calculator', icon: '⚡', ko: '프리랜서 단가 계산기', en: 'Freelance Rate Calculator', category: 'finance' },
@@ -146,6 +147,7 @@ export const TOOL_MAP: Record<string, ToolMeta> = Object.fromEntries(
 export const TOOL_RELATIONS: Record<string, string[]> = {
   // ── Finance ────────────────────────────────────────────────
   'utilities/finance/tax-33-calc': [
+    'utilities/finance/alba-pay-calc',
     'utilities/finance/vat-calc',
     'utilities/finance/interest-calc',
     'utilities/finance/percentage-calc',
@@ -180,7 +182,13 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/finance/exchange-rate',
     'utilities/finance/percentage-calc',
   ],
+  'utilities/finance/alba-pay-calc': [
+    'utilities/finance/salary-calc',
+    'utilities/finance/tax-33-calc',
+    'utilities/finance/percentage-calc',
+  ],
   'utilities/finance/salary-calc': [
+    'utilities/finance/alba-pay-calc',
     'utilities/finance/tax-33-calc',
     'utilities/finance/freelance-rate-calculator',
     'utilities/finance/percentage-calc',

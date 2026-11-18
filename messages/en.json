@@ -286,7 +286,11 @@
     },
     "metaTitle": "Finance Calculators — VAT, Salary, Interest, Exchange Rate & Invoices | Utility Hub",
     "metaDescription": "Free finance calculators: VAT and sales tax, take-home salary, simple and compound interest, live currency exchange rates, crypto profit, freelance hourly rates and a one-minute invoice maker. No login needed.",
-    "intro": "Money calculators for freelancers, small businesses and everyday decisions. Split a price into supply value and 10% VAT or work back from a total, and calculate the 3.3% withholding that Korean clients deduct from freelance fees. The Salary Take-Home Pay Calculator applies national pension, health and employment insurance and income tax to a gross salary, while the Interest Calculator compares simple and monthly compound growth for savings or loans. Percentage tools cover discounts, rates of change and reverse calculations. The Freelance Rate Calculator turns an income goal and fixed costs into an hourly rate, and the Invoice Maker produces a printable invoice or quote you can share as a link. For investors, the Currency Converter shows 20 currencies with a 30-day chart and the Crypto Profit Calculator includes fees. Results are estimates; check official rates before filing taxes."
+    "intro": "Money calculators for freelancers, small businesses and everyday decisions. Split a price into supply value and 10% VAT or work back from a total, and calculate the 3.3% withholding that Korean clients deduct from freelance fees. The Salary Take-Home Pay Calculator applies national pension, health and employment insurance and income tax to a gross salary, while the Interest Calculator compares simple and monthly compound growth for savings or loans. Percentage tools cover discounts, rates of change and reverse calculations. The Freelance Rate Calculator turns an income goal and fixed costs into an hourly rate, and the Invoice Maker produces a printable invoice or quote you can share as a link. For investors, the Currency Converter shows 20 currencies with a 30-day chart and the Crypto Profit Calculator includes fees. Results are estimates; check official rates before filing taxes.",
+    "alba-pay-calc": {
+      "title": "Part-time Pay & Holiday Allowance (Korea)",
+      "desc": "Weekly holiday allowance, weekly and monthly pay and take-home pay under Korean labour law."
+    }
   },
   "Tax33": {
     "title": "🧾 Korean Freelancer 3.3% Tax Calculator",
@@ -2408,5 +2412,113 @@
     "faq5A": "No. Completely empty rows after the data start row are removed automatically, so the downloaded list contains only real records.",
     "faq6Q": "What happens if the workbook has several sheets?",
     "faq6A": "At the moment only the first sheet is read. To convert another sheet, move it to the first position in Excel and upload the file again."
+  },
+  "AlbaPay": {
+    "title": "Korea Part-time Pay & Weekly Holiday Allowance Calculator {year}",
+    "subtitle": "For part-timers and employers in Korea — {year} minimum wage {wage}/hour. Weekly holiday allowance (juhyu sudang), weekly and monthly pay, and take-home pay.",
+    "meta_title": "Korea Part-time Pay Calculator {year} – Weekly Holiday Allowance (Juhyu) | Utility Hub",
+    "meta_description": "Calculate part-time pay in Korea with the {year} minimum wage of {wage}/hour: weekly holiday allowance (juhyu sudang), weekly and monthly pay, overtime and night premiums, and take-home pay after the 4 insurances or 3.3%.",
+    "description": "This calculator is for foreign part-timers and small business owners who need to check pay under Korean labour law. Enter an hourly wage and your hours and it shows the weekly holiday allowance (주휴수당, juhyu sudang), weekly pay, pay converted to a month, and take-home pay after the four social insurances or the 3.3% freelancer withholding. The {year} minimum wage of {wage} an hour is filled in for you, and you can switch the year to check last year's pay. Anyone contracted for 15 hours or more a week earns an extra paid day off each week worth (weekly hours ÷ 40) × 8 hours of pay, so a 40-hour week becomes 209 paid hours a month, or {monthly}. The weekly schedule tab takes start and end times and breaks for each day, splits out overtime and night work between 10 pm and 6 am, and handles shifts that end after midnight such as 6 pm to 2 am. Workplaces with five or more staff must add 50% for overtime, night and holiday work; smaller ones pay no premiums but still owe the weekly holiday allowance. Wages below the legal minimum are flagged in red. Everything runs in your browser and nothing you type is sent anywhere.",
+    "button": "Copy result",
+    "result_label": "Monthly take-home",
+    "share_title": "Korea Part-time Pay Calculator",
+    "faq_title": "FAQ",
+    "related_title": "Related calculators",
+    "use_cases_title": "When to use it",
+    "how_to_title": "How to use",
+    "about_title": "What is the weekly holiday allowance (juhyu sudang)?",
+    "about": "Korean law gives every worker one paid day off a week, called juhyu (주휴), as long as they were contracted for at least 15 hours that week and showed up on every scheduled day. Part-timers and students qualify on exactly the same terms as full-time staff, and the rule also applies to businesses with fewer than five employees. The allowance equals (contracted weekly hours ÷ 40) × 8 × hourly wage and never exceeds 8 hours, even if you work more than 40 hours. With the {year} minimum wage of {wage}, working 4 hours a day for 5 days (20 hours) adds 4 paid hours, or {juhyu20}, every week. Overtime hours do not count toward the allowance, and a week with an unexcused absence earns none.",
+    "formula": "Weekly holiday allowance = (contracted weekly hours ÷ 40) × 8 × hourly wage",
+    "under5_title": "What changes under five employees?",
+    "under5": [
+      "<b>The weekly holiday allowance still applies</b> once you work 15 hours or more a week.",
+      "<b>No 50% premium</b> for overtime, night (10 pm–6 am) or holiday work — every hour is paid at the normal rate.",
+      "Hours over 8 a day or 40 a week must still be paid at your hourly wage.",
+      "Staff are counted excluding the owner; part-timers count toward the five."
+    ],
+    "break_title": "Break time rules",
+    "break": [
+      "A 4-hour shift needs at least a 30-minute break and an 8-hour shift at least one hour, given during the shift (Labor Standards Act, Article 54).",
+      "Breaks are unpaid, so 9 am to 6 pm with a one-hour lunch is 8 working hours.",
+      "The schedule tab shows a yellow note when a break is shorter than required."
+    ],
+    "table_title": "Korean minimum wage by year",
+    "table_head": [
+      "Year",
+      "Hourly",
+      "Monthly (209 h)",
+      "Status"
+    ],
+    "table_confirmed": "Final",
+    "table_pending": "Pending",
+    "excluded_title": "Not covered in this version",
+    "excluded": [
+      "Probation pay cut (90% of minimum wage for 3 months on 1-year+ contracts, not for simple labour)",
+      "Income tax from the withholding table — see the Salary Take-Home Pay Calculator",
+      "Severance pay and unused annual leave pay",
+      "Upper and lower income caps for pension and health insurance"
+    ],
+    "use_cases": [
+      {
+        "icon": "🏪",
+        "title": "Owners preparing payday",
+        "desc": "Cafe, convenience store and restaurant owners can see exactly what each part-timer is owed, holiday allowance included, before transferring wages on payday."
+      },
+      {
+        "icon": "🙋",
+        "title": "Checking your own payslip",
+        "desc": "Foreign students and part-timers can confirm their pay matches hours × wage plus the weekly holiday allowance they are entitled to."
+      },
+      {
+        "icon": "🗓️",
+        "title": "Planning shift schedules",
+        "desc": "Managers can compare 14 versus 15 hours a week, or a late shift past 10 pm, and see how much weekly labour cost changes."
+      },
+      {
+        "icon": "⏪",
+        "title": "Back-pay for last year",
+        "desc": "Switch the rate year to recalculate with that year's minimum wage and insurance rates when you claim weekly holiday allowance that was never paid."
+      }
+    ],
+    "how_to": [
+      {
+        "step": "Pick a mode",
+        "desc": "Use Quick if you work the same hours every day, or Weekly schedule if days differ or you work nights and weekends."
+      },
+      {
+        "step": "Enter wage and hours",
+        "desc": "The current minimum wage is pre-filled. Enter hours actually worked per day, excluding unpaid breaks, and the number of days."
+      },
+      {
+        "step": "Choose size and deductions",
+        "desc": "Select 5+ staff if the workplace has five or more employees, then choose the 4 insurances or 3.3% if anything is deducted."
+      },
+      {
+        "step": "Read and share",
+        "desc": "Check eligibility, the weekly breakdown, monthly pay and take-home pay, then copy the summary, save it as an image or print it."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How many hours do I need for the weekly holiday allowance?",
+        "a": "You need at least 15 contracted hours a week and must attend every scheduled day that week. Three hours a day for five days (15 hours) qualifies, but seven hours on two days (14 hours) does not. It is judged week by week, and overtime does not count toward the 15 hours."
+      },
+      {
+        "q": "Do small businesses with under five staff have to pay it?",
+        "a": "Yes. The weekly holiday allowance applies to every workplace regardless of size. What small workplaces with fewer than five regular employees skip is the 50% premium for overtime, night and holiday work, so late or long shifts are paid at the normal hourly rate there."
+      },
+      {
+        "q": "What is the Korean minimum wage in {year}?",
+        "a": "It is {wage} an hour, up from {prevWage} in {prevYear}. For a 40-hour week the monthly equivalent is {monthly}, based on 209 paid hours (48 hours including the paid holiday × 4.345 weeks). The rate is announced around August 5 each year and applies to all workplaces from January 1."
+      },
+      {
+        "q": "Should my employer deduct 4 insurances or 3.3%?",
+        "a": "A part-timer who works set hours under an employer's direction is an employee and is normally covered by national pension, health, employment and accident insurance. Workers under 60 hours a month may be left out of pension and health insurance. The 3.3% withholding is meant for freelancers with business income, not employees."
+      },
+      {
+        "q": "When do I get the night work premium?",
+        "a": "Hours worked between 10 pm and 6 am earn an extra 50% of the hourly wage at workplaces with five or more staff. A 6 pm to 2 am shift includes four night hours. If those hours are also overtime beyond 8 a day, the two premiums add up to double pay."
+      }
+    ]
   }
 }

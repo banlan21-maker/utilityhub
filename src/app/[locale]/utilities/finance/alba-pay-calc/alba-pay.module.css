@@ -1,0 +1,110 @@
+/* 알바 급여·주휴수당 계산기 — 공통 UI 키트 위에 배치만 */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  max-width: var(--tool-width);
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 1rem 3rem;
+  animation: fadeIn 0.6s ease-out;
+}
+@media (prefers-reduced-motion: reduce) { .container { animation: none; } }
+
+/* 입력 | 결과 두 칸 (넓은 화면), 휴대폰은 위아래 */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+@media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+.card { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
+.resultCol { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; position: sticky; top: 1rem; }
+@media (max-width: 860px) { .resultCol { position: static; } }
+
+.applyMin { align-self: flex-start; }
+/* 주 근무일수 1~7: 한 줄 7칸 */
+.dayChips { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.35rem; }
+.dayChips > button { padding-inline: 0; min-width: 0; }
+
+/* 근무표 */
+.schedule { display: flex; flex-direction: column; gap: 0.6rem; }
+.dayRow {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-control);
+  background: var(--surface);
+}
+.dayOff { flex-direction: row; align-items: center; justify-content: space-between; background: var(--surface-hover); }
+.dayName { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 800; color: var(--text-primary); cursor: pointer; }
+.dayName input, .holiday input { width: 18px; height: 18px; accent-color: var(--color-primary); }
+.offText { font-size: 0.85rem; color: var(--text-muted); }
+.dayFields { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 0.5rem; }
+.mini { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.mini span { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+.dayFields .mini input { min-height: 42px; padding: 0 0.5rem; font-size: 0.95rem; }
+.dayMeta { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-secondary); }
+.holiday { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; font-weight: 600; }
+.dayWarn { margin: 0; padding: 0.5rem 0.75rem; font-size: 0.82rem; }
+
+/* 결과 */
+.eligibility { align-items: center; }
+.eligibility div { display: flex; flex-direction: column; gap: 0.15rem; }
+.eligibility strong { font-size: 1.05rem; }
+.eligibility span { font-size: 0.82rem; opacity: 0.9; }
+
+.subTitle { font-size: 0.9rem; font-weight: 800; color: var(--text-primary); margin: 0 0 0.35rem; }
+.row {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem;
+  padding: 0.55rem 0; border-bottom: 1px dashed var(--border);
+}
+.rowLabel { display: flex; flex-direction: column; font-size: 0.92rem; color: var(--text-secondary); }
+.rowLabel small { font-size: 0.78rem; color: var(--text-muted); }
+.rowValue { font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.total { border-bottom: none; }
+.total .rowLabel { color: var(--text-primary); font-weight: 800; }
+.total .rowValue { font-size: 1.05rem; font-weight: 800; }
+.minus { color: var(--tint-red-fg); }
+
+.basis { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
+.disclaimer { margin: 0; font-size: 0.78rem; line-height: 1.6; color: var(--text-muted); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.actions > button { flex: 1 1 0; }
+@media (max-width: 420px) { .actions > button { flex-basis: 100%; } }
+
+/* 서버 렌더 도움말 */
+.help { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+@media (max-width: 760px) { .help { grid-template-columns: minmax(0, 1fr); } }
+.help p, .help li { font-size: 0.92rem; line-height: 1.75; color: var(--text-secondary); margin: 0; }
+.help ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.help strong { color: var(--text-primary); }
+.wide { grid-column: 1 / -1; }
+.tableWrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.table th, .table td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); text-align: right; color: var(--text-secondary); white-space: nowrap; }
+.table th:first-child, .table td:first-child { text-align: left; }
+.table th { font-weight: 800; color: var(--text-primary); background: var(--surface-hover); }
+.formula { font-weight: 700; font-size: 0.9rem; background: var(--surface-hover); border-radius: 8px; padding: 0.5rem 0.75rem; color: var(--text-primary); }
+
+/* 휴대폰 하단 실수령액 막대 */
+.mobileBar { display: none; }
+@media (max-width: 860px) {
+  .mobileBar {
+    position: fixed; left: 0.75rem; right: 0.75rem; bottom: 0.75rem; z-index: 40;
+    display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
+    padding: 0.8rem 1.1rem; border-radius: var(--radius-card); border: 1px solid var(--tint-violet-border);
+    background: var(--surface); box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.18));
+    color: var(--text-secondary); font-size: 0.85rem; font-weight: 700; cursor: pointer;
+  }
+  .mobileBar strong { font-size: 1.2rem; font-weight: 800; color: var(--color-primary); font-variant-numeric: tabular-nums; }
+}
+
+@media print {
+  .mobileBar { display: none; }
+  .inputs, .actions { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .resultCol { position: static; }
+}

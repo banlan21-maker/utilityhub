@@ -13,6 +13,7 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-19', type: 'new', href: '/utilities/finance/alba-pay-calc', ko: '알바 급여·주휴수당 계산기 — 2027 최저시급, 근무표로 연장·야간수당', en: 'Part-time Pay Calculator (Korea) — weekly holiday allowance, 2027 minimum wage' },
   { date: '2026-11-18', type: 'update', href: '/utilities/utility', ko: '전체 도구 — 버튼·입력칸·카드 디자인 통일, 다크 모드 색상 상자 개선', en: 'All tools — unified buttons, inputs and cards; better dark mode panels' },
   { date: '2026-11-18', type: 'update', href: '/utilities/utility', ko: '전체 도구 — 다크 모드 가독성 개선, 제목 디자인 통일', en: 'All tools — readable dark mode and a consistent page header' },
   { date: '2026-11-18', type: 'update', href: '/utilities/performance/core-web-vitals', ko: 'Core Web Vitals 판정기 — 모바일·데스크톱 비교, 공유 링크, 표시 오류 수정', en: 'Core Web Vitals Checker — mobile vs desktop, share links, display fixes' },
