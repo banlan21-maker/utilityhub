@@ -42,7 +42,7 @@
 /* 입력 + 단면도 */
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 1.25rem; align-items: start; }
 @media (max-width: 720px) { .layout { grid-template-columns: 1fr; } }
-.layout_diagram { position: sticky; top: 1rem; }
+.layout_diagram { position: sticky; top: calc(var(--header-height, 64px) + 1rem); }
 @media (max-width: 720px) { .layout_diagram { position: static; order: -1; } }
 
 .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }

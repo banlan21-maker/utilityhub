@@ -36,7 +36,7 @@
   border: 1.5px solid #ede9fe;
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
   position: sticky;
-  top: 2rem;
+  top: calc(var(--header-height, 64px) + 1rem);
 }
 
 .sal_receipt_header {

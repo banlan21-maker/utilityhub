@@ -153,7 +153,10 @@ body {
   display: flex;
   flex-direction: column;
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden; /* 전역 좌우 스크롤 방지 */
+  /* 전역 좌우 스크롤 방지. hidden은 body를 스크롤 상자로 만들어 position: sticky가 전부 멈추므로
+     clip을 쓴다 (clip을 모르는 옛 브라우저는 앞줄 hidden 사용) */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 a {

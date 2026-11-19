@@ -1,542 +1,468 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
-import { Sparkles } from 'lucide-react';
-import NavigationActions from '@/app/components/NavigationActions';
-import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
-import RelatedTools from '@/app/components/RelatedTools';
-import ShareBar from '@/app/components/ShareBar';
-import s from './bubble-popart.module.css';
+// 버블 팝아트 글씨 생성기 — 입력·미리보기·다운로드만 (제목·설명·FAQ는 page.tsx 서버 렌더)
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useLocale } from 'next-intl';
+import { Download, Check } from 'lucide-react';
 import { ui } from '@/app/components/ui';
+import {
+  FONTS, FONT_CSS, PRESETS, SIZE_PRESETS, MAX_CHARS, MAX_LINES, SIZE_MIN, SIZE_MAX, KERNING_MIN, KERNING_MAX,
+  clampText, countChars, fontCss, isDarkBg, luminance, render, a4Dpi,
+  type Design, type RenderInfo, type BgKind, type DecoKind, type DecoAmount, type ShadowMode, type ShadowDir,
+  type FillMode, type ShapeKind, type ArchKind,
+} from '@/lib/bubblePopart';
+import s from './bubble-popart.module.css';
 
-const BG_PRESETS = [
-  { name: '노랑', en: 'Yellow', hex: '#FFD93D' },
-  { name: '하늘', en: 'Sky Blue', hex: '#74B9FF' },
-  { name: '연두', en: 'Mint Green', hex: '#A8E6CF' },
-  { name: '핑크', en: 'Pink', hex: '#FFB3C6' },
-  { name: '흰색', en: 'White', hex: '#FFFFFF' },
-  { name: '검정', en: 'Black', hex: '#1a1a1a' },
-];
+const T = {
+  ko: {
+    preview: '버블 팝아트 미리보기',
+    loading: '폰트 불러오는 중…',
+    shrunk: (n: number) => `이미지에 맞게 글자 크기를 ${n}px로 줄였어요`,
+    preset: '스타일 프리셋',
+    presetHint: '누르면 전체 분위기가 바뀌고, 아래 옵션으로 하나씩 다시 바꿀 수 있어요.',
+    text: '텍스트',
+    textPh: '최대 3줄 · 20자 (Enter로 줄바꿈)',
+    font: '폰트',
+    fontNote: '모두 Google Fonts 무료 상업용 폰트(OFL)',
+    fill: '글씨 채우기',
+    fills: { multi: '멀티컬러', single: '단색', gradient: '그라데이션' } as Record<FillMode, string>,
+    gradTop: '위', gradBottom: '아래',
+    outline: '외곽선',
+    outlines: { 1: '한 겹', 2: '두 겹' } as Record<1 | 2, string>,
+    outerColor: '바깥', innerColor: '안쪽',
+    thickness: '두께',
+    thin: '얇게', thick: '두껍게',
+    autoWhite: '어두운 배경이라 검은 외곽선을 흰색으로 바꿔 그려요.',
+    depth: '입체 효과',
+    shadows: { none: '없음', drop: '그림자', extrude: '3D 두께' } as Record<ShadowMode, string>,
+    dirs: { bl: '↙ 왼쪽 아래', b: '↓ 아래', br: '↘ 오른쪽 아래' } as Record<ShadowDir, string>,
+    shadowColor: '그림자 색',
+    auto: '자동',
+    sticker: '스티커 테두리', glow: '네온 빛 번짐', highlight: '광택 하이라이트', zigzag: '지그재그 회전',
+    bg: '배경',
+    bgs: { solid: '단색', gradient: '그라데이션', dots: '망점', rays: '햇살', check: '체크', stripes: '줄무늬', transparent: '투명' } as Record<BgKind, string>,
+    bgColor: '배경색', bgColor2: '두 번째 색',
+    transparentHint: '투명 PNG로 저장돼요. 미리보기의 회색 격자는 투명 부분 표시이고 파일에는 들어가지 않아요.',
+    deco: '장식',
+    decos: { none: '없음', stars: '⭐ 별', hearts: '❤ 하트', sparkles: '✦ 반짝이', notes: '♪ 음표', mixed: '섞기' } as Record<DecoKind, string>,
+    amounts: { few: '적게', normal: '보통', many: '많이' } as Record<DecoAmount, string>,
+    shape: '배경 도형',
+    shapes: { none: '없음', bubble: '말풍선', burst: '펑!' } as Record<ShapeKind, string>,
+    shapeColor: '도형 색',
+    arch: '아치형 글자',
+    arches: { none: '반듯하게', up: '위로 둥글게', down: '아래로 둥글게' } as Record<ArchKind, string>,
+    size: '크기와 간격',
+    fontSize: '글자 크기', kerning: '자간', narrow: '좁게', wide: '넓게',
+    output: '출력 크기',
+    sizes: { square: '정사각형', landscape: '가로형 16:9', portrait: '세로형 9:16', a4: 'A4' } as Record<string, string>,
+    scale: '다운로드 배율',
+    scaleNote: (w: number, h: number, dpi: number | null) =>
+      `${w.toLocaleString()} × ${h.toLocaleString()}px로 저장${dpi ? ` · A4 인쇄 시 약 ${dpi}dpi${dpi >= 280 ? ' (인쇄용 품질)' : dpi >= 180 ? ' (가까이 보면 살짝 거칠어요)' : ' (화면용 — 인쇄엔 3배 권장)'}` : ''}`,
+    download: 'PNG 다운로드',
+    done: '저장했어요',
+    custom: '직접 선택',
+  },
+  en: {
+    preview: 'Bubble pop art preview',
+    loading: 'Loading font…',
+    shrunk: (n: number) => `Text was scaled down to ${n}px to fit the image`,
+    preset: 'Style presets',
+    presetHint: 'Pick one to change the whole look, then fine-tune any option below.',
+    text: 'Text',
+    textPh: 'Up to 3 lines · 20 characters (Enter for a new line)',
+    font: 'Font',
+    fontNote: 'All free for commercial use (Google Fonts, OFL)',
+    fill: 'Letter fill',
+    fills: { multi: 'Multicolor', single: 'Single', gradient: 'Gradient' } as Record<FillMode, string>,
+    gradTop: 'Top', gradBottom: 'Bottom',
+    outline: 'Outline',
+    outlines: { 1: 'Single', 2: 'Double' } as Record<1 | 2, string>,
+    outerColor: 'Outer', innerColor: 'Inner',
+    thickness: 'Thickness',
+    thin: 'Thin', thick: 'Thick',
+    autoWhite: 'Dark background: the black outline is drawn in white so it stays visible.',
+    depth: 'Depth effect',
+    shadows: { none: 'None', drop: 'Shadow', extrude: '3D depth' } as Record<ShadowMode, string>,
+    dirs: { bl: '↙ Down-left', b: '↓ Down', br: '↘ Down-right' } as Record<ShadowDir, string>,
+    shadowColor: 'Shadow color',
+    auto: 'Auto',
+    sticker: 'Sticker border', glow: 'Neon glow', highlight: 'Glossy highlight', zigzag: 'Zigzag tilt',
+    bg: 'Background',
+    bgs: { solid: 'Solid', gradient: 'Gradient', dots: 'Halftone', rays: 'Sunburst', check: 'Checker', stripes: 'Stripes', transparent: 'Transparent' } as Record<BgKind, string>,
+    bgColor: 'Background', bgColor2: 'Second color',
+    transparentHint: 'Saved as a transparent PNG. The grey checkerboard only marks transparency in the preview.',
+    deco: 'Decorations',
+    decos: { none: 'None', stars: '⭐ Stars', hearts: '❤ Hearts', sparkles: '✦ Sparkles', notes: '♪ Notes', mixed: 'Mixed' } as Record<DecoKind, string>,
+    amounts: { few: 'Few', normal: 'Normal', many: 'Many' } as Record<DecoAmount, string>,
+    shape: 'Backdrop shape',
+    shapes: { none: 'None', bubble: 'Speech bubble', burst: 'Burst!' } as Record<ShapeKind, string>,
+    shapeColor: 'Shape color',
+    arch: 'Arched text',
+    arches: { none: 'Straight', up: 'Arch up', down: 'Arch down' } as Record<ArchKind, string>,
+    size: 'Size & spacing',
+    fontSize: 'Font size', kerning: 'Letter spacing', narrow: 'Tight', wide: 'Wide',
+    output: 'Output size',
+    sizes: { square: 'Square', landscape: 'Landscape 16:9', portrait: 'Portrait 9:16', a4: 'A4' } as Record<string, string>,
+    scale: 'Download scale',
+    scaleNote: (w: number, h: number, dpi: number | null) =>
+      `Saves at ${w.toLocaleString()} × ${h.toLocaleString()}px${dpi ? ` · about ${dpi} dpi on A4${dpi >= 280 ? ' (print quality)' : dpi >= 180 ? ' (slightly soft up close)' : ' (screen only — use 3× for print)'}` : ''}`,
+    download: 'Download PNG',
+    done: 'Saved',
+    custom: 'Custom',
+  },
+};
 
-const MULTI_COLORS = [
-  '#FF6B9D', '#4ECDC4', '#FFE66D', '#FF8B3D',
-  '#A8E6CF', '#C9B1FF', '#FF6B6B', '#74B9FF',
-];
+const BG_SWATCHES = ['#FFD93D', '#74B9FF', '#A8E6CF', '#FFB3C6', '#FFFFFF', '#1a1a1a'];
+const SAMPLE = { ko: '팝!', en: 'POP!' };
 
-const STAR_COLORS = ['#FF8B3D', '#A8E6CF', '#FF6B9D', '#C9B1FF'];
+/** 색 고르기: 원형 견본 + 직접 선택 */
+function ColorField({ label, value, onChange, swatches }: { label: string; value: string; onChange: (v: string) => void; swatches?: string[] }) {
+  return (
+    <div className={s.colorField}>
+      <span className={s.mini}>{label}</span>
+      <div className={s.colorRow}>
+        {swatches?.map((c) => (
+          <button
+            key={c}
+            type="button"
+            className={`${s.dot} ${value.toLowerCase() === c.toLowerCase() ? s.dotActive : ''}`}
+            style={{ background: c }}
+            onClick={() => onChange(c)}
+            aria-label={`${label} ${c}`}
+            aria-pressed={value.toLowerCase() === c.toLowerCase()}
+          />
+        ))}
+        <input type="color" className={s.picker} value={value.slice(0, 7)} onChange={(e) => onChange(e.target.value)} aria-label={label} />
+      </div>
+    </div>
+  );
+}
 
-const SIZE_PRESETS = [
-  { key: 'square', w: 800, h: 800 },
-  { key: 'landscape', w: 1280, h: 720 },
-  { key: 'portrait', w: 720, h: 1280 },
-  { key: 'a4', w: 794, h: 1123 },
-];
+function Section({ title, children, hint }: { title: string; children: ReactNode; hint?: ReactNode }) {
+  return (
+    <section className={s.section}>
+      <h3 className={s.sectionTitle}>{title}</h3>
+      {children}
+      {hint && <p className={`${ui.hint} ${s.hintLine}`}>{hint}</p>}
+    </section>
+  );
+}
 
-const FONT_HREF = 'https://fonts.googleapis.com/css2?family=Jua&display=swap';
-const FONT_FAMILY = '"Jua", sans-serif';
+function Choice<V extends string | number>({ value, options, onChange, label }: { value: V; options: { value: V; label: string }[]; onChange: (v: V) => void; label: string }) {
+  return (
+    <div className={ui.chips} role="group" aria-label={label}>
+      {options.map((o) => (
+        <button
+          key={String(o.value)}
+          type="button"
+          className={`${ui.chip} ${ui.pill} ${value === o.value ? ui.chipActive : ''}`}
+          aria-pressed={value === o.value}
+          onClick={() => onChange(o.value)}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
+  return (
+    <label className={s.check}>
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <span>{label}</span>
+    </label>
+  );
+}
 
 export default function BubblePopartClient() {
-  const t = useTranslations('BubblePopart');
   const locale = useLocale();
   const isKo = locale === 'ko';
+  const t = isKo ? T.ko : T.en;
 
+  const [design, setDesign] = useState<Design>(PRESETS[0].design);
   const [text, setText] = useState(isKo ? '예쁜글씨POP' : 'Hello POP');
-  const [bgColor, setBgColor] = useState('#FFD93D');
   const [fontSize, setFontSize] = useState(110);
-  const [sizePreset, setSizePreset] = useState(0);
-  const [colorMode, setColorMode] = useState<'multi' | 'single'>('multi');
-  const [singleColor, setSingleColor] = useState('#FF6B9D');
-  const [showHighlight, setShowHighlight] = useState(true);
-  const [showStars, setShowStars] = useState(true);
-  const [showZigzag, setShowZigzag] = useState(false);
   const [kerning, setKerning] = useState(0.9);
-  const [fontLoaded, setFontLoaded] = useState(false);
-  const [downloaded, setDownloaded] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [sizeIdx, setSizeIdx] = useState(0);
+  const [scale, setScale] = useState(2);
+  const [cssReady, setCssReady] = useState(false);
+  const [fontReady, setFontReady] = useState(false);
+  const [fontTick, setFontTick] = useState(0);
+  const [info, setInfo] = useState<RenderInfo>({ fontSize: 110, shrunk: false });
+  const [saved, setSaved] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const thumbRefs = useRef<(HTMLCanvasElement | null)[]>([]);
+  const preset = SIZE_PRESETS[sizeIdx];
+  const set = <K extends keyof Design>(k: K, v: Design[K]) => setDesign((d) => ({ ...d, [k]: v }));
+  const activePreset = useMemo(() => PRESETS.find((p) => JSON.stringify(p.design) === JSON.stringify(design))?.key, [design]);
 
+  // 폰트 스타일시트 1회 연결 (6종 정의만 받고, 실제 글꼴 파일은 쓰는 글자만 내려받음)
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Google Fonts (Jua) 동적 로드
-  useEffect(() => {
-    if (!isMounted) return;
-
-    const existing = document.querySelector(`link[data-bubble-jua]`);
-    let link: HTMLLinkElement;
-    if (existing) {
-      link = existing as HTMLLinkElement;
-    } else {
+    let link = document.querySelector<HTMLLinkElement>('link[data-bubble-fonts]');
+    if (link?.sheet) { void Promise.resolve().then(() => setCssReady(true)); return; }
+    if (!link) {
       link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = FONT_HREF;
-      link.setAttribute('data-bubble-jua', '1');
+      link.href = FONT_CSS;
+      link.setAttribute('data-bubble-fonts', '1');
       document.head.appendChild(link);
     }
-
-    if (typeof document !== 'undefined' && document.fonts) {
-      document.fonts.ready.then(() => {
-        document.fonts.load(`16px ${FONT_FAMILY}`).then(() => {
-          setFontLoaded(true);
-        }).catch(() => setFontLoaded(true));
-      }).catch(() => setFontLoaded(true));
-    } else {
-      const t = setTimeout(() => setFontLoaded(true), 1500);
-      return () => clearTimeout(t);
-    }
-
-    return () => {
-      const elem = document.querySelector('link[data-bubble-jua]');
-      if (elem) elem.parentNode?.removeChild(elem);
-    };
-  }, [isMounted]);
-
-  const preset = SIZE_PRESETS[sizePreset];
-
-  // 별 그리기 (5각)
-  const drawStar = useCallback((ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, color: string) => {
-    const spikes = 5;
-    const innerR = r * 0.45;
-    ctx.save();
-    ctx.beginPath();
-    for (let i = 0; i < spikes * 2; i++) {
-      const radius = i % 2 === 0 ? r : innerR;
-      const angle = (Math.PI / spikes) * i - Math.PI / 2;
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.strokeStyle = '#1a1a1a';
-    ctx.lineWidth = 4;
-    ctx.lineJoin = 'round';
-    ctx.stroke();
-    ctx.restore();
+    const done = () => setCssReady(true);
+    link.addEventListener('load', done);
+    link.addEventListener('error', done);
+    const timer = setTimeout(done, 4000);
+    return () => { link?.removeEventListener('load', done); link?.removeEventListener('error', done); clearTimeout(timer); };
   }, []);
 
-  const drawCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    if (!fontLoaded) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = preset.w;
-    canvas.height = preset.h;
-
-    // 1) 배경
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, preset.w, preset.h);
-
-    if (!text || text.length === 0) return;
-
-    const chars = text.split('');
-    const centerY = preset.h / 2;
-
-    // 폰트 크기 자동 축소
-    let curFontSize = fontSize;
-    const measureTotal = (size: number) => {
-      ctx.font = `${size}px ${FONT_FAMILY}`;
-      return chars.reduce((sum, ch, i) => {
-        const w = ctx.measureText(ch).width;
-        return sum + (i < chars.length - 1 ? w * kerning : w);
-      }, 0);
-    };
-
-    const maxAllowed = preset.w * 0.9;
-    while (curFontSize > 40 && measureTotal(curFontSize) > maxAllowed) {
-      curFontSize -= 5;
-    }
-
-    ctx.font = `${curFontSize}px ${FONT_FAMILY}`;
-    ctx.textBaseline = 'middle';
-
-    const totalWidth = chars.reduce((sum, ch, i) => {
-      const w = ctx.measureText(ch).width;
-      return sum + (i < chars.length - 1 ? w * kerning : w);
-    }, 0);
-
-    let startX = (preset.w - totalWidth) / 2;
-
-    // 2) 별 장식 (텍스트 그리기 전)
-    if (showStars) {
-      drawStar(ctx, startX - 65, centerY - 35, 28, STAR_COLORS[0]);
-      drawStar(ctx, startX + totalWidth + 65, centerY + 25, 32, STAR_COLORS[1]);
-      drawStar(ctx, startX - 25, centerY + 60, 20, STAR_COLORS[2]);
-      drawStar(ctx, startX + totalWidth + 20, centerY - 55, 18, STAR_COLORS[3]);
-    }
-
-    // 3) 글자별 렌더링
-    chars.forEach((char, i) => {
-      const charW = ctx.measureText(char).width;
-      const charCenterX = startX + charW / 2;
-
-      const charColor = colorMode === 'multi'
-        ? MULTI_COLORS[i % MULTI_COLORS.length]
-        : singleColor;
-
-      ctx.save();
-
-      let drawTextFn: (offsetX: number, offsetY: number) => void;
-
-      if (showZigzag) {
-        const angle = (i % 2 === 0 ? -3 : 3) * (Math.PI / 180);
-        ctx.translate(charCenterX, centerY);
-        ctx.rotate(angle);
-        drawTextFn = (ox, oy) => {
-          // (0,0) 기준 — translate 후 좌표
-          ctx.strokeText(char, -charW / 2 + ox, oy);
-          ctx.fillText(char, -charW / 2 + ox, oy);
-        };
-        // 외곽선 1: 검정
-        ctx.lineJoin = 'round';
-        ctx.lineWidth = curFontSize * 0.24;
-        ctx.strokeStyle = '#1a1a1a';
-        ctx.strokeText(char, -charW / 2, 0);
-        // 외곽선 2: 흰색
-        ctx.lineWidth = curFontSize * 0.10;
-        ctx.strokeStyle = '#ffffff';
-        ctx.strokeText(char, -charW / 2, 0);
-        // 본체
-        ctx.fillStyle = charColor;
-        ctx.fillText(char, -charW / 2, 0);
-
-        // 하이라이트 (translate 좌표계 기준)
-        if (showHighlight) {
-          const cx1 = -charW * 0.12;
-          const cy1 = -curFontSize * 0.24;
-          const r1 = curFontSize * 0.09;
-          ctx.beginPath();
-          ctx.arc(cx1, cy1, r1, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,255,255,0.88)';
-          ctx.fill();
-
-          const cx2 = cx1 + r1 * 0.85;
-          const cy2 = cy1 + r1 * 0.65;
-          const r2 = curFontSize * 0.05;
-          ctx.beginPath();
-          ctx.arc(cx2, cy2, r2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,255,255,0.6)';
-          ctx.fill();
-        }
-      } else {
-        // 외곽선 1: 검정
-        ctx.lineJoin = 'round';
-        ctx.lineWidth = curFontSize * 0.24;
-        ctx.strokeStyle = '#1a1a1a';
-        ctx.strokeText(char, startX, centerY);
-        // 외곽선 2: 흰색
-        ctx.lineWidth = curFontSize * 0.10;
-        ctx.strokeStyle = '#ffffff';
-        ctx.strokeText(char, startX, centerY);
-        // 본체
-        ctx.fillStyle = charColor;
-        ctx.fillText(char, startX, centerY);
-
-        // 하이라이트 원 2개
-        if (showHighlight) {
-          const cx1 = charCenterX - charW * 0.12;
-          const cy1 = centerY - curFontSize * 0.24;
-          const r1 = curFontSize * 0.09;
-          ctx.beginPath();
-          ctx.arc(cx1, cy1, r1, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,255,255,0.88)';
-          ctx.fill();
-
-          const cx2 = cx1 + r1 * 0.85;
-          const cy2 = cy1 + r1 * 0.65;
-          const r2 = curFontSize * 0.05;
-          ctx.beginPath();
-          ctx.arc(cx2, cy2, r2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,255,255,0.6)';
-          ctx.fill();
-        }
-      }
-
-      ctx.restore();
-
-      startX += charW * kerning;
-    });
-  }, [text, bgColor, fontSize, kerning, colorMode, singleColor, showHighlight, showStars, showZigzag, preset, fontLoaded, drawStar]);
-
+  // 지금 글자에 필요한 폰트 조각을 받은 뒤 다시 그린다
   useEffect(() => {
-    drawCanvas();
-  }, [drawCanvas]);
+    if (!cssReady) return;
+    let alive = true;
+    const finish = () => { if (alive) { setFontReady(true); setFontTick((n) => n + 1); } };
+    if (typeof document === 'undefined' || !document.fonts) { void Promise.resolve().then(finish); return () => { alive = false; }; }
+    document.fonts.load(fontCss(design.font, 100), text.replace(/\n/g, '') || 'A').then(finish, finish);
+    return () => { alive = false; };
+  }, [cssReady, design.font, text]);
 
-  // 미리보기 스케일 (시각용)
-  const displayScale = useMemo(() => {
-    return Math.min(1, 480 / Math.max(preset.w, preset.h));
-  }, [preset]);
+  // 프리셋 견본에 쓰는 폰트
+  useEffect(() => {
+    if (!cssReady || typeof document === 'undefined' || !document.fonts) return;
+    let alive = true;
+    const fonts = [...new Set(PRESETS.map((p) => p.design.font))];
+    Promise.all(fonts.map((f) => document.fonts.load(fontCss(f, 100), SAMPLE.ko + SAMPLE.en).catch(() => null)))
+      .then(() => { if (alive) setFontTick((n) => n + 1); });
+    return () => { alive = false; };
+  }, [cssReady]);
+
+  // 미리보기 (다운로드와 같은 함수, 배율 1)
+  useEffect(() => {
+    const cv = canvasRef.current;
+    if (!cv) return;
+    const id = requestAnimationFrame(() => {
+      const r = render(cv, preset.w, preset.h, 1, design, { text, fontSize, kerning });
+      setInfo((p) => (p.fontSize === r.fontSize && p.shrunk === r.shrunk ? p : r));
+    });
+    return () => cancelAnimationFrame(id);
+  }, [design, text, fontSize, kerning, preset, fontTick]);
+
+  // 프리셋 견본
+  useEffect(() => {
+    const sample = isKo ? SAMPLE.ko : SAMPLE.en;
+    PRESETS.forEach((p, i) => {
+      const cv = thumbRefs.current[i];
+      if (cv) render(cv, 160, 100, 1, { ...p.design, decoAmount: 'few' }, { text: sample, fontSize: 200, kerning: 0.9 });
+    });
+  }, [fontTick, isKo]);
 
   const handleDownload = () => {
-    const canvas = canvasRef.current;
-    if (!canvas || !text) return;
-    const url = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'bubble-pop-art.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setDownloaded(true);
-    setTimeout(() => setDownloaded(false), 2000);
+    if (!text.trim()) return;
+    const off = document.createElement('canvas');
+    render(off, preset.w, preset.h, scale, design, { text, fontSize, kerning });
+    off.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bubble-pop-art-${off.width}x${off.height}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    }, 'image/png');
   };
 
+  const outW = preset.w * scale;
+  const outH = preset.h * scale;
+  const needs2 = design.bg !== 'solid' && design.bg !== 'transparent';
+  const autoWhite = isDarkBg(design) && luminance(design.outlineColor) < 0.18;
 
   return (
-    <div className={s.container}>
-      <NavigationActions />
-      <ToolHeader icon={<Sparkles />} title={t('title')} subtitle={t('description')} />
-
-      <div className={s.splitLayout}>
-        {/* 우측 캔버스 — 모바일에서는 order: -1 로 위로 옴 */}
-        <div className={s.canvasWrapper}>
+    <div className={s.split}>
+      {/* 미리보기 — 선택한 출력 비율 그대로 */}
+      <div className={s.previewCol}>
+        <div className={s.previewBox}>
           <canvas
             ref={canvasRef}
-            className={s.canvas}
-            style={{
-              width: preset.w * displayScale,
-              height: preset.h * displayScale,
-            }}
-            aria-label={isKo ? '버블 팝아트 미리보기' : 'Bubble pop art preview'}
+            className={`${s.canvas} ${design.bg === 'transparent' ? s.checker : ''}`}
+            style={{ aspectRatio: `${preset.w} / ${preset.h}`, ['--ratio' as string]: preset.w / preset.h }}
+            role="img"
+            aria-label={`${t.preview}: ${text.replace(/\n/g, ' ')}`}
           />
-          {!fontLoaded && <div className={s.fontLoading}>{t('loading_font')}</div>}
+          {!fontReady && <div className={s.fontLoading}>{t.loading}</div>}
         </div>
-
-        {/* 좌측 설정 */}
-        <div className={`${ui.card} ${s.settingsPanel}`}>
-          {/* STEP 1: 텍스트 */}
-          <div>
-            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_text')}</div>
-            <input
-              type="text"
-              className={ui.input}
-              value={text}
-              maxLength={10}
-              onChange={(e) => setText(e.target.value)}
-              placeholder={t('step_text_placeholder')}
-              aria-label={t('step_text')}
-            />
-            <div className={`${ui.hint} ${s.charCount}`}>{text.length}/10</div>
-          </div>
-
-          {/* STEP 2: 배경색 */}
-          <div>
-            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_bg')}</div>
-            <div className={s.colorPresets}>
-              {BG_PRESETS.map((c) => (
-                <button
-                  key={c.hex}
-                  className={`${s.colorDot} ${bgColor === c.hex ? s.colorDotActive : ''}`}
-                  style={{ background: c.hex }}
-                  onClick={() => setBgColor(c.hex)}
-                  aria-label={isKo ? `배경 ${c.name}` : `${c.en} background`}
-                />
-              ))}
-              <div className={s.colorPickerWrap}>
-                <input
-                  type="color"
-                  className={s.colorPicker}
-                  value={bgColor}
-                  onChange={(e) => setBgColor(e.target.value)}
-                  aria-label={isKo ? '배경색 커스텀 선택' : 'Pick custom background'}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* STEP 3: 글자 색상 */}
-          <div>
-            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_color')}</div>
-            <div className={`${ui.segmented} ${s.toggleRow}`}>
-              <button
-                className={`${ui.segment} ${colorMode === 'multi' ? ui.segmentActive : ''}`}
-                onClick={() => setColorMode('multi')}
-                aria-label={t('color_mode_multi')}
-              >
-                {t('color_mode_multi')}
-              </button>
-              <button
-                className={`${ui.segment} ${colorMode === 'single' ? ui.segmentActive : ''}`}
-                onClick={() => setColorMode('single')}
-                aria-label={t('color_mode_single')}
-              >
-                {t('color_mode_single')}
-              </button>
-            </div>
-            {colorMode === 'single' && (
-              <input
-                type="color"
-                className={s.colorPicker}
-                style={{ width: '100%', height: 40, borderRadius: 8 }}
-                value={singleColor}
-                onChange={(e) => setSingleColor(e.target.value)}
-                aria-label={isKo ? '단색 글자 색상' : 'Single text color'}
-              />
-            )}
-          </div>
-
-          {/* STEP 4: 글자 크기 & 자간 */}
-          <div>
-            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_size')}</div>
-            <div className={s.sliderRow}>
-              <span>{t('label_size')}</span>
-              <span className={s.sliderValue}>{fontSize}px</span>
-            </div>
-            <input
-              type="range"
-              min={40}
-              max={200}
-              step={1}
-              value={fontSize}
-              onChange={(e) => setFontSize(Number(e.target.value))}
-              className={s.slider}
-              aria-label={t('label_size')}
-            />
-            <div className={s.sliderRow} style={{ marginTop: '0.6rem' }}>
-              <span>{t('label_kerning')}</span>
-              <span className={s.sliderValue}>{kerning.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min={0.8}
-              max={1.0}
-              step={0.01}
-              value={kerning}
-              onChange={(e) => setKerning(Number(e.target.value))}
-              className={s.slider}
-              aria-label={t('label_kerning')}
-            />
-            <div className={s.kerningHint}>
-              <span>{t('kerning_hint').split(' ')[0]} {t('kerning_hint').split(' ')[1] ?? ''}</span>
-              <span>{t('kerning_hint').split(' ').slice(-1)[0]}</span>
-            </div>
-          </div>
-
-          {/* STEP 5: 출력 크기 */}
-          <div>
-            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_output')}</div>
-            <div className={s.sizeGrid}>
-              {SIZE_PRESETS.map((p, i) => (
-                <button
-                  key={p.key}
-                  className={`${ui.chip} ${sizePreset === i ? ui.chipActive : ''} ${s.sizeBtn}`}
-                  onClick={() => setSizePreset(i)}
-                  aria-label={t(`preset_${p.key}` as 'preset_square')}
-                >
-                  <span>{t(`preset_${p.key}` as 'preset_square')}</span>
-                  <span className={s.sizeBtnSub}>{p.w}×{p.h}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* STEP 6: 장식 옵션 */}
-          <div>
-            <div className={`${ui.label} ${s.stepTitle}`}>{t('step_deco')}</div>
-            <label className={s.checkRow}>
-              <input
-                type="checkbox"
-                className={s.checkbox}
-                checked={showHighlight}
-                onChange={(e) => setShowHighlight(e.target.checked)}
-                aria-label={t('opt_highlight')}
-              />
-              <span className={s.checkLabel}>{t('opt_highlight')}</span>
-            </label>
-            <label className={s.checkRow}>
-              <input
-                type="checkbox"
-                className={s.checkbox}
-                checked={showStars}
-                onChange={(e) => setShowStars(e.target.checked)}
-                aria-label={t('opt_stars')}
-              />
-              <span className={s.checkLabel}>{t('opt_stars')}</span>
-            </label>
-            <label className={s.checkRow}>
-              <input
-                type="checkbox"
-                className={s.checkbox}
-                checked={showZigzag}
-                onChange={(e) => setShowZigzag(e.target.checked)}
-                aria-label={t('opt_zigzag')}
-              />
-              <span className={s.checkLabel}>{t('opt_zigzag')}</span>
-            </label>
-          </div>
-
-          {/* 다운로드 */}
-          <button
-            className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${downloaded ? ui.green : ''}`}
-            onClick={handleDownload}
-            disabled={!text || !fontLoaded}
-            aria-label={t('download')}
-          >
-            {downloaded ? t('download_done') : t('download')}
-          </button>
-        </div>
+        <p className={`${ui.hint} ${s.previewMeta}`} aria-live="polite">
+          {preset.w}×{preset.h} · {info.shrunk ? t.shrunk(info.fontSize) : `${info.fontSize}px`}
+        </p>
       </div>
 
-      {/* 표준 하단 7개 섹션 */}
-      <ShareBar title={t('title')} description={t('description')} />
-      <RelatedTools toolId="utilities/design/bubble-popart" />
-      <SeoSection
-        ko={{
-          title: '버블 팝아트 글씨 생성기란 무엇인가요?',
-          description:
-            '버블 팝아트 글씨 생성기는 텍스트를 입력하면 둥글둥글한 버블 폰트에 멀티컬러, 두꺼운 외곽선, 광택 하이라이트 효과가 적용된 팝아트 스타일 이미지를 즉시 생성해주는 도구입니다. 매장 POP(Point of Purchase) 제작, SNS 이벤트 이미지, 현수막, 스티커 등 다양한 용도로 활용할 수 있습니다. 배경색, 글자 색상(멀티컬러/단색), 글자 크기, 출력 해상도를 자유롭게 설정할 수 있으며, 모든 처리가 브라우저 안에서만 이루어져 파일이 서버로 전송되지 않습니다. 정사각형, 16:9 가로형, 9:16 세로형, A4 비율 등 다양한 크기로 고해상도 PNG를 바로 다운로드할 수 있습니다.',
-          useCases: [
-            { icon: '🏪', title: '매장 POP 이미지 제작', desc: '카페, 식당, 소매점 등에서 메뉴판, 가격표, 이벤트 안내문 등 매장 POP 이미지를 전문 디자이너 없이도 즉시 제작할 수 있습니다.' },
-            { icon: '📱', title: 'SNS 이벤트 이미지', desc: '인스타그램, 카카오톡 채널 등 SNS에 올릴 이벤트 공지나 이름 이미지를 귀엽고 눈에 띄는 팝아트 스타일로 만들어보세요.' },
-            { icon: '🎉', title: '파티·이벤트 소품', desc: '생일 파티, 돌잔치, 결혼식 웰컴보드 등 이벤트용 텍스트 이미지를 원하는 색상과 크기로 자유롭게 제작할 수 있습니다.' },
-            { icon: '🖨️', title: '스티커·현수막 출력', desc: '고해상도(최대 1280px) PNG로 저장되어 인쇄소에 바로 넘길 수 있습니다. 정사각형, A4, 16:9 등 다양한 비율을 지원합니다.' },
-          ],
-          steps: [
-            { step: '텍스트 입력', desc: '원하는 텍스트를 입력합니다. 한글, 영문, 숫자, 특수문자 모두 지원하며 최대 10자까지 입력할 수 있습니다. 입력 즉시 오른쪽 미리보기에 실시간으로 반영됩니다.' },
-            { step: '색상 선택', desc: '배경색과 글자 색상을 선택합니다. 멀티컬러 모드에서는 글자마다 다른 색상이 자동 적용되고, 단색 모드에서는 원하는 색을 직접 선택할 수 있습니다.' },
-            { step: '크기 & 장식', desc: '글자 크기 슬라이더로 원하는 크기를 조정하고, 출력 크기(정사각형·가로형·세로형·A4)를 선택합니다. 하이라이트 광택 효과와 별 장식 표시 여부도 설정할 수 있습니다.' },
-            { step: 'PNG 다운로드', desc: '[PNG 다운로드] 버튼을 클릭하면 설정한 해상도의 고품질 PNG 이미지가 즉시 저장됩니다. 인쇄나 SNS 업로드에 바로 사용할 수 있습니다.' },
-          ],
-          faqs: [
-            { q: '한글도 잘 표시되나요?', a: '네, 한글을 완벽하게 지원합니다. Google Fonts의 Jua 폰트를 사용하며, 이 폰트는 한글 전용으로 설계된 둥글둥글한 버블 스타일 폰트입니다. 한글, 영문, 숫자, 특수문자 모두 동일한 스타일로 표현됩니다. 단, 첫 로딩 시 폰트 다운로드에 1~2초가 소요될 수 있습니다.' },
-            { q: '다운로드한 이미지를 인쇄에 사용해도 되나요?', a: '인쇄 용도로 사용하실 수 있습니다. 최대 1280×720px 해상도로 저장되며, 소형 인쇄물(A6 이하)에서는 충분한 품질을 제공합니다. 대형 현수막이나 A3 이상 출력이 필요한 경우 화질이 다소 낮아 보일 수 있으므로, 출력 전 인쇄소와 확인하시기 바랍니다.' },
-            { q: '생성한 이미지를 상업적으로 사용해도 되나요?', a: '이 툴로 생성한 이미지 자체는 자유롭게 사용하실 수 있습니다. 사용된 Jua 폰트는 OFL(Open Font License)로 상업적 사용이 허용됩니다. 단, 이미지에 포함된 텍스트 내용에 대한 저작권은 사용자 본인이 확인하시기 바랍니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 결과물은 참고용 이미지로 제공됩니다. 공식 인쇄물이나 중요한 디자인 작업에는 전문 디자인 툴(Adobe Illustrator 등)을 사용하시거나 전문 디자이너에게 의뢰하시기 바랍니다.' },
-          ],
-        }}
-        en={{
-          title: 'What is the Bubble Pop Art Text Generator?',
-          description:
-            'The Bubble Pop Art Text Generator instantly creates pop art-style images with rounded bubble fonts, vivid multicolor letters, thick bold outlines, and glossy highlights. Perfect for store POP (Point of Purchase) signs, social media event graphics, banners, and stickers. You can freely customize the background color, text color (multicolor or single), font size, and output resolution. All processing happens entirely in your browser — files are never uploaded to a server, ensuring complete privacy. Download high-resolution PNG images in multiple aspect ratios including square, 16:9 landscape, 9:16 portrait, and A4 ratio to fit both print and digital workflows. The generator is free, requires no signup, and works on any modern browser.',
-          useCases: [
-            { icon: '🏪', title: 'Store POP Signage', desc: 'Cafes, restaurants, and retail shops can design eye-catching menu boards, price tags, and event signs in seconds without a graphic designer.' },
-            { icon: '📱', title: 'Social Media Events', desc: 'Create cute, scroll-stopping event announcement images or personal name graphics for Instagram, Kakao Channel, and other social networks.' },
-            { icon: '🎉', title: 'Party & Event Props', desc: 'Make birthday banners, baby shower signs, wedding welcome boards, and event signage with full control over colors and sizes.' },
-            { icon: '🖨️', title: 'Stickers & Banners', desc: 'High-resolution PNGs (up to 1280px) export directly to your print shop. Supports square, A4, 16:9, and more aspect ratios out of the box.' },
-          ],
-          steps: [
-            { step: 'Enter Text', desc: 'Type your message in any language — Korean, English, numbers, and symbols are all supported, up to 10 characters. The preview updates in real time as you type.' },
-            { step: 'Pick Colors', desc: 'Choose a background color and pick between multicolor mode (each letter a different color) or single color mode for a unified look.' },
-            { step: 'Adjust Size & Decoration', desc: 'Use the size slider to resize letters, pick the output aspect ratio, then toggle highlights, star decorations, and zigzag rotation for extra pop.' },
-            { step: 'Download PNG', desc: 'Click the [Download PNG] button to save your high-resolution image instantly. Use it for print, social media uploads, or merchandise.' },
-          ],
-          faqs: [
-            { q: 'Does it support Korean characters?', a: 'Yes, Korean is fully supported. The tool uses Google Fonts Jua — a rounded bubble-style typeface designed specifically for Korean. English letters, numbers, and symbols are also rendered in the same style. The font may take 1-2 seconds to load on first use.' },
-            { q: 'Can I use the exported image for printing?', a: 'Yes, the export resolution goes up to 1280×720px, which works well for small-format prints (A6 or smaller). For large banners (A3 or larger), check with your print shop in advance — they may request a vector format for crispness.' },
-            { q: 'Can I use the generated images commercially?', a: 'Yes, images you create are yours to use. The Jua font is released under the SIL Open Font License, which allows commercial use. You are responsible for the copyright of the text content you choose to embed.' },
-            { q: 'Can I use this result as official data?', a: 'Results are for reference only. For official printed materials or professional design work, please use a professional design tool (e.g., Adobe Illustrator) or consult a graphic designer.' },
-          ],
-        }}
-      />
+      {/* 설정 */}
+      <div className={`${ui.card} ${s.panel}`}>
+        <Section title={t.preset} hint={t.presetHint}>
+          <div className={s.presetGrid}>
+            {PRESETS.map((p, i) => (
+              <button
+                key={p.key}
+                type="button"
+                className={`${s.presetBtn} ${activePreset === p.key ? s.presetActive : ''}`}
+                onClick={() => setDesign(p.design)}
+                aria-pressed={activePreset === p.key}
+              >
+                <canvas ref={(el) => { thumbRefs.current[i] = el; }} className={s.thumb} aria-hidden="true" />
+                <span>{isKo ? p.ko : p.en}</span>
+              </button>
+            ))}
+          </div>
+        </Section>
+
+        <Section title={t.text}>
+          <textarea
+            className={`${ui.input} ${s.textarea}`}
+            value={text}
+            rows={2}
+            onChange={(e) => setText(clampText(e.target.value))}
+            placeholder={t.textPh}
+            aria-label={t.text}
+          />
+          <div className={`${ui.hint} ${s.count}`}>
+            {Math.min(text.split('\n').length, MAX_LINES)}/{MAX_LINES} · {countChars(text)}/{MAX_CHARS}
+          </div>
+          <span className={s.mini}>{t.font}</span>
+          <div className={s.fontGrid} role="group" aria-label={t.font}>
+            {FONTS.map((f) => (
+              <button
+                key={f.key}
+                type="button"
+                className={`${ui.chip} ${design.font === f.key ? ui.chipActive : ''} ${s.fontBtn}`}
+                style={{ fontFamily: `"${f.family}", sans-serif`, fontWeight: f.weight }}
+                onClick={() => set('font', f.key)}
+                aria-pressed={design.font === f.key}
+              >
+                {isKo ? f.ko : f.en}
+              </button>
+            ))}
+          </div>
+          <p className={`${ui.hint} ${s.hintLine}`}>{t.fontNote}</p>
+        </Section>
+
+        <Section title={t.fill}>
+          <Choice label={t.fill} value={design.fill} onChange={(v) => set('fill', v)}
+            options={(['multi', 'single', 'gradient'] as FillMode[]).map((v) => ({ value: v, label: t.fills[v] }))} />
+          {design.fill === 'multi' && (
+            <div className={s.palette} aria-hidden="true">
+              {design.palette.map((c, i) => <span key={i} style={{ background: c }} />)}
+            </div>
+          )}
+          {design.fill === 'single' && <ColorField label={t.fills.single} value={design.single} onChange={(v) => set('single', v)} swatches={['#FF6B9D', '#FF1E56', '#4ECDC4', '#FFB627', '#8C6CFF', '#ffffff']} />}
+          {design.fill === 'gradient' && (
+            <div className={s.twoCols}>
+              <ColorField label={t.gradTop} value={design.gradient[0]} onChange={(v) => set('gradient', [v, design.gradient[1]])} />
+              <ColorField label={t.gradBottom} value={design.gradient[1]} onChange={(v) => set('gradient', [design.gradient[0], v])} />
+            </div>
+          )}
+        </Section>
+
+        <Section title={t.outline} hint={autoWhite ? t.autoWhite : undefined}>
+          <Choice label={t.outline} value={design.outline} onChange={(v) => set('outline', v)}
+            options={([1, 2] as const).map((v) => ({ value: v, label: t.outlines[v] }))} />
+          <div className={s.twoCols}>
+            <ColorField label={t.outerColor} value={design.outlineColor} onChange={(v) => set('outlineColor', v)} swatches={['#1a1a1a', '#ffffff']} />
+            {design.outline === 2 && <ColorField label={t.innerColor} value={design.innerColor} onChange={(v) => set('innerColor', v)} swatches={['#ffffff', '#1a1a1a']} />}
+          </div>
+          <label className={s.sliderHead}><span>{t.thickness}</span><b>{Math.round(design.outlineWidth * 100)}%</b></label>
+          <input type="range" min={0.3} max={1.6} step={0.05} value={design.outlineWidth} onChange={(e) => set('outlineWidth', Number(e.target.value))} className={s.slider} aria-label={t.thickness} />
+          <div className={s.ends}><span>{t.thin}</span><span>{t.thick}</span></div>
+        </Section>
+
+        <Section title={t.depth}>
+          <Choice label={t.depth} value={design.shadow} onChange={(v) => set('shadow', v)}
+            options={(['none', 'drop', 'extrude'] as ShadowMode[]).map((v) => ({ value: v, label: t.shadows[v] }))} />
+          {design.shadow !== 'none' && (
+            <>
+              <Choice label={t.depth} value={design.shadowDir} onChange={(v) => set('shadowDir', v)}
+                options={(['bl', 'b', 'br'] as ShadowDir[]).map((v) => ({ value: v, label: t.dirs[v] }))} />
+              <div className={s.colorField}>
+                <span className={s.mini}>{t.shadowColor}</span>
+                <div className={s.colorRow}>
+                  <button type="button" className={`${ui.chip} ${ui.pill} ${design.shadowColor === 'auto' ? ui.chipActive : ''}`} onClick={() => set('shadowColor', 'auto')} aria-pressed={design.shadowColor === 'auto'}>{t.auto}</button>
+                  {['#1a1a1a', '#ffffff'].map((c) => (
+                    <button key={c} type="button" className={`${s.dot} ${design.shadowColor === c ? s.dotActive : ''}`} style={{ background: c }} onClick={() => set('shadowColor', c)} aria-label={`${t.shadowColor} ${c}`} aria-pressed={design.shadowColor === c} />
+                  ))}
+                  <input type="color" className={s.picker} value={design.shadowColor === 'auto' ? '#555555' : design.shadowColor.slice(0, 7)} onChange={(e) => set('shadowColor', e.target.value)} aria-label={t.shadowColor} />
+                </div>
+              </div>
+            </>
+          )}
+          <div className={s.toggles}>
+            <Toggle checked={design.highlight} onChange={(v) => set('highlight', v)} label={t.highlight} />
+            <Toggle checked={design.sticker} onChange={(v) => set('sticker', v)} label={t.sticker} />
+            <Toggle checked={design.glow} onChange={(v) => set('glow', v)} label={t.glow} />
+            <Toggle checked={design.zigzag} onChange={(v) => set('zigzag', v)} label={t.zigzag} />
+          </div>
+        </Section>
+
+        <Section title={t.bg} hint={design.bg === 'transparent' ? t.transparentHint : undefined}>
+          <Choice label={t.bg} value={design.bg} onChange={(v) => set('bg', v)}
+            options={(['solid', 'gradient', 'dots', 'rays', 'check', 'stripes', 'transparent'] as BgKind[]).map((v) => ({ value: v, label: t.bgs[v] }))} />
+          {design.bg !== 'transparent' && (
+            <div className={s.twoCols}>
+              <ColorField label={t.bgColor} value={design.bgColor} onChange={(v) => set('bgColor', v)} swatches={needs2 ? undefined : BG_SWATCHES} />
+              {needs2 && <ColorField label={t.bgColor2} value={design.bgColor2} onChange={(v) => set('bgColor2', v)} />}
+            </div>
+          )}
+        </Section>
+
+        <Section title={t.deco}>
+          <Choice label={t.deco} value={design.deco} onChange={(v) => set('deco', v)}
+            options={(['none', 'stars', 'hearts', 'sparkles', 'notes', 'mixed'] as DecoKind[]).map((v) => ({ value: v, label: t.decos[v] }))} />
+          {design.deco !== 'none' && (
+            <Choice label={t.deco} value={design.decoAmount} onChange={(v) => set('decoAmount', v)}
+              options={(['few', 'normal', 'many'] as DecoAmount[]).map((v) => ({ value: v, label: t.amounts[v] }))} />
+          )}
+          <span className={s.mini}>{t.shape}</span>
+          <Choice label={t.shape} value={design.shape} onChange={(v) => set('shape', v)}
+            options={(['none', 'bubble', 'burst'] as ShapeKind[]).map((v) => ({ value: v, label: t.shapes[v] }))} />
+          {design.shape !== 'none' && <ColorField label={t.shapeColor} value={design.shapeColor} onChange={(v) => set('shapeColor', v)} swatches={['#ffffff', '#FFE600', '#FFB3C6', '#A8E6CF']} />}
+          <span className={s.mini}>{t.arch}</span>
+          <Choice label={t.arch} value={design.arch} onChange={(v) => set('arch', v)}
+            options={(['none', 'up', 'down'] as ArchKind[]).map((v) => ({ value: v, label: t.arches[v] }))} />
+        </Section>
+
+        <Section title={t.size}>
+          <label className={s.sliderHead}><span>{t.fontSize}</span><b>{fontSize}px</b></label>
+          <input type="range" min={SIZE_MIN} max={SIZE_MAX} step={1} value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} className={s.slider} aria-label={t.fontSize} />
+          <label className={s.sliderHead}><span>{t.kerning}</span><b>{kerning.toFixed(2)}</b></label>
+          <input type="range" min={KERNING_MIN} max={KERNING_MAX} step={0.01} value={kerning} onChange={(e) => setKerning(Number(e.target.value))} className={s.slider} aria-label={t.kerning} />
+          <div className={s.ends}><span>{t.narrow}</span><span>{t.wide}</span></div>
+        </Section>
+
+        <Section title={t.output}>
+          <div className={s.sizeGrid}>
+            {SIZE_PRESETS.map((p, i) => (
+              <button key={p.key} type="button" className={`${ui.chip} ${sizeIdx === i ? ui.chipActive : ''} ${s.sizeBtn}`} onClick={() => setSizeIdx(i)} aria-pressed={sizeIdx === i}>
+                <span>{t.sizes[p.key]}</span>
+                <small>{p.w}×{p.h}</small>
+              </button>
+            ))}
+          </div>
+          <span className={s.mini}>{t.scale}</span>
+          <Choice label={t.scale} value={scale} onChange={setScale} options={[1, 2, 3].map((v) => ({ value: v, label: `${v}×` }))} />
+          <p className={`${ui.hint} ${s.hintLine}`}>{t.scaleNote(outW, outH, preset.key === 'a4' ? a4Dpi(scale) : null)}</p>
+        </Section>
+
+        <button
+          type="button"
+          className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${saved ? ui.green : ''}`}
+          onClick={handleDownload}
+          disabled={!text.trim() || !fontReady}
+        >
+          {saved ? <Check size={18} /> : <Download size={18} />}
+          {saved ? t.done : `${t.download} (${outW}×${outH})`}
+        </button>
+      </div>
     </div>
   );
 }

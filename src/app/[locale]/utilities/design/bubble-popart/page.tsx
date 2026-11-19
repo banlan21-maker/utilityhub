@@ -1,120 +1,165 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import { getTranslations } from 'next-intl/server';
+import { Sparkles } from 'lucide-react';
+import NavigationActions from '@/app/components/NavigationActions';
+import ToolHeader from '@/app/components/ToolHeader';
+import SeoSection, { type SeoContent } from '@/app/components/SeoSection';
+import RelatedTools from '@/app/components/RelatedTools';
+import ShareBar from '@/app/components/ShareBar';
+import { ui } from '@/app/components/ui';
+import { FONTS, SIZE_PRESETS, a4Dpi } from '@/lib/bubblePopart';
 import BubblePopartClient from './BubblePopartClient';
-import ToolJsonLd from '@/app/components/ToolJsonLd';
+import s from './bubble-popart.module.css';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const isKo = locale === 'ko';
-  const title = isKo
-    ? '버블 팝아트 글씨 생성기 — 귀여운 팝아트 이미지 만들기 | Utility Hub'
-    : 'Bubble Pop Art Text Generator | Utility Hub';
-  const description = isKo
-    ? '텍스트를 입력하면 둥글둥글한 버블 폰트에 멀티컬러·광택 효과가 적용된 팝아트 이미지를 PNG로 저장합니다. 매장 POP 제작, SNS 이미지, 이벤트 현수막에 활용하세요.'
-    : 'Generate cute bubble-style pop art text images with multicolor, glossy highlights, and bold outlines. Download as PNG instantly — no signup required.';
-  const canonical = `https://www.theutilhub.com/${locale}/utilities/design/bubble-popart`;
+const BASE = 'https://www.theutilhub.com';
+const PATH = '/utilities/design/bubble-popart';
+const SCALES = [1, 2, 3];
 
+type Props = { params: Promise<{ locale: string }> };
+
+async function content(locale: 'ko' | 'en') {
+  const t = await getTranslations({ locale, namespace: 'BubblePopart' });
+  const raw = <T,>(k: string) => t.raw(k) as T;
   return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        ko: 'https://www.theutilhub.com/ko/utilities/design/bubble-popart',
-        en: 'https://www.theutilhub.com/en/utilities/design/bubble-popart',
-        'x-default': 'https://www.theutilhub.com/ko/utilities/design/bubble-popart',
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: 'Utility Hub',
-      locale: isKo ? 'ko_KR' : 'en_US',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
+    title: raw<string>('title'),
+    subtitle: raw<string>('subtitle'),
+    metaTitle: raw<string>('meta_title'),
+    metaDescription: raw<string>('meta_description'),
+    description: raw<string>('description'),
+    shareTitle: raw<string>('share_title'),
+    aboutTitle: raw<string>('about_title'),
+    about: raw<string>('about'),
+    presetsTitle: raw<string>('presets_title'),
+    presets: raw<string[]>('presets'),
+    printTitle: raw<string>('print_title'),
+    printIntro: raw<string>('print_intro'),
+    printHead: raw<string[]>('print_head'),
+    printDpiRow: raw<string>('print_dpi_row'),
+    printNote: raw<string>('print_note'),
+    fontsTitle: raw<string>('fonts_title'),
+    fontsIntro: raw<string>('fonts_intro'),
+    fontNotes: raw<Record<string, string>>('font_notes'),
+    useCases: raw<SeoContent['useCases']>('use_cases'),
+    steps: raw<SeoContent['steps']>('how_to'),
+    faqs: raw<SeoContent['faqs']>('faq'),
   };
 }
 
-const softwareSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: '버블 팝아트 글씨 생성기',
-  alternateName: 'Bubble Pop Art Text Generator',
-  operatingSystem: 'Web Browser',
-  applicationCategory: 'DesignApplication',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-  url: 'https://www.theutilhub.com/ko/utilities/design/bubble-popart',
-  description:
-    '텍스트를 입력하면 둥글둥글한 버블 폰트에 멀티컬러·광택 효과가 적용된 팝아트 이미지를 PNG로 저장합니다. 매장 POP 제작, SNS 이미지, 이벤트 현수막에 활용하세요.',
-};
+/** 번역문의 <b>…</b> 만 굵게 */
+const rich = (text: string): ReactNode[] =>
+  text.split(/(<b>.*?<\/b>)/g).map((part, i) =>
+    part.startsWith('<b>') ? <strong key={i}>{part.slice(3, -4)}</strong> : part);
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: '한글도 잘 표시되나요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '네, 한글을 완벽하게 지원합니다. Google Fonts의 Jua 폰트를 사용하며, 이 폰트는 한글 전용으로 설계된 둥글둥글한 버블 스타일 폰트입니다. 한글, 영문, 숫자, 특수문자 모두 동일한 스타일로 표현됩니다.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '다운로드한 이미지를 인쇄에 사용해도 되나요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '인쇄 용도로 사용하실 수 있습니다. 최대 1280×720px 해상도로 저장되며, 소형 인쇄물에서는 충분한 품질을 제공합니다. 대형 현수막은 출력 전 인쇄소와 확인하시기 바랍니다.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '생성한 이미지를 상업적으로 사용해도 되나요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '이 툴로 생성한 이미지 자체는 자유롭게 사용하실 수 있습니다. 사용된 Jua 폰트는 OFL(Open Font License)로 상업적 사용이 허용됩니다.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '이 툴의 결과를 공식 자료로 사용해도 되나요?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: '이 툴의 결과물은 참고용 이미지로 제공됩니다. 공식 인쇄물이나 중요한 디자인 작업에는 전문 디자인 툴을 사용하시거나 전문 디자이너에게 의뢰하시기 바랍니다.',
-      },
-    },
-  ],
-};
-
-export default async function BubblePopartPage({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const isKo = locale === 'ko';
+  const c = await content(isKo ? 'ko' : 'en');
+  const canonical = `${BASE}/${locale}${PATH}`;
+  return {
+    title: c.metaTitle,
+    description: c.metaDescription,
+    keywords: isKo
+      ? ['버블 폰트', '팝아트 글씨', '예쁜 글씨 만들기', 'POP 글씨', '매장 POP 만들기', '투명 배경 글씨 PNG', '귀여운 글씨체 이미지']
+      : ['bubble letters generator', 'pop art text', 'bubble font PNG', 'transparent text PNG', 'cute lettering maker'],
+    alternates: {
+      canonical,
+      languages: { ko: `${BASE}/ko${PATH}`, en: `${BASE}/en${PATH}`, 'x-default': `${BASE}/ko${PATH}` },
+    },
+    openGraph: { title: c.metaTitle, description: c.metaDescription, url: canonical, siteName: 'Utility Hub', locale: isKo ? 'ko_KR' : 'en_US', type: 'website' },
+    twitter: { card: 'summary_large_image', title: c.metaTitle, description: c.metaDescription },
+  };
+}
+
+export default async function BubblePopartPage({ params }: Props) {
+  const { locale } = await params;
+  const isKo = locale === 'ko';
+  const [ko, en] = await Promise.all([content('ko'), content('en')]);
+  const c = isKo ? ko : en;
+
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: c.title,
+    operatingSystem: 'Web Browser',
+    applicationCategory: 'DesignApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    url: `${BASE}/${locale}${PATH}`,
+    inLanguage: locale,
+    description: c.metaDescription,
+  };
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: c.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  };
+  const seo = (x: typeof ko): SeoContent => ({
+    title: x.title, description: x.description, useCases: x.useCases, steps: x.steps, faqs: x.faqs,
+  });
+  const sizeName: Record<string, [string, string]> = {
+    square: ['정사각형', 'Square'], landscape: ['가로형 16:9', 'Landscape 16:9'], portrait: ['세로형 9:16', 'Portrait 9:16'], a4: ['A4', 'A4'],
+  };
+
   return (
-    <>
-      {locale === 'ko' ? (
-        <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-          />
-        </>
-      ) : (
-        <ToolJsonLd href="/utilities/design/bubble-popart" />
-      )}
+    <div className={s.container}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+
+      <NavigationActions />
+      <ToolHeader icon={<Sparkles />} title={c.title} subtitle={c.subtitle} />
+
       <BubblePopartClient />
-    </>
+
+      <section className={s.help} aria-label={isKo ? '도움말' : 'Guide'}>
+        <article className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{c.aboutTitle}</h2>
+          <p>{c.about}</p>
+        </article>
+        <article className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{c.presetsTitle}</h2>
+          <ul>{c.presets.map((x, i) => <li key={i}>{rich(x)}</li>)}</ul>
+        </article>
+        <article className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{c.printTitle}</h2>
+          <p>{c.printIntro}</p>
+          <div className={s.tableWrap}>
+            <table className={s.table}>
+              <thead><tr>{c.printHead.map((h) => <th key={h} scope="col">{h}</th>)}</tr></thead>
+              <tbody>
+                {SIZE_PRESETS.map((p) => (
+                  <tr key={p.key}>
+                    <td>{sizeName[p.key][isKo ? 0 : 1]}</td>
+                    {SCALES.map((k) => <td key={k}>{p.w * k}×{p.h * k}</td>)}
+                  </tr>
+                ))}
+                <tr>
+                  <td>{c.printDpiRow}</td>
+                  {SCALES.map((k) => <td key={k}>≈ {a4Dpi(k)} dpi</td>)}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>{c.printNote}</p>
+        </article>
+        <article className={`${ui.card} ${s.card}`}>
+          <h2 className={ui.cardTitle}>{c.fontsTitle}</h2>
+          <p>{c.fontsIntro}</p>
+          <ul>
+            {FONTS.map((f) => (
+              <li key={f.key}>
+                <a href={`https://fonts.google.com/specimen/${f.family.replace(/ /g, '+')}`} target="_blank" rel="noopener noreferrer">
+                  <strong>{isKo ? `${f.ko} (${f.family})` : f.family}</strong>
+                </a>{' '}— {c.fontNotes[f.key]}
+              </li>
+            ))}
+          </ul>
+        </article>
+      </section>
+
+      <ShareBar title={c.shareTitle} description={c.subtitle} />
+      <RelatedTools toolId="utilities/design/bubble-popart" />
+      <SeoSection ko={seo(ko)} en={seo(en)} faqSchema={false} />
+    </div>
   );
 }

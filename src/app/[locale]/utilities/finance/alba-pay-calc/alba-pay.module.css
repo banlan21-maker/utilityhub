@@ -22,7 +22,7 @@
 @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
 
 .card { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
-.resultCol { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; position: sticky; top: 1rem; }
+.resultCol { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; position: sticky; top: calc(var(--header-height, 64px) + 1rem); }
 @media (max-width: 860px) { .resultCol { position: static; } }
 
 .applyMin { align-self: flex-start; }

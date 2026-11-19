@@ -589,7 +589,7 @@
     },
     "bubble-popart": {
       "title": "Bubble Pop Art Text Generator",
-      "desc": "Generate cute bubble-style pop art text images with multicolor, glossy highlights, and bold outlines. Download as PNG instantly."
+      "desc": "Turn text into bubble-letter pop art — 8 presets, 6 fonts, transparent background, 3× print-ready PNG."
     },
     "metaTitle": "Design Tools — Color Palette, Logo & Favicon Maker, Font Preview | Utility Hub",
     "metaDescription": "Free design tools: generate harmonious color palettes and check WCAG contrast, create text logos and favicons, preview Google Fonts, batch-resize photos and visualize bathroom tiles. No design software required.",
@@ -1677,32 +1677,111 @@
   },
   "BubblePopart": {
     "title": "Bubble Pop Art Text Generator",
-    "description": "Generate cute bubble-style pop art text images with multicolor, glossy highlights, and bold outlines. Download as PNG instantly — no signup required.",
+    "subtitle": "Type a word and get a pop art image with rounded bubble letters, bold outlines, and glossy highlights. 8 style presets, 6 fonts, transparent backgrounds, and 3× print-quality export.",
+    "meta_title": "Bubble Pop Art Text Generator — Cute Bubble Letters as PNG | Utility Hub",
+    "meta_description": "Turn any text into bubble-letter pop art with outlines, 3D depth, and glossy highlights. 8 presets (candy, retro, neon…), 6 free commercial fonts, transparent PNG, and 3× export for ~290 dpi A4 prints.",
+    "description": "The Bubble Pop Art Text Generator turns a short phrase into a bold, cheerful image built from rounded bubble letters, layered outlines, glossy highlight dots, and optional drop shadows or 3D depth. Eight style presets — Classic bubble, Candy, Retro pop, Neon, Sticker, Jelly 3D, Macaron, and Comic — change colors, outlines, background, and decorations in one tap, and every option stays editable afterwards. You can type up to three lines and twenty characters, which fits shop signs such as \"Today's special / Latte $3\". When the text grows wider than the image, the letters shrink automatically to stay inside a 3% margin, and the stars, hearts, sparkles, and music notes scale with the letters so they never outgrow them. Backgrounds include solid colors, gradients, halftone dots, sunbursts, checkers, stripes, and a fully transparent option for stickers, logos, and video overlays. Export square, 16:9, 9:16, or A4 canvases at 1×, 2×, or 3× scale; A4 at 3× saves 2382×3369 pixels, roughly 290 dpi. Everything is drawn in your browser, and your text never leaves your device.",
     "button": "Use Now",
-    "loading_font": "⏳ Loading font...",
-    "step_text": "STEP 1. Text",
-    "step_text_placeholder": "Enter text... (max 10 chars)",
-    "step_bg": "STEP 2. Background",
-    "step_color": "STEP 3. Text Color",
-    "color_mode_multi": "🌈 Multi",
-    "color_mode_single": "🎨 Single",
-    "step_size": "STEP 4. Size & Kerning",
-    "label_size": "Font size",
-    "label_kerning": "Kerning",
-    "kerning_hint": "← Tight (overlap)     Wide →",
-    "step_output": "STEP 5. Output Size",
-    "preset_square": "Square",
-    "preset_landscape": "Landscape",
-    "preset_portrait": "Portrait",
-    "preset_a4": "A4 Ratio",
-    "step_deco": "STEP 6. Decorations",
-    "opt_highlight": "💧 Highlight",
-    "opt_stars": "⭐ Stars",
-    "opt_zigzag": "🌀 Zigzag rotate",
-    "download": "📥 Download PNG",
-    "download_done": "✅ Downloaded!",
-    "about_title": "What is the Bubble Pop Art Text Generator?",
-    "about": "The Bubble Pop Art Text Generator instantly creates pop art-style images with rounded bubble fonts, vivid multicolor letters, thick bold outlines, and glossy highlights. Perfect for store POP (Point of Purchase) signs, social media event graphics, banners, and stickers. You can freely customize the background color, text color (multicolor or single), font size, and output resolution. All processing happens entirely in your browser — files are never uploaded to a server. Download high-resolution PNG images in multiple aspect ratios including square, 16:9 landscape, 9:16 portrait, and A4 ratio for both print and digital use."
+    "share_title": "Bubble Pop Art Text Generator — cute bubble lettering as PNG",
+    "faq_title": "Frequently Asked Questions",
+    "related_title": "Related tools",
+    "use_cases_title": "Where people use it",
+    "how_to_title": "How to use",
+    "about_title": "How the bubble lettering is drawn",
+    "about": "Each letter is painted on its own: first a thick outer outline, then an optional inner outline, then the fill color, and finally two small white highlight dots near the top left. Because the next letter's outline lands on top of the previous letter's fill, tightening the letter spacing below 1.0 makes the letters overlap like a bunch of balloons, while widening it above 1.0 gives a cleaner signboard look. The 3D depth effect stacks ten slightly shifted copies of each letter in a darker shade, and the shadow option offsets a single copy. On a dark background a near-black outline would disappear, so it is drawn in white automatically. The preview and the download use the same drawing function at different scales, so the file matches what you see.",
+    "presets_title": "Eight style presets",
+    "presets": [
+      "<b>Classic bubble</b> — yellow background, a different color for each letter, black-and-white double outline and gloss. The signature look.",
+      "<b>Candy</b> — pink-to-sky-blue gradient letters with a double white outline and a soft pink shadow.",
+      "<b>Retro pop</b> — red and yellow letters, a black 3D block shadow toward the lower right, and a halftone dot background.",
+      "<b>Neon</b> — glowing letters on a dark night-sky gradient. Great for night events and game thumbnails.",
+      "<b>Sticker</b> — a thick white die-cut border with a drop shadow, as if the word were a peeled sticker.",
+      "<b>Jelly 3D</b> — squishy letters with a darker body stacked underneath and glossy highlights on top.",
+      "<b>Macaron</b> — handwritten Gaegu font, pastel colors, a gentle shadow, and a striped background.",
+      "<b>Comic</b> — a yellow \"Burst!\" shape over a sunburst, heavy Black Han Sans letters, and a zigzag tilt."
+    ],
+    "print_title": "Output sizes and print resolution",
+    "print_intro": "1× is enough for screens, 2× suits social media uploads, and 3× is the choice for printing. Print shops usually ask for about 300 dpi; the last row shows the resolution you get when an A4 sheet (210×297 mm) is filled edge to edge.",
+    "print_head": [
+      "Output",
+      "1×",
+      "2×",
+      "3×"
+    ],
+    "print_dpi_row": "A4 print resolution",
+    "print_note": "A4 at 3× (2382×3369 px) prints at about 290 dpi, which is fine for flyers and shop signs. Stretching the same file to A3 or a banner halves the resolution or worse, so check the size your print shop needs first.",
+    "fonts_title": "Fonts and licenses",
+    "fonts_intro": "All six fonts are distributed by Google Fonts under the SIL Open Font License 1.1, so the images you make can be used commercially — in shop signage, social posts, packaging, or merchandise. Only selling the font files themselves is prohibited.",
+    "font_notes": {
+      "jua": "Round, chubby bubble letters — the default",
+      "dohyeon": "Solid, upright headline lettering",
+      "blackhan": "Extra-heavy impact lettering for comic and retro looks",
+      "gaegu": "Pencil-style handwriting",
+      "singleday": "Bouncy, cute handwriting",
+      "dokdo": "Rough brush-style handwriting"
+    },
+    "use_cases": [
+      {
+        "icon": "🏪",
+        "title": "Shop signs & menus",
+        "desc": "Cafés, snack bars, and flower shops can set two or three lines like \"Today's special / Latte $3\", export A4 at 3×, and print it for the counter or window display."
+      },
+      {
+        "icon": "🏷️",
+        "title": "Stickers & logos",
+        "desc": "Turn on the transparent background and the sticker border to get a PNG you can place on merch stickers, channel art, or video subtitles without any box around it."
+      },
+      {
+        "icon": "📱",
+        "title": "Social media posts",
+        "desc": "Export an 800×800 square for Instagram or a 720×1280 portrait for stories at 2× to announce openings, discounts, giveaways, or birthday wishes with eye-catching lettering."
+      },
+      {
+        "icon": "🎉",
+        "title": "Parties & classrooms",
+        "desc": "Make birthday welcome boards, classroom bulletin titles, and sports-day cheer signs with arched text plus hearts or stars, then print them on A4 paper at home."
+      }
+    ],
+    "how_to": [
+      {
+        "step": "Pick a preset",
+        "desc": "Tap one of the eight style presets at the top. Fill colors, outlines, shadows, background, and decorations all change at once, and each preset shows a small live thumbnail."
+      },
+      {
+        "step": "Type text and choose a font",
+        "desc": "Enter up to three lines and twenty characters, pressing Enter for a new line. Choose Jua, Do Hyeon, Black Han Sans, Gaegu, Single Day, or Dokdo and watch the preview update."
+      },
+      {
+        "step": "Fine-tune the style",
+        "desc": "Adjust the fill (multicolor, single, gradient), single or double outline and its thickness, shadow or 3D direction, background pattern, decoration type and amount, and arched text."
+      },
+      {
+        "step": "Choose a size and download",
+        "desc": "Select square, landscape, portrait, or A4, then a 1×, 2×, or 3× scale, and press Download PNG. The button shows the exact pixel size the file will be saved at."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Will long text get cut off at the edges?",
+        "a": "No. If the letters, outlines, shadows, and decorations together exceed 94% of the image, the font size is reduced automatically so everything sits inside a 3% margin. The caption under the preview then shows the size actually used, for example \"scaled down to 72px\". Twenty characters on three lines at the largest size fit the same way."
+      },
+      {
+        "q": "Is the quality good enough for printing?",
+        "a": "It depends on the export scale. A4 at 1× is 794×1123 pixels, about 96 dpi on paper, which is really screen quality. At 3× it becomes 2382×3369 pixels, about 290 dpi, close to the usual 300 dpi print standard. Choose 3× for anything you print, and check with your print shop before going to A3 or larger."
+      },
+      {
+        "q": "How do I make a transparent PNG?",
+        "a": "Choose Transparent under Background. Only the letters and decorations are saved, and everything else becomes transparent in the PNG. The grey checkerboard in the preview just marks transparent areas and is not part of the file. Turning on the sticker border keeps the text readable on both light and dark surfaces."
+      },
+      {
+        "q": "Can I use the images commercially?",
+        "a": "Yes. All six fonts are SIL Open Font License fonts from Google Fonts, so the images may be used in shop promotions, product packaging, and paid content. The license only forbids selling the font files on their own. You are still responsible for the rights to the words or brand names you put in the image."
+      },
+      {
+        "q": "Why did my black outline turn white?",
+        "a": "A near-black outline on a dark background blends into it and the letters lose their shape. When the background is dark, the tool therefore draws a black outline in white automatically and shows a note under the Outline section. Outlines in other colors are left as chosen, so pick a color yourself if you want something different."
+      }
+    ]
   },
   "PipingCalc": {
     "title": "Piping Calculator",
