@@ -163,6 +163,10 @@
     "concrete-calc": {
       "title": "Concrete Calculator",
       "desc": "Slabs, footings, columns, post holes and stairs in one list — cubic yards, truck loads and bags."
+    },
+    "sling-angle-calc": {
+      "title": "Sling Angle & Rigging Load Calculator",
+      "desc": "Work out the tension in each sling leg from the load and angle, and check it against the sling WLL."
     }
   },
   "TextCounter": {
@@ -2748,6 +2752,157 @@
       {
         "q": "How much does a yard of concrete weigh?",
         "a": "Normal-weight concrete weighs about 145–150 pounds per cubic foot, so a cubic yard is roughly 3,900–4,050 pounds — close to two tons. That is why a typical pickup truck can only carry about half a yard of mixed concrete safely, and why suspended forms need solid shoring."
+      }
+    ]
+  },
+  "SlingCalc": {
+    "title": "Sling Angle & Rigging Load Calculator",
+    "subtitle": "Enter the load and the sling angle to see the real tension in each leg and whether it stays within the sling’s WLL",
+    "meta_title": "Sling Angle Calculator – Rigging Load & Leg Tension | Utility Hub",
+    "meta_description": "Free sling angle calculator: enter the load, number of legs (1–4) and the angle from horizontal, vertical, included angle or leg lengths to get tension per leg, the load angle factor and a pass/fail check against the sling WLL. lb, US ton and metric units.",
+    "description": "This sling angle calculator works out the tension in each sling leg from the load weight and the rigging angle. Lift 20,000 lb on two legs hanging straight down and each leg carries 10,000 lb. Open the legs to 60° from horizontal and each leg carries 11,547 lb; at 45° it is 14,142 lb, and at 30° from horizontal each leg carries the full 20,000 lb. The flatter the legs, the more they pull against each other sideways, and that horizontal pull adds to the tension. You can enter the angle from horizontal (the \"sling angle\" used in OSHA and ASME charts), the angle from vertical, the included angle between the legs, or simply the leg length and horizontal distance if you cannot measure the angle. Add the working load limit (WLL) from the sling tag and the result turns green or red with the percentage of WLL used. For 3- and 4-leg bridles the calculator assumes only two legs carry the load by default, because unequal leg lengths rarely let every leg share evenly. Units include lb, US (short) tons, metric tons, kg and kN, clearly labelled so a short ton is never confused with a metric ton. Nothing is sent to a server; your inputs stay on this device.",
+    "share_title": "Sling Angle Calculator – tension per leg in seconds",
+    "about_title": "How sling angle changes the load on each leg",
+    "about": [
+      "When sling legs hang straight down, the load simply divides between them. Once the legs spread out, each leg must hold up its share of the weight and also resist the sideways pull of the other leg. That is why the same load puts more tension on each leg as the angle opens up.",
+      "Leg tension = load ÷ (number of legs sharing × cos θ), where θ is the angle between a leg and the vertical. The multiplier 1 ÷ cos θ is the load angle factor: 1.155 at 60° from horizontal, 1.414 at 45° and 2.000 at 30°.",
+      "At 30° from horizontal (120° between the legs) each leg carries the entire load even though there are two of them. At 15° from horizontal the factor jumps to 3.86. ASME B30.9 does not allow horizontal sling angles below 30° unless the sling manufacturer or a qualified person approves, and most riggers aim for 60° or steeper.",
+      "To steepen the angle, use longer legs, bring the pick points closer together, or use a spreader or lifting beam. The same sling choked up short can easily exceed its WLL, so check the tension at the actual angle before the lift."
+    ],
+    "factor_title": "Load angle factor by angle",
+    "factor_head": [
+      "Included angle",
+      "From horizontal",
+      "Load factor",
+      "Each leg, 20,000 lb on 2 legs"
+    ],
+    "factor_rows": [
+      [
+        "0°",
+        "90°",
+        "×1.000",
+        "10,000 lb"
+      ],
+      [
+        "30°",
+        "75°",
+        "×1.035",
+        "10,353 lb"
+      ],
+      [
+        "60°",
+        "60°",
+        "×1.155",
+        "11,547 lb"
+      ],
+      [
+        "90°",
+        "45°",
+        "×1.414",
+        "14,142 lb"
+      ],
+      [
+        "120°",
+        "30°",
+        "×2.000",
+        "20,000 lb"
+      ],
+      [
+        "150°",
+        "15°",
+        "×3.864",
+        "38,637 lb"
+      ]
+    ],
+    "factor_note": "Load factor = 1 ÷ sin(angle from horizontal) = 1 ÷ cos(angle from vertical). From 30° above horizontal and flatter, each leg carries at least the full load.",
+    "why4_title": "Why not divide a 4-leg lift by four?",
+    "why4": [
+      "<b>Four legs rarely share a load evenly.</b> A few millimetres of difference in leg length or pick-point height lets two legs take up first while the others stay slack.",
+      "This is especially true for <b>rigid loads</b> such as steel, precast blocks and dies. Dividing by four can put the calculated tension at about half the real value and lead to an undersized sling.",
+      "So this calculator assumes <b>only two legs carry the load</b> on 3- and 4-leg bridles — the most conservative choice. You can switch to three legs sharing, the basis European standard EN 13414 uses, but stay with two if the load is rigid or the legs are not matched exactly."
+    ],
+    "apex_title": "Horizontal, vertical and included angles",
+    "apex": [
+      "<b>Angle from horizontal</b> is measured between a leg and the top of the load. It is the \"sling angle\" in OSHA and ASME charts, so most US rigging tables use it.",
+      "<b>Angle from vertical</b> is measured between a leg and a plumb line from the hook. It equals 90° minus the horizontal angle.",
+      "<b>Included angle</b> is the angle between two legs at the hook — twice the vertical angle. A 60° horizontal angle equals a 30° vertical angle and a 60° included angle.",
+      "Can’t measure the angle? Enter the <b>leg length</b> and the <b>horizontal distance from the hook centre to the pick point</b>. A 12 ft leg with 6 ft horizontal distance is 30° from vertical, or 60° from horizontal."
+    ],
+    "law_title": "Rules and standards",
+    "law": [
+      "OSHA 29 CFR 1910.184 (general industry) and 1926.251 (construction) require slings to be used within their rated capacity and inspected before use; damaged slings must be removed from service.",
+      "Sling capacity tables in OSHA and ASME B30.9 already include the effect of sling angle for bridle hitches. If you use those tables, look up the angle; if you use a single-leg WLL, compare it with the leg tension shown here.",
+      "Rated capacity on the tag already includes the manufacturer’s design factor (typically 5:1 for wire rope and 4:1 for alloy chain). Do not divide it again.",
+      "Standards are summarised for orientation only, as checked in November 2026. Follow the current regulation and your company lift plan."
+    ],
+    "excluded_title": "What this version does not cover",
+    "excluded": [
+      "Off-centre centre of gravity — the leg closer to the centre of gravity carries more.",
+      "Legs of different lengths — the shorter leg sits steeper and takes more load.",
+      "Choker and basket hitch reduction or increase factors",
+      "Dynamic loading — sudden stops, swinging and wind raise the peak tension.",
+      "Lifts using spreader beams or lifting beams"
+    ],
+    "use_cases": [
+      {
+        "icon": "🏗️",
+        "title": "Pre-lift check on the job",
+        "desc": "Before picking a 7,000 lb skid on two legs at 45° from horizontal, a rigger confirms each leg sees about 4,950 lb and that a 4,000 lb sling would be overloaded."
+      },
+      {
+        "icon": "🚢",
+        "title": "Shipyard and plant lifts",
+        "desc": "On a four-leg bridle the calculator uses two legs sharing instead of four, so the sling chosen still holds when leg lengths are not perfectly matched."
+      },
+      {
+        "icon": "🎓",
+        "title": "Rigging training",
+        "desc": "Drag the slider from 90° down to 15° from horizontal and watch the factor climb from 1.0 to 3.86 on the chart and diagram — an easy way to teach why flat angles are dangerous."
+      },
+      {
+        "icon": "📋",
+        "title": "Lift plan review",
+        "desc": "A safety lead enters the load, legs and angle from a lift plan, checks the percentage of WLL used, and pastes the one-line result into the review notes as the calculation basis."
+      }
+    ],
+    "how_to": [
+      {
+        "step": "Enter the load",
+        "desc": "Type the load weight and pick lb, US ton (2,000 lb), metric t (1,000 kg), kg or kN. Decimals like 2.5 are fine."
+      },
+      {
+        "step": "Choose the number of legs",
+        "desc": "Pick 1 to 4 legs. Three- and four-leg bridles assume two legs carry the load unless you switch to three under the sharing option."
+      },
+      {
+        "step": "Enter the angle",
+        "desc": "Use the angle from horizontal, from vertical or the included angle with the number box or slider. If you cannot measure it, switch to Lengths and enter leg length and horizontal distance."
+      },
+      {
+        "step": "Compare with the WLL",
+        "desc": "Enter the single-leg vertical WLL from the tag to see the percentage used and a green or red verdict. Copy the result to share it with your crew."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Why does a 30° sling angle double the tension?",
+        "a": "At 30° from horizontal, each leg is 60° from vertical and cos 60° = 0.5. Tension = load ÷ (2 × 0.5), which equals the full load, so a 20,000 lb lift on two legs puts 20,000 lb on each leg. The flatter the legs, the harder they pull against each other sideways, and below 30° the tension rises very quickly."
+      },
+      {
+        "q": "Why not divide a four-leg lift by four?",
+        "a": "Small differences in leg length or pick-point height mean two legs usually take most of the load, especially with rigid loads. The calculator therefore assumes two legs by default, with an option for three legs sharing as in EN 13414. It never divides by four."
+      },
+      {
+        "q": "Which WLL should I enter from the sling tag?",
+        "a": "Enter the single-leg vertical rated capacity. The calculator already applies the angle to the leg tension, so using the tag’s bridle rating at a given angle would count the angle twice. Choker and basket hitch ratings are not part of this check."
+      },
+      {
+        "q": "Is a US ton the same as a metric ton?",
+        "a": "No. A US (short) ton is 2,000 lb and a metric ton is 1,000 kg, or 2,204.62 lb — about 10% more. Mixing them up can understate the load by 10%, so the unit list labels them separately as \"US ton\" and \"metric t\"."
+      },
+      {
+        "q": "If the tension is within the WLL, is the lift safe?",
+        "a": "Not by itself. The result is a static calculation that leaves out shock loading, off-centre loads, unequal legs and hitch reduction factors. If you are above about 90% of WLL, consider the next size up, and always follow the manufacturer’s rating, a qualified rigger and your lift plan."
       }
     ]
   }
