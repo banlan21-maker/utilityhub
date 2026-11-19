@@ -101,6 +101,49 @@ const BASE: Design = {
   arch: 'none',
 };
 
+/* ── 저장해 둔 디자인 되살리기: 모양이 틀린 값은 기본값으로 ── */
+const HEX = /^#[0-9a-fA-F]{6}$/;
+const hex = (v: unknown, fb: string) => (typeof v === 'string' && HEX.test(v) ? v : fb);
+const hexList = (v: unknown, fb: string[]) =>
+  Array.isArray(v) && v.length > 0 && v.length <= 12 && v.every((x) => typeof x === 'string' && HEX.test(x)) ? (v as string[]) : fb;
+const oneOf = <T,>(v: unknown, list: readonly T[], fb: T): T => (list.includes(v as T) ? (v as T) : fb);
+const bool = (v: unknown, fb: boolean) => (typeof v === 'boolean' ? v : fb);
+
+/** 키 순서는 BASE와 같게 유지한다 (프리셋과 같은지 JSON으로 비교하므로) */
+export function sanitizeDesign(raw: unknown): Design {
+  const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+  const b = BASE;
+  const grad = hexList(r.gradient, b.gradient);
+  const ow = typeof r.outlineWidth === 'number' && Number.isFinite(r.outlineWidth) ? Math.min(1.6, Math.max(0.3, r.outlineWidth)) : b.outlineWidth;
+  return {
+    font: oneOf(r.font, FONTS.map((f) => f.key), b.font),
+    fill: oneOf<FillMode>(r.fill, ['multi', 'single', 'gradient'], b.fill),
+    palette: hexList(r.palette, b.palette),
+    single: hex(r.single, b.single),
+    gradient: grad.length === 2 ? [grad[0], grad[1]] : b.gradient,
+    outline: r.outline === 1 ? 1 : r.outline === 2 ? 2 : b.outline,
+    outlineColor: hex(r.outlineColor, b.outlineColor),
+    innerColor: hex(r.innerColor, b.innerColor),
+    outlineWidth: ow,
+    shadow: oneOf<ShadowMode>(r.shadow, ['none', 'drop', 'extrude'], b.shadow),
+    shadowDir: oneOf<ShadowDir>(r.shadowDir, ['br', 'b', 'bl'], b.shadowDir),
+    shadowColor: r.shadowColor === 'auto' ? 'auto' : hex(r.shadowColor, b.shadowColor),
+    sticker: bool(r.sticker, b.sticker),
+    glow: bool(r.glow, b.glow),
+    highlight: bool(r.highlight, b.highlight),
+    zigzag: bool(r.zigzag, b.zigzag),
+    bg: oneOf<BgKind>(r.bg, ['solid', 'gradient', 'dots', 'rays', 'check', 'stripes', 'transparent'], b.bg),
+    bgColor: hex(r.bgColor, b.bgColor),
+    bgColor2: hex(r.bgColor2, b.bgColor2),
+    deco: oneOf<DecoKind>(r.deco, ['none', 'stars', 'hearts', 'sparkles', 'notes', 'mixed'], b.deco),
+    decoAmount: oneOf<DecoAmount>(r.decoAmount, ['few', 'normal', 'many'], b.decoAmount),
+    decoColors: hexList(r.decoColors, b.decoColors),
+    shape: oneOf<ShapeKind>(r.shape, ['none', 'bubble', 'burst'], b.shape),
+    shapeColor: hex(r.shapeColor, b.shapeColor),
+    arch: oneOf<ArchKind>(r.arch, ['none', 'up', 'down'], b.arch),
+  };
+}
+
 export type PresetKey = 'classic' | 'candy' | 'retro' | 'neon' | 'sticker' | 'jelly' | 'macaron' | 'comic';
 export const PRESETS: { key: PresetKey; ko: string; en: string; design: Design }[] = [
   { key: 'classic', ko: '클래식 버블', en: 'Classic bubble', design: BASE },
@@ -207,6 +250,72 @@ export function effectiveOutline(d: Design): { outer: string; inner: string } {
     if (luminance(inner) > 0.8) inner = d.outlineColor;
   }
   return { outer, inner };
+}
+
+/* ── 광택 점 자리 찾기 ──
+   글자마다 모양이 달라 고정 위치에 찍으면 획 밖(영문 소문자 위, ㅇ 구멍 안)에 떨어진다.
+   글자를 작은 마스크에 그려 놓고, 왼쪽 위에서 가장 가까우면서 원이 통째로 획 안에 들어가는 자리를 찾는다. */
+interface Spot { x: number; y: number; r: number; second: boolean } // 글자 크기(em) 기준
+const MASK_N = 80;
+const MASK_PPE = 40; // 마스크에서 1em = 40px (80px = 2em)
+const spotCache = new Map<string, Spot | null>();
+let maskCanvas: HTMLCanvasElement | null = null;
+
+function highlightSpot(font: FontKey, ch: string, wEm: number): Spot | null {
+  if (typeof document === 'undefined' || !ch.trim()) return null;
+  // 폰트가 아직 안 받아졌을 때(대체 글꼴)와 받은 뒤의 모양이 다르므로 따로 기억한다
+  const loaded = document.fonts?.check(fontCss(font, MASK_PPE), ch) ? 1 : 0;
+  const key = `${font}|${loaded}|${ch}`;
+  const cached = spotCache.get(key);
+  if (cached !== undefined) return cached;
+
+  maskCanvas ??= document.createElement('canvas');
+  maskCanvas.width = MASK_N;
+  maskCanvas.height = MASK_N;
+  const mc = maskCanvas.getContext('2d', { willReadFrequently: true });
+  let spot: Spot | null = null;
+  if (mc) {
+    mc.clearRect(0, 0, MASK_N, MASK_N);
+    mc.font = fontCss(font, MASK_PPE);
+    mc.textAlign = 'center';
+    mc.textBaseline = 'middle';
+    mc.fillStyle = '#000';
+    mc.fillText(ch, MASK_N / 2, MASK_N / 2);
+    const a = mc.getImageData(0, 0, MASK_N, MASK_N).data;
+    const inside = (x: number, y: number) => {
+      const px = Math.round(MASK_N / 2 + x * MASK_PPE);
+      const py = Math.round(MASK_N / 2 + y * MASK_PPE);
+      return px >= 0 && py >= 0 && px < MASK_N && py < MASK_N && a[(py * MASK_N + px) * 4 + 3] > 140;
+    };
+    const fits = (x: number, y: number, r: number) => {
+      if (!inside(x, y)) return false;
+      for (let i = 0; i < 8; i++) {
+        const t = (i / 8) * Math.PI * 2;
+        if (!inside(x + Math.cos(t) * r, y + Math.sin(t) * r)) return false;
+      }
+      return true;
+    };
+    const tx = -wEm * 0.14;
+    const ty = -0.24;
+    const half = wEm / 2 + 0.1;
+    // 큰 점부터 시도: 굵은 폰트는 큰 점, 가는 손글씨 폰트는 작은 점, 들어갈 자리가 없으면 생략
+    for (const r of [0.09, 0.07, 0.052]) {
+      let best = Infinity, bx = 0, by = 0;
+      for (let y = -0.62; y <= 0.2; y += 0.025) {
+        for (let x = -half; x <= half; x += 0.025) {
+          const dist = Math.hypot(x - tx, (y - ty) * 1.25);
+          if (dist < best && fits(x, y, r * 1.15)) { best = dist; bx = x; by = y; }
+        }
+      }
+      if (best <= 0.34) {
+        spot = { x: bx, y: by, r, second: fits(bx + r * 0.85, by + r * 0.65, r * 0.6) };
+        break;
+      }
+    }
+  }
+  if (spotCache.size > 600) spotCache.clear();
+  spotCache.set(key, spot);
+  return spot;
 }
 
 const DIR: Record<ShadowDir, [number, number]> = { br: [0.72, 0.72], b: [0, 1], bl: [-0.72, 0.72] };
@@ -350,14 +459,14 @@ function layoutUnit(ctx: CanvasRenderingContext2D, lines: string[][], d: Design,
   const ow = d.outlineWidth;
   const strokeHalf = ((d.outline === 2 ? 24 : 20) * ow) / 2;
   const effect = Math.max(d.shadow === 'drop' ? 10 : d.shadow === 'extrude' ? 14 : 0, d.glow ? 30 : 0);
-  const pad = strokeHalf + (d.sticker ? 15 : 0) + effect + (d.zigzag ? 4 : 0);
+  const pad = strokeHalf + (d.sticker ? 21 : 0) + effect + (d.zigzag ? 4 : 0);
   const blockW = textW + pad * 2;
   const blockH = textH + pad * 2;
 
   let shapeRx = 0, shapeRy = 0, outerW = blockW, outerH = blockH, tail = 0;
   if (d.shape !== 'none') {
-    shapeRx = (blockW / 2) * 1.28 + 30;
-    shapeRy = (blockH / 2) * 1.28 + 30;
+    shapeRx = (blockW / 2) * 1.28 + 18;
+    shapeRy = (blockH / 2) * 1.28 + 18;
     const k = d.shape === 'burst' ? 1.2 : 1.03;
     outerW = shapeRx * 2 * k;
     outerH = shapeRy * 2 * k;
@@ -590,18 +699,19 @@ export function render(canvas: HTMLCanvasElement, w: number, h: number, scale: n
       }
       ctx.fillStyle = fillOf(g.idx);
       ctx.fillText(g.ch, 0, 0);
-      if (d.highlight && g.ch.trim() && g.w > f * 0.4) {
-        const x1 = -g.w * 0.12;
-        const y1 = -f * 0.24;
-        const r1 = f * 0.09;
+      const spot = d.highlight ? highlightSpot(d.font, g.ch, g.w / f) : null;
+      if (spot) {
+        const r1 = spot.r * f;
         ctx.beginPath();
-        ctx.arc(x1, y1, r1, 0, Math.PI * 2);
+        ctx.arc(spot.x * f, spot.y * f, r1, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(255,255,255,0.88)';
         ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x1 + r1 * 0.85, y1 + r1 * 0.65, f * 0.05, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        ctx.fill();
+        if (spot.second) {
+          ctx.beginPath();
+          ctx.arc(spot.x * f + r1 * 0.85, spot.y * f + r1 * 0.65, r1 * 0.55, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          ctx.fill();
+        }
       }
     });
   }

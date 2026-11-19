@@ -11,6 +11,8 @@ interface Props {
   stair?: StairType;
   post?: PostShape;
   className?: string;
+  /** 치수 그림일 때 읽어 줄 이름 */
+  title?: string;
 }
 
 /** 경사 투영 상자: 앞면·윗면·옆면 (x0,y0 = 앞면 왼쪽 아래) */
@@ -30,7 +32,7 @@ function T({ x, y, a = 'middle', children }: { x: number; y: number; a?: 'start'
   return <text className={s.dLabel} x={x} y={y} textAnchor={a}>{children}</text>;
 }
 
-export default function ConcreteDiagram({ kind, labels, stair = 'waist', post = 'square', className }: Props) {
+export default function ConcreteDiagram({ kind, labels, stair = 'waist', post = 'square', className, title }: Props) {
   const L = labels ?? {};
   const full = !!labels;
   let body: ReactNode = null;
@@ -121,7 +123,7 @@ export default function ConcreteDiagram({ kind, labels, stair = 'waist', post = 
   }
 
   return (
-    <svg className={className} viewBox="0 0 240 142" role="img" aria-hidden={!full} focusable="false">
+    <svg className={className} viewBox="0 0 240 142" role="img" aria-hidden={!full} aria-label={full ? title : undefined} focusable="false">
       {body}
     </svg>
   );

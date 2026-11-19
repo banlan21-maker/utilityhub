@@ -1683,8 +1683,8 @@
     "title": "Bubble Pop Art Text Generator",
     "subtitle": "Type a word and get a pop art image with rounded bubble letters, bold outlines, and glossy highlights. 8 style presets, 6 fonts, transparent backgrounds, and 3× print-quality export.",
     "meta_title": "Bubble Pop Art Text Generator — Cute Bubble Letters as PNG | Utility Hub",
-    "meta_description": "Turn any text into bubble-letter pop art with outlines, 3D depth, and glossy highlights. 8 presets (candy, retro, neon…), 6 free commercial fonts, transparent PNG, and 3× export for ~290 dpi A4 prints.",
-    "description": "The Bubble Pop Art Text Generator turns a short phrase into a bold, cheerful image built from rounded bubble letters, layered outlines, glossy highlight dots, and optional drop shadows or 3D depth. Eight style presets — Classic bubble, Candy, Retro pop, Neon, Sticker, Jelly 3D, Macaron, and Comic — change colors, outlines, background, and decorations in one tap, and every option stays editable afterwards. You can type up to three lines and twenty characters, which fits shop signs such as \"Today's special / Latte $3\". When the text grows wider than the image, the letters shrink automatically to stay inside a 3% margin, and the stars, hearts, sparkles, and music notes scale with the letters so they never outgrow them. Backgrounds include solid colors, gradients, halftone dots, sunbursts, checkers, stripes, and a fully transparent option for stickers, logos, and video overlays. Export square, 16:9, 9:16, or A4 canvases at 1×, 2×, or 3× scale; A4 at 3× saves 2382×3369 pixels, roughly 290 dpi. Everything is drawn in your browser, and your text never leaves your device.",
+    "meta_description": "Turn any text into bubble-letter pop art with outlines, 3D depth, and glossy highlights. 8 presets (candy, retro, neon…), 6 free commercial fonts, transparent PNG, and 3× export for ~288 dpi A4 prints.",
+    "description": "The Bubble Pop Art Text Generator turns a short phrase into a bold, cheerful image built from rounded bubble letters, layered outlines, glossy highlight dots, and optional drop shadows or 3D depth. Eight style presets — Classic bubble, Candy, Retro pop, Neon, Sticker, Jelly 3D, Macaron, and Comic — change colors, outlines, background, and decorations in one tap, and every option stays editable afterwards. You can type up to three lines and twenty characters, which fits shop signs such as \"Today's special / Latte $3\". When the text grows wider than the image, the letters shrink automatically to stay inside a 3% margin, and the stars, hearts, sparkles, and music notes scale with the letters so they never outgrow them. Backgrounds include solid colors, gradients, halftone dots, sunbursts, checkers, stripes, and a fully transparent option for stickers, logos, and video overlays. Export square, 16:9, 9:16, or A4 canvases at 1×, 2×, or 3× scale; A4 at 3× saves 2382×3369 pixels, roughly 288 dpi. Everything is drawn in your browser, and your text never leaves your device.",
     "button": "Use Now",
     "share_title": "Bubble Pop Art Text Generator — cute bubble lettering as PNG",
     "faq_title": "Frequently Asked Questions",
@@ -1713,7 +1713,7 @@
       "3×"
     ],
     "print_dpi_row": "A4 print resolution",
-    "print_note": "A4 at 3× (2382×3369 px) prints at about 290 dpi, which is fine for flyers and shop signs. Stretching the same file to A3 or a banner halves the resolution or worse, so check the size your print shop needs first.",
+    "print_note": "A4 at 3× (2382×3369 px) prints at about 288 dpi, which is fine for flyers and shop signs. Stretching the same file to A3 drops it to about 204 dpi and A2 to about 144 dpi, so check what your print shop needs before going large.",
     "fonts_title": "Fonts and licenses",
     "fonts_intro": "All six fonts are distributed by Google Fonts under the SIL Open Font License 1.1, so the images you make can be used commercially — in shop signage, social posts, packaging, or merchandise. Only selling the font files themselves is prohibited.",
     "font_notes": {
@@ -1771,7 +1771,7 @@
       },
       {
         "q": "Is the quality good enough for printing?",
-        "a": "It depends on the export scale. A4 at 1× is 794×1123 pixels, about 96 dpi on paper, which is really screen quality. At 3× it becomes 2382×3369 pixels, about 290 dpi, close to the usual 300 dpi print standard. Choose 3× for anything you print, and check with your print shop before going to A3 or larger."
+        "a": "It depends on the export scale. A4 at 1× is 794×1123 pixels, about 96 dpi on paper, which is really screen quality. At 3× it becomes 2382×3369 pixels, about 288 dpi, close to the usual 300 dpi print standard. Choose 3× for anything you print, and check with your print shop before going to A3 or larger."
       },
       {
         "q": "How do I make a transparent PNG?",
@@ -2697,7 +2697,7 @@
       {
         "icon": "🪵",
         "title": "Fence and deck posts",
-        "desc": "Enter the hole diameter, depth, post size and number of holes to find out exactly how many 50, 60 or 80 lb bags to pick up."
+        "desc": "Enter the hole diameter, depth, post size and number of holes to find out exactly how many 40, 60 or 80 lb bags to pick up."
       },
       {
         "icon": "🏡",

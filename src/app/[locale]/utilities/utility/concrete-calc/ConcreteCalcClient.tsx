@@ -7,7 +7,7 @@ import { AlertTriangle, Check, Copy, Info, Pencil, Plus, Printer, RotateCcw, Tra
 import { ui } from '@/app/components/ui';
 import {
   DENSITY_T, FT3_M3, HAS_COUNT, LEN_TO_M, MIXES, SHAPES, UNITS, VOL_TO_M3, YD3_M3,
-  activeFields, defaultUnit, dimWarnings, emptyPart, mix, num, partVolume, postTooBig, premixBags, trucks,
+  activeFields, defaultUnit, dimWarnings, emptyPart, mix, num, partVolume, postTooBig, premixBags, round2, trucks,
   type DimKey, type LenUnit, type MixId, type Part, type PostShape, type ShapeKind, type StairType, type UnitSystem, type VolUnit,
 } from '@/lib/concreteCalc';
 import ConcreteDiagram, { type DiagramLabels } from './ConcreteDiagram';
@@ -57,7 +57,9 @@ const T = {
     rube: '루베',
     net: '순 물량', waste: (w: number) => `할증 ${w}%`,
     trucks: '레미콘 차량', truckLine: (cap: string, n: number) => `${cap} 차량 ${n}대`,
-    smallLoad: '마지막 차 적재량이 적습니다. 소량 배차는 업체에 따라 추가 요금이 붙을 수 있습니다.',
+    smallLoad: (one: boolean) => `${one ? '주문 물량이 차량 1대 용량의 절반보다 적습니다.' : '마지막 차 적재량이 적습니다.'} 소량 배차는 업체에 따라 추가 요금이 붙을 수 있습니다.`,
+    stairTotal: (rise: string, run: string) => `계단 전체 높이 ${rise} · 전체 길이 ${run}`,
+    warnItem: '단위 확인 필요',
     weight: '콘크리트 중량', weightHint: '2.3~2.4 t/㎥ 기준, 운반·하중 검토 참고용',
     cost: '예상 비용',
     zero: '치수를 입력하면 바로 계산됩니다',
@@ -126,7 +128,9 @@ const T = {
     rube: '',
     net: 'Net volume', waste: (w: number) => `Waste ${w}%`,
     trucks: 'Ready-mix trucks', truckLine: (cap: string, n: number) => `${n} × ${cap} truck${n === 1 ? '' : 's'}`,
-    smallLoad: 'The last load is small. Some suppliers charge a short-load fee.',
+    smallLoad: (one: boolean) => `${one ? 'This is less than half a truck.' : 'The last load is small.'} Some suppliers charge a short-load fee.`,
+    stairTotal: (rise: string, run: string) => `Total rise ${rise} · total run ${run}`,
+    warnItem: 'Check the units',
     weight: 'Concrete weight', weightHint: 'At 2.3–2.4 t/m³ (about 145–150 lb/ft³), for hauling and load checks',
     cost: 'Estimated cost',
     zero: 'Enter dimensions to see results',
@@ -158,9 +162,9 @@ const T = {
   },
 };
 
-/** 숫자 입력 정리: 숫자와 소수점 하나, 소수 3자리까지 */
+/** 숫자 입력 정리: 숫자와 소수점 하나, 소수 3자리까지. 쉼표는 천 단위 구분으로 보고 지운다 */
 const decimal = (v: string) => {
-  const [i, ...d] = v.replace(/,/g, '.').replace(/[^0-9.]/g, '').split('.');
+  const [i, ...d] = v.replace(/[^0-9.]/g, '').split('.');
   return (d.length ? `${i}.${d.join('').slice(0, 3)}` : i).slice(0, 10);
 };
 const trim3 = (n: number) => String(Math.round(n * 1000) / 1000);
@@ -254,7 +258,7 @@ export default function ConcreteCalcClient() {
         setSys(nextSys);
         if (Array.isArray(sv.items)) setItems(sv.items.map((x) => normalize(x, nextSys)).filter((x): x is Part => !!x).slice(0, 100));
         const d = normalize(sv.draft, nextSys);
-        if (d) setDraft({ ...d, id: '' });
+        setDraft(d ? { ...d, id: '' } : emptyPart('slab', nextSys));
         if (typeof sv.waste === 'number') setWaste(Math.min(15, Math.max(0, Math.round(sv.waste))));
         if (sv.cap && typeof sv.cap === 'object') {
           const c = sv.cap as Record<string, unknown>;
@@ -297,7 +301,9 @@ export default function ConcreteCalcClient() {
   const net = rows.reduce((a, r) => a + (r.vol ?? 0), 0);
   const order = net * (1 + waste / 100);
   const capNum = num(cap[sys]);
-  const truck = trucks(sys === 'imperial' ? order / YD3_M3 : order, capNum);
+  // 차량 대수·비용은 화면에 보이는 주문 물량(소수 둘째 자리)으로 계산해 손으로 검산한 값과 맞춘다
+  const orderQty = round2(sys === 'imperial' ? order / YD3_M3 : order);
+  const truck = trucks(orderQty, capNum);
   const mixR = mix(order, mixId);
   const premix = premixBags(order);
   const priceNum = num(price);
@@ -333,6 +339,17 @@ export default function ConcreteCalcClient() {
   for (const k of activeFields(draft)) diagramLabels[k] = L.label(draft.kind, k, draft.post);
   if (HAS_COUNT[draft.kind]) diagramLabels.count = draft.kind === 'stairs' ? L.count('stairs') : `× ${L.count(draft.kind)}`;
 
+  // 계단 전체 높이·길이 (단 수 × 단 높이, 단 수 × 단 너비)
+  const stairTotals = (() => {
+    if (draft.kind !== 'stairs') return null;
+    const n = num(draft.count);
+    const R = num(draft.dims.riser?.v) * LEN_TO_M[draft.dims.riser?.u ?? 'm'];
+    const Tr = num(draft.dims.tread?.v) * LEN_TO_M[draft.dims.tread?.u ?? 'm'];
+    if (!(n > 0 && R > 0 && Tr > 0)) return null;
+    const len = (m: number) => (sys === 'imperial' ? `${nf(m / LEN_TO_M.ft)} ft` : `${nf(m)}m`);
+    return [len(n * R), len(n * Tr)] as const;
+  })();
+
   /* ── 동작 ── */
   const pickKind = (kind: ShapeKind) => {
     if (kind === draft.kind) return;
@@ -353,7 +370,7 @@ export default function ConcreteCalcClient() {
       setItems((list) => list.map((p) => (p.id === editId ? { ...draft, id: editId } : p)));
       setEditId(null);
     } else {
-      setItems((list) => [...list, { ...draft, id: newId() }]);
+      setItems((list) => [...list, { ...draft, id: newId(), name: draft.name.trim() || `${L.shortNames[draft.kind]} ${list.length + 1}` }]);
     }
     setDraft(emptyPart(draft.kind, sys));
   };
@@ -387,7 +404,7 @@ export default function ConcreteCalcClient() {
   const fieldId = (k: string) => `cc-${k}`;
   const hasValue = order > 0;
   const priceUnit = sys === 'imperial' ? 'yd³' : '㎥';
-  const costTotal = priceNum > 0 && hasValue ? priceNum * (sys === 'imperial' ? order / YD3_M3 : order) : 0;
+  const costTotal = priceNum > 0 && hasValue ? priceNum * orderQty : 0;
   const money = (n: number) => (isKo ? `${Math.round(n).toLocaleString('ko-KR')}원` : `$${nf(n)}`);
 
   return (
@@ -423,7 +440,7 @@ export default function ConcreteCalcClient() {
 
             <div className={s.form}>
               <div className={s.diagramBox}>
-                <ConcreteDiagram kind={draft.kind} labels={diagramLabels} stair={draft.stair} post={draft.post} className={s.diagram} />
+                <ConcreteDiagram kind={draft.kind} labels={diagramLabels} stair={draft.stair} post={draft.post} className={s.diagram} title={L.shapes[draft.kind]} />
               </div>
 
               {draft.kind === 'stairs' && (
@@ -496,8 +513,8 @@ export default function ConcreteCalcClient() {
                   <div className={ui.field}>
                     <label className={ui.label} htmlFor={fieldId('count')}>{L.count(draft.kind)}</label>
                     <div className={ui.inputGroup}>
-                      <input id={fieldId('count')} className={ui.input} inputMode={draft.kind === 'stairs' ? 'numeric' : 'decimal'} autoComplete="off" placeholder={draft.kind === 'stairs' ? '5' : '1'}
-                        value={draft.count} onChange={(e) => setDraft((d) => ({ ...d, count: d.kind === 'stairs' ? e.target.value.replace(/[^0-9]/g, '').slice(0, 3) : decimal(e.target.value) }))} />
+                      <input id={fieldId('count')} className={ui.input} inputMode="numeric" autoComplete="off" placeholder={draft.kind === 'stairs' ? '5' : '1'}
+                        value={draft.count} onChange={(e) => setDraft((d) => ({ ...d, count: e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }))} />
                       <span className={ui.unit}>{L.countUnit(draft.kind)}</span>
                     </div>
                   </div>
@@ -510,6 +527,7 @@ export default function ConcreteCalcClient() {
                 </div>
               </div>
 
+              {stairTotals && <p className={ui.hint}>{L.stairTotal(stairTotals[0], stairTotals[1])}</p>}
               {postBig && <p className={s.warn} role="alert"><AlertTriangle aria-hidden />{L.postBig}</p>}
 
               <div className={s.preview} aria-live="polite">
@@ -548,7 +566,7 @@ export default function ConcreteCalcClient() {
                           {nameOf(r.part, i)}
                           {pending && <small className={s.tag}>{L.drafting}</small>}
                           {r.state === 'editing' && <small className={s.tag}>{L.editing}</small>}
-                          {Object.keys(dimWarnings(r.part)).length > 0 && <AlertTriangle className={s.itemWarn} aria-label={L.warnBig} />}
+                          {Object.keys(dimWarnings(r.part)).length > 0 && <AlertTriangle className={s.itemWarn} aria-label={L.warnItem} />}
                         </span>
                         <span className={s.itemDims}>{L.shapes[r.part.kind]} · {summary(r.part)}</span>
                       </div>
@@ -624,7 +642,7 @@ export default function ConcreteCalcClient() {
               </div>
             )}
             {hasValue && truck.lastSmall && (
-              <div className={`${ui.notice} ${ui.amber} ${s.smallNotice}`}><Info aria-hidden /><div>{L.smallLoad}</div></div>
+              <div className={`${ui.notice} ${ui.amber} ${s.smallNotice}`}><Info aria-hidden /><div>{L.smallLoad(truck.count === 1)}</div></div>
             )}
           </section>
 

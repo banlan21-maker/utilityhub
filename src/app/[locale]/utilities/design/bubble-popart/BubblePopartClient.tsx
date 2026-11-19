@@ -7,7 +7,7 @@ import { Download, Check } from 'lucide-react';
 import { ui } from '@/app/components/ui';
 import {
   FONTS, FONT_CSS, PRESETS, SIZE_PRESETS, MAX_CHARS, MAX_LINES, SIZE_MIN, SIZE_MAX, KERNING_MIN, KERNING_MAX,
-  clampText, countChars, fontCss, isDarkBg, luminance, render, a4Dpi,
+  clampText, countChars, fontCss, isDarkBg, luminance, render, a4Dpi, sanitizeDesign,
   type Design, type RenderInfo, type BgKind, type DecoKind, type DecoAmount, type ShadowMode, type ShadowDir,
   type FillMode, type ShapeKind, type ArchKind,
 } from '@/lib/bubblePopart';
@@ -112,6 +112,7 @@ const T = {
   },
 };
 
+const STORE_KEY = 'utilhub-bubble-popart';
 const BG_SWATCHES = ['#FFD93D', '#74B9FF', '#A8E6CF', '#FFB3C6', '#FFFFFF', '#1a1a1a'];
 const SAMPLE = { ko: '팝!', en: 'POP!' };
 
@@ -189,6 +190,9 @@ export default function BubblePopartClient() {
   const [cssReady, setCssReady] = useState(false);
   const [fontReady, setFontReady] = useState(false);
   const [fontTick, setFontTick] = useState(0);
+  const [fontBusy, setFontBusy] = useState(false);
+  const [thumbTick, setThumbTick] = useState(0);
+  const loaded = useRef(false);
   const [info, setInfo] = useState<RenderInfo>({ fontSize: 110, shrunk: false });
   const [saved, setSaved] = useState(false);
 
@@ -220,11 +224,40 @@ export default function BubblePopartClient() {
   useEffect(() => {
     if (!cssReady) return;
     let alive = true;
-    const finish = () => { if (alive) { setFontReady(true); setFontTick((n) => n + 1); } };
+    const finish = () => { if (alive) { setFontReady(true); setFontBusy(false); setFontTick((n) => n + 1); } };
     if (typeof document === 'undefined' || !document.fonts) { void Promise.resolve().then(finish); return () => { alive = false; }; }
-    document.fonts.load(fontCss(design.font, 100), text.replace(/\n/g, '') || 'A').then(finish, finish);
+    const font = fontCss(design.font, 100);
+    const sample = text.replace(/\n/g, '') || 'A';
+    // 이미 받은 글꼴 조각이면 미리보기는 방금 그린 그대로 맞다 (글자를 칠 때마다 두 번 그리지 않게)
+    let have = false;
+    try { have = document.fonts.check(font, sample); } catch { /* 일부 브라우저는 예외 */ }
+    if (have) { void Promise.resolve().then(() => { if (alive) { setFontReady(true); setFontBusy(false); } }); return () => { alive = false; }; }
+    // 받는 동안에는 대체 글꼴로 저장되지 않도록 다운로드를 잠시 막는다
+    void Promise.resolve().then(() => { if (alive) setFontBusy(true); });
+    document.fonts.load(font, sample).then(finish, finish);
     return () => { alive = false; };
   }, [cssReady, design.font, text]);
+
+  // 저장해 둔 디자인·글자 되살리기 (새로고침·언어 전환 후에도 이어서)
+  useEffect(() => {
+    let saved: Record<string, unknown> | null = null;
+    try { saved = JSON.parse(localStorage.getItem(STORE_KEY) ?? 'null'); } catch { /* 저장소 없음 */ }
+    void Promise.resolve().then(() => {
+      if (saved && typeof saved === 'object') {
+        if (saved.design) setDesign(sanitizeDesign(saved.design));
+        if (typeof saved.text === 'string' && saved.text.trim()) setText(clampText(saved.text));
+        if (typeof saved.fontSize === 'number') setFontSize(Math.min(SIZE_MAX, Math.max(SIZE_MIN, Math.round(saved.fontSize))));
+        if (typeof saved.kerning === 'number') setKerning(Math.min(KERNING_MAX, Math.max(KERNING_MIN, saved.kerning)));
+        if (typeof saved.sizeIdx === 'number' && SIZE_PRESETS[saved.sizeIdx]) setSizeIdx(saved.sizeIdx);
+        if (saved.scale === 1 || saved.scale === 2 || saved.scale === 3) setScale(saved.scale);
+      }
+      loaded.current = true;
+    });
+  }, []);
+  useEffect(() => {
+    if (!loaded.current) return;
+    try { localStorage.setItem(STORE_KEY, JSON.stringify({ design, text, fontSize, kerning, sizeIdx, scale })); } catch { /* 저장 실패해도 그대로 동작 */ }
+  }, [design, text, fontSize, kerning, sizeIdx, scale]);
 
   // 프리셋 견본에 쓰는 폰트
   useEffect(() => {
@@ -232,7 +265,7 @@ export default function BubblePopartClient() {
     let alive = true;
     const fonts = [...new Set(PRESETS.map((p) => p.design.font))];
     Promise.all(fonts.map((f) => document.fonts.load(fontCss(f, 100), SAMPLE.ko + SAMPLE.en).catch(() => null)))
-      .then(() => { if (alive) setFontTick((n) => n + 1); });
+      .then(() => { if (alive) setThumbTick((n) => n + 1); });
     return () => { alive = false; };
   }, [cssReady]);
 
@@ -254,7 +287,7 @@ export default function BubblePopartClient() {
       const cv = thumbRefs.current[i];
       if (cv) render(cv, 160, 100, 1, { ...p.design, decoAmount: 'few' }, { text: sample, fontSize: 200, kerning: 0.9 });
     });
-  }, [fontTick, isKo]);
+  }, [thumbTick, isKo]);
 
   const handleDownload = () => {
     if (!text.trim()) return;
@@ -323,7 +356,12 @@ export default function BubblePopartClient() {
             className={`${ui.input} ${s.textarea}`}
             value={text}
             rows={2}
-            onChange={(e) => setText(clampText(e.target.value))}
+            onChange={(e) => {
+              const v = e.target.value;
+              // 이미 3줄인데 Enter로 줄을 더 나누면 마지막 줄이 잘려 나가므로 무시한다 (붙여넣기는 앞 3줄만 받음)
+              if (v.split('\n').length > MAX_LINES && v.length === text.length + 1 && v.replace(/\n/g, '') === text.replace(/\n/g, '')) return;
+              setText(clampText(v));
+            }}
             placeholder={t.textPh}
             aria-label={t.text}
           />
@@ -457,7 +495,7 @@ export default function BubblePopartClient() {
           type="button"
           className={`${ui.button} ${ui.primary} ${ui.lg} ${ui.block} ${saved ? ui.green : ''}`}
           onClick={handleDownload}
-          disabled={!text.trim() || !fontReady}
+          disabled={!text.trim() || !fontReady || fontBusy}
         >
           {saved ? <Check size={18} /> : <Download size={18} />}
           {saved ? t.done : `${t.download} (${outW}×${outH})`}
