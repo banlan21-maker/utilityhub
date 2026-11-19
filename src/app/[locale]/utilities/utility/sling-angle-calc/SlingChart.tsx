@@ -44,7 +44,8 @@ export default function SlingChart({ apex, labels, title }: Props) {
 
   const cur = apex !== null && apex >= 0 ? apex : null;
   const inRange = cur !== null && cur <= AMAX;
-  const tipW = 132;
+  /** 말풍선 폭: 한글은 넓게, 영문·숫자는 좁게 잡아 글자가 넘치지 않게 */
+  const tipWidth = (t: string) => [...t].reduce((a, ch) => a + (ch.charCodeAt(0) > 0x2e80 ? 12 : 6.9), 18);
 
   return (
     <div className={s.chartWrap}>
@@ -72,6 +73,8 @@ export default function SlingChart({ apex, labels, title }: Props) {
 
         {hover !== null && (() => {
           const hx = xOf(hover), hy = yOf(fOfApex(hover));
+          const tipText = labels.tip(hover, fOfApex(hover).toFixed(3));
+          const tipW = tipWidth(tipText);
           const tx = Math.min(Math.max(hx - tipW / 2, X0), X1 - tipW);
           const ty = hy - 40 < Y1 ? hy + 12 : hy - 40;
           return (
@@ -79,7 +82,7 @@ export default function SlingChart({ apex, labels, title }: Props) {
               <line className={s.crosshair} x1={hx} x2={hx} y1={Y1} y2={Y0} />
               <circle className={s.hoverDot} cx={hx} cy={hy} r={4} />
               <rect className={s.tipBox} x={tx} y={ty} width={tipW} height={26} rx={6} />
-              <text className={s.tipText} x={tx + tipW / 2} y={ty + 17} textAnchor="middle">{labels.tip(hover, fOfApex(hover).toFixed(3))}</text>
+              <text className={s.tipText} x={tx + tipW / 2} y={ty + 17} textAnchor="middle">{tipText}</text>
             </g>
           );
         })()}

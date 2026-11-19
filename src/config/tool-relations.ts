@@ -96,7 +96,7 @@ export const TOOLS: ToolMeta[] = [
   { id: 'utilities/utility/cable-tray-calc', icon: '🪜', ko: '케이블 트레이 가공 계산기', en: 'Cable Tray Bend & Offset Calculator', category: 'utility' },
   { id: 'utilities/utility/metal-weight-calc', icon: '🏗️', ko: '금속 중량·면적 계산기', en: 'Metal Weight Calculator', category: 'utility' },
   { id: 'utilities/utility/concrete-calc', icon: '🚛', ko: '콘크리트·레미콘 물량 계산기', en: 'Concrete Calculator', category: 'utility' },
-  { id: 'utilities/utility/sling-angle-calc', icon: '🪝', ko: '줄걸이(슬링) 각도·하중 계산기', en: 'Sling Angle Calculator', category: 'utility' },
+  { id: 'utilities/utility/sling-angle-calc', icon: '⛓️', ko: '줄걸이(슬링) 각도·하중 계산기', en: 'Sling Angle Calculator', category: 'utility' },
   { id: 'utilities/utility/interior-material-calc', icon: '🧱', ko: '타일·도배 계산기', en: 'Tile & Wallpaper Calculator', category: 'utility' },
   { id: 'utilities/utility/elbow-offset', icon: '📐', ko: '배관 엘보 오프셋 계산기', en: 'Pipe Elbow Offset Calculator', category: 'utility' },
   { id: 'utilities/utility/construction-dictionary', icon: '📖', ko: '건설현장 용어 사전', en: 'Construction Site Glossary', category: 'utility' },

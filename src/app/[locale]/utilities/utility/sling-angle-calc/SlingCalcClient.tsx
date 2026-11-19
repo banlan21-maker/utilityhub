@@ -16,6 +16,7 @@ import s from './sling-angle-calc.module.css';
 
 const STORE_KEY = 'utilhub-sling-angle-calc';
 const MODES: AngleMode[] = ['apex', 'vertical', 'horizontal', 'length'];
+const GRADE_INDEX: Record<Grade, 0 | 1 | 2 | 3> = { green: 0, yellow: 1, orange: 2, red: 3 };
 
 const T = {
   ko: {
@@ -69,7 +70,12 @@ const T = {
       orange: ['경고: 장력 급증', '꼭지각 90~120° — 120°에서는 줄 1개에 인양물 전체 무게가 걸립니다.'],
       red: ['사용 금지 수준', '꼭지각 120° 초과 — 각도를 줄이거나 더 긴 슬링·인양 보조 기구를 쓰세요.'],
     } as Record<Grade, [string, string]>,
-    okWll: '사용 가능', overWll: '허용하중 초과',
+    okWll: '사용 가능', overWll: '허용하중 초과', withinRed: 'WLL 이내 · 각도는 사용 금지 수준',
+    needWll: '필요한 슬링 WLL', needWllSub: '다리 1개 수직 허용하중 기준', atLeast: (v: string) => `${v} 이상`,
+    maxLoad: '이 각도에서 최대 인양 중량', maxLoadSub: '입력한 WLL 기준 · 정적 하중', atMost: (v: string) => `${v} 이하`,
+    apexMulti: (legs: Legs) => legs === 4
+      ? '4줄걸이의 꼭지각은 대각선으로 마주 보는 두 줄 사이 각도입니다. 이웃한 두 줄 사이를 재면 실제보다 작게 나와 장력이 낮게 계산됩니다.'
+      : '3줄걸이는 마주 보는 줄이 없어 꼭지각을 재기 어렵습니다. 수직 기준 각도(줄 하나와 수직선 사이)를 재서 넣거나, 꼭지각 칸에는 그 2배를 넣으세요.',
     usage: (p: string) => `WLL의 ${p}% 사용`,
     tight: '여유가 10% 미만입니다. 동하중(급정지·흔들림)을 생각하면 한 단계 큰 슬링을 검토하세요.',
     redButOk: 'WLL 이내지만 각도가 사용 금지 수준입니다. 각도를 줄이세요.',
@@ -112,7 +118,7 @@ const T = {
     why4: 'Why not divide by 4?',
     why4Body: 'Even with four legs hooked up, a few millimetres of difference in leg length lets two short legs take up first while the others stay slack. With rigid loads such as steel, blocks or dies this is common, so dividing by four can badly underestimate the real tension.',
     mode: 'How to enter the angle',
-    modes: { apex: 'Included', vertical: 'From vertical', horizontal: 'From horizontal', length: 'Lengths' } as Record<AngleMode, string>,
+    modes: { apex: 'Included', vertical: 'Vertical', horizontal: 'Horizontal', length: 'Lengths' } as Record<AngleMode, string>,
     modeHint: {
       apex: 'The angle between the two legs (included angle).',
       vertical: 'The angle between a leg and a vertical line dropped from the hook — half the included angle.',
@@ -147,7 +153,12 @@ const T = {
       orange: ['Warning: tension climbing fast', 'Included 90–120° — at 120° each leg carries the full load.'],
       red: ['Do not use', 'Included angle over 120° (under 30° from horizontal) — reduce the angle, use longer legs or a spreader beam.'],
     } as Record<Grade, [string, string]>,
-    okWll: 'Within WLL', overWll: 'Over the WLL',
+    okWll: 'Within WLL', overWll: 'Over the WLL', withinRed: 'Within WLL — but the angle is too flat',
+    needWll: 'Minimum sling WLL', needWllSub: 'single-leg vertical rating', atLeast: (v: string) => `${v} or more`,
+    maxLoad: 'Max load at this angle', maxLoadSub: 'from the WLL entered · static load', atMost: (v: string) => `up to ${v}`,
+    apexMulti: (legs: Legs) => legs === 4
+      ? 'On a 4-leg bridle the included angle is measured between diagonally opposite legs. Measuring between neighbouring legs gives a smaller angle and understates the tension.'
+      : 'A 3-leg bridle has no opposite leg, so the included angle is hard to measure. Use the angle from vertical or horizontal instead, or enter twice the vertical angle here.',
     usage: (p: string) => `${p}% of WLL`,
     tight: 'Less than 10% margin. Allow for shock loading (sudden stops, swinging) — consider the next size up.',
     redButOk: 'Within the WLL, but the angle is in the do-not-use range. Reduce the angle.',
@@ -157,7 +168,7 @@ const T = {
     chart: 'Angle vs. tension',
     chartSub: 'As the included angle opens up, the force in each leg climbs steeply.',
     chartX: 'Included angle', chartY: 'Load factor',
-    zones: ['OK', 'Caution', 'Warning', 'No'] as [string, string, string, string],
+    zones: ['OK', 'Caution', 'Warning', 'Avoid'] as [string, string, string, string],
     tip: (a: number, f: string) => `${a}° included → ×${f}`,
     outside: (a: number, f: string) => `The current included angle (${a}°) is beyond the chart (150°). Factor ×${f}`,
     table: 'Tension by angle',
@@ -206,6 +217,7 @@ export default function SlingCalcClient() {
 
   const [st, setSt] = useState<Saved>(() => defaults(isKo));
   const [copied, setCopied] = useState(false);
+  const [weightFocus, setWeightFocus] = useState(false);
   const loaded = useRef(false);
   const inputsRef = useRef<HTMLElement>(null);
   const resultRef = useRef<HTMLElement>(null);
@@ -268,13 +280,17 @@ export default function SlingCalcClient() {
   const theta = angleRes.ok ? angleRes.theta : null;
   const w = num(weight);
   const weightOk = w > 0;
-  const weightErr = weight !== '' && !(w > 0);
+  // 0.5를 치는 도중("0", "0.")에는 오류를 띄우지 않는다
+  const weightErr = !weightFocus && weight !== '' && !(w > 0);
   const n = sharingLegs(legs, share);
   const factor = theta !== null ? angleFactor(theta) : null;
   const grade: Grade | null = theta !== null && legs > 1 ? angleGrade(theta) : null;
   const tension = theta !== null && weightOk ? legTension(w, legs, share, theta) : null;
   const wllNum = num(wll);
   const usage = tension !== null && wllNum > 0 ? toKg(tension, wUnit) / toKg(wllNum, wllUnit) : null;
+  // 이 각도에서 WLL로 들 수 있는 최대 중량 (사용 금지 각도에서는 보여 주지 않음)
+  const maxLoad = wllNum > 0 && theta !== null && grade !== 'red'
+    ? fromKg(toKg(wllNum, wllUnit), wUnit) * n * Math.cos((theta * Math.PI) / 180) : null;
 
   /* ── 표시 ── */
   const fmtW = (v: number, u: WeightUnit) => {
@@ -295,8 +311,23 @@ export default function SlingCalcClient() {
     const base = isKo ? `꼭지각 ${thetaEq.apex}°` : `${thetaEq.apex}° included`;
     return mode === 'length' ? base + L.copyLen(`${slingLen}${lenUnit}`, `${horiz}${lenUnit}`) : base;
   })();
-  const pct = usage !== null ? nf(usage * 100, 0) : '';
-  const over = usage !== null && usage > 1;
+  const over = usage !== null && usage > 1 + 1e-9;
+  // 초과인데 반올림하면 100%로 보이는 경우 소수 한 자리로 올려서 보여 준다
+  const pct = usage === null ? '' : over && Math.round(usage * 100) <= 100 ? nf(Math.ceil(usage * 1000) / 10, 1) : nf(usage * 100, 0);
+  // 필요 WLL은 올림, 최대 중량은 내림 (항상 보수적인 쪽)
+  const pow = 10 ** DECIMALS[wUnit];
+  const needWll = tension !== null ? Math.ceil(tension * pow - 1e-6) / pow : null;
+  const maxLoadShown = maxLoad !== null ? Math.floor(maxLoad * pow + 1e-6) / pow : null;
+  // WLL 비교 줄: 단위가 다르면 WLL 단위로 환산해 함께, 초과인데 같아 보이면 자릿수를 늘린다
+  const compare = (() => {
+    if (usage === null || tension === null) return '';
+    const tw = fromKg(toKg(tension, wUnit), wllUnit);
+    let d = DECIMALS[wllUnit];
+    while (over && d < 6 && Number(tw.toFixed(d)) <= wllNum) d += 1;
+    const twText = isKo && wllUnit === 't' ? `${nf(tw, d)}${L.unitName.t}` : `${nf(tw, d)} ${L.unitName[wllUnit]}`;
+    const left = wllUnit === wUnit ? twText : `${fmtW(tension, wUnit)} (= ${twText})`;
+    return `${left} ${over ? '>' : '≤'} WLL ${inputW(wllNum, wllUnit)}`;
+  })();
 
   /* ── 동작 ── */
   const setAngle = (m: Exclude<AngleMode, 'length'>, raw: string) => {
@@ -329,9 +360,9 @@ export default function SlingCalcClient() {
   const sliderMax = mode === 'apex' ? APEX_SLIDER : mode === 'vertical' ? VERT_SLIDER : 90;
   const angleStr = mode === 'length' ? '' : angles[mode];
   const sliderVal = Math.min(sliderMax, Math.max(sliderMin, Number.isFinite(num(angleStr)) ? num(angleStr) : sliderMin));
-  const angleErr = !angleRes.ok && legs > 1
-    ? (angleRes.reason === 'empty' ? (mode === 'length' ? L.lenEmpty : L.errs.empty) : L.errs[angleRes.reason])
-    : null;
+  // 빈칸은 안내, 범위를 벗어난 값만 오류
+  const angleHint = !angleRes.ok && legs > 1 && angleRes.reason === 'empty' ? (mode === 'length' ? L.lenEmpty : L.errs.empty) : null;
+  const angleErr = !angleRes.ok && legs > 1 && angleRes.reason !== 'empty' ? L.errs[angleRes.reason] : null;
 
   // 비교표: 기본 각도 + 현재 각도(목록에 없으면 끼워 넣음)
   const curApex = thetaEq ? Number(thetaEq.apex) : null;
@@ -353,7 +384,8 @@ export default function SlingCalcClient() {
             <label className={ui.label} htmlFor="sl-weight">{L.weight}</label>
             <div className={`${s.unitInput} ${weightErr ? s.errInput : ''}`}>
               <input id="sl-weight" className={ui.input} inputMode="decimal" autoComplete="off" placeholder="0"
-                value={weight} aria-invalid={weightErr} onChange={(e) => set({ weight: decimal(e.target.value) })} />
+                value={weight} aria-invalid={weightErr} onChange={(e) => set({ weight: decimal(e.target.value) })}
+                onFocus={() => setWeightFocus(true)} onBlur={() => setWeightFocus(false)} />
               <select className={s.unitSelect} aria-label={`${L.weight} ${isKo ? '단위' : 'unit'}`} value={wUnit}
                 onChange={(e) => setWeightUnit(e.target.value as WeightUnit)}>
                 {WEIGHT_UNITS[isKo ? 'ko' : 'en'].map((u) => <option key={u} value={u}>{L.unitOpt[u]}</option>)}
@@ -406,6 +438,7 @@ export default function SlingCalcClient() {
             {legs === 1
               ? <p className={`${ui.notice} ${ui.gray} ${s.small}`}><Info aria-hidden />{L.oneLeg}</p>
               : <p className={ui.hint}>{L.modeHint[mode]}</p>}
+            {legs >= 3 && mode === 'apex' && <p className={`${ui.notice} ${ui.amber} ${s.small}`}><AlertTriangle aria-hidden />{L.apexMulti(legs)}</p>}
           </div>
 
           {legs > 1 && mode !== 'length' && (
@@ -448,6 +481,7 @@ export default function SlingCalcClient() {
 
           {legs > 1 && (angleErr
             ? <p className={ui.error} role="alert">{angleErr}</p>
+            : angleHint ? <p className={ui.hint}>{angleHint}</p>
             : thetaEq && <p className={s.equiv}>{L.equiv(thetaEq.apex, thetaEq.vertical, thetaEq.horizontal)}</p>)}
 
           <div className={ui.field}>
@@ -475,7 +509,7 @@ export default function SlingCalcClient() {
                   <div className={s.resultSub}>= {alt(tension)}</div>
                 </>
               ) : (
-                <div className={s.zero}>{weightOk ? (angleErr ?? L.noWeight) : L.noWeight}</div>
+                <div className={s.zero}>{weightOk ? (angleErr ?? angleHint ?? L.noWeight) : L.noWeight}</div>
               )}
             </div>
 
@@ -498,6 +532,18 @@ export default function SlingCalcClient() {
                   <span className={s.rowValue}>{L.shareVal(legs, n)}</span>
                 </div>
               )}
+              {needWll !== null && (
+                <div className={s.row}>
+                  <span className={s.rowLabel}>{L.needWll}<small>{L.needWllSub}</small></span>
+                  <span className={s.rowValue}>{L.atLeast(fmtW(needWll, wUnit))}</span>
+                </div>
+              )}
+              {maxLoadShown !== null && maxLoadShown > 0 && (
+                <div className={s.row}>
+                  <span className={s.rowLabel}>{L.maxLoad}<small>{L.maxLoadSub}</small></span>
+                  <span className={s.rowValue}>{L.atMost(fmtW(maxLoadShown, wUnit))}</span>
+                </div>
+              )}
             </div>
 
             {grade && (
@@ -511,8 +557,8 @@ export default function SlingCalcClient() {
               <div className={`${ui.notice} ${over || grade === 'red' ? ui.red : ui.green} ${s.verdict}`} role="status">
                 {over ? <XCircle aria-hidden /> : grade === 'red' ? <OctagonAlert aria-hidden /> : <CheckCircle2 aria-hidden />}
                 <div>
-                  <strong>{over ? L.overWll : L.okWll} · {L.usage(pct)}</strong>
-                  <span>{fmtW(tension!, wUnit)} {over ? '>' : '≤'} WLL {inputW(wllNum, wllUnit)}</span>
+                  <strong>{over ? L.overWll : grade === 'red' ? L.withinRed : L.okWll} · {L.usage(pct)}</strong>
+                  <span>{compare}</span>
                   {!over && grade === 'red' && <span>{L.redButOk}</span>}
                   {!over && grade !== 'red' && usage > 0.9 && <span>{L.tight}</span>}
                 </div>
@@ -535,7 +581,8 @@ export default function SlingCalcClient() {
             <SlingDiagram legs={legs} theta={theta ?? 0} grade={grade} title={L.diagram}
               tension={tension !== null ? fmtW(tension, wUnit) : undefined}
               load={weightOk ? inputW(w, wUnit) : undefined}
-              apex={thetaEq && legs > 1 ? `${thetaEq.apex}°` : undefined} />
+              apex={thetaEq && legs > 1 ? `${thetaEq.apex}°` : undefined}
+              gradeLabel={grade ? L.grades[grade][0] : undefined} />
             {L.diagramNote(legs, n) && <p className={s.note}>{L.diagramNote(legs, n)}</p>}
           </section>
         </aside>
@@ -559,7 +606,7 @@ export default function SlingCalcClient() {
           {legs === 1 ? (
             <p className={s.zero}>{L.tableOne}</p>
           ) : (
-            <table className={s.table}>
+            <table className={`${s.table} ${s.cmpTable}`}>
               <thead><tr>{L.tableHead.map((h) => <th key={h} scope="col">{h}</th>)}</tr></thead>
               <tbody>
                 {tableRows.map((r) => {
@@ -567,7 +614,7 @@ export default function SlingCalcClient() {
                   const g = angleGrade(th);
                   return (
                     <tr key={`${r.apex}${r.now ? 'n' : ''}`} className={r.now ? s.nowRow : ''}>
-                      <td><span className={`${s.dotMark} ${s[`dot_${g}`]}`} aria-hidden />{deg(r.apex)}°{r.now && <small className={s.nowTag}>{L.current}</small>}</td>
+                      <td><span className={`${s.dotMark} ${s[`dot_${g}`]}`} aria-hidden />{deg(r.apex)}°{r.now && <small className={s.nowTag}>{L.current}</small>}<small className={s.gradeTag}>{L.zones[GRADE_INDEX[g]]}</small></td>
                       <td>{deg(th)}°</td>
                       <td>×{angleFactor(th).toFixed(3)}</td>
                       <td>{weightOk ? fmtW(legTension(w, legs, share, th), wUnit) : '—'}</td>

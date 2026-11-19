@@ -2826,7 +2826,8 @@
       "<b>Angle from horizontal</b> is measured between a leg and the top of the load. It is the \"sling angle\" in OSHA and ASME charts, so most US rigging tables use it.",
       "<b>Angle from vertical</b> is measured between a leg and a plumb line from the hook. It equals 90° minus the horizontal angle.",
       "<b>Included angle</b> is the angle between two legs at the hook — twice the vertical angle. A 60° horizontal angle equals a 30° vertical angle and a 60° included angle.",
-      "Can’t measure the angle? Enter the <b>leg length</b> and the <b>horizontal distance from the hook centre to the pick point</b>. A 12 ft leg with 6 ft horizontal distance is 30° from vertical, or 60° from horizontal."
+      "Can’t measure the angle? Enter the <b>leg length</b> and the <b>horizontal distance from the hook centre to the pick point</b>. A 12 ft leg with 6 ft horizontal distance is 30° from vertical, or 60° from horizontal.",
+      "On <b>3- and 4-leg bridles</b> the included angle means the angle between diagonally opposite legs. The angle between neighbouring legs is smaller and would understate the tension — when in doubt, use the angle from vertical or the leg lengths."
     ],
     "law_title": "Rules and standards",
     "law": [

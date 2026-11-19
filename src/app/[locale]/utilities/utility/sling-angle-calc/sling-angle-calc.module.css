@@ -64,9 +64,13 @@
 .legBtn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .legActive { border-color: var(--color-primary); background: var(--color-primary-light); color: var(--color-primary); }
 
-.modeTabs > button { min-height: 46px; white-space: nowrap; padding-inline: 0.5rem; }
+.modeTabs { flex-wrap: nowrap; }
+.modeTabs > button { min-height: 46px; white-space: nowrap; padding-inline: 0.35rem; }
 .modeTabs > button:disabled { opacity: 0.45; cursor: not-allowed; }
-@media (max-width: 480px) { .modeTabs > button { flex: 1 1 calc(50% - 0.25rem); } }
+@media (max-width: 480px) {
+  .modeTabs { flex-wrap: wrap; }
+  .modeTabs > button { flex: 1 1 calc(50% - 0.25rem); }
+}
 
 .why { font-size: 0.85rem; color: var(--text-secondary); }
 .why summary { cursor: pointer; font-weight: 800; color: var(--color-primary); padding: 0.25rem 0; }
@@ -94,13 +98,14 @@
   padding: 0.6rem 0; border-bottom: 1px dashed var(--border);
 }
 .row:last-child { border-bottom: none; }
-.rowLabel { display: flex; flex-direction: column; font-size: 0.92rem; color: var(--text-secondary); min-width: 0; }
+.rowLabel { display: flex; flex-direction: column; font-size: 0.92rem; color: var(--text-secondary); min-width: 0; word-break: keep-all; }
 .rowLabel small { font-size: 0.78rem; color: var(--text-muted); }
-.rowValue { font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; text-align: right; }
+.rowValue { flex-shrink: 0; white-space: nowrap; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; text-align: right; }
 .factorValue { font-size: 1.3rem; font-weight: 800; color: var(--text-primary); }
 .orange { background: var(--tint-orange-bg); border-color: var(--tint-orange-border); color: var(--tint-orange-fg); }
 .verdict > div { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
 .verdict strong { font-size: 1.05rem; font-weight: 800; }
+.verdict, .disclaimer, .small { word-break: keep-all; }
 .verdict span { font-size: 0.86rem; }
 .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .actions > button { flex: 1 1 0; min-height: 50px; white-space: nowrap; }
@@ -129,6 +134,11 @@
   font-variant-numeric: tabular-nums;
 }
 .angleText { fill: var(--color-primary); font-size: 14px; }
+.gradeText { font-size: 13px; font-weight: 800; }
+.gtGreen { fill: var(--tint-green-fg); }
+.gtYellow { fill: var(--tint-amber-fg); }
+.gtOrange { fill: var(--tint-orange-fg); }
+.gtRed { fill: var(--tint-red-fg); }
 .tensionText { fill: var(--text-primary); font-size: 15px; }
 
 /* 그래프·표 */
@@ -157,14 +167,21 @@
 .table th, .table td { padding: 0.6rem 0.45rem; border-bottom: 1px solid var(--border); text-align: right; color: var(--text-secondary); }
 .table th { font-size: 0.8rem; font-weight: 800; color: var(--text-primary); background: var(--surface-hover); }
 .table th:first-child, .table td:first-child { text-align: left; }
+.table td { white-space: nowrap; }
 .table td:last-child { font-weight: 800; color: var(--text-primary); }
 .nowRow td { background: var(--tint-violet-bg); }
+.gradeTag { margin-left: 0.35rem; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
 .nowTag { margin-left: 0.35rem; font-size: 0.7rem; font-weight: 800; color: var(--tint-violet-fg); }
 .dotMark { display: inline-block; width: 9px; height: 9px; border-radius: 999px; margin-right: 0.4rem; vertical-align: 1px; }
 .dot_green { background: var(--tint-green-fg); }
 .dot_yellow { background: var(--tint-amber-fg); }
 .dot_orange { background: var(--tint-orange-fg); }
 .dot_red { background: var(--tint-red-fg); }
+@media (max-width: 480px) {
+  .cmpTable th:nth-child(2), .cmpTable td:nth-child(2) { display: none; }
+  .cmpTable .gradeTag { display: block; margin: 0.1rem 0 0 calc(9px + 0.4rem); }
+  .cmpTable th, .cmpTable td { padding-inline: 0.3rem; }
+}
 
 /* 휴대폰 하단 장력 막대 */
 .mobileBar { display: none; }

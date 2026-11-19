@@ -13,6 +13,7 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-20', type: 'update', href: '/utilities/utility/sling-angle-calc', ko: '줄걸이 계산기 — 필요한 슬링 WLL·최대 인양 중량 표시, 3·4줄 꼭지각 안내', en: 'Sling Angle Calculator — minimum sling WLL, max load at the angle, 3/4-leg angle guidance' },
   { date: '2026-11-20', type: 'new', href: '/utilities/utility/sling-angle-calc', ko: '줄걸이(슬링) 각도·하중 계산기 — 줄 1개 장력, WLL 판정, 4줄걸이 2줄 분담', en: 'Sling Angle Calculator — tension per leg, WLL check, conservative 4-leg sharing' },
   { date: '2026-11-19', type: 'fix', href: '/utilities/design/bubble-popart', ko: '버블 팝아트 글씨 — 광택 점 위치 개선, 만들던 디자인 자동 저장', en: 'Bubble Pop Art — better highlight placement, designs are saved automatically' },
   { date: '2026-11-19', type: 'new', href: '/utilities/utility/concrete-calc', ko: '콘크리트·레미콘 물량 계산기 — 여러 부위 합산, 레미콘 차량 대수, 시멘트 포대 수', en: 'Concrete Calculator — multi-part totals, truck loads and bag counts' },
