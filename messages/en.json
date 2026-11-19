@@ -159,7 +159,11 @@
     },
     "metaTitle": "Everyday Utilities — Unit Converter, Image Resizer, GIF Maker & Engineering Calculators | Utility Hub",
     "metaDescription": "Free everyday utilities: unit converter, image resizer, GIF maker, YouTube thumbnail downloader, lottery number generator, plus field calculators for wire size, pipe offsets, cable tray fill and metal weight.",
-    "intro": "General utilities plus a growing set of calculators for construction and trades work. Convert length, weight, temperature and Korean pyeong to square metres, resize, edit and animate images into GIFs, and grab every resolution of a YouTube thumbnail. For the job site, the Wire Size Calculator picks conductor cross-sections from load current, distance and voltage drop, the Cable Tray Calculator checks fill against tray capacity, the Piping Calculator covers pipe schedules, drain slopes, hydrostatic test volumes and flow velocity, and the Pipe Offset Calculator gives cut lengths with elbow take-offs. The Metal Weight Calculator handles H-beams, channels, pipes and plates with paint area and cost, and the Tile & Wallpaper Calculator counts boxes, rolls and waste. Between tasks you can play the Daily Word Puzzle, Grid Poker or Persona Build, or let Decision Master choose for you."
+    "intro": "General utilities plus a growing set of calculators for construction and trades work. Convert length, weight, temperature and Korean pyeong to square metres, resize, edit and animate images into GIFs, and grab every resolution of a YouTube thumbnail. For the job site, the Wire Size Calculator picks conductor cross-sections from load current, distance and voltage drop, the Cable Tray Calculator checks fill against tray capacity, the Piping Calculator covers pipe schedules, drain slopes, hydrostatic test volumes and flow velocity, and the Pipe Offset Calculator gives cut lengths with elbow take-offs. The Metal Weight Calculator handles H-beams, channels, pipes and plates with paint area and cost, and the Tile & Wallpaper Calculator counts boxes, rolls and waste. Between tasks you can play the Daily Word Puzzle, Grid Poker or Persona Build, or let Decision Master choose for you.",
+    "concrete-calc": {
+      "title": "Concrete Calculator",
+      "desc": "Slabs, footings, columns, post holes and stairs in one list — cubic yards, truck loads and bags."
+    }
   },
   "TextCounter": {
     "title": "Character & Byte Counter",
@@ -2597,6 +2601,153 @@
       {
         "q": "When do I get the night work premium?",
         "a": "Hours worked between 10 pm and 6 am earn an extra 50% of the hourly wage at workplaces with five or more staff. A 6 pm to 2 am shift includes four night hours. If those hours are also overtime beyond 8 a day, the two premiums add up to double pay."
+      }
+    ]
+  },
+  "ConcreteCalc": {
+    "title": "Concrete Calculator – Slabs, Footings, Columns & Bags",
+    "subtitle": "Add every pour to one list and get cubic yards, ready-mix trucks and how many bags to buy",
+    "meta_title": "Concrete Calculator – Cubic Yards, Bags & Slab Volume | Utility Hub",
+    "meta_description": "Free concrete calculator for slabs, footings, walls, round columns, fence post holes and stairs. Add several parts to one list and get cubic yards with waste, truck loads, and how many 80, 60 or 40 lb bags you need.",
+    "description": "This concrete calculator is built for jobs that are more than one simple slab. Pick a shape — slab or patio, wall or strip footing, square column or pad footing, round column or Sonotube, fence or deck post hole, stairs, or a volume you already know — and enter the dimensions in feet or inches. Each part goes into a list with its own name, so a garage slab, four pier footings and a set of front steps add up to one total. You get the net volume, the order volume with a waste allowance (5% by default, adjustable from 0 to 15%), the number of ready-mix truck loads with the size of the last load, and the approximate weight of the concrete. For small pours you can see how many 80 lb, 60 lb or 40 lb premix bags to buy, or the cement, sand and gravel for a site-mixed batch at 1:2:4, 1:3:6 or 1:1.5:3. Every input has its own unit selector, and values that look wrong — a 4-foot-thick slab, say — trigger a check-your-units warning. Copy a plain-text order summary for your supplier or print the results for a quote. Everything runs in your browser; nothing is uploaded.",
+    "share_title": "Concrete Calculator — cubic yards, trucks and bags for any pour",
+    "about_title": "How to calculate concrete",
+    "about": [
+      "Concrete is ordered by volume, so every shape comes down to length × width × depth in the same unit. A 10 ft × 10 ft patio poured 4 inches thick is 10 × 10 × (4 ÷ 12) = 33.33 cubic feet. Divide by 27 to get cubic yards: about 1.23 yd³. The classic mistake is multiplying by 4 instead of 0.333, which makes the order twelve times too big — this calculator labels every unit and warns when a value looks unrealistic.",
+      "Round columns and Sonotubes use the area of a circle: π × radius² × height. Four 12-inch tubes 8 ft tall come to about 25.1 ft³, or 0.93 yd³. For fence and deck posts set in concrete, the post takes up part of the hole, so subtract its volume — a 4×4 post in a 10-inch hole saves roughly 15% of the concrete.",
+      "Stairs have two parts: the triangular steps (riser × tread ÷ 2 for each step) and the sloped waist slab underneath (thickness × the length of the slope). If the steps are poured solid on grade, choose “Solid fill” and the calculator uses the full stepped cross-section instead.",
+      "Add a waste allowance to the net volume to cover spillage, form bulging and uneven subgrade. Ready-mix is sold by the cubic yard and delivered in truck loads of roughly 8–10 yd³, so divide the order volume by the truck size and round up."
+    ],
+    "formula_title": "Formulas by shape",
+    "formula_head": [
+      "Shape",
+      "Formula",
+      "Example"
+    ],
+    "formula_rows": [
+      [
+        "Slab / patio",
+        "length × width × thickness",
+        "10 ft × 10 ft × 4 in = 1.23 yd³"
+      ],
+      [
+        "Wall / strip footing",
+        "length × thickness × height",
+        "40 ft × 12 in × 24 in = 2.96 yd³"
+      ],
+      [
+        "Square column / pad",
+        "width × length × height × count",
+        "24 in × 24 in × 12 in × 6 = 0.89 yd³"
+      ],
+      [
+        "Round column / tube",
+        "π × (diameter ÷ 2)² × height × count",
+        "⌀12 in × 8 ft × 4 ≈ 0.93 yd³"
+      ],
+      [
+        "Post hole",
+        "(hole volume − post volume) × count",
+        "⌀10 in × 36 in × 10, 4×4 post (3.5 in) ≈ 0.51 yd³"
+      ],
+      [
+        "Stairs (waist slab)",
+        "width × (steps × riser × tread ÷ 2 + waist × slope length)",
+        "4 ft wide · 4 steps (7 × 11 in) · 6 in waist ≈ 0.48 yd³"
+      ],
+      [
+        "Stairs (solid fill)",
+        "width × riser × tread × steps × (steps + 1) ÷ 2",
+        "4 ft wide · 3 steps (7 × 12 in) ≈ 0.52 yd³"
+      ]
+    ],
+    "rube_title": "Cubic yards, cubic feet and m³",
+    "rube": [
+      "<b>1 cubic yard = 27 cubic feet = 0.7646 m³.</b> US ready-mix plants quote and deliver by the cubic yard; bagged concrete is labelled by cubic feet of yield.",
+      "<b>A cubic yard of concrete weighs about 4,000 lb</b> (roughly 145–150 lb per cubic foot). Keep this in mind for trailer loads, wheelbarrow trips and suspended forms.",
+      "<b>Truck size:</b> a full mixer usually carries 8–10 yd³, and many suppliers charge a short-load fee below a minimum. Ask your plant — the truck size in this calculator is editable."
+    ],
+    "waste_title": "How much extra to order",
+    "waste": [
+      "<b>Formed slabs and footings: 5%.</b> Straight forms and a level, compacted base. This is the default.",
+      "<b>Slabs on uneven ground: 5–10%.</b> Low spots in the subgrade eat concrete fast — a half-inch dip across a 20 × 20 ft slab is about 0.6 yd³.",
+      "<b>Post holes and dug footings: 10–15%.</b> Holes are rarely perfectly round and the walls cave in a little.",
+      "Running short means waiting for another truck and risking a cold joint, so round up when in doubt."
+    ],
+    "mix_title": "Premix bags vs. mixing your own",
+    "mix": [
+      "<b>Premix bags</b> already contain cement, sand and gravel. Typical yields are 0.60 ft³ for an 80 lb bag, 0.45 ft³ for 60 lb and 0.30 ft³ for 40 lb, so one cubic yard takes about 45 bags of 80 lb.",
+      "<b>Site mixing at 1 : 2 : 4</b> (cement : sand : gravel) is the general-purpose ratio for slabs, footings and posts. <b>1 : 3 : 6</b> is for blinding and non-structural fill; <b>1 : 1.5 : 3</b> is stronger and uses the most cement.",
+      "Dry ingredients shrink when mixed, so the calculator multiplies the wet volume by <b>1.54</b>, converts cement at 1,440 kg/m³ (about 90 lb/ft³) and counts 94 lb bags of Portland cement. Water is estimated at half the cement weight.",
+      "Past roughly one cubic yard, ready-mix is usually cheaper and far less work than bags."
+    ],
+    "excluded_title": "What this calculator does not cover",
+    "excluded": [
+      "Rebar, mesh and formwork area are not calculated.",
+      "It does not design a mix for a specific strength (e.g. 3,000 or 4,000 psi) — specify that when you order ready-mix.",
+      "Sloped or irregular shapes: split them into rectangles and add each one as a part.",
+      "Prices, minimum orders and short-load fees vary by supplier, so none are built in."
+    ],
+    "use_cases": [
+      {
+        "icon": "🏗️",
+        "title": "Ordering ready-mix for a slab",
+        "desc": "List the garage slab and its thickened edge footing, add 5% waste, and see the cubic yards and number of truck loads before you call the plant."
+      },
+      {
+        "icon": "🪵",
+        "title": "Fence and deck posts",
+        "desc": "Enter the hole diameter, depth, post size and number of holes to find out exactly how many 50, 60 or 80 lb bags to pick up."
+      },
+      {
+        "icon": "🏡",
+        "title": "Patios, pads and steps",
+        "desc": "Combine a patio, an AC pad and a short run of solid steps in one list so a single trip to the store or one delivery covers everything."
+      },
+      {
+        "icon": "📋",
+        "title": "Contractor estimates",
+        "desc": "Name each part, add a price per cubic yard and print the parts list and totals to attach to a bid or a material order for the crew."
+      }
+    ],
+    "how_to": [
+      {
+        "step": "Pick a shape",
+        "desc": "Choose slab, wall or footing, square column, round column, post hole, stairs or a known volume. A diagram shows which dimension is which."
+      },
+      {
+        "step": "Enter dimensions with units",
+        "desc": "Use the unit menu next to each box — feet or inches in US mode. A warning appears if a value looks like the wrong unit."
+      },
+      {
+        "step": "Add parts to the list",
+        "desc": "Name the part, press “Add to list” and keep adding. Use the pencil to edit a part or the bin to remove it."
+      },
+      {
+        "step": "Set waste and copy the order",
+        "desc": "Adjust the waste and truck size, check the bag counts, then copy the order summary or print the results for your supplier."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How many bags of concrete do I need for a 10×10 slab?",
+        "a": "A 10 × 10 ft slab 4 inches thick is 33.33 cubic feet, or about 1.23 cubic yards. With 80 lb bags yielding 0.60 ft³ each that is 56 bags, or 75 bags of 60 lb. Add 5–10% for waste, and for anything over about a yard compare the price of a ready-mix delivery before buying that many bags."
+      },
+      {
+        "q": "How many 80 lb bags make a cubic yard?",
+        "a": "About 45. A cubic yard is 27 cubic feet and an 80 lb bag of premix yields roughly 0.60 cubic feet, so 27 ÷ 0.60 = 45 bags. With 60 lb bags it is about 60, and with 40 lb bags about 90. Yields vary slightly by brand, so check the number printed on the bag."
+      },
+      {
+        "q": "How much concrete do I need for a fence post?",
+        "a": "Calculate the hole volume and subtract the post. A 10-inch hole 3 feet deep holds about 1.64 ft³; a 4×4 post (3.5 × 3.5 in actual) takes up about 0.26 ft³, leaving roughly 1.38 ft³. That is about 2.3 bags of 80 lb, so plan on three 80 lb bags (or four 60 lb bags) per post."
+      },
+      {
+        "q": "How much extra concrete should I order?",
+        "a": "Order 5% extra for formed slabs and footings on a level base, 5–10% for slabs on uneven ground, and 10–15% for dug post holes and footings. Running short means a second delivery, possible short-load fees and a cold joint where the two pours meet, which is weaker and can crack."
+      },
+      {
+        "q": "How much does a yard of concrete weigh?",
+        "a": "Normal-weight concrete weighs about 145–150 pounds per cubic foot, so a cubic yard is roughly 3,900–4,050 pounds — close to two tons. That is why a typical pickup truck can only carry about half a yard of mixed concrete safely, and why suspended forms need solid shoring."
       }
     ]
   }

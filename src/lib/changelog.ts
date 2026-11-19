@@ -13,6 +13,7 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-19', type: 'new', href: '/utilities/utility/concrete-calc', ko: '콘크리트·레미콘 물량 계산기 — 여러 부위 합산, 레미콘 차량 대수, 시멘트 포대 수', en: 'Concrete Calculator — multi-part totals, truck loads and bag counts' },
   { date: '2026-11-19', type: 'update', href: '/utilities/design/bubble-popart', ko: '버블 팝아트 글씨 — 프리셋 8종·폰트 6종·투명 배경·3줄 입력·인쇄용 3배 저장', en: 'Bubble Pop Art — 8 presets, 6 fonts, transparent PNG, 3 lines, 3× print export' },
   { date: '2026-11-19', type: 'new', href: '/utilities/finance/alba-pay-calc', ko: '알바 급여·주휴수당 계산기 — 2027 최저시급, 근무표로 연장·야간수당', en: 'Part-time Pay Calculator (Korea) — weekly holiday allowance, 2027 minimum wage' },
   { date: '2026-11-18', type: 'update', href: '/utilities/utility', ko: '전체 도구 — 버튼·입력칸·카드 디자인 통일, 다크 모드 색상 상자 개선', en: 'All tools — unified buttons, inputs and cards; better dark mode panels' },
