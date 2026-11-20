@@ -12,7 +12,9 @@ export default function Header() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('utilhub-theme');
+    // 사이트 데이터를 차단한 브라우저는 localStorage 접근 자체가 예외를 던진다 → 페이지 전체가 멈추지 않게
+    let stored: string | null = null;
+    try { stored = localStorage.getItem('utilhub-theme'); } catch { /* 저장소 막힘 */ }
     const dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
     setIsDark(dark);
   }, []);
@@ -21,7 +23,7 @@ export default function Header() {
     const next = !isDark;
     setIsDark(next);
     document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
-    localStorage.setItem('utilhub-theme', next ? 'dark' : 'light');
+    try { localStorage.setItem('utilhub-theme', next ? 'dark' : 'light'); } catch { /* 저장소 막힘 */ }
   };
 
   return (

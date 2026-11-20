@@ -23,7 +23,8 @@ export default function CategoryTools({ categorySlug }: CategoryToolsProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('card');
 
   useEffect(() => {
-    const saved = localStorage.getItem(VIEW_MODE_KEY) as ViewMode | null;
+    let saved: ViewMode | null = null;
+    try { saved = localStorage.getItem(VIEW_MODE_KEY) as ViewMode | null; } catch { /* 저장소 막힘 */ }
     if (saved) {
       setViewMode(saved);
     } else if (window.innerWidth < 768) {
@@ -33,7 +34,7 @@ export default function CategoryTools({ categorySlug }: CategoryToolsProps) {
 
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
-    localStorage.setItem(VIEW_MODE_KEY, mode);
+    try { localStorage.setItem(VIEW_MODE_KEY, mode); } catch { /* 저장소 막힘 */ }
   };
 
   const categoryTools = tools.filter(t => t.category === categorySlug && t.available);

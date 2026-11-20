@@ -601,7 +601,11 @@
     },
     "metaTitle": "Design Tools — Color Palette, Logo & Favicon Maker, Font Preview | Utility Hub",
     "metaDescription": "Free design tools: generate harmonious color palettes and check WCAG contrast, create text logos and favicons, preview Google Fonts, batch-resize photos and visualize bathroom tiles. No design software required.",
-    "intro": "Design tools for people who need good-looking results without opening a full design suite. Generate harmonious colour palettes and check text contrast against WCAG 2.1 AA and AAA ratios, preview Google Fonts with your own sentence before choosing one, and build a text-based logo and favicon set in the sizes browsers and phones expect. The Photo Batch Editor resizes and filters many photos at once for a blog or online shop, and the Bubble Pop Art Text Generator exports playful lettering as a transparent PNG. The Formation Planner lays out players or performers on a field or stage and saves the plan as an image. The Bathroom Tile Visualizer lays photo-real tiles on your own bathroom photo at true scale and perspective, keeping the original lighting, with grout, layouts and tile counts. Everything works in the browser, so images are never uploaded."
+    "intro": "Design tools for people who need good-looking results without opening a full design suite. Generate harmonious colour palettes and check text contrast against WCAG 2.1 AA and AAA ratios, preview Google Fonts with your own sentence before choosing one, and build a text-based logo and favicon set in the sizes browsers and phones expect. The Photo Batch Editor resizes and filters many photos at once for a blog or online shop, and the Bubble Pop Art Text Generator exports playful lettering as a transparent PNG. The Formation Planner lays out players or performers on a field or stage and saves the plan as an image. The Bathroom Tile Visualizer lays photo-real tiles on your own bathroom photo at true scale and perspective, keeping the original lighting, with grout, layouts and tile counts. Everything works in the browser, so images are never uploaded.",
+    "before-after-maker": {
+      "title": "Before & After Photo Maker",
+      "desc": "Two photos to an Instagram-ready before and after image — logo, watermark and face blurring, all on your device."
+    }
   },
   "FontCompare": {
     "title": "🔤 Multilingual Font Comparer",
@@ -2904,6 +2908,137 @@
       {
         "q": "If the tension is within the WLL, is the lift safe?",
         "a": "Not by itself. The result is a static calculation that leaves out shock loading, off-centre loads, unequal legs and hitch reduction factors. If you are above about 90% of WLL, consider the next size up, and always follow the manufacturer’s rating, a qualified rigger and your lift plan."
+      }
+    ]
+  },
+  "BeforeAfter": {
+    "title": "Before & After Photo Maker",
+    "subtitle": "Drop in two photos and get a ready-to-post before and after comparison for Instagram, with your logo, a watermark and face blurring",
+    "meta_title": "Before and After Photo Maker – Side by Side for Instagram | Utility Hub",
+    "meta_description": "Put two photos side by side, top and bottom or on a diagonal and save a 1080px before and after image in 4:5, 1:1, 3:4 or 9:16. Add BEFORE/AFTER labels, your logo and handle, a repeating watermark and face pixelation. Photos never leave your device.",
+    "local_badge": "Photos never leave your device",
+    "description": "Before & After Photo Maker is built for salons, nail studios, lash and brow artists, groomers, detailers and cleaning crews who post results every day. Pick two photos from your camera roll — the first becomes BEFORE, the second AFTER — and you instantly get a comparison sized for Instagram: 4:5 feed portrait at 1080×1350 px, 1:1 square, 3:4, or 9:16 for Stories and Reels. Drag a photo to reposition it and pinch to zoom; switch on Line up photos to overlay both shots at half opacity so the hairline, hand or room corner sits in exactly the same place. Add BEFORE/AFTER labels in four styles, a one-line caption, your logo, shop name, Instagram handle and phone number, and an optional repeating watermark that makes reposting harder. Hide a client’s face with pixelation, blur or a heart sticker. Brightness, contrast and saturation are applied to both photos by default so the result is not exaggerated. Your logo and layout are remembered, and you can save up to three styles, so from the second time on it is just add photos and save. Everything runs in your browser: photos are never uploaded, and saved images contain no GPS location or other camera data.",
+    "share_title": "Before & After Photo Maker — two photos to an Instagram-ready comparison",
+    "about_title": "What it does",
+    "about": [
+      "Combines two photos into one image <b>side by side, top and bottom, or split on a diagonal</b>. The width is fixed at 1080 px, the size Instagram recommends, so the app does not shrink and recompress it again on upload.",
+      "Each photo can be <b>rotated 90°, flipped, zoomed and moved</b>. Line up photos overlays the after shot on the before shot so you can match the angle and scale precisely.",
+      "<b>Face hiding</b> is drawn separately on each photo. Pixelate and blur replace the original pixels with block averages when the image is saved, so the face cannot be recovered from the saved file.",
+      "Phone photos are shown <b>the right way up</b> using their orientation data, and large photos (a 12-megapixel shot is 4,000 px wide) are reduced to 2,400 px on the long side as they load so older phones do not freeze. If your browser cannot open an HEIC photo, you get a clear message instead of an error."
+    ],
+    "ratio_title": "Output sizes",
+    "ratio_head": [
+      "Ratio",
+      "Saved size",
+      "Best for"
+    ],
+    "ratio_notes": {
+      "4:5": "Instagram feed portrait — takes up the most screen space. Default",
+      "1:1": "Square feed posts, Facebook, profile grids",
+      "3:4": "Slightly taller portrait for blogs and product pages",
+      "9:16": "Full-screen Stories and Reels; pairs well with top-and-bottom"
+    },
+    "ratio_note": "In the side-by-side layout each photo gets 540 px of width (540×1080 px on a 1:1 image). The divider is drawn over the seam, so it never makes the photos narrower.",
+    "tips_title": "How to shoot better before and after photos",
+    "tips": [
+      "<b>Same spot, same light.</b> Pick one place in the studio for every photo. Morning window light and evening overhead light will make the same hair color look different.",
+      "<b>Same distance and angle.</b> Mark a spot on the floor with tape and hold the phone at the same height. Avoid the 0.5× ultra-wide lens on faces; it stretches features.",
+      "<b>Same pose.</b> Front, side or back — match it between shots, and keep the same hand position for nails. If the framing is a little off, Line up photos fixes it.",
+      "<b>Turn off beauty mode and filters.</b> A filter on only the after shot makes the result look better than it is. Apply adjustments here, to both photos.",
+      "<b>Plain background.</b> A neutral wall or curtain keeps attention on the work."
+    ],
+    "industries_title": "Suggested settings by business",
+    "industries_head": [
+      "Business",
+      "Layout · ratio",
+      "Tip"
+    ],
+    "industries": [
+      [
+        "Hair salon",
+        "Side by side · 4:5",
+        "Back or profile shots side by side show length and curl best. Shoot color work in daylight for accurate tones."
+      ],
+      [
+        "Nail studio",
+        "Top & bottom · 1:1 or 9:16",
+        "Hands are wide subjects, so stacking fits them well. Zoom in until the nails fill each half."
+      ],
+      [
+        "Lashes, brows, skin care",
+        "Side by side · 4:5 + hide",
+        "Leave only the treated area visible and pixelate the rest of the face; clients agree more readily."
+      ],
+      [
+        "Cleaning, repairs, remodeling",
+        "Diagonal · 4:5",
+        "Wide shots from the same corner look dramatic on a diagonal split. Add your phone number for local ads."
+      ],
+      [
+        "Detailing, pet grooming",
+        "Side by side · 1:1",
+        "Profile shots from the same side, with your handle in a corner."
+      ]
+    ],
+    "consent_title": "Before you post",
+    "consent": [
+      "<b>Get permission.</b> A recognizable face is personal data in many places (for example under the EU GDPR), and using a client’s image to promote your business without consent can breach their right of publicity in many US states. A short written release that names where you will post it is enough for most salons.",
+      "<b>Don’t exaggerate.</b> Under Section 5 of the FTC Act, ads must not be deceptive, and before and after images edited to overstate results can be treated that way. Adjustments here apply to both photos by default.",
+      "<b>Medical procedures.</b> Before and after photos of medical or cosmetic medical treatments are regulated more strictly in many countries; check the rules that apply to your practice.",
+      "<b>Original files.</b> Photos straight from a phone can contain the GPS location where they were taken. Images saved from this tool contain none, so post those instead of the originals."
+    ],
+    "use_cases": [
+      {
+        "title": "Hair salon portfolio posts",
+        "desc": "Pair the before shot with the finished look side by side in 4:5, add your logo and Instagram handle in the corner, and post it straight to the feed."
+      },
+      {
+        "title": "Nail art close-ups",
+        "desc": "Stack zoomed-in nail shots top and bottom for a 9:16 Story, using Line up photos to match finger positions when the hands were posed differently."
+      },
+      {
+        "title": "Lash, brow and skin care results",
+        "desc": "Pixelate everything except the treated area, apply the same brightness to both photos, and share an honest comparison clients are comfortable with."
+      },
+      {
+        "title": "Cleaning, repair and remodeling jobs",
+        "desc": "Split job-site photos on a diagonal, add your business name and phone number, and use the image in local listings, flyers and blog posts."
+      }
+    ],
+    "how_to": [
+      {
+        "step": "Tap Pick both photos at once and choose the before photo first, then the after photo. If they end up reversed, tap Swap before/after."
+      },
+      {
+        "step": "Drag each photo in the preview to position it and pinch to zoom. If the angles differ, turn on Line up photos and match them on the overlay."
+      },
+      {
+        "step": "Choose a layout and ratio, label style and logo. Your last settings are remembered automatically, and you can save favorite looks under My styles."
+      },
+      {
+        "step": "Hide faces in the Hide faces tab if needed, then tap Save image or Share to send it to Instagram, WhatsApp or anywhere else."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Are my photos uploaded anywhere?",
+        "a": "No. Opening, combining, pixelating and saving all happen inside your browser on this phone or computer. Once the page has loaded, no photo data is sent to any server, and your logo and style settings are stored only in this browser."
+      },
+      {
+        "q": "My iPhone photo won’t open or appears sideways.",
+        "a": "Orientation is applied automatically in current browsers, so photos should not appear sideways. If a photo will not open, it is usually HEIC. On the iPhone, Settings › Camera › Formats › Most Compatible saves new photos as JPG; for existing ones, share or export them as JPG first."
+      },
+      {
+        "q": "Can pixelated faces be un-blurred?",
+        "a": "Not from the saved image. Pixelate and blur shrink the area to a handful of blocks and scale it back up, so the original pixels are not in the file. Very small areas can still reveal someone by outline, so cover the eyes, nose, mouth and hairline generously."
+      },
+      {
+        "q": "Do I have to add my logo every time?",
+        "a": "No. Your last logo, shop name, labels, layout, ratio and divider are remembered and come back on your next visit. You can also save up to three named styles, such as Feed and Stories. They live in this browser’s storage, so another phone or browser needs its own setup."
+      },
+      {
+        "q": "Why does Instagram make my images blurry?",
+        "a": "Instagram resizes anything wider than 1080 px and compresses it again. This tool saves at exactly 1080 px wide, so that extra resize never happens. For the sharpest feed posts use 4:5, and avoid zooming far into a low-resolution photo."
       }
     ]
   }
