@@ -1,5 +1,6 @@
 // 페르소나 카드 게임 — 카드 데이터 + 미션 데이터
-// V1.4 지침서: 1단계 (미션 1~3 완성, 4~10은 빈 껍데기)
+// 미션 10개 × 상황 10개 × 선택지 4개. 선택지는 '좋은 답부터' 적혀 있고 화면에서 날짜 기준으로 섞는다.
+// tags: 카드 id (성격·특기·직업) 또는 '반대_카드id' (그 캐릭터라면 하지 않을 행동 → 감점)
 
 export interface Card {
   id: string;
@@ -135,8 +136,8 @@ export const MISSIONS: Mission[] = [
       {
         text: { ko: '산소 잔량 25%. 24시간 안에 해결 못 하면 위험하다.', en: 'Oxygen at 25%. Critical within 24 hours.' },
         choices: [
-          { text: { ko: '잔해 속 산소 발생기를 수리한다', en: 'Repair the oxygen generator from the wreckage' }, tags: ['genius', 'inventing', 'engineer'], baseScore: 100 },
-          { text: { ko: '비상 산소통을 아껴 쓰며 구조를 기다린다', en: 'Conserve emergency oxygen and wait for rescue' }, tags: ['cautious', 'pessimist'], baseScore: 70 },
+          { text: { ko: '잔해 속 산소 발생기를 수리한다', en: 'Repair the oxygen generator from the wreckage' }, tags: ['genius', 'inventing', 'engineer', 'astronaut'], baseScore: 100 },
+          { text: { ko: '비상 산소통을 아껴 쓰며 구조를 기다린다', en: 'Conserve emergency oxygen and wait for rescue' }, tags: ['cautious', 'pessimist', 'astronaut'], baseScore: 70 },
           { text: { ko: '화성 토양에서 산소를 추출할 수 있는지 시도한다', en: 'Try to extract oxygen from Martian soil' }, tags: ['curious', 'creative', 'scientist'], baseScore: 55 },
           { text: { ko: '낮잠을 잔다. 어차피 산소만 더 닳을 뿐', en: 'Take a nap. Worrying just burns more oxygen' }, tags: ['lazy', 'sleeping', '반대_perfectionist'], baseScore: 10 },
         ],
@@ -145,7 +146,7 @@ export const MISSIONS: Mission[] = [
       {
         text: { ko: '거대한 화성 모래폭풍이 다가온다. 시야가 0이 될 것이다.', en: 'A massive dust storm is approaching. Visibility will drop to zero.' },
         choices: [
-          { text: { ko: '우주선 잔해를 보강 후 안에서 폭풍을 견딘다', en: 'Reinforce the wreckage and ride it out inside' }, tags: ['cautious', 'building', 'engineer'], baseScore: 100 },
+          { text: { ko: '우주선 잔해를 보강 후 안에서 폭풍을 견딘다', en: 'Reinforce the wreckage and ride it out inside' }, tags: ['cautious', 'building', 'engineer', 'astronaut'], baseScore: 100 },
           { text: { ko: '근처 바위 동굴로 대피한다', en: 'Take shelter in a nearby rock cave' }, tags: ['cautious', 'hiding', 'explorer'], baseScore: 80 },
           { text: { ko: '폭풍을 뚫고 구조 신호를 보내러 나간다', en: 'Charge into the storm to send a signal' }, tags: ['brave', 'impulsive', 'running'], baseScore: 20 },
           { text: { ko: '제자리에서 모래를 막아본다', en: 'Try to block the sand barehanded' }, tags: ['clumsy', 'stubborn', '반대_cautious'], baseScore: 0 },
@@ -216,7 +217,7 @@ export const MISSIONS: Mission[] = [
         text: { ko: '구조선이 도착했지만 자리는 한 자리 부족하다.', en: 'Rescue arrived — but one seat short.' },
         choices: [
           { text: { ko: '한 명은 다음 구조를 기다리기로 함께 합의', en: 'Agree together that one will wait for the next ride' }, tags: ['kindhearted', 'negotiation', 'honest'], baseScore: 100 },
-          { text: { ko: '내가 자원해서 남는다', en: 'Volunteer yourself to stay behind' }, tags: ['brave', 'kindhearted', 'selfless'], baseScore: 90 },
+          { text: { ko: '내가 자원해서 남는다', en: 'Volunteer yourself to stay behind' }, tags: ['brave', 'kindhearted'], baseScore: 90 },
           { text: { ko: '제비뽑기를 한다', en: 'Draw lots' }, tags: ['honest', 'optimist'], baseScore: 70 },
           { text: { ko: '제일 약한 동료를 떼어놓고 떠난다', en: 'Leave the weakest one behind' }, tags: ['selfish', 'sneaky', '반대_kindhearted'], baseScore: 0 },
         ],
@@ -237,7 +238,7 @@ export const MISSIONS: Mission[] = [
         choices: [
           { text: { ko: '몸을 말리고 주변 환경부터 파악한다', en: 'Dry off and scan the surroundings' }, tags: ['cautious', 'sensing', 'explorer'], baseScore: 100 },
           { text: { ko: '바로 식수와 식량을 찾으러 간다', en: 'Immediately search for water and food' }, tags: ['impulsive', 'cautious'], baseScore: 75 },
-          { text: { ko: '해변에서 SOS를 외친다', en: 'Yell SOS at the empty beach' }, tags: ['coward', 'talkative', '반대_genius'], baseScore: 20 },
+          { text: { ko: '해변에서 SOS를 외친다', en: 'Yell SOS at the empty beach' }, tags: ['coward', 'talkative', '반대_genius', 'singing'], baseScore: 20 },
           { text: { ko: '드러누워 운명에 맡긴다', en: 'Lay down and let fate decide' }, tags: ['lazy', 'pessimist', 'sleeping'], baseScore: 5 },
         ],
       },
@@ -286,8 +287,8 @@ export const MISSIONS: Mission[] = [
         text: { ko: '동굴 안에 옛 해적의 흔적이 있다. 보물 지도?', en: 'Inside a cave, signs of old pirates. A treasure map?' },
         choices: [
           { text: { ko: '단서를 기록하고 우선순위는 탈출에 둔다', en: 'Record clues but prioritize escape' }, tags: ['perfectionist', 'archaeologist', 'cautious'], baseScore: 100 },
-          { text: { ko: '지도를 분석해 보물을 찾는다', en: 'Analyze the map and seek treasure' }, tags: ['curious', 'detective', 'greedy'], baseScore: 70 },
-          { text: { ko: '바로 보물 찾기에 몰두한다', en: 'Drop everything and hunt treasure' }, tags: ['greedy', 'impulsive', '반대_cautious'], baseScore: 25 },
+          { text: { ko: '지도를 분석해 보물을 찾는다', en: 'Analyze the map and seek treasure' }, tags: ['curious', 'detective', 'greedy', 'pirate'], baseScore: 70 },
+          { text: { ko: '바로 보물 찾기에 몰두한다', en: 'Drop everything and hunt treasure' }, tags: ['greedy', 'impulsive', '반대_cautious', 'pirate'], baseScore: 25 },
           { text: { ko: '저주가 무서워 동굴을 떠난다', en: 'Flee the cave fearing a curse' }, tags: ['coward', 'pessimist'], baseScore: 50 },
         ],
       },
@@ -296,7 +297,7 @@ export const MISSIONS: Mission[] = [
         text: { ko: '저장한 식량이 떨어졌다. 사냥·채집해야 한다.', en: 'Your stored food is gone. Time to hunt or forage.' },
         choices: [
           { text: { ko: '안전한 과일·물고기를 분류해 채집한다', en: 'Sort safe fruit/fish and forage methodically' }, tags: ['scientist', 'farming', 'cautious'], baseScore: 100 },
-          { text: { ko: '낚시 도구를 만들어 잡는다', en: 'Craft a fishing rig and catch fish' }, tags: ['inventing', 'fishing', 'patience'], baseScore: 85 },
+          { text: { ko: '낚시 도구를 만들어 잡는다', en: 'Craft a fishing rig and catch fish' }, tags: ['inventing', 'cautious', 'explorer'], baseScore: 85 },
           { text: { ko: '눈에 보이는 건 다 먹는다', en: 'Eat anything in sight' }, tags: ['impulsive', 'eating', '반대_cautious'], baseScore: 10 },
           { text: { ko: '굶기로 한다', en: 'Choose to fast' }, tags: ['stubborn', 'pessimist'], baseScore: 20 },
         ],
@@ -327,7 +328,7 @@ export const MISSIONS: Mission[] = [
         choices: [
           { text: { ko: '거울·플래시로 정확히 SOS 부호를 보낸다', en: 'Mirror/flash an exact SOS code' }, tags: ['genius', 'sensing', 'detective'], baseScore: 100 },
           { text: { ko: '큰 천을 흔든다', en: 'Wave a large cloth' }, tags: ['talkative', 'optimist'], baseScore: 75 },
-          { text: { ko: '있는 힘껏 소리친다', en: 'Scream as loud as you can' }, tags: ['talkative', 'impulsive'], baseScore: 30 },
+          { text: { ko: '있는 힘껏 소리친다', en: 'Scream as loud as you can' }, tags: ['talkative', 'impulsive', 'musician', 'singing'], baseScore: 30 },
           { text: { ko: '신호를 안 보내고 운에 맡긴다', en: 'Skip signaling and hope for luck' }, tags: ['lazy', 'pessimist', '반대_brave'], baseScore: 5 },
         ],
       },
@@ -406,7 +407,7 @@ export const MISSIONS: Mission[] = [
         text: { ko: '용이 깨어났다. 거대한 화염을 뿜으려 한다.', en: 'The dragon wakes — about to breathe fire.' },
         choices: [
           { text: { ko: '엄폐물 뒤로 피하며 약점을 노린다', en: 'Take cover, aim for the weak spot' }, tags: ['cautious', 'detective', 'sensing'], baseScore: 100 },
-          { text: { ko: '큰 소리로 도발해 주의를 끈다', en: 'Taunt loudly to grab attention' }, tags: ['talkative', 'brave'], baseScore: 70 },
+          { text: { ko: '큰 소리로 도발해 주의를 끈다', en: 'Taunt loudly to grab attention' }, tags: ['talkative', 'brave', 'musician', 'singing'], baseScore: 70 },
           { text: { ko: '바로 돌진해 검을 휘두른다', en: 'Charge in swinging' }, tags: ['brave', 'impulsive', 'fighting'], baseScore: 35 },
           { text: { ko: '눈을 감고 기도한다', en: 'Close eyes and pray' }, tags: ['coward', 'pessimist', '반대_brave'], baseScore: 5 },
         ],
@@ -627,7 +628,7 @@ export const MISSIONS: Mission[] = [
         choices: [
           { text: { ko: '주변 좀비·생존자 흔적부터 확인 후 진입', en: 'Scout surroundings for zombies/survivors before entering' }, tags: ['cautious', 'tracking', 'detective'], baseScore: 100 },
           { text: { ko: '소음 최소화하며 빠르게 연료만 챙김', en: 'Quietly grab fuel and leave fast' }, tags: ['sneaky', 'cautious', 'hiding'], baseScore: 90 },
-          { text: { ko: '큰 소리 내며 진입해 좀비를 미리 끌어낸다', en: 'Make noise to lure any zombies out first' }, tags: ['brave', 'creative'], baseScore: 60 },
+          { text: { ko: '큰 소리 내며 진입해 좀비를 미리 끌어낸다', en: 'Make noise to lure any zombies out first' }, tags: ['brave', 'creative', 'musician', 'singing'], baseScore: 60 },
           { text: { ko: '연료 없이 그냥 떠난다', en: 'Skip the fuel and drive on' }, tags: ['lazy', 'pessimist', '반대_cautious'], baseScore: 15 },
         ],
       },
@@ -814,9 +815,9 @@ export const MISSIONS: Mission[] = [
       {
         text: { ko: '수갑을 풀 도구가 필요하다. 무엇을 활용할까?', en: 'You need something to remove the cuffs. What to use?' },
         choices: [
-          { text: { ko: '주위 부품으로 즉석 해킹 도구 제작', en: 'Build a makeshift hacking tool from scrap parts' }, tags: ['inventing', 'hacking', 'engineer'], baseScore: 100 },
+          { text: { ko: '주위 부품으로 즉석 해킹 도구 제작', en: 'Build a makeshift hacking tool from scrap parts' }, tags: ['inventing', 'hacking', 'engineer', 'hacker'], baseScore: 100 },
           { text: { ko: '식판 모서리·머리핀 등으로 자물쇠 따기', en: 'Pick the lock with a tray edge or hairpin' }, tags: ['sneaky', 'creative', 'spy'], baseScore: 90 },
-          { text: { ko: '간수가 졸 때 열쇠를 훔친다', en: 'Steal the key while the guard naps' }, tags: ['sneaky', 'hiding', 'ninja'], baseScore: 85 },
+          { text: { ko: '간수가 졸 때 열쇠를 훔친다', en: 'Steal the key while the guard naps' }, tags: ['sneaky', 'hiding', 'ninja', 'pirate'], baseScore: 85 },
           { text: { ko: '수갑을 자기 손에 잘라낸다', en: 'Try to cut through your own wrist binding' }, tags: ['stubborn', 'clumsy', '반대_cautious'], baseScore: 10 },
         ],
       },
@@ -834,7 +835,7 @@ export const MISSIONS: Mission[] = [
       {
         text: { ko: '통신실에 도착했다. 구조 신호를 보낼 기회.', en: 'You reach the comms room — a chance to send a distress signal.' },
         choices: [
-          { text: { ko: '암호화된 비상 신호로 정확히 송신', en: 'Send an encrypted distress signal correctly' }, tags: ['hacking', 'genius', 'engineer'], baseScore: 100 },
+          { text: { ko: '암호화된 비상 신호로 정확히 송신', en: 'Send an encrypted distress signal correctly' }, tags: ['hacking', 'genius', 'engineer', 'hacker'], baseScore: 100 },
           { text: { ko: '익숙한 주파수로 음성 SOS 송신', en: 'Send a voice SOS on a known frequency' }, tags: ['cautious', 'pilot'], baseScore: 85 },
           { text: { ko: '아무 채널로나 도와달라 외친다', en: 'Yell for help on every open channel' }, tags: ['impulsive', 'talkative', '반대_cautious'], baseScore: 35 },
           { text: { ko: '통신 장비를 부순다', en: 'Smash the comms gear' }, tags: ['stubborn', 'fighting', '반대_genius'], baseScore: 0 },
@@ -874,7 +875,7 @@ export const MISSIONS: Mission[] = [
       {
         text: { ko: '해적선이 우주에서 셔틀을 추격해 온다.', en: 'The pirate ship pursues your shuttle through space.' },
         choices: [
-          { text: { ko: '소행성대로 진입해 정밀 회피 기동', en: 'Dive into an asteroid belt for precision evasion' }, tags: ['pilot', 'genius', 'navigation'], baseScore: 100 },
+          { text: { ko: '소행성대로 진입해 정밀 회피 기동', en: 'Dive into an asteroid belt for precision evasion' }, tags: ['pilot', 'genius', 'navigation', 'astronaut'], baseScore: 100 },
           { text: { ko: '미끼·플레어로 표적 락온을 흔든다', en: 'Drop decoys and flares to break the lock-on' }, tags: ['creative', 'inventing', 'spy'], baseScore: 90 },
           { text: { ko: '직선으로 가속해 도망친다', en: 'Burn straight ahead at full speed' }, tags: ['impulsive', 'brave', '반대_cautious'], baseScore: 45 },
           { text: { ko: '셔틀의 통신으로 항복한다', en: 'Open comms and surrender' }, tags: ['coward', 'pessimist', '반대_brave'], baseScore: 5 },
@@ -987,7 +988,7 @@ export const MISSIONS: Mission[] = [
           { text: { ko: '추억을 간직하고 정중히 작별 인사', en: 'Cherish the memory, say a proper goodbye' }, tags: ['kindhearted', 'honest', 'optimist'], baseScore: 100 },
           { text: { ko: '미소만 짓고 떠난다', en: 'Smile and leave without words' }, tags: ['mysterious', 'kindhearted'], baseScore: 85 },
           { text: { ko: '미래에서 다시 만나러 오겠다고 약속', en: 'Promise to return from the future' }, tags: ['lying', 'optimist', '반대_honest'], baseScore: 40 },
-          { text: { ko: '뒤도 안 돌아보고 떠난다', en: 'Leave without looking back' }, tags: ['selfish', 'cold', '반대_kindhearted'], baseScore: 20 },
+          { text: { ko: '뒤도 안 돌아보고 떠난다', en: 'Leave without looking back' }, tags: ['selfish', '반대_kindhearted'], baseScore: 20 },
         ],
       },
     ],
@@ -1136,7 +1137,7 @@ export const MISSIONS: Mission[] = [
         choices: [
           { text: { ko: '직접 정중하게 질문해 동기·고충을 청취', en: 'Politely ask directly about their motives and concerns' }, tags: ['honest', 'curious', 'detective'], baseScore: 100 },
           { text: { ko: '심리·표정 관찰로 단서 수집', en: 'Read their behavior and body language for clues' }, tags: ['sensing', 'detective', 'spy'], baseScore: 90 },
-          { text: { ko: '도청·해킹으로 정보 빼냄', en: 'Eavesdrop or hack their systems for info' }, tags: ['sneaky', 'hacking', '반대_honest'], baseScore: 60 },
+          { text: { ko: '도청·해킹으로 정보 빼냄', en: 'Eavesdrop or hack their systems for info' }, tags: ['sneaky', 'hacking', '반대_honest', 'hacker'], baseScore: 60 },
           { text: { ko: '협박해서 알아낸다', en: 'Threaten them into telling' }, tags: ['stubborn', 'fighting', '반대_cautious'], baseScore: 15 },
         ],
       },

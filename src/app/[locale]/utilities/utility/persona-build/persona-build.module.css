@@ -98,7 +98,14 @@
 .mission_title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.3rem; }
 .mission_desc { font-size: 0.85rem; color: rgba(255,255,255,0.92); line-height: 1.4; }
 
-.start_btn { margin-top: 1.25rem; }
+.hint {
+  margin: 1rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-align: center;
+}
+.start_btn { margin-top: 1rem; }
 
 /* ── Playing ───────────────────────────────────────────── */
 .play_header {
@@ -129,6 +136,22 @@
   height: 100%;
   background: linear-gradient(90deg, #a855f7, #f59e0b);
   transition: width 0.4s ease;
+}
+
+.me_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+}
+.me_chip {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--tint-amber-bg);
+  border: 1px solid var(--tint-violet-border);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .situation_text {
@@ -183,6 +206,17 @@
   animation: pop 0.45s ease-out;
 }
 
+.reason {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  animation: fadeIn 0.3s ease-out;
+}
+
 /* ── Result ────────────────────────────────────────────── */
 .result_panel {
   background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
@@ -218,25 +252,33 @@
   font-size: 0.95rem;
   font-weight: 700;
 }
-.result_usage_row {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1.25rem;
+.result_cards { margin-top: 1.25rem; }
+.result_cards .card_row { margin-bottom: 0; }
+.card_on_dark {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.3);
+}
+.card_on_dark .card_label { color: rgba(255,255,255,0.75); }
+.card_on_dark .card_name { color: white; }
+.result_usage {
+  margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px dashed rgba(255,255,255,0.25);
 }
-.result_usage_item { text-align: center; }
 .result_usage_label {
-  font-size: 0.72rem;
-  color: rgba(255,255,255,0.75);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.8);
   font-weight: 700;
-  margin-bottom: 0.15rem;
 }
 .result_usage_value {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 900;
   color: white;
+  line-height: 1.3;
+}
+.result_usage_note {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.7);
 }
 
 .share_label {
@@ -263,8 +305,8 @@
   transition: all 0.2s;
 }
 .share_btn:hover { background: rgba(255,255,255,0.22); }
-.share_btn_kakao { background: #FEE500; color: #181600; border-color: #FEE500; }
-.share_btn_kakao:hover { background: #fdd835; }
+.share_btn_main { background: white; color: var(--color-primary); border-color: white; }
+.share_btn_main:hover { background: rgba(255,255,255,0.88); }
 
 .countdown {
   margin-top: 1.25rem;
