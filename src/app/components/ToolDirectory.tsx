@@ -4,7 +4,7 @@ import { tools } from '@/lib/tools-registry';
 import s from './ToolDirectory.module.css';
 
 const CATEGORY_ORDER = [
-  'finance', 'productivity', 'document', 'utility', 'lifestyle',
+  'construction', 'finance', 'productivity', 'document', 'utility', 'lifestyle',
   'design', 'marketing', 'security', 'dev', 'performance',
 ] as const;
 

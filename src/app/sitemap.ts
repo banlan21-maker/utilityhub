@@ -9,7 +9,7 @@ const BASE = 'https://www.theutilhub.com';
 const STATIC_PATHS = ['', '/privacy', '/terms', '/about', '/contact', ...(hasSupportLinks() ? ['/support'] : [])];
 
 const CATEGORY_SLUGS = [
-  'performance', 'document', 'finance', 'productivity',
+  'construction', 'performance', 'document', 'finance', 'productivity',
   'design', 'marketing', 'lifestyle', 'security', 'utility', 'dev',
 ];
 
@@ -57,7 +57,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Category listing pages — 목록이 바뀌는 건 새 도구가 들어올 때
   for (const cat of CATEGORY_SLUGS) {
     const path = `/utilities/${cat}`;
-    const lastMod = latest(baseline[path], changed((h, type) => type === 'new' && h.startsWith(`${path}/`)));
+    const inCat = new Set(tools.filter((t) => t.category === cat).map((t) => t.href));
+    const lastMod = latest(baseline[path], changed((h, type) => type === 'new' && inCat.has(h)));
     for (const locale of LOCALES) {
       entries.push({
         url: `${BASE}/${locale}${path}`,

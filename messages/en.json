@@ -65,7 +65,8 @@
     "design": "UX & Design",
     "security": "Security & Privacy",
     "performance": "Performance & Monitoring",
-    "dev": "Developer Tools"
+    "dev": "Developer Tools",
+    "construction": "Construction & Trades"
   },
   "Feedback": {
     "title": "Suggest a Feature & Feedback",
@@ -84,7 +85,7 @@
     "emptyState": "Enter text to see your QR code here."
   },
   "UtilityBoard": {
-    "subtitle": "A collection of various extra tools you need in your daily life.",
+    "subtitle": "Handy everyday tools and mini games.",
     "wordle": {
       "title": "Daily Word Puzzle",
       "desc": "Guess a new word every day in six tries — classic English Wordle plus a Korean jamo version."
@@ -157,9 +158,9 @@
       "title": "Persona Build",
       "desc": "Daily solo card game. Random character (job + personality + skill) + new mission each day. Score 0–1000 across 10 situational choices."
     },
-    "metaTitle": "Everyday Utilities & Engineering Calculators | Utility Hub",
-    "metaDescription": "Free everyday utilities: unit converter, image resizer, GIF maker, YouTube thumbnail downloader, lottery number generator, plus field calculators for wire size, pipe offsets, cable tray fill and metal weight.",
-    "intro": "General utilities plus a growing set of calculators for construction and trades work. Convert length, weight, temperature and Korean pyeong to square metres, resize, edit and animate images into GIFs, and grab every resolution of a YouTube thumbnail. For the job site, the Wire Size Calculator picks conductor cross-sections from load current, distance and voltage drop, the Cable Tray Calculator checks fill against tray capacity, the Piping Calculator covers pipe schedules, drain slopes, hydrostatic test volumes and flow velocity, and the Pipe Offset Calculator gives cut lengths with elbow take-offs. The Metal Weight Calculator handles H-beams, channels, pipes and plates with paint area and cost, and the Tile & Wallpaper Calculator counts boxes, rolls and waste. Between tasks you can play the Daily Word Puzzle, Grid Poker or Persona Build, or let Decision Master choose for you.",
+    "metaTitle": "Everyday Utilities & Word Games | Utility Hub",
+    "metaDescription": "Free everyday utilities and mini games: a unit converter, a character and byte counter, daily Korean and English Wordle, a lottery number picker, a decision wheel and ladder, and Grid Poker. No install, runs in your browser.",
+    "intro": "Small everyday tools and mini games for a break. The Unit Converter switches length, weight, temperature, volume and more on one screen, and the Character & Byte Counter counts characters with and without spaces, plus bytes, for application forms and social posts with limits. Decision Master settles lunch or turn order with a wheel, an arrow or a ladder draw, and the Lotto Number Generator picks a set of numbers for you. There is also a daily Wordle in Korean and English, Grid Poker, where you place 25 cards on a grid to build poker hands, and Persona Card, which creates a character of the day. Field calculators for wiring, piping and concrete are now under Construction & Trades, and the image compressor, resizer and GIF maker are under Design.",
     "concrete-calc": {
       "title": "Concrete Calculator",
       "desc": "Slabs, footings, columns, post holes and stairs in one list — cubic yards, truck loads and bags."
@@ -247,8 +248,8 @@
       "desc": "Create shareable quizzes and personality tests instantly with simple inputs."
     },
     "metaTitle": "Marketing Tools — QR Codes, Short URLs & Hashtags | Utility Hub",
-    "metaDescription": "Free marketing tools for small teams: a QR code generator, URL shortener, hashtag generator, an OSMU formatter that adapts one post for every social network, and a shareable quiz builder.",
-    "intro": "Marketing tools for creators and small teams who publish on several channels. The OSMU Formatter takes one piece of writing and reshapes it for Instagram, X, blogs and newsletters — a hook in the first two sentences, line breaks that survive each app and suggested hashtags. The Hashtag Generator proposes a mix of broad and niche tags for a topic, the QR Code Generator creates codes for URLs, text, Wi-Fi and contact cards that you can print on flyers and packaging, and the URL Shortener turns long campaign links into short ones that fit in a post or SMS. The Quiz Builder makes a personality or knowledge quiz that visitors can take and share, a reliable way to grow engagement. All tools are free, need no sign-up and work in the browser, so drafts and customer data stay with you."
+    "metaDescription": "Free marketing tools for small teams: a QR code generator, URL shortener, hashtag generator, YouTube thumbnail downloader, an OSMU formatter that adapts one post for every social network, and a shareable quiz builder.",
+    "intro": "Marketing tools for creators and small teams who publish on several channels. The OSMU Formatter takes one piece of writing and reshapes it for Instagram, X, blogs and newsletters — a hook in the first two sentences, line breaks that survive each app and suggested hashtags. The Hashtag Generator proposes a mix of broad and niche tags for a topic, the QR Code Generator creates codes for URLs, text, Wi-Fi and contact cards that you can print on flyers and packaging, and the URL Shortener turns long campaign links into short ones that fit in a post or SMS. The YouTube Thumbnail Downloader grabs every resolution of a video thumbnail from its link, handy for competitor research or a blog post. The Quiz Builder makes a personality or knowledge quiz that visitors can take and share, a reliable way to grow engagement. All tools are free, need no sign-up and work in the browser, so drafts and customer data stay with you."
   },
   "FinanceBoard": {
     "subtitle": "Financial utilities for payments, exchange rates, and more.",
@@ -536,7 +537,7 @@
     },
     "metaTitle": "Productivity Tools — Pomodoro, File Renamer & Excel | Utility Hub",
     "metaDescription": "Free productivity tools: a Pomodoro focus timer, a bulk file renamer with numbering and regex, an Excel column mapper, a world time zone converter and a live meeting cost meter. Runs in your browser.",
-    "intro": "Productivity tools that save minutes every day and hours every month. The Smart Bulk Renamer renames hundreds of files at once with find-and-replace, numbering, dates and regular expressions, and the Excel Column Mapper reshapes spreadsheets into the column layout another system expects. The Pomodoro Timer runs 25-minute focus blocks with breaks, the World Time Converter lines up business hours across Seoul, London, New York and other cities to find a meeting slot, and the Meeting Cost Calculator shows in real time how much a meeting costs based on attendees' pay. Bomb Notepad keeps a scratch note that deletes itself after a timer. The Solar Calculator estimates rooftop solar output, bill savings and payback with measured plant data, and also models power-plant revenue and IRR. All tools run locally in your browser, so files and notes stay on your device."
+    "intro": "Productivity tools that save minutes every day and hours every month. The Smart Bulk Renamer renames hundreds of files at once with find-and-replace, numbering, dates and regular expressions, and the Excel Column Mapper reshapes spreadsheets into the column layout another system expects. The Pomodoro Timer runs 25-minute focus blocks with breaks, the World Time Converter lines up business hours across Seoul, London, New York and other cities to find a meeting slot, and the Meeting Cost Calculator shows in real time how much a meeting costs based on attendees' pay. Bomb Notepad keeps a scratch note that deletes itself after a timer. All tools run locally in your browser, so files and notes stay on your device."
   },
   "Pomodoro": {
     "title": "🍅 Pomodoro Timer",
@@ -604,8 +605,8 @@
       "desc": "Turn text into bubble-letter pop art — 8 presets, 6 fonts, transparent background, 3× print-ready PNG."
     },
     "metaTitle": "Design Tools — Color Palettes, Logos & Favicons | Utility Hub",
-    "metaDescription": "Free design tools: generate harmonious color palettes and check WCAG contrast, create text logos and favicons, preview Google Fonts, batch-resize photos and visualize bathroom tiles. No design software required.",
-    "intro": "Design tools for people who need good-looking results without opening a full design suite. Generate harmonious colour palettes and check text contrast against WCAG 2.1 AA and AAA ratios, preview Google Fonts with your own sentence before choosing one, and build a text-based logo and favicon set in the sizes browsers and phones expect. The Photo Batch Editor resizes and filters many photos at once for a blog or online shop, and the Bubble Pop Art Text Generator exports playful lettering as a transparent PNG. The Formation Planner lays out players or performers on a field or stage and saves the plan as an image. The Bathroom Tile Visualizer lays photo-real tiles on your own bathroom photo at true scale and perspective, keeping the original lighting, with grout, layouts and tile counts. Everything works in the browser, so images are never uploaded.",
+    "metaDescription": "Free design tools: color palettes with WCAG contrast checks, text logos and favicons, Google Fonts preview, image compression, resizing and GIF making, batch photo editing, outfit color matching and a bathroom tile visualizer.",
+    "intro": "Design tools for people who need good-looking results without opening a full design suite. Generate harmonious colour palettes and check text contrast against WCAG 2.1 AA and AAA ratios, preview Google Fonts with your own sentence before choosing one, and build a text-based logo and favicon set in the sizes browsers and phones expect. The Photo Batch Editor resizes and filters many photos at once for a blog or online shop, and the Bubble Pop Art Text Generator exports playful lettering as a transparent PNG. The Formation Planner lays out players or performers on a field or stage and saves the plan as an image. The Bathroom Tile Visualizer lays photo-real tiles on your own bathroom photo at true scale and perspective, keeping the original lighting, with grout, layouts and tile counts. The Image Compressor and Image Resizer shrink file size and dimensions, the GIF Maker turns a set of images into an animated GIF, and the Color Coordinator dresses a mannequin in outfit colour combinations and checks them against your personal colour season. Everything works in the browser, so images are never uploaded.",
     "before-after-maker": {
       "title": "Before & After Photo Maker",
       "desc": "Two photos to an Instagram-ready before and after image — logo, watermark and face blurring, all on your device."
@@ -807,8 +808,8 @@
       "desc": "Compare total capsules, serving size, active mg, and purity to find the true value winner between two supplements."
     },
     "metaTitle": "Lifestyle Calculators — BMI, Age, GPA & Countdown | Utility Hub",
-    "metaDescription": "Free lifestyle and health tools: BMI calculator, exact age calculator, countdown timer, GPA calculator, air conditioner sizing, supplement cost-per-dose analysis, plus MBTI-style personality tests and fun quizzes.",
-    "intro": "Everyday calculators and small games for health, home, hobbies and fun. Check BMI and a healthy weight range, count days to an exam or anniversary, convert international and Korean age, and work out a college GPA on 4.5 or 4.3 scales. Pet owners can estimate daily calories for dogs and cats, aquarium keepers can size tanks and stocking, and coffee lovers can dial in pour-over ratios and espresso extraction with SCA standards. The AC Size Calculator suggests air-conditioner capacity for a room, the Gym Plate Calculator loads a barbell to a target weight and the Supplement Cost Analyzer compares two products by price per day. For a break there are MBTI and Teto-Egen tests, a nickname generator, a daily fortune prompt, a 30-day challenge tracker, an apnea breathing trainer and a dual N-back memory game. Everything runs free in the browser."
+    "metaDescription": "Free lifestyle and health tools: BMI calculator, exact age calculator, countdown timer, GPA calculator, supplement cost-per-dose analysis, plus MBTI-style personality tests and fun quizzes.",
+    "intro": "Everyday calculators and small games for health, home, hobbies and fun. Check BMI and a healthy weight range, count days to an exam or anniversary, convert international and Korean age, and work out a college GPA on 4.5 or 4.3 scales. Pet owners can estimate daily calories for dogs and cats, aquarium keepers can size tanks and stocking, and coffee lovers can dial in pour-over ratios and espresso extraction with SCA standards. The Gym Plate Calculator loads a barbell to a target weight and the Supplement Cost Analyzer compares two products by price per day. For a break there are MBTI and Teto-Egen tests, a nickname generator, a daily fortune prompt, a 30-day challenge tracker, an apnea breathing trainer and a dual N-back memory game. Everything runs free in the browser."
   },
   "SecurityBoard": {
     "subtitle": "Security tools for privacy protection and safe internet usage.",
@@ -837,8 +838,8 @@
       "desc": "Only the line you're reading stays sharp; the rest blurs out. Protect your writing from over-the-shoulder peeking in cafes, subways, and offices."
     },
     "metaTitle": "Security Tools — Password Generator & Data Masking | Utility Hub",
-    "metaDescription": "Free security and privacy tools: a strong password generator, automatic masking of personal data in text, a URL safety checker for suspicious links, self-destructing secret notes and a robots.txt generator that blocks AI crawlers.",
-    "intro": "Privacy and security tools that work entirely in your browser, so the sensitive text you paste never leaves your device. Privacy Masking hides names, phone numbers, email addresses, ID and card numbers in a block of text before you share a screenshot or send a document. The Password Generator creates long random passwords with the character sets a site requires and estimates how long they would resist an offline attack. The URL Safety Checker inspects a link for phishing patterns such as look-alike domains, IP addresses, misleading subdomains and risky shortener redirects. Burn Message creates a one-time note that is destroyed after it is read, and Peek-Proof Editor blurs everything except the line you are typing to stop shoulder surfing in cafés and offices. Block AI Crawlers writes robots.txt rules, meta tags and headers to keep AI training bots away from your site."
+    "metaDescription": "Free security and privacy tools: a strong password generator and strength checker, automatic masking of personal data in text, a URL safety checker, self-destructing secret notes and a robots.txt generator that blocks AI crawlers.",
+    "intro": "Privacy and security tools that work entirely in your browser, so the sensitive text you paste never leaves your device. Privacy Masking hides names, phone numbers, email addresses, ID and card numbers in a block of text before you share a screenshot or send a document. The Password Generator creates long random passwords with the character sets a site requires and estimates how long they would resist an offline attack. The Password Strength Checker scores a password you already use for entropy and crack time without sending it anywhere. The URL Safety Checker inspects a link for phishing patterns such as look-alike domains, IP addresses, misleading subdomains and risky shortener redirects. Burn Message creates a one-time note that is destroyed after it is read, and Peek-Proof Editor blurs everything except the line you are typing to stop shoulder surfing in cafés and offices. Block AI Crawlers writes robots.txt rules, meta tags and headers to keep AI training bots away from your site."
   },
   "Redact": {
     "title": "🔏 Personal Info Redactor",
@@ -974,8 +975,8 @@
       "desc": "Calculate grounding conductor sizes based on KEC standards."
     },
     "metaTitle": "Developer Tools — JSON Formatter & Regex Tester | Utility Hub",
-    "metaDescription": "Free browser-based developer tools: format, validate and minify JSON, test regular expressions in real time, check password strength, decode resistor color bands and size grounding conductors.",
-    "intro": "These are the tools developers keep open while coding and debugging. Pretty-print minified JSON from an API response, validate it and pinpoint the exact line of a syntax error, and watch which strings a regular expression matches as you type, with capture groups and flags highlighted. The Password Strength Checker estimates entropy and crack time for a password without sending it anywhere, useful when you design sign-up rules. For hardware and electrical work, the Resistor Calculator decodes 4-, 5- and 6-band colour codes into resistance and tolerance, and the KEC Grounding Calculator sizes protective and grounding conductors under the Korean Electrical Code. Each tool runs instantly in the browser with no installation, so you can use it on any machine, including a locked-down work laptop. Bookmark the ones you use most and they stay one click away."
+    "metaDescription": "Free browser-based developer tools: format, validate and minify JSON, test regular expressions in real time and decode 4-, 5- and 6-band resistor colour codes.",
+    "intro": "These are the tools developers keep open while coding and debugging. Pretty-print minified JSON from an API response, validate it and pinpoint the exact line of a syntax error, and watch which strings a regular expression matches as you type, with capture groups and flags highlighted. For electronics projects, the Resistor Calculator decodes 4-, 5- and 6-band colour codes into resistance and tolerance. The Password Strength Checker is now under Security and the KEC Grounding Calculator under Construction & Trades. Each tool runs instantly in the browser with no installation, so you can use it on any machine, including a locked-down work laptop. Bookmark the ones you use most and they stay one click away."
   },
   "JsonFormatter": {
     "title": "🗂️ JSON Formatter & Viewer",
@@ -1643,7 +1644,7 @@
     "metaDesc": "Utility Hub is a free online tool collection built from real work needs. Privacy-first, completely free, no installation required.",
     "hero_sub": "Free online tools built by a non-developer for real-world work needs",
     "origin_title": "Why Was This Built?",
-    "origin_body": "Working through repetitive tasks at my job, I kept running into the same problem: there was no clean, free tool that did exactly what I needed. Calculating VAT meant opening Excel. Converting a single image to PDF meant uploading it to an unfamiliar website. So I started building my own tools. What began as personal utilities has grown into {count} tools across 10 categories. Because they were built by someone who actually uses them — not a developer optimizing for metrics — they tend to solve the exact frustrations real users face.",
+    "origin_body": "Working through repetitive tasks at my job, I kept running into the same problem: there was no clean, free tool that did exactly what I needed. Calculating VAT meant opening Excel. Converting a single image to PDF meant uploading it to an unfamiliar website. So I started building my own tools. What began as personal utilities has grown into {count} tools across 11 categories. Because they were built by someone who actually uses them — not a developer optimizing for metrics — they tend to solve the exact frustrations real users face.",
     "philosophy_title": "Core Principles",
     "p1_icon": "🔒",
     "p1_title": "Privacy First",
@@ -3155,5 +3156,11 @@
         "a": "Your items and costs are saved automatically in this browser on this device only, and nothing is sent to a server. To move to another device or keep a safe copy, use Export backup and later Import backup. The cost sheet can be exported as CSV for Excel or Google Sheets, or printed."
       }
     ]
+  },
+  "ConstructionBoard": {
+    "subtitle": "Calculators for electrical, plumbing, structural and interior work on site.",
+    "metaTitle": "Construction Calculators — Wire Size, Pipe & Concrete | Utility Hub",
+    "metaDescription": "Free calculators for the trades: wire size and voltage drop, cable tray fill, grounding conductors, pipe sizing and offsets, concrete volume and truck loads, metal weight, sling angle loads, tile and wallpaper quantities, AC sizing and rooftop solar output.",
+    "intro": "Calculators for the work done every day on electrical, plumbing, structural and interior jobs. For electrical work, the Wire Size Calculator picks a conductor from load current, run length and allowed voltage drop, the Cable Tray Calculator checks fill against tray capacity, and the Grounding Calculator sizes protective and earthing conductors under the Korean Electrical Code. For plumbing, the Piping Calculator covers pipe sizes, drain slopes and hydrostatic test volumes, and the Pipe Offset Calculator gives cut lengths with elbow take-offs. For structural and lifting work, the Concrete Calculator adds up several pours and works out ready-mix truck loads, the Metal Weight Calculator gives the weight and paint area of H-beams, channels and pipes, and the Sling Angle Calculator shows the tension on each leg and checks it against the working load limit. For fit-out and installation there are tile and wallpaper quantity estimates, a Korean pyeong to square metre converter, air-conditioner sizing for a room and a rooftop solar output and payback calculator. Everything runs in the browser; treat the results as estimates and follow the design standard and the site engineer before you build."
   }
 }

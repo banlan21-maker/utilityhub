@@ -5,7 +5,7 @@ import { routing } from './i18n/routing';
 const intlMiddleware = createMiddleware(routing);
 
 const HOST = 'www.theutilhub.com';
-const CATS = 'performance|document|finance|productivity|design|marketing|lifestyle|security|utility|dev';
+const CATS = 'construction|performance|document|finance|productivity|design|marketing|lifestyle|security|utility|dev';
 const STATIC_PAGES = 'about|contact|feedback|privacy|terms|support';
 
 /**

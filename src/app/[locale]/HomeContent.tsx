@@ -19,6 +19,7 @@ export interface HomeLive {
 }
 
 const CATEGORIES_BASE = [
+  { id: 'construction', icon: '🏗️', color: '#d97706', hot: true,  popular: true  },
   { id: 'performance',  icon: '🚀', color: '#ef4444', hot: false, popular: false },
   { id: 'document',     icon: '📄', color: '#10b981', hot: false, popular: false },
   { id: 'finance',      icon: '💳', color: '#3b82f6', hot: false, popular: true  },

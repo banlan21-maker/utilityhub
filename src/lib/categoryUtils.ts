@@ -1,55 +1,19 @@
-import { existsSync, readdirSync, statSync } from 'fs';
-import { join } from 'path';
-
-const CATEGORIES = [
-  'performance',
-  'document',
-  'finance',
-  'productivity',
-  'design',
-  'marketing',
-  'lifestyle',
-  'security',
-  'utility',
-  'dev'
-] as const;
+import { tools } from '@/lib/tools-registry';
 
 /**
- * Automatically count tools in each category by scanning the file system
- * Returns a map of category -> tool count
+ * 카테고리별 도구 수 (홈 카테고리 카드). 레지스트리의 화면 분류(category)로 센다.
+ * 폴더(주소)로 세면 분류만 옮긴 도구가 옛 카테고리에 잡힌다.
  */
 export function getToolCounts(): Record<string, number> {
   const counts: Record<string, number> = {};
-
-  const basePath = join(process.cwd(), 'src', 'app', '[locale]');
-
-  for (const category of CATEGORIES) {
-    try {
-      const categoryPath = join(basePath, 'utilities', category);
-      const items = readdirSync(categoryPath);
-
-      // Count only directories (each tool has its own directory)
-      // Exclude page.tsx and other files
-      const toolDirs = items.filter(item => {
-        const itemPath = join(categoryPath, item);
-        // 빈 폴더(작업 흔적)는 빼고 실제 페이지가 있는 도구만 센다
-        return statSync(itemPath).isDirectory() && existsSync(join(itemPath, 'page.tsx'));
-      });
-
-      counts[category] = toolDirs.length;
-    } catch (error) {
-      // Category directory doesn't exist or is empty
-      counts[category] = 0;
-    }
+  for (const t of tools) {
+    if (!t.available) continue;
+    counts[t.category] = (counts[t.category] ?? 0) + 1;
   }
-
   return counts;
 }
 
-/**
- * Get total tool count across all categories
- */
+/** 전체 도구 수 */
 export function getTotalToolCount(): number {
-  const counts = getToolCounts();
-  return Object.values(counts).reduce((sum, count) => sum + count, 0);
+  return tools.filter((t) => t.available).length;
 }

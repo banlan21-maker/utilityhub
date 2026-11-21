@@ -23,6 +23,7 @@ const CATEGORY_GROUPS = [
   {
     titleKey: "footer.tools_title",
     links: [
+      { icon: <span className="text-sm">🏗️</span>, labelKo: "건설·현장", labelEn: "Construction", href: "/utilities/construction" },
       { icon: <Zap className="w-4 h-4" />, labelKo: "성능 및 모니터링", labelEn: "Performance", href: "/utilities/performance" },
       { icon: <FileText className="w-4 h-4" />, labelKo: "문서 변환/편집", labelEn: "Documents", href: "/utilities/document" },
       { icon: <CreditCard className="w-4 h-4" />, labelKo: "결제 및 핀테크", labelEn: "Fintech", href: "/utilities/finance" },
