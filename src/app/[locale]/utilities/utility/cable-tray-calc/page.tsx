@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '케이블 트레이 경사·오프셋 가공 계산기 (V-컷·3D 도면) | Utility Hub'
-    : 'Cable Tray Offset & Slope Calculator (V-cut, 3D) | Utility Hub';
+    : 'Cable Tray Slope & Offset Fabrication Calculator (V-cut, 3D) | Utility Hub';
   const description = isKo
     ? '케이블 트레이 오르막·내리막·오프셋 구간의 V-컷과 일자 절개 치수, 마킹 간격, 지지점 위치를 계산하고 3D로 접히는 모습을 보여줍니다. 30·45·60° 프리셋과 실측 입력 지원.'
     : 'Field-fabricate cable tray rises, drops and offsets: V-cut and slit dimensions for both bends, marking distance, support positions and a 3D fold preview.';
