@@ -13,6 +13,7 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-21', type: 'fix', href: '/utilities/utility/grid-poker', ko: '그리드 포커 — 한 달 내내 같던 카드를 매일 새로 섞기, 등급 표시, 하던 판 자동 저장, 줄별 점수', en: 'Grid Poker — cards now really change daily, grades, auto-saved board, live line scores' },
   { date: '2026-11-21', type: 'fix', href: '/utilities/utility/persona-build', ko: '페르소나 카드 — 선택지 순서 섞기, 캐릭터에 따라 최선의 답이 달라지는 점수, 고른 이유 표시', en: 'Persona Build — shuffled choices, scoring that depends on your character, reasons shown after each pick' },
   { date: '2026-11-21', type: 'fix', href: '/utilities/finance/vat-calc', ko: '부가세·에어컨 평형·평수 계산기 — 휴대폰에서 계산 종류 메뉴가 겹쳐 보이던 문제 수정', en: 'VAT, AC size and pyeong calculators — mode tabs no longer overlap on phones' },
   { date: '2026-11-21', type: 'new', href: '/utilities/document/sign-stamp-maker', ko: '싸인·도장 이미지 만들기 — 도장 사진 배경 제거, 싸인 그리기, 이름 도장, 투명 PNG', en: 'Signature & Stamp Maker — draw, type or extract a transparent PNG signature' },

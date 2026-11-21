@@ -7,6 +7,7 @@
 //   표시 점수 = 그 상황에서 가장 좋은 선택 100점, 가장 나쁜 선택 0점이 되도록 환산 → 10개 상황 합계 0~1000
 // 그래서 "상식적으로 좋은 답"이 기본이지만, 캐릭터에 따라 최선의 답이 달라진다 (한 판에 평균 2개 안팎).
 import { JOBS, MISSIONS, OBVIOUS_OVERLAP, PERSONALITIES, SKILLS, type Card, type Choice, type Mission, type Situation } from './persona-data';
+import { dailySeed, rand } from './dailyRandom';
 
 export interface Character { job: Card; personality: Card; skill: Card }
 
@@ -32,23 +33,8 @@ export const ABILITY_GROUPS: string[][] = [
 ];
 const groupOf = (groups: string[][], id: string) => groups.find((g) => g.includes(id)) ?? [id];
 
-/* ── 날짜 시드·난수 ── */
-
-/** 한국 시간 기준 YYYYMMDD — 모두가 같은 날 같은 캐릭터·미션을 받는다 */
-export function dailySeed(now: Date = new Date()): number {
-  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-  return kst.getUTCFullYear() * 10000 + (kst.getUTCMonth() + 1) * 100 + kst.getUTCDate();
-}
-
-/** (날짜, 용도 번호) → 0 이상 1 미만. 용도마다 서로 무관한 값이 나온다
- *  (예전 Math.sin(seed + index) 방식은 "오늘 성격 번호 = 내일 직업 번호"로 하루씩 밀렸다) */
-export function rand(seed: number, salt: number): number {
-  let x = (Math.imul(seed | 0, 0x9e3779b1) ^ Math.imul((salt + 1) | 0, 0x85ebca6b)) >>> 0;
-  x = Math.imul(x ^ (x >>> 16), 0x21f0aaad);
-  x = Math.imul(x ^ (x >>> 15), 0x735a2d97);
-  x ^= x >>> 15;
-  return (x >>> 0) / 4294967296;
-}
+/* ── 날짜 시드·난수 (데일리 게임 공통) ── */
+export { dailySeed, rand };
 
 export interface DailySetup {
   seed: number;

@@ -72,14 +72,56 @@
   color: var(--text-muted);
 }
 
-/* ── 5×5 Grid ── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: clamp(4px, 1.2vw, 8px);
+/* ── 5×5 판 + 줄별 점수 칸 ── */
+.board {
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   margin: 0 auto;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 1.2vw, 8px);
+}
+
+.gridRow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(30px, 0.62fr);
+  gap: clamp(3px, 1.2vw, 8px);
+  align-items: stretch;
+}
+
+.lineBadge {
+  height: 100%;
+  min-height: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  font-size: clamp(0.68rem, 2.4vw, 0.85rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  background: transparent;
+}
+.lineBadgeZero { background: var(--surface-hover); }
+.lineBadgeOn {
+  background: var(--tint-violet-bg);
+  border: 1px solid var(--tint-violet-border);
+  color: var(--color-primary);
+}
+.lineTotal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.6rem;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: white;
+  font-size: clamp(0.72rem, 2.6vw, 0.9rem);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
 }
 
 .cell {
@@ -90,7 +132,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  cursor: pointer;
+  padding: 0;
+  font: inherit;
   transition: all 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
@@ -98,10 +141,12 @@
 .cellEmpty {
   border: 2px dashed var(--border);
   background: var(--surface-hover);
+  cursor: pointer;
 }
+.cellEmpty:disabled { cursor: default; }
 
-.cellEmpty:hover {
-  border-color: #8b5cf6;
+.cellEmpty:not(:disabled):hover {
+  border-color: var(--color-primary);
   background: var(--tint-violet-bg);
   transform: scale(1.03);
 }
@@ -112,7 +157,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
 }
 
-.cell:active {
+.cellEmpty:not(:disabled):active {
   transform: scale(0.95);
 }
 
@@ -239,7 +284,8 @@
 
 /* ── Mobile breakpoints ── */
 @media (max-width: 360px) {
-  .grid {
+  .grid,
+  .gridRow {
     gap: 2px;
   }
   .cardRank {
@@ -254,4 +300,82 @@
   .totalScore {
     font-size: 2.5rem;
   }
+}
+
+/* ── 안내·점수표 ── */
+.nextCardEmpty { border-style: dashed; box-shadow: none; }
+
+.how {
+  margin: 0;
+  max-width: 480px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.cellInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rules {
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+}
+.rules summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.rulesNote {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.rulesList {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 1.25rem;
+}
+.rulesList li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--text-primary);
+}
+.rulesList b { color: var(--color-primary); }
+
+/* ── 결과: 등급 ── */
+.gradeBox { text-align: center; }
+.gradeName {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0.2rem 0 0.35rem;
+}
+.totalScoreUnit {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-left: 0.15rem;
+}
+.right { text-align: right !important; }
+.shareRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+@media (max-width: 480px) {
+  .rulesList { grid-template-columns: 1fr; }
 }
