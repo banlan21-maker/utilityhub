@@ -1,5 +1,5 @@
 /**
- * Tool metadata registry and relationship map.
+ * Related-tools map. Tool names and icons come from src/lib/tools-registry.ts.
  *
  * toolId format: "utilities/{category}/{slug}" — matches the Next.js route path under /[locale]/
  */
@@ -16,127 +16,116 @@ export interface ToolMeta {
   category: string;
 }
 
-export const TOOLS: ToolMeta[] = [
-  // Finance
-  { id: 'utilities/finance/percentage-calc', icon: '🔢', ko: '퍼센트 계산기', en: 'Percentage Calculator', category: 'finance' },
-  { id: 'utilities/finance/exchange-rate', icon: '💱', ko: '실시간 환율 변환기', en: 'Exchange Rate Converter', category: 'finance' },
-  { id: 'utilities/finance/coin-profit', icon: '🪙', ko: '코인 수익률 계산기', en: 'Crypto Profit Calculator', category: 'finance' },
-  { id: 'utilities/finance/vat-calc', icon: '🧾', ko: '부가세(VAT) 계산기', en: 'VAT Calculator', category: 'finance' },
-  { id: 'utilities/finance/interest-calc', icon: '💰', ko: '이자 계산기', en: 'Interest Calculator', category: 'finance' },
-  { id: 'utilities/finance/tax-33-calc', icon: '🧾', ko: '3.3% 세금 계산기', en: 'Freelancer 3.3% Tax Calculator', category: 'finance' },
-  { id: 'utilities/finance/alba-pay-calc', icon: '🕒', ko: '알바 급여·주휴수당 계산기', en: 'Part-time Pay Calculator (Korea)', category: 'finance' },
-  { id: 'utilities/finance/menu-cost-breakeven', icon: '🏪', ko: '손익분기점·원가율 계산기', en: 'Menu Cost & Break-even Calculator', category: 'finance' },
-  { id: 'utilities/finance/salary-calc', icon: '💼', ko: '연봉 실수령액 계산기', en: 'Salary Take-Home Calculator', category: 'finance' },
-  { id: 'utilities/finance/smart-percent', icon: '💹', ko: '스마트 퍼센트 계산기', en: 'Smart Percentage Calculator', category: 'finance' },
-  { id: 'utilities/finance/freelance-rate-calculator', icon: '⚡', ko: '프리랜서 단가 계산기', en: 'Freelance Rate Calculator', category: 'finance' },
-  { id: 'utilities/finance/invoice-maker', icon: '🧾', ko: '인보이스 & 견적서 메이커', en: 'Invoice & Quote Maker', category: 'finance' },
-
-  // Productivity
-  { id: 'utilities/productivity/pomodoro', icon: '🍅', ko: '뽀모도로 타이머', en: 'Pomodoro Timer', category: 'productivity' },
-  { id: 'utilities/productivity/world-time', icon: '🌍', ko: '세계 시간대 변환기', en: 'World Time Converter', category: 'productivity' },
-  { id: 'utilities/productivity/resume-helper', icon: '📝', ko: '자소서 작성 헬퍼', en: 'Resume Helper', category: 'productivity' },
-  { id: 'utilities/productivity/excel-mapper', icon: '📊', ko: '엑셀 데이터 매퍼', en: 'Excel Data Mapper', category: 'productivity' },
-  { id: 'utilities/productivity/meeting-burner', icon: '⏱️', ko: 'Meeting Burner', en: 'Meeting Burner', category: 'productivity' },
-  { id: 'utilities/productivity/solar-master', icon: '☀️', ko: 'Solar Master', en: 'Solar Master', category: 'productivity' },
-  { id: 'utilities/productivity/bulk-renamer', icon: '📝', ko: '스마트 대량 파일명 변환기', en: 'Smart Bulk Renamer', category: 'productivity' },
-
-  // Design
-  { id: 'utilities/design/color-palette', icon: '🎯', ko: '색상 팔레트 & 가독성 검사기', en: 'Color Palette Checker', category: 'design' },
-  { id: 'utilities/design/logo-favicon', icon: '🎨', ko: 'AI 로고 & 파비콘 생성기', en: 'Logo & Favicon Generator', category: 'design' },
-  { id: 'utilities/design/font-preview', icon: '🔤', ko: '다국어 폰트 비교기', en: 'Multilingual Font Comparer', category: 'design' },
-  { id: 'utilities/design/photo-batch-master', icon: '📸', ko: '일괄 사진 보정 & 프리셋 마스터', en: 'Photo Batch Master', category: 'design' },
-  { id: 'utilities/design/bubble-popart', icon: '🎨', ko: '버블 팝아트 글씨 생성기', en: 'Bubble Pop Art Text Generator', category: 'design' },
-  { id: 'utilities/design/before-after-maker', icon: '📷', ko: '시술 전후 비교 사진 메이커', en: 'Before & After Photo Maker', category: 'design' },
-
-  // Marketing
-  { id: 'utilities/marketing/hashtag-generator', icon: '#️⃣', ko: '해시태그 생성기', en: 'Hashtag Generator', category: 'marketing' },
-  { id: 'utilities/marketing/osmu-formatter', icon: '✨', ko: 'OSMU 콘텐츠 재가공 포맷터', en: 'OSMU Content Formatter', category: 'marketing' },
-  { id: 'utilities/marketing/qr-generator', icon: '🔳', ko: 'QR 코드 생성기', en: 'QR Code Generator', category: 'marketing' },
-  { id: 'utilities/marketing/shorturl', icon: '🔗', ko: 'URL 단축기', en: 'URL Shortener', category: 'marketing' },
-  { id: 'utilities/marketing/quiz-builder', icon: '🧩', ko: '심리테스트 / 퀴즈 빌더', en: 'Quiz Builder', category: 'marketing' },
-
-  // Lifestyle
-  { id: 'utilities/lifestyle/color-coordinator', icon: '🧥', ko: 'OOTD 컬러 코디네이터', en: 'Outfit Color Coordinator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/30day-challenge', icon: '📅', ko: '30일 챌린지 트래커', en: '30 Day Challenge Tracker', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/gym-plate-calc', icon: '🏋️', ko: '1RM & 바벨 원판 계산기', en: '1RM & Barbell Plate Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/bmi-calc', icon: '💧', ko: 'BMI & 건강 계산기', en: 'BMI & Health Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/dday-calc', icon: '📆', ko: 'D-Day & 날짜 계산기', en: 'D-Day Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/age-calc', icon: '🎂', ko: '한국형 날짜 계산기', en: 'Korean Date Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/gpa-calc', icon: '📊', ko: '대학생 학점 변환기', en: 'GPA Converter', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/nickname', icon: '✨', ko: '영문 이름/닉네임 추천기', en: 'English Name Generator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/pet-calorie', icon: '🐾', ko: '반려동물 칼로리 계산기', en: 'Pet Calorie Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/aquarium-calc', icon: '🐟', ko: '수족관 바이오로드 계산기', en: 'Aquarium Bioload Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/mbti-test', icon: '🌊', ko: 'MBTI 해양생물 테스트', en: 'MBTI Marine Life Test', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/fortune-prompt', icon: '🔮', ko: '오늘의 운세 프롬프트', en: 'Fortune Prompt', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/teto-egen-test', icon: '😊', ko: '태토에겐 성격 테스트', en: 'Teto Egen Personality Test', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/brain-boost', icon: '🧠', ko: '브레인 부스트 (N-Back)', en: 'Brain Boost N-Back', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/apnea-trainer', icon: '🫁', ko: 'Apnea Pro 드라이 트레이닝', en: 'Apnea Pro Dry Training', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/saju-compatibility', icon: '💕', ko: '사주 궁합 테스트', en: 'Saju Compatibility Test', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/coffee-yield-calc', icon: '☕', ko: '커피 브루잉 수율 계산기', en: 'Coffee Extraction Calculator', category: 'lifestyle' },
-  { id: 'utilities/lifestyle/supplement-cost-calc', icon: '💊', ko: '영양제 진짜 가성비 분석기', en: 'Supplement Cost Analyzer', category: 'lifestyle' },
-
-  // Security
-  { id: 'utilities/security/privacy-masking', icon: '🔏', ko: '개인정보 마스킹 도구', en: 'Privacy Masking Tool', category: 'security' },
-  { id: 'utilities/security/password-generator', icon: '🔑', ko: '비밀번호 생성기', en: 'Password Generator', category: 'security' },
-  { id: 'utilities/security/url-safety', icon: '🛡️', ko: 'URL 피싱/악성코드 검사기', en: 'URL Safety Checker', category: 'security' },
-  { id: 'utilities/security/burn-message', icon: '💣', ko: '일회용 비밀 메모', en: 'Burn Message', category: 'security' },
-  { id: 'utilities/security/block-ai-crawlers', icon: '🛡️', ko: 'AI 학습 차단 코드 생성기', en: 'Block AI Crawlers', category: 'security' },
-  { id: 'utilities/security/peek-proof', icon: '👁️', ko: '어깨너머 시선 차단 에디터', en: 'Peek-Proof Editor', category: 'security' },
-
-  // Utility
-  { id: 'utilities/utility/counter', icon: '📝', ko: '글자 수 & 바이트 계산기', en: 'Character Counter', category: 'utility' },
-  { id: 'utilities/utility/pyeong-calc', icon: '📐', ko: '평수 ↔ ㎡ 변환기', en: 'Pyeong to m² Converter', category: 'utility' },
-  { id: 'utilities/utility/unit-converter', icon: '🔢', ko: '단위 변환기', en: 'Unit Converter', category: 'utility' },
-  { id: 'utilities/utility/image-processor', icon: '🖼️', ko: '이미지 압축기', en: 'Image Compressor', category: 'utility' },
-  { id: 'utilities/utility/image-resizer', icon: '✂️', ko: '이미지 리사이저', en: 'Image Resizer', category: 'utility' },
-  { id: 'utilities/utility/wordle', icon: '🎮', ko: '한글 워들 게임', en: 'Korean Wordle Game', category: 'utility' },
-  { id: 'utilities/utility/yt-thumbnail', icon: '📸', ko: '유튜브 썸네일 추출기', en: 'YouTube Thumbnail Downloader', category: 'utility' },
-  { id: 'utilities/utility/lotto-generator', icon: '🎰', ko: '운명 로또 번호 생성기', en: 'Destiny Lotto Picker', category: 'utility' },
-  { id: 'utilities/utility/decision-master', icon: '🎡', ko: 'Decision Master', en: 'Decision Master', category: 'utility' },
-  { id: 'utilities/utility/piping-calc', icon: '🔧', ko: '배관 종합 계산기', en: 'Pipe Size, Slope & Flow Calculator', category: 'utility' },
-  { id: 'utilities/utility/wire-size-calc', icon: '⚡', ko: '전선 굵기 계산기', en: 'Wire Size Calculator (AWG & mm²)', category: 'utility' },
-  { id: 'utilities/utility/cable-tray-calc', icon: '🪜', ko: '케이블 트레이 가공 계산기', en: 'Cable Tray Bend & Offset Calculator', category: 'utility' },
-  { id: 'utilities/utility/metal-weight-calc', icon: '🏗️', ko: '금속 중량·면적 계산기', en: 'Metal Weight Calculator', category: 'utility' },
-  { id: 'utilities/utility/concrete-calc', icon: '🚛', ko: '콘크리트·레미콘 물량 계산기', en: 'Concrete Calculator', category: 'utility' },
-  { id: 'utilities/utility/sling-angle-calc', icon: '⛓️', ko: '줄걸이(슬링) 각도·하중 계산기', en: 'Sling Angle Calculator', category: 'utility' },
-  { id: 'utilities/utility/interior-material-calc', icon: '🧱', ko: '타일·도배 계산기', en: 'Tile & Wallpaper Calculator', category: 'utility' },
-  { id: 'utilities/utility/elbow-offset', icon: '📐', ko: '배관 엘보 오프셋 계산기', en: 'Pipe Elbow Offset Calculator', category: 'utility' },
-  { id: 'utilities/utility/construction-dictionary', icon: '📖', ko: '건설현장 용어 사전', en: 'Construction Site Glossary', category: 'utility' },
-  { id: 'utilities/utility/persona-build', icon: '🎭', ko: '페르소나 카드', en: 'Persona Build', category: 'utility' },
-
-  // Dev
-  { id: 'utilities/dev/json-formatter', icon: '🗂️', ko: 'JSON 포맷터 & 뷰어', en: 'JSON Formatter & Viewer', category: 'dev' },
-  { id: 'utilities/dev/regex-tester', icon: '🔍', ko: '정규표현식 테스터', en: 'Regex Tester', category: 'dev' },
-  { id: 'utilities/dev/password-strength', icon: '🔐', ko: '비밀번호 강도 분석기', en: 'Password Strength Analyzer', category: 'dev' },
-  { id: 'utilities/dev/kec-grounding', icon: '⚡', ko: 'KEC 접지 저항 계산기', en: 'KEC Grounding Calculator', category: 'dev' },
-  { id: 'utilities/dev/resistor-calc', icon: '🔌', ko: '저항 색띠 계산기', en: 'Resistor Color Code Calculator', category: 'dev' },
-
-  // Document
-  { id: 'utilities/document/hwp-pdf-converter', icon: '📄', ko: '한글(HWP) to PDF', en: 'HWP → PDF Converter', category: 'document' },
-  { id: 'utilities/document/img-pdf-converter', icon: '🖼️', ko: '이미지 to PDF', en: 'Image → PDF Converter', category: 'document' },
-  { id: 'utilities/document/pdf-masking', icon: '🔒', ko: 'PDF 개인정보 마스킹', en: 'PDF Privacy Masking', category: 'document' },
-
-  // Performance
-  { id: 'utilities/performance/ttfb-check', icon: '🚀', ko: 'TTFB 속도 테스터', en: 'TTFB Speed Tester', category: 'performance' },
-  { id: 'utilities/performance/sla-uptime-calc', icon: '📊', ko: 'SLA 가동률 계산기', en: 'SLA Uptime Calculator', category: 'performance' },
-];
+/**
+ * 도구 이름·아이콘은 tools-registry.ts 한 곳에서만 관리한다 (카테고리 목록·검색·홈과 같은 이름).
+ * 예전에는 여기에 이름을 따로 적어 "관련 도구" 칸만 다른 이름으로 보였다.
+ */
+const fromRegistry: ToolMeta[] = registryTools
+  .filter(t => t.available)
+  .map(t => ({
+    id: t.href.slice(1),
+    icon: t.emoji,
+    ko: t.nameKo ?? t.slug,
+    en: t.nameEn ?? t.slug,
+    category: t.category,
+  }));
 
 /**
- * TOOLS + tools-registry에만 등록된 툴.
- * 레지스트리에 추가됐지만 위 목록에 빠진 툴도 관련 도구로 노출·연결되도록 자동 보완한다.
+ * "관련 도구" 빈자리를 같은 카테고리 도구로 채울 때의 순서 (이름은 여기 적지 않는다).
+ * 이 목록에 없는 도구는 레지스트리 순서대로 뒤에 붙으므로, 새 도구를 만들 때 여기를 고칠 필요는 없다.
  */
-const ALL_TOOLS: ToolMeta[] = [
-  ...TOOLS,
-  ...registryTools
-    .filter(t => t.available && !TOOLS.some(m => m.id === t.href.slice(1)))
-    .map(t => ({
-      id: t.href.slice(1),
-      icon: t.emoji,
-      ko: t.nameKo ?? t.slug,
-      en: t.nameEn ?? t.slug,
-      category: t.category,
-    })),
+const FILL_ORDER: string[] = [
+  'utilities/finance/percentage-calc',
+  'utilities/finance/exchange-rate',
+  'utilities/finance/coin-profit',
+  'utilities/finance/vat-calc',
+  'utilities/finance/interest-calc',
+  'utilities/finance/tax-33-calc',
+  'utilities/finance/alba-pay-calc',
+  'utilities/finance/menu-cost-breakeven',
+  'utilities/finance/salary-calc',
+  'utilities/finance/smart-percent',
+  'utilities/finance/freelance-rate-calculator',
+  'utilities/finance/invoice-maker',
+  'utilities/productivity/pomodoro',
+  'utilities/productivity/world-time',
+  'utilities/productivity/resume-helper',
+  'utilities/productivity/excel-mapper',
+  'utilities/productivity/meeting-burner',
+  'utilities/productivity/solar-master',
+  'utilities/productivity/bulk-renamer',
+  'utilities/design/color-palette',
+  'utilities/design/logo-favicon',
+  'utilities/design/font-preview',
+  'utilities/design/photo-batch-master',
+  'utilities/design/bubble-popart',
+  'utilities/design/before-after-maker',
+  'utilities/marketing/hashtag-generator',
+  'utilities/marketing/osmu-formatter',
+  'utilities/marketing/qr-generator',
+  'utilities/marketing/shorturl',
+  'utilities/marketing/quiz-builder',
+  'utilities/lifestyle/color-coordinator',
+  'utilities/lifestyle/30day-challenge',
+  'utilities/lifestyle/gym-plate-calc',
+  'utilities/lifestyle/bmi-calc',
+  'utilities/lifestyle/dday-calc',
+  'utilities/lifestyle/age-calc',
+  'utilities/lifestyle/gpa-calc',
+  'utilities/lifestyle/nickname',
+  'utilities/lifestyle/pet-calorie',
+  'utilities/lifestyle/aquarium-calc',
+  'utilities/lifestyle/mbti-test',
+  'utilities/lifestyle/fortune-prompt',
+  'utilities/lifestyle/teto-egen-test',
+  'utilities/lifestyle/brain-boost',
+  'utilities/lifestyle/apnea-trainer',
+  'utilities/lifestyle/saju-compatibility',
+  'utilities/lifestyle/coffee-yield-calc',
+  'utilities/lifestyle/supplement-cost-calc',
+  'utilities/security/privacy-masking',
+  'utilities/security/password-generator',
+  'utilities/security/url-safety',
+  'utilities/security/burn-message',
+  'utilities/security/block-ai-crawlers',
+  'utilities/security/peek-proof',
+  'utilities/utility/counter',
+  'utilities/utility/pyeong-calc',
+  'utilities/utility/unit-converter',
+  'utilities/utility/image-processor',
+  'utilities/utility/image-resizer',
+  'utilities/utility/wordle',
+  'utilities/utility/yt-thumbnail',
+  'utilities/utility/lotto-generator',
+  'utilities/utility/decision-master',
+  'utilities/utility/piping-calc',
+  'utilities/utility/wire-size-calc',
+  'utilities/utility/cable-tray-calc',
+  'utilities/utility/metal-weight-calc',
+  'utilities/utility/concrete-calc',
+  'utilities/utility/sling-angle-calc',
+  'utilities/utility/interior-material-calc',
+  'utilities/utility/elbow-offset',
+  'utilities/utility/construction-dictionary',
+  'utilities/utility/persona-build',
+  'utilities/dev/json-formatter',
+  'utilities/dev/regex-tester',
+  'utilities/dev/password-strength',
+  'utilities/dev/kec-grounding',
+  'utilities/dev/resistor-calc',
+  'utilities/document/hwp-pdf-converter',
+  'utilities/document/img-pdf-converter',
+  'utilities/document/pdf-masking',
+  'utilities/performance/ttfb-check',
+  'utilities/performance/sla-uptime-calc',
 ];
+
+export const TOOLS: ToolMeta[] = [
+  ...FILL_ORDER.map(id => fromRegistry.find(t => t.id === id)).filter((t): t is ToolMeta => !!t),
+  ...fromRegistry.filter(t => !FILL_ORDER.includes(t.id)),
+];
+
+const ALL_TOOLS = TOOLS;
 
 /** Build a lookup map: toolId → ToolMeta */
 export const TOOL_MAP: Record<string, ToolMeta> = Object.fromEntries(
