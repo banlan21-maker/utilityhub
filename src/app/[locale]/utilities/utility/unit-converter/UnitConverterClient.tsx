@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { Calculator } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
@@ -208,7 +208,6 @@ function formatNum(n: number): string {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function UnitConverterClient() {
-  const t = useTranslations('UnitConverter');
   const locale = useLocale();
 
   const [activeCatId, setActiveCatId] = useState('length');

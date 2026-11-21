@@ -2,6 +2,7 @@ import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
+import {pickMessages} from '@/i18n/client-messages';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Script from 'next/script';
@@ -37,9 +38,9 @@ export default async function LocaleLayout({
     notFound();
   }
  
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messages = await getMessages();
+  // 브라우저에는 공통 묶음만 보낸다. 도구별 묶음은 각 도구 폴더의 layout.tsx(ScopedMessages)가 더한다.
+  // 전체를 넘기면 모든 페이지 HTML 에 번역 파일이 통째로 실린다 (src/i18n/client-messages.ts)
+  const messages = pickMessages(await getMessages());
  
   return (
     <html lang={locale} suppressHydrationWarning>

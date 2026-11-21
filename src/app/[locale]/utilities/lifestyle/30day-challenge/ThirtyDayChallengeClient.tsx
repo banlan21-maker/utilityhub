@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { Calendar, Download, Palette, RefreshCw, Sparkles, X } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
@@ -60,7 +60,6 @@ function isFailed(startDate: string, idx: number, day: DayEntry): boolean {
 }
 
 export default function ThirtyDayChallengeClient() {
-  const t = useTranslations('30DayChallenge');
   const locale = useLocale();
   const isKorean = locale === 'ko';
 
