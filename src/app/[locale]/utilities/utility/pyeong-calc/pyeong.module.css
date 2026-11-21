@@ -20,7 +20,12 @@
   .container { animation: none; }
 }
 
-@media (max-width: 520px) { .tabs { flex-direction: column; } }
+/* 휴대폰: 탭을 세로로 쌓는다. 공통 탭 버튼은 가로 배치용(flex: 1 1 0)이라 세로에서는 높이가 0 기준으로 줄어
+   두 줄 글씨(제목 + 설명)가 버튼 밖으로 넘쳐 아래 탭과 겹쳤다 → 내용 높이대로 */
+@media (max-width: 520px) {
+  .tabs { flex-direction: column; }
+  .tabs > button { flex: 0 0 auto; } /* .segment 보다 우선 (같은 강도면 불러오는 순서에 따라 졌다) */
+}
 
 .card { display: flex; flex-direction: column; gap: 1rem; }
 .card > h2 { margin-bottom: 0; }

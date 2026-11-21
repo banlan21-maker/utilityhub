@@ -13,6 +13,7 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-21', type: 'fix', href: '/utilities/finance/vat-calc', ko: '부가세·에어컨 평형·평수 계산기 — 휴대폰에서 계산 종류 메뉴가 겹쳐 보이던 문제 수정', en: 'VAT, AC size and pyeong calculators — mode tabs no longer overlap on phones' },
   { date: '2026-11-21', type: 'new', href: '/utilities/document/sign-stamp-maker', ko: '싸인·도장 이미지 만들기 — 도장 사진 배경 제거, 싸인 그리기, 이름 도장, 투명 PNG', en: 'Signature & Stamp Maker — draw, type or extract a transparent PNG signature' },
   { date: '2026-11-21', type: 'update', href: '/utilities/finance/invoice-maker', ko: '견적서 메이커 — 발행인 이름 옆 (인) 자리에 도장·싸인 이미지 넣기', en: 'Invoice Maker — add your signature or stamp next to your name' },
   { date: '2026-11-21', type: 'update', href: '/utilities/construction', ko: '건설·현장 카테고리 신설 — 전선·배관·콘크리트·줄걸이 등 현장 계산기 13개를 한곳에', en: 'New Construction & Trades category — 13 field calculators for wiring, piping, concrete and rigging' },
