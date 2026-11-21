@@ -61,7 +61,8 @@ export interface PayResult {
   belowMinWage: boolean;
 }
 
-const floor10 = (n: number) => Math.floor(n / 10) * 10;
+// 소수 계산 오차(…49.999)로 10원이 깎이지 않게 보정 — krPayroll.ts 와 같은 방식
+const floor10 = (n: number) => Math.floor((n + 1e-6) / 10) * 10;
 const toMin = (hhmm: string) => {
   const [h, m] = hhmm.split(':').map(Number);
   return (Number.isFinite(h) ? h : 0) * 60 + (Number.isFinite(m) ? m : 0);

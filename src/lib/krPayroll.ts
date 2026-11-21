@@ -1,8 +1,8 @@
-import { KR_INSURANCE_2026 as INS } from '@/constants/wageConfig';
+import { currentKrYear, krInsurance } from '@/constants/wageConfig';
 import { TAX_TABLE_ROWS, TAX_AT_10000, CHILD_CREDIT } from '@/constants/incomeTaxTable2026';
 
-/** 10원 미만 절사 */
-const floor10 = (n: number) => Math.floor(n / 10) * 10;
+/** 10원 미만 절사 — 3,550,000 × 0.009 = 31,949.999… 같은 소수 계산 오차로 10원이 깎이지 않게 보정한다 */
+const floor10 = (n: number) => Math.floor((n + 1e-6) / 10) * 10;
 
 /**
  * 근로소득 간이세액표(2026. 3. 1. 이후 지급분)에 따른 월 소득세.
@@ -53,6 +53,8 @@ export interface KRNetPayInput {
   nonTaxable: number;
   family: number;
   children: number;
+  /** 4대보험 요율을 적용할 연도 (없으면 한국 시간 기준 올해) */
+  year?: number;
 }
 
 export interface KRNetPayResult {
@@ -69,11 +71,12 @@ export interface KRNetPayResult {
 }
 
 /** 월급여 기준 4대보험 + 근로소득세(간이세액표 100%) + 지방소득세 공제 후 실수령액 */
-export function calcKRNetPay({ monthlyGross, nonTaxable, family, children }: KRNetPayInput): KRNetPayResult {
+export function calcKRNetPay({ monthlyGross, nonTaxable, family, children, year }: KRNetPayInput): KRNetPayResult {
+  const INS = krInsurance(year ?? currentKrYear());
   const gross = Math.max(0, monthlyGross);
   const taxable = Math.max(0, gross - Math.max(0, nonTaxable));
 
-  // 국민연금: 기준소득월액(천원 미만 절사, 상·하한 적용) × 4.75%
+  // 국민연금: 기준소득월액(천원 미만 절사, 상·하한 적용) × 근로자 요율
   const pensionBase = Math.min(
     INS.pensionBaseMax,
     Math.max(INS.pensionBaseMin, Math.floor(taxable / 1000) * 1000),

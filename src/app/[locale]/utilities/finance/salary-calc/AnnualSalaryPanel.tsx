@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import { calcKRNetPay } from '@/lib/krPayroll';
-import { KR_INSURANCE_2026 as INS } from '@/constants/wageConfig';
+import { krInsurance } from '@/constants/wageConfig';
 import s from './salary.module.css';
 import { ui } from '@/app/components/ui';
 
@@ -28,7 +28,8 @@ function Stepper({ value, min, max, onChange, unit, label }: {
   );
 }
 
-export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
+export default function AnnualSalaryPanel({ isKo, year }: { isKo: boolean; year: number }) {
+  const INS = krInsurance(year);
   const [basis, setBasis] = useState<Basis>('annual');
   const [amountText, setAmountText] = useState('40,000,000');
   const [severanceIncluded, setSeveranceIncluded] = useState(false);
@@ -40,7 +41,7 @@ export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
   const nonTaxable = digitsOnly(nonTaxableText);
   const months = basis === 'annual' && severanceIncluded ? 13 : 12;
   const monthlyGross = basis === 'annual' ? Math.floor(amount / months) : amount;
-  const r = calcKRNetPay({ monthlyGross, nonTaxable, family, children });
+  const r = calcKRNetPay({ monthlyGross, nonTaxable, family, children, year });
 
   const onMoney = (setter: (v: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const n = digitsOnly(e.target.value);
@@ -69,8 +70,8 @@ export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
     detail: '월 공제 내역', gross: '월 급여 (세전)', taxable: '과세 대상 급여',
     pension: '국민연금', health: '건강보험', ltc: '장기요양보험', employment: '고용보험',
     incomeTax: '근로소득세', localTax: '지방소득세', total: '공제 합계', final: '월 실수령액',
-    note: '* 2026년 4대보험 요율과 근로소득 간이세액표(2026. 3. 1. 이후 지급분, 100% 기준)로 계산한 추정치입니다. 실제 원천징수액은 회사의 비과세 항목·세액 선택(80/100/120%)에 따라 다를 수 있고, 최종 세금은 연말정산에서 확정됩니다.',
-    tableTitle: '2026년 연봉별 실수령액 표',
+    note: `* ${year}년 4대보험 요율과 현행 근로소득 간이세액표(2026. 3. 1. 이후 지급분, 100% 기준)로 계산한 추정치입니다. 실제 원천징수액은 회사의 비과세 항목·세액 선택(80/100/120%)에 따라 다를 수 있고, 최종 세금은 연말정산에서 확정됩니다.`,
+    tableTitle: `${year}년 연봉별 실수령액 표`,
     tableNote: `부양가족 1명(본인), 월 비과세 ${won(TABLE_NON_TAXABLE)}, 퇴직금 별도 기준`,
     colSalary: '연봉', colMonthly: '월 세전', colDeduct: '월 공제', colNet: '월 실수령액',
     salaryLabel: (man: number) => man >= 10000 ? `${man / 10000}억 원` : `${man.toLocaleString('ko-KR')}만 원`,
@@ -84,8 +85,8 @@ export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
     detail: 'Monthly deductions', gross: 'Monthly gross', taxable: 'Taxable pay',
     pension: 'National Pension', health: 'Health Insurance', ltc: 'Long-term Care', employment: 'Employment Insurance',
     incomeTax: 'Income tax', localTax: 'Local income tax', total: 'Total deductions', final: 'Monthly take-home',
-    note: '* Estimate based on 2026 Korean social insurance rates and the official simplified withholding tax table (payments from March 1, 2026, 100% option). Actual withholding depends on your employer\'s non-taxable items and withholding option; final tax is settled in the year-end tax adjustment.',
-    tableTitle: '2026 Korean Take-Home Pay by Annual Salary',
+    note: `* Estimate based on ${year} Korean social insurance rates and the current official simplified withholding tax table (payments from March 1, 2026, 100% option). Actual withholding depends on your employer's non-taxable items and withholding option; final tax is settled in the year-end tax adjustment.`,
+    tableTitle: `${year} Korean Take-Home Pay by Annual Salary`,
     tableNote: `1 dependent (yourself), ${won(TABLE_NON_TAXABLE)}/month non-taxable, severance excluded`,
     colSalary: 'Annual salary', colMonthly: 'Monthly gross', colDeduct: 'Deductions', colNet: 'Monthly net',
     salaryLabel: (man: number) => `₩${(man * 10000).toLocaleString('en-US')}`,
@@ -194,7 +195,7 @@ export default function AnnualSalaryPanel({ isKo }: { isKo: boolean }) {
             </thead>
             <tbody>
               {TABLE_SALARIES.map(man => {
-                const row = calcKRNetPay({ monthlyGross: Math.floor((man * 10000) / 12), nonTaxable: TABLE_NON_TAXABLE, family: 1, children: 0 });
+                const row = calcKRNetPay({ monthlyGross: Math.floor((man * 10000) / 12), nonTaxable: TABLE_NON_TAXABLE, family: 1, children: 0, year });
                 return (
                   <tr key={man} style={{ borderBottom: '1px solid var(--border)', textAlign: 'right', color: 'var(--text-primary)' }}>
                     <th scope="row" style={{ textAlign: 'left', padding: '0.5rem', fontWeight: 700 }}>{T.salaryLabel(man)}</th>

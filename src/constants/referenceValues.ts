@@ -56,7 +56,7 @@ export const REFERENCE_VALUES: RefValue[] = [
   },
   {
     id: 'kr.pension_employee', name: '국민연금 근로자 부담', value: 5.0, unit: '%', effectiveFrom: '2027-01-01',
-    source: NPS_SRC, lastChecked: '2026-11-19', nextCheck: '2027-12-01', status: 'confirmed', usedBy: [ALBA],
+    source: NPS_SRC, lastChecked: '2026-11-19', nextCheck: '2027-12-01', status: 'confirmed', usedBy: [ALBA, SALARY],
     note: '전체 10%',
   },
 
@@ -67,7 +67,7 @@ export const REFERENCE_VALUES: RefValue[] = [
   },
   {
     id: 'kr.health_total', name: '건강보험료율(전체)', value: 7.19, unit: '%', effectiveFrom: '2027-01-01',
-    source: NHIS_SRC, lastChecked: '2026-11-19', nextCheck: '2027-12-01', status: 'confirmed', usedBy: [ALBA],
+    source: NHIS_SRC, lastChecked: '2026-11-19', nextCheck: '2027-12-01', status: 'confirmed', usedBy: [ALBA, SALARY],
     note: '2026-09-08 의결, 동결',
   },
 
@@ -79,7 +79,7 @@ export const REFERENCE_VALUES: RefValue[] = [
   },
   {
     id: 'kr.ltc_total', name: '장기요양보험료율(소득 대비)', value: 0.9994, unit: '%', effectiveFrom: '2027-01-01',
-    source: LTC_SRC, lastChecked: '2026-11-19', nextCheck: '2027-12-01', status: 'confirmed', usedBy: [ALBA],
+    source: LTC_SRC, lastChecked: '2026-11-19', nextCheck: '2027-12-01', status: 'confirmed', usedBy: [ALBA, SALARY],
     note: '2026-10-30 의결. 건강보험료 대비 13.90%',
   },
 
@@ -90,7 +90,7 @@ export const REFERENCE_VALUES: RefValue[] = [
   },
   {
     id: 'kr.employment_employee', name: '고용보험 근로자 부담', value: 0.9, unit: '%', effectiveFrom: '2027-01-01',
-    source: EI_SRC, lastChecked: '2026-11-19', nextCheck: '2026-12-15', status: 'pending', usedBy: [ALBA],
+    source: EI_SRC, lastChecked: '2026-11-19', nextCheck: '2026-12-15', status: 'pending', usedBy: [ALBA, SALARY],
     note: '정부가 2027년 1.0%(전체 1.8%→2.0%) 인상안 발표(2026-09). 시행령 개정 전이라 현행 0.9% 적용',
   },
 ];

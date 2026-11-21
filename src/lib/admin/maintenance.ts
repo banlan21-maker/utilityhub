@@ -74,19 +74,19 @@ const hasWageYear = (y: number) => Object.prototype.hasOwnProperty.call(WAGE_DAT
 const CALENDAR: CalItem[] = [
   {
     id: 'min-wage', title: '최저임금 다음 해 값 추가',
-    detail: '8월 5일 전후 고시 → 1월 1일 시행. wageConfig에 다음 해(Y+1) 시급을 넣어야 시급·주휴수당 계산기가 맞음',
-    where: 'src/constants/wageConfig.ts(연봉 계산기) · src/constants/referenceValues.ts(알바 계산기)', source: 'https://www.minimumwage.go.kr',
+    detail: '8월 5일 전후 고시 → 1월 1일 시행. referenceValues.ts 에 다음 해 시급을 넣으면 알바·연봉 계산기가 함께 따라옴',
+    where: 'src/constants/referenceValues.ts (알바·연봉 계산기 공통)', source: 'https://www.minimumwage.go.kr',
     window: [[8, 10], [12, 31]], done: (y) => hasWageYear(y + 1), level: 'warn',
   },
   {
     id: 'insurance', title: '4대보험 요율 (건강·장기요양·국민연금)',
     detail: '건강보험·장기요양 요율은 보통 8~11월 결정, 국민연금은 연금개혁으로 매년 0.5%p 인상(2027년 근로자 5.0%). 1월 1일 시행분 반영',
-    where: 'src/constants/wageConfig.ts KR_INSURANCE_* · src/lib/krPayroll.ts · 연봉 실수령액', source: 'https://www.nhis.or.kr',
+    where: 'src/constants/referenceValues.ts (알바·연봉 계산기 공통)', source: 'https://www.nhis.or.kr',
     window: [[11, 15], [1, 15]], level: 'warn',
   },
   {
     id: 'pension-base', title: '국민연금 기준소득월액 상·하한',
-    detail: '매년 7월 1일 변경(그해 3월 전후 고시). 상한·하한 값 갱신', where: 'src/constants/wageConfig.ts pensionBaseMin/Max', source: 'https://www.nps.or.kr',
+    detail: '매년 7월 1일 변경(그해 3월 전후 고시). 상한·하한 값 갱신', where: 'src/constants/wageConfig.ts PENSION_BASE', source: 'https://www.nps.or.kr',
     window: [[6, 15], [7, 10]],
   },
   {
@@ -134,7 +134,7 @@ function calendar(): AdminAlert[] {
   }
   // 이번 해 최저임금 데이터가 아예 없으면 계산기가 틀린 값을 보여 주는 중
   if (!hasWageYear(year)) {
-    out.unshift({ id: 'min-wage-missing', level: 'danger', title: `${year}년 최저임금 데이터 없음`, detail: '시급·연봉 계산기가 지난해 값으로 계산 중', where: 'src/constants/wageConfig.ts' });
+    out.unshift({ id: 'min-wage-missing', level: 'danger', title: `${year}년 최저임금 데이터 없음`, detail: '시급·연봉 계산기가 지난해 값으로 계산 중', where: 'src/constants/referenceValues.ts' });
   }
   return out;
 }

@@ -7,7 +7,7 @@ import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
-import { CURRENT_DATA, WEEKS_PER_MONTH } from '@/constants/wageConfig';
+import { WEEKS_PER_MONTH, currentKrYear, krInsurance, krYears, wageData } from '@/constants/wageConfig';
 import AnnualSalaryPanel from './AnnualSalaryPanel';
 import s from './salary.module.css';
 import { ui } from '@/app/components/ui';
@@ -32,7 +32,7 @@ const DEFAULT_OT: WorkBlock  = { hoursPerDay: 0, daysPerWeek: 0, multiplier: 1.5
 function calcKR(
   hW: number,
   reg: WorkBlock, ot: WorkBlock, sp: WorkBlock,
-  holidayOn: boolean, deduction: KRDeduction
+  holidayOn: boolean, deduction: KRDeduction, year: number
 ) {
   const regH = reg.hoursPerDay * reg.daysPerWeek;
   const otH  = ot.hoursPerDay  * ot.daysPerWeek;
@@ -48,7 +48,7 @@ function calcKR(
 
   const weeklyGross  = regPay + otPay + spPay + holidayPay;
   const monthlyGross = weeklyGross * WEEKS_PER_MONTH;
-  const dRate        = CURRENT_DATA.KR.deductions[deduction];
+  const dRate        = wageData(year).KR.deductions[deduction];
   const deductAmt    = monthlyGross * dRate;
 
   return {
@@ -65,7 +65,7 @@ function calcKR(
 function calcUS(
   hW: number,
   reg: WorkBlock, ot: WorkBlock, hol: WorkBlock,
-  deduction: USDeduction
+  deduction: USDeduction, year: number
 ) {
   const regH = reg.hoursPerDay * reg.daysPerWeek;
   const otH  = ot.hoursPerDay  * ot.daysPerWeek;
@@ -77,7 +77,7 @@ function calcUS(
 
   const weeklyGross  = regPay + otPay + holPay;
   const monthlyGross = weeklyGross * WEEKS_PER_MONTH;
-  const dRate        = CURRENT_DATA.US.deductions[deduction];
+  const dRate        = wageData(year).US.deductions[deduction];
   const deductAmt    = monthlyGross * dRate;
 
   return {
@@ -122,14 +122,18 @@ function MultiplierPicker({ value, onChange }: { value: number; onChange: (v: nu
 
 /* ─── Main Component ─── */
 
-export default function SalaryCalcClient({ seo }: { seo?: React.ReactNode }) {
+export default function SalaryCalcClient({ seo, initialYear }: { seo?: React.ReactNode; initialYear: number }) {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
   const [country, setCountry]       = useState<Country>('KR');
   const [krMode, setKrMode]         = useState<KRMode>('annual');
   // 입력 중인 문자열을 그대로 보관해야 "7." 같은 소수점 입력이 가능하다
-  const [wageText, setWageText]     = useState(String(CURRENT_DATA.KR.minWage));
+  // 기준 연도: 서버가 준 올해(한국 시간)로 시작하고, 브라우저에서 한 번 더 확인한다
+  const [year, setYear]             = useState(initialYear);
+  const years = krYears();
+  const data = wageData(year);
+  const [wageText, setWageText]     = useState(String(wageData(initialYear).KR.minWage));
   const hourlyWage = parseFloat(wageText) || 0;
   const [regular, setRegular]       = useState<WorkBlock>(DEFAULT_REG);
   const [overtime, setOvertime]     = useState<WorkBlock>(DEFAULT_OT);
@@ -142,11 +146,28 @@ export default function SalaryCalcClient({ seo }: { seo?: React.ReactNode }) {
 
   const isKRW = country === 'KR';
   const showAnnual = isKRW && krMode === 'annual';
-  const insurancePct = (CURRENT_DATA.KR.deductions.insurance * 100).toFixed(2);
+  const insurancePct = (data.KR.deductions.insurance * 100).toFixed(2);
+  const pending = krInsurance(year).pending;
+
+  // 해가 바뀐 뒤 캐시된 화면을 열었을 때: 올해로 맞춘다 (최저시급 그대로였으면 함께 바꾼다)
+  useEffect(() => {
+    const now = currentKrYear();
+    if (now === initialYear) return;
+    void Promise.resolve().then(() => {
+      setYear(now);
+      setWageText((w) => (w === String(wageData(initialYear).KR.minWage) ? String(wageData(now).KR.minWage) : w));
+    });
+  }, [initialYear]);
+
+  const changeYear = (y: number) => {
+    // 시급이 그 해 최저시급 그대로였으면 새 연도 최저시급으로 바꿔 준다
+    if (isKRW && wageText === String(data.KR.minWage)) setWageText(String(wageData(y).KR.minWage));
+    setYear(y);
+  };
 
   const switchCountry = (c: Country) => {
     setCountry(c);
-    setWageText(String(c === 'KR' ? CURRENT_DATA.KR.minWage : CURRENT_DATA.US.minWage));
+    setWageText(String(c === 'KR' ? data.KR.minWage : data.US.minWage));
     setRegular(DEFAULT_REG);
     setOvertime(DEFAULT_OT);
     setSpecial(DEFAULT_OT);
@@ -157,8 +178,8 @@ export default function SalaryCalcClient({ seo }: { seo?: React.ReactNode }) {
       ? `₩${Math.round(n).toLocaleString()}`
       : `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-  const kr = calcKR(hourlyWage, regular, overtime, special, holidayOn, krDeduction);
-  const us = calcUS(hourlyWage, regular, overtime, special, usDeduction);
+  const kr = calcKR(hourlyWage, regular, overtime, special, holidayOn, krDeduction, year);
+  const us = calcUS(hourlyWage, regular, overtime, special, usDeduction, year);
   const res = isKRW ? kr : us;
 
   const handleCopy = () => {
@@ -194,7 +215,7 @@ export default function SalaryCalcClient({ seo }: { seo?: React.ReactNode }) {
       <NavigationActions />
       <ToolHeader
         icon={<Wallet />}
-        title={isKo ? '2026 연봉·급여 실수령액 계산기' : '2026 Salary & Take-Home Pay Calculator'}
+        title={isKo ? `${year} 연봉·급여 실수령액 계산기` : `${year} Salary & Take-Home Pay Calculator`}
         subtitle={isKo ? '연봉·월급은 4대보험과 소득세까지, 시급은 주휴수당·잔업·특근까지 계산합니다' : 'Korean salary after social insurance and income tax, plus hourly pay with overtime.'}
       />
 
@@ -220,7 +241,26 @@ export default function SalaryCalcClient({ seo }: { seo?: React.ReactNode }) {
         </div>
       )}
 
-      {showAnnual ? <AnnualSalaryPanel isKo={isKo} /> : (
+      {/* 기준 연도 (한국 요율·최저시급) */}
+      {isKRW && years.length > 1 && (
+        <div className={`${ui.field} ${s.sal_seg}`}>
+          <span className={ui.label}>{isKo ? '기준 연도' : 'Rate year'}</span>
+          <div className={`${ui.chips} ${ui.grow}`}>
+            {years.map((y) => (
+              <button key={y} type="button" aria-pressed={year === y} className={`${ui.chip} ${year === y ? ui.chipActive : ''}`} onClick={() => changeYear(y)}>
+                {isKo ? `${y}년` : y}
+              </button>
+            ))}
+          </div>
+          {pending.map((p) => (
+            <span key={p.name} className={ui.hint}>
+              {isKo ? `${p.name}: 아직 확정되지 않았습니다.${p.note ? ` ${p.note}` : ''}` : `The ${year} employment insurance rate is not finalised yet, so the current rate is used.`}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {showAnnual ? <AnnualSalaryPanel isKo={isKo} year={year} /> : (
       <div className={s.sal_main_grid}>
         {/* ── Left: Input Panel ── */}
         <div className={ui.card}>
@@ -245,8 +285,8 @@ export default function SalaryCalcClient({ seo }: { seo?: React.ReactNode }) {
             </div>
             <div className={ui.hint}>
               {isKRW
-                ? `2026 최저시급 ₩${CURRENT_DATA.KR.minWage.toLocaleString()}`
-                : `Federal min. wage $${CURRENT_DATA.US.minWage.toFixed(2)}`}
+                ? (isKo ? `${year}년 최저시급 ₩${data.KR.minWage.toLocaleString()}` : `${year} Korean minimum wage ₩${data.KR.minWage.toLocaleString()}`)
+                : `Federal min. wage $${data.US.minWage.toFixed(2)}`}
             </div>
           </div>
 
@@ -498,7 +538,7 @@ export default function SalaryCalcClient({ seo }: { seo?: React.ReactNode }) {
 
       {/* Standard Bottom Sections */}
       <div style={{ width: '100%' }}>
-        <ShareBar title={isKo ? '2026 연봉·급여 실수령액 계산기' : 'Korean Salary & Take-Home Pay Calculator'} description={isKo ? '4대보험·소득세 공제 후 월 실수령액 계산' : 'Monthly take-home pay after insurance and income tax'} />
+        <ShareBar title={isKo ? `${year} 연봉·급여 실수령액 계산기` : 'Korean Salary & Take-Home Pay Calculator'} description={isKo ? '4대보험·소득세 공제 후 월 실수령액 계산' : 'Monthly take-home pay after insurance and income tax'} />
         <RelatedTools toolId="utilities/finance/salary-calc" />
         {seo}
       </div>
