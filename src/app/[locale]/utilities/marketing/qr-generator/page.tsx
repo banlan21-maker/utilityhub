@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import QrGeneratorClient from './QrGeneratorClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -77,7 +79,7 @@ export default async function QrGeneratorPage({ params }: { params: Promise<{ lo
       ) : (
         <ToolJsonLd href="/utilities/marketing/qr-generator" />
       )}
-      <QrGeneratorClient />
+      <QrGeneratorClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

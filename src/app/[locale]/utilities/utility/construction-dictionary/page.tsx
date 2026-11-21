@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import ConstructionDictionaryClient from './ConstructionDictionaryClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -103,7 +105,7 @@ export default function ConstructionDictionaryPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <ConstructionDictionaryClient />
+      <ConstructionDictionaryClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

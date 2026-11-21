@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import SupplementCostClient from './SupplementCostClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -110,7 +112,7 @@ export default async function SupplementCostPage({ params }: { params: Promise<{
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/supplement-cost-calc" />
       )}
-      <SupplementCostClient />
+      <SupplementCostClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

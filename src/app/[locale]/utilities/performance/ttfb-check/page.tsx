@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import TtfbClient from './TtfbClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -95,7 +97,7 @@ export default async function TtfbPage({ params }: { params: Promise<{ locale: s
       ) : (
         <ToolJsonLd href="/utilities/performance/ttfb-check" />
       )}
-      <TtfbClient />
+      <TtfbClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

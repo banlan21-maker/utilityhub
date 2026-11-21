@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import LottoGeneratorClient from './LottoGeneratorClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function LottoGeneratorPage({ params }: { params: Promise<{
       ) : (
         <ToolJsonLd href="/utilities/utility/lotto-generator" />
       )}
-      <LottoGeneratorClient />
+      <LottoGeneratorClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

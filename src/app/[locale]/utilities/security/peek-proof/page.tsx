@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import PeekProofClient from './PeekProofClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -110,7 +112,7 @@ export default async function PeekProofPage({ params }: { params: Promise<{ loca
       ) : (
         <ToolJsonLd href="/utilities/security/peek-proof" />
       )}
-      <PeekProofClient />
+      <PeekProofClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

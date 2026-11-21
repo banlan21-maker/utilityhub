@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import OsmuFormatterClient from './OsmuFormatterClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -77,7 +79,7 @@ export default async function OsmuFormatterPage({ params }: { params: Promise<{ 
       ) : (
         <ToolJsonLd href="/utilities/marketing/osmu-formatter" />
       )}
-      <OsmuFormatterClient />
+      <OsmuFormatterClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

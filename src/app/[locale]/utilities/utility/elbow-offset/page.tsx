@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import ElbowOffsetClient from './ElbowOffsetClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/utility/elbow-offset';
@@ -92,7 +94,7 @@ export default async function ElbowOffsetPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <ElbowOffsetClient />
+      <ElbowOffsetClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

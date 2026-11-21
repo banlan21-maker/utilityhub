@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import SolarMasterClient from './SolarMasterClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/productivity/solar-master';
@@ -98,7 +100,7 @@ export default async function SolarMasterPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <SolarMasterClient />
+      <SolarMasterClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

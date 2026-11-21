@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import GymPlateCalcClient from './GymPlateCalcClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function GymPlateCalcPage({ params }: { params: Promise<{ l
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/gym-plate-calc" />
       )}
-      <GymPlateCalcClient />
+      <GymPlateCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

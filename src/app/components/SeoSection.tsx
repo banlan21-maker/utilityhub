@@ -1,8 +1,13 @@
-'use client';
-
-import { useState } from 'react';
+// 도구 하단 SEO 4섹션 (소개 · 활용 사례 · 사용 방법 · FAQ).
+//
+// 'use client' 가 없고 상태·이벤트도 없다 → page.tsx(서버)에서 부르면 서버에서만 그려져
+// 본문이 자바스크립트로 실리지 않는다. FAQ 펼침은 브라우저 기본 <details> 를 쓴다 (JS 없이 동작, 한 번에 하나만 열림).
+// 화면 코드('use client' 파일) 안에서 직접 부르지 말고, page.tsx 에서 만들어 seo 자리로 넘긴다:
+//   <ToolClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
+import { useId } from 'react';
 import { useLocale } from 'next-intl';
 import AdSlot from './AdSlot';
+import s from './SeoSection.module.css';
 
 export interface FaqItem {
   q: string;
@@ -29,28 +34,9 @@ export interface SeoSectionProps {
 
 export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps) {
   const locale = useLocale();
-  const c = locale === 'ko' ? ko : en;
   const isKo = locale === 'ko';
-
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const h2Style: React.CSSProperties = {
-    fontSize: '1.25rem',
-    fontWeight: 700,
-    color: 'var(--text-primary)',
-    marginTop: '3rem',
-    marginBottom: '1.5rem',
-    borderLeft: '4px solid var(--primary)',
-    paddingLeft: '0.75rem',
-  };
-
-  const pStyle: React.CSSProperties = {
-    color: 'var(--text-secondary)',
-    lineHeight: 1.8,
-    fontSize: '0.95rem',
-    margin: 0,
-    marginBottom: '1rem',
-  };
+  const c = isKo ? ko : en;
+  const group = useId(); // 같은 name 의 <details> 는 하나만 열린다
 
   const faqLd = !isKo && faqSchema && c.faqs.length > 0 ? {
     '@context': 'https://schema.org',
@@ -60,21 +46,14 @@ export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps
   } : null;
 
   return (
-    <section style={{
-      marginTop: '4rem',
-      maxWidth: '896px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      paddingLeft: '1rem',
-      paddingRight: '1rem',
-    }}>
+    <section className={s.section}>
       {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
-      <hr style={{ border: 'none', borderTop: '1px solid var(--border)', marginBottom: '2rem' }} />
+      <hr className={s.rule} />
 
       {/* 1. What is it */}
       <div>
-        <h2 style={h2Style}>{c.title}</h2>
-        <p style={pStyle}>{c.description}</p>
+        <h2 className={s.h2}>{c.title}</h2>
+        <p className={s.p}>{c.description}</p>
       </div>
 
       {/* 광고 자리 1: 설명글과 활용 사례 사이 (설정이 꺼져 있으면 비어 있음) */}
@@ -82,45 +61,13 @@ export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps
 
       {/* 2. Use cases */}
       <div>
-        <h2 style={h2Style}>{isKo ? '주요 활용 사례' : 'Common Use Cases'}</h2>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(1, 1fr)',
-          gap: '1rem',
-        }}
-        className="md:grid-cols-2 lg:grid-cols-4">
+        <h2 className={s.h2}>{isKo ? '주요 활용 사례' : 'Common Use Cases'}</h2>
+        <div className={s.cases}>
           {c.useCases.map((uc, i) => (
-            <div
-              key={i}
-              style={{
-                padding: '1.5rem',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: '1rem',
-                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 12px 0 rgba(139, 92, 246, 0.15)';
-                e.currentTarget.style.borderColor = 'var(--primary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.05)';
-                e.currentTarget.style.borderColor = 'var(--border)';
-              }}
-            >
-              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>{uc.icon}</div>
-              <div style={{
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                marginBottom: '0.5rem',
-                fontSize: '0.95rem',
-              }}>{uc.title}</div>
-              <div style={{
-                color: 'var(--text-secondary)',
-                fontSize: '0.85rem',
-                lineHeight: 1.6,
-              }}>{uc.desc}</div>
+            <div key={i} className={s.case}>
+              <div className={s.caseIcon}>{uc.icon}</div>
+              <div className={s.caseTitle}>{uc.title}</div>
+              <div className={s.caseDesc}>{uc.desc}</div>
             </div>
           ))}
         </div>
@@ -128,135 +75,37 @@ export default function SeoSection({ ko, en, faqSchema = true }: SeoSectionProps
 
       {/* 3. How to use */}
       <div>
-        <h2 style={h2Style}>{isKo ? '사용 방법' : 'How to Use'}</h2>
-        <ol style={{
-          paddingLeft: 0,
-          listStyle: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-        }}>
-          {c.steps.map((s, i) => (
-            <li key={i} style={{
-              display: 'flex',
-              gap: '1rem',
-              alignItems: 'flex-start',
-              padding: '1rem',
-              background: 'var(--surface-hover)',
-              borderRadius: '0.75rem',
-              border: '1px solid var(--border)',
-            }}>
-              <span style={{
-                width: '2rem',
-                height: '2rem',
-                background: 'var(--primary)',
-                color: 'var(--on-primary)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 700,
-                fontSize: '0.9rem',
-                flexShrink: 0,
-              }}>{i + 1}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  fontSize: '0.95rem',
-                  marginBottom: '0.25rem',
-                }}>{s.step}</div>
-                <div style={{
-                  color: 'var(--text-secondary)',
-                  fontSize: '0.875rem',
-                  lineHeight: 1.7,
-                }}>{s.desc}</div>
+        <h2 className={s.h2}>{isKo ? '사용 방법' : 'How to Use'}</h2>
+        <ol className={s.steps}>
+          {c.steps.map((st, i) => (
+            <li key={i} className={s.step}>
+              <span className={s.stepNum}>{i + 1}</span>
+              <div className={s.stepBody}>
+                <div className={s.stepTitle}>{st.step}</div>
+                <div className={s.stepDesc}>{st.desc}</div>
               </div>
             </li>
           ))}
         </ol>
       </div>
 
-      {/* 4. FAQ accordion */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h2 style={h2Style}>{isKo ? '자주 묻는 질문 (FAQ)' : 'Frequently Asked Questions'}</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      {/* 4. FAQ */}
+      <div className={s.faqWrap}>
+        <h2 className={s.h2}>{isKo ? '자주 묻는 질문 (FAQ)' : 'Frequently Asked Questions'}</h2>
+        <div className={s.faqs}>
           {c.faqs.map((faq, i) => (
-            <div
-              key={i}
-              style={{
-                overflow: 'hidden',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: '0.75rem',
-                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-              }}
-            >
-              <button
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                aria-expanded={openFaq === i}
-                aria-controls={`faq-a-${i}`}
-                style={{
-                  width: '100%',
-                  textAlign: 'left',
-                  padding: '1.25rem 1.5rem',
-                  background: openFaq === i ? 'var(--surface-hover)' : 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
-                  color: openFaq === i ? 'var(--primary)' : 'var(--text-primary)',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (openFaq !== i) {
-                    e.currentTarget.style.background = 'var(--surface-hover)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (openFaq !== i) {
-                    e.currentTarget.style.background = 'transparent';
-                  }
-                }}
-              >
-                <span style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                  <span style={{ color: 'var(--primary)', flexShrink: 0 }}>Q.</span>
+            <details key={i} className={s.faq} name={group}>
+              <summary className={s.q}>
+                <span className={s.qText}>
+                  <span className={s.qMark}>Q.</span>
                   <span>{faq.q}</span>
                 </span>
-                <span
-                  style={{
-                    flexShrink: 0,
-                    fontSize: '1.25rem',
-                    color: 'var(--text-muted)',
-                    transition: 'transform 0.2s ease',
-                    transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)',
-                    fontWeight: 400,
-                  }}
-                >
-                  ▾
-                </span>
-              </button>
-              {(
-                <div
-                  id={`faq-a-${i}`}
-                  hidden={openFaq !== i}
-                  style={{
-                    padding: '0 1.5rem 1.25rem 1.5rem',
-                    color: 'var(--text-secondary)',
-                    fontSize: '0.9rem',
-                    lineHeight: 1.8,
-                    borderTop: '1px solid var(--border)',
-                    animation: 'fadeIn 0.2s ease-in',
-                  }}
-                >
-                  <span style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>A.</span> {faq.a}
-                </div>
-              )}
-            </div>
+                <span className={s.arrow} aria-hidden="true">▾</span>
+              </summary>
+              <div className={s.a}>
+                <strong>A.</strong> {faq.a}
+              </div>
+            </details>
           ))}
         </div>
       </div>

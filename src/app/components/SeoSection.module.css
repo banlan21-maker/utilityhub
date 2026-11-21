@@ -1,0 +1,58 @@
+/* 도구 하단 SEO 4섹션 (소개 · 활용 사례 · 사용 방법 · FAQ). 훅·이벤트 없이 CSS 만으로 동작한다. */
+.section { margin: 4rem auto 0; max-width: 896px; padding: 0 1rem; }
+.rule { border: none; border-top: 1px solid var(--border); margin: 0 0 2rem; }
+.h2 {
+  font-size: 1.25rem; font-weight: 700; color: var(--text-primary);
+  margin: 3rem 0 1.5rem; border-left: 4px solid var(--primary); padding-left: 0.75rem;
+}
+.p { color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; margin: 0 0 1rem; }
+
+.cases { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.case {
+  padding: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); transition: all 0.2s ease;
+}
+.case:hover { box-shadow: 0 4px 12px 0 rgba(139, 92, 246, 0.15); border-color: var(--primary); }
+.caseIcon { font-size: 2rem; margin-bottom: 0.75rem; }
+.caseTitle { font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 0.95rem; }
+.caseDesc { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+
+.steps { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 1rem; margin: 0; }
+.step {
+  display: flex; gap: 1rem; align-items: flex-start; padding: 1rem;
+  background: var(--surface-hover); border-radius: 0.75rem; border: 1px solid var(--border);
+}
+.stepNum {
+  width: 2rem; height: 2rem; background: var(--primary); color: var(--on-primary); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+}
+.stepBody { flex: 1; min-width: 0; }
+.stepTitle { font-weight: 700; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.25rem; }
+.stepDesc { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.7; }
+
+.faqWrap { margin-bottom: 2rem; }
+.faqs { display: flex; flex-direction: column; gap: 0.75rem; }
+.faq {
+  overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.q {
+  list-style: none; cursor: pointer; padding: 1.25rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  font-size: 0.95rem; font-weight: 700; color: var(--text-primary); transition: all 0.2s ease;
+}
+.q::-webkit-details-marker { display: none; }
+.q:hover, .faq[open] > .q { background: var(--surface-hover); }
+.faq[open] > .q { color: var(--primary); }
+.q:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
+.qText { display: flex; align-items: flex-start; gap: 0.5rem; }
+.qMark { color: var(--primary); flex-shrink: 0; }
+.arrow { flex-shrink: 0; font-size: 1.25rem; font-weight: 400; color: var(--text-muted); transition: transform 0.2s ease; }
+.faq[open] .arrow { transform: rotate(180deg); }
+.a {
+  padding: 1.25rem 1.5rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;
+  border-top: 1px solid var(--border); animation: seoFaqIn 0.2s ease-in;
+}
+.a strong { font-weight: 700; color: var(--text-secondary); }
+@keyframes seoFaqIn { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .a { animation: none; } .arrow, .case, .q { transition: none; } }

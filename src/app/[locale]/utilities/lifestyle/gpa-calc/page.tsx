@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import GpaCalcClient from './GpaCalcClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function GpaCalcPage({ params }: { params: Promise<{ locale
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/gpa-calc" />
       )}
-      <GpaCalcClient />
+      <GpaCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

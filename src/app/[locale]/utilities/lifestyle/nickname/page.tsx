@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import NicknameClient from './NicknameClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function NicknamePage({ params }: { params: Promise<{ local
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/nickname" />
       )}
-      <NicknameClient />
+      <NicknameClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

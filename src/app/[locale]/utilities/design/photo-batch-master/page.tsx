@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import PhotoBatchMasterClient from './PhotoBatchMasterClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { seoKo, seoEn } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -95,7 +97,7 @@ export default async function PhotoBatchMasterPage({ params }: { params: Promise
       ) : (
         <ToolJsonLd href="/utilities/design/photo-batch-master" />
       )}
-      <PhotoBatchMasterClient />
+      <PhotoBatchMasterClient seo={<SeoSection ko={seoKo} en={seoEn} />} />
     </>
   );
 }

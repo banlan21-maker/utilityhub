@@ -4,12 +4,10 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import s from './decision.module.css';
 import { ui } from '@/app/components/ui';
-import { SEO_KO, SEO_EN } from './content';
 
 /* ── Types ── */
 type Mode = 'ladder' | 'wheel' | 'dice' | 'lot' | 'arrow';
@@ -754,7 +752,7 @@ const TABS: { id: Mode; ko: string; en: string; icon: string }[] = [
   { id: 'arrow',  ko: '화살표', en: 'Arrow',  icon: '🏹' },
 ];
 
-export default function DecisionMasterClient() {
+export default function DecisionMasterClient({ seo }: { seo?: React.ReactNode }) {
   const locale = useLocale();
   const isKo = locale === 'ko';
   const [mode, setMode] = useState<Mode>('wheel');
@@ -802,7 +800,7 @@ export default function DecisionMasterClient() {
       <RelatedTools toolId="utilities/utility/decision-master" />
 
       {/* SEO */}
-      <SeoSection ko={SEO_KO} en={SEO_EN} />
+      {seo}
       <div className={`${ui.notice} ${ui.amber} ${s.disclaimer}`}>
         {isKo
           ? "⚠️ 이 도구의 모든 결과는 순수 오락·편의 목적의 랜덤 생성값으로, 법적 효력이 없습니다. 중요한 결정은 반드시 당사자 간 합의를 통해 이루어져야 합니다."

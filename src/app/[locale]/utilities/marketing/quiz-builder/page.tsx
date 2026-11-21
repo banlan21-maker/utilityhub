@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import QuizBuilderClient from './QuizBuilderClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -77,7 +79,7 @@ export default async function QuizBuilderPage({ params }: { params: Promise<{ lo
       ) : (
         <ToolJsonLd href="/utilities/marketing/quiz-builder" />
       )}
-      <QuizBuilderClient />
+      <QuizBuilderClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

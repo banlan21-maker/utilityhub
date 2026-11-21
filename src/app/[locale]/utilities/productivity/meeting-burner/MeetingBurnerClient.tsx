@@ -5,13 +5,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Flame, Users, DollarSign, Clock, Receipt, Download } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import html2canvas from 'html2canvas';
 import s from './meeting.module.css';
 import { ui } from '@/app/components/ui';
-import { MEETING_BURNER_SEO } from './seoContent';
 
 // Salary presets (annual)
 const PRESETS = {
@@ -36,7 +34,7 @@ const OPPORTUNITY_COSTS: OpportunityCost[] = [
   { threshold: 5000000, text: { ko: '중고차 한 대 증발... 🚗', en: 'Used car evaporated... 🚗' } },
 ];
 
-export default function MeetingBurnerClient() {
+export default function MeetingBurnerClient({ seo }: { seo?: React.ReactNode }) {
   const locale = useLocale();
   const isKorean = locale === 'ko';
   const receiptRef = useRef<HTMLDivElement>(null);
@@ -342,7 +340,7 @@ export default function MeetingBurnerClient() {
         </p>
       </div>
 
-      <SeoSection ko={MEETING_BURNER_SEO.ko} en={MEETING_BURNER_SEO.en} />
+      {seo}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import ExchangeRateClient from './ExchangeRateClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -95,7 +97,7 @@ export default async function ExchangeRatePage({ params }: { params: Promise<{ l
       ) : (
         <ToolJsonLd href="/utilities/finance/exchange-rate" />
       )}
-      <ExchangeRateClient />
+      <ExchangeRateClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

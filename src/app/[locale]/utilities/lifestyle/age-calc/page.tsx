@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import AgeCalcClient from './AgeCalcClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -85,7 +87,7 @@ export default async function AgeCalcPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? softwareSchema : softwareSchemaEn) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(isKo ? faqSchema : faqSchemaEn) }} />
-      <AgeCalcClient />
+      <AgeCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

@@ -56,6 +56,8 @@ const faqSchema = {
 
 import SajuCompatibilityClient from './SajuCompatibilityClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export default async function SajuCompatibilityPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -69,7 +71,7 @@ export default async function SajuCompatibilityPage({ params }: { params: Promis
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/saju-compatibility" />
       )}
-      <SajuCompatibilityClient />
+      <SajuCompatibilityClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

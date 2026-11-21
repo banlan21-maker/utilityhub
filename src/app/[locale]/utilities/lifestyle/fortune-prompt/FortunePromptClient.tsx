@@ -5,7 +5,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import { ui } from '@/app/components/ui';
@@ -51,7 +50,7 @@ interface SajuData {
 type CalendarType = 'solar' | 'lunar';
 type AnalysisType = 'general' | 'wealth' | 'love' | 'business';
 
-export default function FortunePromptClient() {
+export default function FortunePromptClient({ seo }: { seo?: React.ReactNode }) {
   const t = useTranslations('AiSajuPrompt');
   const isKo = useLocale() === 'ko';
 
@@ -525,52 +524,7 @@ Please avoid difficult jargon and explain with modern analogies and concrete, ac
 
 
       {/* SEO Section */}
-      <SeoSection
-        ko={{
-          title: t('seoTitle'),
-          description: t('seoDescription'),
-          useCases: [
-            { icon: '🤖', title: t('useCase1Title'), desc: t('useCase1Desc') },
-            { icon: '🎯', title: t('useCase2Title'), desc: t('useCase2Desc') },
-            { icon: '💎', title: t('useCase3Title'), desc: t('useCase3Desc') },
-            { icon: '🔒', title: t('useCase4Title'), desc: t('useCase4Desc') },
-          ],
-          steps: [
-            { step: t('howStep1Title'), desc: t('howStep1Desc') },
-            { step: t('howStep2Title'), desc: t('howStep2Desc') },
-            { step: t('howStep3Title'), desc: t('howStep3Desc') },
-            { step: t('howStep4Title'), desc: t('howStep4Desc') },
-          ],
-          faqs: [
-            { q: t('faq1Q'), a: t('faq1A') },
-            { q: t('faq2Q'), a: t('faq2A') },
-            { q: t('faq3Q'), a: t('faq3A') },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
-          ],
-        }}
-        en={{
-          title: t('seoTitle'),
-          description: t('seoDescription'),
-          useCases: [
-            { icon: '🤖', title: t('useCase1Title'), desc: t('useCase1Desc') },
-            { icon: '🎯', title: t('useCase2Title'), desc: t('useCase2Desc') },
-            { icon: '💎', title: t('useCase3Title'), desc: t('useCase3Desc') },
-            { icon: '🔒', title: t('useCase4Title'), desc: t('useCase4Desc') },
-          ],
-          steps: [
-            { step: t('howStep1Title'), desc: t('howStep1Desc') },
-            { step: t('howStep2Title'), desc: t('howStep2Desc') },
-            { step: t('howStep3Title'), desc: t('howStep3Desc') },
-            { step: t('howStep4Title'), desc: t('howStep4Desc') },
-          ],
-          faqs: [
-            { q: t('faq1Q'), a: t('faq1A') },
-            { q: t('faq2Q'), a: t('faq2A') },
-            { q: t('faq3Q'), a: t('faq3A') },
-            { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
-          ],
-        }}
-      />
+      {seo}
     </div>
   );
 }

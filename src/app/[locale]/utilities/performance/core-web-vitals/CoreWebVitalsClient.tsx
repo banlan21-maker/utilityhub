@@ -5,14 +5,12 @@ import { useLocale } from 'next-intl';
 import { Layers, Monitor, Smartphone } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import {
   METRICS, METRIC_KEYS, assess, decodeDevice, encodeDevice, formatMetric, parseMetric,
   type Device, type MetricKey, type Rating,
 } from './cwv';
-import { SEO_EN, SEO_KO } from './content';
 import s from './core-web-vitals.module.css';
 import { ui } from '@/app/components/ui';
 
@@ -73,7 +71,7 @@ const ZONES: Record<MetricKey, { widths: string[]; labels: string[] }> = {
   cls: { widths: ['16.7%', '25%', '58.3%'], labels: ['0', 'Good ≤0.1', '≤0.25', 'Poor >0.25', '0.6+'] },
 };
 
-export default function CoreWebVitalsClient() {
+export default function CoreWebVitalsClient({ seo }: { seo?: React.ReactNode }) {
   const locale = useLocale();
   const isKo = locale === 'ko';
   const L = isKo ? 'ko' : 'en';
@@ -369,7 +367,7 @@ export default function CoreWebVitalsClient() {
 
       <ShareBar title={titleStr} description={descStr} />
       <RelatedTools toolId="utilities/performance/core-web-vitals" />
-      <SeoSection ko={SEO_KO} en={SEO_EN} />
+      {seo}
     </div>
   );
 }

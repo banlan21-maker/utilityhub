@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import DdayCalcClient from './DdayCalcClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function DdayCalcPage({ params }: { params: Promise<{ local
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/dday-calc" />
       )}
-      <DdayCalcClient />
+      <DdayCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import LogoFaviconClient from './LogoFaviconClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -95,7 +97,7 @@ export default async function LogoFaviconPage({ params }: { params: Promise<{ lo
       ) : (
         <ToolJsonLd href="/utilities/design/logo-favicon" />
       )}
-      <LogoFaviconClient />
+      <LogoFaviconClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

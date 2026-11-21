@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import AcCapacityCalcClient from './AcCapacityCalcClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/lifestyle/ac-capacity-calc';
@@ -93,7 +95,7 @@ export default async function AcCapacityCalcPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <AcCapacityCalcClient />
+      <AcCapacityCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

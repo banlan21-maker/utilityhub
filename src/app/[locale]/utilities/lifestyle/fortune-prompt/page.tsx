@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import FortunePromptClient from './FortunePromptClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection, { type SeoContent } from '@/app/components/SeoSection';
+import { getTranslations } from 'next-intl/server';
 
 export async function generateMetadata({
   params,
@@ -55,6 +57,53 @@ const faqSchema = {
 
 export default async function FortunePromptPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  // 하단 SEO 섹션: 화면 코드가 아니라 서버에서 번역해 그린다
+  const t = await getTranslations('AiSajuPrompt');
+  const seoKo: SeoContent = {
+    title: t('seoTitle'),
+    description: t('seoDescription'),
+    useCases: [
+      { icon: '🤖', title: t('useCase1Title'), desc: t('useCase1Desc') },
+      { icon: '🎯', title: t('useCase2Title'), desc: t('useCase2Desc') },
+      { icon: '💎', title: t('useCase3Title'), desc: t('useCase3Desc') },
+      { icon: '🔒', title: t('useCase4Title'), desc: t('useCase4Desc') },
+    ],
+    steps: [
+      { step: t('howStep1Title'), desc: t('howStep1Desc') },
+      { step: t('howStep2Title'), desc: t('howStep2Desc') },
+      { step: t('howStep3Title'), desc: t('howStep3Desc') },
+      { step: t('howStep4Title'), desc: t('howStep4Desc') },
+    ],
+    faqs: [
+      { q: t('faq1Q'), a: t('faq1A') },
+      { q: t('faq2Q'), a: t('faq2A') },
+      { q: t('faq3Q'), a: t('faq3A') },
+      { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
+    ],
+  };
+  const seoEn: SeoContent = {
+    title: t('seoTitle'),
+    description: t('seoDescription'),
+    useCases: [
+      { icon: '🤖', title: t('useCase1Title'), desc: t('useCase1Desc') },
+      { icon: '🎯', title: t('useCase2Title'), desc: t('useCase2Desc') },
+      { icon: '💎', title: t('useCase3Title'), desc: t('useCase3Desc') },
+      { icon: '🔒', title: t('useCase4Title'), desc: t('useCase4Desc') },
+    ],
+    steps: [
+      { step: t('howStep1Title'), desc: t('howStep1Desc') },
+      { step: t('howStep2Title'), desc: t('howStep2Desc') },
+      { step: t('howStep3Title'), desc: t('howStep3Desc') },
+      { step: t('howStep4Title'), desc: t('howStep4Desc') },
+    ],
+    faqs: [
+      { q: t('faq1Q'), a: t('faq1A') },
+      { q: t('faq2Q'), a: t('faq2A') },
+      { q: t('faq3Q'), a: t('faq3A') },
+      { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
+    ],
+  };
+
   return (
     <>
       {locale === 'ko' ? (
@@ -65,7 +114,7 @@ export default async function FortunePromptPage({ params }: { params: Promise<{ 
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/fortune-prompt" />
       )}
-      <FortunePromptClient />
+      <FortunePromptClient seo={<SeoSection ko={seoKo} en={seoEn} />} />
     </>
   );
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import WordleClient from './WordleClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/utility/wordle';
@@ -92,7 +94,7 @@ export default async function WordlePage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <WordleClient />
+      <WordleClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

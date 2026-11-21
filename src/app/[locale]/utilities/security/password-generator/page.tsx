@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import PasswordGeneratorClient from './PasswordGeneratorClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -95,7 +97,7 @@ export default async function PasswordGeneratorPage({ params }: { params: Promis
       ) : (
         <ToolJsonLd href="/utilities/security/password-generator" />
       )}
-      <PasswordGeneratorClient />
+      <PasswordGeneratorClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

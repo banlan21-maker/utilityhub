@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import CableTrayCalcClient from './CableTrayCalcClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/utility/cable-tray-calc';
@@ -100,7 +102,7 @@ export default async function CableTrayCalcPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <CableTrayCalcClient />
+      <CableTrayCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

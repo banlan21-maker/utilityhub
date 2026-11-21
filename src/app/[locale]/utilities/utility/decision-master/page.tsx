@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import DecisionMasterClient from './DecisionMasterClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
 import { SEO_KO } from './content';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO_EN } from './content';
 
 export async function generateMetadata({
   params,
@@ -67,7 +69,7 @@ export default async function DecisionMasterPage({ params }: { params: Promise<{
       ) : (
         <ToolJsonLd href="/utilities/utility/decision-master" />
       )}
-      <DecisionMasterClient />
+      <DecisionMasterClient seo={<SeoSection ko={SEO_KO} en={SEO_EN} />} />
     </>
   );
 }

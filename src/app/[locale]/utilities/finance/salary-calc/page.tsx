@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import SalaryCalcClient from './SalaryCalcClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/finance/salary-calc';
@@ -100,7 +102,7 @@ export default async function SalaryCalcPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <SalaryCalcClient />
+      <SalaryCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

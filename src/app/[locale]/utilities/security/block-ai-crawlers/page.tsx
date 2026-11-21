@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import BlockAiCrawlersClient from './BlockAiCrawlersClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -110,7 +112,7 @@ export default async function BlockAiCrawlersPage({ params }: { params: Promise<
       ) : (
         <ToolJsonLd href="/utilities/security/block-ai-crawlers" />
       )}
-      <BlockAiCrawlersClient />
+      <BlockAiCrawlersClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import GifMasterClient from './GifMasterClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -101,7 +103,7 @@ export default async function GifMasterPage({ params }: { params: Promise<{ loca
       ) : (
         <ToolJsonLd href="/utilities/utility/gif-master" />
       )}
-      <GifMasterClient />
+      <GifMasterClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

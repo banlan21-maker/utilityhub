@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import ImgPdfConverterClient from './ImgPdfConverterClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -114,7 +116,7 @@ export default async function ImgPdfConverterPage({ params }: { params: Promise<
       ) : (
         <ToolJsonLd href="/utilities/document/img-pdf-converter" />
       )}
-      <ImgPdfConverterClient />
+      <ImgPdfConverterClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

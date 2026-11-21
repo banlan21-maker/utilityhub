@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import ShortUrlClient from './ShortUrlClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -77,7 +79,7 @@ export default async function ShortUrlPage({ params }: { params: Promise<{ local
       ) : (
         <ToolJsonLd href="/utilities/marketing/shorturl" />
       )}
-      <ShortUrlClient />
+      <ShortUrlClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import TileVisualizerClient from './TileVisualizerClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/design/tile-visualizer';
@@ -94,7 +96,7 @@ export default async function TileVisualizerPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <TileVisualizerClient />
+      <TileVisualizerClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

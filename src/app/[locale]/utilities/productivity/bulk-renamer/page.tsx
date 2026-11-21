@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import BulkRenamerClient from './BulkRenamerClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -110,7 +112,7 @@ export default async function BulkRenamerPage({ params }: { params: Promise<{ lo
       ) : (
         <ToolJsonLd href="/utilities/productivity/bulk-renamer" />
       )}
-      <BulkRenamerClient />
+      <BulkRenamerClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

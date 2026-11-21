@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import HwpConverterClient from './HwpConverterClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/document/hwp-pdf-converter';
@@ -100,7 +102,7 @@ export default async function HwpConverterPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <HwpConverterClient />
+      <HwpConverterClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

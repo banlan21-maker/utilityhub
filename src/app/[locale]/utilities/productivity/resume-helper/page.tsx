@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import ResumeHelperClient from './ResumeHelperClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default function ResumeHelperPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <ResumeHelperClient />
+      <ResumeHelperClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

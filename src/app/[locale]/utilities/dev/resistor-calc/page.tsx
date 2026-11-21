@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import ResistorCalcClient from './ResistorCalcClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function ResistorCalcPage({ params }: { params: Promise<{ l
       ) : (
         <ToolJsonLd href="/utilities/dev/resistor-calc" />
       )}
-      <ResistorCalcClient />
+      <ResistorCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

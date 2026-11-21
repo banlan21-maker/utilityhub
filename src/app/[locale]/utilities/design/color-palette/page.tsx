@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import ColorPaletteClient from './ColorPaletteClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -95,7 +97,7 @@ export default async function ColorPalettePage({ params }: { params: Promise<{ l
       ) : (
         <ToolJsonLd href="/utilities/design/color-palette" />
       )}
-      <ColorPaletteClient />
+      <ColorPaletteClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

@@ -56,6 +56,8 @@ const faqSchema = {
 
 import SlaUptimeCalcClient from './SlaUptimeCalcClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export default async function SlaUptimeCalcPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -69,7 +71,7 @@ export default async function SlaUptimeCalcPage({ params }: { params: Promise<{ 
       ) : (
         <ToolJsonLd href="/utilities/performance/sla-uptime-calc" />
       )}
-      <SlaUptimeCalcClient />
+      <SlaUptimeCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

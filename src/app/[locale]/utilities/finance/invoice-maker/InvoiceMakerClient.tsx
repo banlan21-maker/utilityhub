@@ -7,10 +7,8 @@ import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
-import SeoSection from '@/app/components/SeoSection';
 import s from './ivm.module.css';
 import { ui } from '@/app/components/ui';
-import { SEO_KO, SEO_EN } from './content';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type CountryMode = 'KR' | 'US';
@@ -103,7 +101,7 @@ const defaultData = (mode: CountryMode = 'KR'): InvoiceData => ({
 });
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export default function InvoiceMakerClient() {
+export default function InvoiceMakerClient({ seo }: { seo?: React.ReactNode }) {
   const locale = useLocale();
   const isKo = locale === 'ko';
   const [isClient, setIsClient] = useState(false);
@@ -646,7 +644,7 @@ export default function InvoiceMakerClient() {
       <RelatedTools toolId="utilities/finance/invoice-maker" />
 
       {/* SEO Section */}
-      <SeoSection ko={SEO_KO} en={SEO_EN} />
+      {seo}
       <section className={`${ui.card} ${s.ivm_seo}`}>
         <h2>{isKo ? '⚠️ 면책 조항' : '⚠️ Disclaimer'}</h2>
         <p>

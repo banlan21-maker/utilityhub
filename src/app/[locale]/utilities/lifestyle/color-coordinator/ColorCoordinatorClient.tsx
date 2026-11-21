@@ -5,7 +5,6 @@ import { useLocale } from 'next-intl';
 import { Plus, X, Download, RotateCcw, Check, AlertTriangle, Info } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import {
@@ -13,7 +12,6 @@ import {
   type LookType, type SeasonKey, type SlotKey, type SlotsMap,
 } from '@/lib/outfitColor';
 import OutfitFigure, { FIG_H, FIG_W, type HairStyle } from './OutfitFigure';
-import { SEO_EN, SEO_KO } from './content';
 import { trackEvent } from '@/lib/track';
 import s from './color-coordinator.module.css';
 import { ui } from '@/app/components/ui';
@@ -70,7 +68,7 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxW: number): st
   return lines;
 }
 
-export default function ColorCoordinatorClient() {
+export default function ColorCoordinatorClient({ seo }: { seo?: React.ReactNode }) {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
@@ -460,7 +458,7 @@ export default function ColorCoordinatorClient() {
         description={isKo ? '마네킹에 코디 색을 입혀 보고 퍼스널 컬러·조합 원칙으로 점검하는 무료 도구' : 'Try outfit colors on a mannequin and check them against personal color and styling rules — free.'}
       />
       <RelatedTools toolId="utilities/lifestyle/color-coordinator" />
-      <SeoSection ko={SEO_KO} en={SEO_EN} />
+      {seo}
     </div>
   );
 }

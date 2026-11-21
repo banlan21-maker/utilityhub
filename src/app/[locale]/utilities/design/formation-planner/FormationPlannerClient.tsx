@@ -5,12 +5,10 @@ import { useLocale } from 'next-intl';
 import { Download, Undo2, Plus, Trash2, ChevronUp, ChevronDown, Info, Square, Circle } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
 import ShareBar from '@/app/components/ShareBar';
 import RelatedTools from '@/app/components/RelatedTools';
 import s from './formation-planner.module.css';
 import { ui } from '@/app/components/ui';
-import { FORMATION_PLANNER_SEO } from './seoContent';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -238,7 +236,7 @@ function drawLegendCanvas(ctx: CanvasRenderingContext2D, x: number, y: number, w
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function FormationPlannerClient() {
+export default function FormationPlannerClient({ seo }: { seo?: React.ReactNode }) {
   const locale = useLocale();
   const isKo = locale === 'ko';
 
@@ -780,7 +778,7 @@ export default function FormationPlannerClient() {
       />
       <RelatedTools toolId="utilities/design/formation-planner" />
 
-      <SeoSection ko={FORMATION_PLANNER_SEO.ko} en={FORMATION_PLANNER_SEO.en} />
+      {seo}
     </div>
   );
 }

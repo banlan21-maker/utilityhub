@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import CoffeeYieldClient from './CoffeeYieldClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -110,7 +112,7 @@ export default async function CoffeeYieldPage({ params }: { params: Promise<{ lo
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/coffee-yield-calc" />
       )}
-      <CoffeeYieldClient />
+      <CoffeeYieldClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

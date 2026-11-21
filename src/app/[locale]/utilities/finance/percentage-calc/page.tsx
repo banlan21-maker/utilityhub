@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import PercentageCalcClient from './PercentageCalcClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -73,7 +75,7 @@ export default async function PercentageCalcPage({ params }: { params: Promise<{
       ) : (
         <ToolJsonLd href="/utilities/finance/percentage-calc" />
       )}
-      <PercentageCalcClient />
+      <PercentageCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

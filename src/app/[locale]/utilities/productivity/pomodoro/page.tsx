@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import PomodoroClient from './PomodoroClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -79,7 +81,7 @@ export default async function PomodoroPage({ params }: { params: Promise<{ local
       ) : (
         <ToolJsonLd href="/utilities/productivity/pomodoro" />
       )}
-      <PomodoroClient />
+      <PomodoroClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

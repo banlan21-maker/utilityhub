@@ -5,7 +5,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { ShieldOff, Copy, Check, Download, ChevronDown, ChevronRight } from 'lucide-react';
 import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
-import SeoSection from '@/app/components/SeoSection';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
 import { AI_BOTS, normalizePaths, hasWildcard, type AiBot } from '@/lib/ai-bots';
@@ -18,7 +17,7 @@ type HeaderPlatform = 'apache' | 'nginx';
 
 const MAJOR_IDS = AI_BOTS.filter((b) => b.major).map((b) => b.id);
 
-export default function BlockAiCrawlersClient() {
+export default function BlockAiCrawlersClient({ seo }: { seo?: React.ReactNode }) {
   const t = useTranslations('BlockAiCrawlers');
   const locale = useLocale();
   const isKo = locale === 'ko';
@@ -392,54 +391,7 @@ export default function BlockAiCrawlersClient() {
       <ShareBar title={t('title')} description={t('subtitle')} />
       <RelatedTools toolId="utilities/security/block-ai-crawlers" />
 
-      <SeoSection
-        ko={{
-          title: 'AI 학습 차단 코드 생성기란?',
-          description:
-            'AI 학습 차단 코드 생성기는 OpenAI(GPTBot), Anthropic(ClaudeBot), Google(Google-Extended), Meta, Perplexity 등 주요 AI 크롤러가 내 웹사이트 콘텐츠를 학습 데이터로 무단 수집하는 것을 표준 방식으로 차단하는 코드를 만들어주는 도구입니다. 차단할 봇을 고르고 차단 범위(전체 사이트·특정 폴더·이미지)와 산출물 종류(robots.txt·HTML 메타태그·서버 헤더·llms.txt)를 선택하면 즉시 붙여넣을 수 있는 코드가 생성됩니다. 중요한 점은 이 차단이 구글·빙 같은 일반 검색 엔진의 색인에는 전혀 영향을 주지 않는다는 것입니다 — Googlebot과 Google-Extended는 별개의 봇이라, 검색 노출은 유지하면서 AI 학습만 선택적으로 막을 수 있습니다. 모든 코드 생성은 100% 브라우저에서 이루어지며 입력한 경로나 설정이 서버로 전송되지 않습니다. 18종 이상의 AI 봇 데이터베이스와 봇별 용도 설명, 적용 가이드까지 함께 제공합니다.',
-          useCases: [
-            { icon: '✍️', title: '블로그·창작물 보호', desc: '직접 쓴 글, 그림, 사진이 AI 학습 데이터로 무단 사용되는 것을 막아 창작물의 가치를 지킵니다. robots.txt 한 줄로 전체 콘텐츠를 보호합니다.' },
-            { icon: '🏢', title: '기업 사이트 정책 적용', desc: '회사 웹사이트의 제품 정보·문서가 경쟁사 AI나 무단 학습에 사용되지 않도록 표준 차단 정책을 적용합니다. 검색 노출은 그대로 유지됩니다.' },
-            { icon: '🖼️', title: '이미지 무단 학습 차단', desc: '포트폴리오·작품 이미지가 이미지 생성 AI의 학습 데이터로 수집되는 것을 차단합니다. 텍스트는 허용하고 이미지만 선택적으로 막을 수 있습니다.' },
-            { icon: '📁', title: '특정 폴더만 선택 차단', desc: '유료 콘텐츠나 회원 전용 영역(/premium/, /members/)만 AI 학습에서 제외하고, 공개 영역은 그대로 두는 세밀한 정책을 구성합니다.' },
-          ],
-          steps: [
-            { step: '차단할 AI 봇 선택', desc: '메이저 8개(GPTBot·ClaudeBot·Google-Extended 등)가 기본 선택되어 있습니다. 추가 봇 아코디언을 펼쳐 더 많은 봇을 선택하거나, 빠른 버튼으로 일괄 선택·해제할 수 있습니다.' },
-            { step: '차단 범위 결정', desc: '전체 사이트, 특정 폴더, 이미지만 중에서 선택합니다. 특정 폴더는 입력창에서 벗어나면 경로가 자동으로 /blog/ 형식으로 정규화되며, 쉼표로 여러 폴더를 지정할 수 있습니다.' },
-            { step: '산출물 형식 선택', desc: 'robots.txt가 가장 표준적이며 권장됩니다. HTML 메타태그, 서버 헤더(Apache·Nginx), llms.txt 중 자신의 환경에 맞는 형식을 탭으로 선택합니다.' },
-            { step: '복사 후 적용', desc: '생성된 코드를 복사하거나 파일로 다운로드합니다. robots.txt는 사이트 루트에 업로드하고, 배포 후 yoursite.com/robots.txt로 접속해 적용을 확인합니다.' },
-          ],
-          faqs: [
-            { q: 'AI 학습을 막으면 구글 검색에서도 사라지나요?', a: '아니요. Google-Extended(AI 학습용 봇)와 Googlebot(검색 색인용 봇)은 완전히 별개입니다. 본 도구는 AI 학습 봇만 차단하므로 구글·빙 일반 검색 노출은 100% 유지됩니다. 검색 트래픽 손실 없이 AI 학습만 선택적으로 막을 수 있습니다.' },
-            { q: 'robots.txt로 정말 AI 봇을 막을 수 있나요?', a: 'robots.txt는 강제력이 아닌 "정중한 요청" 표준입니다. OpenAI, Anthropic, Google 등 주요 AI 기업은 공식적으로 robots.txt를 준수한다고 명시하고 있어 대부분의 메이저 봇은 차단됩니다. 다만 일부 비양심적 봇은 무시할 수 있어, 더 강한 차단이 필요하면 서버 헤더(X-Robots-Tag)나 방화벽 차단을 병행하세요.' },
-            { q: 'robots.txt와 메타태그, 서버 헤더 중 뭘 써야 하나요?', a: 'robots.txt가 가장 표준적이고 사이트 전체에 한 번에 적용되어 권장됩니다. 특정 폴더만 막으려면 robots.txt나 서버 헤더가 적합합니다. HTML 메타태그는 페이지 단위라 폴더 차단에는 부적합합니다. llms.txt는 신생 표준으로 AI 정책을 명시하는 보조 수단입니다.' },
-            { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '본 도구는 표준 규격에 기반한 코드를 생성하지만, AI 봇 정책은 수시로 변하고 봇별 준수 여부가 다릅니다. 법적 효력이 필요한 저작권 보호에는 robots.txt만으로 충분하지 않으므로, 중요한 콘텐츠는 이용약관 명시·DRM·법적 조치 등 추가 수단을 병행하시기 바랍니다.' },
-          ],
-        }}
-        en={{
-          title: 'What is the Block AI Crawlers Code Generator?',
-          description:
-            "The Block AI Crawlers Code Generator creates standards-based code to stop major AI crawlers — OpenAI (GPTBot), Anthropic (ClaudeBot), Google (Google-Extended), Meta, Perplexity, and more — from scraping your website content as training data. Choose which bots to block, the scope (entire site, specific folders, or images only), and the output type (robots.txt, HTML meta tag, server header, or llms.txt), and ready-to-paste code is generated instantly. Crucially, this blocking does NOT affect indexing by normal search engines like Google or Bing — Googlebot and Google-Extended are separate bots, so you keep your search visibility while selectively blocking only AI training. All code generation happens 100% in your browser; your paths and settings are never sent to a server. Includes a database of 18+ AI bots with per-bot purpose descriptions and application guides.",
-          useCases: [
-            { icon: '✍️', title: 'Protect Blogs & Creative Work', desc: 'Prevent your articles, art, and photos from being scraped as AI training data, preserving the value of your creative work — a single robots.txt line protects everything.' },
-            { icon: '🏢', title: 'Corporate Site Policy', desc: 'Apply a standard blocking policy so your company\'s product info and docs are not used for competitor AI or unauthorized training, while keeping search visibility intact.' },
-            { icon: '🖼️', title: 'Block Image Scraping', desc: 'Stop your portfolio and artwork images from being collected for image-generation AI training. Allow text while selectively blocking images only.' },
-            { icon: '📁', title: 'Block Specific Folders', desc: 'Exclude only paid content or members-only areas (/premium/, /members/) from AI training while leaving public areas open — fine-grained control.' },
-          ],
-          steps: [
-            { step: 'Select AI bots to block', desc: 'The 8 major bots (GPTBot, ClaudeBot, Google-Extended, etc.) are selected by default. Expand the "More bots" accordion for additional bots, or use the quick buttons to select/deselect all.' },
-            { step: 'Choose block scope', desc: 'Pick entire site, specific folders, or images only. For folders, the path auto-normalizes to /blog/ format on blur, and you can specify multiple folders comma-separated.' },
-            { step: 'Pick the output format', desc: 'robots.txt is the most standard and recommended. Switch tabs to HTML meta tag, server header (Apache/Nginx), or llms.txt depending on your environment.' },
-            { step: 'Copy and apply', desc: 'Copy the generated code or download it as a file. Upload robots.txt to your site root, then visit yoursite.com/robots.txt after deployment to confirm it works.' },
-          ],
-          faqs: [
-            { q: 'If I block AI training, do I disappear from Google Search?', a: 'No. Google-Extended (AI training bot) and Googlebot (search indexing bot) are completely separate. This tool blocks only AI training bots, so your Google/Bing search visibility stays 100% intact. You can selectively block AI training with zero search traffic loss.' },
-            { q: 'Does robots.txt really block AI bots?', a: 'robots.txt is a "polite request" standard, not enforcement. Major AI companies — OpenAI, Anthropic, Google — officially state they honor robots.txt, so most major bots are blocked. Some unscrupulous bots may ignore it; for stronger blocking, combine with server headers (X-Robots-Tag) or firewall rules.' },
-            { q: 'Which should I use — robots.txt, meta tag, or server header?', a: 'robots.txt is the most standard and applies site-wide at once, so it is recommended. For folder-only blocking, robots.txt or server headers work best. HTML meta tags are per-page and unsuitable for folder blocking. llms.txt is an emerging standard for declaring AI policy.' },
-            { q: 'Can I use this as official protection?', a: 'This tool generates standards-based code, but AI bot policies change frequently and compliance varies by bot. robots.txt alone is not sufficient for legally enforceable copyright protection, so combine it with terms-of-service notices, DRM, or legal measures for critical content.' },
-          ],
-        }}
-      />
+      {seo}
     </div>
   );
 }

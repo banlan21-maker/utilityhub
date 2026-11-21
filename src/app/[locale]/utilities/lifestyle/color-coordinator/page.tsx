@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import ColorCoordinatorClient from './ColorCoordinatorClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
 import { SEO_KO } from './content';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO_EN } from './content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/lifestyle/color-coordinator';
@@ -67,7 +69,7 @@ export default async function ColorCoordinatorPage({ params }: { params: Promise
       ) : (
         <ToolJsonLd href={PATH} />
       )}
-      <ColorCoordinatorClient />
+      <ColorCoordinatorClient seo={<SeoSection ko={SEO_KO} en={SEO_EN} />} />
     </>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import GridPokerClient from './GridPokerClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { seoKo, seoEn } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -114,7 +116,7 @@ export default async function GridPokerPage({ params }: { params: Promise<{ loca
       ) : (
         <ToolJsonLd href="/utilities/utility/grid-poker" />
       )}
-      <GridPokerClient />
+      <GridPokerClient seo={<SeoSection ko={seoKo} en={seoEn} />} />
     </>
   );
 }

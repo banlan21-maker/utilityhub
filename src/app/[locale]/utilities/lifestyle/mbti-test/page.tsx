@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import MbtiTestClient from './MbtiTestClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function MbtiTestPage({ params }: { params: Promise<{ local
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/mbti-test" />
       )}
-      <MbtiTestClient />
+      <MbtiTestClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

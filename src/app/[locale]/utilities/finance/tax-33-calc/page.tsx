@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Tax33CalcClient from './Tax33CalcClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/finance/tax-33-calc';
@@ -101,7 +103,7 @@ export default async function Tax33CalcPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <Tax33CalcClient />
+      <Tax33CalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} faqSchema={false} />} />
     </>
   );
 }

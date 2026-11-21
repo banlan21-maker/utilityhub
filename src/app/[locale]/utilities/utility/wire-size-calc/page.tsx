@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import WireSizeCalcClient from './WireSizeCalcClient';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 const BASE = 'https://www.theutilhub.com';
 const PATH = '/utilities/utility/wire-size-calc';
@@ -101,7 +103,7 @@ export default async function WireSizeCalcPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       {/* 영문 FAQPage는 화면의 영어 FAQ와 같도록 SeoSection이 내보낸다 */}
       {locale === 'ko' && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
-      <WireSizeCalcClient />
+      <WireSizeCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

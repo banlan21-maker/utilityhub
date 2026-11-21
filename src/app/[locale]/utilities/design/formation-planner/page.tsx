@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import FormationPlannerClient from './FormationPlannerClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
 import { FORMATION_PLANNER_SEO } from './seoContent';
+import SeoSection from '@/app/components/SeoSection';
 
 export async function generateMetadata({
   params,
@@ -81,7 +82,7 @@ export default async function FormationPlannerPage({ params }: { params: Promise
       ) : (
         <ToolJsonLd href="/utilities/design/formation-planner" />
       )}
-      <FormationPlannerClient />
+      <FormationPlannerClient seo={<SeoSection ko={FORMATION_PLANNER_SEO.ko} en={FORMATION_PLANNER_SEO.en} />} />
     </>
   );
 }

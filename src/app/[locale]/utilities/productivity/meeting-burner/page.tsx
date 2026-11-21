@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import MeetingBurnerClient from './MeetingBurnerClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
 import { MEETING_BURNER_SEO } from './seoContent';
+import SeoSection from '@/app/components/SeoSection';
 
 export async function generateMetadata({
   params,
@@ -74,7 +75,7 @@ export default async function MeetingBurnerPage({ params }: { params: Promise<{ 
       ) : (
         <ToolJsonLd href="/utilities/productivity/meeting-burner" />
       )}
-      <MeetingBurnerClient />
+      <MeetingBurnerClient seo={<SeoSection ko={MEETING_BURNER_SEO.ko} en={MEETING_BURNER_SEO.en} />} />
     </>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import JsonFormatterClient from './JsonFormatterClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function JsonFormatterPage({ params }: { params: Promise<{ 
       ) : (
         <ToolJsonLd href="/utilities/dev/json-formatter" />
       )}
-      <JsonFormatterClient />
+      <JsonFormatterClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

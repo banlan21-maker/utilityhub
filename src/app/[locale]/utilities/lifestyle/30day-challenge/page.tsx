@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import ThirtyDayChallengeClient from './ThirtyDayChallengeClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -64,7 +66,7 @@ export default async function ThirtyDayChallengePage({ params }: { params: Promi
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/30day-challenge" />
       )}
-      <ThirtyDayChallengeClient />
+      <ThirtyDayChallengeClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import BmiCalcClient from './BmiCalcClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -65,7 +67,7 @@ export default async function BmiCalcPage({ params }: { params: Promise<{ locale
       ) : (
         <ToolJsonLd href="/utilities/lifestyle/bmi-calc" />
       )}
-      <BmiCalcClient />
+      <BmiCalcClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

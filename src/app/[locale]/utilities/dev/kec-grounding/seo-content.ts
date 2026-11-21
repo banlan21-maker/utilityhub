@@ -1,0 +1,49 @@
+// 하단 SEO 섹션 내용 — page.tsx(서버)에서 SeoSection 으로 그린다
+import type { SeoContent } from '@/app/components/SeoSection';
+
+export const SEO: { ko: SeoContent; en: SeoContent } = {
+  ko: {
+            title: 'KEC 접지선 굵기 계산기란 무엇인가요?',
+            description: '한국전기설비규정(KEC) 143조는 전기 설비에서 감전 사고를 방지하기 위한 보호접지도체(접지선)의 최소 단면적을 규정합니다. 이 계산기는 KEC 143조의 두 가지 산정 방법을 모두 지원합니다. 방법 A(비례법)는 상 도체 굵기를 기준으로 접지선 최소 굵기를 즉시 산출하며, 방법 B(열 단락 계산법)는 S = √(I²×t)/k 공식에 고장전류(A), 차단 시간(초), 도체·절연 재질별 k값을 적용해 정밀하게 계산합니다. 계산 결과는 실제 시장에서 유통되는 표준 SQ(공칭 단면적)로 자동 올림하여 제시하므로, 현장에서 즉시 자재를 선정할 수 있습니다. 전기공학 설계자, 전기기사 시험 준비생, 현장 시공 기술자 모두에게 유용한 전문 도구입니다.',
+            useCases: [
+              { icon: '🏗️', title: '신축 건물 전기 설계', desc: '설계도 작성 시 분전반별 상 도체 굵기를 기준으로 KEC 143조 방법 A를 적용해 각 회로의 보호접지도체 굵기를 일괄 산출합니다.' },
+              { icon: '🏭', title: '산업 설비 고장 전류 계산', desc: '변압기 2차측 단락전류와 차단기 동작 시간, 케이블 재질(Cu/Al, PVC/XLPE)을 입력해 방법 B로 정밀한 접지선 굵기를 계산합니다.' },
+              { icon: '📐', title: '전기기사 시험 준비', desc: 'KEC 143조 접지선 굵기 계산 공식(방법 A·B)을 실제 입력값으로 검증하며 시험에 나오는 계산 유형을 반복 학습합니다.' },
+              { icon: '🎓', title: '현장 시공 및 감리', desc: '시공 현장에서 기존 설계의 접지선 굵기 적정성을 빠르게 검토하고, 변경 사항 발생 시 즉시 재계산하여 규정 준수 여부를 확인합니다.' },
+            ],
+            steps: [
+              { step: '계산 방법 선택', desc: '상단 탭에서 [방법 A (비례법)] 또는 [방법 B (열 단락 계산법)]를 선택합니다. 단락전류 데이터가 없으면 방법 A, 정밀 계산이 필요하면 방법 B를 사용합니다.' },
+              { step: '입력값 입력', desc: '방법 A에서는 상 도체 단면적(㎟)을 입력합니다. 방법 B에서는 고장전류(A, RMS), 차단기 동작 시간(초), 케이블 도체·절연 재질(Cu/PVC, Cu/XLPE, Al/PVC, Al/XLPE)을 선택합니다.' },
+              { step: '계산 결과 확인', desc: '이론 최솟값(㎟)과 실제 시장 표준 SQ로 올림된 추천 굵기가 표시됩니다. 추천 굵기는 KEC 143조를 만족하는 가장 경제적인 최소 규격입니다.' },
+              { step: '자재 선정 및 적용', desc: '계산된 추천 SQ를 설계 도면에 반영하거나 자재 발주 시 기준으로 활용합니다. 반드시 해당 설비의 관할 전기안전공사 및 감리자와 최종 확인하시기 바랍니다.' },
+            ],
+            faqs: [
+              { q: 'KEC 143조 접지선 굵기 기준이란 무엇인가요?', a: '한국전기설비규정(KEC) 143조는 보호접지도체의 최소 단면적을 규정합니다. 상 도체 단면적 S가 16㎟ 이하이면 접지선 = S, 16~35㎟이면 접지선 = 16㎟, 35㎟ 초과이면 접지선 = S/2로 선정합니다. 이 기준은 IEC 60364-5-54를 근거로 하며, 고장 시 발생하는 열에너지로부터 도체를 보호하기 위해 설정된 최솟값입니다.' },
+              { q: '열 단락 계산법(방법 B)은 언제 사용하나요?', a: '단락전류 크기와 차단 시간을 알고 있을 때 S = √(I²×t)/k 공식으로 접지선 굵기를 정밀 계산합니다. 고장전류가 크거나 차단 시간이 긴 특수 환경, 또는 경제성을 위해 방법 A보다 작은 단면적을 선정하고 싶을 때 적용합니다.' },
+              { q: 'k값은 어떻게 결정하나요?', a: 'k값은 도체 재질(구리/알루미늄)과 절연 종류(PVC/XLPE)에 따라 달라집니다. Cu/PVC = 115, Cu/XLPE = 143, Al/PVC = 76, Al/XLPE = 94의 값을 사용합니다. 이 값은 KEC 143조 및 IEC 60364-5-54의 부속서 B 표에서 규정하며, 본 도구 드롭다운에서 선택할 수 있습니다.' },
+              { q: '이 툴의 결과를 공식 자료로 사용해도 되나요?', a: '이 툴의 계산 결과는 참고용으로만 제공됩니다. 정확한 수치는 전문가 또는 공식 기관에 확인하시기 바랍니다.' },
+            ],
+          },
+  en: {
+            title: 'What is the KEC Grounding Conductor Calculator?',
+            description: 'Article 143 of the Korean Electrical Code (KEC) specifies the minimum cross-sectional area of protective earthing conductors (grounding wires) required to prevent electric shock in electrical installations. This calculator supports both calculation methods defined in KEC 143. Method A (proportional) instantly determines the minimum grounding conductor size based on the phase conductor cross-section. Method B (adiabatic equation) applies the formula S = √(I²×t)/k, using fault current (A), disconnection time (s), and a material-dependent k-factor for copper or aluminum conductors with PVC or XLPE insulation. Results are automatically rounded up to the nearest standard cable cross-section (SQ) available in the market, allowing immediate material procurement. This tool is designed for electrical engineers, electrician exam candidates, and on-site construction technicians.',
+            useCases: [
+              { icon: '🏗️', title: 'New Building Electrical Design', desc: 'Apply KEC 143 Method A across all circuits in a distribution panel to determine grounding wire sizes in bulk during the design phase.' },
+              { icon: '🏭', title: 'Industrial Fault Current Calculation', desc: 'Enter transformer secondary short-circuit current, breaker trip time, and cable material to precisely calculate grounding conductor size using Method B.' },
+              { icon: '📐', title: 'Electrician Exam Preparation', desc: 'Verify KEC 143 grounding calculations (Method A and B) with real input values to practice the formula types that appear on the exam.' },
+              { icon: '🎓', title: 'On-Site Construction & Inspection', desc: 'Quickly verify the adequacy of grounding conductor sizes on-site and recalculate immediately when design changes occur to ensure code compliance.' },
+            ],
+            steps: [
+              { step: 'Select Calculation Method', desc: 'Choose Method A (proportional) from the top tab if you only know the phase conductor size, or Method B (adiabatic) if you have fault current and disconnection time data.' },
+              { step: 'Enter Input Values', desc: 'For Method A, enter the phase conductor cross-section in mm². For Method B, enter fault current (A, RMS), disconnection time (seconds), and select the cable material combination (Cu/PVC, Cu/XLPE, Al/PVC, or Al/XLPE).' },
+              { step: 'Review Results', desc: 'The theoretical minimum size and the recommended standard SQ size (rounded up to the nearest commercially available cable) are displayed. The recommended size is the most economical minimum that satisfies KEC 143.' },
+              { step: 'Apply to Design', desc: 'Incorporate the recommended SQ into your electrical drawings or material orders. Always verify the final specification with the supervising electrical engineer and local authority.' },
+            ],
+            faqs: [
+              { q: 'What is the KEC Article 143 grounding conductor standard?', a: 'KEC Article 143 (based on IEC 60364-5-54) specifies minimum protective earthing conductor cross-sections: if phase conductor S ≤ 16mm², grounding = S; if 16mm² < S ≤ 35mm², grounding = 16mm²; if S > 35mm², grounding = S/2. These minimums protect the conductor from heat damage during a fault.' },
+              { q: 'When should I use the adiabatic equation (Method B)?', a: 'Use Method B when you know the prospective fault current and the disconnection time of the protective device. The formula S = √(I²×t)/k may yield a smaller cross-section than Method A, offering a more economical solution for circuits with large fault currents or short disconnection times.' },
+              { q: 'How is the k-factor determined?', a: 'The k-factor depends on conductor material and insulation type as defined in KEC 143 and IEC 60364-5-54 Annex B: Cu/PVC = 115, Cu/XLPE = 143, Al/PVC = 76, Al/XLPE = 94. Select the appropriate combination from the dropdown in this tool.' },
+              { q: 'Can I use this result as official data?', a: 'Results are for reference only. Please consult a professional or official source for accurate figures.' },
+            ],
+          },
+};

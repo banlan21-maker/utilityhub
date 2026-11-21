@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import UrlSafetyClient from './UrlSafetyClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO } from './seo-content';
 
 export async function generateMetadata({
   params,
@@ -95,7 +97,7 @@ export default async function UrlSafetyPage({ params }: { params: Promise<{ loca
       ) : (
         <ToolJsonLd href="/utilities/security/url-safety" />
       )}
-      <UrlSafetyClient />
+      <UrlSafetyClient seo={<SeoSection ko={SEO.ko} en={SEO.en} />} />
     </>
   );
 }

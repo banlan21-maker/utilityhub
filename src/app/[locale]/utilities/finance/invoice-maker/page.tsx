@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import InvoiceMakerClient from './InvoiceMakerClient';
 import ToolJsonLd from '@/app/components/ToolJsonLd';
 import { SEO_KO } from './content';
+import SeoSection from '@/app/components/SeoSection';
+import { SEO_EN } from './content';
 
 export async function generateMetadata({
   params,
@@ -75,7 +77,7 @@ export default async function InvoiceMakerPage({ params }: { params: Promise<{ l
       ) : (
         <ToolJsonLd href="/utilities/finance/invoice-maker" />
       )}
-      <InvoiceMakerClient />
+      <InvoiceMakerClient seo={<SeoSection ko={SEO_KO} en={SEO_EN} />} />
     </>
   );
 }
