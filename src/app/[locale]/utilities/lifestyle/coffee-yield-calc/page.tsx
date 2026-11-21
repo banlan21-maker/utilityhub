@@ -11,7 +11,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '커피 브루잉 수율 계산기 (SCA 표준 · 물 양 · TDS) | Utility Hub'
-    : 'Coffee Extraction Calculator (SCA Standard · Brew Ratio · TDS Yield) | Utility Hub';
+    : 'Coffee Extraction Yield & Brew Ratio Calculator | Utility Hub';
   const description = isKo
     ? '핸드드립 물 양과 에스프레소 추출량을 계산하고, TDS 측정값으로 SCA 표준 추출 수율과 분쇄도 가이드까지. 100% 브라우저 계산.'
     : 'Calculate pour-over brew water or espresso yield from your dose and ratio, plus SCA extraction yield from TDS with a barista grind guide. 100% browser-based.';

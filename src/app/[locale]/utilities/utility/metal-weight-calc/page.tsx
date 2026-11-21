@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '금속 중량 계산기 — H빔·찬넬·앵글·파이프 kg/m, KS 규격, 도장 면적 | Utility Hub'
-    : 'Metal Weight Calculator — Steel Section kg/m, KS Sizes & Paint Area | Utility Hub';
+    : 'Metal Weight Calculator — Steel kg/m & Paint Area | Utility Hub';
   const description = isKo
     ? 'H형강·ㄷ형강·ㄱ형강·각파이프·SPP 강관 등 12가지 형상의 단위중량(kg/m)을 KS 규격 치수(필렛 포함)로 계산합니다. 단면도에서 t1(웹)·t2(플랜지) 위치를 표시하고 도장 면적·자재비·발주 내역까지 만듭니다.'
     : 'Weight per metre for H-beams, channels, angles, tubes and pipes using KS standard sizes with fillets, plus paint area, cost and an order list. The diagram shows exactly where t1 (web) and t2 (flange) are.';

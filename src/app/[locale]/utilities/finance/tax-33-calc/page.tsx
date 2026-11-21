@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '3.3% 세금 계산기 — 프리랜서 실수령액·종합소득세 환급 예상 | Utility Hub'
-    : 'Korean 3.3% Freelancer Tax Calculator — Net Pay & May Refund | Utility Hub';
+    : 'Korea 3.3% Tax Calculator — Net Pay & May Refund | Utility Hub';
   const description = isKo
     ? '프리랜서 계약금에서 3.3%를 뗀 실수령액(10원 미만 절사)과 역산, 5월 종합소득세 환급·추가 납부 예상액, 지역가입자 건강보험·국민연금 월 보험료를 2026년 기준으로 계산합니다.'
     : 'Net pay after Korea\'s 3.3% freelancer withholding, a May income tax refund estimate and monthly regional health insurance and pension, using 2026 rates.';

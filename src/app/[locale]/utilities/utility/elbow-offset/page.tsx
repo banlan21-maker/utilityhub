@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '배관 절단 길이 계산기 — 엘보값(뺄길이)·옵셋·45도 1.414·나사 물림 | Utility Hub'
-    : 'Pipe Offset & Cut Length Calculator — Elbow Take-off, 45° Offsets | Utility Hub';
+    : 'Pipe Offset & Cut Length Calculator — 45° Elbows | Utility Hub';
   const description = isKo
     ? '옵셋 거리나 도면 심-심 치수만 넣으면 엘보값(뺄길이)을 자동으로 빼서 파이프 절단 길이를 계산합니다. KS 용접 엘보·나사 엘보(물림 길이)·ASME, 45도·롤링 옵셋, 잘라 쓰는 엘보 각도, 용접 갭까지 반영합니다.'
     : 'Enter an offset or centre-to-centre dimension and get the pipe cut length with elbow allowances deducted: KS butt-weld and threaded fittings, ASME, 45° and rolling offsets, cut-down elbows and weld gaps.';

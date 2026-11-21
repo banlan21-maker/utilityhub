@@ -8,7 +8,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isKo = locale === 'ko';
-  const title = isKo ? '유튜브 썸네일 추출기 – 전 화질 즉시 다운로드 | Utility Hub' : 'YouTube Thumbnail Downloader – All Quality Levels Instantly | Utility Hub';
+  const title = isKo ? '유튜브 썸네일 추출기 – 전 화질 즉시 다운로드 | Utility Hub' : 'YouTube Thumbnail Downloader – All Sizes, Free | Utility Hub';
   const description = isKo
     ? '유튜브 URL을 입력하면 MQ·HQ·SD·MaxRes 4가지 화질 썸네일을 즉시 추출하고 다운로드할 수 있는 무료 온라인 도구입니다.'
     : 'Free online tool to instantly extract and download YouTube video thumbnails in MQ, HQ, SD, and Max Resolution quality levels.';

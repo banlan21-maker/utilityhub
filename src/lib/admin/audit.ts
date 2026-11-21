@@ -67,7 +67,9 @@ export async function auditUrl(url: string): Promise<AuditResult> {
   const isTool = /\/utilities\/[^/]+\/[^/]+$/.test(new URL(url).pathname);
   if (isTool && out.ld === 0) fail('구조화 데이터(JSON-LD) 없음');
   if (isTool && out.words < 300) warn(`본문이 적음(${isKo ? `한글 ${hangul}자` : `${out.words}단어`}) — 300단어 이상 권장`);
-  if (!isKo) {
+  // 한글 자체가 내용인 영문 페이지 (한글 워들 모드 설명의 예시 단어 학생·생일 등) — 한글 경고에서 뺀다
+  const HANGUL_CONTENT = ['/utilities/utility/wordle'];
+  if (!isKo && !HANGUL_CONTENT.some((p) => new URL(url).pathname.endsWith(p))) {
     // 언어 전환 버튼('한국어') 외의 한글
     const stray = hangul - (text.match(/한국어/g) ?? []).length * 3;
     if (stray > 20) warn(`영문 페이지에 한글 ${stray}자`);

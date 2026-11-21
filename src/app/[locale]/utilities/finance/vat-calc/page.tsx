@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '부가세 계산기 — 공급가액 역산·부가세 신고 예상·간이과세자 | Utility Hub'
-    : 'Korean VAT Calculator — Net/Gross Split, VAT Return & Simplified Taxpayer | Utility Hub';
+    : 'Korean VAT Calculator — Net/Gross & VAT Return | Utility Hub';
   const description = isKo
     ? '부가세 10%를 더하거나 합계에서 공급가액·세액을 나누고(원 단위 합계 일치), 일반과세자 부가세 신고 납부·환급액과 간이과세자 업종별 부가세를 계산해 비교합니다.'
     : 'Add or split Korean 10% VAT to the won, estimate a general taxpayer\'s VAT return and a simplified taxpayer\'s annual VAT by industry, and compare the two.';

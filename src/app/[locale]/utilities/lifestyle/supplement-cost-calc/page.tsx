@@ -11,7 +11,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '영양제 진짜 가성비 분석기 (1일 단가 · 1000mg당 · 순도 비교) | Utility Hub'
-    : 'Supplement Cost Analyzer (Cost per Day · per 1000mg · Purity) | Utility Hub';
+    : 'Supplement Cost per Day & per 1000mg Calculator | Utility Hub';
   const description = isKo
     ? '라벨 꼼수에 속지 마세요. 총 캡슐 수, 1회 섭취량, 핵심 함량, 순도를 대조하여 영양제 A·B 중 진짜 가성비 승자를 판정합니다.'
     : 'See through label tricks. Compare total capsules, serving size, active mg, and purity to find the true value winner between two supplements.';

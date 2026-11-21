@@ -157,7 +157,7 @@
       "title": "Persona Build",
       "desc": "Daily solo card game. Random character (job + personality + skill) + new mission each day. Score 0–1000 across 10 situational choices."
     },
-    "metaTitle": "Everyday Utilities — Unit Converter, Image Resizer, GIF Maker & Engineering Calculators | Utility Hub",
+    "metaTitle": "Everyday Utilities & Engineering Calculators | Utility Hub",
     "metaDescription": "Free everyday utilities: unit converter, image resizer, GIF maker, YouTube thumbnail downloader, lottery number generator, plus field calculators for wire size, pipe offsets, cable tray fill and metal weight.",
     "intro": "General utilities plus a growing set of calculators for construction and trades work. Convert length, weight, temperature and Korean pyeong to square metres, resize, edit and animate images into GIFs, and grab every resolution of a YouTube thumbnail. For the job site, the Wire Size Calculator picks conductor cross-sections from load current, distance and voltage drop, the Cable Tray Calculator checks fill against tray capacity, the Piping Calculator covers pipe schedules, drain slopes, hydrostatic test volumes and flow velocity, and the Pipe Offset Calculator gives cut lengths with elbow take-offs. The Metal Weight Calculator handles H-beams, channels, pipes and plates with paint area and cost, and the Tile & Wallpaper Calculator counts boxes, rolls and waste. Between tasks you can play the Daily Word Puzzle, Grid Poker or Persona Build, or let Decision Master choose for you.",
     "concrete-calc": {
@@ -220,7 +220,7 @@
       "title": "PDF OCR Converter",
       "desc": "Make scanned contracts, official documents, and faxes searchable with Ctrl+F. 100% local processing for complete privacy protection."
     },
-    "metaTitle": "Free Document Tools — HWP to PDF, Image to PDF, PDF OCR & Redaction | Utility Hub",
+    "metaTitle": "Free Document Tools — HWP to PDF, OCR & Redaction | Utility Hub",
     "metaDescription": "Free document tools that run in your browser: convert Korean HWP files to PDF, merge images into a PDF, make scanned PDFs searchable with OCR, and redact personal data in PDFs. Files never leave your device.",
     "intro": "Document tools for the small but annoying jobs that come up around PDFs. Convert Korean HWP word-processor files to PDF so recipients without Hancom Office can open them, and combine phone photos or scanned images into a single PDF in the order you choose. The PDF OCR Converter adds an invisible text layer to scanned contracts and receipts, so Ctrl+F search, copy and paste finally work, with Korean, English, Japanese and Chinese recognition. The PDF Masking Tool blacks out resident registration numbers, phone numbers and account numbers before you send a document by email. Files are processed inside your browser and are never uploaded to a server, which matters when the paperwork contains personal or company information. Typical uses include submitting forms to public offices, sharing quotes with clients and keeping searchable copies of paper records."
   },
@@ -246,7 +246,7 @@
       "title": "Quiz / Personality Test Builder",
       "desc": "Create shareable quizzes and personality tests instantly with simple inputs."
     },
-    "metaTitle": "Marketing Tools — QR Code Generator, URL Shortener, Hashtags & Quiz Builder | Utility Hub",
+    "metaTitle": "Marketing Tools — QR Codes, Short URLs & Hashtags | Utility Hub",
     "metaDescription": "Free marketing tools for small teams: a QR code generator, URL shortener, hashtag generator, an OSMU formatter that adapts one post for every social network, and a shareable quiz builder.",
     "intro": "Marketing tools for creators and small teams who publish on several channels. The OSMU Formatter takes one piece of writing and reshapes it for Instagram, X, blogs and newsletters — a hook in the first two sentences, line breaks that survive each app and suggested hashtags. The Hashtag Generator proposes a mix of broad and niche tags for a topic, the QR Code Generator creates codes for URLs, text, Wi-Fi and contact cards that you can print on flyers and packaging, and the URL Shortener turns long campaign links into short ones that fit in a post or SMS. The Quiz Builder makes a personality or knowledge quiz that visitors can take and share, a reliable way to grow engagement. All tools are free, need no sign-up and work in the browser, so drafts and customer data stay with you."
   },
@@ -292,7 +292,7 @@
       "title": "Invoice & Quote Maker",
       "desc": "Create professional KR/US invoices with PDF, Excel export & encrypted share links. Free, no sign-up."
     },
-    "metaTitle": "Finance Calculators — VAT, Salary, Interest, Exchange Rate & Invoices | Utility Hub",
+    "metaTitle": "Finance Calculators — VAT, Salary & Interest | Utility Hub",
     "metaDescription": "Free finance calculators: VAT and sales tax, take-home salary, simple and compound interest, live currency exchange rates, crypto profit, freelance hourly rates and a one-minute invoice maker. No login needed.",
     "intro": "Money calculators for freelancers, small businesses and everyday decisions. Split a price into supply value and 10% VAT or work back from a total, and calculate the 3.3% withholding that Korean clients deduct from freelance fees. The Salary Take-Home Pay Calculator applies national pension, health and employment insurance and income tax to a gross salary, while the Interest Calculator compares simple and monthly compound growth for savings or loans. Percentage tools cover discounts, rates of change and reverse calculations. The Freelance Rate Calculator turns an income goal and fixed costs into an hourly rate, and the Invoice Maker produces a printable invoice or quote you can share as a link. For investors, the Currency Converter shows 20 currencies with a 30-day chart and the Crypto Profit Calculator includes fees. Results are estimates; check official rates before filing taxes.",
     "alba-pay-calc": {
@@ -534,7 +534,7 @@
       "title": "Smart Bulk Renamer",
       "desc": "Apply find/replace, 001 numbering, date insertion, and regex in one click, then download as ZIP or save straight to a folder. Files never leave your browser."
     },
-    "metaTitle": "Productivity Tools — Pomodoro Timer, Bulk File Renamer & Excel Mapper | Utility Hub",
+    "metaTitle": "Productivity Tools — Pomodoro, File Renamer & Excel | Utility Hub",
     "metaDescription": "Free productivity tools: a Pomodoro focus timer, a bulk file renamer with numbering and regex, an Excel column mapper, a world time zone converter and a live meeting cost meter. Runs in your browser.",
     "intro": "Productivity tools that save minutes every day and hours every month. The Smart Bulk Renamer renames hundreds of files at once with find-and-replace, numbering, dates and regular expressions, and the Excel Column Mapper reshapes spreadsheets into the column layout another system expects. The Pomodoro Timer runs 25-minute focus blocks with breaks, the World Time Converter lines up business hours across Seoul, London, New York and other cities to find a meeting slot, and the Meeting Cost Calculator shows in real time how much a meeting costs based on attendees' pay. Bomb Notepad keeps a scratch note that deletes itself after a timer. The Solar Calculator estimates rooftop solar output, bill savings and payback with measured plant data, and also models power-plant revenue and IRR. All tools run locally in your browser, so files and notes stay on your device."
   },
@@ -603,7 +603,7 @@
       "title": "Bubble Pop Art Text Generator",
       "desc": "Turn text into bubble-letter pop art — 8 presets, 6 fonts, transparent background, 3× print-ready PNG."
     },
-    "metaTitle": "Design Tools — Color Palette, Logo & Favicon Maker, Font Preview | Utility Hub",
+    "metaTitle": "Design Tools — Color Palettes, Logos & Favicons | Utility Hub",
     "metaDescription": "Free design tools: generate harmonious color palettes and check WCAG contrast, create text logos and favicons, preview Google Fonts, batch-resize photos and visualize bathroom tiles. No design software required.",
     "intro": "Design tools for people who need good-looking results without opening a full design suite. Generate harmonious colour palettes and check text contrast against WCAG 2.1 AA and AAA ratios, preview Google Fonts with your own sentence before choosing one, and build a text-based logo and favicon set in the sizes browsers and phones expect. The Photo Batch Editor resizes and filters many photos at once for a blog or online shop, and the Bubble Pop Art Text Generator exports playful lettering as a transparent PNG. The Formation Planner lays out players or performers on a field or stage and saves the plan as an image. The Bathroom Tile Visualizer lays photo-real tiles on your own bathroom photo at true scale and perspective, keeping the original lighting, with grout, layouts and tile counts. Everything works in the browser, so images are never uploaded.",
     "before-after-maker": {
@@ -688,7 +688,7 @@
       "title": "Core Web Vitals Checker",
       "desc": "Enter your LCP, INP and CLS values to instantly get Google’s Good / Needs Improvement / Poor ratings."
     },
-    "metaTitle": "Web Performance Tools — TTFB, Core Web Vitals & SLA Calculator | Utility Hub",
+    "metaTitle": "Web Performance Tools — TTFB & Core Web Vitals | Utility Hub",
     "metaDescription": "Free browser-based web performance tools: measure TTFB, check Core Web Vitals (LCP, CLS, INP), calculate SLA uptime and allowed downtime, and estimate your website carbon footprint. No sign-up required.",
     "intro": "These tools answer one question: is your website fast and reliable enough? The TTFB Checker measures how long a server takes to send the first byte, the earliest warning sign of a slow host, cold cache or overloaded database. The Core Web Vitals Checker scores LCP, INP and CLS against Google's thresholds of 2.5 seconds, 200 milliseconds and 0.1, so you can see which metric is costing you search visibility. The SLA Uptime Calculator turns a promised availability such as 99.9% into allowed downtime per day, month and year — about 43 minutes a month — and back again, which helps when you compare hosting plans or write a service agreement. The Carbon Footprint Calculator estimates the emissions of everyday travel, electricity and food so a team can set realistic reduction goals. Everything runs in your browser; no account or installation is needed."
   },
@@ -806,7 +806,7 @@
       "title": "Supplement Cost Analyzer",
       "desc": "Compare total capsules, serving size, active mg, and purity to find the true value winner between two supplements."
     },
-    "metaTitle": "Lifestyle & Health Calculators — BMI, Age, Countdown, GPA & Personality Tests | Utility Hub",
+    "metaTitle": "Lifestyle Calculators — BMI, Age, GPA & Countdown | Utility Hub",
     "metaDescription": "Free lifestyle and health tools: BMI calculator, exact age calculator, countdown timer, GPA calculator, air conditioner sizing, supplement cost-per-dose analysis, plus MBTI-style personality tests and fun quizzes.",
     "intro": "Everyday calculators and small games for health, home, hobbies and fun. Check BMI and a healthy weight range, count days to an exam or anniversary, convert international and Korean age, and work out a college GPA on 4.5 or 4.3 scales. Pet owners can estimate daily calories for dogs and cats, aquarium keepers can size tanks and stocking, and coffee lovers can dial in pour-over ratios and espresso extraction with SCA standards. The AC Size Calculator suggests air-conditioner capacity for a room, the Gym Plate Calculator loads a barbell to a target weight and the Supplement Cost Analyzer compares two products by price per day. For a break there are MBTI and Teto-Egen tests, a nickname generator, a daily fortune prompt, a 30-day challenge tracker, an apnea breathing trainer and a dual N-back memory game. Everything runs free in the browser."
   },
@@ -836,7 +836,7 @@
       "title": "Peek-Proof Editor",
       "desc": "Only the line you're reading stays sharp; the rest blurs out. Protect your writing from over-the-shoulder peeking in cafes, subways, and offices."
     },
-    "metaTitle": "Security & Privacy Tools — Password Generator, Data Masking & URL Checker | Utility Hub",
+    "metaTitle": "Security Tools — Password Generator & Data Masking | Utility Hub",
     "metaDescription": "Free security and privacy tools: a strong password generator, automatic masking of personal data in text, a URL safety checker for suspicious links, self-destructing secret notes and a robots.txt generator that blocks AI crawlers.",
     "intro": "Privacy and security tools that work entirely in your browser, so the sensitive text you paste never leaves your device. Privacy Masking hides names, phone numbers, email addresses, ID and card numbers in a block of text before you share a screenshot or send a document. The Password Generator creates long random passwords with the character sets a site requires and estimates how long they would resist an offline attack. The URL Safety Checker inspects a link for phishing patterns such as look-alike domains, IP addresses, misleading subdomains and risky shortener redirects. Burn Message creates a one-time note that is destroyed after it is read, and Peek-Proof Editor blurs everything except the line you are typing to stop shoulder surfing in cafés and offices. Block AI Crawlers writes robots.txt rules, meta tags and headers to keep AI training bots away from your site."
   },
@@ -973,7 +973,7 @@
       "title": "KEC Grounding Calculator",
       "desc": "Calculate grounding conductor sizes based on KEC standards."
     },
-    "metaTitle": "Developer Tools — JSON Formatter, Regex Tester & Password Strength Checker | Utility Hub",
+    "metaTitle": "Developer Tools — JSON Formatter & Regex Tester | Utility Hub",
     "metaDescription": "Free browser-based developer tools: format, validate and minify JSON, test regular expressions in real time, check password strength, decode resistor color bands and size grounding conductors.",
     "intro": "These are the tools developers keep open while coding and debugging. Pretty-print minified JSON from an API response, validate it and pinpoint the exact line of a syntax error, and watch which strings a regular expression matches as you type, with capture groups and flags highlighted. The Password Strength Checker estimates entropy and crack time for a password without sending it anywhere, useful when you design sign-up rules. For hardware and electrical work, the Resistor Calculator decodes 4-, 5- and 6-band colour codes into resistance and tolerance, and the KEC Grounding Calculator sizes protective and grounding conductors under the Korean Electrical Code. Each tool runs instantly in the browser with no installation, so you can use it on any machine, including a locked-down work laptop. Bookmark the ones you use most and they stay one click away."
   },
@@ -1694,7 +1694,7 @@
   "BubblePopart": {
     "title": "Bubble Pop Art Text Generator",
     "subtitle": "Type a word and get a pop art image with rounded bubble letters, bold outlines, and glossy highlights. 8 style presets, 6 fonts, transparent backgrounds, and 3× print-quality export.",
-    "meta_title": "Bubble Pop Art Text Generator — Cute Bubble Letters as PNG | Utility Hub",
+    "meta_title": "Bubble Letter Generator — Cute Pop Art Text PNG | Utility Hub",
     "meta_description": "Turn any text into bubble-letter pop art with outlines, 3D depth, and glossy highlights. 8 presets (candy, retro, neon…), 6 free commercial fonts, transparent PNG, and 3× export for ~288 dpi A4 prints.",
     "description": "The Bubble Pop Art Text Generator turns a short phrase into a bold, cheerful image built from rounded bubble letters, layered outlines, glossy highlight dots, and optional drop shadows or 3D depth. Eight style presets — Classic bubble, Candy, Retro pop, Neon, Sticker, Jelly 3D, Macaron, and Comic — change colors, outlines, background, and decorations in one tap, and every option stays editable afterwards. You can type up to three lines and twenty characters, which fits shop signs such as \"Today's special / Latte $3\". When the text grows wider than the image, the letters shrink automatically to stay inside a 3% margin, and the stars, hearts, sparkles, and music notes scale with the letters so they never outgrow them. Backgrounds include solid colors, gradients, halftone dots, sunbursts, checkers, stripes, and a fully transparent option for stickers, logos, and video overlays. Export square, 16:9, 9:16, or A4 canvases at 1×, 2×, or 3× scale; A4 at 3× saves 2382×3369 pixels, roughly 288 dpi. Everything is drawn in your browser, and your text never leaves your device.",
     "button": "Use Now",
@@ -2511,7 +2511,7 @@
   "AlbaPay": {
     "title": "Korea Part-time Pay & Weekly Holiday Allowance Calculator {year}",
     "subtitle": "For part-timers and employers in Korea — {year} minimum wage {wage}/hour. Weekly holiday allowance (juhyu sudang), weekly and monthly pay, and take-home pay.",
-    "meta_title": "Korea Part-time Pay Calculator {year} – Weekly Holiday Allowance (Juhyu) | Utility Hub",
+    "meta_title": "Korea Part-time Pay & Juhyu Calculator {year} | Utility Hub",
     "meta_description": "Calculate part-time pay in Korea with the {year} minimum wage of {wage}/hour: weekly holiday allowance (juhyu sudang), weekly and monthly pay, overtime and night premiums, and take-home pay after the 4 insurances or 3.3%.",
     "description": "This calculator is for foreign part-timers and small business owners who need to check pay under Korean labour law. Enter an hourly wage and your hours and it shows the weekly holiday allowance (주휴수당, juhyu sudang), weekly pay, pay converted to a month, and take-home pay after the four social insurances or the 3.3% freelancer withholding. The {year} minimum wage of {wage} an hour is filled in for you, and you can switch the year to check last year's pay. Anyone contracted for 15 hours or more a week earns an extra paid day off each week worth (weekly hours ÷ 40) × 8 hours of pay, so a 40-hour week becomes 209 paid hours a month, or {monthly}. The weekly schedule tab takes start and end times and breaks for each day, splits out overtime and night work between 10 pm and 6 am, and handles shifts that end after midnight such as 6 pm to 2 am. Workplaces with five or more staff must add 50% for overtime, night and holiday work; smaller ones pay no premiums but still owe the weekly holiday allowance. Wages below the legal minimum are flagged in red. Everything runs in your browser and nothing you type is sent anywhere.",
     "button": "Copy result",
@@ -2918,7 +2918,7 @@
   "BeforeAfter": {
     "title": "Before & After Photo Maker",
     "subtitle": "Drop in two photos and get a ready-to-post before and after comparison for Instagram, with your logo, a watermark and face blurring",
-    "meta_title": "Before and After Photo Maker – Side by Side for Instagram | Utility Hub",
+    "meta_title": "Before and After Photo Maker for Instagram | Utility Hub",
     "meta_description": "Put two photos side by side, top and bottom or on a diagonal and save a 1080px before and after image in 4:5, 1:1, 3:4 or 9:16. Add BEFORE/AFTER labels, your logo and handle, a repeating watermark and face pixelation. Photos never leave your device.",
     "local_badge": "Photos never leave your device",
     "description": "Before & After Photo Maker is built for salons, nail studios, lash and brow artists, groomers, detailers and cleaning crews who post results every day. Pick two photos from your camera roll — the first becomes BEFORE, the second AFTER — and you instantly get a comparison sized for Instagram: 4:5 feed portrait at 1080×1350 px, 1:1 square, 3:4, or 9:16 for Stories and Reels. Drag a photo to reposition it and pinch to zoom; switch on Line up photos to overlay both shots at half opacity so the hairline, hand or room corner sits in exactly the same place. Add BEFORE/AFTER labels in four styles, a one-line caption, your logo, shop name, Instagram handle and phone number, and an optional repeating watermark that makes reposting harder. Hide a client’s face with pixelation, blur or a heart sticker. Brightness, contrast and saturation are applied to both photos by default so the result is not exaggerated. Your logo and layout are remembered, and you can save up to three styles, so from the second time on it is just add photos and save. Everything runs in your browser: photos are never uploaded, and saved images contain no GPS location or other camera data.",
@@ -3049,7 +3049,7 @@
   "MenuCost": {
     "title": "Menu Cost & Break-even Calculator",
     "subtitle": "From ingredient cost to menu price to the number of customers you need each day. For restaurants, cafés and salons.",
-    "meta_title": "Menu Cost & Break-even Calculator for Restaurants and Salons | Utility Hub",
+    "meta_title": "Menu Cost & Break-even Calculator for Restaurants | Utility Hub",
     "meta_description": "Work out food cost per plate and cost ratio from purchase prices and portion sizes, get a suggested menu price for your target food cost %, then see how many customers a day you need to break even — with a chart and a what-if table. Free, no sign-up.",
     "local_badge": "Your data stays on this device",
     "description": "This calculator links the three numbers every small food or beauty business needs: what an item costs to make, what it should sell for, and how many customers you need each day to cover your costs. In step ① you enter each ingredient's purchase price, pack size and the amount used per serving; units are converted automatically (kg to g, L to ml) and a yield percentage accounts for trimming waste. Salon owners can add service time multiplied by an hourly labour rate. In step ② the tool takes sales tax or VAT out of the menu price if it is included, shows the cost ratio against your target, the money left per sale after card or delivery-app fees, and a suggested price rounded up to the nearest 50 cents or whole unit. A slider shows what a 10–50% rise in ingredient prices does to your margin. In step ③ you add rent, wages, your own pay, utilities, loan interest and equipment costs; the calculator divides fixed costs by the contribution margin to give break-even sales, customers per month and customers per day, plus a chart and a what-if table. Choose your currency and tax rate at the top. Everything is saved only in your browser and can be exported as a backup file or a CSV cost sheet.",

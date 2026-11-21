@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '에어컨 평형 계산기 — 방·아파트 거실·매장 몇 평형? kW 환산 | Utility Hub'
-    : 'Air Conditioner Size Calculator — Pyeong Class & kW for Rooms, Apartments, Shops | Utility Hub';
+    : 'Air Conditioner Size Calculator — Room Area to kW | Utility Hub';
   const description = isKo
     ? '방 면적, 아파트 평형, 매장 업종과 인원으로 몇 평형 에어컨이 맞는지 계산합니다. 34평형 아파트 거실은 17평형 스탠드처럼 제조사 기준(냉방면적 1㎡당 약 123W)으로 냉방능력 kW까지 알려 줍니다.'
     : 'Find the right air conditioner pyeong class and cooling capacity (kW) for a room, an apartment living room or a shop, based on manufacturer cooling-area ratings.';

@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo ? '테토·에겐 테스트 | Utility Hub' : 'Teto-Egen Test | Utility Hub';
   const description = isKo
-    ? '남성형(테토)과 여성형(에겐) 성향을 분석하는 무료 성격 테스트'
+    ? '10문항에 답하면 내가 테토(주도적·대담한 성향)인지 에겐(섬세·배려하는 성향)인지 퍼센트로 알려 주는 무료 테토·에겐 테스트입니다. 테토남·에겐녀 등 유형별 특징과 잘 맞는 궁합 유형까지 바로 확인하세요.'
     : 'A free personality test that analyzes your Teto (masculine) and Egen (feminine) tendencies.';
   const canonical = `https://www.theutilhub.com/${locale}/utilities/lifestyle/teto-egen-test`;
   return {
@@ -41,7 +41,7 @@ const softwareSchema = {
   applicationCategory: 'UtilitiesApplication',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
   url: 'https://www.theutilhub.com/ko/utilities/lifestyle/teto-egen-test',
-  description: '남성형(테토)과 여성형(에겐) 성향을 분석하는 무료 성격 테스트',
+  description: '10문항에 답하면 내가 테토(주도적·대담한 성향)인지 에겐(섬세·배려하는 성향)인지 퍼센트로 알려 주는 무료 테토·에겐 테스트입니다. 테토남·에겐녀 등 유형별 특징과 잘 맞는 궁합 유형까지 바로 확인하세요.',
 };
 
 // 한국어 FAQPage — 화면의 한국어 FAQ(SeoSection)와 같은 데이터. 영문 FAQPage는 SeoSection이 /en에서 내보낸다.

@@ -13,7 +13,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '욕실 타일 시뮬레이터 — 내 사진에 실제 크기·원근으로 타일 깔아 보기 | Utility Hub'
-    : 'Bathroom Tile Visualizer — Try Tiles on Your Photo at True Scale | Utility Hub';
+    : 'Bathroom Tile Visualizer — Try Tiles on Your Photo | Utility Hub';
   const description = isKo
     ? '내 욕실 사진이나 샘플 욕실의 바닥·벽에 실사 대리석·콘크리트·우드 타일을 실제 크기와 원근으로 깔아 봅니다. 조명·그림자·거울·유광 반사 유지, 줄눈·배치·마감, 전후 비교, 필요한 타일 장수까지. 사진은 브라우저 안에서만 처리됩니다.'
     : 'Lay tiles on your own bathroom photo or a sample room at true scale and perspective, keeping the lighting, with grout, offset layouts and tile counts. Processed in your browser.';

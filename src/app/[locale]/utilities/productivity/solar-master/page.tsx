@@ -12,8 +12,8 @@ export async function generateMetadata({
   const { locale } = await params;
   const isKo = locale === 'ko';
   const title = isKo
-    ? '태양광 발전량·수익 계산기 — 전기요금 절감, 발전사업 SMP·REC·IRR, 태양열 온수 | Utility Hub'
-    : 'Solar PV, Power Plant & Thermal Calculator — Savings, Revenue, IRR | Utility Hub';
+    ? '태양광 발전량·수익 계산기 — 전기요금 절감, SMP·REC·IRR | Utility Hub'
+    : 'Solar PV & Power Plant Calculator — Savings, IRR | Utility Hub';
   const description = isKo
     ? '지역별 일평균 발전시간(서울 3.2h, 전국 3.6h)과 한전 주택용 전기요금 전체(누진·부가세·전력기금·상계거래)로 태양광 발전량·절감액·회수 기간을 계산합니다. 발전사업은 계약시장 20년 고정가격 또는 SMP·REC로 수익, IRR, DSCR을 구하고, 태양열 온수는 급탕량 기준으로 가스·등유 절감액을 구합니다.'
     : 'Estimate solar PV output, bill savings and payback with Korean regional yields and the full KEPCO residential tariff, power plant revenue and IRR from contract or SMP + REC prices, and solar hot-water savings.';

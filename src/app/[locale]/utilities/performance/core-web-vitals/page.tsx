@@ -12,7 +12,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? 'Core Web Vitals 판정기 — LCP·INP·CLS 등급 즉시 판정, 무료 | Utility Hub'
-    : 'Core Web Vitals Checker – Rate LCP, INP & CLS Free, No Signup | Utility Hub';
+    : 'Core Web Vitals Checker – LCP, INP & CLS, Free | Utility Hub';
   const description = isKo
     ? 'PageSpeed Insights나 서치콘솔의 LCP·INP·CLS 수치를 넣으면 구글 기준 Good·Needs Improvement·Poor 등급과 무엇부터 고칠지 바로 알려 줍니다. 구글 현행 공식 기준(2024년 3월 INP 도입) 적용, 무료·가입 없음.'
     : 'Paste the LCP, INP and CLS numbers from PageSpeed Insights or Search Console and instantly see Google\'s Good / Needs Improvement / Poor rating, which metric to fix first and how. Free, no sign-up.';

@@ -11,7 +11,7 @@ export async function generateMetadata({
   const isKo = locale === 'ko';
   const title = isKo
     ? '어깨너머 시선 차단 에디터 | Utility Hub'
-    : 'Peek-Proof Editor - Shield Text From Over-the-Shoulder Eyes | Utility Hub';
+    : 'Peek-Proof Editor — Hide Text From Shoulder Surfers | Utility Hub';
   const description = isKo
     ? '카페·지하철·사무실에서 어깨너머 시선으로부터 글을 보호하세요. 커서가 있는 줄만 선명하게, 나머지는 모두 흐려집니다. 100% 브라우저 처리.'
     : 'Protect your text from over-the-shoulder peeking in cafes, subways, and offices. Only the cursor line stays sharp; everything else blurs. 100% browser-side.';
