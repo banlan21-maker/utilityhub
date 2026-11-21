@@ -7,6 +7,7 @@ import NavigationActions from '@/app/components/NavigationActions';
 import ToolHeader from '@/app/components/ToolHeader';
 import RelatedTools from '@/app/components/RelatedTools';
 import ShareBar from '@/app/components/ShareBar';
+import { INVOICE_STAMP_KEY } from '@/lib/signStamp';
 import s from './ivm.module.css';
 import { ui } from '@/app/components/ui';
 
@@ -16,6 +17,8 @@ interface LineItem { id: string; desc: string; qty: number; unitPrice: number; }
 interface Issuer {
   name: string; email: string; phone: string; address: string;
   bizNo: string; account: string; bank: string; logoBase64: string;
+  /** 도장·싸인 이미지 (투명 PNG) — 발행인 이름 옆에 찍힌다 */
+  stampBase64?: string;
 }
 interface InvoiceData {
   invNo: string; issueDate: string; dueDate: string;
@@ -84,7 +87,7 @@ const fmt = (n: number, mode: CountryMode) =>
 const newItem = (): LineItem => ({ id: Date.now().toString(), desc: '', qty: 1, unitPrice: 0 });
 
 const defaultIssuer = (): Issuer => ({
-  name: '', email: '', phone: '', address: '', bizNo: '', account: '', bank: '', logoBase64: '',
+  name: '', email: '', phone: '', address: '', bizNo: '', account: '', bank: '', logoBase64: '', stampBase64: '',
 });
 
 const defaultData = (mode: CountryMode = 'KR'): InvoiceData => ({
@@ -111,6 +114,7 @@ export default function InvoiceMakerClient({ seo }: { seo?: React.ReactNode }) {
   const [shareUrl, setShareUrl] = useState('');
   const previewRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const stampInputRef = useRef<HTMLInputElement>(null);
 
   // ── Init ──
   useEffect(() => {
@@ -121,13 +125,24 @@ export default function InvoiceMakerClient({ seo }: { seo?: React.ReactNode }) {
     const hist: InvoiceData[] = [];
     try { hist.push(...JSON.parse(localStorage.getItem(LS_HISTORY) || '[]')); } catch { /* ignore */ }
     setHistory(hist);
+    // 싸인·도장 이미지 만들기에서 "견적서에 넣기"로 넘어온 이미지
+    let handed = '';
+    try {
+      handed = localStorage.getItem(INVOICE_STAMP_KEY) ?? '';
+      if (handed) localStorage.removeItem(INVOICE_STAMP_KEY);
+    } catch { /* ignore */ }
+    if (!handed.startsWith('data:image/png')) handed = '';
     setData(prev => ({
       ...prev,
       invNo,
       issueDate: prev.issueDate || todayStr(),
-      issuer: { ...prev.issuer, ...(saved as Partial<Issuer>) },
+      issuer: { ...prev.issuer, ...(saved as Partial<Issuer>), ...(handed ? { stampBase64: handed } : {}) },
     }));
-  }, []);
+    if (handed) {
+      setToast(isKo ? '도장·싸인을 발행인 이름 옆에 넣었습니다' : 'Signature added next to your name');
+      setTimeout(() => setToast(''), 3000);
+    }
+  }, [isKo]);
 
   // ── Save issuer on change ──
   useEffect(() => {
@@ -177,6 +192,17 @@ export default function InvoiceMakerClient({ seo }: { seo?: React.ReactNode }) {
     if (file.size > 1024 * 1024) { showToast(isKo ? '이미지는 1MB 이하로 올려주세요' : 'Image must be under 1MB'); return; }
     const reader = new FileReader();
     reader.onload = ev => setIssuerField('logoBase64', ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  // ── Stamp / signature upload ──
+  const handleStamp = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (file.size > 1024 * 1024) { showToast(isKo ? '이미지는 1MB 이하로 올려주세요' : 'Image must be under 1MB'); return; }
+    const reader = new FileReader();
+    reader.onload = ev => setIssuerField('stampBase64', ev.target?.result as string);
     reader.readAsDataURL(file);
   };
 
@@ -269,7 +295,7 @@ export default function InvoiceMakerClient({ seo }: { seo?: React.ReactNode }) {
     try {
       const CryptoJS = (await import('crypto-js')).default;
       const LZString = (await import('lz-string')).default;
-      const safeData = { ...data, issuer: { ...data.issuer, account: '', bank: '' } };
+      const safeData = { ...data, issuer: { ...data.issuer, account: '', bank: '', stampBase64: '' } };
       const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(safeData));
       const SECRET = 'theutilhub-inv-2026';
       const encrypted = CryptoJS.AES.encrypt(compressed, SECRET).toString();
@@ -367,6 +393,26 @@ export default function InvoiceMakerClient({ seo }: { seo?: React.ReactNode }) {
               </button>
             )}
             <input ref={fileInputRef} type="file" accept="image/*" style={{ display:'none' }} onChange={handleLogo} />
+          </div>
+          <div className={s.ivm_logo_wrap}>
+            <div className={`${s.ivm_logo_preview} ${s.ivm_stamp_preview}`}>
+              {data.issuer.stampBase64
+                ? <img src={data.issuer.stampBase64} alt={isKo ? '도장' : 'signature'} />
+                : <span>{isKo ? '도장' : 'SIGN'}</span>}
+            </div>
+            <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={() => stampInputRef.current?.click()}>
+              {isKo ? '도장·싸인 올리기' : 'Upload signature'}
+            </button>
+            {data.issuer.stampBase64 ? (
+              <button className={`${ui.button} ${ui.secondary} ${ui.sm}`} onClick={() => setIssuerField('stampBase64', '')}>
+                {isKo ? '제거' : 'Remove'}
+              </button>
+            ) : (
+              <a className={s.ivm_stamp_link} href={`/${isKo ? 'ko' : 'en'}/utilities/document/sign-stamp-maker`}>
+                {isKo ? '도장 이미지 만들기 →' : 'Make a signature →'}
+              </a>
+            )}
+            <input ref={stampInputRef} type="file" accept="image/png,image/*" style={{ display:'none' }} onChange={handleStamp} />
           </div>
           {[
             { k: 'name' as keyof Issuer, label: isKo ? '이름/상호명' : 'Name / Company' },
@@ -568,7 +614,15 @@ export default function InvoiceMakerClient({ seo }: { seo?: React.ReactNode }) {
         <div className={s.ivm_preview_parties}>
           <div>
             <p className={s.ivm_preview_party_label}>{isKo ? '발행인' : 'FROM'}</p>
-            <p className={s.ivm_preview_party_name}>{data.issuer.name}</p>
+            <p className={s.ivm_preview_party_name}>
+              {data.issuer.name}
+              {data.issuer.stampBase64 && (
+                <span className={s.ivm_preview_seal}>
+                  {isKo && data.countryMode === 'KR' && <span className={s.ivm_preview_seal_text}>(인)</span>}
+                  <img src={data.issuer.stampBase64} alt="" className={s.ivm_preview_seal_img} />
+                </span>
+              )}
+            </p>
             <p className={s.ivm_preview_party_info}>
               {data.issuer.email}{data.issuer.email && <br />}
               {data.issuer.phone}{data.issuer.phone && <br />}

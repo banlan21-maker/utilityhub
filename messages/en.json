@@ -222,8 +222,12 @@
       "desc": "Make scanned contracts, official documents, and faxes searchable with Ctrl+F. 100% local processing for complete privacy protection."
     },
     "metaTitle": "Free Document Tools — HWP to PDF, OCR & Redaction | Utility Hub",
-    "metaDescription": "Free document tools that run in your browser: convert Korean HWP files to PDF, merge images into a PDF, make scanned PDFs searchable with OCR, and redact personal data in PDFs. Files never leave your device.",
-    "intro": "Document tools for the small but annoying jobs that come up around PDFs. Convert Korean HWP word-processor files to PDF so recipients without Hancom Office can open them, and combine phone photos or scanned images into a single PDF in the order you choose. The PDF OCR Converter adds an invisible text layer to scanned contracts and receipts, so Ctrl+F search, copy and paste finally work, with Korean, English, Japanese and Chinese recognition. The PDF Masking Tool blacks out resident registration numbers, phone numbers and account numbers before you send a document by email. Files are processed inside your browser and are never uploaded to a server, which matters when the paperwork contains personal or company information. Typical uses include submitting forms to public offices, sharing quotes with clients and keeping searchable copies of paper records."
+    "metaDescription": "Free document tools that run in your browser: convert Korean HWP files to PDF, merge images into a PDF, make scanned PDFs searchable with OCR, redact personal data in PDFs and make a transparent signature PNG. Files never leave your device.",
+    "intro": "Document tools for the small but annoying jobs that come up around PDFs. Convert Korean HWP word-processor files to PDF so recipients without Hancom Office can open them, and combine phone photos or scanned images into a single PDF in the order you choose. The PDF OCR Converter adds an invisible text layer to scanned contracts and receipts, so Ctrl+F search, copy and paste finally work, with Korean, English, Japanese and Chinese recognition. The PDF Masking Tool blacks out resident registration numbers, phone numbers and account numbers before you send a document by email. The Signature & Stamp Maker turns a photo of your signature or stamp, or one you draw on screen, into a transparent PNG for contracts and invoices. Files are processed inside your browser and are never uploaded to a server, which matters when the paperwork contains personal or company information. Typical uses include submitting forms to public offices, sharing quotes with clients and keeping searchable copies of paper records.",
+    "sign-stamp-maker": {
+      "title": "Signature & Stamp Maker",
+      "desc": "Draw, type or extract a signature or stamp as a transparent PNG"
+    }
   },
   "MarketingBoard": {
     "subtitle": "AI-powered marketing content creation and automation tools.",
@@ -3162,5 +3166,110 @@
     "metaTitle": "Construction Calculators — Wire Size, Pipe & Concrete | Utility Hub",
     "metaDescription": "Free calculators for the trades: wire size and voltage drop, cable tray fill, grounding conductors, pipe sizing and offsets, concrete volume and truck loads, metal weight, sling angle loads, tile and wallpaper quantities, a bathroom tile visualizer, AC sizing and rooftop solar output.",
     "intro": "Calculators for the work done every day on electrical, plumbing, structural and interior jobs. For electrical work, the Wire Size Calculator picks a conductor from load current, run length and allowed voltage drop, the Cable Tray Calculator checks fill against tray capacity, and the Grounding Calculator sizes protective and earthing conductors under the Korean Electrical Code. For plumbing, the Piping Calculator covers pipe sizes, drain slopes and hydrostatic test volumes, and the Pipe Offset Calculator gives cut lengths with elbow take-offs. For structural and lifting work, the Concrete Calculator adds up several pours and works out ready-mix truck loads, the Metal Weight Calculator gives the weight and paint area of H-beams, channels and pipes, and the Sling Angle Calculator shows the tension on each leg and checks it against the working load limit. For fit-out and installation there are tile and wallpaper quantity estimates, a bathroom tile visualizer that lays real tiles on your own photo at true scale with grout, layouts and counts, a Korean pyeong to square metre converter, air-conditioner sizing for a room and a rooftop solar output and payback calculator. Everything runs in the browser; treat the results as estimates and follow the design standard and the site engineer before you build."
+  },
+  "SignStamp": {
+    "title": "Signature & Stamp Maker",
+    "subtitle": "Draw, type or extract your signature from a photo — saved as a transparent PNG",
+    "meta_title": "Free Signature Maker — Draw, Type or Extract to PNG | Utility Hub",
+    "meta_description": "Create a transparent PNG signature: draw it with your finger or mouse, type your name in 8 handwriting fonts, or remove the background from a photo of your signature or ink stamp. Free, no sign-up, nothing is uploaded.",
+    "local_badge": "Your photos never leave your device",
+    "description": "The Signature & Stamp Maker gives you a clean signature image for PDFs, contracts, invoices and email footers in three ways. Draw it: sign with a finger, mouse or stylus on a smooth pad where the line gets thinner as you move faster, just like ink, with undo and redo. Type it: enter your name and compare it in eight handwriting fonts at once, then pick black or blue ink. Or extract it: sign on white paper, take a photo and the tool lifts the ink off the page. It evens out shadows and warm indoor light using the brightness of the paper, keeps only the ink, and gives the edges soft transparency so there is no white halo when you place it on a document. The same photo mode handles red or blue rubber and ink stamps, with automatic colour detection and an option to recolour the stamp while keeping its texture. You can also generate a round, square or oval name stamp. Save the result as a transparent PNG at 600 px for the web or 1200 px for print, copy it straight to the clipboard, or add it to an invoice in our Invoice Maker. Everything runs in your browser; your photos and signature are never uploaded.",
+    "share_title": "Signature & Stamp Maker — transparent PNG signature, free",
+    "about_title": "What you can do",
+    "about": [
+      "<b>Draw a signature</b> with a finger, mouse or pen. Line width follows your speed (or pen pressure), and the image is trimmed to your signature automatically.",
+      "<b>Type a signature</b>: your name in eight handwriting fonts side by side, in black or blue ink.",
+      "<b>Extract from a photo</b>: sign on paper, take a photo and get only the ink on a transparent background — shadows and warm light are corrected first.",
+      "<b>Stamps too</b>: lift a red or blue ink stamp from a photo, change its colour, or generate a round, square or oval name stamp."
+    ],
+    "tips_title": "Getting a clean result from a photo",
+    "tips": [
+      "Sign on <b>plain white paper</b>. Lines on notebook paper or printed red text can stay in the result.",
+      "Shoot in <b>good light</b> without the shadow of your hand or phone over the signature. Soft shadows and yellow light are corrected automatically.",
+      "Hold the phone <b>parallel to the paper</b> and get close so the signature fills the frame. Use Fine angle to straighten a tilted photo.",
+      "If parts of a light signature disappear, raise <b>Color range</b>; if paper texture stays, lower it or raise <b>Remove specks</b>."
+    ],
+    "how_title": "How the background is removed",
+    "how": [
+      "No AI model is involved: ink and paper differ enough in colour and brightness to separate them directly, which keeps the tool fast, light and able to work offline.",
+      "The photo is split into small tiles and the brightest part of each tile is taken as the paper. Dividing by that paper colour removes shadows and colour casts. Each pixel then gets a value between 0 and 1 for how close it is to ink — dark for a pen, red or blue for a stamp — and that value becomes its transparency, so edges stay smooth instead of jagged.",
+      "Finally, isolated specks below a size threshold are removed and the image is trimmed to the ink. In Original colour mode the true ink colour is recovered from the paper-blended pixels, so the signature looks the same on any background."
+    ],
+    "stamp_title": "About name stamps",
+    "stamp": [
+      "Korean and Chinese characters are laid out in vertical columns read from right to left: one column for 2–3 characters, a 2 × 2 grid for 4, two columns for 5–8.",
+      "Latin names are set on one or two centred lines inside a round, square or oval border.",
+      "Ink texture adds the slight unevenness of a real stamp; the same name always gets the same texture."
+    ],
+    "caution_title": "Before you use it",
+    "caution": [
+      "Use <b>only your own</b> signature or stamp. Creating or using someone else's without permission can carry legal liability.",
+      "An image of a signature is <b>not a certified electronic signature</b>. It is fine for invoices and everyday documents; for important contracts use a recognised e-signature service.",
+      "Photos and results are <b>never uploaded or stored</b>. Everything is processed in this browser and disappears when you close the tab. Only \"Add to invoice\" passes the image to the Invoice Maker on this device."
+    ],
+    "fonts_title": "Fonts and licences",
+    "fonts_note": "All fonts come from Google Fonts under the SIL Open Font License (OFL), which allows personal and commercial use and embedding. You are free to use the signatures and stamps you make.",
+    "use_cases": [
+      {
+        "icon": "✍️",
+        "title": "Signing a PDF contract",
+        "desc": "Draw your signature on your phone, save it as a transparent PNG and drop it onto the signature line in any PDF editor or Word document before sending it back."
+      },
+      {
+        "icon": "🧾",
+        "title": "Signed invoices and quotes",
+        "desc": "Add your signature or company stamp to an invoice in the Invoice Maker with one click, or paste it into your own invoice template so every document looks finished."
+      },
+      {
+        "icon": "📧",
+        "title": "Email and document footers",
+        "desc": "Type your name in a handwriting font to create a consistent signature image for email footers, letters, certificates and presentation slides."
+      },
+      {
+        "icon": "📄",
+        "title": "Digitising a paper signature",
+        "desc": "Already have a signature you like on paper? Photograph it and get a clean transparent copy that keeps the character of your real pen stroke."
+      }
+    ],
+    "how_to": [
+      {
+        "step": "Choose how to make it",
+        "desc": "Pick Draw to sign on screen, Type to choose a handwriting font for your name, or From a photo to lift a signature or stamp off paper."
+      },
+      {
+        "step": "Create your signature",
+        "desc": "Sign on the pad with a finger, mouse or pen, type your name and pick a font, or add a photo and adjust the frame around the signature."
+      },
+      {
+        "step": "Fine-tune the result",
+        "desc": "Choose black or blue ink, or for photos adjust the color range and speck removal. Preview it on a sample document to check the size."
+      },
+      {
+        "step": "Save or use it",
+        "desc": "Pick web (600 px) or print (1200 px) size, then download the transparent PNG, copy it to the clipboard or add it to an invoice directly."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How do I make a transparent signature image?",
+        "a": "Draw your signature on the pad or type your name and pick a font, then click Download PNG. The file has a transparent background, so it sits cleanly on top of any document. You can also photograph a signature on white paper and the tool removes the background for you."
+      },
+      {
+        "q": "Can I use this signature to sign a PDF?",
+        "a": "Yes. Save the PNG and place it on the signature line using any PDF editor, Preview on a Mac, or a Word document you then export to PDF. Keep in mind that an image of a signature is not a certified electronic signature; for important contracts use a recognised e-signature service."
+      },
+      {
+        "q": "Why does my photo still show some paper or lines?",
+        "a": "Lined paper, coloured printing or strong shadows can be mistaken for ink. Frame only the signature, lower the Color range slightly or raise Remove specks. For best results sign on plain white paper and photograph it in good light, holding the phone parallel to the page."
+      },
+      {
+        "q": "Which fonts are used and can I use them commercially?",
+        "a": "The handwriting and stamp fonts are Google Fonts released under the SIL Open Font License, which permits personal and commercial use. The signature images you create are yours to use in documents, emails and business materials without attribution. The font names are listed in the guide below."
+      },
+      {
+        "q": "Is my signature uploaded anywhere?",
+        "a": "No. Drawing, font rendering, background removal and saving all happen inside your browser, and nothing is sent to a server or stored after you close the tab. The tool keeps working even if you go offline once the page has loaded."
+      }
+    ]
   }
 }

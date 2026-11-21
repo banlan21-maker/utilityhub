@@ -13,6 +13,8 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-21', type: 'new', href: '/utilities/document/sign-stamp-maker', ko: '싸인·도장 이미지 만들기 — 도장 사진 배경 제거, 싸인 그리기, 이름 도장, 투명 PNG', en: 'Signature & Stamp Maker — draw, type or extract a transparent PNG signature' },
+  { date: '2026-11-21', type: 'update', href: '/utilities/finance/invoice-maker', ko: '견적서 메이커 — 발행인 이름 옆 (인) 자리에 도장·싸인 이미지 넣기', en: 'Invoice Maker — add your signature or stamp next to your name' },
   { date: '2026-11-21', type: 'update', href: '/utilities/construction', ko: '건설·현장 카테고리 신설 — 전선·배관·콘크리트·줄걸이 등 현장 계산기 13개를 한곳에', en: 'New Construction & Trades category — 13 field calculators for wiring, piping, concrete and rigging' },
   { date: '2026-11-21', type: 'update', href: '/utilities/finance/salary-calc', ko: '연봉 실수령액 계산기 — 2027년 4대보험 요율·최저시급 선택, 10원 단위 계산 오차 수정', en: 'Salary Take-Home Calculator — 2027 insurance rates and minimum wage, rounding fix' },
   { date: '2026-11-21', type: 'new', href: '/utilities/finance/menu-cost-breakeven', ko: '손익분기점·원가율 계산기 — 메뉴 원가, 추천 판매가, 하루에 손님 몇 명이 와야 본전인지', en: 'Menu Cost & Break-even Calculator — food cost %, suggested price, customers a day to break even' },

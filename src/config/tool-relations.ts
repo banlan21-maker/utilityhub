@@ -200,6 +200,7 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/finance/tax-33-calc',
   ],
   'utilities/finance/invoice-maker': [
+    'utilities/document/sign-stamp-maker',
     'utilities/finance/freelance-rate-calculator',
     'utilities/finance/tax-33-calc',
     'utilities/finance/vat-calc',
@@ -560,6 +561,7 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
   ],
   'utilities/document/img-pdf-converter': [
     'utilities/document/hwp-pdf-converter',
+    'utilities/document/sign-stamp-maker',
     'utilities/utility/image-processor',
     'utilities/document/pdf-masking',
   ],
@@ -567,6 +569,14 @@ export const TOOL_RELATIONS: Record<string, string[]> = {
     'utilities/security/privacy-masking',
     'utilities/document/hwp-pdf-converter',
     'utilities/document/img-pdf-converter',
+    'utilities/document/sign-stamp-maker',
+  ],
+  'utilities/document/sign-stamp-maker': [
+    'utilities/finance/invoice-maker',
+    'utilities/document/img-pdf-converter',
+    'utilities/document/pdf-masking',
+    'utilities/utility/image-processor',
+    'utilities/design/before-after-maker',
   ],
 
   // ── Performance ────────────────────────────────────────────

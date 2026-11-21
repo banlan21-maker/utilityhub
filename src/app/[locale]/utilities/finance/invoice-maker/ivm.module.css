@@ -152,3 +152,11 @@
 .ivm_preview_qr_wrap { display: flex; gap: 16px; }
 .ivm_preview_qr_item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.65rem; color: #94a3b8; }
 .ivm_preview_watermark { font-size: 0.65rem; color: #cbd5e1; text-align: right; }
+
+/* 도장·싸인 */
+.ivm_stamp_preview { background-color: #ffffff; }
+.ivm_stamp_link { font-size: 0.82rem; font-weight: 700; color: var(--color-primary); text-decoration: underline; }
+/* 미리보기: 발행인 이름 옆 (인) 자리에 겹쳐 찍는다 */
+.ivm_preview_seal { position: relative; display: inline-block; margin-left: 10px; min-width: 34px; height: 1.2em; vertical-align: middle; }
+.ivm_preview_seal_text { font-size: 0.85rem; font-weight: 600; color: #475569; }
+.ivm_preview_seal_img { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%); max-width: 54px; max-height: 54px; width: auto; height: auto; }
