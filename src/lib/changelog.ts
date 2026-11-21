@@ -13,6 +13,7 @@ export interface ChangeEntry {
 }
 
 export const CHANGELOG: ChangeEntry[] = [
+  { date: '2026-11-21', type: 'new', href: '/utilities/finance/menu-cost-breakeven', ko: '손익분기점·원가율 계산기 — 메뉴 원가, 추천 판매가, 하루에 손님 몇 명이 와야 본전인지', en: 'Menu Cost & Break-even Calculator — food cost %, suggested price, customers a day to break even' },
   { date: '2026-11-20', type: 'new', href: '/utilities/design/before-after-maker', ko: '시술 전후 비교 사진 메이커 — 사진 2장으로 인스타용 비교 이미지, 로고·워터마크·얼굴 가리기', en: 'Before & After Photo Maker — Instagram-ready comparisons with logo, watermark and face blur' },
   { date: '2026-11-20', type: 'update', href: '/utilities/utility/sling-angle-calc', ko: '줄걸이 계산기 — 필요한 슬링 WLL·최대 인양 중량 표시, 3·4줄 꼭지각 안내', en: 'Sling Angle Calculator — minimum sling WLL, max load at the angle, 3/4-leg angle guidance' },
   { date: '2026-11-20', type: 'new', href: '/utilities/utility/sling-angle-calc', ko: '줄걸이(슬링) 각도·하중 계산기 — 줄 1개 장력, WLL 판정, 4줄걸이 2줄 분담', en: 'Sling Angle Calculator — tension per leg, WLL check, conservative 4-leg sharing' },

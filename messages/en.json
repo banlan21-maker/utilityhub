@@ -298,6 +298,10 @@
     "alba-pay-calc": {
       "title": "Part-time Pay & Holiday Allowance (Korea)",
       "desc": "Weekly holiday allowance, weekly and monthly pay and take-home pay under Korean labour law."
+    },
+    "menu-cost-breakeven": {
+      "title": "Menu Cost & Break-even Calculator",
+      "desc": "Food cost per item, cost ratio, suggested menu price and the customers you need a day to break even."
     }
   },
   "Tax33": {
@@ -3039,6 +3043,116 @@
       {
         "q": "Why does Instagram make my images blurry?",
         "a": "Instagram resizes anything wider than 1080 px and compresses it again. This tool saves at exactly 1080 px wide, so that extra resize never happens. For the sharpest feed posts use 4:5, and avoid zooming far into a low-resolution photo."
+      }
+    ]
+  },
+  "MenuCost": {
+    "title": "Menu Cost & Break-even Calculator",
+    "subtitle": "From ingredient cost to menu price to the number of customers you need each day. For restaurants, cafés and salons.",
+    "meta_title": "Menu Cost & Break-even Calculator for Restaurants and Salons | Utility Hub",
+    "meta_description": "Work out food cost per plate and cost ratio from purchase prices and portion sizes, get a suggested menu price for your target food cost %, then see how many customers a day you need to break even — with a chart and a what-if table. Free, no sign-up.",
+    "local_badge": "Your data stays on this device",
+    "description": "This calculator links the three numbers every small food or beauty business needs: what an item costs to make, what it should sell for, and how many customers you need each day to cover your costs. In step ① you enter each ingredient's purchase price, pack size and the amount used per serving; units are converted automatically (kg to g, L to ml) and a yield percentage accounts for trimming waste. Salon owners can add service time multiplied by an hourly labour rate. In step ② the tool takes sales tax or VAT out of the menu price if it is included, shows the cost ratio against your target, the money left per sale after card or delivery-app fees, and a suggested price rounded up to the nearest 50 cents or whole unit. A slider shows what a 10–50% rise in ingredient prices does to your margin. In step ③ you add rent, wages, your own pay, utilities, loan interest and equipment costs; the calculator divides fixed costs by the contribution margin to give break-even sales, customers per month and customers per day, plus a chart and a what-if table. Choose your currency and tax rate at the top. Everything is saved only in your browser and can be exported as a backup file or a CSV cost sheet.",
+    "share_title": "Menu Cost & Break-even Calculator — from plate cost to customers per day",
+    "about_title": "What you can do with it",
+    "about": [
+      "<b>Ingredient costing</b> with automatic unit conversion between kg and g or L and ml, a yield % for trimming loss, and per-serving extras such as packaging, sauces and sides.",
+      "<b>Pricing</b>: cost ratio on the price before tax, money left per sale after fees, and a suggested price from your target ratio, rounded up to 0.50 or 1 in your currency.",
+      "<b>Break-even</b>: monthly break-even sales, customers per month and per day, seat turns needed, and the customers you need to reach a profit target.",
+      "<b>Many items at once</b>: keep up to 30 menu items or services, compare their cost ratios in one table (items above target turn red), and export a cost sheet as CSV or print it."
+    ],
+    "what_title": "What is a cost ratio?",
+    "what": [
+      "The cost ratio (often called food cost percentage) is the share of the selling price spent on making the item: <b>cost ratio = cost ÷ price before tax × 100</b>.",
+      "A burger that costs $2.58 to make and sells for $7.50 before tax has a cost ratio of about 34%. If your menu prices include VAT, take the tax out first: £12.00 including 20% VAT is £10.00 before tax, so a £3.30 plate cost is 33%, not 27.5%.",
+      "Count everything that goes out with every serving — not only the main ingredients but sauces, garnishes, sides and takeaway packaging. Add those as \"other costs\" per serving."
+    ],
+    "target_title": "What is a good cost ratio?",
+    "target": [
+      "Restaurants commonly aim for a food cost of roughly 28–35%, coffee drinks lower, and salons often keep product costs to 10–20% of the service price. The defaults here (33% food, 20% salon) are reference points like these, not a rule.",
+      "The right number depends on your rent, wages and sales channels. A business in an expensive location or with a large share of delivery-app orders needs a lower ratio; a high-volume business with low overheads can live with a higher one.",
+      "That is why step ③ matters: it turns the ratio into the number of customers you need each day, and the what-if table shows how much a 5-point drop in cost ratio would lower that number."
+    ],
+    "bep_title": "How break-even is calculated",
+    "bep": [
+      "<b>Variable cost ratio</b> = cost ratio + fee ratio. Example: 33% food cost + 7% card and delivery fees = 40%.",
+      "<b>Contribution margin</b> = 1 − 40% = 60%. Of every $10 of sales, $6 is left to pay fixed costs.",
+      "<b>Break-even sales</b> = fixed costs ÷ contribution margin. With $8,000 of fixed costs a month: 8,000 ÷ 0.6 = $13,333.",
+      "<b>Customers</b> = 13,333 ÷ $12 average spend = 1,112 a month (rounded up), then 1,112 ÷ 26 trading days = 43 a day (rounded up).",
+      "To make $3,000 profit a month: (8,000 + 3,000) ÷ 0.6 = $18,333 of sales, or 59 customers a day."
+    ],
+    "owner_title": "Why include your own pay?",
+    "owner": [
+      "If you work in the business and leave your own pay out of fixed costs, the \"break-even\" you see is the point where you have worked the whole month for nothing.",
+      "With $8,000 of fixed costs, adding $3,000 for yourself raises the customers you need from 43 to 59 a day under the same conditions. That gap is often why a busy business still feels like it makes no money.",
+      "Enter what you would earn doing similar work elsewhere. Then break-even really means the business pays its way — including you."
+    ],
+    "vat_title": "Sales tax and VAT",
+    "vat": [
+      "Choose your currency and tax rate at the top. Set the rate to 0% if your menu prices are shown before tax (as with US sales tax), or to your VAT rate — for example 20% in the UK — if prices include it.",
+      "When prices include tax, the calculator removes it before working out cost ratios and profit, because the tax is collected for the government and is not part of your sales.",
+      "The average spend in step ③ is before tax by default; switch to \"Tax included\" if you enter the amount customers actually pay."
+    ],
+    "use_cases": [
+      {
+        "icon": "🍔",
+        "title": "Pricing a new dish",
+        "desc": "Enter what you paid for each ingredient and how much goes on the plate, and get the cost per serving, its cost ratio and a suggested menu price for your target food cost."
+      },
+      {
+        "icon": "📈",
+        "title": "When supplier prices go up",
+        "desc": "Drag the slider to see what a 10, 20 or 30 percent rise in ingredient prices does to your cost ratio, and what you would need to charge to keep your margin."
+      },
+      {
+        "icon": "💅",
+        "title": "Salon and nail service prices",
+        "desc": "Add colour, gel and developer costs plus foil, gloves and other consumables, then factor in service time at your hourly labour rate to see the true cost of each service."
+      },
+      {
+        "icon": "🏪",
+        "title": "Before signing a lease",
+        "desc": "Enter the rent, wages and your expected average spend to find out how many customers a day the location needs just to break even, and how many seat turns that means."
+      }
+    ],
+    "how_to": [
+      {
+        "step": "Pick your business type",
+        "desc": "Choose food and café or salon and beauty, then set your currency and tax rate. Load the restaurant or salon example first if you want to see a filled-in version."
+      },
+      {
+        "step": "① Cost each item",
+        "desc": "For every ingredient enter the purchase price, the pack size (say 10 kg) and the amount used per serving (say 200 g). Add packaging or sides as per-serving extras."
+      },
+      {
+        "step": "② Set prices and a target",
+        "desc": "Enter the menu price to see the cost ratio and what is left per sale after fees. Set a target ratio to get a suggested price rounded up to a tidy amount."
+      },
+      {
+        "step": "③ Add fixed costs",
+        "desc": "Fill in rent, wages, your own pay and other monthly costs, plus average spend and trading days, to get the customers you need a day, a chart and a what-if table."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Should the cost ratio use the price with or without tax?",
+        "a": "Without. Sales tax and VAT are collected for the government, so they are not part of your revenue. If a dish is £12.00 including 20% VAT and costs £3.30 to make, divide by £10.00 — the cost ratio is 33%, not 27.5%. If your prices are shown before tax, set the tax rate to 0%."
+      },
+      {
+        "q": "How is the number of customers per day worked out?",
+        "a": "Fixed costs are divided by the contribution margin (1 − cost ratio − fee ratio) to get break-even sales. That is divided by average spend and rounded up to customers per month, then divided by trading days and rounded up again. $8,000 fixed costs, 33% cost, 7% fees, $12 spend and 26 days gives 43 a day."
+      },
+      {
+        "q": "Should a salon include labour time in the service cost?",
+        "a": "For pricing, it helps to see both. $15 of product, 120 minutes and a $20 hourly rate make a $55 service cost including time. In the break-even step, wages are already in fixed costs, so the average cost ratio uses product and consumable costs only, to avoid counting labour twice."
+      },
+      {
+        "q": "What happens if the pack unit and the usage unit differ?",
+        "a": "Units of the same kind are converted automatically — kg and g, L and ml. A 10 kg pack for $45 used at 200 g a serving costs $0.90. If you buy by weight but use by the piece, the calculator warns you; weigh one piece and enter grams, or buy and use by the piece."
+      },
+      {
+        "q": "Where is my data stored?",
+        "a": "Your items and costs are saved automatically in this browser on this device only, and nothing is sent to a server. To move to another device or keep a safe copy, use Export backup and later Import backup. The cost sheet can be exported as CSV for Excel or Google Sheets, or printed."
       }
     ]
   }
